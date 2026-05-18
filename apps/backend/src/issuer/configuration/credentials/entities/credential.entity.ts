@@ -196,13 +196,13 @@ export class CredentialConfig {
     webhookEndpoint?: WebhookEndpointEntity;
 
     @IsOptional()
-    @ApiProperty({
+    @ApiPropertyOptional({
         description:
             "VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT",
-        nullable: true,
-        oneOf: [
+        anyOf: [
             { type: "string", description: "VCT URI string" },
             { $ref: getSchemaPath(VCT) },
+            { type: "null" },
         ],
     })
     @Column("json", { nullable: true })

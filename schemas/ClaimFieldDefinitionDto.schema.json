@@ -5,14 +5,24 @@
   "type": "object",
   "properties": {
     "path": {
+      "type": "array",
       "description": "Path to claim value",
       "example": [
         "address",
         "locality"
       ],
-      "type": "array",
       "items": {
-        "type": "string"
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ]
       }
     },
     "type": {
