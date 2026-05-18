@@ -11,7 +11,10 @@ import {
 } from "class-validator";
 
 export class FieldDisplayDto {
-    @ApiProperty({ description: "Locale code based on BCP47 (RFC 5646)", example: "en-US" })
+    @ApiProperty({
+        description: "Locale code based on BCP47 (RFC 5646)",
+        example: "en-US",
+    })
     @IsString()
     locale!: string;
 
