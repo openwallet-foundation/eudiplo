@@ -234,7 +234,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="331" class="link-to-prism">src/issuer/issuance/oid4vci/authorize/dto/interactive-authorization.dto.ts:331</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="217" class="link-to-prism">src/issuer/issuance/oid4vci/authorize/dto/interactive-authorization.dto.ts:217</a></div>
                         </td>
                     </tr>
 
@@ -271,7 +271,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="343" class="link-to-prism">src/issuer/issuance/oid4vci/authorize/dto/interactive-authorization.dto.ts:343</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="229" class="link-to-prism">src/issuer/issuance/oid4vci/authorize/dto/interactive-authorization.dto.ts:229</a></div>
                         </td>
                     </tr>
 
@@ -307,7 +307,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="337" class="link-to-prism">src/issuer/issuance/oid4vci/authorize/dto/interactive-authorization.dto.ts:337</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="223" class="link-to-prism">src/issuer/issuance/oid4vci/authorize/dto/interactive-authorization.dto.ts:223</a></div>
                         </td>
                     </tr>
 
@@ -343,7 +343,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="319" class="link-to-prism">src/issuer/issuance/oid4vci/authorize/dto/interactive-authorization.dto.ts:319</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="205" class="link-to-prism">src/issuer/issuance/oid4vci/authorize/dto/interactive-authorization.dto.ts:205</a></div>
                         </td>
                     </tr>
 
@@ -379,7 +379,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="325" class="link-to-prism">src/issuer/issuance/oid4vci/authorize/dto/interactive-authorization.dto.ts:325</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="211" class="link-to-prism">src/issuer/issuance/oid4vci/authorize/dto/interactive-authorization.dto.ts:211</a></div>
                         </td>
                     </tr>
 
@@ -399,8 +399,7 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
-import { IsArray, IsOptional, IsString, ValidateNested } from &quot;class-validator&quot;;
+import { IsOptional, IsString } from &quot;class-validator&quot;;
 
 /**
  * Authorization details for a credential request.
@@ -435,119 +434,6 @@ export class AuthorizationDetailsDto {
     @IsOptional()
     @IsString()
     credential_configuration_id?: string;
-}
-
-/**
- * Initial Interactive Authorization Request DTO.
- * Sent by the wallet to start an interactive authorization flow.
- */
-export class InteractiveAuthorizationInitialRequestDto {
-    @ApiProperty({
-        description: &quot;Response type, typically &#x27;code&#x27;&quot;,
-        example: &quot;code&quot;,
-    })
-    @IsString()
-    response_type!: string;
-
-    @ApiProperty({
-        description: &quot;Client identifier&quot;,
-        example: &quot;wallet-client&quot;,
-    })
-    @IsString()
-    client_id!: string;
-
-    @ApiProperty({
-        description:
-            &quot;Comma-separated list of supported interaction types (e.g., &#x27;openid4vp_presentation,redirect_to_web&#x27;)&quot;,
-        example: &quot;openid4vp_presentation,redirect_to_web&quot;,
-    })
-    @IsString()
-    interaction_types_supported!: string;
-
-    @ApiPropertyOptional({
-        description: &quot;Redirect URI for the authorization response&quot;,
-        example: &quot;https://wallet.example.com/callback&quot;,
-    })
-    @IsOptional()
-    @IsString()
-    redirect_uri?: string;
-
-    @ApiPropertyOptional({
-        description: &quot;OAuth scope&quot;,
-        example: &quot;openid&quot;,
-    })
-    @IsOptional()
-    @IsString()
-    scope?: string;
-
-    @ApiPropertyOptional({
-        description: &quot;PKCE code challenge&quot;,
-    })
-    @IsOptional()
-    @IsString()
-    code_challenge?: string;
-
-    @ApiPropertyOptional({
-        description: &quot;PKCE code challenge method&quot;,
-        example: &quot;S256&quot;,
-    })
-    @IsOptional()
-    @IsString()
-    code_challenge_method?: string;
-
-    @ApiPropertyOptional({
-        description: &quot;Authorization details for credential request&quot;,
-        type: [AuthorizationDetailsDto],
-    })
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; AuthorizationDetailsDto)
-    authorization_details?: AuthorizationDetailsDto[];
-
-    @ApiPropertyOptional({
-        description: &quot;State parameter&quot;,
-    })
-    @IsOptional()
-    @IsString()
-    state?: string;
-
-    @ApiPropertyOptional({
-        description: &quot;Issuer state from credential offer&quot;,
-    })
-    @IsOptional()
-    @IsString()
-    issuer_state?: string;
-}
-
-/**
- * Follow-up Interactive Authorization Request DTO.
- * Sent by the wallet after completing an interaction (e.g., OpenID4VP presentation).
- */
-export class InteractiveAuthorizationFollowUpRequestDto {
-    @ApiProperty({
-        description:
-            &quot;Auth session identifier from the previous interaction response&quot;,
-        example: &quot;session-123&quot;,
-    })
-    @IsString()
-    auth_session!: string;
-
-    @ApiPropertyOptional({
-        description:
-            &quot;OpenID4VP response as JSON string (for openid4vp_presentation interaction)&quot;,
-        example: &#x27;{&quot;vp_token&quot;: &quot;...&quot;}&#x27;,
-    })
-    @IsOptional()
-    @IsString()
-    openid4vp_response?: string;
-
-    @ApiPropertyOptional({
-        description: &quot;PKCE code verifier (for redirect_to_web interaction)&quot;,
-    })
-    @IsOptional()
-    @IsString()
-    code_verifier?: string;
 }
 
 /**

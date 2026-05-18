@@ -607,7 +607,7 @@ export enum FlowType {
 /**
  * Inline claims source - claims provided directly in the request.
  */
-export class InlineClaimsSource {
+class InlineClaimsSource {
     @IsIn([&quot;inline&quot;])
     type!: &quot;inline&quot;;
 
@@ -618,7 +618,7 @@ export class InlineClaimsSource {
 /**
  * Attribute provider claims source - claims fetched dynamically via a configured attribute provider.
  */
-export class AttributeProviderClaimsSource {
+class AttributeProviderClaimsSource {
     @IsIn([&quot;attributeProvider&quot;])
     type!: &quot;attributeProvider&quot;;
 
@@ -629,7 +629,7 @@ export class AttributeProviderClaimsSource {
 /**
  * Webhook claims source - claims fetched dynamically via an inline webhook configuration.
  */
-export class WebhookClaimsSource {
+class WebhookClaimsSource {
     @IsIn([&quot;webhook&quot;])
     type!: &quot;webhook&quot;;
 
@@ -650,7 +650,7 @@ export type ClaimsSource &#x3D;
  * Custom validator to ensure credentialClaims keys are subset of credentialConfigurationIds
  */
 @ValidatorConstraint({ name: &quot;credentialClaimsMatchIds&quot;, async: false })
-export class CredentialClaimsMatchIdsConstraint
+class CredentialClaimsMatchIdsConstraint
     implements ValidatorConstraintInterface
 {
     validate(

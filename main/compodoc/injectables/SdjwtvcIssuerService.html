@@ -188,7 +188,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/issuer/configuration/credentials/issuer/sdjwtvc-issuer/sdjwtvc-issuer.service.ts:30</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/issuer/configuration/credentials/issuer/sdjwtvc-issuer/sdjwtvc-issuer.service.ts:31</a></div>
                             </td>
                         </tr>
 
@@ -301,8 +301,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="44"
-                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/sdjwtvc-issuer/sdjwtvc-issuer.service.ts:44</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="45"
+                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/sdjwtvc-issuer/sdjwtvc-issuer.service.ts:45</a></div>
                         </td>
                     </tr>
 
@@ -380,6 +380,7 @@ import {
     CredentialConfig,
     SdJwtTrustFormat,
 } from &quot;../../entities/credential.entity&quot;;
+import { buildDisclosureFrame } from &quot;../../utils&quot;;
 
 export interface SdJwtVcIssueOptions {
     credentialConfiguration: CredentialConfig;
@@ -459,7 +460,8 @@ export class SdjwtvcIssuerService {
         }
 
         const host &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
-        const disclosureFrame &#x3D; credentialConfiguration.disclosureFrame ?? {};
+        const disclosureFrame &#x3D;
+            buildDisclosureFrame(credentialConfiguration.fields as any) ?? {};
 
         const vct &#x3D;
             typeof credentialConfiguration.vct &#x3D;&#x3D;&#x3D; &quot;string&quot;
