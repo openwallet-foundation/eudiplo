@@ -248,24 +248,3 @@ export function createDeferredResponse(
 export function createNotificationSuccess(): NotificationWebhookResponse {
     return { status: "ok" };
 }
-
-/**
- * Creates an error notification response.
- */
-function createNotificationError(
-    message: string,
-): NotificationWebhookResponse {
-    return { status: "error", message };
-}
-
-/**
- * Union type for all possible webhook request payloads.
- */
-type WebhookRequest = ClaimsWebhookRequest | NotificationWebhookRequest;
-
-/**
- * Union type for all possible webhook response payloads.
- */
-type WebhookResponse =
-    | ClaimsWebhookResponse
-    | NotificationWebhookResponse;
