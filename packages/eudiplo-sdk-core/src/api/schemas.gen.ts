@@ -1797,7 +1797,6 @@ export const FederationConfigSchema = {
         mode: {
             enum: [
                 'federation-only',
-                'lote-only',
                 'hybrid'
             ],
             type: 'string',
@@ -2105,7 +2104,6 @@ export const TrustedAuthorityQuerySchema = {
         type: {
             type: 'string',
             enum: [
-                'aki',
                 'etsi_tl',
                 'openid_federation'
             ]
@@ -2663,14 +2661,14 @@ export const IssuerMetadataCredentialConfigSchema = {
 export const FieldDisplayDtoSchema = {
     type: 'object',
     properties: {
-        lang: {
+        locale: {
             type: 'string',
-            description: 'Locale code',
+            description: 'Locale code based on BCP47 (RFC 5646)',
             example: 'en-US'
         },
-        label: {
+        name: {
             type: 'string',
-            description: 'Display label',
+            description: 'Display name',
             example: 'Given Name'
         },
         description: {
@@ -2680,8 +2678,8 @@ export const FieldDisplayDtoSchema = {
         }
     },
     required: [
-        'lang',
-        'label'
+        'locale',
+        'name'
     ]
 } as const;
 
@@ -2689,14 +2687,24 @@ export const ClaimFieldDefinitionDtoSchema = {
     type: 'object',
     properties: {
         path: {
+            type: 'array',
             description: 'Path to claim value',
             example: [
                 'address',
                 'locality'
             ],
-            type: 'array',
             items: {
-                type: 'string'
+                oneOf: [
+                    {
+                        type: 'string'
+                    },
+                    {
+                        type: 'number'
+                    },
+                    {
+                        type: 'null'
+                    }
+                ]
             }
         },
         type: {
@@ -2931,16 +2939,17 @@ export const CredentialConfigSchema = {
     type: 'object',
     properties: {
         vct: {
-            type: 'object',
             description: 'VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT',
-            nullable: true,
-            oneOf: [
+            anyOf: [
                 {
                     type: 'string',
                     description: 'VCT URI string'
                 },
                 {
                     $ref: '#/components/schemas/VCT'
+                },
+                {
+                    type: 'null'
                 }
             ]
         },
@@ -3055,8 +3064,7 @@ export const CredentialConfigSchema = {
             description: 'For SD-JWT credentials: determines whether to include certificate chain (x5c)\nor use federation-based trust (iss claim).\nDefault: "x5c" (federation must be explicitly selected)',
             enum: [
                 'x5c',
-                'federation',
-                'auto'
+                'federation'
             ],
             type: 'string'
         },
@@ -3077,16 +3085,17 @@ export const CredentialConfigCreateSchema = {
     type: 'object',
     properties: {
         vct: {
-            type: 'object',
             description: 'VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT',
-            nullable: true,
-            oneOf: [
+            anyOf: [
                 {
                     type: 'string',
                     description: 'VCT URI string'
                 },
                 {
                     $ref: '#/components/schemas/VCT'
+                },
+                {
+                    type: 'null'
                 }
             ]
         },
@@ -3184,8 +3193,7 @@ export const CredentialConfigCreateSchema = {
             description: 'For SD-JWT credentials: determines whether to include certificate chain (x5c)\nor use federation-based trust (iss claim).\nDefault: "x5c" (federation must be explicitly selected)',
             enum: [
                 'x5c',
-                'federation',
-                'auto'
+                'federation'
             ],
             type: 'string'
         },
@@ -3205,16 +3213,17 @@ export const CredentialConfigUpdateSchema = {
     type: 'object',
     properties: {
         vct: {
-            type: 'object',
             description: 'VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT',
-            nullable: true,
-            oneOf: [
+            anyOf: [
                 {
                     type: 'string',
                     description: 'VCT URI string'
                 },
                 {
                     $ref: '#/components/schemas/VCT'
+                },
+                {
+                    type: 'null'
                 }
             ]
         },
@@ -3312,8 +3321,7 @@ export const CredentialConfigUpdateSchema = {
             description: 'For SD-JWT credentials: determines whether to include certificate chain (x5c)\nor use federation-based trust (iss claim).\nDefault: "x5c" (federation must be explicitly selected)',
             enum: [
                 'x5c',
-                'federation',
-                'auto'
+                'federation'
             ],
             type: 'string'
         },

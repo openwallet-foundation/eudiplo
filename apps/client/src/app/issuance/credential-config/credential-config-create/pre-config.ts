@@ -36,7 +36,7 @@ export const configs: PredefinedConfig[] = [
           defaultValue: 'DE',
           mandatory: true,
           disclosable: true,
-          display: [{ lang: 'en-US', label: 'Issuing Country' }],
+          display: [{ locale: 'en-US', name: 'Issuing Country' }],
         },
         {
           path: ['issuing_authority'],
@@ -44,7 +44,7 @@ export const configs: PredefinedConfig[] = [
           defaultValue: 'DE',
           mandatory: true,
           disclosable: true,
-          display: [{ lang: 'en-US', label: 'Issuing Authority' }],
+          display: [{ locale: 'en-US', name: 'Issuing Authority' }],
         },
         {
           path: ['given_name'],
@@ -52,7 +52,7 @@ export const configs: PredefinedConfig[] = [
           defaultValue: 'ERIKA',
           mandatory: true,
           disclosable: true,
-          display: [{ lang: 'en-US', label: 'Given Name' }],
+          display: [{ locale: 'en-US', name: 'Given Name' }],
         },
         {
           path: ['family_name'],
@@ -60,7 +60,7 @@ export const configs: PredefinedConfig[] = [
           defaultValue: 'MUSTERMANN',
           mandatory: true,
           disclosable: true,
-          display: [{ lang: 'en-US', label: 'Family Name' }],
+          display: [{ locale: 'en-US', name: 'Family Name' }],
         },
         {
           path: ['birth_family_name'],
@@ -68,7 +68,7 @@ export const configs: PredefinedConfig[] = [
           defaultValue: 'GABLER',
           mandatory: true,
           disclosable: true,
-          display: [{ lang: 'en-US', label: 'Birth Family Name' }],
+          display: [{ locale: 'en-US', name: 'Birth Family Name' }],
         },
         {
           path: ['birthdate'],
@@ -77,7 +77,7 @@ export const configs: PredefinedConfig[] = [
           mandatory: true,
           disclosable: true,
           constraints: { pattern: '^\\d{4}-\\d{2}-\\d{2}$' },
-          display: [{ lang: 'en-US', label: 'Birthdate' }],
+          display: [{ locale: 'en-US', name: 'Birthdate' }],
         },
         {
           path: ['age_birth_year'],
@@ -85,7 +85,7 @@ export const configs: PredefinedConfig[] = [
           defaultValue: 1964,
           mandatory: true,
           disclosable: true,
-          display: [{ lang: 'en-US', label: 'Birth Year' }],
+          display: [{ locale: 'en-US', name: 'Birth Year' }],
         },
         {
           path: ['age_in_years'],
@@ -93,7 +93,7 @@ export const configs: PredefinedConfig[] = [
           defaultValue: 59,
           mandatory: true,
           disclosable: true,
-          display: [{ lang: 'en-US', label: 'Age in Years' }],
+          display: [{ locale: 'en-US', name: 'Age in Years' }],
         },
         {
           path: ['age_equal_or_over'],
@@ -108,7 +108,7 @@ export const configs: PredefinedConfig[] = [
           },
           mandatory: true,
           disclosable: true,
-          display: [{ lang: 'en-US', label: 'Age Equal or Over' }],
+          display: [{ locale: 'en-US', name: 'Age Equal or Over' }],
         },
         { path: ['age_equal_or_over', '12'], type: 'boolean', defaultValue: true, mandatory: true },
         { path: ['age_equal_or_over', '14'], type: 'boolean', defaultValue: true, mandatory: true },
@@ -127,14 +127,14 @@ export const configs: PredefinedConfig[] = [
           defaultValue: { locality: 'BERLIN' },
           mandatory: true,
           disclosable: true,
-          display: [{ lang: 'en-US', label: 'Place of Birth' }],
+          display: [{ locale: 'en-US', name: 'Place of Birth' }],
         },
         {
           path: ['place_of_birth', 'locality'],
           type: 'string',
           defaultValue: 'BERLIN',
           mandatory: true,
-          display: [{ lang: 'en-US', label: 'Locality' }],
+          display: [{ locale: 'en-US', name: 'Locality' }],
         },
         {
           path: ['address'],
@@ -146,7 +146,7 @@ export const configs: PredefinedConfig[] = [
           },
           mandatory: true,
           disclosable: true,
-          display: [{ lang: 'en-US', label: 'Address' }],
+          display: [{ locale: 'en-US', name: 'Address' }],
         },
         {
           path: ['address', 'locality'],
@@ -154,7 +154,7 @@ export const configs: PredefinedConfig[] = [
           defaultValue: 'KÖLN',
           mandatory: true,
           disclosable: true,
-          display: [{ lang: 'en-US', label: 'Locality' }],
+          display: [{ locale: 'en-US', name: 'Locality' }],
         },
         {
           path: ['address', 'postal_code'],
@@ -162,7 +162,7 @@ export const configs: PredefinedConfig[] = [
           defaultValue: '51147',
           mandatory: true,
           disclosable: true,
-          display: [{ lang: 'en-US', label: 'Postal Code' }],
+          display: [{ locale: 'en-US', name: 'Postal Code' }],
         },
         {
           path: ['address', 'street_address'],
@@ -170,7 +170,7 @@ export const configs: PredefinedConfig[] = [
           defaultValue: 'HEIDESTRAẞE 17',
           mandatory: true,
           disclosable: true,
-          display: [{ lang: 'en-US', label: 'Street Address' }],
+          display: [{ locale: 'en-US', name: 'Street Address' }],
         },
         {
           path: ['nationalities'],
@@ -178,7 +178,7 @@ export const configs: PredefinedConfig[] = [
           defaultValue: ['DE'],
           mandatory: true,
           disclosable: true,
-          display: [{ lang: 'en-US', label: 'Nationalities' }],
+          display: [{ locale: 'en-US', name: 'Nationalities' }],
         },
       ],
       vct: {

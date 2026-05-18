@@ -11,13 +11,13 @@ import {
 } from "class-validator";
 
 export class FieldDisplayDto {
-    @ApiProperty({ description: "Locale code", example: "en-US" })
+    @ApiProperty({ description: "Locale code based on BCP47 (RFC 5646)", example: "en-US" })
     @IsString()
-    lang!: string;
+    locale!: string;
 
-    @ApiProperty({ description: "Display label", example: "Given Name" })
+    @ApiProperty({ description: "Display name", example: "Given Name" })
     @IsString()
-    label!: string;
+    name!: string;
 
     @ApiPropertyOptional({
         description: "Optional display description",

@@ -886,7 +886,7 @@ export type FederationConfig = {
     /**
      * Trust decision strategy when both LoTE trust lists and OpenID Federation are configured.
      */
-    mode?: 'federation-only' | 'lote-only' | 'hybrid';
+    mode?: 'federation-only' | 'hybrid';
     /**
      * Entity identifier of this issuer/verifier in the federation.
      */
@@ -1077,7 +1077,7 @@ export type ClaimsQuery = {
 };
 
 export type TrustedAuthorityQuery = {
-    type: 'aki' | 'etsi_tl' | 'openid_federation';
+    type: 'etsi_tl' | 'openid_federation';
     values: Array<string>;
 };
 
@@ -1308,13 +1308,13 @@ export type IssuerMetadataCredentialConfig = {
 
 export type FieldDisplayDto = {
     /**
-     * Locale code
+     * Locale code based on BCP47 (RFC 5646)
      */
-    lang: string;
+    locale: string;
     /**
-     * Display label
+     * Display name
      */
-    label: string;
+    name: string;
     /**
      * Optional display description
      */
@@ -1325,7 +1325,7 @@ export type ClaimFieldDefinitionDto = {
     /**
      * Path to claim value
      */
-    path: Array<string>;
+    path: Array<string | number | null>;
     /**
      * Claim value type
      */
@@ -1455,7 +1455,7 @@ export type CredentialConfig = {
     /**
      * VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT
      */
-    vct?: string | Vct;
+    vct?: string | Vct | null;
     /**
      * List of IAE actions to execute before credential issuance
      */
@@ -1509,7 +1509,7 @@ export type CredentialConfig = {
      * or use federation-based trust (iss claim).
      * Default: "x5c" (federation must be explicitly selected)
      */
-    sdJwtTrustFormat?: 'x5c' | 'federation' | 'auto';
+    sdJwtTrustFormat?: 'x5c' | 'federation';
     lifeTime?: number;
 };
 
@@ -1517,7 +1517,7 @@ export type CredentialConfigCreate = {
     /**
      * VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT
      */
-    vct?: string | Vct;
+    vct?: string | Vct | null;
     /**
      * List of IAE actions to execute before credential issuance
      */
@@ -1564,7 +1564,7 @@ export type CredentialConfigCreate = {
      * or use federation-based trust (iss claim).
      * Default: "x5c" (federation must be explicitly selected)
      */
-    sdJwtTrustFormat?: 'x5c' | 'federation' | 'auto';
+    sdJwtTrustFormat?: 'x5c' | 'federation';
     lifeTime?: number;
 };
 
@@ -1572,7 +1572,7 @@ export type CredentialConfigUpdate = {
     /**
      * VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT
      */
-    vct?: string | Vct;
+    vct?: string | Vct | null;
     /**
      * List of IAE actions to execute before credential issuance
      */
@@ -1619,7 +1619,7 @@ export type CredentialConfigUpdate = {
      * or use federation-based trust (iss claim).
      * Default: "x5c" (federation must be explicitly selected)
      */
-    sdJwtTrustFormat?: 'x5c' | 'federation' | 'auto';
+    sdJwtTrustFormat?: 'x5c' | 'federation';
     lifeTime?: number;
 };
 

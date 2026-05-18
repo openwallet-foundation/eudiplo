@@ -61,9 +61,16 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public loading = false;
   private chainedAsEnabledSub?: Subscription;
+  private readonly federationModes = ['federation-only', 'hybrid'] as const;
 
   private asRecord(value: unknown): Record<string, unknown> {
     return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+  }
+
+  private normalizeFederationMode(value: unknown): 'federation-only' | 'hybrid' {
+    return this.federationModes.includes(value as (typeof this.federationModes)[number])
+      ? (value as 'federation-only' | 'hybrid')
+      : 'hybrid';
   }
 
   constructor(
@@ -262,7 +269,7 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
           federation: {
             enabled: this.trustAnchors.length > 0,
             role: (federation.role as 'trust_anchor' | 'intermediate' | 'leaf') ?? 'leaf',
-            mode: (federation.mode as 'federation-only' | 'lote-only' | 'hybrid') ?? 'hybrid',
+            mode: this.normalizeFederationMode(federation.mode),
             entityId: federation.entityId ?? '',
             enforceSigningPolicy: federation.enforceSigningPolicy ?? true,
             cacheTtlSeconds: federation.cacheTtlSeconds ?? 300,
@@ -352,10 +359,10 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
       return null;
     }
     const role = (fVal['role'] as string) ?? 'leaf';
-    const mode = (fVal['mode'] as string) ?? 'hybrid';
+    const mode = this.normalizeFederationMode(fVal['mode']);
     return {
       role: role as 'trust_anchor' | 'intermediate' | 'leaf',
-      mode: mode as 'federation-only' | 'lote-only' | 'hybrid',
+      mode,
       entityId: (fVal['entityId'] as string) ?? undefined,
       enforceSigningPolicy: fVal['enforceSigningPolicy'] !== false,
       cacheTtlSeconds: (fVal['cacheTtlSeconds'] as number) ?? 300,

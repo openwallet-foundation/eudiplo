@@ -4,14 +4,14 @@
   "title": "FieldDisplayDto",
   "type": "object",
   "properties": {
-    "lang": {
+    "locale": {
       "type": "string",
-      "description": "Locale code",
+      "description": "Locale code based on BCP47 (RFC 5646)",
       "example": "en-US"
     },
-    "label": {
+    "name": {
       "type": "string",
-      "description": "Display label",
+      "description": "Display name",
       "example": "Given Name"
     },
     "description": {
@@ -21,8 +21,8 @@
     }
   },
   "required": [
-    "lang",
-    "label"
+    "locale",
+    "name"
   ],
   "additionalProperties": false
 }
