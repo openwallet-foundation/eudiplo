@@ -353,7 +353,10 @@ export class ClaimFieldDefinitionDto {
     @ApiProperty({
         description: &quot;Path to claim value&quot;,
         example: [&quot;address&quot;, &quot;locality&quot;],
-        type: [String],
+        type: &quot;array&quot;,
+        items: {
+            oneOf: [{ type: &quot;string&quot; }, { type: &quot;number&quot; }, { type: &quot;null&quot; }],
+        },
     })
     @IsArray()
     path!: Array&lt;string | number | null&gt;;

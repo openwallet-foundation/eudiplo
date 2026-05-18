@@ -263,7 +263,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="110" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:110</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="113" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:113</a></div>
                         </td>
                     </tr>
 
@@ -301,7 +301,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:75</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:78</a></div>
                         </td>
                     </tr>
 
@@ -340,7 +340,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="87" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:87</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:90</a></div>
                         </td>
                     </tr>
 
@@ -381,7 +381,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="102" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:102</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="105" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:105</a></div>
                         </td>
                     </tr>
 
@@ -420,7 +420,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:80</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="83" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:83</a></div>
                         </td>
                     </tr>
 
@@ -459,7 +459,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="95" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:95</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="98" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:98</a></div>
                         </td>
                     </tr>
 
@@ -490,13 +490,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Path to claim value&#x27;, example: undefined, type: undefined})<br />@IsArray()<br />
+                            @ApiProperty({description: &#x27;Path to claim value&#x27;, example: undefined, type: &#x27;array&#x27;, items: undefined})<br />@IsArray()<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:38</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:41</a></div>
                         </td>
                     </tr>
 
@@ -534,7 +534,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:54</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:57</a></div>
                         </td>
                     </tr>
 
@@ -587,7 +587,10 @@ export class ClaimFieldDefinitionDto {
     @ApiProperty({
         description: &quot;Path to claim value&quot;,
         example: [&quot;address&quot;, &quot;locality&quot;],
-        type: [String],
+        type: &quot;array&quot;,
+        items: {
+            oneOf: [{ type: &quot;string&quot; }, { type: &quot;number&quot; }, { type: &quot;null&quot; }],
+        },
     })
     @IsArray()
     path!: Array&lt;string | number | null&gt;;
