@@ -213,7 +213,11 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
 
     let app: INestApplication;
     let PLAN_ID: string;
+    let PLAN_ID_KEY_ATTESTATION: string;
     let authToken: string;
+
+    const DEFAULT_CREDENTIAL_CONFIGURATION_ID = "pid";
+    const KEY_ATTESTATION_CREDENTIAL_CONFIGURATION_ID = "pid-key";
 
     const RUN_FULL_MATRIX = import.meta.env.VITE_OIDF_FULL_MATRIX === "true";
     const ENFORCE_MODULE_COVERAGE_GUARD =
@@ -299,6 +303,7 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
      */
     async function sendOfferToTestRunner(
         testInstance: TestInstance,
+        credentialConfigurationId = DEFAULT_CREDENTIAL_CONFIGURATION_ID,
     ): Promise<void> {
         // Request an issuance offer from the local backend using authorization code flow
         const offerResponse = await axiosBackendInstance.post<
@@ -309,7 +314,7 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
             "/issuer/offer",
             {
                 response_type: ResponseType.URI,
-                credentialConfigurationIds: ["pid"],
+                credentialConfigurationIds: [credentialConfigurationId],
                 flow: FlowType.AUTH_CODE,
             },
             {
@@ -424,7 +429,8 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
                 },
                 vci: {
                     credential_issuer_url: `https://${PUBLIC_DOMAIN}/issuers/haip`,
-                    credential_configuration_id: "pid",
+                    credential_configuration_id:
+                        DEFAULT_CREDENTIAL_CONFIGURATION_ID,
                     client_attester_keys_jwks: {
                         keys: [attesterJwk],
                     },
@@ -493,6 +499,68 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         }
 
         PLAN_ID = createdPlans[0].planId;
+
+        const keyAttestationPlanBody = {
+            alias: "eudiplo-key-attestation",
+            description: "test plan sd_jwt_vc/issuer_initiated key-attestation",
+            publish: "everything",
+            client: {
+                client_id: "localhost",
+            },
+            server: {
+                discoveryIssuer: `https://${PUBLIC_DOMAIN}/issuers/haip`,
+            },
+            credential: {
+                signing_jwk: clientSigningJwk,
+                trust_anchor_pem: trustAnchorPem,
+                status_list_trust_anchor_pem: statusListTrustAnchorPem,
+            },
+            vci: {
+                credential_issuer_url: `https://${PUBLIC_DOMAIN}/issuers/haip`,
+                credential_configuration_id:
+                    KEY_ATTESTATION_CREDENTIAL_CONFIGURATION_ID,
+                client_attester_keys_jwks: {
+                    keys: [attesterJwk],
+                },
+                client_attestation_issuer:
+                    "https://client-attester.example.org/",
+                key_attestation_jwks: {
+                    keys: [keyAttestationJwk],
+                },
+            },
+            browser: [
+                {
+                    comment:
+                        "expect an immediate redirect back to the conformance suite",
+                    match: "https://*/authorize*",
+                    tasks: [
+                        {
+                            task: "Verify Complete",
+                            match: "*/test/*/callback*",
+                            comment:
+                                "declaring both this and the next task as optional means this configuration works regardless of whether a url is returned in the direct post response",
+                            optional: true,
+                            commands: [["wait", "id", "submission_complete", 10]],
+                        },
+                        {
+                            task: "Verify Complete",
+                            optional: true,
+                            match: "https://*/authorize*",
+                        },
+                    ],
+                },
+            ],
+        };
+
+        PLAN_ID_KEY_ATTESTATION = await oidfSuite.createPlan(
+            planName,
+            createdPlans[0].variant,
+            keyAttestationPlanBody,
+        );
+        createdPlans.push({
+            planId: PLAN_ID_KEY_ATTESTATION,
+            variant: createdPlans[0].variant,
+        });
 
         const moduleFixture: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
@@ -818,7 +886,7 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
 
     test("oid4vci-1_0-issuer-fail-invalid-key-attestation-signature", async () => {
         const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+            PLAN_ID_KEY_ATTESTATION,
             "oid4vci-1_0-issuer-fail-invalid-key-attestation-signature",
         );
 
@@ -826,7 +894,10 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
             `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
         );
 
-        await sendOfferToTestRunner(testInstance);
+        await sendOfferToTestRunner(
+            testInstance,
+            KEY_ATTESTATION_CREDENTIAL_CONFIGURATION_ID,
+        );
 
         const logResult = await oidfSuite.waitForFinished(testInstance.id);
         // Test may be skipped if key attestation is not required

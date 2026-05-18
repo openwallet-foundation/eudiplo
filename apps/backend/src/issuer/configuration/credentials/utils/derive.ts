@@ -204,7 +204,7 @@ export function buildClaimsMetadata(
         .filter((field) => field.path.length > 0)
         .map((field) => {
             const metadata: ClaimMetadataV1 = {
-                path: field.path,
+                path: field.path.map((segment) => segmentToKey(segment)),
             };
 
             if (typeof field.mandatory === "boolean") {

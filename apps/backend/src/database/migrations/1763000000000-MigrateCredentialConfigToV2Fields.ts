@@ -31,6 +31,19 @@ export class MigrateCredentialConfigToV2Fields1763000000000
 {
     name = "MigrateCredentialConfigToV2Fields1763000000000";
 
+    private async hasColumn(
+        queryRunner: QueryRunner,
+        tableName: string,
+        columnName: string,
+    ): Promise<boolean> {
+        const table = await queryRunner.getTable(tableName);
+        return !!table?.findColumnByName(columnName);
+    }
+
+    private quote(identifier: string): string {
+        return `"${identifier}"`;
+    }
+
     public async up(queryRunner: QueryRunner): Promise<void> {
         const hasCredentialConfig =
             await queryRunner.hasTable("credential_config");
@@ -44,27 +57,72 @@ export class MigrateCredentialConfigToV2Fields1763000000000
 
         const isPostgres = queryRunner.connection.options.type === "postgres";
 
-        await queryRunner.addColumn(
+        const hasConfigVersion = await this.hasColumn(
+            queryRunner,
             "credential_config",
-            new TableColumn({
-                name: "configVersion",
-                type: isPostgres ? "integer" : "int",
-                default: "2",
-                isNullable: true,
-            }),
+            "configVersion",
         );
+        if (!hasConfigVersion) {
+            await queryRunner.addColumn(
+                "credential_config",
+                new TableColumn({
+                    name: "configVersion",
+                    type: isPostgres ? "integer" : "int",
+                    default: "2",
+                    isNullable: true,
+                }),
+            );
+        }
 
-        await queryRunner.addColumn(
+        const hasFields = await this.hasColumn(
+            queryRunner,
             "credential_config",
-            new TableColumn({
-                name: "fields",
-                type: isPostgres ? "jsonb" : "json",
-                isNullable: true,
-            }),
+            "fields",
         );
+        if (!hasFields) {
+            await queryRunner.addColumn(
+                "credential_config",
+                new TableColumn({
+                    name: "fields",
+                    type: isPostgres ? "jsonb" : "json",
+                    isNullable: true,
+                }),
+            );
+        }
+
+        const optionalColumns = [
+            "description",
+            "claims",
+            "disclosureFrame",
+            "schema",
+            "vct",
+            "keyBinding",
+            "keyChainId",
+            "statusManagement",
+            "lifeTime",
+            "iaeActions",
+            "schemaMeta",
+            "embeddedDisclosurePolicy",
+            "attributeProviderId",
+            "webhookEndpointId",
+        ];
+
+        const presentOptionalColumns: string[] = [];
+        for (const column of optionalColumns) {
+            if (await this.hasColumn(queryRunner, "credential_config", column)) {
+                presentOptionalColumns.push(column);
+            }
+        }
+
+        const selectColumns = [
+            this.quote("id"),
+            this.quote("tenantId"),
+            this.quote("config"),
+            ...presentOptionalColumns.map((col) => this.quote(col)),
+        ];
 
         const rows = (await queryRunner.query(
-            `SELECT id, "tenantId", description, config, claims, "disclosureFrame", schema, vct, "keyBinding", "keyChainId", "statusManagement", "lifeTime", "iaeActions", "schemaMeta", "embeddedDisclosurePolicy", "attributeProviderId", "webhookEndpointId" FROM credential_config`,
+            `SELECT ${selectColumns.join(", ")} FROM credential_config`,
         )) as Array<Record<string, unknown>>;
 
         for (const row of rows) {
@@ -107,9 +165,21 @@ export class MigrateCredentialConfigToV2Fields1763000000000
                 .execute();
         }
 
-        await queryRunner.dropColumn("credential_config", "claims");
-        await queryRunner.dropColumn("credential_config", "disclosureFrame");
-        await queryRunner.dropColumn("credential_config", "schema");
+        if (await this.hasColumn(queryRunner, "credential_config", "claims")) {
+            await queryRunner.dropColumn("credential_config", "claims");
+        }
+        if (
+            await this.hasColumn(
+                queryRunner,
+                "credential_config",
+                "disclosureFrame",
+            )
+        ) {
+            await queryRunner.dropColumn("credential_config", "disclosureFrame");
+        }
+        if (await this.hasColumn(queryRunner, "credential_config", "schema")) {
+            await queryRunner.dropColumn("credential_config", "schema");
+        }
 
         await queryRunner.changeColumn(
             "credential_config",
@@ -145,35 +215,55 @@ export class MigrateCredentialConfigToV2Fields1763000000000
 
         const isPostgres = queryRunner.connection.options.type === "postgres";
 
-        await queryRunner.addColumn(
-            "credential_config",
-            new TableColumn({
-                name: "claims",
-                type: isPostgres ? "jsonb" : "json",
-                isNullable: true,
-            }),
-        );
+        if (!(await this.hasColumn(queryRunner, "credential_config", "claims"))) {
+            await queryRunner.addColumn(
+                "credential_config",
+                new TableColumn({
+                    name: "claims",
+                    type: isPostgres ? "jsonb" : "json",
+                    isNullable: true,
+                }),
+            );
+        }
 
-        await queryRunner.addColumn(
-            "credential_config",
-            new TableColumn({
-                name: "disclosureFrame",
-                type: isPostgres ? "jsonb" : "json",
-                isNullable: true,
-            }),
-        );
+        if (
+            !(await this.hasColumn(
+                queryRunner,
+                "credential_config",
+                "disclosureFrame",
+            ))
+        ) {
+            await queryRunner.addColumn(
+                "credential_config",
+                new TableColumn({
+                    name: "disclosureFrame",
+                    type: isPostgres ? "jsonb" : "json",
+                    isNullable: true,
+                }),
+            );
+        }
 
-        await queryRunner.addColumn(
+        if (!(await this.hasColumn(queryRunner, "credential_config", "schema"))) {
+            await queryRunner.addColumn(
+                "credential_config",
+                new TableColumn({
+                    name: "schema",
+                    type: isPostgres ? "jsonb" : "json",
+                    isNullable: true,
+                }),
+            );
+        }
+
+        const hasFieldsInDown = await this.hasColumn(
+            queryRunner,
             "credential_config",
-            new TableColumn({
-                name: "schema",
-                type: isPostgres ? "jsonb" : "json",
-                isNullable: true,
-            }),
+            "fields",
         );
 
         const rows = (await queryRunner.query(
-            `SELECT id, "tenantId", config, fields FROM credential_config`,
+            hasFieldsInDown
+                ? `SELECT ${this.quote("id")}, ${this.quote("tenantId")}, ${this.quote("config")}, ${this.quote("fields")} FROM credential_config`
+                : `SELECT ${this.quote("id")}, ${this.quote("tenantId")}, ${this.quote("config")} FROM credential_config`,
         )) as Array<Record<string, unknown>>;
 
         for (const row of rows) {
@@ -223,7 +313,17 @@ export class MigrateCredentialConfigToV2Fields1763000000000
                 .execute();
         }
 
-        await queryRunner.dropColumn("credential_config", "fields");
-        await queryRunner.dropColumn("credential_config", "configVersion");
+        if (await this.hasColumn(queryRunner, "credential_config", "fields")) {
+            await queryRunner.dropColumn("credential_config", "fields");
+        }
+        if (
+            await this.hasColumn(
+                queryRunner,
+                "credential_config",
+                "configVersion",
+            )
+        ) {
+            await queryRunner.dropColumn("credential_config", "configVersion");
+        }
     }
 }

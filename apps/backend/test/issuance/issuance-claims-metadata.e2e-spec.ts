@@ -43,37 +43,40 @@ describe("Issuance - Claims Metadata", () => {
                         locale: "en-US",
                     },
                 ],
-                claimsMetadata: [
-                    {
-                        path: ["given_name"],
-                        mandatory: false,
-                        display: [
-                            { name: "Given Name", locale: "en-US" },
-                            { name: "Vorname", locale: "de-DE" },
-                        ],
-                    },
-                    {
-                        path: ["family_name"],
-                        mandatory: true,
-                        display: [
-                            { name: "Family Name", locale: "en-US" },
-                            { name: "Nachname", locale: "de-DE" },
-                        ],
-                    },
-                    {
-                        path: ["address", "street_address"],
-                        display: [{ name: "Street Address", locale: "en-US" }],
-                    },
-                ],
             },
             vct: "urn:test:claims-metadata:1",
-            claims: {
-                given_name: "Test",
-                family_name: "User",
-                address: {
-                    street_address: "123 Test St",
+            configVersion: 2,
+            fields: [
+                {
+                    path: ["given_name"],
+                    type: "string",
+                    defaultValue: "Test",
+                    mandatory: false,
+                    disclosable: true,
+                    display: [
+                        { label: "Given Name", lang: "en-US" },
+                        { label: "Vorname", lang: "de-DE" },
+                    ],
                 },
-            },
+                {
+                    path: ["family_name"],
+                    type: "string",
+                    defaultValue: "User",
+                    mandatory: true,
+                    disclosable: true,
+                    display: [
+                        { label: "Family Name", lang: "en-US" },
+                        { label: "Nachname", lang: "de-DE" },
+                    ],
+                },
+                {
+                    path: ["address", "street_address"],
+                    type: "string",
+                    defaultValue: "123 Test St",
+                    disclosable: true,
+                    display: [{ label: "Street Address", lang: "en-US" }],
+                },
+            ],
         };
 
         await request(app.getHttpServer())
@@ -151,7 +154,6 @@ describe("Issuance - Claims Metadata", () => {
             config: {
                 format: "mso_mdoc",
                 docType: "org.test.claims.1",
-                namespace: "org.test.claims",
                 display: [
                     {
                         name: "Test mDOC Credential",
@@ -160,22 +162,25 @@ describe("Issuance - Claims Metadata", () => {
                         locale: "en-US",
                     },
                 ],
-                claimsMetadata: [
-                    {
-                        path: ["org.test.claims", "given_name"],
-                        display: [{ name: "Given Name", locale: "en-US" }],
-                    },
-                    {
-                        path: ["org.test.claims", "family_name"],
-                        mandatory: true,
-                        display: [{ name: "Family Name", locale: "en-US" }],
-                    },
-                ],
             },
-            claims: {
-                given_name: "Test",
-                family_name: "User",
-            },
+            configVersion: 2,
+            fields: [
+                {
+                    path: ["given_name"],
+                    type: "string",
+                    defaultValue: "Test",
+                    namespace: "org.test.claims",
+                    display: [{ label: "Given Name", lang: "en-US" }],
+                },
+                {
+                    path: ["family_name"],
+                    type: "string",
+                    defaultValue: "User",
+                    mandatory: true,
+                    namespace: "org.test.claims",
+                    display: [{ label: "Family Name", lang: "en-US" }],
+                },
+            ],
         };
 
         await request(app.getHttpServer())
@@ -206,8 +211,7 @@ describe("Issuance - Claims Metadata", () => {
         // Check mDOC claim path structure [namespace, claim_name]
         const givenNameClaim = credConfig.credential_metadata.claims.find(
             (c: any) =>
-                JSON.stringify(c.path) ===
-                JSON.stringify(["org.test.claims", "given_name"]),
+                JSON.stringify(c.path) === JSON.stringify(["given_name"]),
         );
         expect(givenNameClaim).toBeDefined();
     });
@@ -224,14 +228,17 @@ describe("Issuance - Claims Metadata", () => {
                         locale: "en-US",
                     },
                 ],
-                claimsMetadata: [
-                    {
-                        path: ["given_name"],
-                        mandatory: true, // Changed from false to true
-                        display: [{ name: "First Name", locale: "en-US" }], // Changed display name
-                    },
-                ],
             },
+            fields: [
+                {
+                    path: ["given_name"],
+                    type: "string",
+                    defaultValue: "Test",
+                    mandatory: true,
+                    disclosable: true,
+                    display: [{ label: "First Name", lang: "en-US" }],
+                },
+            ],
         };
 
         await request(app.getHttpServer())
