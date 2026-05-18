@@ -540,7 +540,9 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
                             comment:
                                 "declaring both this and the next task as optional means this configuration works regardless of whether a url is returned in the direct post response",
                             optional: true,
-                            commands: [["wait", "id", "submission_complete", 10]],
+                            commands: [
+                                ["wait", "id", "submission_complete", 10],
+                            ],
                         },
                         {
                             task: "Verify Complete",

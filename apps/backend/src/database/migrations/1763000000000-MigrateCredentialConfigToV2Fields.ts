@@ -109,7 +109,9 @@ export class MigrateCredentialConfigToV2Fields1763000000000
 
         const presentOptionalColumns: string[] = [];
         for (const column of optionalColumns) {
-            if (await this.hasColumn(queryRunner, "credential_config", column)) {
+            if (
+                await this.hasColumn(queryRunner, "credential_config", column)
+            ) {
                 presentOptionalColumns.push(column);
             }
         }
@@ -175,7 +177,10 @@ export class MigrateCredentialConfigToV2Fields1763000000000
                 "disclosureFrame",
             )
         ) {
-            await queryRunner.dropColumn("credential_config", "disclosureFrame");
+            await queryRunner.dropColumn(
+                "credential_config",
+                "disclosureFrame",
+            );
         }
         if (await this.hasColumn(queryRunner, "credential_config", "schema")) {
             await queryRunner.dropColumn("credential_config", "schema");
@@ -215,7 +220,9 @@ export class MigrateCredentialConfigToV2Fields1763000000000
 
         const isPostgres = queryRunner.connection.options.type === "postgres";
 
-        if (!(await this.hasColumn(queryRunner, "credential_config", "claims"))) {
+        if (
+            !(await this.hasColumn(queryRunner, "credential_config", "claims"))
+        ) {
             await queryRunner.addColumn(
                 "credential_config",
                 new TableColumn({
@@ -243,7 +250,9 @@ export class MigrateCredentialConfigToV2Fields1763000000000
             );
         }
 
-        if (!(await this.hasColumn(queryRunner, "credential_config", "schema"))) {
+        if (
+            !(await this.hasColumn(queryRunner, "credential_config", "schema"))
+        ) {
             await queryRunner.addColumn(
                 "credential_config",
                 new TableColumn({
