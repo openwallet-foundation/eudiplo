@@ -1,16 +1,17 @@
-import { readFileSync } from "node:fs";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { plainToClass } from "class-transformer";
 import { Request } from "express";
 import { Repository } from "typeorm";
-import {
-    AuditLogActor,
-    AuditLogService,
-} from "../../../../audit-log/audit-log.service";
+import { AuditLogService } from "../../../../audit-log/audit-log.service";
 import { TokenPayload } from "../../../../auth/token.decorator";
 import { CertService } from "../../../../crypto/key/cert/cert.service";
 import { KeyUsageType } from "../../../../crypto/key/entities/key-chain.entity";
+import {
+    extractRequestMeta,
+    getChangedFields,
+    resolveAuditActor,
+} from "../../../../shared/utils/audit-log-context.util";
+import { loadConfigDto } from "../../../../shared/utils/config-file-loader.util";
 import { ConfigImportService } from "../../../../shared/utils/config-import/config-import.service";
 import {
     ConfigImportOrchestratorService,
@@ -73,10 +74,8 @@ export class CredentialConfigService {
                             tenantId: tid,
                         })
                         .then(() => undefined),
-                loadData: (filePath) => {
-                    const payload = JSON.parse(readFileSync(filePath, "utf8"));
-                    return plainToClass(CredentialConfigCreate, payload);
-                },
+                loadData: (filePath) =>
+                    loadConfigDto(filePath, CredentialConfigCreate),
                 processItem: async (tid, config) => {
                     await this.processCredentialConfig(tid, config);
                 },
@@ -262,13 +261,13 @@ export class CredentialConfigService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "credential_config_created",
-                actor: this.resolveActor(actorToken),
-                changedFields: this.getChangedFields(
+                actor: resolveAuditActor(actorToken),
+                changedFields: getChangedFields(
                     undefined,
                     this.sanitizeCredentialConfigForLog(saved),
                 ),
                 after: this.sanitizeCredentialConfigForLog(saved),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -312,14 +311,14 @@ export class CredentialConfigService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "credential_config_updated",
-                actor: this.resolveActor(actorToken),
-                changedFields: this.getChangedFields(
+                actor: resolveAuditActor(actorToken),
+                changedFields: getChangedFields(
                     this.sanitizeCredentialConfigForLog(existing),
                     this.sanitizeCredentialConfigForLog(saved),
                 ),
                 before: this.sanitizeCredentialConfigForLog(existing),
                 after: this.sanitizeCredentialConfigForLog(saved),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -348,9 +347,9 @@ export class CredentialConfigService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "credential_config_deleted",
-                actor: this.resolveActor(actorToken),
+                actor: resolveAuditActor(actorToken),
                 before: this.sanitizeCredentialConfigForLog(existing),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -370,61 +369,6 @@ export class CredentialConfigService {
             schemaMeta: config.schemaMeta,
             iaeActions: config.iaeActions,
             keyChainId: config.keyChainId,
-        };
-    }
-
-    private getChangedFields(
-        before?: Record<string, unknown>,
-        after?: Record<string, unknown>,
-    ): string[] {
-        const fields = new Set([
-            ...Object.keys(before ?? {}),
-            ...Object.keys(after ?? {}),
-        ]);
-
-        return [...fields].filter((field) => {
-            const beforeValue = before?.[field] ?? null;
-            const afterValue = after?.[field] ?? null;
-            return JSON.stringify(beforeValue) !== JSON.stringify(afterValue);
-        });
-    }
-
-    private resolveActor(token: TokenPayload): AuditLogActor {
-        const clientId = token.client?.clientId || token.authorizedParty;
-
-        if (token.subject && clientId && token.subject !== clientId) {
-            return {
-                type: "user",
-                id: token.subject,
-                display: clientId,
-            };
-        }
-
-        if (clientId) {
-            return {
-                type: "client",
-                id: clientId,
-                display: clientId,
-            };
-        }
-
-        if (token.subject) {
-            return {
-                type: "user",
-                id: token.subject,
-            };
-        }
-
-        return { type: "system" };
-    }
-
-    private extractRequestMeta(req?: Request) {
-        if (!req) return undefined;
-
-        return {
-            requestId: req.headers["x-request-id"]
-                ? String(req.headers["x-request-id"])
-                : undefined,
         };
     }
 }

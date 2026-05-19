@@ -4,13 +4,15 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { BitsPerStatus } from "@owf/token-status-list";
 import { Request } from "express";
 import { Repository } from "typeorm";
-import {
-    AuditLogActor,
-    AuditLogService,
-} from "../../../audit-log/audit-log.service";
+import { AuditLogService } from "../../../audit-log/audit-log.service";
 import { StatusListConfig } from "../../../auth/tenant/entitites/status-list-config";
 import { TenantEntity } from "../../../auth/tenant/entitites/tenant.entity";
 import { TokenPayload } from "../../../auth/token.decorator";
+import {
+    extractRequestMeta,
+    getChangedFields,
+    resolveAuditActor,
+} from "../../../shared/utils/audit-log-context.util";
 import { UpdateStatusListConfigDto } from "./dto/update-status-list-config.dto";
 
 /**
@@ -138,14 +140,14 @@ export class StatusListConfigService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "status_list_config_updated",
-                actor: this.resolveActor(actorToken),
-                changedFields: this.getChangedFields(
+                actor: resolveAuditActor(actorToken),
+                changedFields: getChangedFields(
                     before,
                     this.sanitizeStatusListConfigForLog(updatedConfig),
                 ),
                 before,
                 after: this.sanitizeStatusListConfigForLog(updatedConfig),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -175,9 +177,9 @@ export class StatusListConfigService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "status_list_config_reset",
-                actor: this.resolveActor(actorToken),
+                actor: resolveAuditActor(actorToken),
                 before,
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
     }
@@ -195,61 +197,6 @@ export class StatusListConfigService {
             ttl: config.ttl,
             immediateUpdate: config.immediateUpdate,
             enableAggregation: config.enableAggregation,
-        };
-    }
-
-    private getChangedFields(
-        before?: Record<string, unknown>,
-        after?: Record<string, unknown>,
-    ): string[] {
-        const fields = new Set([
-            ...Object.keys(before ?? {}),
-            ...Object.keys(after ?? {}),
-        ]);
-
-        return [...fields].filter((field) => {
-            const beforeValue = before?.[field] ?? null;
-            const afterValue = after?.[field] ?? null;
-            return JSON.stringify(beforeValue) !== JSON.stringify(afterValue);
-        });
-    }
-
-    private resolveActor(token: TokenPayload): AuditLogActor {
-        const clientId = token.client?.clientId || token.authorizedParty;
-
-        if (token.subject && clientId && token.subject !== clientId) {
-            return {
-                type: "user",
-                id: token.subject,
-                display: clientId,
-            };
-        }
-
-        if (clientId) {
-            return {
-                type: "client",
-                id: clientId,
-                display: clientId,
-            };
-        }
-
-        if (token.subject) {
-            return {
-                type: "user",
-                id: token.subject,
-            };
-        }
-
-        return { type: "system" };
-    }
-
-    private extractRequestMeta(req?: Request) {
-        if (!req) return undefined;
-
-        return {
-            requestId: req.headers["x-request-id"]
-                ? String(req.headers["x-request-id"])
-                : undefined,
         };
     }
 }

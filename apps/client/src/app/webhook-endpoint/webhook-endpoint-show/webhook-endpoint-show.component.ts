@@ -9,6 +9,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { WebhookEndpointEntity } from '@eudiplo/sdk-core';
+import { getApiKeyAuthType, getApiKeyHeaderName } from '../../common/auth-display.util';
+import { downloadJsonFile } from '../../common/download-json.util';
 import { WebhookEndpointService } from '../webhook-endpoint.service';
 
 @Component({
@@ -50,14 +52,13 @@ export class WebhookEndpointShowComponent implements OnInit {
   }
 
   getAuthType(): string {
-    return this.endpoint?.auth?.type === 'apiKey' ? 'API Key' : 'None';
+    return getApiKeyAuthType(this.endpoint?.auth as { type?: string } | undefined);
   }
 
   getAuthHeaderName(): string | null {
-    if (this.endpoint?.auth?.type === 'apiKey') {
-      return (this.endpoint.auth as any).config?.headerName || null;
-    }
-    return null;
+    return getApiKeyHeaderName(
+      this.endpoint?.auth as { type?: string; config?: { headerName?: string } } | undefined
+    );
   }
 
   deleteEndpoint(): void {
@@ -80,15 +81,7 @@ export class WebhookEndpointShowComponent implements OnInit {
       const config = { ...(this.endpoint as any) };
       delete config.tenantId;
       delete config.tenant;
-      const blob = new Blob([JSON.stringify(config, null, 2)], {
-        type: 'application/json',
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `webhook-endpoint-${this.endpoint.id}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
+      downloadJsonFile(config, `webhook-endpoint-${this.endpoint.id}.json`);
     }
     this.snackBar.open('Configuration downloaded', 'Close', { duration: 3000 });
   }

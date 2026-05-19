@@ -1,5 +1,4 @@
 import { X509Certificate } from "node:crypto";
-import { readFileSync } from "node:fs";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import {
@@ -10,7 +9,6 @@ import {
     signLoTE,
     trustedEntity,
 } from "@owf/eudi-lote";
-import { plainToClass } from "class-transformer";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
 import { TenantEntity } from "../../auth/tenant/entitites/tenant.entity";
@@ -20,6 +18,7 @@ import {
 } from "../../crypto/key/cert/cert.service";
 import { KeyUsageType } from "../../crypto/key/entities/key-chain.entity";
 import { KeyChainService } from "../../crypto/key/key-chain.service";
+import { loadConfigDto } from "../../shared/utils/config-file-loader.util";
 import { ConfigImportService } from "../../shared/utils/config-import/config-import.service";
 import {
     ConfigImportOrchestratorService,
@@ -188,10 +187,8 @@ export class TrustListService {
                 fileExtension: ".json",
                 validationClass: TrustListCreateDto,
                 resourceType: "trustlist",
-                loadData: (filePath) => {
-                    const payload = JSON.parse(readFileSync(filePath, "utf8"));
-                    return plainToClass(TrustListCreateDto, payload);
-                },
+                loadData: (filePath) =>
+                    loadConfigDto(filePath, TrustListCreateDto),
                 checkExists: (tenantId, data) => {
                     return this.findOne(tenantId, data.id!)
                         .then(() => true)

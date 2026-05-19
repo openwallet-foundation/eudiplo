@@ -4,6 +4,8 @@ import { App } from "supertest/types";
 import { Agent, setGlobalDispatcher } from "undici";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { IssuanceTestContext, setupIssuanceTestApp } from "../utils";
+import { CredentialFormat } from "../../src/issuer/configuration/credentials/entities/credential.entity";
+import { CredentialConfigUpdate } from "../../src/issuer/configuration/credentials/dto/credential-config-update.dto";
 
 setGlobalDispatcher(
     new Agent({
@@ -31,11 +33,11 @@ describe("Issuance - Claims Metadata", () => {
     });
 
     test("create credential config with claims metadata", async () => {
-        const credentialConfig = {
+        const credentialConfig: CredentialConfigUpdate = {
             id: "test-claims-metadata",
             description: "Test credential with claims metadata",
             config: {
-                format: "dc+sd-jwt",
+                format: CredentialFormat.SD_JWT_VC,
                 display: [
                     {
                         name: "Test Credential",
@@ -54,8 +56,8 @@ describe("Issuance - Claims Metadata", () => {
                     mandatory: false,
                     disclosable: true,
                     display: [
-                        { label: "Given Name", lang: "en-US" },
-                        { label: "Vorname", lang: "de-DE" },
+                        { name: "Given Name", locale: "en-US" },
+                        { name: "Vorname", locale: "de-DE" },
                     ],
                 },
                 {
@@ -65,8 +67,8 @@ describe("Issuance - Claims Metadata", () => {
                     mandatory: true,
                     disclosable: true,
                     display: [
-                        { label: "Family Name", lang: "en-US" },
-                        { label: "Nachname", lang: "de-DE" },
+                        { name: "Family Name", locale: "en-US" },
+                        { name: "Nachname", locale: "de-DE" },
                     ],
                 },
                 {
@@ -74,7 +76,7 @@ describe("Issuance - Claims Metadata", () => {
                     type: "string",
                     defaultValue: "123 Test St",
                     disclosable: true,
-                    display: [{ label: "Street Address", lang: "en-US" }],
+                    display: [{ name: "Street Address", locale: "en-US" }],
                 },
             ],
         };
@@ -104,6 +106,7 @@ describe("Issuance - Claims Metadata", () => {
             res.body.credential_configurations_supported[
                 "test-claims-metadata"
             ];
+        console.log(credConfig);
         expect(credConfig).toBeDefined();
         expect(credConfig.format).toBe("dc+sd-jwt");
 
@@ -121,6 +124,7 @@ describe("Issuance - Claims Metadata", () => {
             (c: any) =>
                 JSON.stringify(c.path) === JSON.stringify(["given_name"]),
         );
+
         expect(givenNameClaim).toBeDefined();
         expect(givenNameClaim.mandatory).toBe(false);
         expect(givenNameClaim.display).toHaveLength(2);
@@ -148,11 +152,11 @@ describe("Issuance - Claims Metadata", () => {
     });
 
     test("create mDOC credential config with claims metadata", async () => {
-        const credentialConfig = {
+        const credentialConfig: CredentialConfigUpdate = {
             id: "test-mdoc-claims-metadata",
             description: "Test mDOC credential with claims metadata",
             config: {
-                format: "mso_mdoc",
+                format: CredentialFormat.MSO_MDOC,
                 docType: "org.test.claims.1",
                 display: [
                     {
@@ -170,7 +174,7 @@ describe("Issuance - Claims Metadata", () => {
                     type: "string",
                     defaultValue: "Test",
                     namespace: "org.test.claims",
-                    display: [{ label: "Given Name", lang: "en-US" }],
+                    display: [{ name: "Given Name", locale: "en-US" }],
                 },
                 {
                     path: ["family_name"],
@@ -178,7 +182,7 @@ describe("Issuance - Claims Metadata", () => {
                     defaultValue: "User",
                     mandatory: true,
                     namespace: "org.test.claims",
-                    display: [{ label: "Family Name", lang: "en-US" }],
+                    display: [{ name: "Family Name", locale: "en-US" }],
                 },
             ],
         };
@@ -218,9 +222,9 @@ describe("Issuance - Claims Metadata", () => {
 
     test("update credential config claims metadata", async () => {
         // First update the credential config with new claims
-        const updatePayload = {
+        const updatePayload: CredentialConfigUpdate = {
             config: {
-                format: "dc+sd-jwt",
+                format: CredentialFormat.SD_JWT_VC,
                 display: [
                     {
                         name: "Updated Test Credential",
@@ -236,7 +240,7 @@ describe("Issuance - Claims Metadata", () => {
                     defaultValue: "Test",
                     mandatory: true,
                     disclosable: true,
-                    display: [{ label: "First Name", lang: "en-US" }],
+                    display: [{ name: "First Name", locale: "en-US" }],
                 },
             ],
         };

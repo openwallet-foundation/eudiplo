@@ -55,12 +55,12 @@ export class CryptoImplementationService {
                     case "ES256":
                         return "ES256";
                     default:
-                        return "ES256";
+                        throw new Error(`Unsupported algorithm: ${alg}`);
                 }
             },
         );
 
-        if (credentialFormat === CredentialFormat.SD_JWT) {
+        if (credentialFormat === CredentialFormat.SD_JWT_VC) {
             return joseAlgs;
         }
 

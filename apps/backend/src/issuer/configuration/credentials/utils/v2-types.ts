@@ -12,8 +12,8 @@ export type FieldType =
 export type ClaimPathElement = string | number | null;
 
 interface FieldDisplay {
-    lang: string;
-    label: string;
+    locale: string;
+    name: string;
     description?: string;
 }
 

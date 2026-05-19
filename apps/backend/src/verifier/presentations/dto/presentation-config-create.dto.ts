@@ -1,9 +1,9 @@
 import { OmitType } from "@nestjs/swagger";
+import { TENANT_RELATION_FIELDS } from "../../../shared/utils/dto-omit-fields";
 import { PresentationConfig } from "../entities/presentation-config.entity";
 
 export class PresentationConfigCreateDto extends OmitType(PresentationConfig, [
-    "tenantId",
-    "tenant",
+    ...TENANT_RELATION_FIELDS,
     "createdAt",
     "updatedAt",
     "registrationCertCache",

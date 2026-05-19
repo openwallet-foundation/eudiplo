@@ -23,6 +23,7 @@ import { FlexLayoutModule } from 'ngx-flexible-layout';
 import {
   AttributeProviderEntity,
   CredentialConfig,
+  deriveRuntimeArtifacts,
   type IssuanceConfig,
   type OfferRequestDto,
 } from '@eudiplo/sdk-core';
@@ -39,7 +40,6 @@ import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import { getApiErrorMessage } from '../../utils/error-message';
-import { deriveRuntimeArtifacts } from '../credential-config/credential-config-v2.util';
 
 /**
  * Custom validator to check that array has at least one element

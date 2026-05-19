@@ -92,9 +92,9 @@ function getDisplayTitle(
     }
 
     const en = display.find((entry) =>
-        entry.lang.toLowerCase().startsWith("en"),
+        entry.locale.toLowerCase().startsWith("en"),
     );
-    return en?.label ?? display[0]?.label;
+    return en?.name ?? display[0]?.name;
 }
 
 function ensureSchemaNode(
@@ -148,10 +148,7 @@ function normalizeDisplayToV1(
         return undefined;
     }
 
-    return display.map((entry) => ({
-        name: entry.label,
-        locale: entry.lang,
-    }));
+    return display;
 }
 
 export function buildClaims(

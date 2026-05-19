@@ -1,14 +1,15 @@
-import { readFileSync } from "node:fs";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { plainToClass } from "class-transformer";
 import { Request } from "express";
 import { Repository } from "typeorm";
-import {
-    AuditLogActor,
-    AuditLogService,
-} from "../../../audit-log/audit-log.service";
+import { AuditLogService } from "../../../audit-log/audit-log.service";
 import { TokenPayload } from "../../../auth/token.decorator";
+import {
+    extractRequestMeta,
+    getChangedFields,
+    resolveAuditActor,
+} from "../../../shared/utils/audit-log-context.util";
+import { loadConfigDto } from "../../../shared/utils/config-file-loader.util";
 import { ConfigImportService } from "../../../shared/utils/config-import/config-import.service";
 import {
     ConfigImportOrchestratorService,
@@ -68,10 +69,7 @@ export class IssuanceService {
                     this.issuanceConfigRepo
                         .delete({ tenantId: tid })
                         .then(() => undefined),
-                loadData: (filePath) => {
-                    const payload = JSON.parse(readFileSync(filePath, "utf8"));
-                    return plainToClass(IssuanceDto, payload);
-                },
+                loadData: (filePath) => loadConfigDto(filePath, IssuanceDto),
                 processItem: async (tid, issuanceDto) => {
                     // Replace relative URIs with public URLs
                     issuanceDto.display = await this.replaceUrl(
@@ -165,14 +163,14 @@ export class IssuanceService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "issuance_config_updated",
-                actor: this.resolveActor(actorToken),
-                changedFields: this.getChangedFields(
+                actor: resolveAuditActor(actorToken),
+                changedFields: getChangedFields(
                     before,
                     this.sanitizeIssuanceConfigForLog(saved),
                 ),
                 before,
                 after: this.sanitizeIssuanceConfigForLog(saved),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -198,61 +196,6 @@ export class IssuanceService {
             refreshTokenEnabled: config.refreshTokenEnabled,
             refreshTokenExpiresInSeconds: config.refreshTokenExpiresInSeconds,
             txCodeMaxAttempts: config.txCodeMaxAttempts,
-        };
-    }
-
-    private getChangedFields(
-        before?: Record<string, unknown>,
-        after?: Record<string, unknown>,
-    ): string[] {
-        const fields = new Set([
-            ...Object.keys(before ?? {}),
-            ...Object.keys(after ?? {}),
-        ]);
-
-        return [...fields].filter((field) => {
-            const beforeValue = before?.[field] ?? null;
-            const afterValue = after?.[field] ?? null;
-            return JSON.stringify(beforeValue) !== JSON.stringify(afterValue);
-        });
-    }
-
-    private resolveActor(token: TokenPayload): AuditLogActor {
-        const clientId = token.client?.clientId || token.authorizedParty;
-
-        if (token.subject && clientId && token.subject !== clientId) {
-            return {
-                type: "user",
-                id: token.subject,
-                display: clientId,
-            };
-        }
-
-        if (clientId) {
-            return {
-                type: "client",
-                id: clientId,
-                display: clientId,
-            };
-        }
-
-        if (token.subject) {
-            return {
-                type: "user",
-                id: token.subject,
-            };
-        }
-
-        return { type: "system" };
-    }
-
-    private extractRequestMeta(req?: Request) {
-        if (!req) return undefined;
-
-        return {
-            requestId: req.headers["x-request-id"]
-                ? String(req.headers["x-request-id"])
-                : undefined,
         };
     }
 }

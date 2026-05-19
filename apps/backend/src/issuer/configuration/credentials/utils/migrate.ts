@@ -249,8 +249,8 @@ function normalizeDisplay(
     return display
         .filter((entry) => !!entry.name)
         .map((entry) => ({
-            lang: entry.locale ?? "und",
-            label: entry.name ?? "",
+            locale: entry.locale ?? "und",
+            name: entry.name ?? "",
         }));
 }
 

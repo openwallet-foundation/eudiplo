@@ -13,6 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { IssuanceConfig } from '@eudiplo/sdk-core';
+import { downloadJsonFile } from '../../../common/download-json.util';
 import { IssuanceConfigService } from '../issuance-config.service';
 
 @Component({
@@ -86,15 +87,7 @@ export class IssuanceConfigShowComponent implements OnInit {
    */
   downloadConfig() {
     if (this.config) {
-      const blob = new Blob([JSON.stringify(this.config, null, 2)], {
-        type: 'application/json',
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `issuance-config.json`;
-      a.click();
-      URL.revokeObjectURL(url);
+      downloadJsonFile(this.config, 'issuance-config.json');
     }
     this.snackBar.open('Configuration downloaded', 'Close', {
       duration: 3000,

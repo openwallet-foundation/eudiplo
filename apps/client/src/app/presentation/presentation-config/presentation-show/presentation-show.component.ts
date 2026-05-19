@@ -23,6 +23,7 @@ import {
   getRegistrationCertStatus,
   type RegistrationCertStatus,
 } from '../../../utils/registration-cert-status';
+import { downloadJsonFile } from '../../../common/download-json.util';
 
 @Component({
   selector: 'app-presentation-show',
@@ -199,15 +200,7 @@ export class PresentationShowComponent implements OnInit {
       }
       delete exportConfig.registrationCertCache;
 
-      const blob = new Blob([JSON.stringify(exportConfig, null, 2)], {
-        type: 'application/json',
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `presentation-config-${this.config.id}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
+      downloadJsonFile(exportConfig, `presentation-config-${this.config.id}.json`);
     }
     this.snackBar.open('Configuration downloaded', 'Close', {
       duration: 3000,

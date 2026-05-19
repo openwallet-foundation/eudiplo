@@ -15,6 +15,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { Role } from "../roles/role.enum";
 import { Secured } from "../secure.decorator";
 import { Token, TokenPayload } from "../token.decorator";
+import { requireTenantContext } from "../tenant-context.util";
 import { CLIENTS_PROVIDER, ClientsProvider } from "./client.provider";
 import { ClientSecretResponseDto } from "./dto/client-secret-response.dto";
 import { CreateClientDto } from "./dto/create-client.dto";
@@ -30,15 +31,6 @@ export class ClientController {
         @Inject(CLIENTS_PROVIDER) private readonly clients: ClientsProvider,
     ) {}
 
-    private requireTenantContext(user: TokenPayload): string {
-        if (!user.entity?.id) {
-            throw new ForbiddenException(
-                "This endpoint requires a tenant context. Use a tenant-bound account.",
-            );
-        }
-        return user.entity.id;
-    }
-
     /**
      * Get all clients for a user
      * @param user
@@ -47,7 +39,7 @@ export class ClientController {
     @Secured([Role.Clients])
     @Get()
     getClients(@Token() user: TokenPayload) {
-        const tenantId = this.requireTenantContext(user);
+        const tenantId = requireTenantContext(user);
         return this.clients.getClients(tenantId);
     }
 
@@ -60,7 +52,7 @@ export class ClientController {
     @Secured([Role.Clients])
     @Get(":id")
     getClient(@Param("id") id: string, @Token() user: TokenPayload) {
-        const tenantId = this.requireTenantContext(user);
+        const tenantId = requireTenantContext(user);
         return this.clients.getClient(tenantId, id);
     }
 
@@ -104,7 +96,7 @@ export class ClientController {
         // Regular client managers can only rotate their own tenant's clients
         const tenantId = user.roles.includes(Role.Tenants)
             ? null
-            : this.requireTenantContext(user);
+            : requireTenantContext(user);
         const secret = await this.clients.rotateClientSecret(tenantId, id);
         return { secret };
     }
@@ -123,7 +115,7 @@ export class ClientController {
         @Body() updateClientDto: UpdateClientDto,
         @Token() user: TokenPayload,
     ) {
-        const tenantId = this.requireTenantContext(user);
+        const tenantId = requireTenantContext(user);
         // Prevent privilege escalation: only users with tenant:manage can grant tenant:manage
         if (
             updateClientDto.roles?.includes(Role.Tenants) &&
@@ -148,7 +140,7 @@ export class ClientController {
         @Body() createClientDto: CreateClientDto,
         @Token() user: TokenPayload,
     ) {
-        const tenantId = this.requireTenantContext(user);
+        const tenantId = requireTenantContext(user);
         // Prevent privilege escalation: only users with tenant:manage can grant tenant:manage
         if (
             createClientDto.roles?.includes(Role.Tenants) &&
@@ -170,7 +162,7 @@ export class ClientController {
     @Secured([Role.Clients])
     @Delete(":id")
     deleteClient(@Param("id") id: string, @Token() user: TokenPayload) {
-        const tenantId = this.requireTenantContext(user);
+        const tenantId = requireTenantContext(user);
         return this.clients.removeClient(tenantId, id);
     }
 }

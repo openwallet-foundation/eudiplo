@@ -13,12 +13,14 @@ import { validate } from "class-validator";
 import { Request } from "express";
 import { MetricService } from "nestjs-otel";
 import { Repository } from "typeorm";
-import {
-    AuditLogActor,
-    AuditLogService,
-} from "../../audit-log/audit-log.service";
+import { AuditLogService } from "../../audit-log/audit-log.service";
 import { EncryptionService } from "../../crypto/encryption/encryption.service";
 import { RegistrarService } from "../../registrar/registrar.service";
+import {
+    extractRequestMeta,
+    getChangedFieldsForKeys,
+    resolveAuditActor,
+} from "../../shared/utils/audit-log-context.util";
 import { ConfigImportOrchestratorService } from "../../shared/utils/config-import/config-import-orchestrator.service";
 import { FilesService } from "../../storage/files.service";
 import { CLIENTS_PROVIDER, ClientsProvider } from "../client/client.provider";
@@ -180,9 +182,9 @@ export class TenantService implements OnApplicationBootstrap {
             await this.tenantActionLogService.record({
                 tenantId: tenant.id,
                 actionType: "tenant_created",
-                actor: this.resolveActor(actorToken),
+                actor: resolveAuditActor(actorToken),
                 after: this.sanitizeTenantForLog(tenant),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -234,11 +236,11 @@ export class TenantService implements OnApplicationBootstrap {
             await this.tenantActionLogService.record({
                 tenantId: id,
                 actionType: "tenant_updated",
-                actor: this.resolveActor(actorToken),
+                actor: resolveAuditActor(actorToken),
                 changedFields: this.getChangedFields(existing, updated),
                 before: this.sanitizeTenantForLog(existing),
                 after: this.sanitizeTenantForLog(updated),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -267,11 +269,11 @@ export class TenantService implements OnApplicationBootstrap {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "tenant_deleted",
-                actor: this.resolveActor(actorToken),
+                actor: resolveAuditActor(actorToken),
                 before: existingTenant
                     ? this.sanitizeTenantForLog(existingTenant)
                     : undefined,
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
     }
@@ -289,60 +291,15 @@ export class TenantService implements OnApplicationBootstrap {
         };
     }
 
-    private resolveActor(token: TokenPayload): AuditLogActor {
-        const clientId = token.client?.clientId || token.authorizedParty;
-
-        if (token.subject && clientId && token.subject !== clientId) {
-            return {
-                type: "user",
-                id: token.subject,
-                display: clientId,
-            };
-        }
-
-        if (clientId) {
-            return {
-                type: "client",
-                id: clientId,
-                display: clientId,
-            };
-        }
-
-        if (token.subject) {
-            return {
-                type: "user",
-                id: token.subject,
-            };
-        }
-
-        return { type: "system" };
-    }
-
-    private extractRequestMeta(req?: Request) {
-        if (!req) return undefined;
-
-        return {
-            requestId: req.headers["x-request-id"]
-                ? String(req.headers["x-request-id"])
-                : undefined,
-        };
-    }
-
     private getChangedFields(
         before: TenantEntity,
         after: TenantEntity,
     ): string[] {
-        const fields: Array<keyof TenantEntity> = [
+        return getChangedFieldsForKeys(before, after, [
             "name",
             "description",
             "sessionConfig",
             "statusListConfig",
-        ];
-
-        return fields.filter((field) => {
-            const beforeValue = before[field] ?? null;
-            const afterValue = after[field] ?? null;
-            return JSON.stringify(beforeValue) !== JSON.stringify(afterValue);
-        }) as string[];
+        ]);
     }
 }

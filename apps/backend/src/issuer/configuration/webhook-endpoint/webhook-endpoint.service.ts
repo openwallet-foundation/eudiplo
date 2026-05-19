@@ -1,14 +1,15 @@
-import { readFileSync } from "node:fs";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { plainToClass } from "class-transformer";
 import { Request } from "express";
 import { Repository } from "typeorm";
-import {
-    AuditLogActor,
-    AuditLogService,
-} from "../../../audit-log/audit-log.service";
+import { AuditLogService } from "../../../audit-log/audit-log.service";
 import { TokenPayload } from "../../../auth/token.decorator";
+import {
+    extractRequestMeta,
+    getChangedFields,
+    resolveAuditActor,
+} from "../../../shared/utils/audit-log-context.util";
+import { loadConfigDto } from "../../../shared/utils/config-file-loader.util";
 import { ConfigImportService } from "../../../shared/utils/config-import/config-import.service";
 import {
     ConfigImportOrchestratorService,
@@ -50,10 +51,8 @@ export class WebhookEndpointService {
                     this.repo
                         .delete({ id: data.id, tenantId: tid })
                         .then(() => undefined),
-                loadData: (filePath) => {
-                    const payload = JSON.parse(readFileSync(filePath, "utf8"));
-                    return plainToClass(CreateWebhookEndpointDto, payload);
-                },
+                loadData: (filePath) =>
+                    loadConfigDto(filePath, CreateWebhookEndpointDto),
                 processItem: async (tid, dto) => {
                     await this.create(tid, dto);
                 },
@@ -85,13 +84,13 @@ export class WebhookEndpointService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "webhook_endpoint_created",
-                actor: this.resolveActor(actorToken),
-                changedFields: this.getChangedFields(
+                actor: resolveAuditActor(actorToken),
+                changedFields: getChangedFields(
                     undefined,
                     this.sanitizeWebhookEndpointForLog(saved),
                 ),
                 after: this.sanitizeWebhookEndpointForLog(saved),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -117,14 +116,14 @@ export class WebhookEndpointService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "webhook_endpoint_updated",
-                actor: this.resolveActor(actorToken),
-                changedFields: this.getChangedFields(
+                actor: resolveAuditActor(actorToken),
+                changedFields: getChangedFields(
                     this.sanitizeWebhookEndpointForLog(existing),
                     this.sanitizeWebhookEndpointForLog(saved),
                 ),
                 before: this.sanitizeWebhookEndpointForLog(existing),
                 after: this.sanitizeWebhookEndpointForLog(saved),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -144,9 +143,9 @@ export class WebhookEndpointService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "webhook_endpoint_deleted",
-                actor: this.resolveActor(actorToken),
+                actor: resolveAuditActor(actorToken),
                 before: this.sanitizeWebhookEndpointForLog(existing),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -162,61 +161,6 @@ export class WebhookEndpointService {
             url: endpoint.url,
             description: endpoint.description,
             auth: endpoint.auth,
-        };
-    }
-
-    private getChangedFields(
-        before?: Record<string, unknown>,
-        after?: Record<string, unknown>,
-    ): string[] {
-        const fields = new Set([
-            ...Object.keys(before ?? {}),
-            ...Object.keys(after ?? {}),
-        ]);
-
-        return [...fields].filter((field) => {
-            const beforeValue = before?.[field] ?? null;
-            const afterValue = after?.[field] ?? null;
-            return JSON.stringify(beforeValue) !== JSON.stringify(afterValue);
-        });
-    }
-
-    private resolveActor(token: TokenPayload): AuditLogActor {
-        const clientId = token.client?.clientId || token.authorizedParty;
-
-        if (token.subject && clientId && token.subject !== clientId) {
-            return {
-                type: "user",
-                id: token.subject,
-                display: clientId,
-            };
-        }
-
-        if (clientId) {
-            return {
-                type: "client",
-                id: clientId,
-                display: clientId,
-            };
-        }
-
-        if (token.subject) {
-            return {
-                type: "user",
-                id: token.subject,
-            };
-        }
-
-        return { type: "system" };
-    }
-
-    private extractRequestMeta(req?: Request) {
-        if (!req) return undefined;
-
-        return {
-            requestId: req.headers["x-request-id"]
-                ? String(req.headers["x-request-id"])
-                : undefined,
         };
     }
 }

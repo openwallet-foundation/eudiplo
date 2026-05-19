@@ -1,14 +1,15 @@
-import { readFileSync } from "node:fs";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { plainToClass } from "class-transformer";
 import { Request } from "express";
 import { Repository } from "typeorm";
-import {
-    AuditLogActor,
-    AuditLogService,
-} from "../../../audit-log/audit-log.service";
+import { AuditLogService } from "../../../audit-log/audit-log.service";
 import { TokenPayload } from "../../../auth/token.decorator";
+import {
+    extractRequestMeta,
+    getChangedFields,
+    resolveAuditActor,
+} from "../../../shared/utils/audit-log-context.util";
+import { loadConfigDto } from "../../../shared/utils/config-file-loader.util";
 import { ConfigImportService } from "../../../shared/utils/config-import/config-import.service";
 import {
     ConfigImportOrchestratorService,
@@ -50,10 +51,8 @@ export class AttributeProviderService {
                     this.repo
                         .delete({ id: data.id, tenantId: tid })
                         .then(() => undefined),
-                loadData: (filePath) => {
-                    const payload = JSON.parse(readFileSync(filePath, "utf8"));
-                    return plainToClass(CreateAttributeProviderDto, payload);
-                },
+                loadData: (filePath) =>
+                    loadConfigDto(filePath, CreateAttributeProviderDto),
                 processItem: async (tid, dto) => {
                     await this.create(tid, dto);
                 },
@@ -85,13 +84,13 @@ export class AttributeProviderService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "attribute_provider_created",
-                actor: this.resolveActor(actorToken),
-                changedFields: this.getChangedFields(
+                actor: resolveAuditActor(actorToken),
+                changedFields: getChangedFields(
                     undefined,
                     this.sanitizeAttributeProviderForLog(saved),
                 ),
                 after: this.sanitizeAttributeProviderForLog(saved),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -117,14 +116,14 @@ export class AttributeProviderService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "attribute_provider_updated",
-                actor: this.resolveActor(actorToken),
-                changedFields: this.getChangedFields(
+                actor: resolveAuditActor(actorToken),
+                changedFields: getChangedFields(
                     this.sanitizeAttributeProviderForLog(existing),
                     this.sanitizeAttributeProviderForLog(saved),
                 ),
                 before: this.sanitizeAttributeProviderForLog(existing),
                 after: this.sanitizeAttributeProviderForLog(saved),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -144,9 +143,9 @@ export class AttributeProviderService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "attribute_provider_deleted",
-                actor: this.resolveActor(actorToken),
+                actor: resolveAuditActor(actorToken),
                 before: this.sanitizeAttributeProviderForLog(existing),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -162,61 +161,6 @@ export class AttributeProviderService {
             description: provider.description,
             url: provider.url,
             auth: provider.auth,
-        };
-    }
-
-    private getChangedFields(
-        before?: Record<string, unknown>,
-        after?: Record<string, unknown>,
-    ): string[] {
-        const fields = new Set([
-            ...Object.keys(before ?? {}),
-            ...Object.keys(after ?? {}),
-        ]);
-
-        return [...fields].filter((field) => {
-            const beforeValue = before?.[field] ?? null;
-            const afterValue = after?.[field] ?? null;
-            return JSON.stringify(beforeValue) !== JSON.stringify(afterValue);
-        });
-    }
-
-    private resolveActor(token: TokenPayload): AuditLogActor {
-        const clientId = token.client?.clientId || token.authorizedParty;
-
-        if (token.subject && clientId && token.subject !== clientId) {
-            return {
-                type: "user",
-                id: token.subject,
-                display: clientId,
-            };
-        }
-
-        if (clientId) {
-            return {
-                type: "client",
-                id: clientId,
-                display: clientId,
-            };
-        }
-
-        if (token.subject) {
-            return {
-                type: "user",
-                id: token.subject,
-            };
-        }
-
-        return { type: "system" };
-    }
-
-    private extractRequestMeta(req?: Request) {
-        if (!req) return undefined;
-
-        return {
-            requestId: req.headers["x-request-id"]
-                ? String(req.headers["x-request-id"])
-                : undefined,
         };
     }
 }

@@ -9,6 +9,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { AttributeProviderEntity } from '@eudiplo/sdk-core';
+import { getApiKeyAuthType, getApiKeyHeaderName } from '../../../common/auth-display.util';
+import { downloadJsonFile } from '../../../common/download-json.util';
 import { AttributeProviderService } from '../attribute-provider.service';
 
 @Component({
@@ -50,14 +52,13 @@ export class AttributeProviderShowComponent implements OnInit {
   }
 
   getAuthType(): string {
-    return this.provider?.auth?.type === 'apiKey' ? 'API Key' : 'None';
+    return getApiKeyAuthType(this.provider?.auth as { type?: string } | undefined);
   }
 
   getAuthHeaderName(): string | null {
-    if (this.provider?.auth?.type === 'apiKey') {
-      return (this.provider.auth as any).config?.headerName || null;
-    }
-    return null;
+    return getApiKeyHeaderName(
+      this.provider?.auth as { type?: string; config?: { headerName?: string } } | undefined
+    );
   }
 
   deleteProvider(): void {
@@ -82,15 +83,7 @@ export class AttributeProviderShowComponent implements OnInit {
       const config = { ...(this.provider as any) };
       delete config.tenantId;
       delete config.tenant;
-      const blob = new Blob([JSON.stringify(config, null, 2)], {
-        type: 'application/json',
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `attribute-provider-${this.provider.id}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
+      downloadJsonFile(config, `attribute-provider-${this.provider.id}.json`);
     }
     this.snackBar.open('Configuration downloaded', 'Close', { duration: 3000 });
   }

@@ -12,6 +12,7 @@ import {
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Role } from "../roles/role.enum";
 import { Secured } from "../secure.decorator";
+import { requireTenantContext } from "../tenant-context.util";
 import { Token, TokenPayload } from "../token.decorator";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { ManagedUserDto } from "./dto/managed-user.dto";
@@ -25,21 +26,12 @@ export class UserController {
         @Inject(USERS_PROVIDER) private readonly users: UsersProvider,
     ) {}
 
-    private requireTenantContext(user: TokenPayload): string {
-        if (!user.entity?.id) {
-            throw new ForbiddenException(
-                "This endpoint requires a tenant context. Use a tenant-bound account.",
-            );
-        }
-        return user.entity.id;
-    }
-
     @ApiOperation({ summary: "Get all managed users for the current tenant" })
     @ApiResponse({ status: 200, type: ManagedUserDto, isArray: true })
     @Secured([Role.Users])
     @Get()
     getUsers(@Token() user: TokenPayload) {
-        const tenantId = this.requireTenantContext(user);
+        const tenantId = requireTenantContext(user);
         return this.users.getUsers(tenantId);
     }
 
@@ -48,7 +40,7 @@ export class UserController {
     @Secured([Role.Users])
     @Get(":id")
     getUser(@Param("id") id: string, @Token() user: TokenPayload) {
-        const tenantId = this.requireTenantContext(user);
+        const tenantId = requireTenantContext(user);
         return this.users.getUser(tenantId, id);
     }
 
@@ -61,7 +53,7 @@ export class UserController {
         @Body() createUserDto: CreateUserDto,
         @Token() user: TokenPayload,
     ) {
-        const tenantId = this.requireTenantContext(user);
+        const tenantId = requireTenantContext(user);
         if (
             createUserDto.roles?.includes(Role.Tenants) &&
             !user.roles.includes(Role.Tenants)
@@ -84,7 +76,7 @@ export class UserController {
         @Body() updateUserDto: UpdateUserDto,
         @Token() user: TokenPayload,
     ) {
-        const tenantId = this.requireTenantContext(user);
+        const tenantId = requireTenantContext(user);
         if (
             updateUserDto.roles?.includes(Role.Tenants) &&
             !user.roles.includes(Role.Tenants)
@@ -102,7 +94,7 @@ export class UserController {
     @Secured([Role.Users])
     @Delete(":id")
     deleteUser(@Param("id") id: string, @Token() user: TokenPayload) {
-        const tenantId = this.requireTenantContext(user);
+        const tenantId = requireTenantContext(user);
         return this.users.removeUser(tenantId, id);
     }
 }

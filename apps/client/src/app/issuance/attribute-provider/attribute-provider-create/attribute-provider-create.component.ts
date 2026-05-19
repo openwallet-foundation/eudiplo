@@ -13,6 +13,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { AttributeProviderService } from '../attribute-provider.service';
 import { JsonViewDialogComponent } from '../../credential-config/credential-config-create/json-view-dialog/json-view-dialog.component';
+import { buildAuthConfig, toAuthFormValue } from '../../../common/auth-display.util';
 import { webhookSchema } from '../../../utils/schemas';
 
 @Component({
@@ -62,15 +63,13 @@ export class AttributeProviderCreateComponent implements OnInit {
       this.create = false;
       this.attributeProviderService.getById(id).then(
         (provider) => {
+          const authFormValue = toAuthFormValue(provider.auth as any);
           this.form.patchValue({
             id: provider.id,
             name: provider.name,
             description: provider.description || '',
             url: provider.url,
-            authType: provider.auth?.type === 'apiKey' ? 'apiKey' : 'none',
-            authHeaderName:
-              provider.auth?.type === 'apiKey' ? (provider.auth as any).config?.headerName : '',
-            authHeaderValue: '',
+            ...authFormValue,
           });
           this.form.get('id')?.disable();
         },
@@ -86,13 +85,11 @@ export class AttributeProviderCreateComponent implements OnInit {
     if (this.form.invalid) return;
 
     const formValue = this.form.getRawValue();
-    const auth =
-      formValue.authType === 'apiKey'
-        ? {
-            type: 'apiKey' as const,
-            config: { headerName: formValue.authHeaderName, value: formValue.authHeaderValue },
-          }
-        : { type: 'none' as const };
+    const auth = buildAuthConfig({
+      authType: formValue.authType,
+      authHeaderName: formValue.authHeaderName,
+      authHeaderValue: formValue.authHeaderValue,
+    });
 
     if (this.create) {
       this.attributeProviderService
@@ -159,13 +156,11 @@ export class AttributeProviderCreateComponent implements OnInit {
 
   private buildPayload(): any {
     const formValue = this.form.getRawValue();
-    const auth =
-      formValue.authType === 'apiKey'
-        ? {
-            type: 'apiKey' as const,
-            config: { headerName: formValue.authHeaderName, value: formValue.authHeaderValue },
-          }
-        : { type: 'none' as const };
+    const auth = buildAuthConfig({
+      authType: formValue.authType,
+      authHeaderName: formValue.authHeaderName,
+      authHeaderValue: formValue.authHeaderValue,
+    });
     return {
       id: formValue.id,
       name: formValue.name,
@@ -176,14 +171,13 @@ export class AttributeProviderCreateComponent implements OnInit {
   }
 
   private loadFromJson(json: any): void {
+    const authFormValue = toAuthFormValue(json.auth);
     this.form.patchValue({
       id: json.id || '',
       name: json.name || '',
       description: json.description || '',
       url: json.url || '',
-      authType: json.auth?.type === 'apiKey' ? 'apiKey' : 'none',
-      authHeaderName: json.auth?.type === 'apiKey' ? json.auth?.config?.headerName : '',
-      authHeaderValue: json.auth?.type === 'apiKey' ? json.auth?.config?.value : '',
+      ...authFormValue,
     });
   }
 }

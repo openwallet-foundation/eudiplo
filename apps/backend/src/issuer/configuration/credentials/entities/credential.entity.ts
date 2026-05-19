@@ -68,7 +68,7 @@ export class Display {
 
 export enum CredentialFormat {
     MSO_MDOC = "mso_mdoc",
-    SD_JWT = "dc+sd-jwt",
+    SD_JWT_VC = "dc+sd-jwt",
 }
 
 /**

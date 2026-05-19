@@ -1,10 +1,12 @@
-import { Component, type OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { WebhookEndpointEntity } from '@eudiplo/sdk-core';
+import { getApiKeyAuthType } from '../../common/auth-display.util';
+import { BaseAsyncListComponent } from '../../common/base-async-list.component';
 import { WebhookEndpointService } from '../webhook-endpoint.service';
 
 @Component({
@@ -13,18 +15,22 @@ import { WebhookEndpointService } from '../webhook-endpoint.service';
   templateUrl: './webhook-endpoint-list.component.html',
   styleUrl: './webhook-endpoint-list.component.scss',
 })
-export class WebhookEndpointListComponent implements OnInit {
-  endpoints: WebhookEndpointEntity[] = [];
+export class WebhookEndpointListComponent extends BaseAsyncListComponent<WebhookEndpointEntity> {
+  get endpoints(): WebhookEndpointEntity[] {
+    return this.items;
+  }
 
   displayedColumns: string[] = ['id', 'name', 'url', 'auth', 'actions'];
 
-  constructor(private readonly webhookEndpointService: WebhookEndpointService) {}
+  constructor(private readonly webhookEndpointService: WebhookEndpointService) {
+    super();
+  }
 
-  ngOnInit(): void {
-    this.webhookEndpointService.getAll().then((endpoints) => (this.endpoints = endpoints));
+  protected fetchItems(): Promise<WebhookEndpointEntity[]> {
+    return this.webhookEndpointService.getAll();
   }
 
   getAuthType(endpoint: WebhookEndpointEntity): string {
-    return endpoint.auth?.type === 'apiKey' ? 'API Key' : 'None';
+    return getApiKeyAuthType(endpoint.auth as { type?: string });
   }
 }

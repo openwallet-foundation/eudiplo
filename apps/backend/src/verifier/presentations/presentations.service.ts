@@ -1,6 +1,5 @@
 import { createHash } from "node:crypto";
 import { lookup } from "node:dns/promises";
-import { readFileSync } from "node:fs";
 import { isIP } from "node:net";
 import {
     BadRequestException,
@@ -15,15 +14,18 @@ import { base64url, decodeJwt } from "jose";
 import { Span, TraceService } from "nestjs-otel";
 import { PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
-import {
-    AuditLogActor,
-    AuditLogService,
-} from "../../audit-log/audit-log.service";
+import { AuditLogService } from "../../audit-log/audit-log.service";
 import { TokenPayload } from "../../auth/token.decorator";
 import { ServiceTypeIdentifier } from "../../issuer/trust-list/trustlist.service";
 import { RegistrarService } from "../../registrar/registrar.service";
 import { Session } from "../../session/entities/session.entity";
 import { VerifierOptions } from "../../shared/trust/types";
+import {
+    extractRequestMeta,
+    getChangedFields,
+    resolveAuditActor,
+} from "../../shared/utils/audit-log-context.util";
+import { loadJsonFile } from "../../shared/utils/config-file-loader.util";
 import { ConfigImportService } from "../../shared/utils/config-import/config-import.service";
 import {
     ConfigImportOrchestratorService,
@@ -115,7 +117,8 @@ export class PresentationsService {
                 validationClass: PresentationConfigCreateDto,
                 resourceType: "presentation config",
                 loadData: (filePath) => {
-                    const payload = JSON.parse(readFileSync(filePath, "utf8"));
+                    const payload =
+                        loadJsonFile<Record<string, unknown>>(filePath);
                     const id = (filePath.split("/").pop() || "").replace(
                         ".json",
                         "",
@@ -182,10 +185,13 @@ export class PresentationsService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "presentation_config_created",
-                actor: this.resolveActor(actorToken),
-                changedFields: this.getChangedFields(undefined, saved),
+                actor: resolveAuditActor(actorToken),
+                changedFields: getChangedFields(
+                    undefined,
+                    this.sanitizePresentationConfigForLog(saved),
+                ),
                 after: this.sanitizePresentationConfigForLog(saved),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -242,11 +248,14 @@ export class PresentationsService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "presentation_config_updated",
-                actor: this.resolveActor(actorToken),
-                changedFields: this.getChangedFields(existing, saved),
+                actor: resolveAuditActor(actorToken),
+                changedFields: getChangedFields(
+                    this.sanitizePresentationConfigForLog(existing),
+                    this.sanitizePresentationConfigForLog(saved),
+                ),
                 before: this.sanitizePresentationConfigForLog(existing),
                 after: this.sanitizePresentationConfigForLog(saved),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -558,9 +567,9 @@ export class PresentationsService {
             await this.tenantActionLogService.record({
                 tenantId,
                 actionType: "presentation_config_deleted",
-                actor: this.resolveActor(actorToken),
+                actor: resolveAuditActor(actorToken),
                 before: this.sanitizePresentationConfigForLog(existing),
-                requestMeta: this.extractRequestMeta(req),
+                requestMeta: extractRequestMeta(req),
             });
         }
 
@@ -582,67 +591,6 @@ export class PresentationsService {
             attached: config.attached,
             redirectUri: config.redirectUri,
             accessKeyChainId: config.accessKeyChainId,
-        };
-    }
-
-    private getChangedFields(
-        before?: PresentationConfig,
-        after?: PresentationConfig,
-    ): string[] {
-        const beforePayload = before
-            ? this.sanitizePresentationConfigForLog(before)
-            : {};
-        const afterPayload = after
-            ? this.sanitizePresentationConfigForLog(after)
-            : {};
-        const fields = new Set([
-            ...Object.keys(beforePayload),
-            ...Object.keys(afterPayload),
-        ]);
-
-        return [...fields].filter((field) => {
-            const beforeValue = beforePayload[field] ?? null;
-            const afterValue = afterPayload[field] ?? null;
-            return JSON.stringify(beforeValue) !== JSON.stringify(afterValue);
-        });
-    }
-
-    private resolveActor(token: TokenPayload): AuditLogActor {
-        const clientId = token.client?.clientId || token.authorizedParty;
-
-        if (token.subject && clientId && token.subject !== clientId) {
-            return {
-                type: "user",
-                id: token.subject,
-                display: clientId,
-            };
-        }
-
-        if (clientId) {
-            return {
-                type: "client",
-                id: clientId,
-                display: clientId,
-            };
-        }
-
-        if (token.subject) {
-            return {
-                type: "user",
-                id: token.subject,
-            };
-        }
-
-        return { type: "system" };
-    }
-
-    private extractRequestMeta(req?: Request) {
-        if (!req) return undefined;
-
-        return {
-            requestId: req.headers["x-request-id"]
-                ? String(req.headers["x-request-id"])
-                : undefined,
         };
     }
 

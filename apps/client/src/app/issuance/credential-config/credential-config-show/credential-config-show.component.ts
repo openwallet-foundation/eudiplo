@@ -13,10 +13,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
-import { CredentialConfig } from '@eudiplo/sdk-core';
+import { CredentialConfig, deriveRuntimeArtifacts } from '@eudiplo/sdk-core';
 import { CredentialConfigService } from '../credential-config.service';
 import { StatusListManagementService } from '../../../status-list-management/status-list-management.service';
-import { deriveRuntimeArtifacts } from '../credential-config-v2.util';
+import { downloadJsonFile } from '../../../common/download-json.util';
 
 interface ClaimFieldRow {
   key: string;
@@ -682,17 +682,7 @@ export class CredentialConfigShowComponent implements OnInit {
    */
   downloadConfig() {
     if (this.config) {
-      console.log(this.config);
-
-      const blob = new Blob([JSON.stringify(this.config, null, 2)], {
-        type: 'application/json',
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `credential-config-${this.config.id}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
+      downloadJsonFile(this.config, `credential-config-${this.config.id}.json`);
     }
     this.snackBar.open('Configuration downloaded', 'Close', {
       duration: 3000,

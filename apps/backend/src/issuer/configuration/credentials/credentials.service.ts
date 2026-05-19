@@ -161,7 +161,7 @@ export class CredentialsService {
         const jwtProofType = {
             proof_signing_alg_values_supported:
                 this.cryptoImplementationService.getAlgs(
-                    CredentialFormat.SD_JWT,
+                    CredentialFormat.SD_JWT_VC,
                 ) as string[],
             ...(keyAttestationsRequired && {
                 key_attestations_required: { ...keyAttestationsRequired },

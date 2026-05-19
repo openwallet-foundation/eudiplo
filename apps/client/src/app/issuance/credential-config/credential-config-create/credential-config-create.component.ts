@@ -697,18 +697,13 @@ export class CredentialConfigCreateComponent implements OnInit {
 
   // Field Definition Management
   createFieldDisplayGroup(display?: FieldDisplayDto): FormGroup {
-    const displayEntry = display as FieldDisplayDto & {
-      lang?: string;
-      label?: string;
-      locale?: string;
-      name?: string;
-    };
+    const displayEntry = display as FieldDisplayDto;
 
     return new FormGroup({
-      locale: new FormControl(displayEntry?.locale || displayEntry?.lang || 'en-US', [
+      locale: new FormControl(displayEntry?.locale || displayEntry?.locale || 'en-US', [
         Validators.required,
       ]),
-      name: new FormControl(displayEntry?.name || displayEntry?.label || '', [Validators.required]),
+      name: new FormControl(displayEntry?.name || displayEntry?.name || '', [Validators.required]),
       description: new FormControl(display?.description || ''),
     });
   }
