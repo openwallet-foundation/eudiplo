@@ -13,7 +13,14 @@ import type { ClaimFieldDefinition } from "../../issuer/configuration/credential
 // ---------------------------------------------------------------------------
 
 type CredentialFormat = "dc+sd-jwt" | "mso_mdoc";
-type FieldType = "string" | "number" | "integer" | "boolean" | "object" | "array" | "date";
+type FieldType =
+    | "string"
+    | "number"
+    | "integer"
+    | "boolean"
+    | "object"
+    | "array"
+    | "date";
 type ClaimPathElement = string | number | null;
 
 interface ClaimDisplayInfoV1 {
@@ -81,7 +88,8 @@ function inferTypeFromValue(value: unknown): FieldType {
     if (typeof value === "string") {
         return /^\d{4}-\d{2}-\d{2}$/.test(value) ? "date" : "string";
     }
-    if (typeof value === "number") return Number.isInteger(value) ? "integer" : "number";
+    if (typeof value === "number")
+        return Number.isInteger(value) ? "integer" : "number";
     if (typeof value === "boolean") return "boolean";
     if (Array.isArray(value)) return "array";
     if (typeof value === "object" && value !== null) return "object";
@@ -108,7 +116,10 @@ function getValueAtPath(
     for (const segment of path) {
         if (cursor === null || cursor === undefined) return undefined;
         if (Array.isArray(cursor)) {
-            const index = typeof segment === "number" ? segment : Number(segmentToKey(segment));
+            const index =
+                typeof segment === "number"
+                    ? segment
+                    : Number(segmentToKey(segment));
             if (!Number.isInteger(index) || index < 0) return undefined;
             cursor = cursor[index];
             continue;
@@ -119,7 +130,10 @@ function getValueAtPath(
     return cursor;
 }
 
-function collectLeafPaths(value: unknown, prefix: ClaimPathElement[] = []): ClaimPathElement[][] {
+function collectLeafPaths(
+    value: unknown,
+    prefix: ClaimPathElement[] = [],
+): ClaimPathElement[][] {
     if (value === null || value === undefined) return [];
     if (Array.isArray(value)) {
         if (value.length === 0) return [prefix];
@@ -151,11 +165,13 @@ function collectDisclosurePaths(
     const sd = record._sd;
     if (Array.isArray(sd)) {
         for (const name of sd) {
-            if (typeof name === "string") result.add(pathKey([...prefix, name]));
+            if (typeof name === "string")
+                result.add(pathKey([...prefix, name]));
         }
     }
     for (const [key, nested] of Object.entries(record)) {
-        if (key !== "_sd") collectDisclosurePaths(nested, [...prefix, key], result);
+        if (key !== "_sd")
+            collectDisclosurePaths(nested, [...prefix, key], result);
     }
     return result;
 }
@@ -174,9 +190,16 @@ function collectSchemaLeafMap(
     if (!schema || typeof schema !== "object") return result;
     const properties = schema.properties;
     if (properties && typeof properties === "object") {
-        const required = new Set(Array.isArray(schema.required) ? schema.required : []);
+        const required = new Set(
+            Array.isArray(schema.required) ? schema.required : [],
+        );
         for (const [key, value] of Object.entries(properties)) {
-            collectSchemaLeafMap(value, [...prefix, key], required.has(key), result);
+            collectSchemaLeafMap(
+                value,
+                [...prefix, key],
+                required.has(key),
+                result,
+            );
         }
         return result;
     }
@@ -184,7 +207,9 @@ function collectSchemaLeafMap(
     return result;
 }
 
-function collectMetadataByPath(metadata: ClaimMetadataV1[] | undefined): Map<string, ClaimMetadataV1> {
+function collectMetadataByPath(
+    metadata: ClaimMetadataV1[] | undefined,
+): Map<string, ClaimMetadataV1> {
     const map = new Map<string, ClaimMetadataV1>();
     for (const entry of metadata ?? []) {
         if (Array.isArray(entry.path) && entry.path.length > 0) {
@@ -194,27 +219,41 @@ function collectMetadataByPath(metadata: ClaimMetadataV1[] | undefined): Map<str
     return map;
 }
 
-function normalizeDisplay(display: ClaimDisplayInfoV1[] | undefined): ClaimFieldDefinition["display"] {
+function normalizeDisplay(
+    display: ClaimDisplayInfoV1[] | undefined,
+): ClaimFieldDefinition["display"] {
     if (!display || display.length === 0) return undefined;
     return display
         .filter((entry) => !!entry.name)
-        .map((entry) => ({ locale: entry.locale ?? "und", name: entry.name ?? "" }));
+        .map((entry) => ({
+            locale: entry.locale ?? "und",
+            name: entry.name ?? "",
+        }));
 }
 
-function collectPathsFromSchema(schema: JsonSchemaV1 | undefined): ClaimPathElement[][] {
+function collectPathsFromSchema(
+    schema: JsonSchemaV1 | undefined,
+): ClaimPathElement[][] {
     return Array.from(collectSchemaLeafMap(schema).keys()).map(parsePathKey);
 }
 
-function collectPaths(v1: CredentialConfigV1): { paths: ClaimPathElement[][]; namespaceByPath: Map<string, string> } {
+function collectPaths(v1: CredentialConfigV1): {
+    paths: ClaimPathElement[][];
+    namespaceByPath: Map<string, string>;
+} {
     const keys = new Set<string>();
     const namespaceByPath = new Map<string, string>();
     for (const path of collectLeafPaths(v1.claims)) keys.add(pathKey(path));
     for (const entry of v1.config.claimsMetadata ?? []) {
-        if (Array.isArray(entry.path) && entry.path.length > 0) keys.add(pathKey(entry.path));
+        if (Array.isArray(entry.path) && entry.path.length > 0)
+            keys.add(pathKey(entry.path));
     }
     for (const key of collectDisclosurePaths(v1.disclosureFrame)) keys.add(key);
-    for (const path of collectPathsFromSchema(v1.schema)) keys.add(pathKey(path));
-    for (const [namespace, claims] of Object.entries(v1.config.claimsByNamespace ?? {})) {
+    for (const path of collectPathsFromSchema(v1.schema))
+        keys.add(pathKey(path));
+    for (const [namespace, claims] of Object.entries(
+        v1.config.claimsByNamespace ?? {},
+    )) {
         for (const path of collectLeafPaths(claims)) {
             const fullPath = [namespace, ...path];
             const key = pathKey(fullPath);
@@ -223,18 +262,32 @@ function collectPaths(v1: CredentialConfigV1): { paths: ClaimPathElement[][]; na
         }
     }
     return {
-        paths: Array.from(keys).map(parsePathKey).sort((a, b) => pathKey(a).localeCompare(pathKey(b))),
+        paths: Array.from(keys)
+            .map(parsePathKey)
+            .sort((a, b) => pathKey(a).localeCompare(pathKey(b))),
         namespaceByPath,
     };
 }
 
-function extractConstraints(schema: JsonSchemaV1 | undefined): Record<string, unknown> | undefined {
+function extractConstraints(
+    schema: JsonSchemaV1 | undefined,
+): Record<string, unknown> | undefined {
     if (!schema) return undefined;
-    const { type: _t, title: _ti, properties: _p, required: _r, $schema: _s, ...constraints } = schema;
+    const {
+        type: _t,
+        title: _ti,
+        properties: _p,
+        required: _r,
+        $schema: _s,
+        ...constraints
+    } = schema;
     return Object.keys(constraints).length > 0 ? constraints : undefined;
 }
 
-function convertV1ToV2(v1: CredentialConfigV1): { config: Record<string, unknown>; fields: ClaimFieldDefinition[] } {
+function convertV1ToV2(v1: CredentialConfigV1): {
+    config: Record<string, unknown>;
+    fields: ClaimFieldDefinition[];
+} {
     const { paths, namespaceByPath } = collectPaths(v1);
     const metadataByPath = collectMetadataByPath(v1.config.claimsMetadata);
     const schemaByPath = collectSchemaLeafMap(v1.schema);
@@ -250,15 +303,22 @@ function convertV1ToV2(v1: CredentialConfigV1): { config: Record<string, unknown
         let defaultValue = getValueAtPath(v1.claims, path);
         const namespace = namespaceByPath.get(key);
         if (defaultValue === undefined && namespace) {
-            defaultValue = getValueAtPath(claimsByNamespace[namespace], path.slice(1));
+            defaultValue = getValueAtPath(
+                claimsByNamespace[namespace],
+                path.slice(1),
+            );
         }
 
-        const inferredType = inferTypeFromSchema(schemaEntry?.schema) ?? inferTypeFromValue(defaultValue);
+        const inferredType =
+            inferTypeFromSchema(schemaEntry?.schema) ??
+            inferTypeFromValue(defaultValue);
         const field: ClaimFieldDefinition = { path, type: inferredType };
 
         if (defaultValue !== undefined) field.defaultValue = defaultValue;
-        if (metadata?.mandatory === true || schemaEntry?.mandatory === true) field.mandatory = true;
-        if (v1.config.format === "dc+sd-jwt") field.disclosable = disclosureSet.has(key);
+        if (metadata?.mandatory === true || schemaEntry?.mandatory === true)
+            field.mandatory = true;
+        if (v1.config.format === "dc+sd-jwt")
+            field.disclosable = disclosureSet.has(key);
 
         const display = normalizeDisplay(metadata?.display);
         if (display && display.length > 0) field.display = display;
@@ -275,7 +335,12 @@ function convertV1ToV2(v1: CredentialConfigV1): { config: Record<string, unknown
         fields.push(field);
     }
 
-    const { claimsByNamespace: _cbn, claimsMetadata: _cm, namespace: _ns, ...restConfig } = v1.config;
+    const {
+        claimsByNamespace: _cbn,
+        claimsMetadata: _cm,
+        namespace: _ns,
+        ...restConfig
+    } = v1.config;
     return {
         config: {
             ...restConfig,

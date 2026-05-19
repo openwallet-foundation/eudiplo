@@ -64,4 +64,3 @@ export interface CredentialConfigData extends Record<string, unknown> {
     config: CredentialConfigCore;
     fields: ClaimFieldDefinition[];
 }
-
