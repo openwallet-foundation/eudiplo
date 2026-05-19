@@ -164,6 +164,8 @@
                             </li>
                             <li>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#getAllSessions" >getAllSessions</a>
                             </li>
                             <li>
@@ -228,8 +230,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="48"
-                                    class="link-to-prism">src/session/session.controller.ts:48</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="63"
+                                    class="link-to-prism">src/session/session.controller.ts:63</a></div>
                         </td>
                     </tr>
 
@@ -296,6 +298,8 @@
                     <a name="getAllSessions"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>getAllSessions</b></span>
                         <a href="#getAllSessions"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -304,7 +308,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getAllSessions(token: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>)</code>
+                    <code>getAllSessions(token: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>, query: <a href="../classes/SessionQueryDto.html" target="_self">SessionQueryDto</a>)</code>
                 </td>
             </tr>
 
@@ -312,21 +316,21 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get()<br /></code>
+                    <code>@ApiOperation({summary: &#x27;Get sessions (paginated)&#x27;})<br />@ApiResponse({status: 200, type: PaginatedSessionResponseDto})<br />@Get()<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="27"
-                                    class="link-to-prism">src/session/session.controller.ts:27</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="39"
+                                    class="link-to-prism">src/session/session.controller.ts:39</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Retrieves all sessions.</p>
+                        <div class="io-description"><p>Retrieves a paginated list of sessions with optional filters.</p>
 </div>
 
                             <div class="io-description">
@@ -353,11 +357,23 @@
 
 
                                         </tr>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/SessionQueryDto.html" target="_self" >SessionQueryDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../entitys/Session.html" target="_self" >Promise&lt;Session[]&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/PaginatedSessionResponseDto.html" target="_self" >Promise&lt;PaginatedSessionResponseDto&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -397,8 +413,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="37"
-                                    class="link-to-prism">src/session/session.controller.ts:37</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="52"
+                                    class="link-to-prism">src/session/session.controller.ts:52</a></div>
                         </td>
                     </tr>
 
@@ -485,8 +501,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="63"
-                                    class="link-to-prism">src/session/session.controller.ts:63</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="78"
+                                    class="link-to-prism">src/session/session.controller.ts:78</a></div>
                         </td>
                     </tr>
 
@@ -570,8 +586,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="75"
-                                    class="link-to-prism">src/session/session.controller.ts:75</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="90"
+                                    class="link-to-prism">src/session/session.controller.ts:90</a></div>
                         </td>
                     </tr>
 
@@ -635,7 +651,15 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Body, Controller, Delete, Get, Param, Post } from &quot;@nestjs/common&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Query,
+} from &quot;@nestjs/common&quot;;
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from &quot;@nestjs/swagger&quot;;
 import { Role } from &quot;../auth/roles/role.enum&quot;;
 import { Secured } from &quot;../auth/secure.decorator&quot;;
@@ -643,7 +667,9 @@ import { Token, TokenPayload } from &quot;../auth/token.decorator&quot;;
 import { StatusUpdateDto } from &quot;../issuer/lifecycle/status/dto/status-update.dto&quot;;
 import { StatusListService } from &quot;../issuer/lifecycle/status/status-list.service&quot;;
 import { SessionLogStoreService } from &quot;../shared/utils/logger/session-log-store.service&quot;;
+import { PaginatedSessionResponseDto } from &quot;./dto/paginated-session-response.dto&quot;;
 import { SessionLogEntryResponseDto } from &quot;./dto/session-log-entry-response.dto&quot;;
+import { SessionQueryDto } from &quot;./dto/session-query.dto&quot;;
 import { Session } from &quot;./entities/session.entity&quot;;
 import { SessionService } from &quot;./session.service&quot;;
 
@@ -658,11 +684,16 @@ export class SessionController {
     ) {}
 
     /**
-     * Retrieves all sessions.
+     * Retrieves a paginated list of sessions with optional filters.
      */
+    @ApiOperation({ summary: &quot;Get sessions (paginated)&quot; })
+    @ApiResponse({ status: 200, type: PaginatedSessionResponseDto })
     @Get()
-    getAllSessions(@Token() token: TokenPayload): Promise&lt;Session[]&gt; {
-        return this.sessionService.getAll(token.entity!.id);
+    getAllSessions(
+        @Token() token: TokenPayload,
+        @Query() query: SessionQueryDto,
+    ): Promise&lt;PaginatedSessionResponseDto&gt; {
+        return this.sessionService.getAll(token.entity!.id, query);
     }
 
     /**

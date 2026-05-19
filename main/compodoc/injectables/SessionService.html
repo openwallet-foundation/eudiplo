@@ -196,6 +196,7 @@
                                 <a href="#get" >get</a>
                             </li>
                             <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#getAll" >getAll</a>
                             </li>
                             <li>
@@ -240,7 +241,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/session/session.service.ts:28</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/session/session.service.ts:30</a></div>
                             </td>
                         </tr>
 
@@ -363,8 +364,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="161"
-                                    class="link-to-prism">src/session/session.service.ts:161</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="163"
+                                    class="link-to-prism">src/session/session.service.ts:163</a></div>
                         </td>
                     </tr>
 
@@ -446,8 +447,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="105"
-                                    class="link-to-prism">src/session/session.service.ts:105</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="107"
+                                    class="link-to-prism">src/session/session.service.ts:107</a></div>
                         </td>
                     </tr>
 
@@ -515,8 +516,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="310"
-                                    class="link-to-prism">src/session/session.service.ts:310</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="347"
+                                    class="link-to-prism">src/session/session.service.ts:347</a></div>
                         </td>
                     </tr>
 
@@ -596,8 +597,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="189"
-                                    class="link-to-prism">src/session/session.service.ts:189</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="226"
+                                    class="link-to-prism">src/session/session.service.ts:226</a></div>
                         </td>
                     </tr>
 
@@ -668,8 +669,8 @@ Returns null if no session matches.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="322"
-                                    class="link-to-prism">src/session/session.service.ts:322</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="359"
+                                    class="link-to-prism">src/session/session.service.ts:359</a></div>
                         </td>
                     </tr>
 
@@ -776,8 +777,8 @@ Used for wallet-initiated flows where the wallet presents a token from an extern
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="181"
-                                    class="link-to-prism">src/session/session.service.ts:181</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="218"
+                                    class="link-to-prism">src/session/session.service.ts:218</a></div>
                         </td>
                     </tr>
 
@@ -831,6 +832,7 @@ Used for wallet-initiated flows where the wallet presents a token from an extern
                 <td class="col-md-4">
                     <a name="getAll"></a>
                     <span class="name">
+                            <span class="modifier">Async</span>
                         <span ><b>getAll</b></span>
                         <a href="#getAll"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -838,22 +840,23 @@ Used for wallet-initiated flows where the wallet presents a token from an extern
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getAll(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAll(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, query: <a href="../classes/SessionQueryDto.html" target="_self">SessionQueryDto</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="169"
-                                    class="link-to-prism">src/session/session.service.ts:169</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="173"
+                                    class="link-to-prism">src/session/session.service.ts:173</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Get all sessions.</p>
+                        <div class="io-description"><p>Get sessions with pagination and optional filtering.</p>
 </div>
 
                             <div class="io-description">
@@ -865,6 +868,7 @@ Used for wallet-initiated flows where the wallet presents a token from an extern
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
+                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -879,16 +883,37 @@ Used for wallet-initiated flows where the wallet presents a token from an extern
                                             </td>
 
 
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/SessionQueryDto.html" target="_self" >SessionQueryDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Pagination and filter parameters</li>
+</ul>
+
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../entitys/Session.html" target="_self" >Promise&lt;Session[]&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/PaginatedSessionResponseDto.html" target="_self" >Promise&lt;PaginatedSessionResponseDto&gt;</a></code>
 
                         </div>
                             <div class="io-description">
-                                
+                                <p>Paginated session list</p>
+
                             </div>
                 </td>
             </tr>
@@ -914,8 +939,8 @@ Used for wallet-initiated flows where the wallet presents a token from an extern
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="198"
-                                    class="link-to-prism">src/session/session.service.ts:198</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="235"
+                                    class="link-to-prism">src/session/session.service.ts:235</a></div>
                         </td>
                     </tr>
 
@@ -985,8 +1010,8 @@ Used for wallet-initiated flows where the wallet presents a token from an extern
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="209"
-                                    class="link-to-prism">src/session/session.service.ts:209</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="246"
+                                    class="link-to-prism">src/session/session.service.ts:246</a></div>
                         </td>
                     </tr>
 
@@ -1064,8 +1089,8 @@ Used for brute-force protection in the OID4VCI pre-authorized code flow.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="50"
-                                    class="link-to-prism">src/session/session.service.ts:50</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="52"
+                                    class="link-to-prism">src/session/session.service.ts:52</a></div>
                         </td>
                     </tr>
 
@@ -1109,8 +1134,8 @@ This will run every hour by default, but can be configured via the <code>SESSION
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="126"
-                                    class="link-to-prism">src/session/session.service.ts:126</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">src/session/session.service.ts:128</a></div>
                         </td>
                     </tr>
 
@@ -1193,8 +1218,8 @@ Emits a session status change event for SSE subscribers.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="227"
-                                    class="link-to-prism">src/session/session.service.ts:227</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="264"
+                                    class="link-to-prism">src/session/session.service.ts:264</a></div>
                         </td>
                     </tr>
 
@@ -1249,7 +1274,7 @@ Each tenant can configure their own TTL and cleanup mode.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/session/session.service.ts:27</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/session/session.service.ts:29</a></div>
                         </td>
                     </tr>
 
@@ -1277,7 +1302,7 @@ Each tenant can configure their own TTL and cleanup mode.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/session/session.service.ts:28</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/session/session.service.ts:30</a></div>
                         </td>
                     </tr>
 
@@ -1308,6 +1333,8 @@ import {
 import { QueryDeepPartialEntity } from &quot;typeorm/query-builder/QueryPartialEntity.js&quot;;
 import { SessionCleanupMode } from &quot;../auth/tenant/entitites/session-storage-config&quot;;
 import { TenantEntity } from &quot;../auth/tenant/entitites/tenant.entity&quot;;
+import { SessionQueryDto } from &quot;./dto/session-query.dto&quot;;
+import { PaginatedSessionResponseDto } from &quot;./dto/paginated-session-response.dto&quot;;
 import { Session, SessionStatus } from &quot;./entities/session.entity&quot;;
 import {
     SESSION_STATUS_CHANGED,
@@ -1455,14 +1482,49 @@ export class SessionService implements OnApplicationBootstrap {
     }
 
     /**
-     * Get all sessions.
-     * @returns
+     * Get sessions with pagination and optional filtering.
+     * @param tenantId
+     * @param query - Pagination and filter parameters
+     * @returns Paginated session list
      */
-    getAll(tenantId: string): Promise&lt;Session[]&gt; {
-        return this.sessionRepository.find({
-            where: { tenantId },
-            order: { updatedAt: &quot;DESC&quot; },
+    async getAll(
+        tenantId: string,
+        query: SessionQueryDto,
+    ): Promise&lt;PaginatedSessionResponseDto&gt; {
+        const { page, pageSize, status, type, sortBy, sortOrder } &#x3D; query;
+
+        const where: FindOptionsWhere&lt;Session&gt; &#x3D; { tenantId };
+
+        if (status) {
+            where.status &#x3D; status;
+        }
+
+        if (type &#x3D;&#x3D;&#x3D; &quot;issuance&quot;) {
+            where.requestId &#x3D; IsNull();
+        } else if (type &#x3D;&#x3D;&#x3D; &quot;presentation&quot;) {
+            where.requestId &#x3D; Not(IsNull());
+        }
+
+        const orderColumn &#x3D; sortBy ?? &quot;updatedAt&quot;;
+        const orderDirection &#x3D;
+            (sortOrder?.toUpperCase() as &quot;ASC&quot; | &quot;DESC&quot;) ?? &quot;DESC&quot;;
+
+        const [items, total] &#x3D; await this.sessionRepository.findAndCount({
+            select: [&quot;id&quot;, &quot;status&quot;, &quot;createdAt&quot;, &quot;requestId&quot;],
+            where,
+            order: { [orderColumn]: orderDirection },
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+            loadEagerRelations: false,
         });
+
+        return {
+            items,
+            total,
+            page,
+            pageSize,
+            totalPages: Math.ceil(total / pageSize),
+        };
     }
 
     /**

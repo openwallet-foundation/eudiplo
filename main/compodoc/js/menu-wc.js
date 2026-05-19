@@ -1301,6 +1301,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/Openid4vpRequestDto.html" data-type="entity-link" >Openid4vpRequestDto</a>
                             </li>
                             <li class="link">
+                                <a href="classes/PaginatedSessionResponseDto.html" data-type="entity-link" >PaginatedSessionResponseDto</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/ParResponseDto.html" data-type="entity-link" >ParResponseDto</a>
                             </li>
                             <li class="link">
@@ -1383,6 +1386,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/SessionLogEntryResponseDto.html" data-type="entity-link" >SessionLogEntryResponseDto</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/SessionQueryDto.html" data-type="entity-link" >SessionQueryDto</a>
                             </li>
                             <li class="link">
                                 <a href="classes/SessionStorageConfig.html" data-type="entity-link" >SessionStorageConfig</a>

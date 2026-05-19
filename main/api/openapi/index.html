@@ -4676,6 +4676,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#paginatedsessionresponsedto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PaginatedSessionResponseDto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#parresponsedto" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6857,6 +6868,17 @@
     <span class="md-ellipsis">
       
         OfferResponse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paginatedsessionresponsedto_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PaginatedSessionResponseDto
       
     </span>
   </a>
@@ -10403,6 +10425,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#paginatedsessionresponsedto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PaginatedSessionResponseDto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#parresponsedto" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -12584,6 +12617,17 @@
     <span class="md-ellipsis">
       
         OfferResponse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paginatedsessionresponsedto_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PaginatedSessionResponseDto
       
     </span>
   </a>
@@ -15945,7 +15989,7 @@ Users with <code>clients:manage</code> role can only rotate secrets for clients 
 <hr class="operation-separator">
 
 <h3 id="get-apisession"><span class="http-get">GET</span> /api/session<a class="headerlink" href="#get-apisession" title="Permanent link">¶</a></h3>
-<p>Retrieves all sessions.</p>
+<p>Get sessions (paginated)</p>
 <p><strong>Input parameters</strong></p>
 <table>
     <thead>
@@ -15967,6 +16011,54 @@ Users with <code>clients:manage</code> role can only rotate secrets for clients 
             <td>No</td>
             <td></td>
         </tr>
+        <tr>
+            <td class="parameter-name"><code>page</code></td>
+            <td>query</td>
+            <td>number</td>
+            <td>1</td>
+            <td>No</td>
+            <td>Page number (1-based)</td>
+        </tr>
+        <tr>
+            <td class="parameter-name"><code>pageSize</code></td>
+            <td>query</td>
+            <td>number</td>
+            <td>25</td>
+            <td>No</td>
+            <td>Number of items per page</td>
+        </tr>
+        <tr>
+            <td class="parameter-name"><code>sortBy</code></td>
+            <td>query</td>
+            <td>string</td>
+            <td></td>
+            <td>No</td>
+            <td>Field to sort by</td>
+        </tr>
+        <tr>
+            <td class="parameter-name"><code>sortOrder</code></td>
+            <td>query</td>
+            <td>string</td>
+            <td></td>
+            <td>No</td>
+            <td>Sort direction</td>
+        </tr>
+        <tr>
+            <td class="parameter-name"><code>status</code></td>
+            <td>query</td>
+            <td>string</td>
+            <td></td>
+            <td>No</td>
+            <td>Filter by session status</td>
+        </tr>
+        <tr>
+            <td class="parameter-name"><code>type</code></td>
+            <td>query</td>
+            <td>string</td>
+            <td></td>
+            <td>No</td>
+            <td>Filter by session type</td>
+        </tr>
     </tbody>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
@@ -15977,67 +16069,102 @@ Users with <code>clients:manage</code> role can only rotate secrets for clients 
 <div class="tabbed-set tabbed-alternate" data-tabs="53:1"><input checked="checked" id="__tabbed_53_1" name="__tabbed_53" type="radio"><div class="tabbed-labels"><label for="__tabbed_53_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a><span class="p">[</span>
-<a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a><span class="w">        </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span>
-<a id="__codelineno-52-4" name="__codelineno-52-4" href="#__codelineno-52-4"></a><span class="w">        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-5" name="__codelineno-52-5" href="#__codelineno-52-5"></a><span class="w">        </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
-<a id="__codelineno-52-6" name="__codelineno-52-6" href="#__codelineno-52-6"></a><span class="w">        </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
-<a id="__codelineno-52-7" name="__codelineno-52-7" href="#__codelineno-52-7"></a><span class="w">        </span><span class="nt">"expiresAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
-<a id="__codelineno-52-8" name="__codelineno-52-8" href="#__codelineno-52-8"></a><span class="w">        </span><span class="nt">"useDcApi"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-52-9" name="__codelineno-52-9" href="#__codelineno-52-9"></a><span class="w">        </span><span class="nt">"tenantId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-10" name="__codelineno-52-10" href="#__codelineno-52-10"></a><span class="w">        </span><span class="nt">"tenant"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<a id="__codelineno-52-11" name="__codelineno-52-11" href="#__codelineno-52-11"></a><span class="w">        </span><span class="nt">"authorization_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-12" name="__codelineno-52-12" href="#__codelineno-52-12"></a><span class="w">        </span><span class="nt">"refresh_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-13" name="__codelineno-52-13" href="#__codelineno-52-13"></a><span class="w">        </span><span class="nt">"refresh_token_expires_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
-<a id="__codelineno-52-14" name="__codelineno-52-14" href="#__codelineno-52-14"></a><span class="w">        </span><span class="nt">"request_uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-15" name="__codelineno-52-15" href="#__codelineno-52-15"></a><span class="w">        </span><span class="nt">"auth_queries"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<a id="__codelineno-52-16" name="__codelineno-52-16" href="#__codelineno-52-16"></a><span class="w">        </span><span class="nt">"offer"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
-<a id="__codelineno-52-17" name="__codelineno-52-17" href="#__codelineno-52-17"></a><span class="w">        </span><span class="nt">"offerUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-18" name="__codelineno-52-18" href="#__codelineno-52-18"></a><span class="w">        </span><span class="nt">"credentialPayload"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<a id="__codelineno-52-19" name="__codelineno-52-19" href="#__codelineno-52-19"></a><span class="w">        </span><span class="nt">"webhookEndpointId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-20" name="__codelineno-52-20" href="#__codelineno-52-20"></a><span class="w">        </span><span class="nt">"notifications"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-52-21" name="__codelineno-52-21" href="#__codelineno-52-21"></a><span class="w">            </span><span class="p">{}</span>
-<a id="__codelineno-52-22" name="__codelineno-52-22" href="#__codelineno-52-22"></a><span class="w">        </span><span class="p">],</span>
-<a id="__codelineno-52-23" name="__codelineno-52-23" href="#__codelineno-52-23"></a><span class="w">        </span><span class="nt">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-24" name="__codelineno-52-24" href="#__codelineno-52-24"></a><span class="w">        </span><span class="nt">"requestUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-25" name="__codelineno-52-25" href="#__codelineno-52-25"></a><span class="w">        </span><span class="nt">"requestObject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-26" name="__codelineno-52-26" href="#__codelineno-52-26"></a><span class="w">        </span><span class="nt">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-52-27" name="__codelineno-52-27" href="#__codelineno-52-27"></a><span class="w">            </span><span class="p">{}</span>
-<a id="__codelineno-52-28" name="__codelineno-52-28" href="#__codelineno-52-28"></a><span class="w">        </span><span class="p">],</span>
-<a id="__codelineno-52-29" name="__codelineno-52-29" href="#__codelineno-52-29"></a><span class="w">        </span><span class="nt">"vp_nonce"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-30" name="__codelineno-52-30" href="#__codelineno-52-30"></a><span class="w">        </span><span class="nt">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-31" name="__codelineno-52-31" href="#__codelineno-52-31"></a><span class="w">        </span><span class="nt">"walletNonce"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-32" name="__codelineno-52-32" href="#__codelineno-52-32"></a><span class="w">        </span><span class="nt">"responseCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-33" name="__codelineno-52-33" href="#__codelineno-52-33"></a><span class="w">        </span><span class="nt">"responseUri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-34" name="__codelineno-52-34" href="#__codelineno-52-34"></a><span class="w">        </span><span class="nt">"redirectUri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-35" name="__codelineno-52-35" href="#__codelineno-52-35"></a><span class="w">        </span><span class="nt">"parsedWebhook"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<a id="__codelineno-52-36" name="__codelineno-52-36" href="#__codelineno-52-36"></a><span class="w">        </span><span class="nt">"transaction_data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-52-37" name="__codelineno-52-37" href="#__codelineno-52-37"></a><span class="w">            </span><span class="p">{</span>
-<a id="__codelineno-52-38" name="__codelineno-52-38" href="#__codelineno-52-38"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-39" name="__codelineno-52-39" href="#__codelineno-52-39"></a><span class="w">                </span><span class="nt">"credential_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-52-40" name="__codelineno-52-40" href="#__codelineno-52-40"></a><span class="w">                    </span><span class="s2">"string"</span>
-<a id="__codelineno-52-41" name="__codelineno-52-41" href="#__codelineno-52-41"></a><span class="w">                </span><span class="p">]</span>
-<a id="__codelineno-52-42" name="__codelineno-52-42" href="#__codelineno-52-42"></a><span class="w">            </span><span class="p">}</span>
-<a id="__codelineno-52-43" name="__codelineno-52-43" href="#__codelineno-52-43"></a><span class="w">        </span><span class="p">],</span>
-<a id="__codelineno-52-44" name="__codelineno-52-44" href="#__codelineno-52-44"></a><span class="w">        </span><span class="nt">"externalIssuer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-45" name="__codelineno-52-45" href="#__codelineno-52-45"></a><span class="w">        </span><span class="nt">"externalSubject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-46" name="__codelineno-52-46" href="#__codelineno-52-46"></a><span class="w">        </span><span class="nt">"errorReason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-52-47" name="__codelineno-52-47" href="#__codelineno-52-47"></a><span class="w">        </span><span class="nt">"txCodeFailedAttempts"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
-<a id="__codelineno-52-48" name="__codelineno-52-48" href="#__codelineno-52-48"></a><span class="w">        </span><span class="nt">"consumed"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-52-49" name="__codelineno-52-49" href="#__codelineno-52-49"></a><span class="w">        </span><span class="nt">"consumedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span>
-<a id="__codelineno-52-50" name="__codelineno-52-50" href="#__codelineno-52-50"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-52-51" name="__codelineno-52-51" href="#__codelineno-52-51"></a><span class="p">]</span>
+<p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a><span class="p">{</span>
+<a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a><span class="w">    </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-52-4" name="__codelineno-52-4" href="#__codelineno-52-4"></a><span class="w">            </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span>
+<a id="__codelineno-52-5" name="__codelineno-52-5" href="#__codelineno-52-5"></a><span class="w">            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-6" name="__codelineno-52-6" href="#__codelineno-52-6"></a><span class="w">            </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
+<a id="__codelineno-52-7" name="__codelineno-52-7" href="#__codelineno-52-7"></a><span class="w">            </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
+<a id="__codelineno-52-8" name="__codelineno-52-8" href="#__codelineno-52-8"></a><span class="w">            </span><span class="nt">"expiresAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
+<a id="__codelineno-52-9" name="__codelineno-52-9" href="#__codelineno-52-9"></a><span class="w">            </span><span class="nt">"useDcApi"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-52-10" name="__codelineno-52-10" href="#__codelineno-52-10"></a><span class="w">            </span><span class="nt">"tenantId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-11" name="__codelineno-52-11" href="#__codelineno-52-11"></a><span class="w">            </span><span class="nt">"tenant"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-52-12" name="__codelineno-52-12" href="#__codelineno-52-12"></a><span class="w">            </span><span class="nt">"authorization_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-13" name="__codelineno-52-13" href="#__codelineno-52-13"></a><span class="w">            </span><span class="nt">"refresh_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-14" name="__codelineno-52-14" href="#__codelineno-52-14"></a><span class="w">            </span><span class="nt">"refresh_token_expires_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
+<a id="__codelineno-52-15" name="__codelineno-52-15" href="#__codelineno-52-15"></a><span class="w">            </span><span class="nt">"request_uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-16" name="__codelineno-52-16" href="#__codelineno-52-16"></a><span class="w">            </span><span class="nt">"auth_queries"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-52-17" name="__codelineno-52-17" href="#__codelineno-52-17"></a><span class="w">            </span><span class="nt">"offer"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-52-18" name="__codelineno-52-18" href="#__codelineno-52-18"></a><span class="w">            </span><span class="nt">"offerUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-19" name="__codelineno-52-19" href="#__codelineno-52-19"></a><span class="w">            </span><span class="nt">"credentialPayload"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-52-20" name="__codelineno-52-20" href="#__codelineno-52-20"></a><span class="w">            </span><span class="nt">"webhookEndpointId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-21" name="__codelineno-52-21" href="#__codelineno-52-21"></a><span class="w">            </span><span class="nt">"notifications"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-52-22" name="__codelineno-52-22" href="#__codelineno-52-22"></a><span class="w">                </span><span class="p">{}</span>
+<a id="__codelineno-52-23" name="__codelineno-52-23" href="#__codelineno-52-23"></a><span class="w">            </span><span class="p">],</span>
+<a id="__codelineno-52-24" name="__codelineno-52-24" href="#__codelineno-52-24"></a><span class="w">            </span><span class="nt">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-25" name="__codelineno-52-25" href="#__codelineno-52-25"></a><span class="w">            </span><span class="nt">"requestUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-26" name="__codelineno-52-26" href="#__codelineno-52-26"></a><span class="w">            </span><span class="nt">"requestObject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-27" name="__codelineno-52-27" href="#__codelineno-52-27"></a><span class="w">            </span><span class="nt">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-52-28" name="__codelineno-52-28" href="#__codelineno-52-28"></a><span class="w">                </span><span class="p">{}</span>
+<a id="__codelineno-52-29" name="__codelineno-52-29" href="#__codelineno-52-29"></a><span class="w">            </span><span class="p">],</span>
+<a id="__codelineno-52-30" name="__codelineno-52-30" href="#__codelineno-52-30"></a><span class="w">            </span><span class="nt">"vp_nonce"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-31" name="__codelineno-52-31" href="#__codelineno-52-31"></a><span class="w">            </span><span class="nt">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-32" name="__codelineno-52-32" href="#__codelineno-52-32"></a><span class="w">            </span><span class="nt">"walletNonce"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-33" name="__codelineno-52-33" href="#__codelineno-52-33"></a><span class="w">            </span><span class="nt">"responseCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-34" name="__codelineno-52-34" href="#__codelineno-52-34"></a><span class="w">            </span><span class="nt">"responseUri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-35" name="__codelineno-52-35" href="#__codelineno-52-35"></a><span class="w">            </span><span class="nt">"redirectUri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-36" name="__codelineno-52-36" href="#__codelineno-52-36"></a><span class="w">            </span><span class="nt">"parsedWebhook"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-52-37" name="__codelineno-52-37" href="#__codelineno-52-37"></a><span class="w">            </span><span class="nt">"transaction_data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-52-38" name="__codelineno-52-38" href="#__codelineno-52-38"></a><span class="w">                </span><span class="p">{</span>
+<a id="__codelineno-52-39" name="__codelineno-52-39" href="#__codelineno-52-39"></a><span class="w">                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-40" name="__codelineno-52-40" href="#__codelineno-52-40"></a><span class="w">                    </span><span class="nt">"credential_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-52-41" name="__codelineno-52-41" href="#__codelineno-52-41"></a><span class="w">                        </span><span class="s2">"string"</span>
+<a id="__codelineno-52-42" name="__codelineno-52-42" href="#__codelineno-52-42"></a><span class="w">                    </span><span class="p">]</span>
+<a id="__codelineno-52-43" name="__codelineno-52-43" href="#__codelineno-52-43"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-52-44" name="__codelineno-52-44" href="#__codelineno-52-44"></a><span class="w">            </span><span class="p">],</span>
+<a id="__codelineno-52-45" name="__codelineno-52-45" href="#__codelineno-52-45"></a><span class="w">            </span><span class="nt">"externalIssuer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-46" name="__codelineno-52-46" href="#__codelineno-52-46"></a><span class="w">            </span><span class="nt">"externalSubject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-47" name="__codelineno-52-47" href="#__codelineno-52-47"></a><span class="w">            </span><span class="nt">"errorReason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-52-48" name="__codelineno-52-48" href="#__codelineno-52-48"></a><span class="w">            </span><span class="nt">"txCodeFailedAttempts"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
+<a id="__codelineno-52-49" name="__codelineno-52-49" href="#__codelineno-52-49"></a><span class="w">            </span><span class="nt">"consumed"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-52-50" name="__codelineno-52-50" href="#__codelineno-52-50"></a><span class="w">            </span><span class="nt">"consumedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span>
+<a id="__codelineno-52-51" name="__codelineno-52-51" href="#__codelineno-52-51"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-52-52" name="__codelineno-52-52" href="#__codelineno-52-52"></a><span class="w">    </span><span class="p">],</span>
+<a id="__codelineno-52-53" name="__codelineno-52-53" href="#__codelineno-52-53"></a><span class="w">    </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
+<a id="__codelineno-52-54" name="__codelineno-52-54" href="#__codelineno-52-54"></a><span class="w">    </span><span class="nt">"page"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
+<a id="__codelineno-52-55" name="__codelineno-52-55" href="#__codelineno-52-55"></a><span class="w">    </span><span class="nt">"pageSize"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
+<a id="__codelineno-52-56" name="__codelineno-52-56" href="#__codelineno-52-56"></a><span class="w">    </span><span class="nt">"totalPages"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span>
+<a id="__codelineno-52-57" name="__codelineno-52-57" href="#__codelineno-52-57"></a><span class="p">}</span>
 </code></pre></div>
 <span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em><p></p>
 <details class="hint">
 <summary>Schema of the response body</summary>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a><span class="p">{</span>
-<a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a><span class="w">    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span>
-<a id="__codelineno-53-3" name="__codelineno-53-3" href="#__codelineno-53-3"></a><span class="w">    </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-53-4" name="__codelineno-53-4" href="#__codelineno-53-4"></a><span class="w">        </span><span class="nt">"$ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#/components/schemas/Session"</span>
-<a id="__codelineno-53-5" name="__codelineno-53-5" href="#__codelineno-53-5"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-53-6" name="__codelineno-53-6" href="#__codelineno-53-6"></a><span class="p">}</span>
+<a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a><span class="w">    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<a id="__codelineno-53-3" name="__codelineno-53-3" href="#__codelineno-53-3"></a><span class="w">    </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-53-4" name="__codelineno-53-4" href="#__codelineno-53-4"></a><span class="w">        </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-53-5" name="__codelineno-53-5" href="#__codelineno-53-5"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The sessions for the current page."</span><span class="p">,</span>
+<a id="__codelineno-53-6" name="__codelineno-53-6" href="#__codelineno-53-6"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span>
+<a id="__codelineno-53-7" name="__codelineno-53-7" href="#__codelineno-53-7"></a><span class="w">            </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-53-8" name="__codelineno-53-8" href="#__codelineno-53-8"></a><span class="w">                </span><span class="nt">"$ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#/components/schemas/Session"</span>
+<a id="__codelineno-53-9" name="__codelineno-53-9" href="#__codelineno-53-9"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-53-10" name="__codelineno-53-10" href="#__codelineno-53-10"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-53-11" name="__codelineno-53-11" href="#__codelineno-53-11"></a><span class="w">        </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-53-12" name="__codelineno-53-12" href="#__codelineno-53-12"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span>
+<a id="__codelineno-53-13" name="__codelineno-53-13" href="#__codelineno-53-13"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Total number of sessions matching the query"</span>
+<a id="__codelineno-53-14" name="__codelineno-53-14" href="#__codelineno-53-14"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-53-15" name="__codelineno-53-15" href="#__codelineno-53-15"></a><span class="w">        </span><span class="nt">"page"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-53-16" name="__codelineno-53-16" href="#__codelineno-53-16"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span>
+<a id="__codelineno-53-17" name="__codelineno-53-17" href="#__codelineno-53-17"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Current page number (1-based)"</span>
+<a id="__codelineno-53-18" name="__codelineno-53-18" href="#__codelineno-53-18"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-53-19" name="__codelineno-53-19" href="#__codelineno-53-19"></a><span class="w">        </span><span class="nt">"pageSize"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-53-20" name="__codelineno-53-20" href="#__codelineno-53-20"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span>
+<a id="__codelineno-53-21" name="__codelineno-53-21" href="#__codelineno-53-21"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Number of items per page"</span>
+<a id="__codelineno-53-22" name="__codelineno-53-22" href="#__codelineno-53-22"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-53-23" name="__codelineno-53-23" href="#__codelineno-53-23"></a><span class="w">        </span><span class="nt">"totalPages"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-53-24" name="__codelineno-53-24" href="#__codelineno-53-24"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span>
+<a id="__codelineno-53-25" name="__codelineno-53-25" href="#__codelineno-53-25"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Total number of pages"</span>
+<a id="__codelineno-53-26" name="__codelineno-53-26" href="#__codelineno-53-26"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-53-27" name="__codelineno-53-27" href="#__codelineno-53-27"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-53-28" name="__codelineno-53-28" href="#__codelineno-53-28"></a><span class="w">    </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-53-29" name="__codelineno-53-29" href="#__codelineno-53-29"></a><span class="w">        </span><span class="s2">"items"</span><span class="p">,</span>
+<a id="__codelineno-53-30" name="__codelineno-53-30" href="#__codelineno-53-30"></a><span class="w">        </span><span class="s2">"total"</span><span class="p">,</span>
+<a id="__codelineno-53-31" name="__codelineno-53-31" href="#__codelineno-53-31"></a><span class="w">        </span><span class="s2">"page"</span><span class="p">,</span>
+<a id="__codelineno-53-32" name="__codelineno-53-32" href="#__codelineno-53-32"></a><span class="w">        </span><span class="s2">"pageSize"</span><span class="p">,</span>
+<a id="__codelineno-53-33" name="__codelineno-53-33" href="#__codelineno-53-33"></a><span class="w">        </span><span class="s2">"totalPages"</span>
+<a id="__codelineno-53-34" name="__codelineno-53-34" href="#__codelineno-53-34"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-53-35" name="__codelineno-53-35" href="#__codelineno-53-35"></a><span class="p">}</span>
 </code></pre></div>
 </details>
 </div>
@@ -29315,6 +29442,44 @@ Self-signed certificate for the root CA key.</td>
     </tbody>
 </table>
 
+<h3 id="paginatedsessionresponsedto">PaginatedSessionResponseDto<a class="headerlink" href="#paginatedsessionresponsedto" title="Permanent link">¶</a></h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>items</code></td>
+            <td>Array&lt;<a href="#session" class="ref-link">Session</a>&gt;</td>
+            <td>The sessions for the current page.</td>
+        </tr>
+        <tr>
+            <td><code>page</code></td>
+            <td><span class="number-type">number</span></td>
+            <td>Current page number (1-based)</td>
+        </tr>
+        <tr>
+            <td><code>pageSize</code></td>
+            <td><span class="number-type">number</span></td>
+            <td>Number of items per page</td>
+        </tr>
+        <tr>
+            <td><code>total</code></td>
+            <td><span class="number-type">number</span></td>
+            <td>Total number of sessions matching the query</td>
+        </tr>
+        <tr>
+            <td><code>totalPages</code></td>
+            <td><span class="number-type">number</span></td>
+            <td>Total number of pages</td>
+        </tr>
+    </tbody>
+</table>
+
 <h3 id="parresponsedto">ParResponseDto<a class="headerlink" href="#parresponsedto" title="Permanent link">¶</a></h3>
 <table>
     <thead>
@@ -37806,6 +37971,44 @@ Self-signed certificate for the root CA key.</td>
             <td><code>uri</code></td>
             <td><span class="string-type">string</span></td>
             <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<h3 id="paginatedsessionresponsedto_1">PaginatedSessionResponseDto<a class="headerlink" href="#paginatedsessionresponsedto_1" title="Permanent link">¶</a></h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>items</code></td>
+            <td>Array&lt;<a href="#session" class="ref-link">Session</a>&gt;</td>
+            <td>The sessions for the current page.</td>
+        </tr>
+        <tr>
+            <td><code>page</code></td>
+            <td><span class="number-type">number</span></td>
+            <td>Current page number (1-based)</td>
+        </tr>
+        <tr>
+            <td><code>pageSize</code></td>
+            <td><span class="number-type">number</span></td>
+            <td>Number of items per page</td>
+        </tr>
+        <tr>
+            <td><code>total</code></td>
+            <td><span class="number-type">number</span></td>
+            <td>Total number of sessions matching the query</td>
+        </tr>
+        <tr>
+            <td><code>totalPages</code></td>
+            <td><span class="number-type">number</span></td>
+            <td>Total number of pages</td>
         </tr>
     </tbody>
 </table>
