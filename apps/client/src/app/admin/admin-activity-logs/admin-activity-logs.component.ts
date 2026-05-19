@@ -119,7 +119,7 @@ export class AdminActivityLogsComponent implements OnInit {
     };
 
     return Array.from(objectTypes)
-      .sort()
+      .sort((a, b) => a.localeCompare(b))
       .map((type) => ({
         label: typeLabels[type] || type,
         value: type,

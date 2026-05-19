@@ -238,7 +238,7 @@ export class SchemaMetadataShowComponent implements OnInit {
       const parts = jwt.split('.');
       if (parts.length < 2) return null;
 
-      const payloadBase64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const payloadBase64 = parts[1].replaceAll('-', '+').replaceAll('_', '/');
       const padded = payloadBase64.padEnd(
         payloadBase64.length + ((4 - (payloadBase64.length % 4)) % 4),
         '='
@@ -288,7 +288,7 @@ export class SchemaMetadataShowComponent implements OnInit {
   private bumpMinorVersion(version: string): string {
     const parts = version.split('.');
     if (parts.length === 3) {
-      const minor = parseInt(parts[1], 10);
+      const minor = Number.parseInt(parts[1], 10);
       return `${parts[0]}.${minor + 1}.0`;
     }
     return version;

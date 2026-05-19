@@ -265,7 +265,7 @@ export class CrlValidationService {
             const revokedSerial = this.arrayBufferToHex(
                 revoked.userCertificate as unknown as ArrayBuffer,
             );
-            const certSerial = serialNumber.toLowerCase().replace(/:/g, "");
+            const certSerial = serialNumber.toLowerCase().replaceAll(':', "");
 
             if (revokedSerial === certSerial) {
                 const revokedAt = revoked.revocationDate.getTime();

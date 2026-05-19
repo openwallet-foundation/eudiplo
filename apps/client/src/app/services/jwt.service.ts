@@ -63,7 +63,7 @@ export class JwtService {
       }
 
       const payload = parts[1];
-      const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+      const decoded = atob(payload.replaceAll('-', '+').replaceAll('_', '/'));
       return JSON.parse(decoded) as JWTPayload;
     } catch (error) {
       console.error('Error decoding JWT token:', error);

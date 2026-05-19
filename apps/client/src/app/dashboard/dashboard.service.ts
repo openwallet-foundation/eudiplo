@@ -421,7 +421,7 @@ export class DashboardService {
     let hasNonExpired = false;
 
     for (const cert of certs) {
-      const expiryMs = cert.notAfter ? Date.parse(cert.notAfter) : NaN;
+      const expiryMs = cert.notAfter ? Date.parse(cert.notAfter) : Number.NaN;
       if (Number.isNaN(expiryMs)) {
         continue;
       }

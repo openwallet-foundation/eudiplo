@@ -28,7 +28,7 @@ export function extractRawTokenFromSubmission(
         // Path is an index like "$[1]" (Crucial for Multi-Credential-Flows!)
         const indexMatch = path.match(/^\$\[(\d+)\]$/);
         if (indexMatch) {
-            const index = parseInt(indexMatch[1], 10);
+            const index = Number.parseInt(indexMatch[1], 10);
             return typeof vpToken[index] === "string"
                 ? vpToken[index]
                 : undefined;
