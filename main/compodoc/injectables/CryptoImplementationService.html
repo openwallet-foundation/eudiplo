@@ -742,12 +742,12 @@ export class CryptoImplementationService {
                     case &quot;ES256&quot;:
                         return &quot;ES256&quot;;
                     default:
-                        return &quot;ES256&quot;;
+                        throw new Error(&#x60;Unsupported algorithm: ${alg}&#x60;);
                 }
             },
         );
 
-        if (credentialFormat &#x3D;&#x3D;&#x3D; CredentialFormat.SD_JWT) {
+        if (credentialFormat &#x3D;&#x3D;&#x3D; CredentialFormat.SD_JWT_VC) {
             return joseAlgs;
         }
 

@@ -263,7 +263,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="113" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:113</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="116" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:116</a></div>
                         </td>
                     </tr>
 
@@ -301,7 +301,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:78</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:81</a></div>
                         </td>
                     </tr>
 
@@ -340,7 +340,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:90</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="93" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:93</a></div>
                         </td>
                     </tr>
 
@@ -381,7 +381,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="105" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:105</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="108" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:108</a></div>
                         </td>
                     </tr>
 
@@ -420,7 +420,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="83" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:83</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="86" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:86</a></div>
                         </td>
                     </tr>
 
@@ -459,7 +459,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="98" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:98</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="101" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:101</a></div>
                         </td>
                     </tr>
 
@@ -496,7 +496,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:41</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -534,7 +534,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:57</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:60</a></div>
                         </td>
                     </tr>
 
@@ -566,13 +566,16 @@ import {
 } from &quot;class-validator&quot;;
 
 export class FieldDisplayDto {
-    @ApiProperty({ description: &quot;Locale code&quot;, example: &quot;en-US&quot; })
+    @ApiProperty({
+        description: &quot;Locale code based on BCP47 (RFC 5646)&quot;,
+        example: &quot;en-US&quot;,
+    })
     @IsString()
-    lang!: string;
+    locale!: string;
 
-    @ApiProperty({ description: &quot;Display label&quot;, example: &quot;Given Name&quot; })
+    @ApiProperty({ description: &quot;Display name&quot;, example: &quot;Given Name&quot; })
     @IsString()
-    label!: string;
+    name!: string;
 
     @ApiPropertyOptional({
         description: &quot;Optional display description&quot;,

@@ -168,12 +168,12 @@
                             <li>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                <a href="#label" >label</a>
+                                <a href="#locale" >locale</a>
                             </li>
                             <li>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                <a href="#lang" >lang</a>
+                                <a href="#name" >name</a>
                             </li>
                         </ul>
                     </td>
@@ -226,7 +226,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:28</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:31</a></div>
                         </td>
                     </tr>
 
@@ -237,12 +237,12 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="label"></a>
+                    <a name="locale"></a>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                        <span ><b>label</b></span>
-                        <a href="#label"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>locale</b></span>
+                        <a href="#locale"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -257,13 +257,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Display label&#x27;, example: &#x27;Given Name&#x27;})<br />@IsString()<br />
+                            @ApiProperty({description: &#x27;Locale code based on BCP47 (RFC 5646)&#x27;, example: &#x27;en-US&#x27;})<br />@IsString()<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:20</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:19</a></div>
                         </td>
                     </tr>
 
@@ -274,12 +274,12 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="lang"></a>
+                    <a name="name"></a>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                        <span ><b>lang</b></span>
-                        <a href="#lang"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>name</b></span>
+                        <a href="#name"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -294,13 +294,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Locale code&#x27;, example: &#x27;en-US&#x27;})<br />@IsString()<br />
+                            @ApiProperty({description: &#x27;Display name&#x27;, example: &#x27;Given Name&#x27;})<br />@IsString()<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:16</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:23</a></div>
                         </td>
                     </tr>
 
@@ -332,13 +332,16 @@ import {
 } from &quot;class-validator&quot;;
 
 export class FieldDisplayDto {
-    @ApiProperty({ description: &quot;Locale code&quot;, example: &quot;en-US&quot; })
+    @ApiProperty({
+        description: &quot;Locale code based on BCP47 (RFC 5646)&quot;,
+        example: &quot;en-US&quot;,
+    })
     @IsString()
-    lang!: string;
+    locale!: string;
 
-    @ApiProperty({ description: &quot;Display label&quot;, example: &quot;Given Name&quot; })
+    @ApiProperty({ description: &quot;Display name&quot;, example: &quot;Given Name&quot; })
     @IsString()
-    label!: string;
+    name!: string;
 
     @ApiPropertyOptional({
         description: &quot;Optional display description&quot;,

@@ -148,8 +148,7 @@
             </p>
             <p class="comment">
                             <code><a href="../entitys/WebhookEndpointEntity.html" target="_self" >OmitType(WebhookEndpointEntity, [
-    &quot;tenantId&quot;,
-    &quot;tenant&quot;,
+    ...TENANT_RELATION_FIELDS,
 ])</a></code>
             </p>
 
@@ -169,11 +168,11 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { OmitType } from &quot;@nestjs/swagger&quot;;
+import { TENANT_RELATION_FIELDS } from &quot;../../../../shared/utils/dto-omit-fields&quot;;
 import { WebhookEndpointEntity } from &quot;../entities/webhook-endpoint.entity&quot;;
 
 export class CreateWebhookEndpointDto extends OmitType(WebhookEndpointEntity, [
-    &quot;tenantId&quot;,
-    &quot;tenant&quot;,
+    ...TENANT_RELATION_FIELDS,
 ]) {}
 </code></pre>
     </div>

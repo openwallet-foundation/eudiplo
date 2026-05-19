@@ -218,10 +218,19 @@
                             <a href="#extractRawTokenFromSubmission" title="src/shared/utils/webhook/webhook.utils.ts" ><b>extractRawTokenFromSubmission</b>&nbsp;&nbsp;&nbsp;(src/.../webhook.utils.ts)</a>
                         </li>
                         <li>
+                            <a href="#extractRequestMeta" title="src/shared/utils/audit-log-context.util.ts" ><b>extractRequestMeta</b>&nbsp;&nbsp;&nbsp;(src/.../audit-log-context.util.ts)</a>
+                        </li>
+                        <li>
                             <a href="#filterOpenApiPaths" title="src/main.ts" ><b>filterOpenApiPaths</b>&nbsp;&nbsp;&nbsp;(src/.../main.ts)</a>
                         </li>
                         <li>
                             <a href="#findServiceByType" title="src/shared/trust/types.ts" ><b>findServiceByType</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getChangedFields" title="src/shared/utils/audit-log-context.util.ts" ><b>getChangedFields</b>&nbsp;&nbsp;&nbsp;(src/.../audit-log-context.util.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getChangedFieldsForKeys" title="src/shared/utils/audit-log-context.util.ts" ><b>getChangedFieldsForKeys</b>&nbsp;&nbsp;&nbsp;(src/.../audit-log-context.util.ts)</a>
                         </li>
                         <li>
                             <a href="#getDisplayTitle" title="src/issuer/configuration/credentials/utils/derive.ts" ><b>getDisplayTitle</b>&nbsp;&nbsp;&nbsp;(src/.../derive.ts)</a>
@@ -254,6 +263,12 @@
                             <a href="#IsTransactionData" title="src/verifier/presentations/validators/transaction-data.validator.ts" ><b>IsTransactionData</b>&nbsp;&nbsp;&nbsp;(src/.../transaction-data.validator.ts)</a>
                         </li>
                         <li>
+                            <a href="#loadConfigDto" title="src/shared/utils/config-file-loader.util.ts" ><b>loadConfigDto</b>&nbsp;&nbsp;&nbsp;(src/.../config-file-loader.util.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#loadJsonFile" title="src/shared/utils/config-file-loader.util.ts" ><b>loadJsonFile</b>&nbsp;&nbsp;&nbsp;(src/.../config-file-loader.util.ts)</a>
+                        </li>
+                        <li>
                             <a href="#loadTlsOptions" title="src/main.ts" ><b>loadTlsOptions</b>&nbsp;&nbsp;&nbsp;(src/.../main.ts)</a>
                         </li>
                         <li>
@@ -282,6 +297,12 @@
                         </li>
                         <li>
                             <a href="#readOptionalFile" title="src/database/postgres-ssl-options.ts" ><b>readOptionalFile</b>&nbsp;&nbsp;&nbsp;(src/.../postgres-ssl-options.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#requireTenantContext" title="src/auth/tenant-context.util.ts" ><b>requireTenantContext</b>&nbsp;&nbsp;&nbsp;(src/.../tenant-context.util.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#resolveAuditActor" title="src/shared/utils/audit-log-context.util.ts" ><b>resolveAuditActor</b>&nbsp;&nbsp;&nbsp;(src/.../audit-log-context.util.ts)</a>
                         </li>
                         <li>
                             <a href="#Secured" title="src/auth/secure.decorator.ts" ><b>Secured</b>&nbsp;&nbsp;&nbsp;(src/.../secure.decorator.ts)</a>
@@ -3547,6 +3568,281 @@ Supporting Multi-Credential-Flows by evaluating the descriptor_map or falling ba
             </tr>
         </tbody>
     </table>
+</section>    <h3>src/shared/utils/audit-log-context.util.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="extractRequestMeta"></a>
+                    <span class="name">
+                        <span ><b>extractRequestMeta</b></span>
+                        <a href="#extractRequestMeta"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>extractRequestMeta(req?: Request)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                        <code>Request</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getChangedFields"></a>
+                    <span class="name">
+                        <span ><b>getChangedFields</b></span>
+                        <a href="#getChangedFields"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getChangedFields(before?: Record, after?: Record)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>before</td>
+                                            <td>
+                                                        <code>Record</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>after</td>
+                                            <td>
+                                                        <code>Record</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getChangedFieldsForKeys"></a>
+                    <span class="name">
+                        <span ><b>getChangedFieldsForKeys</b></span>
+                        <a href="#getChangedFieldsForKeys"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getChangedFieldsForKeys(before: T, after: T, keys: Array)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>before</td>
+                                            <td>
+                                                        <code>T</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>after</td>
+                                            <td>
+                                                        <code>T</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>keys</td>
+                                            <td>
+                                                        <code>Array</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resolveAuditActor"></a>
+                    <span class="name">
+                        <span ><b>resolveAuditActor</b></span>
+                        <a href="#resolveAuditActor"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>resolveAuditActor(token: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>token</td>
+                                            <td>
+                                                            <code><a href="../interfaces/TokenPayload.html" target="_self" >TokenPayload</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/AuditLogActor.html" target="_self" >AuditLogActor</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>    <h3>src/shared/utils/encryption/encrypted-column.transformer.ts</h3>
     <section data-compodoc="block-methods">
     <h3></h3>    <table class="table table-sm table-bordered">
@@ -3768,6 +4064,142 @@ Must be called during application bootstrap before any database operations.</p>
             </tr>
         </tbody>
     </table>
+</section>    <h3>src/shared/utils/config-file-loader.util.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadConfigDto"></a>
+                    <span class="name">
+                        <span ><b>loadConfigDto</b></span>
+                        <a href="#loadConfigDto"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>loadConfigDto(filePath: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, validationClass: ClassConstructor)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>filePath</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>validationClass</td>
+                                            <td>
+                                                        <code>ClassConstructor</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>T</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadJsonFile"></a>
+                    <span class="name">
+                        <span ><b>loadJsonFile</b></span>
+                        <a href="#loadJsonFile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>loadJsonFile(filePath: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>filePath</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>T</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>    <h3>src/database/migrations/1763000000000-MigrateCredentialConfigToV2Fields.ts</h3>
     <section data-compodoc="block-methods">
     <h3></h3>    <table class="table table-sm table-bordered">
@@ -3890,6 +4322,69 @@ Must be called during application bootstrap before any database operations.</p>
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/auth/tenant-context.util.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="requireTenantContext"></a>
+                    <span class="name">
+                        <span ><b>requireTenantContext</b></span>
+                        <a href="#requireTenantContext"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>requireTenantContext(user: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/TokenPayload.html" target="_self" >TokenPayload</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
                         </div>
                             <div class="io-description">

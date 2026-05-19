@@ -504,8 +504,8 @@ function normalizeDisplay(
     return display
         .filter((entry) &#x3D;&gt; !!entry.name)
         .map((entry) &#x3D;&gt; ({
-            lang: entry.locale ?? &quot;und&quot;,
-            label: entry.name ?? &quot;&quot;,
+            locale: entry.locale ?? &quot;und&quot;,
+            name: entry.name ?? &quot;&quot;,
         }));
 }
 
