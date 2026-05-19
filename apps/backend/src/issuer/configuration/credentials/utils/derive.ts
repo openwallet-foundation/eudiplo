@@ -1,14 +1,16 @@
 import type {
-    ClaimDisplayInfoV1,
+    ClaimDisplayInfo,
     ClaimFieldDefinition,
-    ClaimMetadataV1,
+    ClaimMetadata,
     JsonSchema,
-} from "./v2-types";
+} from "./types";
 
 const JSON_SCHEMA_DRAFT_2020_12 =
     "https://json-schema.org/draft/2020-12/schema";
 
-function segmentToKey(segment: string | number | null): string {
+type Segment = string | number | null;
+
+function segmentToKey(segment: Segment): string {
     if (segment === null) {
         return "*";
     }
@@ -37,7 +39,7 @@ function getOrCreateChild(
 
 function setValueAtPath(
     target: Record<string, unknown>,
-    path: Array<string | number | null>,
+    path: Segment[],
     value: unknown,
 ): void {
     if (path.length === 0) {
@@ -105,9 +107,7 @@ function ensureSchemaNode(
 
     for (const segment of path) {
         const key = segmentToKey(segment);
-        if (!cursor.properties) {
-            cursor.properties = {};
-        }
+        cursor.properties ??= {};
 
         if (!cursor.properties[key]) {
             cursor.properties[key] = {
@@ -116,7 +116,7 @@ function ensureSchemaNode(
             };
         }
 
-        cursor = cursor.properties[key] as JsonSchema;
+        cursor = cursor.properties[key];
     }
 
     return cursor;
@@ -124,7 +124,7 @@ function ensureSchemaNode(
 
 function ensureFrameNode(
     root: Record<string, unknown>,
-    path: Array<string | number | null>,
+    path: Segment[],
 ): Record<string, unknown> {
     let cursor = root;
 
@@ -141,9 +141,9 @@ function ensureFrameNode(
     return cursor;
 }
 
-function normalizeDisplayToV1(
+function normalizeDisplayInfo(
     display: ClaimFieldDefinition["display"],
-): ClaimDisplayInfoV1[] | undefined {
+): ClaimDisplayInfo[] | undefined {
     if (!display || display.length === 0) {
         return undefined;
     }
@@ -179,7 +179,7 @@ export function buildDisclosureFrame(
         }
 
         const parentPath = field.path.slice(0, -1);
-        const leaf = segmentToKey(field.path[field.path.length - 1] ?? "");
+        const leaf = segmentToKey(field.path.at(-1) ?? "");
 
         const node = ensureFrameNode(frame, parentPath);
         const existing = Array.isArray(node._sd) ? node._sd : [];
@@ -196,11 +196,11 @@ export function buildDisclosureFrame(
 
 export function buildClaimsMetadata(
     fields: ClaimFieldDefinition[],
-): ClaimMetadataV1[] {
+): ClaimMetadata[] {
     return fields
         .filter((field) => field.path.length > 0)
         .map((field) => {
-            const metadata: ClaimMetadataV1 = {
+            const metadata: ClaimMetadata = {
                 path: field.path.map((segment) => segmentToKey(segment)),
             };
 
@@ -208,7 +208,7 @@ export function buildClaimsMetadata(
                 metadata.mandatory = field.mandatory;
             }
 
-            const display = normalizeDisplayToV1(field.display);
+            const display = normalizeDisplayInfo(field.display);
             if (display) {
                 metadata.display = display;
             }
@@ -230,11 +230,9 @@ export function buildJsonSchema(fields: ClaimFieldDefinition[]): JsonSchema {
         }
 
         const parent = ensureSchemaNode(root, field.path.slice(0, -1));
-        const leafKey = segmentToKey(field.path[field.path.length - 1] ?? "");
+        const leafKey = segmentToKey(field.path.at(-1) ?? "");
 
-        if (!parent.properties) {
-            parent.properties = {};
-        }
+        parent.properties ??= {};
 
         const leafSchema: JsonSchema = {
             ...(field.constraints ?? {}),
