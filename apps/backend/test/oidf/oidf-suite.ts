@@ -379,7 +379,9 @@ export class OIDFSuite {
 
     private sortRecord(input: Record<string, string>): Record<string, string> {
         const sorted: Record<string, string> = {};
-        for (const key of Object.keys(input).sort((a, b) => a.localeCompare(b))) {
+        for (const key of Object.keys(input).sort((a, b) =>
+            a.localeCompare(b),
+        )) {
             sorted[key] = input[key];
         }
 

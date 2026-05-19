@@ -315,8 +315,8 @@ export class CertService {
         // Return as base64url (no padding)
         return hash
             .toString("base64")
-            .replaceAll('+', "-")
-            .replaceAll('/', "_")
+            .replaceAll("+", "-")
+            .replaceAll("/", "_")
             .replace(/=+$/, "");
     }
 }

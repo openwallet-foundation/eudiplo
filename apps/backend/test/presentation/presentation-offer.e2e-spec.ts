@@ -22,8 +22,8 @@ function computeCertHash(leafPem: string): string {
         .update(derBytes)
         .digest()
         .toString("base64")
-        .replaceAll('+', "-")
-        .replaceAll('/', "_")
+        .replaceAll("+", "-")
+        .replaceAll("/", "_")
         .replace(/=+$/, "");
 }
 
