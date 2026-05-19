@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Query } from "@nestjs/common";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Role } from "../auth/roles/role.enum";
 import { Secured } from "../auth/secure.decorator";
@@ -6,7 +6,9 @@ import { Token, TokenPayload } from "../auth/token.decorator";
 import { StatusUpdateDto } from "../issuer/lifecycle/status/dto/status-update.dto";
 import { StatusListService } from "../issuer/lifecycle/status/status-list.service";
 import { SessionLogStoreService } from "../shared/utils/logger/session-log-store.service";
+import { PaginatedSessionResponseDto } from "./dto/paginated-session-response.dto";
 import { SessionLogEntryResponseDto } from "./dto/session-log-entry-response.dto";
+import { SessionQueryDto } from "./dto/session-query.dto";
 import { Session } from "./entities/session.entity";
 import { SessionService } from "./session.service";
 
@@ -21,11 +23,16 @@ export class SessionController {
     ) {}
 
     /**
-     * Retrieves all sessions.
+     * Retrieves a paginated list of sessions with optional filters.
      */
+    @ApiOperation({ summary: "Get sessions (paginated)" })
+    @ApiResponse({ status: 200, type: PaginatedSessionResponseDto })
     @Get()
-    getAllSessions(@Token() token: TokenPayload): Promise<Session[]> {
-        return this.sessionService.getAll(token.entity!.id);
+    getAllSessions(
+        @Token() token: TokenPayload,
+        @Query() query: SessionQueryDto,
+    ): Promise<PaginatedSessionResponseDto> {
+        return this.sessionService.getAll(token.entity!.id, query);
     }
 
     /**

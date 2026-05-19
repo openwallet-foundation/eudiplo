@@ -16,6 +16,8 @@ import {
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity.js";
 import { SessionCleanupMode } from "../auth/tenant/entitites/session-storage-config";
 import { TenantEntity } from "../auth/tenant/entitites/tenant.entity";
+import { SessionQueryDto } from "./dto/session-query.dto";
+import { PaginatedSessionResponseDto } from "./dto/paginated-session-response.dto";
 import { Session, SessionStatus } from "./entities/session.entity";
 import {
     SESSION_STATUS_CHANGED,
@@ -163,14 +165,48 @@ export class SessionService implements OnApplicationBootstrap {
     }
 
     /**
-     * Get all sessions.
-     * @returns
+     * Get sessions with pagination and optional filtering.
+     * @param tenantId
+     * @param query - Pagination and filter parameters
+     * @returns Paginated session list
      */
-    getAll(tenantId: string): Promise<Session[]> {
-        return this.sessionRepository.find({
-            where: { tenantId },
-            order: { updatedAt: "DESC" },
+    async getAll(
+        tenantId: string,
+        query: SessionQueryDto,
+    ): Promise<PaginatedSessionResponseDto> {
+        const { page, pageSize, status, type, sortBy, sortOrder } = query;
+
+        const where: FindOptionsWhere<Session> = { tenantId };
+
+        if (status) {
+            where.status = status;
+        }
+
+        if (type === "issuance") {
+            where.requestId = IsNull();
+        } else if (type === "presentation") {
+            where.requestId = Not(IsNull());
+        }
+
+        const orderColumn = sortBy ?? "updatedAt";
+        const orderDirection = sortOrder?.toUpperCase() as "ASC" | "DESC" ?? "DESC";
+
+        const [items, total] = await this.sessionRepository.findAndCount({
+            select: ["id", "status", "createdAt", "requestId"],
+            where,
+            order: { [orderColumn]: orderDirection },
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+            loadEagerRelations: false,
         });
+
+        return {
+            items,
+            total,
+            page,
+            pageSize,
+            totalPages: Math.ceil(total / pageSize),
+        };
     }
 
     /**

@@ -1354,6 +1354,42 @@ export const SessionSchema = {
     ]
 } as const;
 
+export const PaginatedSessionResponseDtoSchema = {
+    type: 'object',
+    properties: {
+        items: {
+            description: 'The sessions for the current page.',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/Session'
+            }
+        },
+        total: {
+            type: 'number',
+            description: 'Total number of sessions matching the query'
+        },
+        page: {
+            type: 'number',
+            description: 'Current page number (1-based)'
+        },
+        pageSize: {
+            type: 'number',
+            description: 'Number of items per page'
+        },
+        totalPages: {
+            type: 'number',
+            description: 'Total number of pages'
+        }
+    },
+    required: [
+        'items',
+        'total',
+        'page',
+        'pageSize',
+        'totalPages'
+    ]
+} as const;
+
 export const SessionLogEntryResponseDtoSchema = {
     type: 'object',
     properties: {

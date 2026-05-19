@@ -80,75 +80,90 @@
     }
   </div>
 
-  <table mat-table [dataSource]="dataSource" matSort class="sessions-table">
-    <!-- Checkbox Column -->
-    <ng-container matColumnDef="select">
-      <th mat-header-cell *matHeaderCellDef>
-        <mat-checkbox
-          (change)="$event ? masterToggle() : null"
-          [checked]="selection.hasValue() && isAllSelected()"
-          [indeterminate]="selection.hasValue() && !isAllSelected()"
-          [aria-label]="checkboxLabel()"
-        >
-        </mat-checkbox>
-      </th>
-      <td mat-cell *matCellDef="let session">
-        <mat-checkbox
-          (click)="$event.stopPropagation()"
-          (change)="$event ? selection.toggle(session) : null"
-          [checked]="selection.isSelected(session)"
-          [aria-label]="checkboxLabel(session)"
-        >
-        </mat-checkbox>
-      </td>
-    </ng-container>
+  <div class="table-container">
+    @if (isLoadingResults) {
+      <div class="loading-shade">
+        <mat-spinner></mat-spinner>
+      </div>
+    }
+    <table mat-table [dataSource]="dataSource" matSort class="sessions-table">
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            (change)="$event ? masterToggle() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+            [aria-label]="checkboxLabel()"
+          >
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let session">
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="$event ? selection.toggle(session) : null"
+            [checked]="selection.isSelected(session)"
+            [aria-label]="checkboxLabel(session)"
+          >
+          </mat-checkbox>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Session ID</th>
-      <td mat-cell *matCellDef="let session">
-        <span class="session-id">{{ session.id }}</span>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Session ID</th>
+        <td mat-cell *matCellDef="let session">
+          <span class="session-id">{{ session.id }}</span>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
-      <td mat-cell *matCellDef="let session">
-        @if (session.requestId) {
-          <span class="type-badge presentation"> Presentation </span>
-        } @else {
-          <span class="type-badge issuance"> Issuance </span>
-        }
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+        <td mat-cell *matCellDef="let session">
+          @if (session.requestId) {
+            <span class="type-badge presentation"> Presentation </span>
+          } @else {
+            <span class="type-badge issuance"> Issuance </span>
+          }
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-      <td mat-cell *matCellDef="let session">
-        <span class="status-badge" [class]="getStatusClass(session.status)">
-          {{ getSessionStatus(session) | titlecase }}
-        </span>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let session">
+          <span class="status-badge" [class]="getStatusClass(session.status)">
+            {{ getSessionStatus(session) | titlecase }}
+          </span>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="createdAt">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">Created At</th>
-      <td mat-cell *matCellDef="let session">
-        <span class="date-text">{{ session.createdAt | date: 'short' }}</span>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt">Created At</th>
+        <td mat-cell *matCellDef="let session">
+          <span class="date-text">{{ session.createdAt | date: 'short' }}</span>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let session">
-        <button matIconButton [routerLink]="[session.id]" matTooltip="View Session Details">
-          <mat-icon>visibility</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let session">
+          <button matIconButton [routerLink]="[session.id]" matTooltip="View Session Details">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns" class="session-row"></tr>
-  </table>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="session-row"></tr>
+    </table>
+
+    <mat-paginator
+      [length]="totalItems"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      showFirstLastButtons
+      aria-label="Select page of sessions"
+    ></mat-paginator>
+  </div>
 
   @if (dataSource.data.length === 0) {
     <div fxLayout="column" fxLayoutAlign="center center" class="empty-state">

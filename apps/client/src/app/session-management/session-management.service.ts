@@ -4,6 +4,7 @@ import {
   sessionControllerDeleteSession,
   sessionControllerGetAllSessions,
   sessionControllerGetSession,
+  PaginatedSessionResponseDto,
   Session,
 } from '@eudiplo/sdk-core';
 
@@ -17,6 +18,15 @@ export interface SessionLogEntry {
   detail?: Record<string, unknown>;
 }
 
+export interface SessionQueryParams {
+  page?: number;
+  pageSize?: number;
+  status?: 'active' | 'fetched' | 'completed' | 'expired' | 'failed';
+  type?: 'issuance' | 'presentation';
+  sortBy?: 'id' | 'status' | 'createdAt' | 'requestId';
+  sortOrder?: 'asc' | 'desc';
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -24,12 +34,12 @@ export class SessionManagementService {
   constructor() {}
 
   /**
-   * Get all sessions
+   * Get sessions with pagination and optional filters
    */
-  async getAllSessions(): Promise<Session[]> {
+  async getAllSessions(params: SessionQueryParams = {}): Promise<PaginatedSessionResponseDto> {
     try {
-      const response = await sessionControllerGetAllSessions();
-      return response.data || [];
+      const response = await sessionControllerGetAllSessions({ query: params });
+      return response.data as PaginatedSessionResponseDto;
     } catch (error) {
       console.error('Error fetching sessions:', error);
       throw new Error('Failed to load sessions', { cause: error });

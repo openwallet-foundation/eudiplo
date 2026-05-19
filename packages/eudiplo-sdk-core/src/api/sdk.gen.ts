@@ -284,7 +284,7 @@ export const statusListManagementControllerUpdateList = <ThrowOnError extends bo
 });
 
 /**
- * Retrieves all sessions.
+ * Get sessions (paginated)
  */
 export const sessionControllerGetAllSessions = <ThrowOnError extends boolean = true>(options?: Options<SessionControllerGetAllSessionsData, ThrowOnError>) => (options?.client ?? client).get<SessionControllerGetAllSessionsResponses, unknown, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],

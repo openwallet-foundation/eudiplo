@@ -1,12 +1,15 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
-import { Component, type OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -14,6 +17,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { Session } from '@eudiplo/sdk-core';
+import { from, merge, of as observableOf, Subject } from 'rxjs';
+import { catchError, startWith, switchMap } from 'rxjs/operators';
 import { SessionManagementService } from '../session-management.service';
 
 // Define the SessionStatus type
@@ -32,20 +37,28 @@ export type SessionStatus = 'active' | 'fetched' | 'completed' | 'expired' | 'fa
     CommonModule,
     MatIconModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     RouterModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+    MatPaginatorModule,
   ],
   templateUrl: './session-management-list.component.html',
   styleUrl: './session-management-list.component.scss',
 })
-export class SessionManagementListComponent implements OnInit, AfterViewInit {
+export class SessionManagementListComponent implements AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   dataSource = new MatTableDataSource<Session>([]);
-  typeFilter = new FormControl('all');
-  statusFilter = new FormControl('all');
+  typeFilter = new FormControl<'all' | 'issuance' | 'presentation'>('all');
+  statusFilter = new FormControl<'all' | SessionStatus>('all');
   selection = new SelectionModel<Session>(true, []);
+
+  totalItems = 0;
+  pageSize = 25;
+  pageSizeOptions = [10, 25, 50, 100];
+  isLoadingResults = true;
 
   displayedColumns: (keyof Session | 'select' | 'type' | 'actions')[] = [
     'select',
@@ -71,91 +84,54 @@ export class SessionManagementListComponent implements OnInit, AfterViewInit {
     { value: 'failed', label: 'Failed' },
   ];
 
-  private allSessions: Session[] = [];
   deletingSelected = false;
 
-  constructor(private sessionManagementService: SessionManagementService) {
-    // Set up filter listeners
-    this.typeFilter.valueChanges.subscribe(() => {
-      this.applyFilter();
-    });
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly refresh$ = new Subject<void>();
 
-    this.statusFilter.valueChanges.subscribe(() => {
-      this.applyFilter();
-    });
-  }
-
-  ngOnInit(): void {
-    this.refreshSessions().then(
-      () => {
-        // Custom sort for createdAt
-        this.dataSource.sortingDataAccessor = (item: Session, property: string) => {
-          switch (property) {
-            case 'createdAt':
-              return new Date(item.createdAt).getTime();
-            case 'type':
-              return item.requestId ? 'verification' : 'issuance';
-            case 'status':
-              return this.getSessionStatus(item);
-            default:
-              return (item as any)[property];
-          }
-        };
-      },
-      (error) => {
-        console.error('Error loading sessions:', error);
-      }
-    );
-  }
-
-  refreshSessions() {
-    return this.sessionManagementService.getAllSessions().then((sessions) => {
-      this.dataSource.data = sessions;
-      this.allSessions = sessions;
-      this.selection.clear(); // Clear selection when data is refreshed
-      this.applyFilter(); // Reapply filter after refresh
-    });
-  }
+  constructor(private sessionManagementService: SessionManagementService) {}
 
   ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort;
-  }
+    // Reset to page 1 when sort or filters change
+    merge(this.sort.sortChange, this.typeFilter.valueChanges, this.statusFilter.valueChanges)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => (this.paginator.pageIndex = 0));
 
-  applyFilter(): void {
-    const typeFilterValue = this.typeFilter.value;
-    const statusFilterValue = this.statusFilter.value;
-
-    let filteredSessions = this.allSessions;
-
-    // Apply type filter
-    if (typeFilterValue === 'issuance') {
-      filteredSessions = filteredSessions.filter((session) => !session.requestId);
-    } else if (typeFilterValue === 'presentation') {
-      filteredSessions = filteredSessions.filter((session) => !!session.requestId);
-    }
-
-    // Apply status filter
-    if (statusFilterValue !== 'all') {
-      filteredSessions = filteredSessions.filter((session) => {
-        const sessionStatus = this.getSessionStatus(session);
-        return sessionStatus === statusFilterValue;
+    // Reload data on any triggering event (sort, page change, filter change, manual refresh)
+    merge(this.sort.sortChange, this.paginator.page, this.typeFilter.valueChanges, this.statusFilter.valueChanges, this.refresh$)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          const typeValue = this.typeFilter.value;
+          const statusValue = this.statusFilter.value;
+          // Map the 'type' column sort to its underlying DB field 'requestId'
+          const sortActive = this.sort.active === 'type' ? 'requestId' : this.sort.active;
+          const sortDirection = this.sort.direction;
+          return from(
+            this.sessionManagementService.getAllSessions({
+              page: this.paginator.pageIndex + 1,
+              pageSize: this.paginator.pageSize,
+              ...(typeValue !== 'all' && typeValue ? { type: typeValue } : {}),
+              ...(statusValue !== 'all' && statusValue ? { status: statusValue } : {}),
+              ...(sortActive && sortDirection ? { sortBy: sortActive as 'id' | 'status' | 'createdAt' | 'requestId', sortOrder: sortDirection } : {}),
+            }),
+          ).pipe(catchError(() => observableOf(null)));
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((result) => {
+        this.isLoadingResults = false;
+        if (result) {
+          this.dataSource.data = result.items;
+          this.totalItems = result.total;
+          this.selection.clear();
+        }
       });
-    }
-
-    this.dataSource.data = filteredSessions;
   }
 
-  getSessionStatus(session: Session): SessionStatus {
-    return session.status as SessionStatus;
-  }
-
-  getStatusDisplay(status: any): string {
-    return this.sessionManagementService.getStatusDisplay(status);
-  }
-
-  getStatusClass(status: any): string {
-    const sessionStatus = this.getSessionStatus({ status } as Session);
-    return 'status-' + sessionStatus;
+  refreshSessions(): void {
+    this.refresh$.next();
   }
 
   // Selection methods
@@ -214,5 +190,17 @@ export class SessionManagementListComponent implements OnInit, AfterViewInit {
 
   clearSelection() {
     this.selection.clear();
+  }
+
+  getSessionStatus(session: Session): SessionStatus {
+    return session.status as SessionStatus;
+  }
+
+  getStatusDisplay(status: any): string {
+    return this.sessionManagementService.getStatusDisplay(status);
+  }
+
+  getStatusClass(status: any): string {
+    return 'status-' + (status as SessionStatus);
   }
 }

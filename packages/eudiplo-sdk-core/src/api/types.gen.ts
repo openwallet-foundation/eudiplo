@@ -688,6 +688,29 @@ export type Session = {
     consumedAt?: string;
 };
 
+export type PaginatedSessionResponseDto = {
+    /**
+     * The sessions for the current page.
+     */
+    items: Array<Session>;
+    /**
+     * Total number of sessions matching the query
+     */
+    total: number;
+    /**
+     * Current page number (1-based)
+     */
+    page: number;
+    /**
+     * Number of items per page
+     */
+    pageSize: number;
+    /**
+     * Total number of pages
+     */
+    totalPages: number;
+};
+
 export type SessionLogEntryResponseDto = {
     /**
      * Log entry ID
@@ -3477,12 +3500,29 @@ export type StatusListManagementControllerUpdateListResponse = StatusListManagem
 export type SessionControllerGetAllSessionsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Page number (1-based)
+         */
+        page?: number;
+        /**
+         * Number of items per page
+         */
+        pageSize?: number;
+        /**
+         * Filter by session status
+         */
+        status?: 'active' | 'fetched' | 'completed' | 'expired' | 'failed';
+        /**
+         * Filter by session type
+         */
+        type?: 'issuance' | 'presentation';
+    };
     url: '/api/session';
 };
 
 export type SessionControllerGetAllSessionsResponses = {
-    200: Array<Session>;
+    200: PaginatedSessionResponseDto;
 };
 
 export type SessionControllerGetAllSessionsResponse = SessionControllerGetAllSessionsResponses[keyof SessionControllerGetAllSessionsResponses];
