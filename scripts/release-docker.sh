@@ -25,7 +25,7 @@ login() {
 # Args: <target> <image-name>
 build_and_push() {
   local target="$1" image="$2"
-  local fullImageBase="${REGISTRY}/${image}"
+  local full_image_base="${REGISTRY}/${image}"
 
   log "Building and pushing ${image} from target ${target} (version ${DOCKER_RELEASE_VERSION}) for linux/amd64,linux/arm64"
 
@@ -34,10 +34,10 @@ build_and_push() {
     --target "${target}" \
     --platform linux/amd64,linux/arm64 \
     --build-arg VERSION="${DOCKER_RELEASE_VERSION}" \
-    -t "${fullImageBase}:latest" \
-    -t "${fullImageBase}:${DOCKER_RELEASE_VERSION}" \
-    -t "${fullImageBase}:${MAJOR}" \
-    -t "${fullImageBase}:${MAJOR}.${MINOR}" \
+    -t "${full_image_base}:latest" \
+    -t "${full_image_base}:${DOCKER_RELEASE_VERSION}" \
+    -t "${full_image_base}:${MAJOR}" \
+    -t "${full_image_base}:${MAJOR}.${MINOR}" \
     --push \
     .
 }

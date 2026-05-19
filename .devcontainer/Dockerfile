@@ -10,10 +10,8 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     python3-venv \
-    && rm -rf /var/lib/apt/lists/*
-
-# Enable corepack for pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+    && rm -rf /var/lib/apt/lists/* \
+    && corepack enable && corepack prepare pnpm@latest --activate
 
 # Install Oh My Zsh for better terminal experience (optional)
 USER node

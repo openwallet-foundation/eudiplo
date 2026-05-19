@@ -235,7 +235,7 @@ export function buildJsonSchema(fields: ClaimFieldDefinition[]): JsonSchema {
         parent.properties ??= {};
 
         const leafSchema: JsonSchema = {
-            ...(field.constraints ?? {}),
+            ...field.constraints,
             type: field.type === "date" ? "string" : field.type,
         };
 
