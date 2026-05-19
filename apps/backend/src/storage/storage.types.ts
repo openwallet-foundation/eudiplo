@@ -1,5 +1,5 @@
 // src/storage/storage.types.ts
-import { Readable } from "stream";
+import { Readable } from "node:stream";
 
 export type PutOptions = {
     contentType?: string;

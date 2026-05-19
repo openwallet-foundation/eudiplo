@@ -9,7 +9,7 @@ import {
     writeFileSync,
 } from "node:fs";
 import { dirname, join } from "node:path";
-import { Readable } from "stream";
+import { Readable } from "node:stream";
 import { FileStorage, type PutOptions } from "../storage.types";
 
 /**

@@ -1,6 +1,6 @@
 import * as axios from "axios";
-import { mkdirSync, readFileSync } from "fs";
-import https from "https";
+import { mkdirSync, readFileSync } from "node:fs";
+import https from "node:https";
 import unzipper from "unzipper";
 
 import { OIDF_HTTPD_CA_PATH } from "./oidf-setup";

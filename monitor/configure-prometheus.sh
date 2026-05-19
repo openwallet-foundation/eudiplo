@@ -101,7 +101,7 @@ EOF
 }
 
 use_flexible_config() {
-    if [ -f "$PROMETHEUS_DIR/prometheus-flexible.yml" ]; then
+    if [[ -f "$PROMETHEUS_DIR/prometheus-flexible.yml" ]]; then
         cp "$PROMETHEUS_DIR/prometheus-flexible.yml" "$PROMETHEUS_DIR/prometheus.yml"
     else
         echo "Error: prometheus-flexible.yml not found"
@@ -122,7 +122,7 @@ restart_prometheus() {
 show_status() {
     echo "Current Prometheus configuration:"
     echo "================================="
-    if [ -f "$PROMETHEUS_DIR/prometheus.yml" ]; then
+    if [[ -f "$PROMETHEUS_DIR/prometheus.yml" ]]; then
         grep -A 10 "scrape_configs:" "$PROMETHEUS_DIR/prometheus.yml" | grep -E "(job_name|targets)"
     else
         echo "No prometheus.yml found"
