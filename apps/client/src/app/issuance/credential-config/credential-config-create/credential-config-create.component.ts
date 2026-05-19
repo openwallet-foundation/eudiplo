@@ -700,10 +700,8 @@ export class CredentialConfigCreateComponent implements OnInit {
     const displayEntry = display as FieldDisplayDto;
 
     return new FormGroup({
-      locale: new FormControl(displayEntry?.locale || displayEntry?.locale || 'en-US', [
-        Validators.required,
-      ]),
-      name: new FormControl(displayEntry?.name || displayEntry?.name || '', [Validators.required]),
+      locale: new FormControl(displayEntry?.locale || 'en-US', [Validators.required]),
+      name: new FormControl(displayEntry?.name || '', [Validators.required]),
       description: new FormControl(display?.description || ''),
     });
   }
