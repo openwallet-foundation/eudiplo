@@ -141,7 +141,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/issuer/configuration/credentials/utils/v2-types.ts</code>
+            <code>src/issuer/configuration/credentials/utils/types.ts</code>
         </p>
 
 
@@ -228,7 +228,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/issuer/configuration/credentials/utils/v2-types.ts:63</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/issuer/configuration/credentials/utils/types.ts:49</a></div>
                             </td>
                         </tr>
             </tbody>
@@ -508,9 +508,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">type CredentialFormat &#x3D; &quot;dc+sd-jwt&quot; | &quot;mso_mdoc&quot;;
-
-export type FieldType &#x3D;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">type FieldType &#x3D;
     | &quot;string&quot;
     | &quot;number&quot;
     | &quot;integer&quot;
@@ -519,7 +517,7 @@ export type FieldType &#x3D;
     | &quot;array&quot;
     | &quot;date&quot;;
 
-export type ClaimPathElement &#x3D; string | number | null;
+type ClaimPathElement &#x3D; string | number | null;
 
 interface FieldDisplay {
     locale: string;
@@ -538,29 +536,17 @@ export interface ClaimFieldDefinition {
     constraints?: Record&lt;string, unknown&gt;;
 }
 
-interface CredentialConfigV2Core {
-    format: CredentialFormat;
-    display: Array&lt;Record&lt;string, unknown&gt;&gt;;
-    scope?: string;
-    docType?: string;
-    keyAttestationsRequired?: Record&lt;string, unknown&gt;;
-}
-
-export interface CredentialConfigV2 extends Record&lt;string, unknown&gt; {
-    configVersion: 2;
-    config: CredentialConfigV2Core;
-    fields: ClaimFieldDefinition[];
-}
-
-export interface ClaimDisplayInfoV1 {
+/** @internal Used by derive functions to build runtime metadata for issuance. */
+export interface ClaimDisplayInfo {
     name?: string;
     locale?: string;
 }
 
-export interface ClaimMetadataV1 {
+/** @internal Used by derive functions to build runtime metadata for issuance. */
+export interface ClaimMetadata {
     path: ClaimPathElement[];
     mandatory?: boolean;
-    display?: ClaimDisplayInfoV1[];
+    display?: ClaimDisplayInfo[];
 }
 
 export interface JsonSchema {
@@ -572,23 +558,6 @@ export interface JsonSchema {
     required?: string[];
     items?: JsonSchema;
     [key: string]: unknown;
-}
-
-export interface CredentialConfigV1 extends Record&lt;string, unknown&gt; {
-    config: {
-        format: CredentialFormat;
-        display?: Array&lt;Record&lt;string, unknown&gt;&gt;;
-        scope?: string;
-        docType?: string;
-        namespace?: string;
-        claimsByNamespace?: Record&lt;string, Record&lt;string, unknown&gt;&gt;;
-        claimsMetadata?: ClaimMetadataV1[];
-        keyAttestationsRequired?: Record&lt;string, unknown&gt;;
-        [key: string]: unknown;
-    };
-    claims?: Record&lt;string, unknown&gt;;
-    disclosureFrame?: Record&lt;string, unknown&gt;;
-    schema?: JsonSchema;
 }
 </code></pre>
     </div>

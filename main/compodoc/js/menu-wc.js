@@ -1283,9 +1283,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/MetadataSchemaDto.html" data-type="entity-link" >MetadataSchemaDto</a>
                             </li>
                             <li class="link">
-                                <a href="classes/MigrateCredentialConfigToV2Fields1763000000000.html" data-type="entity-link" >MigrateCredentialConfigToV2Fields1763000000000</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/MigrateKeysToKeyChain1747000000000.html" data-type="entity-link" >MigrateKeysToKeyChain1747000000000</a>
                             </li>
                             <li class="link">
@@ -1622,7 +1619,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/ChainValidationResult.html" data-type="entity-link" >ChainValidationResult</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/ClaimDisplayInfoV1.html" data-type="entity-link" >ClaimDisplayInfoV1</a>
+                                <a href="interfaces/ClaimDisplayInfo.html" data-type="entity-link" >ClaimDisplayInfo</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/ClaimDisplayInput.html" data-type="entity-link" >ClaimDisplayInput</a>
@@ -1631,10 +1628,10 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/ClaimFieldDefinition.html" data-type="entity-link" >ClaimFieldDefinition</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/ClaimMetadataInput.html" data-type="entity-link" >ClaimMetadataInput</a>
+                                <a href="interfaces/ClaimMetadata.html" data-type="entity-link" >ClaimMetadata</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/ClaimMetadataV1.html" data-type="entity-link" >ClaimMetadataV1</a>
+                                <a href="interfaces/ClaimMetadataInput.html" data-type="entity-link" >ClaimMetadataInput</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/ClaimsWebhookResult.html" data-type="entity-link" >ClaimsWebhookResult</a>
@@ -1644,15 +1641,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="interfaces/CreateDeferredTransactionParams.html" data-type="entity-link" >CreateDeferredTransactionParams</a>
-                            </li>
-                            <li class="link">
-                                <a href="interfaces/CredentialConfigV1.html" data-type="entity-link" >CredentialConfigV1</a>
-                            </li>
-                            <li class="link">
-                                <a href="interfaces/CredentialConfigV2.html" data-type="entity-link" >CredentialConfigV2</a>
-                            </li>
-                            <li class="link">
-                                <a href="interfaces/CredentialConfigV2Core.html" data-type="entity-link" >CredentialConfigV2Core</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/CredentialMetadataInput.html" data-type="entity-link" >CredentialMetadataInput</a>
@@ -1731,9 +1719,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="interfaces/RegistrationCertCache.html" data-type="entity-link" >RegistrationCertCache</a>
-                            </li>
-                            <li class="link">
-                                <a href="interfaces/SchemaEntry.html" data-type="entity-link" >SchemaEntry</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/SdJwtVcIssueOptions.html" data-type="entity-link" >SdJwtVcIssueOptions</a>

@@ -1391,7 +1391,7 @@ export class RegistrationCertificateService {
         const arr &#x3D; Array.isArray(credentials) ? credentials : [];
         const fps &#x3D; arr
             .map((c: any) &#x3D;&gt; this.dcqlCredentialFingerprint(c))
-            .sort();
+            .sort((a, b) &#x3D;&gt; a.localeCompare(b));
         return this.hash(fps.join(&quot;|&quot;));
     }
 
@@ -1560,7 +1560,7 @@ export class RegistrationCertificateService {
         if (Array.isArray(value)) {
             return &#x60;[${value.map((v) &#x3D;&gt; this.canonicalJson(v)).join(&quot;,&quot;)}]&#x60;;
         }
-        const keys &#x3D; Object.keys(value).sort();
+        const keys &#x3D; Object.keys(value).sort((a, b) &#x3D;&gt; a.localeCompare(b));
         return &#x60;{${keys
             .map((k) &#x3D;&gt; &#x60;${JSON.stringify(k)}:${this.canonicalJson(value[k])}&#x60;)
             .join(&quot;,&quot;)}}&#x60;;
