@@ -323,6 +323,21 @@ jobs:
           path: tmp/oidf-logs
           if-no-files-found: ignore
 
+  sonarqube:
+    name: SonarQube
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995 # v8.1.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   # =============================================================================
   # Docker Backend: Build, Test & Push (multi-platform with native runners)
   # Uses native ARM runners instead of QEMU for ~4x faster arm64 builds.

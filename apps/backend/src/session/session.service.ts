@@ -189,7 +189,8 @@ export class SessionService implements OnApplicationBootstrap {
         }
 
         const orderColumn = sortBy ?? "updatedAt";
-        const orderDirection = sortOrder?.toUpperCase() as "ASC" | "DESC" ?? "DESC";
+        const orderDirection =
+            (sortOrder?.toUpperCase() as "ASC" | "DESC") ?? "DESC";
 
         const [items, total] = await this.sessionRepository.findAndCount({
             select: ["id", "status", "createdAt", "requestId"],

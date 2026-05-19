@@ -98,7 +98,13 @@ export class SessionManagementListComponent implements AfterViewInit {
       .subscribe(() => (this.paginator.pageIndex = 0));
 
     // Reload data on any triggering event (sort, page change, filter change, manual refresh)
-    merge(this.sort.sortChange, this.paginator.page, this.typeFilter.valueChanges, this.statusFilter.valueChanges, this.refresh$)
+    merge(
+      this.sort.sortChange,
+      this.paginator.page,
+      this.typeFilter.valueChanges,
+      this.statusFilter.valueChanges,
+      this.refresh$
+    )
       .pipe(
         startWith({}),
         switchMap(() => {
@@ -114,11 +120,16 @@ export class SessionManagementListComponent implements AfterViewInit {
               pageSize: this.paginator.pageSize,
               ...(typeValue !== 'all' && typeValue ? { type: typeValue } : {}),
               ...(statusValue !== 'all' && statusValue ? { status: statusValue } : {}),
-              ...(sortActive && sortDirection ? { sortBy: sortActive as 'id' | 'status' | 'createdAt' | 'requestId', sortOrder: sortDirection } : {}),
-            }),
+              ...(sortActive && sortDirection
+                ? {
+                    sortBy: sortActive as 'id' | 'status' | 'createdAt' | 'requestId',
+                    sortOrder: sortDirection,
+                  }
+                : {}),
+            })
           ).pipe(catchError(() => observableOf(null)));
         }),
-        takeUntilDestroyed(this.destroyRef),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((result) => {
         this.isLoadingResults = false;
