@@ -1,6 +1,4 @@
-type CredentialFormat = "dc+sd-jwt" | "mso_mdoc";
-
-export type FieldType =
+type FieldType =
     | "string"
     | "number"
     | "integer"
@@ -9,9 +7,9 @@ export type FieldType =
     | "array"
     | "date";
 
-export type ClaimPathElement = string | number | null;
+type ClaimPathElement = string | number | null;
 
-export interface FieldDisplay {
+interface FieldDisplay {
     locale: string;
     name: string;
     description?: string;
@@ -52,15 +50,3 @@ export interface JsonSchema {
     [key: string]: unknown;
 }
 
-interface CredentialConfigCore {
-    format: CredentialFormat;
-    display: Array<Record<string, unknown>>;
-    scope?: string;
-    docType?: string;
-    keyAttestationsRequired?: Record<string, unknown>;
-}
-
-export interface CredentialConfigData extends Record<string, unknown> {
-    config: CredentialConfigCore;
-    fields: ClaimFieldDefinition[];
-}

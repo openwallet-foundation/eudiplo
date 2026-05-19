@@ -28,4 +28,3 @@ export { AddSessionSingleUseTracking1760000000000 } from "./1760000000000-AddSes
 export { AddSchemaMetaToCredentialConfig1761000000000 } from "./1761000000000-AddSchemaMetaToCredentialConfig";
 export { AddTenantActionLog1762000000000 } from "./1762000000000-AddTenantActionLog";
 export { AddFederationToIssuanceConfig1763000000000 } from "./1763000000000-AddFederationToIssuanceConfig";
-export { MigrateCredentialConfigToV2Fields1763000000000 } from "./1763000000000-MigrateCredentialConfigToV2Fields";
