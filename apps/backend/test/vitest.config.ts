@@ -1,4 +1,3 @@
-import { codecovVitePlugin } from "@codecov/vite-plugin";
 import swc from "unplugin-swc";
 import { defineConfig } from "vitest/config";
 
@@ -31,12 +30,5 @@ export default defineConfig({
             DB_MIGRATIONS_RUN: "false",
         },
     },
-    plugins: [
-        swc.vite(), // Put the Codecov vite plugin after all other plugins
-        codecovVitePlugin({
-            enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
-            bundleName: "eudiplo",
-            uploadToken: process.env.CODECOV_TOKEN,
-        }),
-    ],
+    plugins: [swc.vite()],
 });

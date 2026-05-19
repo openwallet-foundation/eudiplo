@@ -298,23 +298,6 @@ jobs:
         env:
           TESTCONTAINERS_HOST_OVERRIDE: host.testcontainers.internal
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v6
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage-e2e/coverage-final.json
-          flags: e2e-test
-          name: codecov-umbrella
-          fail_ci_if_error: false
-
-      - name: Upload test results to Codecov
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v6
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          report_type: test_results
-          files: ./apps/backend/test-report.junit.xml
-
       - name: Upload OIDF test results
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
