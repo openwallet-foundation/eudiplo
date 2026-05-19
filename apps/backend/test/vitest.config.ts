@@ -12,6 +12,7 @@ export default defineConfig({
         coverage: {
             provider: "v8",
             reportsDirectory: "./coverage/e2e",
+            reporter: ["text", "lcov"],
             cleanOnRerun: false,
         },
         reporters: ["default", "junit"],
