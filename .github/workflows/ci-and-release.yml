@@ -53,11 +53,11 @@ jobs:
 
       - name: Run license check (backend, production)
         working-directory: apps/backend
-        run: pnpm dlx license-checker --production --onlyAllow "MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;0BSD;ISC"
+        run: pnpm dlx license-checker --production --onlyAllow "MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;0BSD;ISC;OFL-1.1"
 
       - name: Run license check (client, production)
         working-directory: apps/client
-        run: pnpm dlx license-checker --production --onlyAllow "MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;0BSD;ISC"
+        run: pnpm dlx license-checker --production --onlyAllow "MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;0BSD;ISC;OFL-1.1"
 
       - name: Run knip
         run: pnpm knip --no-progress

@@ -49,4 +49,3 @@ export interface JsonSchema {
     items?: JsonSchema;
     [key: string]: unknown;
 }
-
