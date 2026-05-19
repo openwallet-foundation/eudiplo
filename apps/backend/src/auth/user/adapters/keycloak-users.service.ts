@@ -240,9 +240,12 @@ export class KeycloakUsersProvider extends UsersProvider {
 
     private buildEmailFromUsername(username: string, tenantId: string): string {
         const normalizedUsername = username.trim().toLowerCase();
-        const isEmailLike = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-            normalizedUsername,
-        );
+        const atIndex = normalizedUsername.indexOf("@");
+        const isEmailLike =
+            atIndex > 0 &&
+            atIndex === normalizedUsername.lastIndexOf("@") &&
+            normalizedUsername.indexOf(".", atIndex + 1) > atIndex + 1 &&
+            !normalizedUsername.includes(" ");
 
         if (isEmailLike) {
             return normalizedUsername;
@@ -251,13 +254,15 @@ export class KeycloakUsersProvider extends UsersProvider {
         const localPart =
             normalizedUsername
                 .replace(/[^a-z0-9._+-]/g, "-")
-                .replace(/^-+|-+$/g, "") || "user";
+                .replace(/^-+/, "")
+                .replace(/-+$/, "") || "user";
         const tenantPart =
             tenantId
                 .trim()
                 .toLowerCase()
                 .replace(/[^a-z0-9-]/g, "-")
-                .replace(/^-+|-+$/g, "") || "tenant";
+                .replace(/^-+/, "")
+                .replace(/-+$/, "") || "tenant";
 
         return `${localPart}+${tenantPart}@eudiplo.local`;
     }

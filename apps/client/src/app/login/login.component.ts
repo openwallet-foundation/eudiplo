@@ -173,7 +173,8 @@ export class LoginComponent implements OnInit {
   }
 
   private async detectMode(apiUrl: string): Promise<void> {
-    const normalizedUrl = apiUrl.replace(/\/+$/, '');
+    let normalizedUrl = apiUrl;
+    while (normalizedUrl.endsWith('/')) normalizedUrl = normalizedUrl.slice(0, -1);
     this.detectedMode = 'loading';
 
     try {
@@ -224,7 +225,8 @@ export class LoginComponent implements OnInit {
         const formValue = this.loginForm.value;
 
         // Normalize the URL: remove trailing slashes
-        const normalizedUrl = formValue.apiUrl.replace(/\/+$/, '');
+        let normalizedUrl = formValue.apiUrl;
+        while (normalizedUrl.endsWith('/')) normalizedUrl = normalizedUrl.slice(0, -1);
 
         if (this.selectedLoginMode === 'sso') {
           const issuerUrl = this.discoveredIssuer;
