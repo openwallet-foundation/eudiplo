@@ -41,6 +41,7 @@ import { VerifierModule } from "./verifier/verifier.module";
         KeyModule.forRoot(),
         MulterModule.register({
             storage: memoryStorage(),
+            limits: { fileSize: 5 * 1024 * 1024 },
         }),
         CryptoModule,
         IssuerModule,
