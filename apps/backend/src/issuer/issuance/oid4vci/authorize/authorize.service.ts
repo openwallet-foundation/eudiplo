@@ -659,6 +659,7 @@ export class AuthorizeService {
             }
 
             await this.sessionService.add(session.id, {
+                consumed: true, // Mark the session as consumed to prevent reuse
                 refresh_token: tokenResponse.refresh_token,
                 refresh_token_expires_at: refreshTokenExpiresAt,
             });
