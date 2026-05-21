@@ -408,7 +408,7 @@
     </mat-card-content>
   </mat-card>
 
-  @if (dashboardService.hasWarnings) {
+  @if (dashboardService.hasWarnings && !dashboardService.isLoading) {
     <mat-card class="setup-card warnings-card">
       <mat-card-header>
         <mat-icon mat-card-avatar class="setup-icon">warning</mat-icon>

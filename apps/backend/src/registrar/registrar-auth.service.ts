@@ -1,9 +1,14 @@
-import { OAuth2Client, OAuth2Token } from "@badgateway/oauth2-client";
+import {
+    OAuth2Client,
+    OAuth2HttpError,
+    OAuth2Token,
+} from "@badgateway/oauth2-client";
 import {
     BadRequestException,
     Injectable,
     Logger,
     NotFoundException,
+    ServiceUnavailableException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -63,9 +68,20 @@ export class RegistrarAuthService {
             });
             this.logger.log("Registrar credentials validated successfully");
         } catch (error: any) {
-            this.logger.warn(`Credential validation failed: ${error.message}`);
-            throw new BadRequestException(
-                `Failed to authenticate with registrar. Please check your credentials. Error: ${error.message}`,
+            if (error instanceof OAuth2HttpError) {
+                this.logger.error(
+                    `Registrar rejected credentials (HTTP ${error.httpCode}): ${error.message}`,
+                );
+                throw new BadRequestException(
+                    `Invalid registrar credentials (HTTP ${error.httpCode}). Please check your username, password, client ID and secret.`,
+                );
+            }
+            // Network-level failure (DNS, connection refused, timeout, etc.)
+            this.logger.warn(
+                `Registrar is not reachable during credential check: ${error.message}`,
+            );
+            throw new ServiceUnavailableException(
+                `Registrar OIDC endpoint is not reachable. Credentials could not be verified. Error: ${error.message}`,
             );
         }
     }
