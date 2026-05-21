@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/PaginatedSessionResponseDto.schema.json",
+  "title": "PaginatedSessionResponseDto",
+  "type": "object",
+  "properties": {
+    "items": {
+      "description": "The sessions for the current page.",
+      "type": "array",
+      "items": {
+        "$ref": "./Session.schema.json"
+      }
+    },
+    "total": {
+      "type": "number",
+      "description": "Total number of sessions matching the query"
+    },
+    "page": {
+      "type": "number",
+      "description": "Current page number (1-based)"
+    },
+    "pageSize": {
+      "type": "number",
+      "description": "Number of items per page"
+    },
+    "totalPages": {
+      "type": "number",
+      "description": "Total number of pages"
+    }
+  },
+  "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize",
+    "totalPages"
+  ],
+  "additionalProperties": false
+}
