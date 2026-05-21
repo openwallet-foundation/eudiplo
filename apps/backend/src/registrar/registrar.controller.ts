@@ -75,7 +75,8 @@ export class RegistrarController {
     })
     @ApiResponse({
         status: 503,
-        description: "Registrar OIDC endpoint unreachable — credentials could not be verified",
+        description:
+            "Registrar OIDC endpoint unreachable — credentials could not be verified",
     })
     async createConfig(
         @Token() token: TokenPayload,
@@ -108,7 +109,8 @@ export class RegistrarController {
     })
     @ApiResponse({
         status: 503,
-        description: "Registrar OIDC endpoint unreachable — credentials could not be verified",
+        description:
+            "Registrar OIDC endpoint unreachable — credentials could not be verified",
     })
     @ApiResponse({
         status: 404,
