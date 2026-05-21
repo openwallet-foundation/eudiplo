@@ -491,8 +491,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="321"
-                                    class="link-to-prism">src/auth/user/adapters/keycloak-users.service.ts:321</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="326"
+                                    class="link-to-prism">src/auth/user/adapters/keycloak-users.service.ts:326</a></div>
                         </td>
                     </tr>
 
@@ -924,8 +924,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="265"
-                                    class="link-to-prism">src/auth/user/adapters/keycloak-users.service.ts:265</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="270"
+                                    class="link-to-prism">src/auth/user/adapters/keycloak-users.service.ts:270</a></div>
                         </td>
                     </tr>
 
@@ -1201,8 +1201,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="279"
-                                    class="link-to-prism">src/auth/user/adapters/keycloak-users.service.ts:279</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="284"
+                                    class="link-to-prism">src/auth/user/adapters/keycloak-users.service.ts:284</a></div>
                         </td>
                     </tr>
 
@@ -1640,9 +1640,12 @@ export class KeycloakUsersProvider extends UsersProvider {
 
     private buildEmailFromUsername(username: string, tenantId: string): string {
         const normalizedUsername &#x3D; username.trim().toLowerCase();
-        const isEmailLike &#x3D; /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-            normalizedUsername,
-        );
+        const atIndex &#x3D; normalizedUsername.indexOf(&quot;@&quot;);
+        const isEmailLike &#x3D;
+            atIndex &gt; 0 &amp;&amp;
+            atIndex &#x3D;&#x3D;&#x3D; normalizedUsername.lastIndexOf(&quot;@&quot;) &amp;&amp;
+            normalizedUsername.indexOf(&quot;.&quot;, atIndex + 1) &gt; atIndex + 1 &amp;&amp;
+            !normalizedUsername.includes(&quot; &quot;);
 
         if (isEmailLike) {
             return normalizedUsername;
@@ -1650,14 +1653,16 @@ export class KeycloakUsersProvider extends UsersProvider {
 
         const localPart &#x3D;
             normalizedUsername
-                .replace(/[^a-z0-9._+-]/g, &quot;-&quot;)
-                .replace(/^-+|-+$/g, &quot;&quot;) || &quot;user&quot;;
+                .replace(/[^a-z0-9._+-]+/g, &quot;-&quot;)
+                .replace(/^-/, &quot;&quot;)
+                .replace(/-$/, &quot;&quot;) || &quot;user&quot;;
         const tenantPart &#x3D;
             tenantId
                 .trim()
                 .toLowerCase()
-                .replace(/[^a-z0-9-]/g, &quot;-&quot;)
-                .replace(/^-+|-+$/g, &quot;&quot;) || &quot;tenant&quot;;
+                .replace(/[^a-z0-9-]+/g, &quot;-&quot;)
+                .replace(/^-/, &quot;&quot;)
+                .replace(/-$/, &quot;&quot;) || &quot;tenant&quot;;
 
         return &#x60;${localPart}+${tenantPart}@eudiplo.local&#x60;;
     }

@@ -228,7 +228,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/all-exceptions.filter.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/all-exceptions.filter.ts:14</a></div>
                         </td>
                     </tr>
 
@@ -262,8 +262,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="15"
-                                    class="link-to-prism">src/all-exceptions.filter.ts:15</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="16"
+                                    class="link-to-prism">src/all-exceptions.filter.ts:16</a></div>
                         </td>
                     </tr>
 
@@ -340,6 +340,7 @@
     Logger,
 } from &quot;@nestjs/common&quot;;
 import { Request, Response } from &quot;express&quot;;
+import { EntityNotFoundError } from &quot;typeorm&quot;;
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -353,7 +354,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
         const status &#x3D;
             exception instanceof HttpException
                 ? exception.getStatus()
-                : HttpStatus.INTERNAL_SERVER_ERROR;
+                : exception instanceof EntityNotFoundError
+                  ? HttpStatus.NOT_FOUND
+                  : HttpStatus.INTERNAL_SERVER_ERROR;
 
         const message &#x3D;
             exception instanceof HttpException

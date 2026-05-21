@@ -1207,16 +1207,18 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="532"
-                                    class="link-to-prism">src/issuer/trust-list/trustlist.service.ts:532</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="534"
+                                    class="link-to-prism">src/issuer/trust-list/trustlist.service.ts:534</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Format CertificateInfo to base64 DER without PEM headers
-Uses the first certificate (leaf) from the chain.</p>
+                        <div class="io-description"><p>Format CertificateInfo to base64 DER without PEM headers.
+Uses the last certificate in the chain as the trust anchor (root CA for InternalChain
+key chains, or the single cert for standalone key chains). This ensures trust list
+entries survive leaf cert rotation, since the root CA cert is fixed.</p>
 </div>
 
                             <div class="io-description">
@@ -1277,8 +1279,8 @@ Uses the first certificate (leaf) from the chain.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="541"
-                                    class="link-to-prism">src/issuer/trust-list/trustlist.service.ts:541</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="544"
+                                    class="link-to-prism">src/issuer/trust-list/trustlist.service.ts:544</a></div>
                         </td>
                     </tr>
 
@@ -2637,13 +2639,16 @@ export class TrustListService {
     }
 
     /**
-     * Format CertificateInfo to base64 DER without PEM headers
-     * Uses the first certificate (leaf) from the chain.
+     * Format CertificateInfo to base64 DER without PEM headers.
+     * Uses the last certificate in the chain as the trust anchor (root CA for InternalChain
+     * key chains, or the single cert for standalone key chains). This ensures trust list
+     * entries survive leaf cert rotation, since the root CA cert is fixed.
      * @param cert
      * @returns
      */
     formatCertEntity(cert: CertificateInfo): string {
-        return this.formatPem(cert.crt[0]);
+        const anchorPem &#x3D; cert.crt.at(-1) ?? cert.crt[0];
+        return this.formatPem(anchorPem);
     }
 
     /**
