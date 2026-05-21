@@ -260,12 +260,17 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { OAuth2Client, OAuth2Token } from &quot;@badgateway/oauth2-client&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+    OAuth2Client,
+    OAuth2HttpError,
+    OAuth2Token,
+} from &quot;@badgateway/oauth2-client&quot;;
 import {
     BadRequestException,
     Injectable,
     Logger,
     NotFoundException,
+    ServiceUnavailableException,
 } from &quot;@nestjs/common&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
 import { Repository } from &quot;typeorm&quot;;
@@ -325,9 +330,20 @@ export class RegistrarAuthService {
             });
             this.logger.log(&quot;Registrar credentials validated successfully&quot;);
         } catch (error: any) {
-            this.logger.warn(&#x60;Credential validation failed: ${error.message}&#x60;);
-            throw new BadRequestException(
-                &#x60;Failed to authenticate with registrar. Please check your credentials. Error: ${error.message}&#x60;,
+            if (error instanceof OAuth2HttpError) {
+                this.logger.error(
+                    &#x60;Registrar rejected credentials (HTTP ${error.httpCode}): ${error.message}&#x60;,
+                );
+                throw new BadRequestException(
+                    &#x60;Invalid registrar credentials (HTTP ${error.httpCode}). Please check your username, password, client ID and secret.&#x60;,
+                );
+            }
+            // Network-level failure (DNS, connection refused, timeout, etc.)
+            this.logger.warn(
+                &#x60;Registrar is not reachable during credential check: ${error.message}&#x60;,
+            );
+            throw new ServiceUnavailableException(
+                &#x60;Registrar OIDC endpoint is not reachable. Credentials could not be verified. Error: ${error.message}&#x60;,
             );
         }
     }
