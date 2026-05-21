@@ -7,6 +7,7 @@ import {
     Logger,
 } from "@nestjs/common";
 import { Request, Response } from "express";
+import { EntityNotFoundError } from "typeorm";
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -20,7 +21,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
         const status =
             exception instanceof HttpException
                 ? exception.getStatus()
-                : HttpStatus.INTERNAL_SERVER_ERROR;
+                : exception instanceof EntityNotFoundError
+                  ? HttpStatus.NOT_FOUND
+                  : HttpStatus.INTERNAL_SERVER_ERROR;
 
         const message =
             exception instanceof HttpException

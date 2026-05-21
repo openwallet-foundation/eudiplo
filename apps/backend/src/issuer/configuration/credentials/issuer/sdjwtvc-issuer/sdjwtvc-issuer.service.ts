@@ -120,7 +120,9 @@ export class SdjwtvcIssuerService {
         };
 
         if (!useFederation) {
-            header.x5c = this.certService.getLeafCertBase64(certificate);
+            // Include the full cert chain so verifiers can walk up to the root CA
+            // trust anchor stored in the trust list (CA-pinning mode).
+            header.x5c = this.certService.getCertChain(certificate);
         }
 
         return sdjwt.issue(

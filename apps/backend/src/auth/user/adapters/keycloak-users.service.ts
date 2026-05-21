@@ -253,16 +253,16 @@ export class KeycloakUsersProvider extends UsersProvider {
 
         const localPart =
             normalizedUsername
-                .replace(/[^a-z0-9._+-]/g, "-")
-                .replace(/^-+/, "")
-                .replace(/-+$/, "") || "user";
+                .replace(/[^a-z0-9._+-]+/g, "-")
+                .replace(/^-/, "")
+                .replace(/-$/, "") || "user";
         const tenantPart =
             tenantId
                 .trim()
                 .toLowerCase()
-                .replace(/[^a-z0-9-]/g, "-")
-                .replace(/^-+/, "")
-                .replace(/-+$/, "") || "tenant";
+                .replace(/[^a-z0-9-]+/g, "-")
+                .replace(/^-/, "")
+                .replace(/-$/, "") || "tenant";
 
         return `${localPart}+${tenantPart}@eudiplo.local`;
     }

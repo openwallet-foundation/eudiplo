@@ -523,16 +523,19 @@ export class KeyChainService {
             kmsProvider: keyChain.kmsProvider,
         };
 
-        // Build certificate array
+        // Build certificate array.
+        // For InternalChain: only export the root CA cert as crt[0].
+        // The leaf cert is always regenerated on import, and including it would
+        // cause importKeyChainWithRotation to treat it as the root CA cert (it
+        // uses dto.crt[0] as rootCertificate).
+        // For standalone: export the full activeCertificate chain.
         const certs: string[] = [];
-        if (keyChain.activeCertificate) {
+        if (keyChain.hasInternalCa()) {
+            if (keyChain.rootCertificate) {
+                certs.push(keyChain.rootCertificate.trim());
+            }
+        } else if (keyChain.activeCertificate) {
             certs.push(...this.splitPemChain(keyChain.activeCertificate));
-        }
-        if (
-            keyChain.rootCertificate &&
-            !certs.includes(keyChain.rootCertificate.trim())
-        ) {
-            certs.push(keyChain.rootCertificate.trim());
         }
         if (certs.length > 0) {
             exportDto.crt = certs;

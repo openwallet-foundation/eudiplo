@@ -1,13 +1,14 @@
 import type {
-  ClaimDisplayInfoV1,
   ClaimFieldDefinition,
-  ClaimMetadataV1,
+  ClaimMetadata,
   JsonSchema,
-} from "./v2-types";
+} from "./types";
 
 const JSON_SCHEMA_DRAFT_2020_12 = "https://json-schema.org/draft/2020-12/schema";
 
-function segmentToKey(segment: string | number | null): string {
+type Segment = string | number | null;
+
+function segmentToKey(segment: Segment): string {
   if (segment === null) {
     return "*";
   }
@@ -36,7 +37,7 @@ function getOrCreateChild(
 
 function setValueAtPath(
   target: Record<string, unknown>,
-  path: Array<string | number | null>,
+  path: Segment[],
   value: unknown,
 ): void {
   if (path.length === 0) {
@@ -88,18 +89,33 @@ function getDisplayTitle(display: ClaimFieldDefinition["display"]):
     return undefined;
   }
 
-  const en = display.find((entry) => entry.lang.toLowerCase().startsWith("en"));
-  return en?.label ?? display[0]?.label;
+  const en = display.find((entry) => entry.locale.toLowerCase().startsWith("en"));
+  return en?.name ?? display[0]?.name;
 }
 
-function ensureSchemaNode(root: JsonSchema, path: Array<string | number | null>): JsonSchema {
+/**
+ * Merges a newly-built leaf schema with an existing intermediate node.
+ * When child fields have already been registered under a key via ensureSchemaNode,
+ * the existing `properties` and `required` arrays must be preserved so that
+ * formly can render the nested controls correctly.
+ */
+function mergeLeafSchema(existing: JsonSchema, next: JsonSchema): JsonSchema {
+  const merged: JsonSchema = { ...next };
+  if (existing.properties && Object.keys(existing.properties).length > 0) {
+    merged.properties = existing.properties;
+  }
+  if (Array.isArray(existing.required) && existing.required.length > 0) {
+    merged.required = existing.required;
+  }
+  return merged;
+}
+
+function ensureSchemaNode(root: JsonSchema, path: Segment[]): JsonSchema {
   let cursor = root;
 
   for (const segment of path) {
     const key = segmentToKey(segment);
-    if (!cursor.properties) {
-      cursor.properties = {};
-    }
+    cursor.properties ??= {};
 
     if (!cursor.properties[key]) {
       cursor.properties[key] = {
@@ -108,7 +124,7 @@ function ensureSchemaNode(root: JsonSchema, path: Array<string | number | null>)
       };
     }
 
-    cursor = cursor.properties[key] as JsonSchema;
+    cursor = cursor.properties[key];
   }
 
   return cursor;
@@ -116,7 +132,7 @@ function ensureSchemaNode(root: JsonSchema, path: Array<string | number | null>)
 
 function ensureFrameNode(
   root: Record<string, unknown>,
-  path: Array<string | number | null>,
+  path: Segment[],
 ): Record<string, unknown> {
   let cursor = root;
 
@@ -131,19 +147,6 @@ function ensureFrameNode(
   }
 
   return cursor;
-}
-
-function normalizeDisplayToV1(
-  display: ClaimFieldDefinition["display"],
-): ClaimDisplayInfoV1[] | undefined {
-  if (!display || display.length === 0) {
-    return undefined;
-  }
-
-  return display.map((entry) => ({
-    name: entry.label,
-    locale: entry.lang,
-  }));
 }
 
 export function buildClaims(
@@ -174,7 +177,7 @@ export function buildDisclosureFrame(
     }
 
     const parentPath = field.path.slice(0, -1);
-    const leaf = segmentToKey(field.path[field.path.length - 1] ?? "");
+    const leaf = segmentToKey(field.path.at(-1) ?? "");
 
     const node = ensureFrameNode(frame, parentPath);
     const existing = Array.isArray(node._sd) ? node._sd : [];
@@ -189,11 +192,11 @@ export function buildDisclosureFrame(
   return hasDisclosure ? frame : undefined;
 }
 
-export function buildClaimsMetadata(fields: ClaimFieldDefinition[]): ClaimMetadataV1[] {
+export function buildClaimsMetadata(fields: ClaimFieldDefinition[]): ClaimMetadata[] {
   return fields
     .filter((field) => field.path.length > 0)
     .map((field) => {
-      const metadata: ClaimMetadataV1 = {
+      const metadata: ClaimMetadata = {
         path: field.path,
       };
 
@@ -201,13 +204,36 @@ export function buildClaimsMetadata(fields: ClaimFieldDefinition[]): ClaimMetada
         metadata.mandatory = field.mandatory;
       }
 
-      const display = normalizeDisplayToV1(field.display);
-      if (display) {
-        metadata.display = display;
+      if (field.display && field.display.length > 0) {
+        metadata.display = field.display;
       }
 
       return metadata;
     });
+}
+
+function buildLeafSchema(field: ClaimFieldDefinition): JsonSchema {
+  const schema: JsonSchema = {
+    ...field.constraints,
+    type: field.type === "date" ? "string" : field.type,
+  };
+  if (field.type === "date" && !schema.format) {
+    schema.format = "date";
+  }
+  const title = getDisplayTitle(field.display);
+  if (title) {
+    schema.title = title;
+  }
+  return schema;
+}
+
+function addRequired(parent: JsonSchema, key: string): void {
+  if (!Array.isArray(parent.required)) {
+    parent.required = [];
+  }
+  if (!parent.required.includes(key)) {
+    parent.required.push(key);
+  }
 }
 
 export function buildJsonSchema(fields: ClaimFieldDefinition[]): JsonSchema {
@@ -223,37 +249,22 @@ export function buildJsonSchema(fields: ClaimFieldDefinition[]): JsonSchema {
     }
 
     const parent = ensureSchemaNode(root, field.path.slice(0, -1));
-    const leafKey = segmentToKey(field.path[field.path.length - 1] ?? "");
+    const leafKey = segmentToKey(field.path.at(-1) ?? "");
+    parent.properties ??= {};
 
-    if (!parent.properties) {
-      parent.properties = {};
-    }
+    const leafSchema = buildLeafSchema(field);
 
-    const leafSchema: JsonSchema = {
-      ...(field.constraints ?? {}),
-      type: field.type === "date" ? "string" : field.type,
-    };
-
-    if (field.type === "date") {
-      if (!leafSchema.format) {
-        leafSchema.format = "date";
-      }
-    }
-
-    const title = getDisplayTitle(field.display);
-    if (title) {
-      leafSchema.title = title;
-    }
-
-    parent.properties[leafKey] = leafSchema;
+    // If a child field already registered this key as an intermediate node
+    // (via ensureSchemaNode), merge to preserve the nested properties instead
+    // of overwriting them with a bare { type: "object" }.
+    const existing = parent.properties[leafKey];
+    parent.properties[leafKey] =
+      existing && typeof existing === "object" && !Array.isArray(existing)
+        ? mergeLeafSchema(existing, leafSchema)
+        : leafSchema;
 
     if (field.mandatory) {
-      if (!Array.isArray(parent.required)) {
-        parent.required = [];
-      }
-      if (!parent.required.includes(leafKey)) {
-        parent.required.push(leafKey);
-      }
+      addRequired(parent, leafKey);
     }
   }
 
@@ -284,4 +295,20 @@ export function buildClaimsByNamespace(
   }
 
   return byNamespace;
+}
+
+export function deriveRuntimeArtifacts(fields: ClaimFieldDefinition[]): {
+  claims: Record<string, unknown>;
+  disclosureFrame?: Record<string, unknown>;
+  claimsMetadata: ClaimMetadata[];
+  schema: JsonSchema;
+  claimsByNamespace: Record<string, Record<string, unknown>>;
+} {
+  return {
+    claims: buildClaims(fields),
+    disclosureFrame: buildDisclosureFrame(fields),
+    claimsMetadata: buildClaimsMetadata(fields),
+    schema: buildJsonSchema(fields),
+    claimsByNamespace: buildClaimsByNamespace(fields),
+  };
 }

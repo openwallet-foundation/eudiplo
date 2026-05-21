@@ -3517,6 +3517,14 @@ export type SessionControllerGetAllSessionsData = {
          * Filter by session type
          */
         type?: 'issuance' | 'presentation';
+        /**
+         * Field to sort by
+         */
+        sortBy?: 'id' | 'status' | 'createdAt' | 'requestId';
+        /**
+         * Sort direction
+         */
+        sortOrder?: 'asc' | 'desc';
     };
     url: '/api/session';
 };

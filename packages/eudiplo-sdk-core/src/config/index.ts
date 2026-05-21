@@ -1,15 +1,12 @@
 export type {
-  ClaimDisplayInfoV1,
   ClaimFieldDefinition,
-  ClaimMetadataV1,
+  ClaimMetadata,
   ClaimPathElement,
-  CredentialConfigV1,
-  CredentialConfigV2,
   CredentialFormat,
   FieldDisplay,
   FieldType,
   JsonSchema,
-} from "./v2-types";
+} from "./types";
 
 export {
   buildClaims,
@@ -17,6 +14,5 @@ export {
   buildClaimsMetadata,
   buildDisclosureFrame,
   buildJsonSchema,
+  deriveRuntimeArtifacts,
 } from "./derive";
-
-export { convertV1ToV2, deriveRuntimeArtifacts } from "./migrate";

@@ -412,7 +412,7 @@ export class Oid4vciService {
 
         //if claims are provided, check them against the schemas when provided
         if (body.credentialClaims) {
-            Promise.all(
+            await Promise.all(
                 Object.entries(body.credentialClaims).map(
                     ([credentialConfigId, claimSource]) => {
                         if (claimSource.type === "inline") {
