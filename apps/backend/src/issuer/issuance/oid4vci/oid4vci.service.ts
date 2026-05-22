@@ -886,9 +886,9 @@ export class Oid4vciService {
             contentType.startsWith("application/jwt") ||
             contentType.startsWith(
                 "application/openid4vci-credential-request+jwt",
-            );             
+            );
 
-        let requestBody: CredentialRequest;        
+        let requestBody: CredentialRequest;
         if (isJwtContentType || typeof rawBody === "string") {
             // Encrypted credential request - need to read and decrypt JWE
             let jweString: string;
@@ -921,9 +921,11 @@ export class Oid4vciService {
                 }
             }
             try {
-                requestBody = await this.encryptionService.decryptJweToJson<
-                    CredentialRequest
-                >(jweString, tenantId);
+                requestBody =
+                    await this.encryptionService.decryptJweToJson<CredentialRequest>(
+                        jweString,
+                        tenantId,
+                    );
             } catch {
                 throw new CredentialRequestException(
                     "invalid_encryption_parameters",
@@ -937,7 +939,7 @@ export class Oid4vciService {
                 "invalid_credential_request",
                 "Credential request body is missing or malformed",
             );
-        }        
+        }
 
         // Validate credential_configuration_id before parsing to return spec-compliant error code
         const requestedConfigId = requestBody.credential_configuration_id as
@@ -981,8 +983,9 @@ export class Oid4vciService {
         }
 
         //TODO: temporary fix to satify parsing
-        if(requestBody.credential_response_encryption) {
-            requestBody.credential_response_encryption.alg = requestBody.credential_response_encryption?.jwk.alg as string;
+        if (requestBody.credential_response_encryption) {
+            requestBody.credential_response_encryption.alg = requestBody
+                .credential_response_encryption?.jwk.alg as string;
         }
 
         let parsedCredentialRequest: ParseCredentialRequestReturn;
@@ -1139,7 +1142,7 @@ export class Oid4vciService {
             });
             await this.sessionService.add(session.id, {
                 notifications: session.notifications,
-                status: SessionStatus.Fetched,                
+                status: SessionStatus.Fetched,
                 consumedAt: new Date(),
             });
 

@@ -639,7 +639,7 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
             const outputDir = resolve(
                 __dirname,
                 `../../../../tmp/oidf-logs/${planId}`,
-            );            
+            );
 
             try {
                 await oidfSuite.storeLog(planId, outputDir);

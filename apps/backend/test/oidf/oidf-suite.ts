@@ -405,9 +405,9 @@ export class OIDFSuite {
 
         // Get the variant from the module
         const variant = module.variant || {};
-        
+
         //TODO: temporary solution for testing encrypted flow
-        if(testName === "oid4vci-1_0-issuer-happy-flow") {
+        if (testName === "oid4vci-1_0-issuer-happy-flow") {
             variant["vci_credential_encryption"] = "encrypted";
         }
 
