@@ -182,7 +182,11 @@ export class Pkcs11KmsAdapter implements KmsAdapter {
             privateTemplate,
         );
 
-        const publicJwk = await this.readPublicJwk(opts.kid, alg, keys.publicKey);
+        const publicJwk = await this.readPublicJwk(
+            opts.kid,
+            alg,
+            keys.publicKey,
+        );
         this.jwkCache.set(opts.kid, publicJwk);
         return { ref: { externalKeyId: opts.kid, publicJwk, alg } };
     }
@@ -430,11 +434,33 @@ function unwrapEcPoint(raw: Buffer): Buffer {
  */
 function buildP256Spki(x: Buffer, y: Buffer): Buffer {
     const prefix = Buffer.from([
-        0x30, 0x59, // SEQUENCE, 89 bytes
-        0x30, 0x13, // SEQUENCE, 19 bytes (AlgorithmIdentifier)
-        0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x02, 0x01, // id-ecPublicKey
-        0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07, // prime256v1
-        0x03, 0x42, 0x00, 0x04, // BIT STRING, 66 bytes, 0 unused, uncompressed
+        0x30,
+        0x59, // SEQUENCE, 89 bytes
+        0x30,
+        0x13, // SEQUENCE, 19 bytes (AlgorithmIdentifier)
+        0x06,
+        0x07,
+        0x2a,
+        0x86,
+        0x48,
+        0xce,
+        0x3d,
+        0x02,
+        0x01, // id-ecPublicKey
+        0x06,
+        0x08,
+        0x2a,
+        0x86,
+        0x48,
+        0xce,
+        0x3d,
+        0x03,
+        0x01,
+        0x07, // prime256v1
+        0x03,
+        0x42,
+        0x00,
+        0x04, // BIT STRING, 66 bytes, 0 unused, uncompressed
     ]);
     return Buffer.concat([prefix, x, y]);
 }
