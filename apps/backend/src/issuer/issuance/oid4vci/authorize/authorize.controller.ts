@@ -14,7 +14,6 @@ import {
 } from "@nestjs/common";
 import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import type { Request, Response } from "express";
-import { SessionService } from "../../../../session/session.service";
 import { AuthorizeService } from "./authorize.service";
 import { AuthorizeQueries } from "./dto/authorize-request.dto";
 import { ParResponseDto } from "./dto/par-response.dto";
@@ -26,10 +25,7 @@ import { ParResponseDto } from "./dto/par-response.dto";
 @ApiTags("OID4VCI")
 @Controller("issuers/:tenantId/authorize")
 export class AuthorizeController {
-    constructor(
-        private readonly authorizeService: AuthorizeService,
-        private readonly sessionService: SessionService,
-    ) {}
+    constructor(private readonly authorizeService: AuthorizeService) {}
 
     /**
      * Endpoint to handle the Authorization Request.

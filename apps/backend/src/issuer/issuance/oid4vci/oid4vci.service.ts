@@ -21,6 +21,7 @@ import {
     CredentialOfferAuthorizationCodeGrant,
     CredentialOfferPreAuthorizedCodeGrant,
     type CredentialResponse,
+    type CredentialRequest,
     DeferredCredentialResponse,
     type IssuerMetadataResult,
     Openid4vciIssuer,
@@ -878,6 +879,7 @@ export class Oid4vciService {
             | Record<string, unknown>
             | string
             | undefined;
+
         const contentType = (req.headers["content-type"] ?? "").toLowerCase();
         const isJwtContentType =
             contentType.startsWith("application/jwt") ||
@@ -885,7 +887,7 @@ export class Oid4vciService {
                 "application/openid4vci-credential-request+jwt",
             );
 
-        let requestBody: Record<string, unknown>;
+        let requestBody: CredentialRequest;
         if (isJwtContentType || typeof rawBody === "string") {
             // Encrypted credential request - need to read and decrypt JWE
             let jweString: string;
@@ -918,9 +920,11 @@ export class Oid4vciService {
                 }
             }
             try {
-                requestBody = await this.encryptionService.decryptJweToJson<
-                    Record<string, unknown>
-                >(jweString, tenantId);
+                requestBody =
+                    await this.encryptionService.decryptJweToJson<CredentialRequest>(
+                        jweString,
+                        tenantId,
+                    );
             } catch {
                 throw new CredentialRequestException(
                     "invalid_encryption_parameters",
@@ -928,7 +932,7 @@ export class Oid4vciService {
                 );
             }
         } else if (rawBody && typeof rawBody === "object") {
-            requestBody = rawBody;
+            requestBody = rawBody as CredentialRequest;
         } else {
             throw new CredentialRequestException(
                 "invalid_credential_request",
@@ -948,9 +952,7 @@ export class Oid4vciService {
         }
 
         // Validate encryption parameters before parsing to return spec-compliant error code
-        const encryptionParams = requestBody.credential_response_encryption as
-            | Record<string, unknown>
-            | undefined;
+        const encryptionParams = requestBody.credential_response_encryption;
         if (encryptionParams) {
             const supportedAlg =
                 issuerMetadata.credentialIssuer.credential_response_encryption
@@ -960,12 +962,12 @@ export class Oid4vciService {
                     ?.enc_values_supported ?? [];
 
             if (
-                typeof encryptionParams.alg !== "string" ||
-                !supportedAlg.includes(encryptionParams.alg)
+                typeof encryptionParams.jwk.alg !== "string" ||
+                !supportedAlg.includes(encryptionParams.jwk.alg)
             ) {
                 throw new CredentialRequestException(
                     "invalid_encryption_parameters",
-                    `Unsupported credential response encryption algorithm '${encryptionParams.alg ?? "undefined"}'. Supported: ${supportedAlg.join(", ")}`,
+                    `Unsupported credential response encryption algorithm '${encryptionParams.jwk.alg ?? "undefined"}'. Supported: ${supportedAlg.join(", ")}`,
                 );
             }
             if (
@@ -977,6 +979,12 @@ export class Oid4vciService {
                     `Unsupported credential response encryption encoding '${encryptionParams.enc ?? "undefined"}'. Supported: ${supportedEnc.join(", ")}`,
                 );
             }
+        }
+
+        //TODO: temporary fix to satify parsing
+        if (requestBody.credential_response_encryption) {
+            requestBody.credential_response_encryption.alg = requestBody
+                .credential_response_encryption?.jwk.alg as string;
         }
 
         let parsedCredentialRequest: ParseCredentialRequestReturn;
@@ -1062,15 +1070,6 @@ export class Oid4vciService {
                 issuanceConfig,
             );
 
-        // Enforce single-use validation: prevent replay attacks
-        // Check if this offer has already been consumed
-        if (session.consumed) {
-            throw new CredentialRequestException(
-                "credential_request_denied",
-                "The credential offer has already been used",
-            );
-        }
-
         // Add session context to span for trace correlation
         const span = this.traceService.getSpan();
         span?.setAttributes({
@@ -1143,7 +1142,6 @@ export class Oid4vciService {
             await this.sessionService.add(session.id, {
                 notifications: session.notifications,
                 status: SessionStatus.Fetched,
-                consumed: true,
                 consumedAt: new Date(),
             });
 

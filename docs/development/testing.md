@@ -37,6 +37,17 @@ pnpm run test:e2e
 It is also accessible via
 [codecov](https://app.codecov.io/github/openwallet-foundation/eudiplo/tree/main).
 
+---
+
+## Code Quality (SonarCloud)
+
+Static analysis and code quality metrics are tracked on
+[SonarCloud](https://sonarcloud.io/project/overview?id=openwallet-foundation_eudiplo).
+
+!!! info "Scope"
+
+    The SonarCloud analysis focuses on the **backend** (`apps/backend`). The Angular client is excluded from coverage reporting as it is considered optional and does not have E2E test coverage yet.
+
 During writing E2E tests, you can use it in watch mode to automatically re-run
 tests on file changes:
 
