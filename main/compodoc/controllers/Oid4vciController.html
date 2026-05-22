@@ -337,8 +337,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="94"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.controller.ts:94</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="95"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.controller.ts:95</a></div>
                         </td>
                     </tr>
 
@@ -457,8 +457,8 @@ for credentials that were not immediately available.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="119"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.controller.ts:119</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="120"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.controller.ts:120</a></div>
                         </td>
                     </tr>
 
@@ -533,8 +533,8 @@ for credentials that were not immediately available.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="108"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.controller.ts:108</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="109"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.controller.ts:109</a></div>
                         </td>
                     </tr>
 
@@ -677,6 +677,7 @@ export class Oid4vciController {
                 return credentialResult.credentialResponse;
             },
             (err) &#x3D;&gt; {
+                console.log(err);
                 // Re-throw if already a spec-compliant CredentialRequestException
                 if (err instanceof CredentialRequestException) {
                     throw err;

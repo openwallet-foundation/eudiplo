@@ -1008,8 +1008,8 @@ According to OID4VCI Section 6.3:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="675"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/authorize.service.ts:675</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="676"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/authorize.service.ts:676</a></div>
                         </td>
                     </tr>
 
@@ -1860,6 +1860,7 @@ export class AuthorizeService {
             }
 
             await this.sessionService.add(session.id, {
+                consumed: true, // Mark the session as consumed to prevent reuse
                 refresh_token: tokenResponse.refresh_token,
                 refresh_token_expires_at: refreshTokenExpiresAt,
             });
