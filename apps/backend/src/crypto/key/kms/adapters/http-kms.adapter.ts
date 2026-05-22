@@ -135,8 +135,10 @@ export class HttpKmsAdapter implements KmsAdapter {
     /** Pre-built HTTPS agent for mTLS (undefined for other auth types). */
     private readonly httpsAgent?: https.Agent;
     /** Cached OAuth 2.0 access token and its expiry timestamp. */
-    private oauth2TokenCache: { accessToken: string; expiresAt: number } | null =
-        null;
+    private oauth2TokenCache: {
+        accessToken: string;
+        expiresAt: number;
+    } | null = null;
 
     constructor(
         config: HttpKmsAdapterConfig,
@@ -288,7 +290,10 @@ export class HttpKmsAdapter implements KmsAdapter {
         const start = Date.now();
         try {
             await firstValueFrom(
-                this.http.get(`${this.baseUrl}${this.healthPath}`, await this.requestConfig()),
+                this.http.get(
+                    `${this.baseUrl}${this.healthPath}`,
+                    await this.requestConfig(),
+                ),
             );
             return { ok: true, latencyMs: Date.now() - start };
         } catch (err) {
@@ -314,11 +319,13 @@ export class HttpKmsAdapter implements KmsAdapter {
         headers: Record<string, string>;
         httpsAgent?: https.Agent;
     }> {
-        const cfg: { headers: Record<string, string>; httpsAgent?: https.Agent } =
-            {
-                headers: {},
-                ...(this.httpsAgent ? { httpsAgent: this.httpsAgent } : {}),
-            };
+        const cfg: {
+            headers: Record<string, string>;
+            httpsAgent?: https.Agent;
+        } = {
+            headers: {},
+            ...(this.httpsAgent ? { httpsAgent: this.httpsAgent } : {}),
+        };
 
         if (this.auth.type === "bearer") {
             cfg.headers["Authorization"] = `Bearer ${this.auth.token}`;

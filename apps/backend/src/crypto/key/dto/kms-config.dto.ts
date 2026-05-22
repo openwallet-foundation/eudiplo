@@ -13,7 +13,13 @@ import {
 /**
  * Supported KMS adapter types.
  */
-const KMS_PROVIDER_TYPES = ["db", "vault", "aws-kms", "pkcs11", "http"] as const;
+const KMS_PROVIDER_TYPES = [
+    "db",
+    "vault",
+    "aws-kms",
+    "pkcs11",
+    "http",
+] as const;
 export type KmsProviderType = (typeof KMS_PROVIDER_TYPES)[number];
 
 /**
@@ -212,8 +218,7 @@ class HttpAuthBearerConfigDto extends HttpAuthBaseConfigDto {
     declare type: "bearer";
 
     @ApiProperty({
-        description:
-            "Bearer token value. Supports \${ENV_VAR} placeholders.",
+        description: "Bearer token value. Supports \${ENV_VAR} placeholders.",
         example: "${KMS_API_KEY}",
     })
     @IsString()
@@ -326,7 +331,7 @@ class HttpKmsConfigDto extends BaseKmsProviderConfigDto {
 
     @ApiPropertyOptional({
         description:
-            "Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to \"none\") for unauthenticated services.",
+            'Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to "none") for unauthenticated services.',
         type: () => HttpAuthBaseConfigDto,
     })
     @IsOptional()
@@ -337,7 +342,10 @@ class HttpKmsConfigDto extends BaseKmsProviderConfigDto {
             subTypes: [
                 { value: HttpAuthNoneConfigDto, name: "none" },
                 { value: HttpAuthBearerConfigDto, name: "bearer" },
-                { value: HttpAuthOauth2ConfigDto, name: "oauth2-client-credentials" },
+                {
+                    value: HttpAuthOauth2ConfigDto,
+                    name: "oauth2-client-credentials",
+                },
                 { value: HttpAuthMtlsConfigDto, name: "mtls" },
             ],
         },

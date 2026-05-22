@@ -56,13 +56,21 @@ async function kmsHandler(
 
     try {
         // GET /health
-        if (req.method === "GET" && parts.length === 1 && parts[0] === "health") {
+        if (
+            req.method === "GET" &&
+            parts.length === 1 &&
+            parts[0] === "health"
+        ) {
             json(res, 200, { ok: true, keyCount: keyStore.size });
             return;
         }
 
         // POST /keys — generate a new ECDSA P-256 key
-        if (req.method === "POST" && parts.length === 1 && parts[0] === "keys") {
+        if (
+            req.method === "POST" &&
+            parts.length === 1 &&
+            parts[0] === "keys"
+        ) {
             const { kid, alg } = JSON.parse(await readBody(req)) as {
                 kid: string;
                 alg: string;
@@ -161,8 +169,8 @@ async function kmsHandler(
 
 function startKmsServer(): Promise<{ server: Server; baseUrl: string }> {
     const keyStore = new Map<string, StoredKey>();
-    const server = createServer((req, res) =>
-        void kmsHandler(req, res, keyStore),
+    const server = createServer(
+        (req, res) => void kmsHandler(req, res, keyStore),
     );
     return new Promise((resolve) => {
         server.listen(0, "127.0.0.1", () => {
