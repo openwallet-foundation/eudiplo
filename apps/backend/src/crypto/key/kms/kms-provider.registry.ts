@@ -16,6 +16,7 @@ import type { KmsProviderInfoDto } from "../dto/kms-provider-capabilities.dto";
 import type { KmsProvidersResponseDto } from "../dto/kms-providers-response.dto";
 import { AwsKmsAdapter } from "./adapters/aws-kms.adapter";
 import { DbKmsAdapter } from "./adapters/db-kms.adapter";
+import { Pkcs11KmsAdapter } from "./adapters/pkcs11-kms.adapter";
 import { VaultKmsAdapter } from "./adapters/vault-kms.adapter";
 import type { KmsAdapter } from "./kms-adapter";
 
@@ -147,6 +148,23 @@ export class KmsProviderRegistry implements OnModuleInit {
                     region: p.region,
                     accessKeyId: p.accessKeyId,
                     secretAccessKey: p.secretAccessKey,
+                });
+            }
+            case "pkcs11": {
+                const p = provider as Extract<
+                    KmsProviderConfigDto,
+                    { type: "pkcs11" }
+                >;
+                const slot =
+                    typeof p.slot === "string" && /^\d+$/.test(p.slot)
+                        ? Number(p.slot)
+                        : p.slot;
+                return new Pkcs11KmsAdapter({
+                    providerId: provider.id,
+                    library: p.library,
+                    slot,
+                    pin: p.pin,
+                    readOnly: p.readOnly,
                 });
             }
             default: {

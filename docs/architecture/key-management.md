@@ -13,6 +13,7 @@ configured in a single `kms.json` file inside the config folder.
 | [`db`](#database-key-management-db) | Built-in | Keys stored encrypted in the database  | ✅ Yes         |
 | [`vault`](#vault-hashicorp-vault)   | Built-in | HashiCorp Vault Transit secrets engine | ❌ No          |
 | [`aws-kms`](#aws-kms)               | Built-in | AWS Key Management Service             | ❌ No          |
+| [`pkcs11`](#pkcs11-hsm)             | Built-in | PKCS#11 Hardware Security Module       | ❌ No          |
 
 ## Configuration
 
@@ -51,7 +52,7 @@ Each provider entry has:
 | Field         | Description                                                              |
 | ------------- | ------------------------------------------------------------------------ |
 | `id`          | Unique identifier for the provider instance (used when generating keys). |
-| `type`        | Adapter type: `db`, `vault`, or `aws-kms`.                               |
+| `type`        | Adapter type: `db`, `vault`, `aws-kms`, or `pkcs11`.                     |
 | `description` | Optional human-readable description.                                     |
 | ...           | Additional type-specific configuration fields.                           |
 
@@ -245,6 +246,150 @@ HSM-backed keys, audit logging via CloudTrail, and fine-grained access control.
 
 > ⚠️ **Note**: AWS KMS does not support importing EC keys. Use `create` to
 > generate new keys directly in AWS KMS.
+
+---
+
+## PKCS#11 (HSM)
+
+To use a **Hardware Security Module** (HSM) or any PKCS#11-compatible token
+(YubiHSM 2, Thales Luna, AWS CloudHSM, SoftHSM2, Nitrokey HSM, …) for key
+management, add a `pkcs11` entry to the `providers` array in `kms.json`:
+
+```json
+{
+    "defaultProvider": "hsm",
+    "providers": [
+        { "id": "db", "type": "db" },
+        {
+            "id": "hsm",
+            "type": "pkcs11",
+            "description": "Production HSM",
+            "library": "/usr/lib/softhsm/libsofthsm2.so",
+            "slot": 0,
+            "pin": "${HSM_PIN}",
+            "readOnly": false
+        }
+    ]
+}
+```
+
+| Field      | Description                                                                                                                                                     |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `library`  | Absolute path to the vendor-provided PKCS#11 shared library (`.so` on Linux, `.dylib` on macOS, `.dll` on Windows). **Required**.                               |
+| `slot`     | Either the numeric slot index (e.g. `0`) **or** a token label string (e.g. `"eudiplo-token"`) — the adapter resolves labels via `C_GetTokenInfo`. **Required**. |
+| `pin`      | User PIN used for `C_Login(CKU_USER, …)`. Use environment-variable placeholders to keep it out of the config file. **Required**.                                |
+| `readOnly` | If `true`, the session is opened without `CKF_RW_SESSION`. Defaults to `false`. Set to `true` only when you do not need to create/delete keys.                  |
+
+### Native Dependency
+
+The adapter is built on top of [`pkcs11js`](https://www.npmjs.com/package/pkcs11js),
+which is a native (N-API) Node.js binding. It is part of the regular backend
+dependencies and is built automatically on `pnpm install` (the package is
+listed under `allowBuilds` / `onlyBuiltDependencies` in `pnpm-workspace.yaml`).
+
+You still need the **vendor's PKCS#11 library** (`.so` / `.dylib` / `.dll`)
+installed on the host where the backend runs, and the path provided via the
+`library` field must be readable by the backend process.
+
+### Key Creation
+
+Keys are generated **inside the HSM** using `C_GenerateKeyPair` with:
+
+- Mechanism: `CKM_EC_KEY_PAIR_GEN`
+- Curve: **P-256 / secp256r1** (only `ES256` is supported)
+- Private key attributes: `CKA_SENSITIVE=true`, `CKA_EXTRACTABLE=false`,
+  `CKA_PRIVATE=true`, `CKA_SIGN=true`
+- Public key attributes: `CKA_VERIFY=true`, `CKA_TOKEN=true`
+- `CKA_LABEL` is set to the EUDIPLO key ID (`kid`) on both objects so the
+  adapter can look them up later.
+
+The public key is read back from the HSM (`CKA_EC_POINT`), wrapped into a P-256
+SPKI DER, and exported as a JWK that is cached in the database for fast access.
+
+### Signing
+
+For each signature the adapter:
+
+1. Computes the SHA-256 digest of the payload in Node.
+2. Looks up the private key object by `CKA_LABEL = kid` (`C_FindObjects`).
+3. Calls `C_SignInit` + `C_Sign` with mechanism `CKM_ECDSA` and the digest.
+4. Returns the raw `r || s` signature (64 bytes) directly to the JOSE layer.
+
+The **private key never leaves the HSM**. EUDIPLO only stores a stub entity
+(label + cached public JWK) in the database for tracking.
+
+### Key Deletion
+
+`deleteKey` calls `C_DestroyObject` on both the private and public key objects
+matched by `CKA_LABEL`. Per-object errors are swallowed so a partial cleanup
+still removes what it can.
+
+### Import
+
+Importing existing key material is **not supported**. HSM-backed keys must be
+generated inside the HSM. Use `create` to provision new keys.
+
+### Health
+
+The `health()` endpoint opens (or reuses) the session and reports latency. A
+failing PIN, missing library, or unavailable slot is surfaced as `{ ok: false,
+error }`.
+
+### Examples
+
+**SoftHSM2** (local dev / CI):
+
+```bash
+softhsm2-util --init-token --slot 0 \
+    --label eudiplo --pin 1234 --so-pin 1234
+```
+
+```json
+{
+    "id": "softhsm",
+    "type": "pkcs11",
+    "library": "/usr/lib/softhsm/libsofthsm2.so",
+    "slot": "eudiplo",
+    "pin": "${SOFTHSM_PIN}"
+}
+```
+
+**YubiHSM 2** (via yubihsm-pkcs11):
+
+```json
+{
+    "id": "yubihsm",
+    "type": "pkcs11",
+    "library": "/usr/local/lib/pkcs11/yubihsm_pkcs11.dylib",
+    "slot": 0,
+    "pin": "${YUBIHSM_PIN}"
+}
+```
+
+**AWS CloudHSM** (via the CloudHSM PKCS#11 SDK):
+
+```json
+{
+    "id": "cloudhsm",
+    "type": "pkcs11",
+    "library": "/opt/cloudhsm/lib/libcloudhsm_pkcs11.so",
+    "slot": 0,
+    "pin": "${CLOUDHSM_USER}:${CLOUDHSM_PASSWORD}"
+}
+```
+
+In this mode:
+
+- All **signing operations** are delegated to the HSM via PKCS#11.
+- The **private key never leaves** the HSM.
+- A **stub key entity** is stored in the database (label + cached public JWK).
+- Access is controlled by the HSM itself (PIN, partitions, slot policies).
+
+PKCS#11 is well-suited for regulated production environments where keys must
+be protected by certified hardware (FIPS 140-2/3, Common Criteria).
+
+> ⚠️ **Only ES256 is supported.** Other curves and RSA are not enabled — open
+> an issue if you need additional algorithms.
 
 ---
 

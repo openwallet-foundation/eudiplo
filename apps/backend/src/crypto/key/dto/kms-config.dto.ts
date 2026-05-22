@@ -12,7 +12,7 @@ import {
 /**
  * Supported KMS adapter types.
  */
-const KMS_PROVIDER_TYPES = ["db", "vault", "aws-kms"] as const;
+const KMS_PROVIDER_TYPES = ["db", "vault", "aws-kms", "pkcs11"] as const;
 export type KmsProviderType = (typeof KMS_PROVIDER_TYPES)[number];
 
 /**
@@ -134,12 +134,60 @@ class AwsKmsConfigDto extends BaseKmsProviderConfigDto {
 }
 
 /**
+ * Configuration for the PKCS#11 KMS provider (HSMs, smart cards, SoftHSM).
+ * The native `pkcs11js` module is loaded lazily on first use.
+ */
+class Pkcs11KmsConfigDto extends BaseKmsProviderConfigDto {
+    @ApiProperty({
+        description: "Type of the KMS provider.",
+        enum: ["pkcs11"],
+        example: "pkcs11",
+    })
+    @IsIn(["pkcs11"])
+    declare type: "pkcs11";
+
+    @ApiProperty({
+        description:
+            "Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.",
+        example: "${PKCS11_LIBRARY}",
+    })
+    @IsString()
+    @IsNotEmpty()
+    library!: string;
+
+    @ApiProperty({
+        description:
+            "Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.",
+        example: "${PKCS11_SLOT}",
+    })
+    slot!: number | string;
+
+    @ApiProperty({
+        description:
+            "User PIN used for C_Login. Supports ${ENV_VAR} placeholders.",
+        example: "${PKCS11_PIN}",
+    })
+    @IsString()
+    @IsNotEmpty()
+    pin!: string;
+
+    @ApiPropertyOptional({
+        description:
+            "Open the PKCS#11 session in read-only mode. Defaults to false.",
+        example: false,
+    })
+    @IsOptional()
+    readOnly?: boolean;
+}
+
+/**
  * Union type for all provider configurations.
  */
 export type KmsProviderConfigDto =
     | DbKmsConfigDto
     | VaultKmsConfigDto
-    | AwsKmsConfigDto;
+    | AwsKmsConfigDto
+    | Pkcs11KmsConfigDto;
 
 /**
  * Root DTO for kms.json.
@@ -201,6 +249,7 @@ export class KmsConfigDto {
                 { value: DbKmsConfigDto, name: "db" },
                 { value: VaultKmsConfigDto, name: "vault" },
                 { value: AwsKmsConfigDto, name: "aws-kms" },
+                { value: Pkcs11KmsConfigDto, name: "pkcs11" },
             ],
         },
         keepDiscriminatorProperty: true,

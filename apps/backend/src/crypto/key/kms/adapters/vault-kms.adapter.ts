@@ -294,10 +294,10 @@ export class VaultKmsAdapter implements KmsAdapter {
 }
 
 function vaultKeyType(alg: KmsSigningAlg): string {
-    if(alg === "ES256") {
+    if (alg === "ES256") {
         return "ecdsa-p256";
     }
-    throw new Error(`Unsupported alg ${alg}`);    
+    throw new Error(`Unsupported alg ${alg}`);
 }
 
 function stripPrivateComponents(jwk: JWK): JWK {
@@ -321,7 +321,7 @@ function pemToDer(pem: string): ArrayBuffer {
 }
 
 function base64UrlOrBase64ToBytes(s: string): Uint8Array {
-    const normalized = s.replaceAll('-', "+").replaceAll('_', "/");
+    const normalized = s.replaceAll("-", "+").replaceAll("_", "/");
     const padded = normalized + "=".repeat((4 - (normalized.length % 4)) % 4);
     return new Uint8Array(Buffer.from(padded, "base64"));
 }
