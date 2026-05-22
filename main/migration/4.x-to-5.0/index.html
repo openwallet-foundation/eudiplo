@@ -2618,10 +2618,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-client-ui-improvements-non-breaking" class="md-nav__link">
+  <a href="#4-keychainentity-jwk-column-rename" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Client UI Improvements (Non-Breaking)
+        4. KeyChainEntity JWK Column Rename
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-key_chainexternalkeyid-integrity-constraint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. key_chain.externalKeyId Integrity Constraint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-client-ui-improvements-non-breaking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Client UI Improvements (Non-Breaking)
       
     </span>
   </a>
@@ -2762,6 +2784,16 @@
 <td>Filesystem Config Import</td>
 <td>v1 JSON files in <code>assets/config/.../issuance/credentials/</code> are rejected on import — must be migrated</td>
 <td>Medium</td>
+</tr>
+<tr>
+<td><code>KeyChainEntity</code> JWK columns</td>
+<td>DB columns <code>activeKey</code>/<code>rootKey</code>/<code>previousKey</code> renamed to <code>activeJwk</code>/<code>rootJwk</code>/<code>previousJwk</code></td>
+<td>Low</td>
+</tr>
+<tr>
+<td><code>key_chain.externalKeyId</code></td>
+<td>New integrity constraint: external KMS providers (<code>vault</code>, <code>aws-kms</code>) must have a non-null <code>externalKeyId</code></td>
+<td>Low</td>
 </tr>
 </tbody>
 </table>
@@ -2904,7 +2936,48 @@
 <p>The runtime JSON schema previously exposed via <code>SchemaResponse</code> is derived on demand from <code>fields[]</code> via the <code>buildJsonSchema()</code> helper.</p>
 <p>If you regenerate the API client (<code>pnpm run gen:api</code>), TypeScript will surface the removed types as compile errors at every call site.</p>
 <hr>
-<h2 id="4-client-ui-improvements-non-breaking">4. Client UI Improvements (Non-Breaking)<a class="headerlink" href="#4-client-ui-improvements-non-breaking" title="Permanent link">¶</a></h2>
+<h2 id="4-keychainentity-jwk-column-rename">4. <code>KeyChainEntity</code> JWK Column Rename<a class="headerlink" href="#4-keychainentity-jwk-column-rename" title="Permanent link">¶</a></h2>
+<p>The DB columns that hold the active, root, and previous JWKs on the <code>key_chain</code> table were renamed for clarity. The columns continue to hold a single encrypted JWK each (private JWK for the <code>db</code> provider, public JWK for external providers):</p>
+<table>
+<thead>
+<tr>
+<th>Old column</th>
+<th>New column</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>activeKey</code></td>
+<td><code>activeJwk</code></td>
+</tr>
+<tr>
+<td><code>rootKey</code></td>
+<td><code>rootJwk</code></td>
+</tr>
+<tr>
+<td><code>previousKey</code></td>
+<td><code>previousJwk</code></td>
+</tr>
+</tbody>
+</table>
+<p>Migration <code>1765000000000-RenameKeyChainActiveKeyToActiveJwk</code> performs the rename in place using <code>ALTER TABLE ... RENAME COLUMN</code>, which is supported by both PostgreSQL and SQLite (≥ 3.25). No data transformation is required and no application code change is needed after upgrade — the TypeORM entity has been renamed in lockstep.</p>
+<p><strong>Action required only if</strong> you read these columns directly (ad-hoc SQL, dashboards, external scripts, reporting). Update those references to the new column names.</p>
+<hr>
+<h2 id="5-key_chainexternalkeyid-integrity-constraint">5. <code>key_chain.externalKeyId</code> Integrity Constraint<a class="headerlink" href="#5-key_chainexternalkeyid-integrity-constraint" title="Permanent link">¶</a></h2>
+<p>Migration <code>1764000000000-AddKmsExternalKeyIdCheck</code> enforces that any key chain backed by a non-<code>db</code> KMS provider (<code>vault</code>, <code>aws-kms</code>) has a non-null <code>externalKeyId</code>:</p>
+<ul>
+<li><strong>PostgreSQL</strong>: real <code>CHECK</code> constraint (<code>kmsProvider = 'db' OR externalKeyId IS NOT NULL</code>).</li>
+<li><strong>SQLite</strong>: equivalent <code>BEFORE INSERT</code>/<code>BEFORE UPDATE</code> triggers that abort the write.</li>
+</ul>
+<p>This prevents orphaned external KMS references where the backend would not know which Vault/AWS key to sign with.</p>
+<p><strong>Action required only if</strong> you have legacy rows where <code>kmsProvider != 'db'</code> and <code>externalKeyId IS NULL</code>. The migration will fail on such rows. Inspect with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="ss">"tenantId"</span><span class="p">,</span><span class="w"> </span><span class="ss">"kmsProvider"</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">FROM</span><span class="w"> </span><span class="ss">"key_chain"</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="ss">"kmsProvider"</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s1">'db'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="ss">"externalKeyId"</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+</code></pre></div>
+<p>Either backfill the <code>externalKeyId</code> (recover the corresponding Vault/AWS key ID and update the row) or delete the orphaned row before upgrading.</p>
+<hr>
+<h2 id="6-client-ui-improvements-non-breaking">6. Client UI Improvements (Non-Breaking)<a class="headerlink" href="#6-client-ui-improvements-non-breaking" title="Permanent link">¶</a></h2>
 <p>The Angular client received additional improvements alongside the v2 migration:</p>
 <ul>
 <li>Submit button is disabled until all required fields are valid</li>
@@ -2916,67 +2989,67 @@
 <hr>
 <h2 id="example-migration">Example Migration<a class="headerlink" href="#example-migration" title="Permanent link">¶</a></h2>
 <h3 id="before-v1-pid-credential-config">Before (v1): PID Credential Config<a class="headerlink" href="#before-v1-pid-credential-config" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pid"</span><span class="p">,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">        </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mso_mdoc"</span><span class="p">,</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">        </span><span class="nt">"docType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eu.europa.ec.eudi.pid.1"</span><span class="p">,</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">        </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eu.europa.ec.eudi.pid.1"</span><span class="p">,</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PID"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">}],</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="nt">"claimsMetadata"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">            </span><span class="p">{</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">                </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">],</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">                </span><span class="nt">"mandatory"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">                </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Given Name"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">}]</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">            </span><span class="p">}</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">        </span><span class="p">]</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="nt">"claims"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">        </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="p">,</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">        </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">    </span><span class="nt">"disclosureFrame"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">        </span><span class="nt">"_sd"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">,</span><span class="w"> </span><span class="s2">"family_name"</span><span class="p">]</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">    </span><span class="nt">"schema"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">        </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://json-schema.org/draft/2020-12/schema"</span><span class="p">,</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">        </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">            </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">            </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">        </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">]</span>
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="p">}</span>
-</code></pre></div>
-<h3 id="after-v2-pid-credential-config">After (v2): PID Credential Config<a class="headerlink" href="#after-v2-pid-credential-config" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pid"</span><span class="p">,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">"configVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">        </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mso_mdoc"</span><span class="p">,</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span><span class="nt">"docType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eu.europa.ec.eudi.pid.1"</span><span class="p">,</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PID"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">}]</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">        </span><span class="p">{</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">],</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="p">,</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">            </span><span class="nt">"mandatory"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">            </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">            </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eu.europa.ec.eudi.pid.1"</span><span class="p">,</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">            </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="p">,</span><span class="w"> </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Given Name"</span><span class="w"> </span><span class="p">}]</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">        </span><span class="p">{</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"family_name"</span><span class="p">],</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">            </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">            </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eu.europa.ec.eudi.pid.1"</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">    </span><span class="p">]</span>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="p">}</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">        </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mso_mdoc"</span><span class="p">,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">        </span><span class="nt">"docType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eu.europa.ec.eudi.pid.1"</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eu.europa.ec.eudi.pid.1"</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PID"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">}],</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span><span class="nt">"claimsMetadata"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">            </span><span class="p">{</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">                </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">],</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">                </span><span class="nt">"mandatory"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">                </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Given Name"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">}]</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">        </span><span class="p">]</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="nt">"claims"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">        </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="p">,</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">        </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span><span class="nt">"disclosureFrame"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">        </span><span class="nt">"_sd"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">,</span><span class="w"> </span><span class="s2">"family_name"</span><span class="p">]</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">    </span><span class="nt">"schema"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">        </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://json-schema.org/draft/2020-12/schema"</span><span class="p">,</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">        </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">            </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">            </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">        </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">]</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="after-v2-pid-credential-config">After (v2): PID Credential Config<a class="headerlink" href="#after-v2-pid-credential-config" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pid"</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="nt">"configVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">        </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mso_mdoc"</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">        </span><span class="nt">"docType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eu.europa.ec.eudi.pid.1"</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">        </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PID"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">}]</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">],</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="p">,</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">            </span><span class="nt">"mandatory"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">            </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">            </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eu.europa.ec.eudi.pid.1"</span><span class="p">,</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">            </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="p">,</span><span class="w"> </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Given Name"</span><span class="w"> </span><span class="p">}]</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"family_name"</span><span class="p">],</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">            </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">            </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eu.europa.ec.eudi.pid.1"</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="p">}</span>
 </code></pre></div>
 <hr>
 <h2 id="recommended-upgrade-order">Recommended Upgrade Order<a class="headerlink" href="#recommended-upgrade-order" title="Permanent link">¶</a></h2>

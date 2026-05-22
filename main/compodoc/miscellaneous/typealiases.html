@@ -203,6 +203,15 @@
                             <a href="#FieldType" title="src/issuer/configuration/credentials/utils/types.ts" ><b>FieldType</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
                         </li>
                         <li>
+                            <a href="#HttpAuthType" title="src/crypto/key/dto/kms-config.dto.ts" ><b>HttpAuthType</b>&nbsp;&nbsp;&nbsp;(src/.../kms-config.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#HttpKmsAuth" title="src/crypto/key/kms/adapters/http-kms.adapter.ts" ><b>HttpKmsAuth</b>&nbsp;&nbsp;&nbsp;(src/.../http-kms.adapter.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#HttpKmsAuthConfigDto" title="src/crypto/key/dto/kms-config.dto.ts" ><b>HttpKmsAuthConfigDto</b>&nbsp;&nbsp;&nbsp;(src/.../kms-config.dto.ts)</a>
+                        </li>
+                        <li>
                             <a href="#IaeAction" title="src/issuer/configuration/credentials/entities/iae-action.dto.ts" ><b>IaeAction</b>&nbsp;&nbsp;&nbsp;(src/.../iae-action.dto.ts)</a>
                         </li>
                         <li>
@@ -219,6 +228,9 @@
                         </li>
                         <li>
                             <a href="#KmsProviderType" title="src/crypto/key/dto/kms-config.dto.ts" ><b>KmsProviderType</b>&nbsp;&nbsp;&nbsp;(src/.../kms-config.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#KmsSigningAlg" title="src/crypto/key/kms/kms-adapter.ts" ><b>KmsSigningAlg</b>&nbsp;&nbsp;&nbsp;(src/.../kms-adapter.ts)</a>
                         </li>
                         <li>
                             <a href="#LoteInfo" title="src/shared/trust/lote-parser.service.ts" ><b>LoteInfo</b>&nbsp;&nbsp;&nbsp;(src/.../lote-parser.service.ts)</a>
@@ -1103,6 +1115,128 @@ from the same entity.</p>
             </tr>
         </tbody>
     </table>
+</section>    <h3>src/crypto/key/dto/kms-config.dto.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="HttpAuthType"></a>
+                    <span class="name "><b>HttpAuthType</b><a href="#HttpAuthType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="HttpKmsAuthConfigDto"></a>
+                    <span class="name "><b>HttpKmsAuthConfigDto</b><a href="#HttpKmsAuthConfigDto"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>HttpAuthNoneConfigDto | HttpAuthBearerConfigDto | HttpAuthOauth2ConfigDto | HttpAuthMtlsConfigDto</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="KmsProviderConfigDto"></a>
+                    <span class="name "><b>KmsProviderConfigDto</b><a href="#KmsProviderConfigDto"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Union type for all provider configurations.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>DbKmsConfigDto | VaultKmsConfigDto | AwsKmsConfigDto | Pkcs11KmsConfigDto | HttpKmsConfigDto</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="KmsProviderType"></a>
+                    <span class="name "><b>KmsProviderType</b><a href="#KmsProviderType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/crypto/key/kms/adapters/http-kms.adapter.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="HttpKmsAuth"></a>
+                    <span class="name "><b>HttpKmsAuth</b><a href="#HttpKmsAuth"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Authentication configuration for the remote KMS microservice.</p>
+<table class="table table-bordered compodoc-table">
+<thead>
+<tr>
+<th>type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>none</code></td>
+<td>No auth — suitable for trusted private networks</td>
+</tr>
+<tr>
+<td><code>bearer</code></td>
+<td>Static <code>Authorization: Bearer &lt;token&gt;</code> header</td>
+</tr>
+<tr>
+<td><code>oauth2-client-credentials</code></td>
+<td>Short-lived tokens fetched and cached from a token server</td>
+</tr>
+<tr>
+<td><code>mtls</code></td>
+<td>Mutual TLS — client cert presented on every connection</td>
+</tr>
+</tbody>
+</table>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type | literal type | literal type | literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>    <h3>src/issuer/configuration/credentials/entities/iae-action.dto.ts</h3>
     <section data-compodoc="block-typealias">
     <table class="table table-sm table-bordered">
@@ -1202,36 +1336,21 @@ This is a discriminated union based on the <code>type</code> field.</p>
             </tr>
         </tbody>
     </table>
-</section>    <h3>src/crypto/key/dto/kms-config.dto.ts</h3>
+</section>    <h3>src/crypto/key/kms/kms-adapter.ts</h3>
     <section data-compodoc="block-typealias">
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="KmsProviderConfigDto"></a>
-                    <span class="name "><b>KmsProviderConfigDto</b><a href="#KmsProviderConfigDto"><span class="icon ion-ios-link"></span></a></span>
+                    <a name="KmsSigningAlg"></a>
+                    <span class="name "><b>KmsSigningAlg</b><a href="#KmsSigningAlg"><span class="icon ion-ios-link"></span></a></span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Union type for all provider configurations.</p>
+                    <div class="io-description"><p>Supported signing algorithms. New algorithms can be added here once
+adapters declare support for them via <a href="KmsAdapterCapabilities.supportedAlgs">KmsAdapterCapabilities.supportedAlgs</a>.</p>
 </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>    <code>DbKmsConfigDto | VaultKmsConfigDto | AwsKmsConfigDto</code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="KmsProviderType"></a>
-                    <span class="name "><b>KmsProviderType</b><a href="#KmsProviderType"><span class="icon ion-ios-link"></span></a></span>
                 </td>
             </tr>
             <tr>

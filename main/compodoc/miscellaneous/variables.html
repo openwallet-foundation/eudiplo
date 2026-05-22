@@ -134,6 +134,9 @@
                             <a href="#ACTION_TYPE_VALUES" title="src/audit-log/dto/audit-log-response.dto.ts" ><b>ACTION_TYPE_VALUES</b>&nbsp;&nbsp;&nbsp;(src/.../audit-log-response.dto.ts)</a>
                         </li>
                         <li>
+                            <a href="#ALG_TO_WEBCRYPTO" title="src/crypto/key/kms/kms-crypto-provider.ts" ><b>ALG_TO_WEBCRYPTO</b>&nbsp;&nbsp;&nbsp;(src/.../kms-crypto-provider.ts)</a>
+                        </li>
+                        <li>
                             <a href="#allRoles" title="src/auth/roles/role.enum.ts" ><b>allRoles</b>&nbsp;&nbsp;&nbsp;(src/.../role.enum.ts)</a>
                         </li>
                         <li>
@@ -191,7 +194,13 @@
                             <a href="#DEFAULT_LANG" title="src/issuer/trust-list/trustlist.service.ts" ><b>DEFAULT_LANG</b>&nbsp;&nbsp;&nbsp;(src/.../trustlist.service.ts)</a>
                         </li>
                         <li>
-                            <a href="#ECDSA_P256" title="src/crypto/key/key-chain.service.ts" ><b>ECDSA_P256</b>&nbsp;&nbsp;&nbsp;(src/.../key-chain.service.ts)</a>
+                            <a href="#DEFAULT_PROVIDER_ID" title="src/crypto/key/kms/kms-config.service.ts" ><b>DEFAULT_PROVIDER_ID</b>&nbsp;&nbsp;&nbsp;(src/.../kms-config.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DEFAULT_PROVIDER_ID" title="src/crypto/key/kms/kms-provider.registry.ts" ><b>DEFAULT_PROVIDER_ID</b>&nbsp;&nbsp;&nbsp;(src/.../kms-provider.registry.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ECDSA_P256_SIGNATURE_ALG" title="src/crypto/key/cert/certificate-builder.service.ts" ><b>ECDSA_P256_SIGNATURE_ALG</b>&nbsp;&nbsp;&nbsp;(src/.../certificate-builder.service.ts)</a>
                         </li>
                         <li>
                             <a href="#EncryptedJsonTransformer" title="src/shared/utils/encryption/encrypted-column.transformer.ts" ><b>EncryptedJsonTransformer</b>&nbsp;&nbsp;&nbsp;(src/.../encrypted-column.transformer.ts)</a>
@@ -216,6 +225,9 @@
                         </li>
                         <li>
                             <a href="#GLOBAL_PREFIX_EXCLUSIONS" title="src/main.ts" ><b>GLOBAL_PREFIX_EXCLUSIONS</b>&nbsp;&nbsp;&nbsp;(src/.../main.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#HTTP_AUTH_TYPES" title="src/crypto/key/dto/kms-config.dto.ts" ><b>HTTP_AUTH_TYPES</b>&nbsp;&nbsp;&nbsp;(src/.../kms-config.dto.ts)</a>
                         </li>
                         <li>
                             <a href="#IS_PUBLIC_KEY" title="src/auth/public.decorator.ts" ><b>IS_PUBLIC_KEY</b>&nbsp;&nbsp;&nbsp;(src/.../public.decorator.ts)</a>
@@ -243,6 +255,12 @@
                         </li>
                         <li>
                             <a href="#otelSDK" title="src/tracing.ts" ><b>otelSDK</b>&nbsp;&nbsp;&nbsp;(src/.../tracing.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#P256_OID_DER" title="src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts" ><b>P256_OID_DER</b>&nbsp;&nbsp;&nbsp;(src/.../pkcs11-kms.adapter.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#pkcs11ModulePromise" title="src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts" ><b>pkcs11ModulePromise</b>&nbsp;&nbsp;&nbsp;(src/.../pkcs11-kms.adapter.ts)</a>
                         </li>
                         <li>
                             <a href="#Public" title="src/auth/public.decorator.ts" ><b>Public</b>&nbsp;&nbsp;&nbsp;(src/.../public.decorator.ts)</a>
@@ -343,6 +361,41 @@
     &quot;attribute_provider_updated&quot;,
     &quot;attribute_provider_deleted&quot;,
 ]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/crypto/key/kms/kms-crypto-provider.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ALG_TO_WEBCRYPTO"></a>
+                    <span class="name">
+                        <span ><b>ALG_TO_WEBCRYPTO</b></span>
+                        <a href="#ALG_TO_WEBCRYPTO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#KmsSigningAlg" target="_self" >Record&lt;KmsSigningAlg, KeyAlgorithm&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    ES256: {
+        name: &quot;ECDSA&quot;,
+        // @ts-expect-error - WebCrypto KeyAlgorithm doesn&#x27;t include namedCurve in its type
+        namedCurve: &quot;P-256&quot;,
+    },
+}</code>
                     </td>
                 </tr>
 
@@ -1406,16 +1459,74 @@ This decorator can be used to determine the media type of the request.</p>
         </tbody>
     </table>
 </section>
-    <h3>src/crypto/key/key-chain.service.ts</h3>
+    <h3>src/crypto/key/kms/kms-config.service.ts</h3>
     <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="ECDSA_P256"></a>
+                    <a name="DEFAULT_PROVIDER_ID"></a>
                     <span class="name">
-                        <span ><b>ECDSA_P256</b></span>
-                        <a href="#ECDSA_P256"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>DEFAULT_PROVIDER_ID</b></span>
+                        <a href="#DEFAULT_PROVIDER_ID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;db&quot;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/crypto/key/kms/kms-provider.registry.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DEFAULT_PROVIDER_ID"></a>
+                    <span class="name">
+                        <span ><b>DEFAULT_PROVIDER_ID</b></span>
+                        <a href="#DEFAULT_PROVIDER_ID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;db&quot;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/crypto/key/cert/certificate-builder.service.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ECDSA_P256_SIGNATURE_ALG"></a>
+                    <span class="name">
+                        <span ><b>ECDSA_P256_SIGNATURE_ALG</b></span>
+                        <a href="#ECDSA_P256_SIGNATURE_ALG"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -1429,7 +1540,6 @@ This decorator can be used to determine the media type of the request.</p>
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
     name: &quot;ECDSA&quot;,
-    namedCurve: &quot;P-256&quot;,
     hash: &quot;SHA-256&quot; as const,
 }</code>
                     </td>
@@ -1840,6 +1950,78 @@ surface without receiving a duplicate <code>/api/api</code> prefix.</p>
         </tbody>
     </table>
 </section>
+    <h3>src/crypto/key/dto/kms-config.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="HTTP_AUTH_TYPES"></a>
+                    <span class="name">
+                        <span ><b>HTTP_AUTH_TYPES</b></span>
+                        <a href="#HTTP_AUTH_TYPES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    &quot;none&quot;,
+    &quot;bearer&quot;,
+    &quot;oauth2-client-credentials&quot;,
+    &quot;mtls&quot;,
+] as const</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="KMS_PROVIDER_TYPES"></a>
+                    <span class="name">
+                        <span ><b>KMS_PROVIDER_TYPES</b></span>
+                        <a href="#KMS_PROVIDER_TYPES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    &quot;db&quot;,
+    &quot;vault&quot;,
+    &quot;aws-kms&quot;,
+    &quot;pkcs11&quot;,
+    &quot;http&quot;,
+] as const</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Supported KMS adapter types.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
     <h3>src/auth/public.decorator.ts</h3>
     <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
@@ -1954,41 +2136,6 @@ surface without receiving a duplicate <code>/api/api</code> prefix.</p>
                     </td>
                 </tr>
 
-
-        </tbody>
-    </table>
-</section>
-    <h3>src/crypto/key/dto/kms-config.dto.ts</h3>
-    <section data-compodoc="block-properties">
-    <h3></h3>    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="KMS_PROVIDER_TYPES"></a>
-                    <span class="name">
-                        <span ><b>KMS_PROVIDER_TYPES</b></span>
-                        <a href="#KMS_PROVIDER_TYPES"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>    <code>unknown</code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>[&quot;db&quot;, &quot;vault&quot;, &quot;aws-kms&quot;] as const</code>
-                    </td>
-                </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Supported KMS adapter types.</p>
-</div>
-                </td>
-            </tr>
 
         </tbody>
     </table>
@@ -2418,6 +2565,58 @@ OpenTelemetry Collector. Configure the collector endpoint via:</p>
 </div>
                 </td>
             </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="P256_OID_DER"></a>
+                    <span class="name">
+                        <span ><b>P256_OID_DER</b></span>
+                        <a href="#P256_OID_DER"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Buffer.from([
+    0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07,
+])</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pkcs11ModulePromise"></a>
+                    <span class="name">
+                        <span ><b>pkcs11ModulePromise</b></span>
+                        <a href="#pkcs11ModulePromise"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Promise | undefined</code>
+
+                    </td>
+                </tr>
+
 
         </tbody>
     </table>

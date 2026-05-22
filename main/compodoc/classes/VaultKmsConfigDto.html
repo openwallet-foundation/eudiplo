@@ -258,7 +258,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:75</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:82</a></code>
 </div>
                         </td>
                     </tr>
@@ -297,7 +297,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="93" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:93</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="100" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:100</a></div>
                         </td>
                     </tr>
 
@@ -335,7 +335,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="84" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:84</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="91" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:91</a></div>
                         </td>
                     </tr>
 
@@ -380,7 +380,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:48</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:55</a></code>
 </div>
                         </td>
                     </tr>
@@ -425,7 +425,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:30</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:37</a></code>
 </div>
                         </td>
                     </tr>
@@ -453,13 +453,20 @@ import {
     IsNotEmpty,
     IsOptional,
     IsString,
+    IsUrl,
     ValidateNested,
 } from &quot;class-validator&quot;;
 
 /**
  * Supported KMS adapter types.
  */
-const KMS_PROVIDER_TYPES &#x3D; [&quot;db&quot;, &quot;vault&quot;, &quot;aws-kms&quot;] as const;
+const KMS_PROVIDER_TYPES &#x3D; [
+    &quot;db&quot;,
+    &quot;vault&quot;,
+    &quot;aws-kms&quot;,
+    &quot;pkcs11&quot;,
+    &quot;http&quot;,
+] as const;
 export type KmsProviderType &#x3D; (typeof KMS_PROVIDER_TYPES)[number];
 
 /**
@@ -581,12 +588,254 @@ class AwsKmsConfigDto extends BaseKmsProviderConfigDto {
 }
 
 /**
+ * Configuration for the PKCS#11 KMS provider (HSMs, smart cards, SoftHSM).
+ * The native &#x60;pkcs11js&#x60; module is loaded lazily on first use.
+ */
+class Pkcs11KmsConfigDto extends BaseKmsProviderConfigDto {
+    @ApiProperty({
+        description: &quot;Type of the KMS provider.&quot;,
+        enum: [&quot;pkcs11&quot;],
+        example: &quot;pkcs11&quot;,
+    })
+    @IsIn([&quot;pkcs11&quot;])
+    declare type: &quot;pkcs11&quot;;
+
+    @ApiProperty({
+        description:
+            &quot;Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${PKCS11_LIBRARY}&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    library!: string;
+
+    @ApiProperty({
+        description:
+            &quot;Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${PKCS11_SLOT}&quot;,
+    })
+    slot!: number | string;
+
+    @ApiProperty({
+        description:
+            &quot;User PIN used for C_Login. Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${PKCS11_PIN}&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    pin!: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Open the PKCS#11 session in read-only mode. Defaults to false.&quot;,
+        example: false,
+    })
+    @IsOptional()
+    readOnly?: boolean;
+}
+
+// ---------------------------------------------------------------------------
+// HTTP KMS auth sub-DTOs
+// ---------------------------------------------------------------------------
+
+const HTTP_AUTH_TYPES &#x3D; [
+    &quot;none&quot;,
+    &quot;bearer&quot;,
+    &quot;oauth2-client-credentials&quot;,
+    &quot;mtls&quot;,
+] as const;
+type HttpAuthType &#x3D; (typeof HTTP_AUTH_TYPES)[number];
+
+class HttpAuthBaseConfigDto {
+    @ApiProperty({
+        description: &quot;Authentication method for the remote KMS service.&quot;,
+        enum: HTTP_AUTH_TYPES,
+    })
+    @IsIn(HTTP_AUTH_TYPES)
+    type!: HttpAuthType;
+}
+
+/** No authentication — suitable for services on a trusted private network. */
+class HttpAuthNoneConfigDto extends HttpAuthBaseConfigDto {
+    declare type: &quot;none&quot;;
+}
+
+/** Static Bearer token sent as &#x60;Authorization: Bearer &lt;token&gt;&#x60;. */
+class HttpAuthBearerConfigDto extends HttpAuthBaseConfigDto {
+    declare type: &quot;bearer&quot;;
+
+    @ApiProperty({
+        description: &quot;Bearer token value. Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${KMS_API_KEY}&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    token!: string;
+}
+
+/** OAuth 2.0 Client Credentials — EUDIPLO fetches and caches short-lived tokens. */
+class HttpAuthOauth2ConfigDto extends HttpAuthBaseConfigDto {
+    declare type: &quot;oauth2-client-credentials&quot;;
+
+    @ApiProperty({
+        description:
+            &quot;Token endpoint URL (e.g. Keycloak, Entra ID). Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${IAM_TOKEN_URL}&quot;,
+    })
+    @IsUrl({ require_tld: false })
+    tokenUrl!: string;
+
+    @ApiProperty({
+        description: &quot;OAuth 2.0 client ID. Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${KMS_CLIENT_ID}&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    clientId!: string;
+
+    @ApiProperty({
+        description:
+            &quot;OAuth 2.0 client secret. Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${KMS_CLIENT_SECRET}&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    clientSecret!: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Space-separated list of OAuth 2.0 scopes to request. Optional.&quot;,
+        example: &quot;kms:sign kms:admin&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    scope?: string;
+}
+
+/** Mutual TLS — EUDIPLO presents a client certificate on every connection. */
+class HttpAuthMtlsConfigDto extends HttpAuthBaseConfigDto {
+    declare type: &quot;mtls&quot;;
+
+    @ApiProperty({
+        description:
+            &quot;Absolute path to the PEM-encoded client certificate file. Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;/etc/certs/eudiplo.crt&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    certFile!: string;
+
+    @ApiProperty({
+        description:
+            &quot;Absolute path to the PEM-encoded private key file for the client certificate. Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;/etc/certs/eudiplo.key&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    keyFile!: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Absolute path to the PEM-encoded CA bundle to trust for the remote server&#x27;s certificate. Omit to use the system CA store.&quot;,
+        example: &quot;/etc/certs/ca.crt&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    caFile?: string;
+}
+
+type HttpKmsAuthConfigDto &#x3D;
+    | HttpAuthNoneConfigDto
+    | HttpAuthBearerConfigDto
+    | HttpAuthOauth2ConfigDto
+    | HttpAuthMtlsConfigDto;
+
+// ---------------------------------------------------------------------------
+// HTTP KMS provider config
+// ---------------------------------------------------------------------------
+
+/**
+ * Configuration for the HTTP KMS provider.
+ * Delegates all key operations to a remote microservice via HTTP/HTTPS.
+ */
+class HttpKmsConfigDto extends BaseKmsProviderConfigDto {
+    @ApiProperty({
+        description: &quot;Type of the KMS provider.&quot;,
+        enum: [&quot;http&quot;],
+        example: &quot;http&quot;,
+    })
+    @IsIn([&quot;http&quot;])
+    declare type: &quot;http&quot;;
+
+    @ApiProperty({
+        description:
+            &quot;Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${KMS_SERVICE_URL}&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    baseUrl!: string;
+
+    @ApiPropertyOptional({
+        description:
+            &#x27;Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to &quot;none&quot;) for unauthenticated services.&#x27;,
+        type: () &#x3D;&gt; HttpAuthBaseConfigDto,
+    })
+    @IsOptional()
+    @ValidateNested()
+    @Type(() &#x3D;&gt; HttpAuthBaseConfigDto, {
+        discriminator: {
+            property: &quot;type&quot;,
+            subTypes: [
+                { value: HttpAuthNoneConfigDto, name: &quot;none&quot; },
+                { value: HttpAuthBearerConfigDto, name: &quot;bearer&quot; },
+                {
+                    value: HttpAuthOauth2ConfigDto,
+                    name: &quot;oauth2-client-credentials&quot;,
+                },
+                { value: HttpAuthMtlsConfigDto, name: &quot;mtls&quot; },
+            ],
+        },
+        keepDiscriminatorProperty: true,
+    })
+    auth?: HttpKmsAuthConfigDto;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Path prefix for key endpoints on the remote service. Defaults to /keys.&quot;,
+        example: &quot;/v1/keys&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    keysPath?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Path for the health check endpoint on the remote service. Defaults to /health.&quot;,
+        example: &quot;/health&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    healthPath?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.&quot;,
+        example: false,
+    })
+    @IsOptional()
+    canImport?: boolean;
+}
+
+/**
  * Union type for all provider configurations.
  */
 export type KmsProviderConfigDto &#x3D;
     | DbKmsConfigDto
     | VaultKmsConfigDto
-    | AwsKmsConfigDto;
+    | AwsKmsConfigDto
+    | Pkcs11KmsConfigDto
+    | HttpKmsConfigDto;
 
 /**
  * Root DTO for kms.json.
@@ -648,6 +897,8 @@ export class KmsConfigDto {
                 { value: DbKmsConfigDto, name: &quot;db&quot; },
                 { value: VaultKmsConfigDto, name: &quot;vault&quot; },
                 { value: AwsKmsConfigDto, name: &quot;aws-kms&quot; },
+                { value: Pkcs11KmsConfigDto, name: &quot;pkcs11&quot; },
+                { value: HttpKmsConfigDto, name: &quot;http&quot; },
             ],
         },
         keepDiscriminatorProperty: true,

@@ -3586,6 +3586,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#get-apikey-chainprovidershealth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /api/key-chain/providers/health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#get-apikey-chain" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -9328,6 +9339,17 @@
     <span class="md-ellipsis">
       
         GET /api/key-chain/providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-apikey-chainprovidershealth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /api/key-chain/providers/health
       
     </span>
   </a>
@@ -18050,15 +18072,15 @@ Users with <code>clients:manage</code> role can only rotate secrets for clients 
 <a id="__codelineno-83-106" name="__codelineno-83-106" href="#__codelineno-83-106"></a><span class="w">            </span><span class="nt">"usage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sign"</span><span class="p">,</span>
 <a id="__codelineno-83-107" name="__codelineno-83-107" href="#__codelineno-83-107"></a><span class="w">            </span><span class="nt">"kmsProvider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-83-108" name="__codelineno-83-108" href="#__codelineno-83-108"></a><span class="w">            </span><span class="nt">"externalKeyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-83-109" name="__codelineno-83-109" href="#__codelineno-83-109"></a><span class="w">            </span><span class="nt">"rootKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-83-109" name="__codelineno-83-109" href="#__codelineno-83-109"></a><span class="w">            </span><span class="nt">"rootJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-83-110" name="__codelineno-83-110" href="#__codelineno-83-110"></a><span class="w">            </span><span class="nt">"rootCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-83-111" name="__codelineno-83-111" href="#__codelineno-83-111"></a><span class="w">            </span><span class="nt">"activeKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-83-111" name="__codelineno-83-111" href="#__codelineno-83-111"></a><span class="w">            </span><span class="nt">"activeJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-83-112" name="__codelineno-83-112" href="#__codelineno-83-112"></a><span class="w">            </span><span class="nt">"activeCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-83-113" name="__codelineno-83-113" href="#__codelineno-83-113"></a><span class="w">            </span><span class="nt">"rotationEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-83-114" name="__codelineno-83-114" href="#__codelineno-83-114"></a><span class="w">            </span><span class="nt">"rotationIntervalDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-83-115" name="__codelineno-83-115" href="#__codelineno-83-115"></a><span class="w">            </span><span class="nt">"certValidityDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-83-116" name="__codelineno-83-116" href="#__codelineno-83-116"></a><span class="w">            </span><span class="nt">"lastRotatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
-<a id="__codelineno-83-117" name="__codelineno-83-117" href="#__codelineno-83-117"></a><span class="w">            </span><span class="nt">"previousKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-83-117" name="__codelineno-83-117" href="#__codelineno-83-117"></a><span class="w">            </span><span class="nt">"previousJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-83-118" name="__codelineno-83-118" href="#__codelineno-83-118"></a><span class="w">            </span><span class="nt">"previousCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-83-119" name="__codelineno-83-119" href="#__codelineno-83-119"></a><span class="w">            </span><span class="nt">"previousKeyExpiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
 <a id="__codelineno-83-120" name="__codelineno-83-120" href="#__codelineno-83-120"></a><span class="w">            </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
@@ -18480,15 +18502,15 @@ Users with <code>clients:manage</code> role can only rotate secrets for clients 
 <a id="__codelineno-88-105" name="__codelineno-88-105" href="#__codelineno-88-105"></a><span class="w">        </span><span class="nt">"usage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sign"</span><span class="p">,</span>
 <a id="__codelineno-88-106" name="__codelineno-88-106" href="#__codelineno-88-106"></a><span class="w">        </span><span class="nt">"kmsProvider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-88-107" name="__codelineno-88-107" href="#__codelineno-88-107"></a><span class="w">        </span><span class="nt">"externalKeyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-88-108" name="__codelineno-88-108" href="#__codelineno-88-108"></a><span class="w">        </span><span class="nt">"rootKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-88-108" name="__codelineno-88-108" href="#__codelineno-88-108"></a><span class="w">        </span><span class="nt">"rootJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-88-109" name="__codelineno-88-109" href="#__codelineno-88-109"></a><span class="w">        </span><span class="nt">"rootCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-88-110" name="__codelineno-88-110" href="#__codelineno-88-110"></a><span class="w">        </span><span class="nt">"activeKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-88-110" name="__codelineno-88-110" href="#__codelineno-88-110"></a><span class="w">        </span><span class="nt">"activeJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-88-111" name="__codelineno-88-111" href="#__codelineno-88-111"></a><span class="w">        </span><span class="nt">"activeCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-88-112" name="__codelineno-88-112" href="#__codelineno-88-112"></a><span class="w">        </span><span class="nt">"rotationEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-88-113" name="__codelineno-88-113" href="#__codelineno-88-113"></a><span class="w">        </span><span class="nt">"rotationIntervalDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-88-114" name="__codelineno-88-114" href="#__codelineno-88-114"></a><span class="w">        </span><span class="nt">"certValidityDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-88-115" name="__codelineno-88-115" href="#__codelineno-88-115"></a><span class="w">        </span><span class="nt">"lastRotatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
-<a id="__codelineno-88-116" name="__codelineno-88-116" href="#__codelineno-88-116"></a><span class="w">        </span><span class="nt">"previousKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-88-116" name="__codelineno-88-116" href="#__codelineno-88-116"></a><span class="w">        </span><span class="nt">"previousJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-88-117" name="__codelineno-88-117" href="#__codelineno-88-117"></a><span class="w">        </span><span class="nt">"previousCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-88-118" name="__codelineno-88-118" href="#__codelineno-88-118"></a><span class="w">        </span><span class="nt">"previousKeyExpiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
 <a id="__codelineno-88-119" name="__codelineno-88-119" href="#__codelineno-88-119"></a><span class="w">        </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
@@ -19731,15 +19753,15 @@ Users with <code>clients:manage</code> role can only rotate secrets for clients 
 <a id="__codelineno-106-13" name="__codelineno-106-13" href="#__codelineno-106-13"></a><span class="w">        </span><span class="nt">"usage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sign"</span><span class="p">,</span>
 <a id="__codelineno-106-14" name="__codelineno-106-14" href="#__codelineno-106-14"></a><span class="w">        </span><span class="nt">"kmsProvider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-106-15" name="__codelineno-106-15" href="#__codelineno-106-15"></a><span class="w">        </span><span class="nt">"externalKeyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-106-16" name="__codelineno-106-16" href="#__codelineno-106-16"></a><span class="w">        </span><span class="nt">"rootKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-106-16" name="__codelineno-106-16" href="#__codelineno-106-16"></a><span class="w">        </span><span class="nt">"rootJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-106-17" name="__codelineno-106-17" href="#__codelineno-106-17"></a><span class="w">        </span><span class="nt">"rootCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-106-18" name="__codelineno-106-18" href="#__codelineno-106-18"></a><span class="w">        </span><span class="nt">"activeKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-106-18" name="__codelineno-106-18" href="#__codelineno-106-18"></a><span class="w">        </span><span class="nt">"activeJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-106-19" name="__codelineno-106-19" href="#__codelineno-106-19"></a><span class="w">        </span><span class="nt">"activeCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-106-20" name="__codelineno-106-20" href="#__codelineno-106-20"></a><span class="w">        </span><span class="nt">"rotationEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-106-21" name="__codelineno-106-21" href="#__codelineno-106-21"></a><span class="w">        </span><span class="nt">"rotationIntervalDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-106-22" name="__codelineno-106-22" href="#__codelineno-106-22"></a><span class="w">        </span><span class="nt">"certValidityDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-106-23" name="__codelineno-106-23" href="#__codelineno-106-23"></a><span class="w">        </span><span class="nt">"lastRotatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
-<a id="__codelineno-106-24" name="__codelineno-106-24" href="#__codelineno-106-24"></a><span class="w">        </span><span class="nt">"previousKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-106-24" name="__codelineno-106-24" href="#__codelineno-106-24"></a><span class="w">        </span><span class="nt">"previousJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-106-25" name="__codelineno-106-25" href="#__codelineno-106-25"></a><span class="w">        </span><span class="nt">"previousCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-106-26" name="__codelineno-106-26" href="#__codelineno-106-26"></a><span class="w">        </span><span class="nt">"previousKeyExpiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
 <a id="__codelineno-106-27" name="__codelineno-106-27" href="#__codelineno-106-27"></a><span class="w">        </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
@@ -19885,15 +19907,15 @@ Users with <code>clients:manage</code> role can only rotate secrets for clients 
 <a id="__codelineno-108-14" name="__codelineno-108-14" href="#__codelineno-108-14"></a><span class="w">            </span><span class="nt">"usage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sign"</span><span class="p">,</span>
 <a id="__codelineno-108-15" name="__codelineno-108-15" href="#__codelineno-108-15"></a><span class="w">            </span><span class="nt">"kmsProvider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-108-16" name="__codelineno-108-16" href="#__codelineno-108-16"></a><span class="w">            </span><span class="nt">"externalKeyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-108-17" name="__codelineno-108-17" href="#__codelineno-108-17"></a><span class="w">            </span><span class="nt">"rootKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-108-17" name="__codelineno-108-17" href="#__codelineno-108-17"></a><span class="w">            </span><span class="nt">"rootJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-108-18" name="__codelineno-108-18" href="#__codelineno-108-18"></a><span class="w">            </span><span class="nt">"rootCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-108-19" name="__codelineno-108-19" href="#__codelineno-108-19"></a><span class="w">            </span><span class="nt">"activeKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-108-19" name="__codelineno-108-19" href="#__codelineno-108-19"></a><span class="w">            </span><span class="nt">"activeJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-108-20" name="__codelineno-108-20" href="#__codelineno-108-20"></a><span class="w">            </span><span class="nt">"activeCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-108-21" name="__codelineno-108-21" href="#__codelineno-108-21"></a><span class="w">            </span><span class="nt">"rotationEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-108-22" name="__codelineno-108-22" href="#__codelineno-108-22"></a><span class="w">            </span><span class="nt">"rotationIntervalDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-108-23" name="__codelineno-108-23" href="#__codelineno-108-23"></a><span class="w">            </span><span class="nt">"certValidityDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-108-24" name="__codelineno-108-24" href="#__codelineno-108-24"></a><span class="w">            </span><span class="nt">"lastRotatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
-<a id="__codelineno-108-25" name="__codelineno-108-25" href="#__codelineno-108-25"></a><span class="w">            </span><span class="nt">"previousKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-108-25" name="__codelineno-108-25" href="#__codelineno-108-25"></a><span class="w">            </span><span class="nt">"previousJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-108-26" name="__codelineno-108-26" href="#__codelineno-108-26"></a><span class="w">            </span><span class="nt">"previousCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-108-27" name="__codelineno-108-27" href="#__codelineno-108-27"></a><span class="w">            </span><span class="nt">"previousKeyExpiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
 <a id="__codelineno-108-28" name="__codelineno-108-28" href="#__codelineno-108-28"></a><span class="w">            </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
@@ -19985,15 +20007,15 @@ Users with <code>clients:manage</code> role can only rotate secrets for clients 
 <a id="__codelineno-110-13" name="__codelineno-110-13" href="#__codelineno-110-13"></a><span class="w">        </span><span class="nt">"usage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sign"</span><span class="p">,</span>
 <a id="__codelineno-110-14" name="__codelineno-110-14" href="#__codelineno-110-14"></a><span class="w">        </span><span class="nt">"kmsProvider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-110-15" name="__codelineno-110-15" href="#__codelineno-110-15"></a><span class="w">        </span><span class="nt">"externalKeyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-110-16" name="__codelineno-110-16" href="#__codelineno-110-16"></a><span class="w">        </span><span class="nt">"rootKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-110-16" name="__codelineno-110-16" href="#__codelineno-110-16"></a><span class="w">        </span><span class="nt">"rootJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-110-17" name="__codelineno-110-17" href="#__codelineno-110-17"></a><span class="w">        </span><span class="nt">"rootCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-110-18" name="__codelineno-110-18" href="#__codelineno-110-18"></a><span class="w">        </span><span class="nt">"activeKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-110-18" name="__codelineno-110-18" href="#__codelineno-110-18"></a><span class="w">        </span><span class="nt">"activeJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-110-19" name="__codelineno-110-19" href="#__codelineno-110-19"></a><span class="w">        </span><span class="nt">"activeCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-110-20" name="__codelineno-110-20" href="#__codelineno-110-20"></a><span class="w">        </span><span class="nt">"rotationEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-110-21" name="__codelineno-110-21" href="#__codelineno-110-21"></a><span class="w">        </span><span class="nt">"rotationIntervalDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-110-22" name="__codelineno-110-22" href="#__codelineno-110-22"></a><span class="w">        </span><span class="nt">"certValidityDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-110-23" name="__codelineno-110-23" href="#__codelineno-110-23"></a><span class="w">        </span><span class="nt">"lastRotatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
-<a id="__codelineno-110-24" name="__codelineno-110-24" href="#__codelineno-110-24"></a><span class="w">        </span><span class="nt">"previousKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-110-24" name="__codelineno-110-24" href="#__codelineno-110-24"></a><span class="w">        </span><span class="nt">"previousJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-110-25" name="__codelineno-110-25" href="#__codelineno-110-25"></a><span class="w">        </span><span class="nt">"previousCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-110-26" name="__codelineno-110-26" href="#__codelineno-110-26"></a><span class="w">        </span><span class="nt">"previousKeyExpiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
 <a id="__codelineno-110-27" name="__codelineno-110-27" href="#__codelineno-110-27"></a><span class="w">        </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
@@ -20211,15 +20233,15 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-114-13" name="__codelineno-114-13" href="#__codelineno-114-13"></a><span class="w">        </span><span class="nt">"usage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sign"</span><span class="p">,</span>
 <a id="__codelineno-114-14" name="__codelineno-114-14" href="#__codelineno-114-14"></a><span class="w">        </span><span class="nt">"kmsProvider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-114-15" name="__codelineno-114-15" href="#__codelineno-114-15"></a><span class="w">        </span><span class="nt">"externalKeyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-114-16" name="__codelineno-114-16" href="#__codelineno-114-16"></a><span class="w">        </span><span class="nt">"rootKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-114-16" name="__codelineno-114-16" href="#__codelineno-114-16"></a><span class="w">        </span><span class="nt">"rootJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-114-17" name="__codelineno-114-17" href="#__codelineno-114-17"></a><span class="w">        </span><span class="nt">"rootCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-114-18" name="__codelineno-114-18" href="#__codelineno-114-18"></a><span class="w">        </span><span class="nt">"activeKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-114-18" name="__codelineno-114-18" href="#__codelineno-114-18"></a><span class="w">        </span><span class="nt">"activeJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-114-19" name="__codelineno-114-19" href="#__codelineno-114-19"></a><span class="w">        </span><span class="nt">"activeCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-114-20" name="__codelineno-114-20" href="#__codelineno-114-20"></a><span class="w">        </span><span class="nt">"rotationEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-114-21" name="__codelineno-114-21" href="#__codelineno-114-21"></a><span class="w">        </span><span class="nt">"rotationIntervalDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-114-22" name="__codelineno-114-22" href="#__codelineno-114-22"></a><span class="w">        </span><span class="nt">"certValidityDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-114-23" name="__codelineno-114-23" href="#__codelineno-114-23"></a><span class="w">        </span><span class="nt">"lastRotatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
-<a id="__codelineno-114-24" name="__codelineno-114-24" href="#__codelineno-114-24"></a><span class="w">        </span><span class="nt">"previousKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-114-24" name="__codelineno-114-24" href="#__codelineno-114-24"></a><span class="w">        </span><span class="nt">"previousJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-114-25" name="__codelineno-114-25" href="#__codelineno-114-25"></a><span class="w">        </span><span class="nt">"previousCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-114-26" name="__codelineno-114-26" href="#__codelineno-114-26"></a><span class="w">        </span><span class="nt">"previousKeyExpiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
 <a id="__codelineno-114-27" name="__codelineno-114-27" href="#__codelineno-114-27"></a><span class="w">        </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
@@ -20523,15 +20545,15 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-118-17" name="__codelineno-118-17" href="#__codelineno-118-17"></a><span class="w">                </span><span class="nt">"usage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sign"</span><span class="p">,</span>
 <a id="__codelineno-118-18" name="__codelineno-118-18" href="#__codelineno-118-18"></a><span class="w">                </span><span class="nt">"kmsProvider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-118-19" name="__codelineno-118-19" href="#__codelineno-118-19"></a><span class="w">                </span><span class="nt">"externalKeyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-118-20" name="__codelineno-118-20" href="#__codelineno-118-20"></a><span class="w">                </span><span class="nt">"rootKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-118-20" name="__codelineno-118-20" href="#__codelineno-118-20"></a><span class="w">                </span><span class="nt">"rootJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-118-21" name="__codelineno-118-21" href="#__codelineno-118-21"></a><span class="w">                </span><span class="nt">"rootCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-118-22" name="__codelineno-118-22" href="#__codelineno-118-22"></a><span class="w">                </span><span class="nt">"activeKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-118-22" name="__codelineno-118-22" href="#__codelineno-118-22"></a><span class="w">                </span><span class="nt">"activeJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-118-23" name="__codelineno-118-23" href="#__codelineno-118-23"></a><span class="w">                </span><span class="nt">"activeCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-118-24" name="__codelineno-118-24" href="#__codelineno-118-24"></a><span class="w">                </span><span class="nt">"rotationEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-118-25" name="__codelineno-118-25" href="#__codelineno-118-25"></a><span class="w">                </span><span class="nt">"rotationIntervalDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-118-26" name="__codelineno-118-26" href="#__codelineno-118-26"></a><span class="w">                </span><span class="nt">"certValidityDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-118-27" name="__codelineno-118-27" href="#__codelineno-118-27"></a><span class="w">                </span><span class="nt">"lastRotatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
-<a id="__codelineno-118-28" name="__codelineno-118-28" href="#__codelineno-118-28"></a><span class="w">                </span><span class="nt">"previousKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-118-28" name="__codelineno-118-28" href="#__codelineno-118-28"></a><span class="w">                </span><span class="nt">"previousJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-118-29" name="__codelineno-118-29" href="#__codelineno-118-29"></a><span class="w">                </span><span class="nt">"previousCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-118-30" name="__codelineno-118-30" href="#__codelineno-118-30"></a><span class="w">                </span><span class="nt">"previousKeyExpiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
 <a id="__codelineno-118-31" name="__codelineno-118-31" href="#__codelineno-118-31"></a><span class="w">                </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
@@ -20641,15 +20663,15 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-120-16" name="__codelineno-120-16" href="#__codelineno-120-16"></a><span class="w">            </span><span class="nt">"usage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sign"</span><span class="p">,</span>
 <a id="__codelineno-120-17" name="__codelineno-120-17" href="#__codelineno-120-17"></a><span class="w">            </span><span class="nt">"kmsProvider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-120-18" name="__codelineno-120-18" href="#__codelineno-120-18"></a><span class="w">            </span><span class="nt">"externalKeyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-120-19" name="__codelineno-120-19" href="#__codelineno-120-19"></a><span class="w">            </span><span class="nt">"rootKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-120-19" name="__codelineno-120-19" href="#__codelineno-120-19"></a><span class="w">            </span><span class="nt">"rootJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-120-20" name="__codelineno-120-20" href="#__codelineno-120-20"></a><span class="w">            </span><span class="nt">"rootCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-120-21" name="__codelineno-120-21" href="#__codelineno-120-21"></a><span class="w">            </span><span class="nt">"activeKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-120-21" name="__codelineno-120-21" href="#__codelineno-120-21"></a><span class="w">            </span><span class="nt">"activeJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-120-22" name="__codelineno-120-22" href="#__codelineno-120-22"></a><span class="w">            </span><span class="nt">"activeCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-120-23" name="__codelineno-120-23" href="#__codelineno-120-23"></a><span class="w">            </span><span class="nt">"rotationEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-120-24" name="__codelineno-120-24" href="#__codelineno-120-24"></a><span class="w">            </span><span class="nt">"rotationIntervalDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-120-25" name="__codelineno-120-25" href="#__codelineno-120-25"></a><span class="w">            </span><span class="nt">"certValidityDays"</span><span class="p">:</span><span class="w"> </span><span class="mf">10.12</span><span class="p">,</span>
 <a id="__codelineno-120-26" name="__codelineno-120-26" href="#__codelineno-120-26"></a><span class="w">            </span><span class="nt">"lastRotatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
-<a id="__codelineno-120-27" name="__codelineno-120-27" href="#__codelineno-120-27"></a><span class="w">            </span><span class="nt">"previousKey"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-120-27" name="__codelineno-120-27" href="#__codelineno-120-27"></a><span class="w">            </span><span class="nt">"previousJwk"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
 <a id="__codelineno-120-28" name="__codelineno-120-28" href="#__codelineno-120-28"></a><span class="w">            </span><span class="nt">"previousCertificate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-120-29" name="__codelineno-120-29" href="#__codelineno-120-29"></a><span class="w">            </span><span class="nt">"previousKeyExpiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
 <a id="__codelineno-120-30" name="__codelineno-120-30" href="#__codelineno-120-30"></a><span class="w">            </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-04-13T15:42:05.901Z"</span><span class="p">,</span>
@@ -25208,6 +25230,40 @@ Creates a new version for audit and regenerates the JWT</p>
 </div>
 <hr class="operation-separator">
 
+<h3 id="get-apikey-chainprovidershealth"><span class="http-get">GET</span> /api/key-chain/providers/health<a class="headerlink" href="#get-apikey-chainprovidershealth" title="Permanent link">¶</a></h3>
+<p>Health probe for every KMS provider</p>
+<p><strong>Input parameters</strong></p>
+<table>
+    <thead>
+        <tr>
+            <th>Parameter</th>
+            <th>In</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Nullable</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="parameter-name"><code>oauth2</code></td>
+            <td>header</td>
+            <td>string</td>
+            <td>N/A</td>
+            <td>No</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+<p class="responses-title"><strong>Responses</strong></p>
+
+<div class="tabbed-set tabbed-alternate" data-tabs="202:1"><input checked="checked" id="__tabbed_202_1" name="__tabbed_202" type="radio"><div class="tabbed-labels"><label for="__tabbed_202_1">200 OK</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block"></div>
+</div>
+</div>
+<hr class="operation-separator">
+
 <h3 id="get-apikey-chain"><span class="http-get">GET</span> /api/key-chain<a class="headerlink" href="#get-apikey-chain" title="Permanent link">¶</a></h3>
 <p>List all key chains for the tenant</p>
 <p><strong>Input parameters</strong></p>
@@ -25243,10 +25299,10 @@ Creates a new version for audit and regenerates the JWT</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="202:1"><input checked="checked" id="__tabbed_202_1" name="__tabbed_202" type="radio"><div class="tabbed-labels"><label for="__tabbed_202_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="203:1"><input checked="checked" id="__tabbed_203_1" name="__tabbed_203" type="radio"><div class="tabbed-labels"><label for="__tabbed_203_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="203:1"><input checked="checked" id="__tabbed_203_1" name="__tabbed_203" type="radio"><div class="tabbed-labels"><label for="__tabbed_203_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="204:1"><input checked="checked" id="__tabbed_204_1" name="__tabbed_204" type="radio"><div class="tabbed-labels"><label for="__tabbed_204_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-201-1" name="__codelineno-201-1" href="#__codelineno-201-1"></a><span class="p">[</span>
@@ -25314,7 +25370,7 @@ Creates a new version for audit and regenerates the JWT</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="204:1"><input checked="checked" id="__tabbed_204_1" name="__tabbed_204" type="radio"><div class="tabbed-labels"><label for="__tabbed_204_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="205:1"><input checked="checked" id="__tabbed_205_1" name="__tabbed_205" type="radio"><div class="tabbed-labels"><label for="__tabbed_205_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-203-1" name="__codelineno-203-1" href="#__codelineno-203-1"></a><span class="p">{</span>
@@ -25383,7 +25439,7 @@ Creates a new version for audit and regenerates the JWT</p>
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="205:1"><input checked="checked" id="__tabbed_205_1" name="__tabbed_205" type="radio"><div class="tabbed-labels"><label for="__tabbed_205_1">201 Created</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="206:1"><input checked="checked" id="__tabbed_206_1" name="__tabbed_206" type="radio"><div class="tabbed-labels"><label for="__tabbed_206_1">201 Created</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -25425,10 +25481,10 @@ Creates a new version for audit and regenerates the JWT</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="206:2"><input checked="checked" id="__tabbed_206_1" name="__tabbed_206" type="radio"><input id="__tabbed_206_2" name="__tabbed_206" type="radio"><div class="tabbed-labels"><label for="__tabbed_206_1">200 OK</label><label for="__tabbed_206_2">404 Not Found</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="207:2"><input checked="checked" id="__tabbed_207_1" name="__tabbed_207" type="radio"><input id="__tabbed_207_2" name="__tabbed_207" type="radio"><div class="tabbed-labels"><label for="__tabbed_207_1">200 OK</label><label for="__tabbed_207_2">404 Not Found</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="207:1"><input checked="checked" id="__tabbed_207_1" name="__tabbed_207" type="radio"><div class="tabbed-labels"><label for="__tabbed_207_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="208:1"><input checked="checked" id="__tabbed_208_1" name="__tabbed_208" type="radio"><div class="tabbed-labels"><label for="__tabbed_208_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-205-1" name="__codelineno-205-1" href="#__codelineno-205-1"></a><span class="p">{</span>
@@ -25606,7 +25662,7 @@ Creates a new version for audit and regenerates the JWT</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="208:1"><input checked="checked" id="__tabbed_208_1" name="__tabbed_208" type="radio"><div class="tabbed-labels"><label for="__tabbed_208_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="209:1"><input checked="checked" id="__tabbed_209_1" name="__tabbed_209" type="radio"><div class="tabbed-labels"><label for="__tabbed_209_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-207-1" name="__codelineno-207-1" href="#__codelineno-207-1"></a><span class="p">{</span>
@@ -25646,7 +25702,7 @@ Creates a new version for audit and regenerates the JWT</p>
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="209:2"><input checked="checked" id="__tabbed_209_1" name="__tabbed_209" type="radio"><input id="__tabbed_209_2" name="__tabbed_209" type="radio"><div class="tabbed-labels"><label for="__tabbed_209_1">200 OK</label><label for="__tabbed_209_2">404 Not Found</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="210:2"><input checked="checked" id="__tabbed_210_1" name="__tabbed_210" type="radio"><input id="__tabbed_210_2" name="__tabbed_210" type="radio"><div class="tabbed-labels"><label for="__tabbed_210_1">200 OK</label><label for="__tabbed_210_2">404 Not Found</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 <div class="tabbed-block"></div>
@@ -25689,7 +25745,7 @@ Creates a new version for audit and regenerates the JWT</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="210:2"><input checked="checked" id="__tabbed_210_1" name="__tabbed_210" type="radio"><input id="__tabbed_210_2" name="__tabbed_210" type="radio"><div class="tabbed-labels"><label for="__tabbed_210_1">200 OK</label><label for="__tabbed_210_2">404 Not Found</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="211:2"><input checked="checked" id="__tabbed_211_1" name="__tabbed_211" type="radio"><input id="__tabbed_211_2" name="__tabbed_211" type="radio"><div class="tabbed-labels"><label for="__tabbed_211_1">200 OK</label><label for="__tabbed_211_2">404 Not Found</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 <div class="tabbed-block"></div>
@@ -25736,10 +25792,10 @@ Creates a new version for audit and regenerates the JWT</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="211:2"><input checked="checked" id="__tabbed_211_1" name="__tabbed_211" type="radio"><input id="__tabbed_211_2" name="__tabbed_211" type="radio"><div class="tabbed-labels"><label for="__tabbed_211_1">200 OK</label><label for="__tabbed_211_2">404 Not Found</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="212:2"><input checked="checked" id="__tabbed_212_1" name="__tabbed_212" type="radio"><input id="__tabbed_212_2" name="__tabbed_212" type="radio"><div class="tabbed-labels"><label for="__tabbed_212_1">200 OK</label><label for="__tabbed_212_2">404 Not Found</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="212:1"><input checked="checked" id="__tabbed_212_1" name="__tabbed_212" type="radio"><div class="tabbed-labels"><label for="__tabbed_212_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="213:1"><input checked="checked" id="__tabbed_213_1" name="__tabbed_213" type="radio"><div class="tabbed-labels"><label for="__tabbed_213_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-209-1" name="__codelineno-209-1" href="#__codelineno-209-1"></a><span class="p">{</span>
@@ -25851,7 +25907,7 @@ Creates a new version for audit and regenerates the JWT</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="213:1"><input checked="checked" id="__tabbed_213_1" name="__tabbed_213" type="radio"><div class="tabbed-labels"><label for="__tabbed_213_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="214:1"><input checked="checked" id="__tabbed_214_1" name="__tabbed_214" type="radio"><div class="tabbed-labels"><label for="__tabbed_214_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-211-1" name="__codelineno-211-1" href="#__codelineno-211-1"></a><span class="p">{</span>
@@ -25931,7 +25987,7 @@ Creates a new version for audit and regenerates the JWT</p>
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="214:1"><input checked="checked" id="__tabbed_214_1" name="__tabbed_214" type="radio"><div class="tabbed-labels"><label for="__tabbed_214_1">201 Created</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="215:1"><input checked="checked" id="__tabbed_215_1" name="__tabbed_215" type="radio"><div class="tabbed-labels"><label for="__tabbed_215_1">201 Created</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -25973,7 +26029,7 @@ Creates a new version for audit and regenerates the JWT</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="215:2"><input checked="checked" id="__tabbed_215_1" name="__tabbed_215" type="radio"><input id="__tabbed_215_2" name="__tabbed_215" type="radio"><div class="tabbed-labels"><label for="__tabbed_215_1">200 OK</label><label for="__tabbed_215_2">404 Not Found</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="216:2"><input checked="checked" id="__tabbed_216_1" name="__tabbed_216" type="radio"><input id="__tabbed_216_2" name="__tabbed_216" type="radio"><div class="tabbed-labels"><label for="__tabbed_216_1">200 OK</label><label for="__tabbed_216_2">404 Not Found</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 <div class="tabbed-block"></div>
@@ -26009,7 +26065,7 @@ Creates a new version for audit and regenerates the JWT</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="216:1"><input checked="checked" id="__tabbed_216_1" name="__tabbed_216" type="radio"><div class="tabbed-labels"><label for="__tabbed_216_1">multipart/form-data</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="217:1"><input checked="checked" id="__tabbed_217_1" name="__tabbed_217" type="radio"><div class="tabbed-labels"><label for="__tabbed_217_1">multipart/form-data</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-213-1" name="__codelineno-213-1" href="#__codelineno-213-1"></a><span class="p">{</span>
@@ -26038,10 +26094,10 @@ Creates a new version for audit and regenerates the JWT</p>
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="217:1"><input checked="checked" id="__tabbed_217_1" name="__tabbed_217" type="radio"><div class="tabbed-labels"><label for="__tabbed_217_1">201 Created</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="218:1"><input checked="checked" id="__tabbed_218_1" name="__tabbed_218" type="radio"><div class="tabbed-labels"><label for="__tabbed_218_1">201 Created</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="218:1"><input checked="checked" id="__tabbed_218_1" name="__tabbed_218" type="radio"><div class="tabbed-labels"><label for="__tabbed_218_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="219:1"><input checked="checked" id="__tabbed_219_1" name="__tabbed_219" type="radio"><div class="tabbed-labels"><label for="__tabbed_219_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -28837,7 +28893,7 @@ for this specific credential configuration.</td>
 Either CA-signed (if rootKey exists) or self-signed.</td>
         </tr>
         <tr>
-            <td><code>activeKey</code></td>
+            <td><code>activeJwk</code></td>
             <td></td>
             <td></td>
         </tr>
@@ -28885,7 +28941,7 @@ References a configured KMS provider name.</td>
             <td>Certificate for the previous signing key in PEM format.</td>
         </tr>
         <tr>
-            <td><code>previousKey</code></td>
+            <td><code>previousJwk</code></td>
             <td></td>
             <td></td>
         </tr>
@@ -28902,7 +28958,7 @@ After this date, the previous key should be deleted.</td>
 Self-signed certificate for the root CA key.</td>
         </tr>
         <tr>
-            <td><code>rootKey</code></td>
+            <td><code>rootJwk</code></td>
             <td></td>
             <td></td>
         </tr>
@@ -29175,6 +29231,16 @@ Self-signed certificate for the root CA key.</td>
             <td><code>canImport</code></td>
             <td><span class="boolean-type">boolean</span></td>
             <td>Whether the provider supports importing existing keys.</td>
+        </tr>
+        <tr>
+            <td><code>defaultAlg</code></td>
+            <td><span class="string-type">string</span></td>
+            <td>Default signing algorithm used when caller does not specify one.</td>
+        </tr>
+        <tr>
+            <td><code>supportedAlgs</code></td>
+            <td>Array&lt;<span class="string-type">string</span>&gt;</td>
+            <td>Signing algorithms supported by the provider.</td>
         </tr>
     </tbody>
 </table>
@@ -32041,7 +32107,7 @@ Most likely, it is not desirable to edit this file by hand!
 
 <h3 id="get"><span class="http-get">GET</span> /<a class="headerlink" href="#get" title="Permanent link">¶</a></h3>
 <p>Main endpoint providing service info</p><p class="responses-title"><strong>Responses</strong></p><p></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="219:1"><input checked="checked" id="__tabbed_219_1" name="__tabbed_219" type="radio"><div class="tabbed-labels"><label for="__tabbed_219_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="220:1"><input checked="checked" id="__tabbed_220_1" name="__tabbed_220" type="radio"><div class="tabbed-labels"><label for="__tabbed_220_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -32050,10 +32116,10 @@ Most likely, it is not desirable to edit this file by hand!
 
 <h3 id="get-health"><span class="http-get">GET</span> /health<a class="headerlink" href="#get-health" title="Permanent link">¶</a></h3>
 <p>Endpoint to check the health of the service.</p><p class="responses-title"><strong>Responses</strong></p><p></p>
-<div class="tabbed-set tabbed-alternate" data-tabs="220:2"><input checked="checked" id="__tabbed_220_1" name="__tabbed_220" type="radio"><input id="__tabbed_220_2" name="__tabbed_220" type="radio"><div class="tabbed-labels"><label for="__tabbed_220_1">200 OK</label><label for="__tabbed_220_2">503 Service Unavailable</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="221:2"><input checked="checked" id="__tabbed_221_1" name="__tabbed_221" type="radio"><input id="__tabbed_221_2" name="__tabbed_221" type="radio"><div class="tabbed-labels"><label for="__tabbed_221_1">200 OK</label><label for="__tabbed_221_2">503 Service Unavailable</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="221:1"><input checked="checked" id="__tabbed_221_1" name="__tabbed_221" type="radio"><div class="tabbed-labels"><label for="__tabbed_221_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="222:1"><input checked="checked" id="__tabbed_222_1" name="__tabbed_222" type="radio"><div class="tabbed-labels"><label for="__tabbed_222_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-216-1" name="__codelineno-216-1" href="#__codelineno-216-1"></a><span class="p">{</span>
@@ -32148,7 +32214,7 @@ Most likely, it is not desirable to edit this file by hand!
 </div>
 </div>
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="222:1"><input checked="checked" id="__tabbed_222_1" name="__tabbed_222" type="radio"><div class="tabbed-labels"><label for="__tabbed_222_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="223:1"><input checked="checked" id="__tabbed_223_1" name="__tabbed_223" type="radio"><div class="tabbed-labels"><label for="__tabbed_223_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-218-1" name="__codelineno-218-1" href="#__codelineno-218-1"></a><span class="p">{</span>
@@ -32273,7 +32339,7 @@ Most likely, it is not desirable to edit this file by hand!
 </details>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="223:1"><input checked="checked" id="__tabbed_223_1" name="__tabbed_223" type="radio"><div class="tabbed-labels"><label for="__tabbed_223_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="224:1"><input checked="checked" id="__tabbed_224_1" name="__tabbed_224" type="radio"><div class="tabbed-labels"><label for="__tabbed_224_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -32288,7 +32354,7 @@ Most likely, it is not desirable to edit this file by hand!
 </details>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="224:1"><input checked="checked" id="__tabbed_224_1" name="__tabbed_224" type="radio"><div class="tabbed-labels"><label for="__tabbed_224_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="225:1"><input checked="checked" id="__tabbed_225_1" name="__tabbed_225" type="radio"><div class="tabbed-labels"><label for="__tabbed_225_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -32331,10 +32397,10 @@ Most likely, it is not desirable to edit this file by hand!
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="225:1"><input checked="checked" id="__tabbed_225_1" name="__tabbed_225" type="radio"><div class="tabbed-labels"><label for="__tabbed_225_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="226:1"><input checked="checked" id="__tabbed_226_1" name="__tabbed_226" type="radio"><div class="tabbed-labels"><label for="__tabbed_226_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="226:1"><input checked="checked" id="__tabbed_226_1" name="__tabbed_226" type="radio"><div class="tabbed-labels"><label for="__tabbed_226_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="227:1"><input checked="checked" id="__tabbed_227_1" name="__tabbed_227" type="radio"><div class="tabbed-labels"><label for="__tabbed_227_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-220-1" name="__codelineno-220-1" href="#__codelineno-220-1"></a><span class="s2">"string"</span>
@@ -32386,10 +32452,10 @@ Most likely, it is not desirable to edit this file by hand!
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="227:1"><input checked="checked" id="__tabbed_227_1" name="__tabbed_227" type="radio"><div class="tabbed-labels"><label for="__tabbed_227_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="228:1"><input checked="checked" id="__tabbed_228_1" name="__tabbed_228" type="radio"><div class="tabbed-labels"><label for="__tabbed_228_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="228:1"><input checked="checked" id="__tabbed_228_1" name="__tabbed_228" type="radio"><div class="tabbed-labels"><label for="__tabbed_228_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="229:1"><input checked="checked" id="__tabbed_229_1" name="__tabbed_229" type="radio"><div class="tabbed-labels"><label for="__tabbed_229_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-222-1" name="__codelineno-222-1" href="#__codelineno-222-1"></a><span class="p">{</span>
@@ -32466,10 +32532,10 @@ Most likely, it is not desirable to edit this file by hand!
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="229:1"><input checked="checked" id="__tabbed_229_1" name="__tabbed_229" type="radio"><div class="tabbed-labels"><label for="__tabbed_229_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="230:1"><input checked="checked" id="__tabbed_230_1" name="__tabbed_230" type="radio"><div class="tabbed-labels"><label for="__tabbed_230_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="230:1"><input checked="checked" id="__tabbed_230_1" name="__tabbed_230" type="radio"><div class="tabbed-labels"><label for="__tabbed_230_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="231:1"><input checked="checked" id="__tabbed_231_1" name="__tabbed_231" type="radio"><div class="tabbed-labels"><label for="__tabbed_231_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-224-1" name="__codelineno-224-1" href="#__codelineno-224-1"></a><span class="s2">"string"</span>
@@ -32518,10 +32584,10 @@ Most likely, it is not desirable to edit this file by hand!
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="231:1"><input checked="checked" id="__tabbed_231_1" name="__tabbed_231" type="radio"><div class="tabbed-labels"><label for="__tabbed_231_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="232:1"><input checked="checked" id="__tabbed_232_1" name="__tabbed_232" type="radio"><div class="tabbed-labels"><label for="__tabbed_232_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="232:1"><input checked="checked" id="__tabbed_232_1" name="__tabbed_232" type="radio"><div class="tabbed-labels"><label for="__tabbed_232_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="233:1"><input checked="checked" id="__tabbed_233_1" name="__tabbed_233" type="radio"><div class="tabbed-labels"><label for="__tabbed_233_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -32568,7 +32634,7 @@ for credentials that were not immediately available.</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="233:1"><input checked="checked" id="__tabbed_233_1" name="__tabbed_233" type="radio"><div class="tabbed-labels"><label for="__tabbed_233_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="234:1"><input checked="checked" id="__tabbed_234_1" name="__tabbed_234" type="radio"><div class="tabbed-labels"><label for="__tabbed_234_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-227-1" name="__codelineno-227-1" href="#__codelineno-227-1"></a><span class="p">{</span>
@@ -32598,7 +32664,7 @@ for credentials that were not immediately available.</p>
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="234:1"><input checked="checked" id="__tabbed_234_1" name="__tabbed_234" type="radio"><div class="tabbed-labels"><label for="__tabbed_234_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="235:1"><input checked="checked" id="__tabbed_235_1" name="__tabbed_235" type="radio"><div class="tabbed-labels"><label for="__tabbed_235_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -32632,7 +32698,7 @@ for credentials that were not immediately available.</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="235:1"><input checked="checked" id="__tabbed_235_1" name="__tabbed_235" type="radio"><div class="tabbed-labels"><label for="__tabbed_235_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="236:1"><input checked="checked" id="__tabbed_236_1" name="__tabbed_236" type="radio"><div class="tabbed-labels"><label for="__tabbed_236_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-229-1" name="__codelineno-229-1" href="#__codelineno-229-1"></a><span class="p">{</span>
@@ -32665,7 +32731,7 @@ for credentials that were not immediately available.</p>
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="236:1"><input checked="checked" id="__tabbed_236_1" name="__tabbed_236" type="radio"><div class="tabbed-labels"><label for="__tabbed_236_1">201 Created</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="237:1"><input checked="checked" id="__tabbed_237_1" name="__tabbed_237" type="radio"><div class="tabbed-labels"><label for="__tabbed_237_1">201 Created</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -32698,7 +32764,7 @@ for credentials that were not immediately available.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="237:1"><input checked="checked" id="__tabbed_237_1" name="__tabbed_237" type="radio"><div class="tabbed-labels"><label for="__tabbed_237_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="238:1"><input checked="checked" id="__tabbed_238_1" name="__tabbed_238" type="radio"><div class="tabbed-labels"><label for="__tabbed_238_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -32838,7 +32904,7 @@ passed inside a signed request object it can already be an array.</td>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="238:1"><input checked="checked" id="__tabbed_238_1" name="__tabbed_238" type="radio"><div class="tabbed-labels"><label for="__tabbed_238_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="239:1"><input checked="checked" id="__tabbed_239_1" name="__tabbed_239" type="radio"><div class="tabbed-labels"><label for="__tabbed_239_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -32888,7 +32954,7 @@ passed inside a signed request object it can already be an array.</td>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="239:1"><input checked="checked" id="__tabbed_239_1" name="__tabbed_239" type="radio"><div class="tabbed-labels"><label for="__tabbed_239_1">application/x-www-form-urlencoded</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="240:1"><input checked="checked" id="__tabbed_240_1" name="__tabbed_240" type="radio"><div class="tabbed-labels"><label for="__tabbed_240_1">application/x-www-form-urlencoded</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-231-1" name="__codelineno-231-1" href="#__codelineno-231-1"></a><span class="p">{</span>
@@ -32962,10 +33028,10 @@ passed inside a signed request object it can already be an array.</td>
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="240:1"><input checked="checked" id="__tabbed_240_1" name="__tabbed_240" type="radio"><div class="tabbed-labels"><label for="__tabbed_240_1">201 Created</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="241:1"><input checked="checked" id="__tabbed_241_1" name="__tabbed_241" type="radio"><div class="tabbed-labels"><label for="__tabbed_241_1">201 Created</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="241:1"><input checked="checked" id="__tabbed_241_1" name="__tabbed_241" type="radio"><div class="tabbed-labels"><label for="__tabbed_241_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="242:1"><input checked="checked" id="__tabbed_242_1" name="__tabbed_242" type="radio"><div class="tabbed-labels"><label for="__tabbed_242_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-233-1" name="__codelineno-233-1" href="#__codelineno-233-1"></a><span class="p">{</span>
@@ -33031,10 +33097,10 @@ This endpoint is used to exchange the authorization code for an access token.</p
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="242:1"><input checked="checked" id="__tabbed_242_1" name="__tabbed_242" type="radio"><div class="tabbed-labels"><label for="__tabbed_242_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="243:1"><input checked="checked" id="__tabbed_243_1" name="__tabbed_243" type="radio"><div class="tabbed-labels"><label for="__tabbed_243_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="243:1"><input checked="checked" id="__tabbed_243_1" name="__tabbed_243" type="radio"><div class="tabbed-labels"><label for="__tabbed_243_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="244:1"><input checked="checked" id="__tabbed_244_1" name="__tabbed_244" type="radio"><div class="tabbed-labels"><label for="__tabbed_244_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -33080,7 +33146,7 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="244:1"><input checked="checked" id="__tabbed_244_1" name="__tabbed_244" type="radio"><div class="tabbed-labels"><label for="__tabbed_244_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="245:1"><input checked="checked" id="__tabbed_245_1" name="__tabbed_245" type="radio"><div class="tabbed-labels"><label for="__tabbed_245_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -33133,7 +33199,7 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="245:1"><input checked="checked" id="__tabbed_245_1" name="__tabbed_245" type="radio"><div class="tabbed-labels"><label for="__tabbed_245_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="246:1"><input checked="checked" id="__tabbed_246_1" name="__tabbed_246" type="radio"><div class="tabbed-labels"><label for="__tabbed_246_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-236-1" name="__codelineno-236-1" href="#__codelineno-236-1"></a><span class="p">{</span>
@@ -33229,10 +33295,10 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="246:2"><input checked="checked" id="__tabbed_246_1" name="__tabbed_246" type="radio"><input id="__tabbed_246_2" name="__tabbed_246" type="radio"><div class="tabbed-labels"><label for="__tabbed_246_1">200 OK</label><label for="__tabbed_246_2">400 Bad Request</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="247:2"><input checked="checked" id="__tabbed_247_1" name="__tabbed_247" type="radio"><input id="__tabbed_247_2" name="__tabbed_247" type="radio"><div class="tabbed-labels"><label for="__tabbed_247_1">200 OK</label><label for="__tabbed_247_2">400 Bad Request</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="247:1"><input checked="checked" id="__tabbed_247_1" name="__tabbed_247" type="radio"><div class="tabbed-labels"><label for="__tabbed_247_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="248:1"><input checked="checked" id="__tabbed_248_1" name="__tabbed_248" type="radio"><div class="tabbed-labels"><label for="__tabbed_248_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-238-1" name="__codelineno-238-1" href="#__codelineno-238-1"></a><span class="p">{</span>
@@ -33269,7 +33335,7 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </div>
 </div>
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="248:1"><input checked="checked" id="__tabbed_248_1" name="__tabbed_248" type="radio"><div class="tabbed-labels"><label for="__tabbed_248_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="249:1"><input checked="checked" id="__tabbed_249_1" name="__tabbed_249" type="radio"><div class="tabbed-labels"><label for="__tabbed_249_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-240-1" name="__codelineno-240-1" href="#__codelineno-240-1"></a><span class="p">{</span>
@@ -33347,7 +33413,7 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="249:2"><input checked="checked" id="__tabbed_249_1" name="__tabbed_249" type="radio"><input id="__tabbed_249_2" name="__tabbed_249" type="radio"><div class="tabbed-labels"><label for="__tabbed_249_1">200 OK</label><label for="__tabbed_249_2">404 Not Found</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="250:2"><input checked="checked" id="__tabbed_250_1" name="__tabbed_250" type="radio"><input id="__tabbed_250_2" name="__tabbed_250" type="radio"><div class="tabbed-labels"><label for="__tabbed_250_1">200 OK</label><label for="__tabbed_250_2">404 Not Found</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 <div class="tabbed-block"></div>
@@ -33390,10 +33456,10 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="250:1"><input checked="checked" id="__tabbed_250_1" name="__tabbed_250" type="radio"><div class="tabbed-labels"><label for="__tabbed_250_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="251:1"><input checked="checked" id="__tabbed_251_1" name="__tabbed_251" type="radio"><div class="tabbed-labels"><label for="__tabbed_251_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="251:1"><input checked="checked" id="__tabbed_251_1" name="__tabbed_251" type="radio"><div class="tabbed-labels"><label for="__tabbed_251_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="252:1"><input checked="checked" id="__tabbed_252_1" name="__tabbed_252" type="radio"><div class="tabbed-labels"><label for="__tabbed_252_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-242-1" name="__codelineno-242-1" href="#__codelineno-242-1"></a><span class="p">{</span>
@@ -33476,10 +33542,10 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="252:1"><input checked="checked" id="__tabbed_252_1" name="__tabbed_252" type="radio"><div class="tabbed-labels"><label for="__tabbed_252_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="253:1"><input checked="checked" id="__tabbed_253_1" name="__tabbed_253" type="radio"><div class="tabbed-labels"><label for="__tabbed_253_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="253:2"><input checked="checked" id="__tabbed_253_1" name="__tabbed_253" type="radio"><input id="__tabbed_253_2" name="__tabbed_253" type="radio"><div class="tabbed-labels"><label for="__tabbed_253_1">application/json</label><label for="__tabbed_253_2">application/jwt</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="254:2"><input checked="checked" id="__tabbed_254_1" name="__tabbed_254" type="radio"><input id="__tabbed_254_2" name="__tabbed_254" type="radio"><div class="tabbed-labels"><label for="__tabbed_254_1">application/json</label><label for="__tabbed_254_2">application/jwt</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -33533,7 +33599,7 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="254:1"><input checked="checked" id="__tabbed_254_1" name="__tabbed_254" type="radio"><div class="tabbed-labels"><label for="__tabbed_254_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="255:1"><input checked="checked" id="__tabbed_255_1" name="__tabbed_255" type="radio"><div class="tabbed-labels"><label for="__tabbed_255_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -33569,10 +33635,10 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="255:1"><input checked="checked" id="__tabbed_255_1" name="__tabbed_255" type="radio"><div class="tabbed-labels"><label for="__tabbed_255_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="256:1"><input checked="checked" id="__tabbed_256_1" name="__tabbed_256" type="radio"><div class="tabbed-labels"><label for="__tabbed_256_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="256:1"><input checked="checked" id="__tabbed_256_1" name="__tabbed_256" type="radio"><div class="tabbed-labels"><label for="__tabbed_256_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="257:1"><input checked="checked" id="__tabbed_257_1" name="__tabbed_257" type="radio"><div class="tabbed-labels"><label for="__tabbed_257_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -33617,10 +33683,10 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="257:1"><input checked="checked" id="__tabbed_257_1" name="__tabbed_257" type="radio"><div class="tabbed-labels"><label for="__tabbed_257_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="258:1"><input checked="checked" id="__tabbed_258_1" name="__tabbed_258" type="radio"><div class="tabbed-labels"><label for="__tabbed_258_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="258:1"><input checked="checked" id="__tabbed_258_1" name="__tabbed_258" type="radio"><div class="tabbed-labels"><label for="__tabbed_258_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="259:1"><input checked="checked" id="__tabbed_259_1" name="__tabbed_259" type="radio"><div class="tabbed-labels"><label for="__tabbed_259_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-247-1" name="__codelineno-247-1" href="#__codelineno-247-1"></a><span class="p">{</span>
@@ -33689,7 +33755,7 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="259:1"><input checked="checked" id="__tabbed_259_1" name="__tabbed_259" type="radio"><div class="tabbed-labels"><label for="__tabbed_259_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="260:1"><input checked="checked" id="__tabbed_260_1" name="__tabbed_260" type="radio"><div class="tabbed-labels"><label for="__tabbed_260_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -33776,10 +33842,10 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="260:2"><input checked="checked" id="__tabbed_260_1" name="__tabbed_260" type="radio"><input id="__tabbed_260_2" name="__tabbed_260" type="radio"><div class="tabbed-labels"><label for="__tabbed_260_1">201 Created</label><label for="__tabbed_260_2">400 Bad Request</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="261:2"><input checked="checked" id="__tabbed_261_1" name="__tabbed_261" type="radio"><input id="__tabbed_261_2" name="__tabbed_261" type="radio"><div class="tabbed-labels"><label for="__tabbed_261_1">201 Created</label><label for="__tabbed_261_2">400 Bad Request</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="261:1"><input checked="checked" id="__tabbed_261_1" name="__tabbed_261" type="radio"><div class="tabbed-labels"><label for="__tabbed_261_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="262:1"><input checked="checked" id="__tabbed_262_1" name="__tabbed_262" type="radio"><div class="tabbed-labels"><label for="__tabbed_262_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-249-1" name="__codelineno-249-1" href="#__codelineno-249-1"></a><span class="p">{</span>
@@ -33816,7 +33882,7 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </div>
 </div>
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="262:1"><input checked="checked" id="__tabbed_262_1" name="__tabbed_262" type="radio"><div class="tabbed-labels"><label for="__tabbed_262_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="263:1"><input checked="checked" id="__tabbed_263_1" name="__tabbed_263" type="radio"><div class="tabbed-labels"><label for="__tabbed_263_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-251-1" name="__codelineno-251-1" href="#__codelineno-251-1"></a><span class="p">{</span>
@@ -33901,11 +33967,11 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="263:2"><input checked="checked" id="__tabbed_263_1" name="__tabbed_263" type="radio"><input id="__tabbed_263_2" name="__tabbed_263" type="radio"><div class="tabbed-labels"><label for="__tabbed_263_1">302 Found</label><label for="__tabbed_263_2">400 Bad Request</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="264:2"><input checked="checked" id="__tabbed_264_1" name="__tabbed_264" type="radio"><input id="__tabbed_264_2" name="__tabbed_264" type="radio"><div class="tabbed-labels"><label for="__tabbed_264_1">302 Found</label><label for="__tabbed_264_2">400 Bad Request</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="264:1"><input checked="checked" id="__tabbed_264_1" name="__tabbed_264" type="radio"><div class="tabbed-labels"><label for="__tabbed_264_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="265:1"><input checked="checked" id="__tabbed_265_1" name="__tabbed_265" type="radio"><div class="tabbed-labels"><label for="__tabbed_265_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-253-1" name="__codelineno-253-1" href="#__codelineno-253-1"></a><span class="p">{</span>
@@ -34006,11 +34072,11 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="265:2"><input checked="checked" id="__tabbed_265_1" name="__tabbed_265" type="radio"><input id="__tabbed_265_2" name="__tabbed_265" type="radio"><div class="tabbed-labels"><label for="__tabbed_265_1">302 Found</label><label for="__tabbed_265_2">400 Bad Request</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="266:2"><input checked="checked" id="__tabbed_266_1" name="__tabbed_266" type="radio"><input id="__tabbed_266_2" name="__tabbed_266" type="radio"><div class="tabbed-labels"><label for="__tabbed_266_1">302 Found</label><label for="__tabbed_266_2">400 Bad Request</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="266:1"><input checked="checked" id="__tabbed_266_1" name="__tabbed_266" type="radio"><div class="tabbed-labels"><label for="__tabbed_266_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="267:1"><input checked="checked" id="__tabbed_267_1" name="__tabbed_267" type="radio"><div class="tabbed-labels"><label for="__tabbed_267_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-255-1" name="__codelineno-255-1" href="#__codelineno-255-1"></a><span class="p">{</span>
@@ -34095,7 +34161,7 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="267:1"><input checked="checked" id="__tabbed_267_1" name="__tabbed_267" type="radio"><div class="tabbed-labels"><label for="__tabbed_267_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="268:1"><input checked="checked" id="__tabbed_268_1" name="__tabbed_268" type="radio"><div class="tabbed-labels"><label for="__tabbed_268_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-257-1" name="__codelineno-257-1" href="#__codelineno-257-1"></a><span class="p">{</span>
@@ -34150,10 +34216,10 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="268:3"><input checked="checked" id="__tabbed_268_1" name="__tabbed_268" type="radio"><input id="__tabbed_268_2" name="__tabbed_268" type="radio"><input id="__tabbed_268_3" name="__tabbed_268" type="radio"><div class="tabbed-labels"><label for="__tabbed_268_1">200 OK</label><label for="__tabbed_268_2">400 Bad Request</label><label for="__tabbed_268_3">401 Unauthorized</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="269:3"><input checked="checked" id="__tabbed_269_1" name="__tabbed_269" type="radio"><input id="__tabbed_269_2" name="__tabbed_269" type="radio"><input id="__tabbed_269_3" name="__tabbed_269" type="radio"><div class="tabbed-labels"><label for="__tabbed_269_1">200 OK</label><label for="__tabbed_269_2">400 Bad Request</label><label for="__tabbed_269_3">401 Unauthorized</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="269:1"><input checked="checked" id="__tabbed_269_1" name="__tabbed_269" type="radio"><div class="tabbed-labels"><label for="__tabbed_269_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="270:1"><input checked="checked" id="__tabbed_270_1" name="__tabbed_270" type="radio"><div class="tabbed-labels"><label for="__tabbed_270_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-259-1" name="__codelineno-259-1" href="#__codelineno-259-1"></a><span class="p">{</span>
@@ -34226,7 +34292,7 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </div>
 </div>
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="270:1"><input checked="checked" id="__tabbed_270_1" name="__tabbed_270" type="radio"><div class="tabbed-labels"><label for="__tabbed_270_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="271:1"><input checked="checked" id="__tabbed_271_1" name="__tabbed_271" type="radio"><div class="tabbed-labels"><label for="__tabbed_271_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-261-1" name="__codelineno-261-1" href="#__codelineno-261-1"></a><span class="p">{</span>
@@ -34261,7 +34327,7 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </div>
 </div>
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="271:1"><input checked="checked" id="__tabbed_271_1" name="__tabbed_271" type="radio"><div class="tabbed-labels"><label for="__tabbed_271_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="272:1"><input checked="checked" id="__tabbed_272_1" name="__tabbed_272" type="radio"><div class="tabbed-labels"><label for="__tabbed_272_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-263-1" name="__codelineno-263-1" href="#__codelineno-263-1"></a><span class="p">{</span>
@@ -34329,10 +34395,10 @@ Per OID4VP spec section 5.10.1: Response MUST use Content-Type: application/oaut
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="272:1"><input checked="checked" id="__tabbed_272_1" name="__tabbed_272" type="radio"><div class="tabbed-labels"><label for="__tabbed_272_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="273:1"><input checked="checked" id="__tabbed_273_1" name="__tabbed_273" type="radio"><div class="tabbed-labels"><label for="__tabbed_273_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="273:1"><input checked="checked" id="__tabbed_273_1" name="__tabbed_273" type="radio"><div class="tabbed-labels"><label for="__tabbed_273_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="274:1"><input checked="checked" id="__tabbed_274_1" name="__tabbed_274" type="radio"><div class="tabbed-labels"><label for="__tabbed_274_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-265-1" name="__codelineno-265-1" href="#__codelineno-265-1"></a><span class="s2">"string"</span>
@@ -34382,10 +34448,10 @@ Per OID4VP spec section 5.10.1: Response MUST use Content-Type: application/oaut
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="274:1"><input checked="checked" id="__tabbed_274_1" name="__tabbed_274" type="radio"><div class="tabbed-labels"><label for="__tabbed_274_1">201 Created</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="275:1"><input checked="checked" id="__tabbed_275_1" name="__tabbed_275" type="radio"><div class="tabbed-labels"><label for="__tabbed_275_1">201 Created</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="275:1"><input checked="checked" id="__tabbed_275_1" name="__tabbed_275" type="radio"><div class="tabbed-labels"><label for="__tabbed_275_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="276:1"><input checked="checked" id="__tabbed_276_1" name="__tabbed_276" type="radio"><div class="tabbed-labels"><label for="__tabbed_276_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-267-1" name="__codelineno-267-1" href="#__codelineno-267-1"></a><span class="s2">"string"</span>
@@ -34435,10 +34501,10 @@ Per OID4VP spec section 5.10.1: Response MUST use Content-Type: application/oaut
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="276:1"><input checked="checked" id="__tabbed_276_1" name="__tabbed_276" type="radio"><div class="tabbed-labels"><label for="__tabbed_276_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="277:1"><input checked="checked" id="__tabbed_277_1" name="__tabbed_277" type="radio"><div class="tabbed-labels"><label for="__tabbed_277_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="277:1"><input checked="checked" id="__tabbed_277_1" name="__tabbed_277" type="radio"><div class="tabbed-labels"><label for="__tabbed_277_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="278:1"><input checked="checked" id="__tabbed_278_1" name="__tabbed_278" type="radio"><div class="tabbed-labels"><label for="__tabbed_278_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-269-1" name="__codelineno-269-1" href="#__codelineno-269-1"></a><span class="s2">"string"</span>
@@ -34486,7 +34552,7 @@ Per OID4VP spec section 5.10.1: Response MUST use Content-Type: application/oaut
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="278:1"><input checked="checked" id="__tabbed_278_1" name="__tabbed_278" type="radio"><div class="tabbed-labels"><label for="__tabbed_278_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="279:1"><input checked="checked" id="__tabbed_279_1" name="__tabbed_279" type="radio"><div class="tabbed-labels"><label for="__tabbed_279_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-271-1" name="__codelineno-271-1" href="#__codelineno-271-1"></a><span class="p">{</span>
@@ -34536,10 +34602,10 @@ Per OID4VP spec section 5.10.1: Response MUST use Content-Type: application/oaut
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="279:1"><input checked="checked" id="__tabbed_279_1" name="__tabbed_279" type="radio"><div class="tabbed-labels"><label for="__tabbed_279_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="280:1"><input checked="checked" id="__tabbed_280_1" name="__tabbed_280" type="radio"><div class="tabbed-labels"><label for="__tabbed_280_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="280:1"><input checked="checked" id="__tabbed_280_1" name="__tabbed_280" type="radio"><div class="tabbed-labels"><label for="__tabbed_280_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="281:1"><input checked="checked" id="__tabbed_281_1" name="__tabbed_281" type="radio"><div class="tabbed-labels"><label for="__tabbed_281_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -34585,7 +34651,7 @@ Per OID4VP spec section 5.10.1: Response MUST use Content-Type: application/oaut
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="281:1"><input checked="checked" id="__tabbed_281_1" name="__tabbed_281" type="radio"><div class="tabbed-labels"><label for="__tabbed_281_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="282:1"><input checked="checked" id="__tabbed_282_1" name="__tabbed_282" type="radio"><div class="tabbed-labels"><label for="__tabbed_282_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -37370,7 +37436,7 @@ for this specific credential configuration.</td>
 Either CA-signed (if rootKey exists) or self-signed.</td>
         </tr>
         <tr>
-            <td><code>activeKey</code></td>
+            <td><code>activeJwk</code></td>
             <td></td>
             <td></td>
         </tr>
@@ -37418,7 +37484,7 @@ References a configured KMS provider name.</td>
             <td>Certificate for the previous signing key in PEM format.</td>
         </tr>
         <tr>
-            <td><code>previousKey</code></td>
+            <td><code>previousJwk</code></td>
             <td></td>
             <td></td>
         </tr>
@@ -37435,7 +37501,7 @@ After this date, the previous key should be deleted.</td>
 Self-signed certificate for the root CA key.</td>
         </tr>
         <tr>
-            <td><code>rootKey</code></td>
+            <td><code>rootJwk</code></td>
             <td></td>
             <td></td>
         </tr>
@@ -37708,6 +37774,16 @@ Self-signed certificate for the root CA key.</td>
             <td><code>canImport</code></td>
             <td><span class="boolean-type">boolean</span></td>
             <td>Whether the provider supports importing existing keys.</td>
+        </tr>
+        <tr>
+            <td><code>defaultAlg</code></td>
+            <td><span class="string-type">string</span></td>
+            <td>Default signing algorithm used when caller does not specify one.</td>
+        </tr>
+        <tr>
+            <td><code>supportedAlgs</code></td>
+            <td>Array&lt;<span class="string-type">string</span>&gt;</td>
+            <td>Signing algorithms supported by the provider.</td>
         </tr>
     </tbody>
 </table>

@@ -978,7 +978,7 @@ export class SchemaMetaAdapterService {
                 trustList.keyChainId,
             );
             const publicKeyJwk &#x3D; this.toPublicJwk(
-                keyChain.activeKey as Record&lt;string, unknown&gt; | undefined,
+                keyChain.activeJwk as Record&lt;string, unknown&gt; | undefined,
             );
             if (!publicKeyJwk) {
                 return undefined;
@@ -1017,7 +1017,7 @@ export class SchemaMetaAdapterService {
                     trustList.keyChainId,
                 );
                 const publicKeyJwk &#x3D; this.toPublicJwk(
-                    keyChain.activeKey as Record&lt;string, unknown&gt; | undefined,
+                    keyChain.activeJwk as Record&lt;string, unknown&gt; | undefined,
                 );
                 if (!publicKeyJwk) {
                     throw new BadRequestException(
@@ -1151,7 +1151,7 @@ export class SchemaMetaAdapterService {
         }
 
         const kid &#x3D;
-            (keyChain.activeKey as { kid?: string } | undefined)?.kid ??
+            (keyChain.activeJwk as { kid?: string } | undefined)?.kid ??
             keyChain.id;
 
         return signSchemaMeta({

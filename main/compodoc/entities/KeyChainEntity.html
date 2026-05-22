@@ -174,7 +174,7 @@ This eliminates orphaned keys and simplifies lifecycle management.</p>
                             </li>
                             <li>
                                     <span class="modifier"></span>
-                                <a href="#activeKey" >activeKey</a>
+                                <a href="#activeJwk" >activeJwk</a>
                             </li>
                             <li>
                                     <span class="modifier"></span>
@@ -226,7 +226,7 @@ This eliminates orphaned keys and simplifies lifecycle management.</p>
                             <li>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
-                                <a href="#previousKey" >previousKey</a>
+                                <a href="#previousJwk" >previousJwk</a>
                             </li>
                             <li>
                                     <span class="modifier"></span>
@@ -243,7 +243,7 @@ This eliminates orphaned keys and simplifies lifecycle management.</p>
                             <li>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
-                                <a href="#rootKey" >rootKey</a>
+                                <a href="#rootJwk" >rootJwk</a>
                             </li>
                             <li>
                                     <span class="modifier"></span>
@@ -345,11 +345,11 @@ Either CA-signed (if rootKey exists) or self-signed.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="activeKey"></a>
+                    <a name="activeJwk"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                        <span ><b>activeKey</b></span>
-                        <a href="#activeKey"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>activeJwk</b></span>
+                        <a href="#activeJwk"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -743,12 +743,12 @@ References a configured KMS provider name.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="previousKey"></a>
+                    <a name="previousJwk"></a>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
-                        <span ><b>previousKey</b></span>
-                        <a href="#previousKey"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>previousJwk</b></span>
+                        <a href="#previousJwk"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -878,12 +878,12 @@ Self-signed certificate for the root CA key.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="rootKey"></a>
+                    <a name="rootJwk"></a>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
-                        <span ><b>rootKey</b></span>
-                        <a href="#rootKey"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>rootJwk</b></span>
+                        <a href="#rootJwk"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -1353,7 +1353,7 @@ export class KeyChainEntity {
         transformer: EncryptedJsonTransformer,
         nullable: true,
     })
-    rootKey?: JWK;
+    rootJwk?: JWK;
 
     /**
      * Root CA certificate in PEM format.
@@ -1374,7 +1374,7 @@ export class KeyChainEntity {
      * This is the key used for signing operations.
      */
     @Column(&quot;text&quot;, { transformer: EncryptedJsonTransformer })
-    activeKey!: JWK;
+    activeJwk!: JWK;
 
     /**
      * Certificate for the active signing key in PEM format.
@@ -1430,7 +1430,7 @@ export class KeyChainEntity {
         transformer: EncryptedJsonTransformer,
         nullable: true,
     })
-    previousKey?: JWK;
+    previousJwk?: JWK;
 
     /**
      * Certificate for the previous signing key in PEM format.
@@ -1471,7 +1471,7 @@ export class KeyChainEntity {
      * Returns true if this key chain has an internal CA (root key).
      */
     hasInternalCa(): boolean {
-        return this.rootKey !&#x3D; null &amp;&amp; this.rootCertificate !&#x3D; null;
+        return this.rootJwk !&#x3D; null &amp;&amp; this.rootCertificate !&#x3D; null;
     }
 
     /**
@@ -1479,11 +1479,11 @@ export class KeyChainEntity {
      */
     getPublicKeys(): JWK[] {
         const keys: JWK[] &#x3D; [];
-        if (this.activeKey) {
-            keys.push(this.getPublicJwk(this.activeKey));
+        if (this.activeJwk) {
+            keys.push(this.getPublicJwk(this.activeJwk));
         }
-        if (this.previousKey) {
-            keys.push(this.getPublicJwk(this.previousKey));
+        if (this.previousJwk) {
+            keys.push(this.getPublicJwk(this.previousJwk));
         }
         return keys;
     }

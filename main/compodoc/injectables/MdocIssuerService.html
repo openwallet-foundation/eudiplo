@@ -628,7 +628,7 @@ export class MdocIssuerService {
         const privateKey &#x3D; await exportJWK(
             await crypto.subtle.importKey(
                 &quot;jwk&quot;,
-                keyChain.activeKey,
+                keyChain.activeJwk,
                 { name: &quot;ECDSA&quot;, namedCurve: &quot;P-256&quot; },
                 true,
                 [&quot;sign&quot;],

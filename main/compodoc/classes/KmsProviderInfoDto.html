@@ -230,7 +230,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/crypto/key/dto/kms-provider-capabilities.dto.ts:53</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/crypto/key/dto/kms-provider-capabilities.dto.ts:68</a></div>
                         </td>
                     </tr>
 
@@ -267,7 +267,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/crypto/key/dto/kms-provider-capabilities.dto.ts:47</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/crypto/key/dto/kms-provider-capabilities.dto.ts:62</a></div>
                         </td>
                     </tr>
 
@@ -303,7 +303,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/crypto/key/dto/kms-provider-capabilities.dto.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/crypto/key/dto/kms-provider-capabilities.dto.ts:50</a></div>
                         </td>
                     </tr>
 
@@ -339,7 +339,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/crypto/key/dto/kms-provider-capabilities.dto.ts:41</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/crypto/key/dto/kms-provider-capabilities.dto.ts:56</a></div>
                         </td>
                     </tr>
 
@@ -382,6 +382,21 @@ export class KmsProviderCapabilitiesDto {
         example: true,
     })
     canDelete!: boolean;
+
+    @ApiProperty({
+        description: &quot;Signing algorithms supported by the provider.&quot;,
+        example: [&quot;ES256&quot;],
+        isArray: true,
+        type: String,
+    })
+    supportedAlgs!: string[];
+
+    @ApiProperty({
+        description:
+            &quot;Default signing algorithm used when caller does not specify one.&quot;,
+        example: &quot;ES256&quot;,
+    })
+    defaultAlg!: string;
 }
 
 /**

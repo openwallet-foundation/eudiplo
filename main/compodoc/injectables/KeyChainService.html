@@ -143,13 +143,10 @@
             </p>
             <p class="comment">
                 <p>KeyChainService manages the unified key chain model.</p>
-<p>A key chain encapsulates:</p>
-<ul>
-<li>An optional root CA key (for internal certificate chains)</li>
-<li>An active signing key with its certificate</li>
-<li>A previous key (for grace period after rotation)</li>
-<li>Rotation policy</li>
-</ul>
+<p>Acts as a facade: all key generation, import and signing is delegated
+to a <a href="../interfaces/KmsAdapter.html">KmsAdapter</a> resolved via <a href="../injectables/KmsProviderRegistry.html">KmsProviderRegistry</a>.
+Certificate construction is delegated to
+<a href="../injectables/CertificateBuilderService.html">CertificateBuilderService</a>.</p>
 
             </p>
 
@@ -195,22 +192,7 @@
                             <li>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
-                                <a href="#createCaSignedCert" >createCaSignedCert</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Private</span>
-                                    <span class="modifier">Async</span>
                                 <a href="#createInternalChain" >createInternalChain</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Private</span>
-                                    <span class="modifier">Async</span>
-                                <a href="#createSelfSignedCaCert" >createSelfSignedCaCert</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Private</span>
-                                    <span class="modifier">Async</span>
-                                <a href="#createSelfSignedCert" >createSelfSignedCert</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
@@ -234,10 +216,6 @@
                                 <a href="#findByUsageType" >findByUsageType</a>
                             </li>
                             <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#generateSerialNumber" >generateSerialNumber</a>
-                            </li>
-                            <li>
                                     <span class="modifier">Async</span>
                                 <a href="#getActiveCertificate" >getActiveCertificate</a>
                             </li>
@@ -254,17 +232,8 @@
                                 <a href="#getById" >getById</a>
                             </li>
                             <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#getCapabilitiesForType" >getCapabilitiesForType</a>
-                            </li>
-                            <li>
                                     <span class="modifier">Async</span>
                                 <a href="#getEntity" >getEntity</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Private</span>
-                                    <span class="modifier">Async</span>
-                                <a href="#getFirstKeyChain" >getFirstKeyChain</a>
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
@@ -273,6 +242,9 @@
                             <li>
                                     <span class="modifier">Async</span>
                                 <a href="#getKid" >getKid</a>
+                            </li>
+                            <li>
+                                <a href="#getProviderHealth" >getProviderHealth</a>
                             </li>
                             <li>
                                 <a href="#getProviders" >getProviders</a>
@@ -288,7 +260,6 @@
                                 <a href="#getPublicKey" >getPublicKey</a>
                             </li>
                             <li>
-                                    <span class="modifier">Async</span>
                                 <a href="#getPublicKey" >getPublicKey</a>
                             </li>
                             <li>
@@ -297,16 +268,15 @@
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
-                                <a href="#importForTenant" >importForTenant</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Async</span>
                                 <a href="#importKeyChain" >importKeyChain</a>
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
-                                    <span class="modifier">Async</span>
-                                <a href="#importKeyChainWithRotation" >importKeyChainWithRotation</a>
+                                <a href="#refForStoredKey" >refForStoredKey</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#refFromEntity" >refFromEntity</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
@@ -317,13 +287,12 @@
                                 <a href="#signer" >signer</a>
                             </li>
                             <li>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Async</span>
                                 <a href="#signJWT" >signJWT</a>
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
-                                <a href="#splitPemChain" >splitPemChain</a>
+                                <a href="#storedKeyForEntity" >storedKeyForEntity</a>
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
@@ -359,12 +328,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(keyChainRepository: <a href="../entitys/KeyChainEntity.html" target="_self">Repository&lt;KeyChainEntity&gt;</a>, tenantRepository: <a href="../entitys/TenantEntity.html" target="_self">Repository&lt;TenantEntity&gt;</a>, configService: ConfigService, configImportService: <a href="../injectables/ConfigImportService.html" target="_self">ConfigImportService</a>, configImportOrchestrator: <a href="../injectables/ConfigImportOrchestratorService.html" target="_self">ConfigImportOrchestratorService</a>)</code>
+<code>constructor(keyChainRepository: <a href="../entitys/KeyChainEntity.html" target="_self">Repository&lt;KeyChainEntity&gt;</a>, tenantRepository: <a href="../entitys/TenantEntity.html" target="_self">Repository&lt;TenantEntity&gt;</a>, configService: ConfigService, kmsRegistry: <a href="../injectables/KmsProviderRegistry.html" target="_self">KmsProviderRegistry</a>, certBuilder: <a href="../injectables/CertificateBuilderService.html" target="_self">CertificateBuilderService</a>, signingService: <a href="../injectables/KeyChainSigningService.html" target="_self">KeyChainSigningService</a>, importService: <a href="../injectables/KeyChainImportService.html" target="_self">KeyChainImportService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/crypto/key/key-chain.service.ts:66</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/crypto/key/key-chain.service.ts:41</a></div>
                             </td>
                         </tr>
 
@@ -418,10 +387,10 @@
                                                     
                                                 </tr>
                                                 <tr>
-                                                        <td>configImportService</td>
+                                                        <td>kmsRegistry</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../injectables/ConfigImportService.html" target="_self" >ConfigImportService</a></code>
+                                                                        <code><a href="../injectables/KmsProviderRegistry.html" target="_self" >KmsProviderRegistry</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -430,10 +399,34 @@
                                                     
                                                 </tr>
                                                 <tr>
-                                                        <td>configImportOrchestrator</td>
+                                                        <td>certBuilder</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../injectables/ConfigImportOrchestratorService.html" target="_self" >ConfigImportOrchestratorService</a></code>
+                                                                        <code><a href="../injectables/CertificateBuilderService.html" target="_self" >CertificateBuilderService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>signingService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/KeyChainSigningService.html" target="_self" >KeyChainSigningService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>importService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/KeyChainImportService.html" target="_self" >KeyChainImportService</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -477,8 +470,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1227"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1227</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="685"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:685</a></div>
                         </td>
                     </tr>
 
@@ -546,16 +539,14 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="172"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:172</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="73"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:73</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Create a new key chain.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -611,150 +602,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="createCaSignedCert"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                            <span class="modifier">Async</span>
-                        <span ><b>createCaSignedCert</b></span>
-                        <a href="#createCaSignedCert"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>createCaSignedCert(caKeyPair: <a href="../miscellaneous/typealiases.html#KeyPair" target="_self">CryptoKeyPair</a>, caCertPem: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, subjectPublicKey: CryptoKey, subjectCN: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, hostname: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, notBefore: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>, notAfter: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="433"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:433</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Create a certificate signed by a CA.</p>
-</div>
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>caKeyPair</td>
-                                            <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#KeyPair" target="_self" >CryptoKeyPair</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>caCertPem</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>subjectPublicKey</td>
-                                            <td>
-                                                        <code>CryptoKey</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>subjectCN</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>hostname</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>notBefore</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>notAfter</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="createInternalChain"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -767,23 +614,21 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>createInternalChain(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, subjectCN: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, hostname: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, notBefore: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>, notAfter: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>, dto: <a href="../classes/KeyChainCreateDto.html" target="_self">KeyChainCreateDto</a>)</code>
+                    <code>createInternalChain(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, adapter: <a href="../interfaces/KmsAdapter.html" target="_self">KmsAdapter</a>, subjectCN: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, hostname: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, notBefore: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>, notAfter: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="269"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:269</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="161"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:161</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Create an internal chain with root CA + signing key.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -810,9 +655,9 @@
 
                                         </tr>
                                         <tr>
-                                                <td>tenantId</td>
+                                                <td>adapter</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../interfaces/KmsAdapter.html" target="_self" >KmsAdapter</a></code>
                                             </td>
 
                                             <td>
@@ -861,18 +706,6 @@
                                                 <td>notAfter</td>
                                             <td>
                                                             <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>dto</td>
-                                            <td>
-                                                            <code><a href="../classes/KeyChainCreateDto.html" target="_self" >KeyChainCreateDto</a></code>
                                             </td>
 
                                             <td>
@@ -886,246 +719,6 @@
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>        <code><a href="../entitys/KeyChainEntity.html" target="_self" >Promise&lt;Partial&lt;KeyChainEntity&gt;&gt;</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="createSelfSignedCaCert"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                            <span class="modifier">Async</span>
-                        <span ><b>createSelfSignedCaCert</b></span>
-                        <a href="#createSelfSignedCaCert"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>createSelfSignedCaCert(keyPair: <a href="../miscellaneous/typealiases.html#KeyPair" target="_self">CryptoKeyPair</a>, subjectCN: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, hostname: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, notBefore: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>, notAfter: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="360"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:360</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Create a self-signed CA certificate.</p>
-</div>
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>keyPair</td>
-                                            <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#KeyPair" target="_self" >CryptoKeyPair</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>subjectCN</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>hostname</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>notBefore</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>notAfter</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="createSelfSignedCert"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                            <span class="modifier">Async</span>
-                        <span ><b>createSelfSignedCert</b></span>
-                        <a href="#createSelfSignedCert"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>createSelfSignedCert(keyPair: <a href="../miscellaneous/typealiases.html#KeyPair" target="_self">CryptoKeyPair</a>, subjectCN: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, hostname: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, notBefore: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>, notAfter: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="397"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:397</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Create a self-signed end-entity certificate (not a CA).</p>
-</div>
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>keyPair</td>
-                                            <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#KeyPair" target="_self" >CryptoKeyPair</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>subjectCN</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>hostname</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>notBefore</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>notAfter</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -1157,17 +750,14 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="234"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:234</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="130"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:130</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Create a standalone key chain with a pre-generated private key.
-Used for encryption keys (e.g., ECDH-ES) that don&#39;t need certificates.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -1223,23 +813,21 @@ Used for encryption keys (e.g., ECDH-ES) that don&#39;t need certificates.</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>createStandaloneKey(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, subjectCN: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, hostname: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, notBefore: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>, notAfter: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>, dto: <a href="../classes/KeyChainCreateDto.html" target="_self">KeyChainCreateDto</a>)</code>
+                    <code>createStandaloneKey(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, adapter: <a href="../interfaces/KmsAdapter.html" target="_self">KmsAdapter</a>, subjectCN: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, hostname: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, notBefore: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>, notAfter: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank">Date</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="328"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:328</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="203"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:203</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Create a standalone key with self-signed certificate.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -1266,9 +854,9 @@ Used for encryption keys (e.g., ECDH-ES) that don&#39;t need certificates.</p>
 
                                         </tr>
                                         <tr>
-                                                <td>tenantId</td>
+                                                <td>adapter</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../interfaces/KmsAdapter.html" target="_self" >KmsAdapter</a></code>
                                             </td>
 
                                             <td>
@@ -1325,18 +913,6 @@ Used for encryption keys (e.g., ECDH-ES) that don&#39;t need certificates.</p>
 
 
                                         </tr>
-                                        <tr>
-                                                <td>dto</td>
-                                            <td>
-                                                            <code><a href="../classes/KeyChainCreateDto.html" target="_self" >KeyChainCreateDto</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -1373,16 +949,14 @@ Used for encryption keys (e.g., ECDH-ES) that don&#39;t need certificates.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="676"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:676</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="378"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:378</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Delete a key chain.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -1456,17 +1030,14 @@ Used for encryption keys (e.g., ECDH-ES) that don&#39;t need certificates.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="513"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:513</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="251"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:251</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Export a key chain in config-import-compatible format.
-Includes private key material so the output can be saved as a JSON config file.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -1540,20 +1111,14 @@ Includes private key material so the output can be saved as a JSON config file.<
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="593"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:593</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="301"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:301</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Find a key chain by usage type.
-If a fallbackUsageType is provided and no key chain is found for
-the primary type, a second lookup is performed with the fallback.
-This enables attestation keys to also sign status lists when no
-dedicated status-list key chain has been configured.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -1633,45 +1198,6 @@ dedicated status-list key chain has been configured.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="generateSerialNumber"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>generateSerialNumber</b></span>
-                        <a href="#generateSerialNumber"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>generateSerialNumber()</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1131"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1131</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                        </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="getActiveCertificate"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -1690,16 +1216,14 @@ dedicated status-list key chain has been configured.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1006"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1006</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="492"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:492</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Get the active certificate chain as PEM.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -1773,16 +1297,14 @@ dedicated status-list key chain has been configured.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="990"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:990</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="482"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:482</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Get the active private key (for signing operations).</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -1856,16 +1378,14 @@ dedicated status-list key chain has been configured.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="483"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:483</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="228"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:228</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Get all key chains for a tenant.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -1939,16 +1459,14 @@ dedicated status-list key chain has been configured.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="497"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:497</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="239"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:239</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Get a specific key chain by ID.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -2004,77 +1522,6 @@ dedicated status-list key chain has been configured.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getCapabilitiesForType"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>getCapabilitiesForType</b></span>
-                        <a href="#getCapabilitiesForType"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getCapabilitiesForType(type: <a href="../miscellaneous/typealiases.html#KmsProviderType" target="_self">KmsProviderType</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="138"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:138</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Get capabilities for a KMS provider type.</p>
-</div>
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>type</td>
-                                            <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#KmsProviderType" target="_self" >KmsProviderType</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/KmsProviderCapabilitiesDto.html" target="_self" >KmsProviderCapabilitiesDto</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="getEntity"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -2093,16 +1540,14 @@ dedicated status-list key chain has been configured.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="574"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:574</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="289"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:289</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Get a key chain entity by ID (internal use).</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -2158,78 +1603,6 @@ dedicated status-list key chain has been configured.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getFirstKeyChain"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                            <span class="modifier">Async</span>
-                        <span ><b>getFirstKeyChain</b></span>
-                        <a href="#getFirstKeyChain"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getFirstKeyChain(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1108"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1108</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Get the first available key chain for a tenant.</p>
-</div>
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../entitys/KeyChainEntity.html" target="_self" >Promise&lt;KeyChainEntity&gt;</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="getHostname"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -2248,8 +1621,8 @@ dedicated status-list key chain has been configured.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1126"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1126</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="539"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:539</a></div>
                         </td>
                     </tr>
 
@@ -2287,16 +1660,14 @@ dedicated status-list key chain has been configured.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1100"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1100</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="531"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:531</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Get the Key ID (kid) for the first available key chain.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -2340,6 +1711,45 @@ dedicated status-list key chain has been configured.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="getProviderHealth"></a>
+                    <span class="name">
+                        <span ><b>getProviderHealth</b></span>
+                        <a href="#getProviderHealth"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getProviderHealth()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:61</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Run a health probe for every registered KMS provider.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Array&lt;literal type&gt;&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="getProviders"></a>
                     <span class="name">
                         <span ><b>getProviders</b></span>
@@ -2356,17 +1766,15 @@ dedicated status-list key chain has been configured.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="90"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:90</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="56"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:56</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Get available KMS providers and their capabilities.</p>
-<p>Reads the kms.json config file to determine which providers are configured.
-If no config file exists, returns the default &#39;db&#39; provider.</p>
+                        <div class="io-description"><p>Return registered KMS providers (delegated to the registry).</p>
 </div>
 
                         <div class="io-description">
@@ -2399,8 +1807,8 @@ If no config file exists, returns the default &#39;db&#39; provider.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1137"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1137</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="598"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:598</a></div>
                         </td>
                     </tr>
 
@@ -2466,16 +1874,14 @@ If no config file exists, returns the default &#39;db&#39; provider.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1072"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1072</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="514"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:514</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Get the public key for a key chain.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -2486,7 +1892,6 @@ If no config file exists, returns the default &#39;db&#39; provider.</p>
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
-                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -2501,12 +1906,6 @@ If no config file exists, returns the default &#39;db&#39; provider.</p>
                                             </td>
 
 
-                                            <td>
-                                                    <ul>
-<li>&quot;jwk&quot; for JSON Web Key format, &quot;pem&quot; for PEM format</li>
-</ul>
-
-                                            </td>
                                         </tr>
                                         <tr>
                                                 <td>tenantId</td>
@@ -2519,8 +1918,6 @@ If no config file exists, returns the default &#39;db&#39; provider.</p>
                                             </td>
 
 
-                                            <td>
-                                            </td>
                                         </tr>
                                         <tr>
                                                 <td>keyId</td>
@@ -2533,8 +1930,6 @@ If no config file exists, returns the default &#39;db&#39; provider.</p>
                                             </td>
 
 
-                                            <td>
-                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -2570,8 +1965,8 @@ If no config file exists, returns the default &#39;db&#39; provider.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1073"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1073</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="515"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:515</a></div>
                         </td>
                     </tr>
 
@@ -2647,7 +2042,6 @@ If no config file exists, returns the default &#39;db&#39; provider.</p>
                 <td class="col-md-4">
                     <a name="getPublicKey"></a>
                     <span class="name">
-                            <span class="modifier">Async</span>
                         <span ><b>getPublicKey</b></span>
                         <a href="#getPublicKey"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -2655,16 +2049,15 @@ If no config file exists, returns the default &#39;db&#39; provider.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getPublicKey(type: "pem" | "jwk", tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, keyId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>getPublicKey(type: "pem" | "jwk", tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, keyId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1078"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1078</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="520"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:520</a></div>
                         </td>
                     </tr>
 
@@ -2756,16 +2149,14 @@ If no config file exists, returns the default &#39;db&#39; provider.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="998"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:998</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="487"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:487</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Get all public keys for JWKS (current + previous if in grace period).</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -2821,82 +2212,6 @@ If no config file exists, returns the default &#39;db&#39; provider.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="importForTenant"></a>
-                    <span class="name">
-                            <span class="modifier">Async</span>
-                        <span ><b>importForTenant</b></span>
-                        <a href="#importForTenant"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>importForTenant(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="695"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:695</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Import key chains for a tenant from the filesystem.</p>
-<p>Supports two modes:</p>
-<ol>
-<li>New format: key-chains/*.json with combined key + cert</li>
-<li>Legacy format: keys/<em>.json + certs/</em>.json (separate files linked by keyId)</li>
-</ol>
-</div>
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="importKeyChain"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -2915,19 +2230,14 @@ If no config file exists, returns the default &#39;db&#39; provider.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="729"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:729</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="404"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:404</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Import a single key chain from DTO.</p>
-<p>When rotationPolicy.enabled is true, the imported key becomes the root CA
-and a new leaf key is generated for signing. This satisfies HAIP section 4.5.1
-which requires credential signing certificates to NOT be self-signed.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -2983,35 +2293,41 @@ which requires credential signing certificates to NOT be self-signed.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="importKeyChainWithRotation"></a>
+                    <a name="refForStoredKey"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
-                            <span class="modifier">Async</span>
-                        <span ><b>importKeyChainWithRotation</b></span>
-                        <a href="#importKeyChainWithRotation"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>refForStoredKey</b></span>
+                        <a href="#refForStoredKey"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>importKeyChainWithRotation(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, subjectCN: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, hostname: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, rootKeyJwk: JWK, dto: <a href="../classes/KeyChainImportDto.html" target="_self">KeyChainImportDto</a>)</code>
+                    <code>refForStoredKey(adapter: <a href="../interfaces/KmsAdapter.html" target="_self">KmsAdapter</a>, storedJwk: JWK, externalKeyId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="814"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:814</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="579"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:579</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Import key chain with rotation enabled.
-The imported key becomes the root CA, and a new leaf key is generated.</p>
+                        <div class="io-description"><p>Build a <a href="../interfaces/KmsKeyRef.html">KmsKeyRef</a> for any stored JWK (active or root).</p>
+<ul>
+<li><code>db</code> provider: the stored JWK is the private JWK; derive the
+public JWK from it.</li>
+<li>external providers: the stored JWK is the public JWK; the
+private key lives in the backend, identified by
+<code>externalKeyId</code> (falling back to <code>storedJwk.kid</code> which is
+what adapters use as the external key identifier).</li>
+</ul>
 </div>
 
                             <div class="io-description">
@@ -3027,9 +2343,9 @@ The imported key becomes the root CA, and a new leaf key is generated.</p>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>id</td>
+                                                <td>adapter</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../interfaces/KmsAdapter.html" target="_self" >KmsAdapter</a></code>
                                             </td>
 
                                             <td>
@@ -3039,43 +2355,7 @@ The imported key becomes the root CA, and a new leaf key is generated.</p>
 
                                         </tr>
                                         <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>subjectCN</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>hostname</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>rootKeyJwk</td>
+                                                <td>storedJwk</td>
                                             <td>
                                                         <code>JWK</code>
                                             </td>
@@ -3087,9 +2367,81 @@ The imported key becomes the root CA, and a new leaf key is generated.</p>
 
                                         </tr>
                                         <tr>
-                                                <td>dto</td>
+                                                <td>externalKeyId</td>
                                             <td>
-                                                            <code><a href="../classes/KeyChainImportDto.html" target="_self" >KeyChainImportDto</a></code>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/KmsKeyRef.html" target="_self" >KmsKeyRef</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="refFromEntity"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>refFromEntity</b></span>
+                        <a href="#refFromEntity"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>refFromEntity(keyChain: <a href="../entitys/KeyChainEntity.html" target="_self">KeyChainEntity</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="561"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:561</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Reconstruct a <a href="../interfaces/KmsKeyRef.html">KmsKeyRef</a> from a persisted entity so the
+adapter can sign / delete.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>keyChain</td>
+                                            <td>
+                                                            <code><a href="../entitys/KeyChainEntity.html" target="_self" >KeyChainEntity</a></code>
                                             </td>
 
                                             <td>
@@ -3102,7 +2454,7 @@ The imported key becomes the root CA, and a new leaf key is generated.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+                            <b>Returns : </b>        <code><a href="../interfaces/KmsKeyRef.html" target="_self" >KmsKeyRef</a></code>
 
                         </div>
                             <div class="io-description">
@@ -3134,17 +2486,14 @@ The imported key becomes the root CA, and a new leaf key is generated.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="906"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:906</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="411"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:411</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Rotate the signing key in a key chain.
-Creates new key material and certificate, moves current to previous.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -3218,18 +2567,14 @@ Creates new key material and certificate, moves current to previous.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1020"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1020</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="501"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:501</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Get a Signer callback for SD-JWT signing.
-If keyId is provided, uses that specific key chain.
-Otherwise uses the first available key chain.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -3287,7 +2632,6 @@ Otherwise uses the first available key chain.</p>
                 <td class="col-md-4">
                     <a name="signJWT"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                             <span class="modifier">Async</span>
                         <span ><b>signJWT</b></span>
                         <a href="#signJWT"><span class="icon ion-ios-link"></span></a>
@@ -3301,26 +2645,17 @@ Otherwise uses the first available key chain.</p>
                 </td>
             </tr>
 
-            <tr>
-                <td class="col-md-4">
-                    <b>Decorators : </b>
-                    <br />
-                    <code>@Span(&#x27;keychain.signJWT&#x27;)<br /></code>
-                </td>
-            </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1043"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1043</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="505"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:505</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Sign a JWT with the active key of a key chain.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -3400,33 +2735,36 @@ Otherwise uses the first available key chain.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="splitPemChain"></a>
+                    <a name="storedKeyForEntity"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
-                        <span ><b>splitPemChain</b></span>
-                        <a href="#splitPemChain"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>storedKeyForEntity</b></span>
+                        <a href="#storedKeyForEntity"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>splitPemChain(pem: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>storedKeyForEntity(adapter: <a href="../interfaces/KmsAdapter.html" target="_self">KmsAdapter</a>, ref: <a href="../interfaces/KmsKeyRef.html" target="_self">KmsKeyRef</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="559"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:559</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="550"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:550</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Split a PEM chain (multiple certs joined by newlines) into individual PEM strings.</p>
+                        <div class="io-description"><p>What gets persisted into the entity&#39;s <code>activeJwk</code> / <code>rootJwk</code> JWK
+column. For the <code>db</code> provider we keep the full private JWK (so
+signing can re-import it). For external providers we keep only
+the public JWK — the private key lives in the KMS backend.</p>
 </div>
 
                             <div class="io-description">
@@ -3442,9 +2780,21 @@ Otherwise uses the first available key chain.</p>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>pem</td>
+                                                <td>adapter</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                            <code><a href="../interfaces/KmsAdapter.html" target="_self" >KmsAdapter</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>ref</td>
+                                            <td>
+                                                            <code><a href="../interfaces/KmsKeyRef.html" target="_self" >KmsKeyRef</a></code>
                                             </td>
 
                                             <td>
@@ -3457,7 +2807,7 @@ Otherwise uses the first available key chain.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>string[]</code>
+                            <b>Returns : </b>    <code>JWK</code>
 
                         </div>
                             <div class="io-description">
@@ -3489,8 +2839,8 @@ Otherwise uses the first available key chain.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1206"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1206</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="665"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:665</a></div>
                         </td>
                     </tr>
 
@@ -3558,8 +2908,8 @@ Otherwise uses the first available key chain.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1194"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1194</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="653"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:653</a></div>
                         </td>
                     </tr>
 
@@ -3627,8 +2977,8 @@ Otherwise uses the first available key chain.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1145"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:1145</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="606"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:606</a></div>
                         </td>
                     </tr>
 
@@ -3696,16 +3046,14 @@ Otherwise uses the first available key chain.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="640"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:640</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="345"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:345</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Update a key chain.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -3801,7 +3149,7 @@ Otherwise uses the first available key chain.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/crypto/key/key-chain.service.ts:66</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/crypto/key/key-chain.service.ts:41</a></div>
                         </td>
                     </tr>
 
@@ -3814,33 +3162,16 @@ Otherwise uses the first available key chain.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { existsSync, readFileSync } from &quot;node:fs&quot;;
-import { join } from &quot;node:path&quot;;
-import { Injectable, Logger, NotFoundException } from &quot;@nestjs/common&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, Logger, NotFoundException } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
 import * as x509 from &quot;@peculiar/x509&quot;;
-import { Signer } from &quot;@sd-jwt/types&quot;;
-import { plainToClass } from &quot;class-transformer&quot;;
-import {
-    exportJWK,
-    exportSPKI,
-    generateKeyPair,
-    importJWK,
-    JWK,
-    JWSHeaderParameters,
-    JWTPayload,
-    SignJWT,
-} from &quot;jose&quot;;
-import { Span } from &quot;nestjs-otel&quot;;
+import type { Signer } from &quot;@sd-jwt/types&quot;;
+import type { JWK, JWSHeaderParameters, JWTPayload } from &quot;jose&quot;;
 import { Repository } from &quot;typeorm&quot;;
 import { v4 } from &quot;uuid&quot;;
 import { TenantEntity } from &quot;../../auth/tenant/entitites/tenant.entity&quot;;
-import { ConfigImportService } from &quot;../../shared/utils/config-import/config-import.service&quot;;
-import {
-    ConfigImportOrchestratorService,
-    ImportPhase,
-} from &quot;../../shared/utils/config-import/config-import-orchestrator.service&quot;;
+import { CertificateBuilderService } from &quot;./cert/certificate-builder.service&quot;;
 import { KeyChainCreateDto, KeyChainType } from &quot;./dto/key-chain-create.dto&quot;;
 import { KeyChainExportDto } from &quot;./dto/key-chain-export.dto&quot;;
 import { KeyChainImportDto } from &quot;./dto/key-chain-import.dto&quot;;
@@ -3850,32 +3181,24 @@ import {
     PublicKeyInfoDto,
 } from &quot;./dto/key-chain-response.dto&quot;;
 import { KeyChainUpdateDto } from &quot;./dto/key-chain-update.dto&quot;;
-import { KmsConfigDto, KmsProviderType } from &quot;./dto/kms-config.dto&quot;;
-import {
-    KmsProviderCapabilitiesDto,
-    KmsProviderInfoDto,
-} from &quot;./dto/kms-provider-capabilities.dto&quot;;
 import { KmsProvidersResponseDto } from &quot;./dto/kms-providers-response.dto&quot;;
 import {
     KeyChainEntity,
     KeyUsage,
     KeyUsageType,
 } from &quot;./entities/key-chain.entity&quot;;
-
-const ECDSA_P256 &#x3D; {
-    name: &quot;ECDSA&quot;,
-    namedCurve: &quot;P-256&quot;,
-    hash: &quot;SHA-256&quot; as const,
-};
+import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from &quot;./kms/kms-adapter&quot;;
+import { KmsProviderRegistry } from &quot;./kms/kms-provider.registry&quot;;
+import { KeyChainImportService } from &quot;./key-chain-import.service&quot;;
+import { KeyChainSigningService } from &quot;./key-chain-signing.service&quot;;
 
 /**
  * KeyChainService manages the unified key chain model.
  *
- * A key chain encapsulates:
- * - An optional root CA key (for internal certificate chains)
- * - An active signing key with its certificate
- * - A previous key (for grace period after rotation)
- * - Rotation policy
+ * Acts as a facade: all key generation, import and signing is delegated
+ * to a {@link KmsAdapter} resolved via {@link KmsProviderRegistry}.
+ * Certificate construction is delegated to
+ * {@link CertificateBuilderService}.
  */
 @Injectable()
 export class KeyChainService {
@@ -3887,104 +3210,30 @@ export class KeyChainService {
         @InjectRepository(TenantEntity)
         private readonly tenantRepository: Repository&lt;TenantEntity&gt;,
         private readonly configService: ConfigService,
-        private readonly configImportService: ConfigImportService,
-        configImportOrchestrator: ConfigImportOrchestratorService,
-    ) {
-        configImportOrchestrator.register(
-            &quot;key-chains&quot;,
-            ImportPhase.CORE,
-            (tenantId) &#x3D;&gt; this.importForTenant(tenantId),
-        );
-    }
+        private readonly kmsRegistry: KmsProviderRegistry,
+        private readonly certBuilder: CertificateBuilderService,
+        private readonly signingService: KeyChainSigningService,
+        private readonly importService: KeyChainImportService,
+    ) {}
 
-    /**
-     * Get available KMS providers and their capabilities.
-     *
-     * Reads the kms.json config file to determine which providers are configured.
-     * If no config file exists, returns the default &#x27;db&#x27; provider.
-     */
+    /** Return registered KMS providers (delegated to the registry). */
     getProviders(): KmsProvidersResponseDto {
-        const configFolder &#x3D; this.configService.get&lt;string&gt;(&quot;CONFIG_FOLDER&quot;);
-        const kmsConfigPath &#x3D; configFolder
-            ? join(configFolder, &quot;kms.json&quot;)
-            : null;
-
-        // Default configuration if no kms.json exists
-        const defaultConfig: KmsConfigDto &#x3D; {
-            defaultProvider: &quot;db&quot;,
-            providers: [
-                {
-                    id: &quot;db&quot;,
-                    type: &quot;db&quot;,
-                    description: &quot;Default database provider&quot;,
-                },
-            ],
-        };
-
-        let config &#x3D; defaultConfig;
-
-        if (kmsConfigPath &amp;&amp; existsSync(kmsConfigPath)) {
-            try {
-                const raw &#x3D; readFileSync(kmsConfigPath, &quot;utf8&quot;);
-                config &#x3D; JSON.parse(raw) as KmsConfigDto;
-            } catch (error) {
-                this.logger.warn(
-                    &#x60;Failed to read kms.json, using default config: ${error}&#x60;,
-                );
-            }
-        }
-
-        // Map providers to response DTOs with capabilities
-        const providers: KmsProviderInfoDto[] &#x3D; config.providers.map((p) &#x3D;&gt; ({
-            name: p.id,
-            type: p.type,
-            description: p.description,
-            capabilities: this.getCapabilitiesForType(p.type),
-        }));
-
-        return {
-            providers,
-            default: config.defaultProvider || &quot;db&quot;,
-        };
+        return this.kmsRegistry.list();
     }
 
-    /**
-     * Get capabilities for a KMS provider type.
-     */
-    private getCapabilitiesForType(
-        type: KmsProviderType,
-    ): KmsProviderCapabilitiesDto {
-        switch (type) {
-            case &quot;db&quot;:
-                return {
-                    canImport: true,
-                    canCreate: true,
-                    canDelete: true,
-                };
-            case &quot;vault&quot;:
-                return {
-                    canImport: true,
-                    canCreate: true,
-                    canDelete: true,
-                };
-            case &quot;aws-kms&quot;:
-                return {
-                    canImport: false,
-                    canCreate: true,
-                    canDelete: false,
-                };
-            default:
-                return {
-                    canImport: false,
-                    canCreate: false,
-                    canDelete: false,
-                };
-        }
+    /** Run a health probe for every registered KMS provider. */
+    getProviderHealth(): Promise&lt;
+        Array&lt;{
+            providerId: string;
+            type: string;
+            ok: boolean;
+            latencyMs?: number;
+            error?: string;
+        }&gt;
+    &gt; {
+        return this.kmsRegistry.health();
     }
 
-    /**
-     * Create a new key chain.
-     */
     async create(tenantId: string, dto: KeyChainCreateDto): Promise&lt;string&gt; {
         const id &#x3D; v4();
         const tenant &#x3D; await this.tenantRepository.findOneByOrFail({
@@ -3999,31 +3248,30 @@ export class KeyChainService {
             now.getTime() + certValidityDays * 24 * 60 * 60 * 1000,
         );
 
+        const adapter &#x3D; this.kmsRegistry.resolve(dto.kmsProvider);
+
         let keyChain: Partial&lt;KeyChainEntity&gt;;
 
         if (dto.type &#x3D;&#x3D;&#x3D; KeyChainType.InternalChain) {
             keyChain &#x3D; await this.createInternalChain(
                 id,
-                tenantId,
+                adapter,
                 subjectCN,
                 hostname,
                 now,
                 notAfter,
-                dto,
             );
         } else {
             keyChain &#x3D; await this.createStandaloneKey(
                 id,
-                tenantId,
+                adapter,
                 subjectCN,
                 hostname,
                 now,
                 notAfter,
-                dto,
             );
         }
 
-        // Save the key chain
         await this.keyChainRepository.save({
             ...keyChain,
             id,
@@ -4031,22 +3279,18 @@ export class KeyChainService {
             usageType: dto.usageType,
             usage: KeyUsage.Sign,
             description: dto.description,
-            kmsProvider: dto.kmsProvider || &quot;db&quot;,
+            kmsProvider: adapter.providerId,
             rotationEnabled: dto.rotationPolicy?.enabled ?? false,
             rotationIntervalDays: dto.rotationPolicy?.intervalDays,
             certValidityDays: dto.rotationPolicy?.certValidityDays,
         } as KeyChainEntity);
 
         this.logger.log(
-            &#x60;Created key chain ${id} for tenant ${tenantId} (type: ${dto.type})&#x60;,
+            &#x60;Created key chain ${id} for tenant ${tenantId} (type: ${dto.type}, provider: ${adapter.providerId})&#x60;,
         );
         return id;
     }
 
-    /**
-     * Create a standalone key chain with a pre-generated private key.
-     * Used for encryption keys (e.g., ECDH-ES) that don&#x27;t need certificates.
-     */
     async createStandalone(options: {
         tenantId: string;
         description?: string;
@@ -4056,7 +3300,6 @@ export class KeyChainService {
         const id &#x3D; v4();
         const { tenantId, privateKey, usageType, description } &#x3D; options;
 
-        // Ensure the private key has a kid
         if (!privateKey.kid) {
             privateKey.kid &#x3D; &#x60;${id}-active&#x60;;
         }
@@ -4068,8 +3311,8 @@ export class KeyChainService {
             usage: KeyUsage.Encrypt,
             description: description || &quot;Encryption key&quot;,
             kmsProvider: &quot;db&quot;,
-            activeKey: privateKey,
-            activeCertificate: &quot;&quot;, // No certificate for encryption keys
+            activeJwk: privateKey,
+            activeCertificate: &quot;&quot;,
             rotationEnabled: false,
         } as KeyChainEntity);
 
@@ -4079,85 +3322,60 @@ export class KeyChainService {
         return id;
     }
 
-    /**
-     * Create an internal chain with root CA + signing key.
-     */
     private async createInternalChain(
         id: string,
-        tenantId: string,
+        adapter: KmsAdapter,
         subjectCN: string,
         hostname: string,
         notBefore: Date,
         notAfter: Date,
-        dto: KeyChainCreateDto,
     ): Promise&lt;Partial&lt;KeyChainEntity&gt;&gt; {
-        // &#x3D;&#x3D;&#x3D; 1. Generate root CA key pair &#x3D;&#x3D;&#x3D;
-        const rootKeyPair &#x3D; await generateKeyPair(&quot;ES256&quot;, {
-            extractable: true,
-        });
-        const rootPrivateJwk &#x3D; await exportJWK(rootKeyPair.privateKey);
-        rootPrivateJwk.kid &#x3D; &#x60;${id}-root&#x60;;
-
-        // Root CA validity is 10 years (never rotates)
+        const rootMat &#x3D; await adapter.generateKey({ kid: &#x60;${id}-root&#x60; });
         const rootNotAfter &#x3D; new Date(
             notBefore.getTime() + 10 * 365 * 24 * 60 * 60 * 1000,
         );
-
-        // &#x3D;&#x3D;&#x3D; 2. Create self-signed root CA certificate &#x3D;&#x3D;&#x3D;
-        const rootCertificate &#x3D; await this.createSelfSignedCaCert(
-            rootKeyPair,
+        const rootCertificate &#x3D; await this.certBuilder.createSelfSignedCaCert(
+            adapter,
+            rootMat.ref,
             &#x60;${subjectCN} Root CA&#x60;,
             hostname,
             notBefore,
             rootNotAfter,
         );
 
-        // &#x3D;&#x3D;&#x3D; 3. Generate active signing key pair &#x3D;&#x3D;&#x3D;
-        const activeKeyPair &#x3D; await generateKeyPair(&quot;ES256&quot;, {
-            extractable: true,
-        });
-        const activePrivateJwk &#x3D; await exportJWK(activeKeyPair.privateKey);
-        activePrivateJwk.kid &#x3D; &#x60;${id}-active&#x60;;
-
-        // &#x3D;&#x3D;&#x3D; 4. Create CA-signed certificate for signing key &#x3D;&#x3D;&#x3D;
-        const { chain } &#x3D; await this.createCaSignedCert(
-            rootKeyPair,
-            rootCertificate,
-            activeKeyPair.publicKey,
+        const activeMat &#x3D; await adapter.generateKey({ kid: &#x60;${id}-active&#x60; });
+        const { chain } &#x3D; await this.certBuilder.createCaSignedCert({
+            caAdapter: adapter,
+            caRef: rootMat.ref,
+            caCertPem: rootCertificate,
+            subjectPublicJwk: activeMat.ref.publicJwk,
             subjectCN,
             hostname,
             notBefore,
             notAfter,
-        );
+        });
 
         return {
-            rootKey: rootPrivateJwk,
+            rootJwk: this.storedKeyForEntity(adapter, rootMat.ref),
             rootCertificate,
-            activeKey: activePrivateJwk,
-            activeCertificate: chain.join(&quot;\n&quot;), // Leaf + CA chain
+            activeJwk: this.storedKeyForEntity(adapter, activeMat.ref),
+            activeCertificate: chain.join(&quot;\n&quot;),
+            externalKeyId: activeMat.ref.externalKeyId,
         };
     }
 
-    /**
-     * Create a standalone key with self-signed certificate.
-     */
     private async createStandaloneKey(
         id: string,
-        tenantId: string,
+        adapter: KmsAdapter,
         subjectCN: string,
         hostname: string,
         notBefore: Date,
         notAfter: Date,
-        dto: KeyChainCreateDto,
     ): Promise&lt;Partial&lt;KeyChainEntity&gt;&gt; {
-        // &#x3D;&#x3D;&#x3D; Generate key pair &#x3D;&#x3D;&#x3D;
-        const keyPair &#x3D; await generateKeyPair(&quot;ES256&quot;, { extractable: true });
-        const privateJwk &#x3D; await exportJWK(keyPair.privateKey);
-        privateJwk.kid &#x3D; &#x60;${id}-active&#x60;;
-
-        // &#x3D;&#x3D;&#x3D; Create self-signed certificate &#x3D;&#x3D;&#x3D;
-        const certificate &#x3D; await this.createSelfSignedCert(
-            keyPair,
+        const mat &#x3D; await adapter.generateKey({ kid: &#x60;${id}-active&#x60; });
+        const certificate &#x3D; await this.certBuilder.createSelfSignedCert(
+            adapter,
+            mat.ref,
             subjectCN,
             hostname,
             notBefore,
@@ -4165,137 +3383,12 @@ export class KeyChainService {
         );
 
         return {
-            activeKey: privateJwk,
+            activeJwk: this.storedKeyForEntity(adapter, mat.ref),
             activeCertificate: certificate,
+            externalKeyId: mat.ref.externalKeyId,
         };
     }
 
-    /**
-     * Create a self-signed CA certificate.
-     */
-    private async createSelfSignedCaCert(
-        keyPair: CryptoKeyPair,
-        subjectCN: string,
-        hostname: string,
-        notBefore: Date,
-        notAfter: Date,
-    ): Promise&lt;string&gt; {
-        const cert &#x3D; await x509.X509CertificateGenerator.createSelfSigned({
-            serialNumber: &quot;01&quot;,
-            name: &#x60;C&#x3D;DE, CN&#x3D;${subjectCN}&#x60;,
-            notBefore,
-            notAfter,
-            signingAlgorithm: ECDSA_P256,
-            keys: keyPair,
-            extensions: [
-                new x509.SubjectAlternativeNameExtension([
-                    { type: &quot;dns&quot;, value: hostname },
-                ]),
-                new x509.BasicConstraintsExtension(true, undefined, true), // CA:TRUE, critical
-                new x509.KeyUsagesExtension(
-                    x509.KeyUsageFlags.digitalSignature |
-                        x509.KeyUsageFlags.keyEncipherment |
-                        x509.KeyUsageFlags.keyCertSign,
-                    true,
-                ),
-                await x509.SubjectKeyIdentifierExtension.create(
-                    keyPair.publicKey,
-                ),
-            ],
-        });
-
-        return cert.toString(&quot;pem&quot;);
-    }
-
-    /**
-     * Create a self-signed end-entity certificate (not a CA).
-     */
-    private async createSelfSignedCert(
-        keyPair: CryptoKeyPair,
-        subjectCN: string,
-        hostname: string,
-        notBefore: Date,
-        notAfter: Date,
-    ): Promise&lt;string&gt; {
-        const cert &#x3D; await x509.X509CertificateGenerator.createSelfSigned({
-            serialNumber: this.generateSerialNumber(),
-            name: &#x60;C&#x3D;DE, CN&#x3D;${subjectCN}&#x60;,
-            notBefore,
-            notAfter,
-            signingAlgorithm: ECDSA_P256,
-            keys: keyPair,
-            extensions: [
-                new x509.SubjectAlternativeNameExtension([
-                    { type: &quot;dns&quot;, value: hostname },
-                ]),
-                new x509.BasicConstraintsExtension(false, undefined, true), // Not a CA
-                new x509.KeyUsagesExtension(
-                    x509.KeyUsageFlags.digitalSignature |
-                        x509.KeyUsageFlags.keyEncipherment,
-                    true,
-                ),
-                await x509.SubjectKeyIdentifierExtension.create(
-                    keyPair.publicKey,
-                ),
-            ],
-        });
-
-        return cert.toString(&quot;pem&quot;);
-    }
-
-    /**
-     * Create a certificate signed by a CA.
-     */
-    private async createCaSignedCert(
-        caKeyPair: CryptoKeyPair,
-        caCertPem: string,
-        subjectPublicKey: CryptoKey,
-        subjectCN: string,
-        hostname: string,
-        notBefore: Date,
-        notAfter: Date,
-    ): Promise&lt;{ cert: string; chain: string[] }&gt; {
-        const caCert &#x3D; new x509.X509Certificate(caCertPem);
-        const issuerName &#x3D; caCert.subject;
-
-        const cert &#x3D; await x509.X509CertificateGenerator.create({
-            serialNumber: this.generateSerialNumber(),
-            subject: &#x60;C&#x3D;DE, CN&#x3D;${subjectCN}&#x60;,
-            issuer: issuerName,
-            notBefore,
-            notAfter,
-            signingAlgorithm: ECDSA_P256,
-            publicKey: subjectPublicKey,
-            signingKey: caKeyPair.privateKey,
-            extensions: [
-                new x509.SubjectAlternativeNameExtension([
-                    { type: &quot;dns&quot;, value: hostname },
-                ]),
-                new x509.BasicConstraintsExtension(false, undefined, true), // Not a CA
-                new x509.KeyUsagesExtension(
-                    x509.KeyUsageFlags.digitalSignature |
-                        x509.KeyUsageFlags.keyEncipherment,
-                    true,
-                ),
-                await x509.SubjectKeyIdentifierExtension.create(
-                    subjectPublicKey,
-                ),
-                await x509.AuthorityKeyIdentifierExtension.create(
-                    caKeyPair.publicKey,
-                ),
-            ],
-        });
-
-        const certPem &#x3D; cert.toString(&quot;pem&quot;);
-        return {
-            cert: certPem,
-            chain: [certPem, caCertPem],
-        };
-    }
-
-    /**
-     * Get all key chains for a tenant.
-     */
     async getAll(
         tenantId: string,
         usageType?: KeyUsageType,
@@ -4307,9 +3400,6 @@ export class KeyChainService {
         return keyChains.map((kc) &#x3D;&gt; this.toResponseDto(kc));
     }
 
-    /**
-     * Get a specific key chain by ID.
-     */
     async getById(tenantId: string, id: string): Promise&lt;KeyChainResponseDto&gt; {
         const keyChain &#x3D; await this.keyChainRepository.findOne({
             where: { tenantId, id },
@@ -4322,10 +3412,6 @@ export class KeyChainService {
         return this.toResponseDto(keyChain);
     }
 
-    /**
-     * Export a key chain in config-import-compatible format.
-     * Includes private key material so the output can be saved as a JSON config file.
-     */
     async export(tenantId: string, id: string): Promise&lt;KeyChainExportDto&gt; {
         const keyChain &#x3D; await this.getEntity(tenantId, id);
 
@@ -4334,30 +3420,25 @@ export class KeyChainService {
             description: keyChain.description,
             usageType: keyChain.usageType,
             key: keyChain.hasInternalCa()
-                ? (keyChain.rootKey as KeyChainExportDto[&quot;key&quot;])
-                : (keyChain.activeKey as KeyChainExportDto[&quot;key&quot;]),
+                ? (keyChain.rootJwk as KeyChainExportDto[&quot;key&quot;])
+                : (keyChain.activeJwk as KeyChainExportDto[&quot;key&quot;]),
             kmsProvider: keyChain.kmsProvider,
         };
 
-        // Build certificate array.
-        // For InternalChain: only export the root CA cert as crt[0].
-        // The leaf cert is always regenerated on import, and including it would
-        // cause importKeyChainWithRotation to treat it as the root CA cert (it
-        // uses dto.crt[0] as rootCertificate).
-        // For standalone: export the full activeCertificate chain.
         const certs: string[] &#x3D; [];
         if (keyChain.hasInternalCa()) {
             if (keyChain.rootCertificate) {
                 certs.push(keyChain.rootCertificate.trim());
             }
         } else if (keyChain.activeCertificate) {
-            certs.push(...this.splitPemChain(keyChain.activeCertificate));
+            certs.push(
+                ...this.certBuilder.splitPemChain(keyChain.activeCertificate),
+            );
         }
         if (certs.length &gt; 0) {
             exportDto.crt &#x3D; certs;
         }
 
-        // Include rotation policy if enabled
         if (keyChain.rotationEnabled) {
             exportDto.rotationPolicy &#x3D; {
                 enabled: true,
@@ -4369,24 +3450,6 @@ export class KeyChainService {
         return exportDto;
     }
 
-    /**
-     * Split a PEM chain (multiple certs joined by newlines) into individual PEM strings.
-     */
-    private splitPemChain(pem: string): string[] {
-        const certs: string[] &#x3D; [];
-        const parts &#x3D; pem.split(&quot;-----END CERTIFICATE-----&quot;);
-        for (const part of parts) {
-            const trimmed &#x3D; part.trim();
-            if (trimmed.includes(&quot;-----BEGIN CERTIFICATE-----&quot;)) {
-                certs.push(&#x60;${trimmed}\n-----END CERTIFICATE-----&#x60;);
-            }
-        }
-        return certs;
-    }
-
-    /**
-     * Get a key chain entity by ID (internal use).
-     */
     async getEntity(tenantId: string, id: string): Promise&lt;KeyChainEntity&gt; {
         const keyChain &#x3D; await this.keyChainRepository.findOne({
             where: { tenantId, id },
@@ -4399,13 +3462,6 @@ export class KeyChainService {
         return keyChain;
     }
 
-    /**
-     * Find a key chain by usage type.
-     * If a fallbackUsageType is provided and no key chain is found for
-     * the primary type, a second lookup is performed with the fallback.
-     * This enables attestation keys to also sign status lists when no
-     * dedicated status-list key chain has been configured.
-     */
     async findByUsageType(
         tenantId: string,
         usageType: KeyUsageType,
@@ -4450,9 +3506,6 @@ export class KeyChainService {
         return keyChain;
     }
 
-    /**
-     * Update a key chain.
-     */
     async update(
         tenantId: string,
         id: string,
@@ -4486,239 +3539,39 @@ export class KeyChainService {
         this.logger.log(&#x60;Updated key chain ${id}&#x60;);
     }
 
-    /**
-     * Delete a key chain.
-     */
     async delete(tenantId: string, id: string): Promise&lt;void&gt; {
-        const result &#x3D; await this.keyChainRepository.delete({ tenantId, id });
-
-        if (result.affected &#x3D;&#x3D;&#x3D; 0) {
+        const keyChain &#x3D; await this.keyChainRepository.findOne({
+            where: { tenantId, id },
+        });
+        if (!keyChain) {
             throw new NotFoundException(&#x60;Key chain ${id} not found&#x60;);
         }
 
+        // Best-effort: ask the adapter to clean up external key material.
+        try {
+            const adapter &#x3D; this.kmsRegistry.resolve(keyChain.kmsProvider);
+            if (adapter.capabilities.canDelete) {
+                await adapter.deleteKey(this.refFromEntity(keyChain));
+            }
+        } catch (err) {
+            this.logger.warn(
+                &#x60;Failed to delete external key material for key chain ${id}: ${String(err)}&#x60;,
+            );
+        }
+
+        await this.keyChainRepository.delete({ tenantId, id });
         this.logger.log(&#x60;Deleted key chain ${id}&#x60;);
     }
 
     // ─────────────────────── config import ───────────────────────
 
-    /**
-     * Import key chains for a tenant from the filesystem.
-     *
-     * Supports two modes:
-     * 1. New format: key-chains/*.json with combined key + cert
-     * 2. Legacy format: keys/*.json + certs/*.json (separate files linked by keyId)
-     */
-    async importForTenant(tenantId: string): Promise&lt;void&gt; {
-        await this.configImportService.importConfigsForTenant&lt;KeyChainImportDto&gt;(
-            tenantId,
-            {
-                subfolder: &quot;key-chains&quot;,
-                fileExtension: &quot;.json&quot;,
-                validationClass: KeyChainImportDto,
-                resourceType: &quot;key-chain&quot;,
-                loadData: (filePath) &#x3D;&gt; {
-                    const payload &#x3D; JSON.parse(readFileSync(filePath, &quot;utf8&quot;));
-                    return plainToClass(KeyChainImportDto, payload);
-                },
-                checkExists: async (tid, data) &#x3D;&gt; {
-                    // Check by matching public key coordinates
-                    return await this.keyChainRepository
-                        .count({
-                            where: { tenantId: tid, id: data.id },
-                        })
-                        .then((count) &#x3D;&gt; count &gt; 0);
-                },
-                processItem: async (tid, config) &#x3D;&gt; {
-                    await this.importKeyChain(tid, config);
-                },
-            },
-        );
-    }
-
-    /**
-     * Import a single key chain from DTO.
-     *
-     * When rotationPolicy.enabled is true, the imported key becomes the root CA
-     * and a new leaf key is generated for signing. This satisfies HAIP section 4.5.1
-     * which requires credential signing certificates to NOT be self-signed.
-     */
     async importKeyChain(
         tenantId: string,
         dto: KeyChainImportDto,
     ): Promise&lt;string&gt; {
-        const id &#x3D; dto.id || v4();
-        const tenant &#x3D; await this.tenantRepository.findOneByOrFail({
-            id: tenantId,
-        });
-        const hostname &#x3D; this.getHostname();
-
-        // Ensure key has a kid
-        const privateKey &#x3D; { ...dto.key };
-        if (!privateKey.kid) {
-            privateKey.kid &#x3D; &#x60;${id}-active&#x60;;
-        }
-        if (!privateKey.alg) {
-            privateKey.alg &#x3D; &quot;ES256&quot;;
-        }
-
-        // Rotation enabled: imported key becomes root CA, generate new leaf key
-        if (dto.rotationPolicy?.enabled) {
-            return this.importKeyChainWithRotation(
-                id,
-                tenantId,
-                tenant.name,
-                hostname,
-                privateKey,
-                dto,
-            );
-        }
-
-        // Standard import: imported key is the active signing key
-        let activeCertificate: string;
-
-        if (dto.crt &amp;&amp; dto.crt.length &gt; 0) {
-            // Use provided certificate
-            activeCertificate &#x3D; dto.crt.join(&quot;\n&quot;);
-        } else {
-            // Generate self-signed certificate
-            // Need to import both private and public keys separately
-            const privateKeyObj &#x3D; await importJWK(privateKey, &quot;ES256&quot;);
-
-            // Create public key JWK by removing the private component
-            const publicKeyJwk &#x3D; { ...privateKey };
-            delete (publicKeyJwk as Record&lt;string, unknown&gt;).d;
-            const publicKeyObj &#x3D; await importJWK(publicKeyJwk, &quot;ES256&quot;);
-
-            const now &#x3D; new Date();
-            const notAfter &#x3D; new Date(
-                now.getTime() + 365 * 24 * 60 * 60 * 1000,
-            );
-            activeCertificate &#x3D; await this.createSelfSignedCert(
-                {
-                    privateKey: privateKeyObj as CryptoKey,
-                    publicKey: publicKeyObj as CryptoKey,
-                },
-                tenant.name,
-                hostname,
-                now,
-                notAfter,
-            );
-        }
-
-        await this.keyChainRepository.save({
-            id,
-            tenantId,
-            usageType: dto.usageType,
-            usage: KeyUsage.Sign,
-            description: dto.description,
-            kmsProvider: dto.kmsProvider || &quot;db&quot;,
-            activeKey: privateKey as JWK,
-            activeCertificate,
-            rotationEnabled: false,
-        } as KeyChainEntity);
-
-        this.logger.log(
-            &#x60;Imported key chain ${id} for tenant ${tenantId} (usage: ${dto.usageType})&#x60;,
-        );
-        return id;
+        return this.importService.importKeyChain(tenantId, dto);
     }
 
-    /**
-     * Import key chain with rotation enabled.
-     * The imported key becomes the root CA, and a new leaf key is generated.
-     */
-    private async importKeyChainWithRotation(
-        id: string,
-        tenantId: string,
-        subjectCN: string,
-        hostname: string,
-        rootKeyJwk: JWK,
-        dto: KeyChainImportDto,
-    ): Promise&lt;string&gt; {
-        const now &#x3D; new Date();
-        const certValidityDays &#x3D; dto.rotationPolicy?.certValidityDays || 365;
-        const rotationIntervalDays &#x3D; dto.rotationPolicy?.intervalDays || 90;
-        const notAfter &#x3D; new Date(
-            now.getTime() + certValidityDays * 24 * 60 * 60 * 1000,
-        );
-
-        // &#x3D;&#x3D;&#x3D; 1. Set up root CA key &#x3D;&#x3D;&#x3D;
-        rootKeyJwk.kid &#x3D; rootKeyJwk.kid || &#x60;${id}-root&#x60;;
-        const rootPrivateKey &#x3D; (await importJWK(
-            rootKeyJwk,
-            &quot;ES256&quot;,
-        )) as CryptoKey;
-        const rootPublicJwk &#x3D; this.getPublicJwk(rootKeyJwk);
-        const rootPublicKey &#x3D; (await importJWK(
-            rootPublicJwk,
-            &quot;ES256&quot;,
-        )) as CryptoKey;
-
-        // &#x3D;&#x3D;&#x3D; 2. Get or generate root CA certificate &#x3D;&#x3D;&#x3D;
-        let rootCertificate: string;
-
-        if (dto.crt &amp;&amp; dto.crt.length &gt; 0) {
-            // Use provided CA certificate
-            rootCertificate &#x3D; dto.crt[0];
-        } else {
-            // Generate self-signed CA certificate for the imported key
-            const rootNotAfter &#x3D; new Date(
-                now.getTime() + 10 * 365 * 24 * 60 * 60 * 1000,
-            );
-            rootCertificate &#x3D; await this.createSelfSignedCaCert(
-                { privateKey: rootPrivateKey, publicKey: rootPublicKey },
-                &#x60;${subjectCN} Root CA&#x60;,
-                hostname,
-                now,
-                rootNotAfter,
-            );
-        }
-
-        // &#x3D;&#x3D;&#x3D; 3. Generate new active signing key &#x3D;&#x3D;&#x3D;
-        const activeKeyPair &#x3D; await generateKeyPair(&quot;ES256&quot;, {
-            extractable: true,
-        });
-        const activePrivateJwk &#x3D; await exportJWK(activeKeyPair.privateKey);
-        activePrivateJwk.kid &#x3D; &#x60;${id}-active-${Date.now()}&#x60;;
-
-        // &#x3D;&#x3D;&#x3D; 4. Create CA-signed certificate for the signing key &#x3D;&#x3D;&#x3D;
-        const { chain } &#x3D; await this.createCaSignedCert(
-            { privateKey: rootPrivateKey, publicKey: rootPublicKey },
-            rootCertificate,
-            activeKeyPair.publicKey,
-            subjectCN,
-            hostname,
-            now,
-            notAfter,
-        );
-
-        // &#x3D;&#x3D;&#x3D; 5. Save key chain with internal CA structure &#x3D;&#x3D;&#x3D;
-        await this.keyChainRepository.save({
-            id,
-            tenantId,
-            usageType: dto.usageType,
-            usage: KeyUsage.Sign,
-            description: dto.description,
-            kmsProvider: dto.kmsProvider || &quot;db&quot;,
-            rootKey: rootKeyJwk,
-            rootCertificate,
-            activeKey: activePrivateJwk,
-            activeCertificate: chain.join(&quot;\n&quot;),
-            rotationEnabled: true,
-            rotationIntervalDays,
-            certValidityDays,
-        } as KeyChainEntity);
-
-        this.logger.log(
-            &#x60;Imported key chain ${id} with rotation for tenant ${tenantId} (usage: ${dto.usageType})&#x60;,
-        );
-        return id;
-    }
-
-    /**
-     * Rotate the signing key in a key chain.
-     * Creates new key material and certificate, moves current to previous.
-     */
     async rotate(tenantId: string, id: string): Promise&lt;void&gt; {
         const keyChain &#x3D; await this.getEntity(tenantId, id);
         const hostname &#x3D; this.getHostname();
@@ -4733,50 +3586,40 @@ export class KeyChainService {
             now.getTime() + certValidityDays * 24 * 60 * 60 * 1000,
         );
 
-        // Grace period: keep previous key for 30 days after rotation
         const gracePeriodDays &#x3D; 30;
         const previousKeyExpiry &#x3D; new Date(
             now.getTime() + gracePeriodDays * 24 * 60 * 60 * 1000,
         );
 
-        // Move current key to previous
-        const previousKey &#x3D; keyChain.activeKey;
+        const previousJwk &#x3D; keyChain.activeJwk;
         const previousCertificate &#x3D; keyChain.activeCertificate;
 
-        // Generate new active key
-        const newKeyPair &#x3D; await generateKeyPair(&quot;ES256&quot;, {
-            extractable: true,
+        const adapter &#x3D; this.kmsRegistry.resolve(keyChain.kmsProvider);
+        const newMat &#x3D; await adapter.generateKey({
+            kid: &#x60;${id}-${Date.now()}&#x60;,
         });
-        const newPrivateJwk &#x3D; await exportJWK(newKeyPair.privateKey);
-        newPrivateJwk.kid &#x3D; &#x60;${id}-${Date.now()}&#x60;;
 
         let newCertificate: string;
-
         if (keyChain.hasInternalCa()) {
-            // Recreate CA key pair from JWK for signing
-            const caPrivateKey &#x3D; (await importJWK(
-                keyChain.rootKey!,
-                &quot;ES256&quot;,
-            )) as CryptoKey;
-            const caPublicJwk &#x3D; this.getPublicJwk(keyChain.rootKey!);
-            const caPublicKey &#x3D; (await importJWK(
-                caPublicJwk,
-                &quot;ES256&quot;,
-            )) as CryptoKey;
-
-            const { chain } &#x3D; await this.createCaSignedCert(
-                { privateKey: caPrivateKey, publicKey: caPublicKey },
-                keyChain.rootCertificate!,
-                newKeyPair.publicKey,
+            // The root key already lives in the adapter&#x27;s backing store.
+            // Build a reference to it without re-importing (which would
+            // create a duplicate key in external KMS backends).
+            const caRef &#x3D; this.refForStoredKey(adapter, keyChain.rootJwk!);
+            const { chain } &#x3D; await this.certBuilder.createCaSignedCert({
+                caAdapter: adapter,
+                caRef,
+                caCertPem: keyChain.rootCertificate!,
+                subjectPublicJwk: newMat.ref.publicJwk,
                 subjectCN,
                 hostname,
-                now,
+                notBefore: now,
                 notAfter,
-            );
+            });
             newCertificate &#x3D; chain.join(&quot;\n&quot;);
         } else {
-            newCertificate &#x3D; await this.createSelfSignedCert(
-                newKeyPair,
+            newCertificate &#x3D; await this.certBuilder.createSelfSignedCert(
+                adapter,
+                newMat.ref,
                 subjectCN,
                 hostname,
                 now,
@@ -4784,13 +3627,13 @@ export class KeyChainService {
             );
         }
 
-        // Update the key chain
         await this.keyChainRepository.update(
             { tenantId, id },
             {
-                activeKey: newPrivateJwk,
+                activeJwk: this.storedKeyForEntity(adapter, newMat.ref),
                 activeCertificate: newCertificate,
-                previousKey,
+                externalKeyId: newMat.ref.externalKeyId,
+                previousJwk,
                 previousCertificate,
                 previousKeyExpiry,
                 lastRotatedAt: now,
@@ -4800,139 +3643,57 @@ export class KeyChainService {
         this.logger.log(&#x60;Rotated key chain ${id}&#x60;);
     }
 
-    /**
-     * Get the active private key (for signing operations).
-     */
     async getActiveKey(tenantId: string, id: string): Promise&lt;JWK&gt; {
         const keyChain &#x3D; await this.getEntity(tenantId, id);
-        return keyChain.activeKey;
+        return keyChain.activeJwk;
     }
 
-    /**
-     * Get all public keys for JWKS (current + previous if in grace period).
-     */
     async getPublicKeys(tenantId: string, id: string): Promise&lt;JWK[]&gt; {
         const keyChain &#x3D; await this.getEntity(tenantId, id);
         return keyChain.getPublicKeys();
     }
 
-    /**
-     * Get the active certificate chain as PEM.
-     */
     async getActiveCertificate(tenantId: string, id: string): Promise&lt;string&gt; {
         const keyChain &#x3D; await this.getEntity(tenantId, id);
         return keyChain.activeCertificate;
     }
 
     // ─────────────────────────────────────────────────────────
-    // SIGNING OPERATIONS
+    // SIGNING OPERATIONS — delegated to KeyChainSigningService
     // ─────────────────────────────────────────────────────────
 
-    /**
-     * Get a Signer callback for SD-JWT signing.
-     * If keyId is provided, uses that specific key chain.
-     * Otherwise uses the first available key chain.
-     */
     async signer(tenantId: string, keyId?: string): Promise&lt;Signer&gt; {
-        const keyChain &#x3D; keyId
-            ? await this.getEntity(tenantId, keyId)
-            : await this.getFirstKeyChain(tenantId);
-
-        const privateKey &#x3D; await importJWK(keyChain.activeKey, &quot;ES256&quot;);
-
-        return async (data: string): Promise&lt;string&gt; &#x3D;&gt; {
-            // For SD-JWT, sign raw data directly (not a full JWT)
-            const encoder &#x3D; new TextEncoder();
-            const signature &#x3D; await globalThis.crypto.subtle.sign(
-                { name: &quot;ECDSA&quot;, hash: &quot;SHA-256&quot; },
-                privateKey as CryptoKey,
-                encoder.encode(data),
-            );
-            return Buffer.from(signature).toString(&quot;base64url&quot;);
-        };
+        return this.signingService.signer(tenantId, keyId);
     }
 
-    /**
-     * Sign a JWT with the active key of a key chain.
-     */
-    @Span(&quot;keychain.signJWT&quot;)
     async signJWT(
         payload: JWTPayload,
         header: JWSHeaderParameters,
         tenantId: string,
         keyId?: string,
     ): Promise&lt;string&gt; {
-        const keyChain &#x3D; keyId
-            ? await this.getEntity(tenantId, keyId)
-            : await this.getFirstKeyChain(tenantId);
-
-        const privateKey &#x3D; await importJWK(keyChain.activeKey, &quot;ES256&quot;);
-
-        // Build JWT header, filtering out incompatible properties
-        const { b64, ...compatibleHeader } &#x3D; header;
-        const jwtHeader &#x3D; {
-            ...compatibleHeader,
-            alg: header.alg || &quot;ES256&quot;,
-            kid: keyChain.activeKey.kid,
-        };
-
-        const jwt &#x3D; new SignJWT(payload).setProtectedHeader(jwtHeader);
-
-        return jwt.sign(privateKey);
+        return this.signingService.signJWT(payload, header, tenantId, keyId);
     }
 
-    /**
-     * Get the public key for a key chain.
-     * @param type - &quot;jwk&quot; for JSON Web Key format, &quot;pem&quot; for PEM format
-     */
     getPublicKey(type: &quot;jwk&quot;, tenantId: string, keyId?: string): Promise&lt;JWK&gt;;
     getPublicKey(
         type: &quot;pem&quot;,
         tenantId: string,
         keyId?: string,
     ): Promise&lt;string&gt;;
-    async getPublicKey(
+    getPublicKey(
         type: &quot;pem&quot; | &quot;jwk&quot;,
         tenantId: string,
         keyId?: string,
     ): Promise&lt;JWK | string&gt; {
-        const keyChain &#x3D; keyId
-            ? await this.getEntity(tenantId, keyId)
-            : await this.getFirstKeyChain(tenantId);
-
-        const publicJwk &#x3D; this.getPublicJwk(keyChain.activeKey);
-
         if (type &#x3D;&#x3D;&#x3D; &quot;jwk&quot;) {
-            return publicJwk;
+            return this.signingService.getPublicKey(&quot;jwk&quot;, tenantId, keyId);
         }
-
-        const publicKey &#x3D; await importJWK(publicJwk, &quot;ES256&quot;);
-        return exportSPKI(publicKey as CryptoKey);
+        return this.signingService.getPublicKey(&quot;pem&quot;, tenantId, keyId);
     }
 
-    /**
-     * Get the Key ID (kid) for the first available key chain.
-     */
     async getKid(tenantId: string): Promise&lt;string&gt; {
-        const keyChain &#x3D; await this.getFirstKeyChain(tenantId);
-        return keyChain.id;
-    }
-
-    /**
-     * Get the first available key chain for a tenant.
-     */
-    private async getFirstKeyChain(tenantId: string): Promise&lt;KeyChainEntity&gt; {
-        const keyChain &#x3D; await this.keyChainRepository.findOne({
-            where: { tenantId },
-        });
-
-        if (!keyChain) {
-            throw new NotFoundException(
-                &#x60;No key chain found for tenant ${tenantId}&#x60;,
-            );
-        }
-
-        return keyChain;
+        return this.signingService.getKid(tenantId);
     }
 
     // ─────────────────────────────────────────────────────────
@@ -4944,10 +3705,58 @@ export class KeyChainService {
             .hostname;
     }
 
-    private generateSerialNumber(): string {
-        const bytes &#x3D; new Uint8Array(16);
-        globalThis.crypto.getRandomValues(bytes);
-        return Buffer.from(bytes).toString(&quot;hex&quot;);
+    /**
+     * What gets persisted into the entity&#x27;s &#x60;activeJwk&#x60; / &#x60;rootJwk&#x60; JWK
+     * column. For the &#x60;db&#x60; provider we keep the full private JWK (so
+     * signing can re-import it). For external providers we keep only
+     * the public JWK — the private key lives in the KMS backend.
+     */
+    private storedKeyForEntity(adapter: KmsAdapter, ref: KmsKeyRef): JWK {
+        if (adapter.type &#x3D;&#x3D;&#x3D; &quot;db&quot; &amp;&amp; ref.privateJwk) {
+            return ref.privateJwk;
+        }
+        return ref.publicJwk;
+    }
+
+    /**
+     * Reconstruct a {@link KmsKeyRef} from a persisted entity so the
+     * adapter can sign / delete.
+     */
+    private refFromEntity(keyChain: KeyChainEntity): KmsKeyRef {
+        return this.refForStoredKey(
+            this.kmsRegistry.resolve(keyChain.kmsProvider),
+            keyChain.activeJwk,
+            keyChain.externalKeyId ?? undefined,
+        );
+    }
+
+    /**
+     * Build a {@link KmsKeyRef} for any stored JWK (active or root).
+     *
+     * - &#x60;db&#x60; provider: the stored JWK is the private JWK; derive the
+     *   public JWK from it.
+     * - external providers: the stored JWK is the public JWK; the
+     *   private key lives in the backend, identified by
+     *   &#x60;externalKeyId&#x60; (falling back to &#x60;storedJwk.kid&#x60; which is
+     *   what adapters use as the external key identifier).
+     */
+    private refForStoredKey(
+        adapter: KmsAdapter,
+        storedJwk: JWK,
+        externalKeyId?: string,
+    ): KmsKeyRef {
+        const alg &#x3D;
+            (storedJwk.alg as KmsSigningAlg | undefined) ??
+            adapter.capabilities.defaultAlg;
+        if (adapter.type &#x3D;&#x3D;&#x3D; &quot;db&quot;) {
+            const publicJwk &#x3D; this.getPublicJwk(storedJwk);
+            return { privateJwk: storedJwk, publicJwk, alg };
+        }
+        return {
+            externalKeyId: externalKeyId ?? storedJwk.kid,
+            publicJwk: storedJwk,
+            alg,
+        };
     }
 
     private getPublicJwk(jwk: JWK): JWK {
@@ -4969,7 +3778,7 @@ export class KeyChainService {
             type,
             description: keyChain.description,
             kmsProvider: keyChain.kmsProvider,
-            activePublicKey: this.toPublicKeyInfo(keyChain.activeKey),
+            activePublicKey: this.toPublicKeyInfo(keyChain.activeJwk),
             rotationPolicy: {
                 enabled: keyChain.rotationEnabled,
                 intervalDays: keyChain.rotationIntervalDays,
@@ -4980,8 +3789,6 @@ export class KeyChainService {
             updatedAt: keyChain.updatedAt,
         };
 
-        // Only include certificate info for keys that have certificates
-        // Encryption keys (ECDH-ES) don&#x27;t have certificates
         if (keyChain.activeCertificate) {
             response.activeCertificate &#x3D; this.toCertificateInfo(
                 keyChain.activeCertificate,
@@ -4994,9 +3801,9 @@ export class KeyChainService {
             );
         }
 
-        if (keyChain.previousKey) {
+        if (keyChain.previousJwk) {
             response.previousPublicKey &#x3D; this.toPublicKeyInfo(
-                keyChain.previousKey,
+                keyChain.previousJwk,
             );
             response.previousCertificate &#x3D; this.toCertificateInfo(
                 keyChain.previousCertificate!,
@@ -5020,7 +3827,6 @@ export class KeyChainService {
     }
 
     private toCertificateInfo(pem: string): CertificateInfoDto {
-        // Parse first certificate in chain
         const firstCertPem &#x3D;
             pem.split(&quot;-----END CERTIFICATE-----&quot;)[0] +
             &quot;-----END CERTIFICATE-----&quot;;

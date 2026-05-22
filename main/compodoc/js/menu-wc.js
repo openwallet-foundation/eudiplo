@@ -929,6 +929,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/AddKeyUsageEntity1743000000000.html" data-type="entity-link" >AddKeyUsageEntity1743000000000</a>
                             </li>
                             <li class="link">
+                                <a href="classes/AddKmsExternalKeyIdCheck1764000000000.html" data-type="entity-link" >AddKmsExternalKeyIdCheck1764000000000</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/AddKmsProvider1740500000000.html" data-type="entity-link" >AddKmsProvider1740500000000</a>
                             </li>
                             <li class="link">
@@ -1008,6 +1011,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/AuthResponse.html" data-type="entity-link" >AuthResponse</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/AwsKmsAdapter.html" data-type="entity-link" >AwsKmsAdapter</a>
                             </li>
                             <li class="link">
                                 <a href="classes/AwsKmsConfigDto.html" data-type="entity-link" >AwsKmsConfigDto</a>
@@ -1112,6 +1118,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/CredentialSetQuery.html" data-type="entity-link" >CredentialSetQuery</a>
                             </li>
                             <li class="link">
+                                <a href="classes/DbKmsAdapter.html" data-type="entity-link" >DbKmsAdapter</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/DbKmsConfigDto.html" data-type="entity-link" >DbKmsConfigDto</a>
                             </li>
                             <li class="link">
@@ -1185,6 +1194,27 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/GrafanaConfigDto.html" data-type="entity-link" >GrafanaConfigDto</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/HttpAuthBaseConfigDto.html" data-type="entity-link" >HttpAuthBaseConfigDto</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/HttpAuthBearerConfigDto.html" data-type="entity-link" >HttpAuthBearerConfigDto</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/HttpAuthMtlsConfigDto.html" data-type="entity-link" >HttpAuthMtlsConfigDto</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/HttpAuthNoneConfigDto.html" data-type="entity-link" >HttpAuthNoneConfigDto</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/HttpAuthOauth2ConfigDto.html" data-type="entity-link" >HttpAuthOauth2ConfigDto</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/HttpKmsAdapter.html" data-type="entity-link" >HttpKmsAdapter</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/HttpKmsConfigDto.html" data-type="entity-link" >HttpKmsConfigDto</a>
                             </li>
                             <li class="link">
                                 <a href="classes/IaeActionBase.html" data-type="entity-link" >IaeActionBase</a>
@@ -1265,6 +1295,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/KmsConfigDto.html" data-type="entity-link" >KmsConfigDto</a>
                             </li>
                             <li class="link">
+                                <a href="classes/KmsCryptoProvider.html" data-type="entity-link" >KmsCryptoProvider</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/KmsProviderCapabilitiesDto.html" data-type="entity-link" >KmsProviderCapabilitiesDto</a>
                             </li>
                             <li class="link">
@@ -1307,6 +1340,12 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ParResponseDto.html" data-type="entity-link" >ParResponseDto</a>
                             </li>
                             <li class="link">
+                                <a href="classes/Pkcs11KmsAdapter.html" data-type="entity-link" >Pkcs11KmsAdapter</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/Pkcs11KmsConfigDto.html" data-type="entity-link" >Pkcs11KmsConfigDto</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/PolicyCredential.html" data-type="entity-link" >PolicyCredential</a>
                             </li>
                             <li class="link">
@@ -1325,6 +1364,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/PresentationRequest.html" data-type="entity-link" >PresentationRequest</a>
                             </li>
                             <li class="link">
+                                <a href="classes/PublicJwkCache.html" data-type="entity-link" >PublicJwkCache</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/PublicKeyInfoDto.html" data-type="entity-link" >PublicKeyInfoDto</a>
                             </li>
                             <li class="link">
@@ -1341,6 +1383,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/RegistrationCertificateRequest.html" data-type="entity-link" >RegistrationCertificateRequest</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/RenameKeyChainActiveKeyToActiveJwk1765000000000.html" data-type="entity-link" >RenameKeyChainActiveKeyToActiveJwk1765000000000</a>
                             </li>
                             <li class="link">
                                 <a href="classes/RenameSigningToAttestation1745000000000.html" data-type="entity-link" >RenameSigningToAttestation1745000000000</a>
@@ -1478,6 +1523,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ValidationErrorFilter.html" data-type="entity-link" >ValidationErrorFilter</a>
                             </li>
                             <li class="link">
+                                <a href="classes/VaultKmsAdapter.html" data-type="entity-link" >VaultKmsAdapter</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/VaultKmsConfigDto.html" data-type="entity-link" >VaultKmsConfigDto</a>
                             </li>
                             <li class="link">
@@ -1521,6 +1569,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                     <a href="injectables/AzureKeyVaultEncryptionKeyProvider.html" data-type="entity-link" >AzureKeyVaultEncryptionKeyProvider</a>
                                 </li>
                                 <li class="link">
+                                    <a href="injectables/CertificateBuilderService.html" data-type="entity-link" >CertificateBuilderService</a>
+                                </li>
+                                <li class="link">
                                     <a href="injectables/CertService.html" data-type="entity-link" >CertService</a>
                                 </li>
                                 <li class="link">
@@ -1542,7 +1593,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                     <a href="injectables/JwtAuthGuard.html" data-type="entity-link" >JwtAuthGuard</a>
                                 </li>
                                 <li class="link">
+                                    <a href="injectables/KeyChainImportService.html" data-type="entity-link" >KeyChainImportService</a>
+                                </li>
+                                <li class="link">
                                     <a href="injectables/KeyChainService.html" data-type="entity-link" >KeyChainService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/KeyChainSigningService.html" data-type="entity-link" >KeyChainSigningService</a>
                                 </li>
                                 <li class="link">
                                     <a href="injectables/KeycloakClientsProvider.html" data-type="entity-link" >KeycloakClientsProvider</a>
@@ -1552,6 +1609,12 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 </li>
                                 <li class="link">
                                     <a href="injectables/KeyRotationService.html" data-type="entity-link" >KeyRotationService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/KmsConfigService.html" data-type="entity-link" >KmsConfigService</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/KmsProviderRegistry.html" data-type="entity-link" >KmsProviderRegistry</a>
                                 </li>
                                 <li class="link">
                                     <a href="injectables/VaultEncryptionKeyProvider.html" data-type="entity-link" >VaultEncryptionKeyProvider</a>
@@ -1596,6 +1659,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="interfaces/AuthorizationIdentity.html" data-type="entity-link" >AuthorizationIdentity</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/AwsKmsAdapterConfig.html" data-type="entity-link" >AwsKmsAdapterConfig</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/BuildCredentialConfigOptions.html" data-type="entity-link" >BuildCredentialConfigOptions</a>
@@ -1676,6 +1742,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/GenerateTokenOptions.html" data-type="entity-link" >GenerateTokenOptions</a>
                             </li>
                             <li class="link">
+                                <a href="interfaces/HttpKmsAdapterConfig.html" data-type="entity-link" >HttpKmsAdapterConfig</a>
+                            </li>
+                            <li class="link">
                                 <a href="interfaces/ImportOptions.html" data-type="entity-link" >ImportOptions</a>
                             </li>
                             <li class="link">
@@ -1689,6 +1758,24 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="interfaces/JsonSchema.html" data-type="entity-link" >JsonSchema</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/KmsAdapter.html" data-type="entity-link" >KmsAdapter</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/KmsAdapterCapabilities.html" data-type="entity-link" >KmsAdapterCapabilities</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/KmsHealthResult.html" data-type="entity-link" >KmsHealthResult</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/KmsKeyMaterial.html" data-type="entity-link" >KmsKeyMaterial</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/KmsKeyRef.html" data-type="entity-link" >KmsKeyRef</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/KmsSigningKeyMarker.html" data-type="entity-link" >KmsSigningKeyMarker</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/MdocErrorDetails.html" data-type="entity-link" >MdocErrorDetails</a>
@@ -1713,6 +1800,21 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="interfaces/ParsedInteractiveAuthorizationRequest.html" data-type="entity-link" >ParsedInteractiveAuthorizationRequest</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/Pkcs11AdapterConfig.html" data-type="entity-link" >Pkcs11AdapterConfig</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/Pkcs11Attribute.html" data-type="entity-link" >Pkcs11Attribute</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/Pkcs11Constants.html" data-type="entity-link" >Pkcs11Constants</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/Pkcs11Instance.html" data-type="entity-link" >Pkcs11Instance</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/Pkcs11Module.html" data-type="entity-link" >Pkcs11Module</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/PresentationRequestOptions.html" data-type="entity-link" >PresentationRequestOptions</a>
@@ -1746,6 +1848,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="interfaces/TokenPayload.html" data-type="entity-link" >TokenPayload</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/VaultAdapterConfig.html" data-type="entity-link" >VaultAdapterConfig</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/VaultKVResponse.html" data-type="entity-link" >VaultKVResponse</a>
