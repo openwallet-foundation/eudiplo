@@ -128,7 +128,7 @@ export class DashboardService {
               this.presentationConfigs = result.value.data.length;
               break;
             case 'sessions':
-              result.value.data.forEach((session: Session) => {
+              result.value.data.items.forEach((session: Session) => {
                 switch (session.status) {
                   case 'active':
                     this.sessionActive++;
@@ -171,7 +171,7 @@ export class DashboardService {
               this.hasTrustList = this.trustListCount > 0;
               break;
             case 'registrar':
-              this.hasRegistrarConfig = true;
+              this.hasRegistrarConfig = !!result.value.data;
               break;
           }
         } else if (key === 'registrar') {

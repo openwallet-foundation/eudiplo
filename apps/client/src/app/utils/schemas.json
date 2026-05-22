@@ -1424,6 +1424,43 @@
     }
   },
   {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/PaginatedSessionResponseDto.schema.json",
+    "fileMatch": ["a://b/PaginatedSessionResponseDto*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/PaginatedSessionResponseDto.schema.json",
+      "title": "PaginatedSessionResponseDto",
+      "type": "object",
+      "properties": {
+        "items": {
+          "description": "The sessions for the current page.",
+          "type": "array",
+          "items": {
+            "$ref": "./Session.schema.json"
+          }
+        },
+        "total": {
+          "type": "number",
+          "description": "Total number of sessions matching the query"
+        },
+        "page": {
+          "type": "number",
+          "description": "Current page number (1-based)"
+        },
+        "pageSize": {
+          "type": "number",
+          "description": "Number of items per page"
+        },
+        "totalPages": {
+          "type": "number",
+          "description": "Total number of pages"
+        }
+      },
+      "required": ["items", "total", "page", "pageSize", "totalPages"],
+      "additionalProperties": false
+    }
+  },
+  {
     "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/SessionLogEntryResponseDto.schema.json",
     "fileMatch": ["a://b/SessionLogEntryResponseDto*.schema.json"],
     "schema": {
@@ -2497,7 +2534,7 @@
           "description": "Action type discriminator",
           "example": "openid4vp_presentation"
         },
-        "name": {
+        "label": {
           "type": "string",
           "description": "Optional label for this step (for display purposes)",
           "example": "Identity Verification"
@@ -2527,7 +2564,7 @@
           "description": "Action type discriminator",
           "example": "redirect_to_web"
         },
-        "name": {
+        "label": {
           "type": "string",
           "description": "Optional label for this step (for display purposes)",
           "example": "Identity Verification"
@@ -3598,7 +3635,7 @@
           "type": "string",
           "description": "Stable machine-readable value to submit in schema metadata category/tags fields."
         },
-        "name": {
+        "label": {
           "type": "string",
           "description": "Display label for UI rendering."
         },
@@ -3612,7 +3649,7 @@
           "description": "Replacement code when status is deprecated."
         }
       },
-      "required": ["code", "name", "status"],
+      "required": ["code", "label", "status"],
       "additionalProperties": false
     }
   },
@@ -4105,7 +4142,7 @@
         "name": {
           "type": "string"
         },
-        "locale": {
+        "lang": {
           "type": "string"
         },
         "uri": {
@@ -4398,14 +4435,14 @@
       "title": "RegistrationCertificatePurpose",
       "type": "object",
       "properties": {
-        "locale": {
+        "lang": {
           "type": "string"
         },
         "content": {
           "type": "string"
         }
       },
-      "required": ["locale", "content"],
+      "required": ["lang", "content"],
       "additionalProperties": false
     }
   },
