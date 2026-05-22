@@ -7,8 +7,6 @@ import type { KmsProviderType } from "../dto/kms-config.dto";
  */
 export type KmsSigningAlg = "ES256";
 
-export const DEFAULT_KMS_ALG: KmsSigningAlg = "ES256";
-
 /**
  * Opaque reference to a key stored by a KMS provider.
  *

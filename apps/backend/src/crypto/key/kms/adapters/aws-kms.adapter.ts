@@ -165,8 +165,7 @@ export class AwsKmsAdapter implements KmsAdapter {
     }
 
     private async client(): Promise<KMSClient> {
-        if (!this.clientPromise) {
-            this.clientPromise = (async () => {
+        this.clientPromise ??= (async () => {
                 const { KMSClient } = await import("@aws-sdk/client-kms");
                 return new KMSClient({
                     region: this.region,
@@ -180,7 +179,6 @@ export class AwsKmsAdapter implements KmsAdapter {
                         : {}),
                 });
             })();
-        }
         return this.clientPromise;
     }
 
@@ -203,11 +201,9 @@ export class AwsKmsAdapter implements KmsAdapter {
     ): Promise<JWK> {
         const client = await this.client();
         const res: DescribeKeyCommandOutput & { PublicKey?: Uint8Array } =
-            (await client.send(
+            await client.send(
                 new GetPublicKeyCommand({ KeyId: keyId }),
-            )) as unknown as DescribeKeyCommandOutput & {
-                PublicKey?: Uint8Array;
-            };
+            );
         const spki = res.PublicKey;
         if (!spki) {
             throw new Error(
