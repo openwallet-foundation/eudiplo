@@ -394,8 +394,8 @@ export class HttpKmsAdapter implements KmsAdapter {
 function base64UrlToBytes(encoded: string): Uint8Array {
     // Normalise base64url → base64.
     const base64 = encoded
-        .replaceAll('-', "+")
-        .replaceAll('_', "/")
+        .replaceAll("-", "+")
+        .replaceAll("_", "/")
         .padEnd(encoded.length + ((4 - (encoded.length % 4)) % 4), "=");
     return Buffer.from(base64, "base64");
 }

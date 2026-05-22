@@ -471,16 +471,16 @@ let pkcs11ModulePromise: Promise<Pkcs11Module> | undefined;
 
 async function loadPkcs11(): Promise<Pkcs11Module> {
     pkcs11ModulePromise ??= (async () => {
-            try {
-                const mod = (await import("pkcs11js")) as unknown as
-                    | Pkcs11Module
-                    | { default: Pkcs11Module };
-                return "PKCS11" in mod ? mod : mod.default;
-            } catch (err) {
-                throw new Error(
-                    `pkcs11js is not installed. Install it with 'pnpm add pkcs11js' in apps/backend before configuring a pkcs11 KMS provider. Original error: ${String(err)}`,
-                );
-            }
-        })();
+        try {
+            const mod = (await import("pkcs11js")) as unknown as
+                | Pkcs11Module
+                | { default: Pkcs11Module };
+            return "PKCS11" in mod ? mod : mod.default;
+        } catch (err) {
+            throw new Error(
+                `pkcs11js is not installed. Install it with 'pnpm add pkcs11js' in apps/backend before configuring a pkcs11 KMS provider. Original error: ${String(err)}`,
+            );
+        }
+    })();
     return pkcs11ModulePromise;
 }

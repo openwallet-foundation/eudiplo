@@ -1,5 +1,5 @@
 import {
-    CreateKeyCommand,    
+    CreateKeyCommand,
     type DescribeKeyCommandOutput,
     GetPublicKeyCommand,
     type KMSClient,
