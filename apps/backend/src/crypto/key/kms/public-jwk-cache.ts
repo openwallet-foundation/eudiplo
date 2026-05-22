@@ -9,7 +9,10 @@ import type { JWK } from "jose";
  * relying on explicit invalidation alone.
  */
 export class PublicJwkCache {
-    private readonly entries = new Map<string, { jwk: JWK; expiresAt: number }>();
+    private readonly entries = new Map<
+        string,
+        { jwk: JWK; expiresAt: number }
+    >();
     private readonly ttlMs: number;
 
     constructor(ttlMs = 5 * 60 * 1000) {

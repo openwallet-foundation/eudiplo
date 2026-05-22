@@ -32,7 +32,8 @@ export class KmsProviderCapabilitiesDto {
     supportedAlgs!: string[];
 
     @ApiProperty({
-        description: "Default signing algorithm used when caller does not specify one.",
+        description:
+            "Default signing algorithm used when caller does not specify one.",
         example: "ES256",
     })
     defaultAlg!: string;

@@ -2,10 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import type {
-    KmsConfigDto,
-    KmsProviderConfigDto,
-} from "../dto/kms-config.dto";
+import type { KmsConfigDto, KmsProviderConfigDto } from "../dto/kms-config.dto";
 
 const DEFAULT_PROVIDER_ID = "db";
 

@@ -37,11 +37,7 @@ import {
     KeyUsage,
     KeyUsageType,
 } from "./entities/key-chain.entity";
-import type {
-    KmsAdapter,
-    KmsKeyRef,
-    KmsSigningAlg,
-} from "./kms/kms-adapter";
+import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "./kms/kms-adapter";
 import { KmsProviderRegistry } from "./kms/kms-provider.registry";
 
 /**

@@ -5,11 +5,7 @@ import {
     importPublicCryptoKey,
     makeKmsSigningKey,
 } from "../kms/kms-crypto-provider";
-import type {
-    KmsAdapter,
-    KmsKeyRef,
-    KmsSigningAlg,
-} from "../kms/kms-adapter";
+import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "../kms/kms-adapter";
 
 const ECDSA_P256_SIGNATURE_ALG = {
     name: "ECDSA",

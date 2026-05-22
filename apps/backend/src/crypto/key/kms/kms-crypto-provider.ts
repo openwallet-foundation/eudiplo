@@ -1,9 +1,5 @@
 import type { JWK } from "jose";
-import type {
-    KmsAdapter,
-    KmsKeyRef,
-    KmsSigningAlg,
-} from "./kms-adapter";
+import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "./kms-adapter";
 
 /**
  * Marker properties spliced onto a fake CryptoKey so that
@@ -97,9 +93,7 @@ export class KmsCryptoProvider implements Crypto {
                     };
                 }
                 const value = Reflect.get(target, prop, receiver);
-                return typeof value === "function"
-                    ? value.bind(target)
-                    : value;
+                return typeof value === "function" ? value.bind(target) : value;
             },
         });
     }
@@ -142,12 +136,8 @@ export class KmsCryptoProvider implements Crypto {
     }
 }
 
-function isKmsKey(
-    key: CryptoKey,
-): key is CryptoKey & KmsSigningKeyMarker {
-    return Boolean(
-        (key as Partial<KmsSigningKeyMarker>).__kmsAdapter,
-    );
+function isKmsKey(key: CryptoKey): key is CryptoKey & KmsSigningKeyMarker {
+    return Boolean((key as Partial<KmsSigningKeyMarker>).__kmsAdapter);
 }
 
 /**
