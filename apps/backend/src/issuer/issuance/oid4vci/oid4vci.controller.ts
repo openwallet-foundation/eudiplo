@@ -65,6 +65,7 @@ export class Oid4vciController {
                 return credentialResult.credentialResponse;
             },
             (err) => {
+                console.log(err);
                 // Re-throw if already a spec-compliant CredentialRequestException
                 if (err instanceof CredentialRequestException) {
                     throw err;
