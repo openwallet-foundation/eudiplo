@@ -66,7 +66,6 @@ import { DeferredTransactionEntity } from "./entities/deferred-transaction.entit
 import { NonceEntity } from "./entities/nonces.entity";
 import { CredentialRequestException } from "./exceptions";
 import { getHeadersFromRequest } from "./util";
-import { isValidName } from "@opentelemetry/sdk-metrics/build/src/InstrumentDescriptor";
 
 /**
  * Type alias for the OAuth2 access token payload returned by resource server verification.
