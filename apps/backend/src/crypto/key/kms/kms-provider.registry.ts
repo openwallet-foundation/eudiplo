@@ -16,6 +16,7 @@ import type { KmsProviderInfoDto } from "../dto/kms-provider-capabilities.dto";
 import type { KmsProvidersResponseDto } from "../dto/kms-providers-response.dto";
 import { AwsKmsAdapter } from "./adapters/aws-kms.adapter";
 import { DbKmsAdapter } from "./adapters/db-kms.adapter";
+import { HttpKmsAdapter } from "./adapters/http-kms.adapter";
 import { Pkcs11KmsAdapter } from "./adapters/pkcs11-kms.adapter";
 import { VaultKmsAdapter } from "./adapters/vault-kms.adapter";
 import type { KmsAdapter } from "./kms-adapter";
@@ -166,6 +167,23 @@ export class KmsProviderRegistry implements OnModuleInit {
                     pin: p.pin,
                     readOnly: p.readOnly,
                 });
+            }
+            case "http": {
+                const p = provider as Extract<
+                    KmsProviderConfigDto,
+                    { type: "http" }
+                >;
+                return new HttpKmsAdapter(
+                    {
+                        providerId: provider.id,
+                        baseUrl: p.baseUrl,
+                        auth: p.auth,
+                        keysPath: p.keysPath,
+                        healthPath: p.healthPath,
+                        canImport: p.canImport,
+                    },
+                    this.httpService,
+                );
             }
             default: {
                 const _exhaustive: never = type;

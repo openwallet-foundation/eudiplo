@@ -14,6 +14,7 @@ configured in a single `kms.json` file inside the config folder.
 | [`vault`](#vault-hashicorp-vault)   | Built-in | HashiCorp Vault Transit secrets engine | ❌ No          |
 | [`aws-kms`](#aws-kms)               | Built-in | AWS Key Management Service             | ❌ No          |
 | [`pkcs11`](#pkcs11-hsm)             | Built-in | PKCS#11 Hardware Security Module       | ❌ No          |
+| [`http`](#http-remote-kms)          | Built-in | Remote KMS microservice (HTTP/HTTPS)   | ✅ Optional    |
 
 ## Configuration
 
@@ -390,6 +391,172 @@ be protected by certified hardware (FIPS 140-2/3, Common Criteria).
 
 > ⚠️ **Only ES256 is supported.** Other curves and RSA are not enabled — open
 > an issue if you need additional algorithms.
+
+---
+
+## HTTP (Remote KMS)
+
+The `http` provider delegates **all key operations** to a remote microservice
+over HTTP/HTTPS. This is useful when:
+
+- You already operate a centralised KMS service and want EUDIPLO to use it
+  without duplicating key-management logic.
+- You need to separate the signing service from the main application for
+  compliance or deployment reasons (e.g. separate network zone).
+- You want to implement a custom HSM or key-management backend without
+  modifying EUDIPLO's source code.
+
+### Configuration
+
+Add an `http` entry to the `providers` array in `kms.json`:
+
+```json
+{
+    "defaultProvider": "remote-kms",
+    "providers": [
+        { "id": "db", "type": "db" },
+        {
+            "id": "remote-kms",
+            "type": "http",
+            "description": "Central KMS microservice",
+            "baseUrl": "${KMS_SERVICE_URL}",
+            "apiKey": "${KMS_API_KEY}"
+        }
+    ]
+}
+```
+
+| Field        | Description                                                                                                            |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| `baseUrl`    | Base URL of the remote service (no trailing slash). **Required**. Supports `${ENV_VAR}` placeholders.                  |
+| `apiKey`     | Bearer token sent as `Authorization: Bearer <apiKey>`. Optional — omit for unauthenticated internal services.          |
+| `keysPath`   | Path prefix for key endpoints. Defaults to `/keys`. Adjust if your service mounts the API elsewhere (e.g. `/v1/keys`). |
+| `healthPath` | Path of the health check endpoint. Defaults to `/health`.                                                              |
+| `canImport`  | Set to `true` to enable `POST {keysPath}/{kid}/import`. Defaults to `false`.                                           |
+
+### Remote Service API Contract
+
+The remote microservice must implement the following endpoints:
+
+#### `POST {keysPath}` — generate a key
+
+Request body:
+
+```json
+{ "kid": "my-key-id", "alg": "ES256" }
+```
+
+Response `200`:
+
+```json
+{ "publicJwk": { "kty": "EC", "crv": "P-256", "x": "...", "y": "..." } }
+```
+
+#### `POST {keysPath}/{kid}/sign` — produce a signature
+
+Request body:
+
+```json
+{ "data": "<base64-encoded bytes>", "alg": "ES256" }
+```
+
+Response `200`:
+
+```json
+{ "signature": "<base64url-encoded raw r‖s (64 bytes for P-256)>" }
+```
+
+The signature must be the raw `r || s` concatenation (not DER-encoded)
+so it is directly usable in JOSE / COSE.
+
+#### `DELETE {keysPath}/{kid}` — delete a key
+
+Response: `204 No Content`
+
+#### `GET {healthPath}` — health check
+
+Response `200`:
+
+```json
+{ "ok": true }
+```
+
+#### `POST {keysPath}/{kid}/import` — import a private JWK (optional)
+
+Enabled only when `canImport: true` is set.
+
+Request body:
+
+```json
+{ "privateJwk": { "kty": "EC", "crv": "P-256", "d": "...", ... }, "alg": "ES256" }
+```
+
+Response `200`:
+
+```json
+{ "publicJwk": { "kty": "EC", "crv": "P-256", "x": "...", "y": "..." } }
+```
+
+Return `404` or `405` if your service does not support import — EUDIPLO will
+propagate the error.
+
+### Authentication
+
+If `apiKey` is set, every request carries `Authorization: Bearer <apiKey>`.
+For mTLS or other auth mechanisms, place a sidecar proxy (e.g. Envoy, NGINX)
+in front of the KMS service and leave `apiKey` unset.
+
+### Example: minimal Express microservice
+
+Below is a minimal Node.js/Express reference implementation that stores keys
+in memory. **Do not use this in production** — it is provided as a starting
+point for building a real service.
+
+```js
+import express from 'express';
+import { generateKeyPair, exportJWK, importJWK } from 'jose';
+import { createSign } from 'node:crypto';
+
+const app = express();
+app.use(express.json());
+
+const keys = new Map(); // kid → { privateKey, publicJwk }
+
+// Generate
+app.post('/keys', async (req, res) => {
+    const { kid, alg } = req.body;
+    const { privateKey, publicKey } = await generateKeyPair('ES256');
+    const publicJwk = await exportJWK(publicKey);
+    keys.set(kid, { privateKey, publicJwk });
+    res.json({ publicJwk });
+});
+
+// Sign
+app.post('/keys/:kid/sign', async (req, res) => {
+    const entry = keys.get(req.params.kid);
+    if (!entry) return res.status(404).json({ error: 'key not found' });
+    const data = Buffer.from(req.body.data, 'base64');
+    // ... produce raw r||s using your preferred library
+    res.json({ signature: '<base64url r||s>' });
+});
+
+// Delete
+app.delete('/keys/:kid', (req, res) => {
+    keys.delete(req.params.kid);
+    res.status(204).send();
+});
+
+// Health
+app.get('/health', (_, res) => res.json({ ok: true }));
+
+app.listen(3001);
+```
+
+In this mode:
+
+- All **signing operations** are delegated to the remote service.
+- EUDIPLO only stores a stub entity (kid + cached public JWK) locally.
+- The remote service is fully responsible for protecting the private keys.
 
 ---
 
