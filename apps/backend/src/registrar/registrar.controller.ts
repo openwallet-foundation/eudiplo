@@ -5,6 +5,7 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    NotFoundException,
     Patch,
     Post,
 } from "@nestjs/common";
@@ -46,9 +47,12 @@ export class RegistrarController {
     })
     async getConfig(
         @Token() token: TokenPayload,
-    ): Promise<RegistrarConfigResponseDto | null> {
+    ): Promise<RegistrarConfigResponseDto> {
         const config = await this.registrarService.getConfig(token.entity!.id);
-        return config ? RegistrarConfigResponseDto.fromEntity(config) : null;
+        if (!config) {
+            throw new NotFoundException("No registrar configuration found");
+        }
+        return RegistrarConfigResponseDto.fromEntity(config);
     }
 
     /**
@@ -68,6 +72,11 @@ export class RegistrarController {
     @ApiResponse({
         status: 400,
         description: "Invalid credentials",
+    })
+    @ApiResponse({
+        status: 503,
+        description:
+            "Registrar OIDC endpoint unreachable — credentials could not be verified",
     })
     async createConfig(
         @Token() token: TokenPayload,
@@ -97,6 +106,11 @@ export class RegistrarController {
     @ApiResponse({
         status: 400,
         description: "Invalid credentials",
+    })
+    @ApiResponse({
+        status: 503,
+        description:
+            "Registrar OIDC endpoint unreachable — credentials could not be verified",
     })
     @ApiResponse({
         status: 404,
