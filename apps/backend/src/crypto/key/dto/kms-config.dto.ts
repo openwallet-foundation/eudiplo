@@ -197,7 +197,7 @@ const HTTP_AUTH_TYPES = [
     "oauth2-client-credentials",
     "mtls",
 ] as const;
-export type HttpAuthType = (typeof HTTP_AUTH_TYPES)[number];
+type HttpAuthType = (typeof HTTP_AUTH_TYPES)[number];
 
 class HttpAuthBaseConfigDto {
     @ApiProperty({
@@ -218,7 +218,7 @@ class HttpAuthBearerConfigDto extends HttpAuthBaseConfigDto {
     declare type: "bearer";
 
     @ApiProperty({
-        description: "Bearer token value. Supports \${ENV_VAR} placeholders.",
+        description: "Bearer token value. Supports ${ENV_VAR} placeholders.",
         example: "${KMS_API_KEY}",
     })
     @IsString()
@@ -232,14 +232,14 @@ class HttpAuthOauth2ConfigDto extends HttpAuthBaseConfigDto {
 
     @ApiProperty({
         description:
-            "Token endpoint URL (e.g. Keycloak, Entra ID). Supports \${ENV_VAR} placeholders.",
+            "Token endpoint URL (e.g. Keycloak, Entra ID). Supports ${ENV_VAR} placeholders.",
         example: "${IAM_TOKEN_URL}",
     })
     @IsUrl({ require_tld: false })
     tokenUrl!: string;
 
     @ApiProperty({
-        description: "OAuth 2.0 client ID. Supports \${ENV_VAR} placeholders.",
+        description: "OAuth 2.0 client ID. Supports ${ENV_VAR} placeholders.",
         example: "${KMS_CLIENT_ID}",
     })
     @IsString()
@@ -248,7 +248,7 @@ class HttpAuthOauth2ConfigDto extends HttpAuthBaseConfigDto {
 
     @ApiProperty({
         description:
-            "OAuth 2.0 client secret. Supports \${ENV_VAR} placeholders.",
+            "OAuth 2.0 client secret. Supports ${ENV_VAR} placeholders.",
         example: "${KMS_CLIENT_SECRET}",
     })
     @IsString()
@@ -271,7 +271,7 @@ class HttpAuthMtlsConfigDto extends HttpAuthBaseConfigDto {
 
     @ApiProperty({
         description:
-            "Absolute path to the PEM-encoded client certificate file. Supports \${ENV_VAR} placeholders.",
+            "Absolute path to the PEM-encoded client certificate file. Supports ${ENV_VAR} placeholders.",
         example: "/etc/certs/eudiplo.crt",
     })
     @IsString()
@@ -280,7 +280,7 @@ class HttpAuthMtlsConfigDto extends HttpAuthBaseConfigDto {
 
     @ApiProperty({
         description:
-            "Absolute path to the PEM-encoded private key file for the client certificate. Supports \${ENV_VAR} placeholders.",
+            "Absolute path to the PEM-encoded private key file for the client certificate. Supports ${ENV_VAR} placeholders.",
         example: "/etc/certs/eudiplo.key",
     })
     @IsString()
@@ -297,7 +297,7 @@ class HttpAuthMtlsConfigDto extends HttpAuthBaseConfigDto {
     caFile?: string;
 }
 
-export type HttpKmsAuthConfigDto =
+type HttpKmsAuthConfigDto =
     | HttpAuthNoneConfigDto
     | HttpAuthBearerConfigDto
     | HttpAuthOauth2ConfigDto
