@@ -408,7 +408,6 @@ export class KeyChainService {
         return this.importService.importKeyChain(tenantId, dto);
     }
 
-
     async rotate(tenantId: string, id: string): Promise<void> {
         const keyChain = await this.getEntity(tenantId, id);
         const hostname = this.getHostname();
