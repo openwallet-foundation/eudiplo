@@ -572,3 +572,131 @@ Available operations include listing key chains, importing key chains, rotating 
 - **Key Format**: JSON Web Key (JWK) format
 - **Certificate Support**: Optional X.509 certificates in PEM format (leaf first, then CA chain)
 - **Key Generation**: Automatic generation if no key chains exist
+
+---
+
+## Cryptographic Invariants
+
+The KMS abstraction enforces a small set of invariants across all providers:
+
+- **Private keys never leave the backend** for external providers (`vault`,
+  `aws-kms`). The `KeyChainEntity` only stores the **public** JWK for those
+  providers; signing requests are dispatched through the adapter's `sign()`
+  call. The `db` provider is the only adapter that materialises the private
+  JWK, and it does so inside the encrypted `activeJwk` column.
+- **Algorithm-aware signing**: every adapter advertises a `capabilities`
+  descriptor (`{ supportedAlgs, defaultAlg, canCreate, canImport, canDelete }`).
+  Callers may pass an explicit `alg` when signing; otherwise the adapter's
+  `defaultAlg` is used. The current shipping default is **ES256** for all
+  built-in adapters.
+- **X.509 signing via `KmsCryptoProvider`**: `@peculiar/x509` is wired through
+  a global crypto provider that delegates signature generation back to the
+  resolved KMS adapter. This means certificate creation (self-signed CA,
+  CA-signed leaves, rotation) works uniformly across `db`, `vault`, and
+  `aws-kms` without ever exposing private key material to the Node process.
+- **AWS DER → raw signature conversion**: AWS KMS returns ECDSA signatures in
+  DER encoding. The adapter converts them to the JOSE raw `r || s` format
+  (32-byte components for P-256) before returning to callers, so downstream
+  JWS/COSE consumers see a uniform signature shape regardless of backend.
+- **Vault transit auto-mount**: the Vault adapter creates the per-tenant
+  transit mount on first use. Mount creation is idempotent — HTTP **400/409**
+  responses (mount already exists) are treated as success, and a single retry
+  is performed on **404** after mount creation.
+
+## Public JWK Cache
+
+External KMS adapters (`vault`, `aws-kms`) cache resolved public JWKs in
+memory with a **5-minute TTL** (per-adapter `PublicJwkCache`). This avoids
+repeated round-trips to fetch the public key for every signing operation:
+
+- The cache key is the external key identifier (`externalKeyId` or
+  `storedJwk.kid`).
+- Entries are invalidated automatically when a key is deleted through the
+  adapter.
+- The cache is purely best-effort; cache misses fall back to the provider API.
+
+The `db` adapter does not need the cache because the public JWK is derived
+locally from the stored private JWK.
+
+## Provider Health Endpoint
+
+A read-only health probe is exposed for every registered KMS provider:
+
+```http
+GET /key-chain/providers/health
+```
+
+Response shape (per provider):
+
+```json
+[
+    {
+        "providerId": "db",
+        "type": "db",
+        "ok": true,
+        "latencyMs": 0
+    },
+    {
+        "providerId": "vault",
+        "type": "vault",
+        "ok": true,
+        "latencyMs": 12
+    },
+    {
+        "providerId": "aws",
+        "type": "aws-kms",
+        "ok": false,
+        "error": "AccessDenied: User is not authorized to perform: kms:ListKeys"
+    }
+]
+```
+
+What each adapter checks:
+
+| Adapter   | Probe                                              |
+| --------- | -------------------------------------------------- |
+| `db`      | Always `ok: true` with `latencyMs: 0` (in-process) |
+| `vault`   | `GET ${vaultUrl}/v1/sys/health`                    |
+| `aws-kms` | `ListKeys` with `Limit: 1`                         |
+
+Probes run in parallel and a failure of one provider does not affect the
+others. Use this endpoint as a readiness signal for orchestration and for
+alerting on stale credentials.
+
+---
+
+## Breaking Changes
+
+### `KeyChainEntity` JWK column rename
+
+The columns that store the active, root, and previous JWKs were renamed to
+make their semantics explicit:
+
+| Old column    | New column    |
+| ------------- | ------------- |
+| `activeKey`   | `activeJwk`   |
+| `rootKey`     | `rootJwk`     |
+| `previousKey` | `previousJwk` |
+
+The columns continue to hold a single encrypted JWK each (private JWK for the
+`db` provider, public JWK for external providers). Migration
+`1765000000000-RenameKeyChainActiveKeyToActiveJwk` performs the rename in
+place using `ALTER TABLE ... RENAME COLUMN`, which is supported by both
+PostgreSQL and SQLite (≥ 3.25). No data transformation is required.
+
+Code that reads these columns directly (ad-hoc SQL, dashboards, scripts) must
+be updated. Application code uses the TypeORM entity and is unaffected after
+upgrade.
+
+### `key_chain.externalKeyId` integrity constraint
+
+Migration `1764000000000-AddKmsExternalKeyIdCheck` enforces that any key chain
+backed by a non-`db` KMS provider has a non-null `externalKeyId`:
+
+- PostgreSQL: real `CHECK` constraint
+  (`kmsProvider = 'db' OR externalKeyId IS NOT NULL`).
+- SQLite: equivalent `BEFORE INSERT`/`BEFORE UPDATE` triggers that abort the
+  write.
+
+This prevents orphaned external KMS references where the backend would not
+know which Vault/AWS key to sign with.
