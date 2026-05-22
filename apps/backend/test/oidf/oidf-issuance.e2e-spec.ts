@@ -10,7 +10,7 @@ import { X509CertificateGenerator } from "@peculiar/x509";
 import * as axios from "axios";
 import { exportJWK, generateKeyPair } from "jose";
 import { Logger } from "nestjs-pino";
-import { beforeAll, describe, expect, test } from "vitest";
+import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { AppModule } from "../../src/app.module";
 import {
     FlowType,
@@ -233,11 +233,11 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
             vci_authorization_code_flow_variant: "wallet_initiated",
         },
         {
-            credential_format: "mso_mdoc",
+            credential_format: "mdoc",
             vci_authorization_code_flow_variant: "issuer_initiated",
         },
         {
-            credential_format: "mso_mdoc",
+            credential_format: "mdoc",
             vci_authorization_code_flow_variant: "wallet_initiated",
         },
     ] as const;
@@ -253,6 +253,7 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         planId: string;
         variant: IssuerVariant;
     }> = [];
+    const executedPlanIds = new Set<string>();
     const unavailableVariantCombinations: Array<{
         variant: IssuerVariant;
         reason: string;
@@ -267,6 +268,14 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
     });
 
     const oidfSuite = new OIDFSuite(OIDF_URL, OIDF_DEMO_TOKEN);
+    const oidfSuiteStartTest = oidfSuite.startTest.bind(oidfSuite);
+    oidfSuite.startTest = async (
+        planId: string,
+        testName: string,
+    ): Promise<TestInstance> => {
+        executedPlanIds.add(planId);
+        return oidfSuiteStartTest(planId, testName);
+    };
 
     // Keep this list in sync with executed tests below.
     const COVERED_ISSUER_MODULES = [
@@ -620,6 +629,13 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
 
     afterAll(async () => {
         for (const { planId, variant } of createdPlans) {
+            if (!executedPlanIds.has(planId)) {
+                console.log(
+                    `Skipping OIDF log export for matrix-only plan ${planId} (${variant.credential_format}/${variant.vci_authorization_code_flow_variant})`,
+                );
+                continue;
+            }
+
             const outputDir = resolve(
                 __dirname,
                 `../../../../tmp/oidf-logs/${planId}`,
