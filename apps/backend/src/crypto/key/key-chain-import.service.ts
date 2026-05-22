@@ -138,7 +138,7 @@ export class KeyChainImportService {
             activeCertificate,
             externalKeyId: activeMat.ref.externalKeyId,
             rotationEnabled: false,
-        } as KeyChainEntity);
+        });
 
         this.logger.log(
             `Imported key chain ${id} for tenant ${tenantId} (usage: ${dto.usageType}, provider: ${adapter.providerId})`,
@@ -214,7 +214,7 @@ export class KeyChainImportService {
             rotationEnabled: true,
             rotationIntervalDays,
             certValidityDays,
-        } as KeyChainEntity);
+        });
 
         this.logger.log(
             `Imported key chain ${id} with rotation for tenant ${tenantId} (usage: ${dto.usageType}, provider: ${adapter.providerId})`,
