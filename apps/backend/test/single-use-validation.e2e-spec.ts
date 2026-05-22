@@ -11,7 +11,6 @@ import request from "supertest";
 import { App } from "supertest/types";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { StatusListService } from "../src/issuer/lifecycle/status/status-list.service";
-import { SessionService } from "../src/session/session.service";
 import { ResponseType } from "../src/verifier/oid4vp/dto/presentation-request.dto";
 import {
     callbacks,
@@ -29,13 +28,11 @@ describe("Single-Use Validation (Issue #503) - OID4VCI", () => {
     let app: INestApplication<App>;
     let authToken: string;
     let ctx: IssuanceTestContext;
-    let sessionService: SessionService;
 
     beforeAll(async () => {
         ctx = await setupIssuanceTestApp();
         app = ctx.app;
         authToken = ctx.authToken;
-        sessionService = app.get(SessionService);
     });
 
     afterAll(async () => {
@@ -79,20 +76,14 @@ describe("Single-Use Validation (Issue #503) - OID4VCI", () => {
             });
         expect(tokenResponse.accessTokenResponse.access_token).toBeDefined();
 
-        // Session is consumed on credential request, not on token exchange
+        // Session is consumed during token exchange
         const sessionResponse = await request(app.getHttpServer())
             .get(`/session/${sessionId}`)
             .trustLocalhost()
             .set("Authorization", `Bearer ${authToken}`)
             .expect(200);
-        expect(sessionResponse.body.consumed).toBe(false);
-        expect(sessionResponse.body.consumedAt).toBeFalsy();
-
-        // Simulate consumed state (normally set by successful credential request)
-        await sessionService.add(sessionId, {
-            consumed: true,
-            consumedAt: new Date(),
-        });
+        expect(sessionResponse.body.consumed).toBe(true);
+        expect(sessionResponse.body.consumedAt).toBeDefined();
 
         // Second token exchange with the same code should fail
         const tokenEndpoint = issuerMetadata.authorizationServers?.[0]

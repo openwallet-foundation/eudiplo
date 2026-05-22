@@ -59,7 +59,7 @@ export const BACKEND_TEST_CA_PATH = resolve(__dirname, "../cert.pem");
  */
 export const OIDF_HTTPD_CA_PATH = OIDF_HTTPD_CA_HOST_PATH;
 
-const TAG = "release-v5.1.42";
+const TAG = "release-v5.1.43";
 
 const FAPI_IMAGE = `registry.gitlab.com/openid/conformance-suite:${TAG}`;
 const HTTP_IMAGE = `registry.gitlab.com/openid/conformance-suite/nginx:${TAG}`;
