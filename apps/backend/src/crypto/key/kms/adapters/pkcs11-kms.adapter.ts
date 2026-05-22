@@ -278,9 +278,7 @@ export class Pkcs11KmsAdapter implements KmsAdapter {
         c: Pkcs11Constants;
         session: Buffer;
     }> {
-        if (!this.initPromise) {
-            this.initPromise = this.initialise();
-        }
+        this.initPromise ??= this.initialise();
         await this.initPromise;
         if (!this.pkcs11 || !this.constants || !this.session) {
             throw new Error(
@@ -472,8 +470,7 @@ function toConstants(mod: Pkcs11Module): Pkcs11Constants {
 let pkcs11ModulePromise: Promise<Pkcs11Module> | undefined;
 
 async function loadPkcs11(): Promise<Pkcs11Module> {
-    if (!pkcs11ModulePromise) {
-        pkcs11ModulePromise = (async () => {
+    pkcs11ModulePromise ??= (async () => {
             try {
                 const mod = (await import("pkcs11js")) as unknown as
                     | Pkcs11Module
@@ -485,6 +482,5 @@ async function loadPkcs11(): Promise<Pkcs11Module> {
                 );
             }
         })();
-    }
     return pkcs11ModulePromise;
 }

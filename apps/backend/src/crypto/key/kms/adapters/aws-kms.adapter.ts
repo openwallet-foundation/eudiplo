@@ -1,6 +1,5 @@
 import {
-    CreateKeyCommand,
-    DeleteAliasCommand,
+    CreateKeyCommand,    
     type DescribeKeyCommandOutput,
     GetPublicKeyCommand,
     type KMSClient,
@@ -233,10 +232,6 @@ export class AwsKmsAdapter implements KmsAdapter {
         }
     }
 }
-
-// Suppress unused-import lint for DeleteAliasCommand (kept for future
-// alias support — see scheduleKeyDeletion for primary delete path).
-void DeleteAliasCommand;
 
 /**
  * Convert an ASN.1 DER-encoded ECDSA-Sig-Value (`SEQUENCE { r, s }`)
