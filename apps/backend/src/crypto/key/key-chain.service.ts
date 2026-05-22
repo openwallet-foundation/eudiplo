@@ -1,26 +1,12 @@
-import { readFileSync } from "node:fs";
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as x509 from "@peculiar/x509";
-import { Signer } from "@sd-jwt/types";
-import { plainToClass } from "class-transformer";
-import {
-    exportSPKI,
-    importJWK,
-    JWK,
-    JWSHeaderParameters,
-    JWTPayload,
-} from "jose";
-import { Span } from "nestjs-otel";
+import type { Signer } from "@sd-jwt/types";
+import type { JWK, JWSHeaderParameters, JWTPayload } from "jose";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
 import { TenantEntity } from "../../auth/tenant/entitites/tenant.entity";
-import { ConfigImportService } from "../../shared/utils/config-import/config-import.service";
-import {
-    ConfigImportOrchestratorService,
-    ImportPhase,
-} from "../../shared/utils/config-import/config-import-orchestrator.service";
 import { CertificateBuilderService } from "./cert/certificate-builder.service";
 import { KeyChainCreateDto, KeyChainType } from "./dto/key-chain-create.dto";
 import { KeyChainExportDto } from "./dto/key-chain-export.dto";
@@ -39,6 +25,8 @@ import {
 } from "./entities/key-chain.entity";
 import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "./kms/kms-adapter";
 import { KmsProviderRegistry } from "./kms/kms-provider.registry";
+import { KeyChainImportService } from "./key-chain-import.service";
+import { KeyChainSigningService } from "./key-chain-signing.service";
 
 /**
  * KeyChainService manages the unified key chain model.
@@ -58,17 +46,11 @@ export class KeyChainService {
         @InjectRepository(TenantEntity)
         private readonly tenantRepository: Repository<TenantEntity>,
         private readonly configService: ConfigService,
-        private readonly configImportService: ConfigImportService,
         private readonly kmsRegistry: KmsProviderRegistry,
         private readonly certBuilder: CertificateBuilderService,
-        configImportOrchestrator: ConfigImportOrchestratorService,
-    ) {
-        configImportOrchestrator.register(
-            "key-chains",
-            ImportPhase.CORE,
-            (tenantId) => this.importForTenant(tenantId),
-        );
-    }
+        private readonly signingService: KeyChainSigningService,
+        private readonly importService: KeyChainImportService,
+    ) {}
 
     /** Return registered KMS providers (delegated to the registry). */
     getProviders(): KmsProvidersResponseDto {
@@ -419,181 +401,13 @@ export class KeyChainService {
 
     // ─────────────────────── config import ───────────────────────
 
-    async importForTenant(tenantId: string): Promise<void> {
-        await this.configImportService.importConfigsForTenant<KeyChainImportDto>(
-            tenantId,
-            {
-                subfolder: "key-chains",
-                fileExtension: ".json",
-                validationClass: KeyChainImportDto,
-                resourceType: "key-chain",
-                loadData: (filePath) => {
-                    const payload = JSON.parse(readFileSync(filePath, "utf8"));
-                    return plainToClass(KeyChainImportDto, payload);
-                },
-                checkExists: async (tid, data) => {
-                    return await this.keyChainRepository
-                        .count({
-                            where: { tenantId: tid, id: data.id },
-                        })
-                        .then((count) => count > 0);
-                },
-                processItem: async (tid, config) => {
-                    await this.importKeyChain(tid, config);
-                },
-            },
-        );
-    }
-
     async importKeyChain(
         tenantId: string,
         dto: KeyChainImportDto,
     ): Promise<string> {
-        const id = dto.id || v4();
-        const tenant = await this.tenantRepository.findOneByOrFail({
-            id: tenantId,
-        });
-        const hostname = this.getHostname();
-
-        const privateKey: JWK = { ...dto.key };
-        if (!privateKey.kid) {
-            privateKey.kid = `${id}-active`;
-        }
-        if (!privateKey.alg) {
-            privateKey.alg = "ES256";
-        }
-
-        const adapter = this.kmsRegistry.resolve(dto.kmsProvider);
-
-        if (dto.rotationPolicy?.enabled) {
-            return this.importKeyChainWithRotation(
-                id,
-                tenantId,
-                tenant.name,
-                hostname,
-                privateKey,
-                adapter,
-                dto,
-            );
-        }
-
-        const activeMat = await adapter.importKey({
-            kid: privateKey.kid,
-            privateJwk: privateKey,
-        });
-
-        let activeCertificate: string;
-        if (dto.crt && dto.crt.length > 0) {
-            activeCertificate = dto.crt.join("\n");
-        } else {
-            const now = new Date();
-            const notAfter = new Date(
-                now.getTime() + 365 * 24 * 60 * 60 * 1000,
-            );
-            activeCertificate = await this.certBuilder.createSelfSignedCert(
-                adapter,
-                activeMat.ref,
-                tenant.name,
-                hostname,
-                now,
-                notAfter,
-            );
-        }
-
-        await this.keyChainRepository.save({
-            id,
-            tenantId,
-            usageType: dto.usageType,
-            usage: KeyUsage.Sign,
-            description: dto.description,
-            kmsProvider: adapter.providerId,
-            activeJwk: this.storedKeyForEntity(adapter, activeMat.ref),
-            activeCertificate,
-            externalKeyId: activeMat.ref.externalKeyId,
-            rotationEnabled: false,
-        } as KeyChainEntity);
-
-        this.logger.log(
-            `Imported key chain ${id} for tenant ${tenantId} (usage: ${dto.usageType}, provider: ${adapter.providerId})`,
-        );
-        return id;
+        return this.importService.importKeyChain(tenantId, dto);
     }
 
-    private async importKeyChainWithRotation(
-        id: string,
-        tenantId: string,
-        subjectCN: string,
-        hostname: string,
-        rootKeyJwk: JWK,
-        adapter: KmsAdapter,
-        dto: KeyChainImportDto,
-    ): Promise<string> {
-        const now = new Date();
-        const certValidityDays = dto.rotationPolicy?.certValidityDays || 365;
-        const rotationIntervalDays = dto.rotationPolicy?.intervalDays || 90;
-        const notAfter = new Date(
-            now.getTime() + certValidityDays * 24 * 60 * 60 * 1000,
-        );
-
-        rootKeyJwk.kid = rootKeyJwk.kid || `${id}-root`;
-        const rootMat = await adapter.importKey({
-            kid: rootKeyJwk.kid,
-            privateJwk: rootKeyJwk,
-        });
-
-        let rootCertificate: string;
-        if (dto.crt && dto.crt.length > 0) {
-            rootCertificate = dto.crt[0];
-        } else {
-            const rootNotAfter = new Date(
-                now.getTime() + 10 * 365 * 24 * 60 * 60 * 1000,
-            );
-            rootCertificate = await this.certBuilder.createSelfSignedCaCert(
-                adapter,
-                rootMat.ref,
-                `${subjectCN} Root CA`,
-                hostname,
-                now,
-                rootNotAfter,
-            );
-        }
-
-        const activeMat = await adapter.generateKey({
-            kid: `${id}-active-${Date.now()}`,
-        });
-        const { chain } = await this.certBuilder.createCaSignedCert({
-            caAdapter: adapter,
-            caRef: rootMat.ref,
-            caCertPem: rootCertificate,
-            subjectPublicJwk: activeMat.ref.publicJwk,
-            subjectCN,
-            hostname,
-            notBefore: now,
-            notAfter,
-        });
-
-        await this.keyChainRepository.save({
-            id,
-            tenantId,
-            usageType: dto.usageType,
-            usage: KeyUsage.Sign,
-            description: dto.description,
-            kmsProvider: adapter.providerId,
-            rootJwk: this.storedKeyForEntity(adapter, rootMat.ref),
-            rootCertificate,
-            activeJwk: this.storedKeyForEntity(adapter, activeMat.ref),
-            activeCertificate: chain.join("\n"),
-            externalKeyId: activeMat.ref.externalKeyId,
-            rotationEnabled: true,
-            rotationIntervalDays,
-            certValidityDays,
-        } as KeyChainEntity);
-
-        this.logger.log(
-            `Imported key chain ${id} with rotation for tenant ${tenantId} (usage: ${dto.usageType}, provider: ${adapter.providerId})`,
-        );
-        return id;
-    }
 
     async rotate(tenantId: string, id: string): Promise<void> {
         const keyChain = await this.getEntity(tenantId, id);
@@ -682,56 +496,20 @@ export class KeyChainService {
     }
 
     // ─────────────────────────────────────────────────────────
-    // SIGNING OPERATIONS
+    // SIGNING OPERATIONS — delegated to KeyChainSigningService
     // ─────────────────────────────────────────────────────────
 
     async signer(tenantId: string, keyId?: string): Promise<Signer> {
-        const keyChain = keyId
-            ? await this.getEntity(tenantId, keyId)
-            : await this.getFirstKeyChain(tenantId);
-
-        const adapter = this.kmsRegistry.resolve(keyChain.kmsProvider);
-        const ref = this.refFromEntity(keyChain);
-
-        return async (data: string): Promise<string> => {
-            const signature = await adapter.sign(
-                ref,
-                new TextEncoder().encode(data),
-            );
-            return Buffer.from(signature).toString("base64url");
-        };
+        return this.signingService.signer(tenantId, keyId);
     }
 
-    @Span("keychain.signJWT")
     async signJWT(
         payload: JWTPayload,
         header: JWSHeaderParameters,
         tenantId: string,
         keyId?: string,
     ): Promise<string> {
-        const keyChain = keyId
-            ? await this.getEntity(tenantId, keyId)
-            : await this.getFirstKeyChain(tenantId);
-
-        const adapter = this.kmsRegistry.resolve(keyChain.kmsProvider);
-        const ref = this.refFromEntity(keyChain);
-
-        const { b64: _b64, ...compatibleHeader } = header;
-        const jwtHeader = {
-            ...compatibleHeader,
-            alg: header.alg || "ES256",
-            kid: keyChain.activeJwk.kid,
-        };
-
-        const headerB64 = base64url(JSON.stringify(jwtHeader));
-        const payloadB64 = base64url(JSON.stringify(payload));
-        const signingInput = `${headerB64}.${payloadB64}`;
-        const sig = await adapter.sign(
-            ref,
-            new TextEncoder().encode(signingInput),
-        );
-        const sigB64 = Buffer.from(sig).toString("base64url");
-        return `${signingInput}.${sigB64}`;
+        return this.signingService.signJWT(payload, header, tenantId, keyId);
     }
 
     getPublicKey(type: "jwk", tenantId: string, keyId?: string): Promise<JWK>;
@@ -740,42 +518,19 @@ export class KeyChainService {
         tenantId: string,
         keyId?: string,
     ): Promise<string>;
-    async getPublicKey(
+    getPublicKey(
         type: "pem" | "jwk",
         tenantId: string,
         keyId?: string,
     ): Promise<JWK | string> {
-        const keyChain = keyId
-            ? await this.getEntity(tenantId, keyId)
-            : await this.getFirstKeyChain(tenantId);
-
-        const publicJwk = this.getPublicJwk(keyChain.activeJwk);
-
         if (type === "jwk") {
-            return publicJwk;
+            return this.signingService.getPublicKey("jwk", tenantId, keyId);
         }
-
-        const publicKey = await importJWK(publicJwk, "ES256");
-        return exportSPKI(publicKey as CryptoKey);
+        return this.signingService.getPublicKey("pem", tenantId, keyId);
     }
 
     async getKid(tenantId: string): Promise<string> {
-        const keyChain = await this.getFirstKeyChain(tenantId);
-        return keyChain.id;
-    }
-
-    private async getFirstKeyChain(tenantId: string): Promise<KeyChainEntity> {
-        const keyChain = await this.keyChainRepository.findOne({
-            where: { tenantId, usage: KeyUsage.Sign },
-        });
-
-        if (!keyChain) {
-            throw new NotFoundException(
-                `No key chain found for tenant ${tenantId}`,
-            );
-        }
-
-        return keyChain;
+        return this.signingService.getKid(tenantId);
     }
 
     // ─────────────────────────────────────────────────────────
@@ -939,8 +694,4 @@ export class KeyChainService {
                 keyChain.rotationIntervalDays * 24 * 60 * 60 * 1000,
         );
     }
-}
-
-function base64url(input: string): string {
-    return Buffer.from(input, "utf8").toString("base64url");
 }
