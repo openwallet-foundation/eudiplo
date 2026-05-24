@@ -1426,7 +1426,7 @@ export type KeyChainEntity = {
      * This field stores the provider-specific key reference for the active signing key.
      */
     externalKeyId?: string;
-    rootKey?: {
+    rootJwk?: {
         [key: string]: unknown;
     };
     /**
@@ -1434,7 +1434,7 @@ export type KeyChainEntity = {
      * Self-signed certificate for the root CA key.
      */
     rootCertificate?: string;
-    activeKey: {
+    activeJwk: {
         [key: string]: unknown;
     };
     /**
@@ -1455,7 +1455,7 @@ export type KeyChainEntity = {
      * Timestamp of when the key was last rotated.
      */
     lastRotatedAt?: string;
-    previousKey?: {
+    previousJwk?: {
         [key: string]: unknown;
     };
     /**
@@ -2661,6 +2661,14 @@ export type KmsProviderCapabilitiesDto = {
      * Whether the provider supports deleting keys.
      */
     canDelete: boolean;
+    /**
+     * Signing algorithms supported by the provider.
+     */
+    supportedAlgs: Array<string>;
+    /**
+     * Default signing algorithm used when caller does not specify one.
+     */
+    defaultAlg: string;
 };
 
 export type KmsProviderInfoDto = {
@@ -4639,6 +4647,10 @@ export type RegistrarControllerUpdateConfigErrors = {
      * No registrar configuration found
      */
     404: unknown;
+    /**
+     * Registrar OIDC endpoint unreachable — credentials could not be verified
+     */
+    503: unknown;
 };
 
 export type RegistrarControllerUpdateConfigResponses = {
@@ -4662,6 +4674,10 @@ export type RegistrarControllerCreateConfigErrors = {
      * Invalid credentials
      */
     400: unknown;
+    /**
+     * Registrar OIDC endpoint unreachable — credentials could not be verified
+     */
+    503: unknown;
 };
 
 export type RegistrarControllerCreateConfigResponses = {
@@ -4790,6 +4806,20 @@ export type KeyChainControllerGetProvidersResponses = {
 };
 
 export type KeyChainControllerGetProvidersResponse = KeyChainControllerGetProvidersResponses[keyof KeyChainControllerGetProvidersResponses];
+
+export type KeyChainControllerGetProvidersHealthData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/key-chain/providers/health';
+};
+
+export type KeyChainControllerGetProvidersHealthResponses = {
+    /**
+     * Per-provider health result (ok, latencyMs, optional error).
+     */
+    200: unknown;
+};
 
 export type KeyChainControllerGetAllData = {
     body?: never;

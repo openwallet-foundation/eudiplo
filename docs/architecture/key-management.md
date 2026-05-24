@@ -13,6 +13,8 @@ configured in a single `kms.json` file inside the config folder.
 | [`db`](#database-key-management-db) | Built-in | Keys stored encrypted in the database  | ✅ Yes         |
 | [`vault`](#vault-hashicorp-vault)   | Built-in | HashiCorp Vault Transit secrets engine | ❌ No          |
 | [`aws-kms`](#aws-kms)               | Built-in | AWS Key Management Service             | ❌ No          |
+| [`pkcs11`](#pkcs11-hsm)             | Built-in | PKCS#11 Hardware Security Module       | ❌ No          |
+| [`http`](#http-remote-kms)          | Built-in | Remote KMS microservice (HTTP/HTTPS)   | ✅ Optional    |
 
 ## Configuration
 
@@ -51,7 +53,7 @@ Each provider entry has:
 | Field         | Description                                                              |
 | ------------- | ------------------------------------------------------------------------ |
 | `id`          | Unique identifier for the provider instance (used when generating keys). |
-| `type`        | Adapter type: `db`, `vault`, or `aws-kms`.                               |
+| `type`        | Adapter type: `db`, `vault`, `aws-kms`, or `pkcs11`.                     |
 | `description` | Optional human-readable description.                                     |
 | ...           | Additional type-specific configuration fields.                           |
 
@@ -245,6 +247,316 @@ HSM-backed keys, audit logging via CloudTrail, and fine-grained access control.
 
 > ⚠️ **Note**: AWS KMS does not support importing EC keys. Use `create` to
 > generate new keys directly in AWS KMS.
+
+---
+
+## PKCS#11 (HSM)
+
+To use a **Hardware Security Module** (HSM) or any PKCS#11-compatible token
+(YubiHSM 2, Thales Luna, AWS CloudHSM, SoftHSM2, Nitrokey HSM, …) for key
+management, add a `pkcs11` entry to the `providers` array in `kms.json`:
+
+```json
+{
+    "defaultProvider": "hsm",
+    "providers": [
+        { "id": "db", "type": "db" },
+        {
+            "id": "hsm",
+            "type": "pkcs11",
+            "description": "Production HSM",
+            "library": "/usr/lib/softhsm/libsofthsm2.so",
+            "slot": 0,
+            "pin": "${HSM_PIN}",
+            "readOnly": false
+        }
+    ]
+}
+```
+
+| Field      | Description                                                                                                                                                     |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `library`  | Absolute path to the vendor-provided PKCS#11 shared library (`.so` on Linux, `.dylib` on macOS, `.dll` on Windows). **Required**.                               |
+| `slot`     | Either the numeric slot index (e.g. `0`) **or** a token label string (e.g. `"eudiplo-token"`) — the adapter resolves labels via `C_GetTokenInfo`. **Required**. |
+| `pin`      | User PIN used for `C_Login(CKU_USER, …)`. Use environment-variable placeholders to keep it out of the config file. **Required**.                                |
+| `readOnly` | If `true`, the session is opened without `CKF_RW_SESSION`. Defaults to `false`. Set to `true` only when you do not need to create/delete keys.                  |
+
+### Native Dependency
+
+The adapter is built on top of [`pkcs11js`](https://www.npmjs.com/package/pkcs11js),
+which is a native (N-API) Node.js binding. It is part of the regular backend
+dependencies and is built automatically on `pnpm install` (the package is
+listed under `allowBuilds` / `onlyBuiltDependencies` in `pnpm-workspace.yaml`).
+
+You still need the **vendor's PKCS#11 library** (`.so` / `.dylib` / `.dll`)
+installed on the host where the backend runs, and the path provided via the
+`library` field must be readable by the backend process.
+
+### Key Creation
+
+Keys are generated **inside the HSM** using `C_GenerateKeyPair` with:
+
+- Mechanism: `CKM_EC_KEY_PAIR_GEN`
+- Curve: **P-256 / secp256r1** (only `ES256` is supported)
+- Private key attributes: `CKA_SENSITIVE=true`, `CKA_EXTRACTABLE=false`,
+  `CKA_PRIVATE=true`, `CKA_SIGN=true`
+- Public key attributes: `CKA_VERIFY=true`, `CKA_TOKEN=true`
+- `CKA_LABEL` is set to the EUDIPLO key ID (`kid`) on both objects so the
+  adapter can look them up later.
+
+The public key is read back from the HSM (`CKA_EC_POINT`), wrapped into a P-256
+SPKI DER, and exported as a JWK that is cached in the database for fast access.
+
+### Signing
+
+For each signature the adapter:
+
+1. Computes the SHA-256 digest of the payload in Node.
+2. Looks up the private key object by `CKA_LABEL = kid` (`C_FindObjects`).
+3. Calls `C_SignInit` + `C_Sign` with mechanism `CKM_ECDSA` and the digest.
+4. Returns the raw `r || s` signature (64 bytes) directly to the JOSE layer.
+
+The **private key never leaves the HSM**. EUDIPLO only stores a stub entity
+(label + cached public JWK) in the database for tracking.
+
+### Key Deletion
+
+`deleteKey` calls `C_DestroyObject` on both the private and public key objects
+matched by `CKA_LABEL`. Per-object errors are swallowed so a partial cleanup
+still removes what it can.
+
+### Import
+
+Importing existing key material is **not supported**. HSM-backed keys must be
+generated inside the HSM. Use `create` to provision new keys.
+
+### Health
+
+The `health()` endpoint opens (or reuses) the session and reports latency. A
+failing PIN, missing library, or unavailable slot is surfaced as `{ ok: false,
+error }`.
+
+### Examples
+
+**SoftHSM2** (local dev / CI):
+
+```bash
+softhsm2-util --init-token --slot 0 \
+    --label eudiplo --pin 1234 --so-pin 1234
+```
+
+```json
+{
+    "id": "softhsm",
+    "type": "pkcs11",
+    "library": "/usr/lib/softhsm/libsofthsm2.so",
+    "slot": "eudiplo",
+    "pin": "${SOFTHSM_PIN}"
+}
+```
+
+**YubiHSM 2** (via yubihsm-pkcs11):
+
+```json
+{
+    "id": "yubihsm",
+    "type": "pkcs11",
+    "library": "/usr/local/lib/pkcs11/yubihsm_pkcs11.dylib",
+    "slot": 0,
+    "pin": "${YUBIHSM_PIN}"
+}
+```
+
+**AWS CloudHSM** (via the CloudHSM PKCS#11 SDK):
+
+```json
+{
+    "id": "cloudhsm",
+    "type": "pkcs11",
+    "library": "/opt/cloudhsm/lib/libcloudhsm_pkcs11.so",
+    "slot": 0,
+    "pin": "${CLOUDHSM_USER}:${CLOUDHSM_PASSWORD}"
+}
+```
+
+In this mode:
+
+- All **signing operations** are delegated to the HSM via PKCS#11.
+- The **private key never leaves** the HSM.
+- A **stub key entity** is stored in the database (label + cached public JWK).
+- Access is controlled by the HSM itself (PIN, partitions, slot policies).
+
+PKCS#11 is well-suited for regulated production environments where keys must
+be protected by certified hardware (FIPS 140-2/3, Common Criteria).
+
+> ⚠️ **Only ES256 is supported.** Other curves and RSA are not enabled — open
+> an issue if you need additional algorithms.
+
+---
+
+## HTTP (Remote KMS)
+
+The `http` provider delegates **all key operations** to a remote microservice
+over HTTP/HTTPS. This is useful when:
+
+- You already operate a centralised KMS service and want EUDIPLO to use it
+  without duplicating key-management logic.
+- You need to separate the signing service from the main application for
+  compliance or deployment reasons (e.g. separate network zone).
+- You want to implement a custom HSM or key-management backend without
+  modifying EUDIPLO's source code.
+
+### Configuration
+
+Add an `http` entry to the `providers` array in `kms.json`:
+
+```json
+{
+    "defaultProvider": "remote-kms",
+    "providers": [
+        { "id": "db", "type": "db" },
+        {
+            "id": "remote-kms",
+            "type": "http",
+            "description": "Central KMS microservice",
+            "baseUrl": "${KMS_SERVICE_URL}",
+            "apiKey": "${KMS_API_KEY}"
+        }
+    ]
+}
+```
+
+| Field        | Description                                                                                                            |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| `baseUrl`    | Base URL of the remote service (no trailing slash). **Required**. Supports `${ENV_VAR}` placeholders.                  |
+| `apiKey`     | Bearer token sent as `Authorization: Bearer <apiKey>`. Optional — omit for unauthenticated internal services.          |
+| `keysPath`   | Path prefix for key endpoints. Defaults to `/keys`. Adjust if your service mounts the API elsewhere (e.g. `/v1/keys`). |
+| `healthPath` | Path of the health check endpoint. Defaults to `/health`.                                                              |
+| `canImport`  | Set to `true` to enable `POST {keysPath}/{kid}/import`. Defaults to `false`.                                           |
+
+### Remote Service API Contract
+
+The remote microservice must implement the following endpoints:
+
+#### `POST {keysPath}` — generate a key
+
+Request body:
+
+```json
+{ "kid": "my-key-id", "alg": "ES256" }
+```
+
+Response `200`:
+
+```json
+{ "publicJwk": { "kty": "EC", "crv": "P-256", "x": "...", "y": "..." } }
+```
+
+#### `POST {keysPath}/{kid}/sign` — produce a signature
+
+Request body:
+
+```json
+{ "data": "<base64-encoded bytes>", "alg": "ES256" }
+```
+
+Response `200`:
+
+```json
+{ "signature": "<base64url-encoded raw r‖s (64 bytes for P-256)>" }
+```
+
+The signature must be the raw `r || s` concatenation (not DER-encoded)
+so it is directly usable in JOSE / COSE.
+
+#### `DELETE {keysPath}/{kid}` — delete a key
+
+Response: `204 No Content`
+
+#### `GET {healthPath}` — health check
+
+Response `200`:
+
+```json
+{ "ok": true }
+```
+
+#### `POST {keysPath}/{kid}/import` — import a private JWK (optional)
+
+Enabled only when `canImport: true` is set.
+
+Request body:
+
+```json
+{ "privateJwk": { "kty": "EC", "crv": "P-256", "d": "...", ... }, "alg": "ES256" }
+```
+
+Response `200`:
+
+```json
+{ "publicJwk": { "kty": "EC", "crv": "P-256", "x": "...", "y": "..." } }
+```
+
+Return `404` or `405` if your service does not support import — EUDIPLO will
+propagate the error.
+
+### Authentication
+
+If `apiKey` is set, every request carries `Authorization: Bearer <apiKey>`.
+For mTLS or other auth mechanisms, place a sidecar proxy (e.g. Envoy, NGINX)
+in front of the KMS service and leave `apiKey` unset.
+
+### Example: minimal Express microservice
+
+Below is a minimal Node.js/Express reference implementation that stores keys
+in memory. **Do not use this in production** — it is provided as a starting
+point for building a real service.
+
+```js
+import express from 'express';
+import { generateKeyPair, exportJWK, importJWK } from 'jose';
+import { createSign } from 'node:crypto';
+
+const app = express();
+app.use(express.json());
+
+const keys = new Map(); // kid → { privateKey, publicJwk }
+
+// Generate
+app.post('/keys', async (req, res) => {
+    const { kid, alg } = req.body;
+    const { privateKey, publicKey } = await generateKeyPair('ES256');
+    const publicJwk = await exportJWK(publicKey);
+    keys.set(kid, { privateKey, publicJwk });
+    res.json({ publicJwk });
+});
+
+// Sign
+app.post('/keys/:kid/sign', async (req, res) => {
+    const entry = keys.get(req.params.kid);
+    if (!entry) return res.status(404).json({ error: 'key not found' });
+    const data = Buffer.from(req.body.data, 'base64');
+    // ... produce raw r||s using your preferred library
+    res.json({ signature: '<base64url r||s>' });
+});
+
+// Delete
+app.delete('/keys/:kid', (req, res) => {
+    keys.delete(req.params.kid);
+    res.status(204).send();
+});
+
+// Health
+app.get('/health', (_, res) => res.json({ ok: true }));
+
+app.listen(3001);
+```
+
+In this mode:
+
+- All **signing operations** are delegated to the remote service.
+- EUDIPLO only stores a stub entity (kid + cached public JWK) locally.
+- The remote service is fully responsible for protecting the private keys.
 
 ---
 
@@ -572,3 +884,93 @@ Available operations include listing key chains, importing key chains, rotating 
 - **Key Format**: JSON Web Key (JWK) format
 - **Certificate Support**: Optional X.509 certificates in PEM format (leaf first, then CA chain)
 - **Key Generation**: Automatic generation if no key chains exist
+
+---
+
+## Cryptographic Invariants
+
+The KMS abstraction enforces a small set of invariants across all providers:
+
+- **Private keys never leave the backend** for external providers (`vault`,
+  `aws-kms`). The `KeyChainEntity` only stores the **public** JWK for those
+  providers; signing requests are dispatched through the adapter's `sign()`
+  call. The `db` provider is the only adapter that materialises the private
+  JWK, and it does so inside the encrypted `activeJwk` column.
+- **Algorithm-aware signing**: every adapter advertises a `capabilities`
+  descriptor (`{ supportedAlgs, defaultAlg, canCreate, canImport, canDelete }`).
+  Callers may pass an explicit `alg` when signing; otherwise the adapter's
+  `defaultAlg` is used. The current shipping default is **ES256** for all
+  built-in adapters.
+- **X.509 signing via `KmsCryptoProvider`**: `@peculiar/x509` is wired through
+  a global crypto provider that delegates signature generation back to the
+  resolved KMS adapter. This means certificate creation (self-signed CA,
+  CA-signed leaves, rotation) works uniformly across `db`, `vault`, and
+  `aws-kms` without ever exposing private key material to the Node process.
+- **AWS DER → raw signature conversion**: AWS KMS returns ECDSA signatures in
+  DER encoding. The adapter converts them to the JOSE raw `r || s` format
+  (32-byte components for P-256) before returning to callers, so downstream
+  JWS/COSE consumers see a uniform signature shape regardless of backend.
+- **Vault transit auto-mount**: the Vault adapter creates the per-tenant
+  transit mount on first use. Mount creation is idempotent — HTTP **400/409**
+  responses (mount already exists) are treated as success, and a single retry
+  is performed on **404** after mount creation.
+
+## Public JWK Cache
+
+External KMS adapters (`vault`, `aws-kms`) cache resolved public JWKs in
+memory with a **5-minute TTL** (per-adapter `PublicJwkCache`). This avoids
+repeated round-trips to fetch the public key for every signing operation:
+
+- The cache key is the external key identifier (`externalKeyId` or
+  `storedJwk.kid`).
+- Entries are invalidated automatically when a key is deleted through the
+  adapter.
+- The cache is purely best-effort; cache misses fall back to the provider API.
+
+The `db` adapter does not need the cache because the public JWK is derived
+locally from the stored private JWK.
+
+## Provider Health Endpoint
+
+A read-only health probe is exposed for every registered KMS provider:
+
+```http
+GET /key-chain/providers/health
+```
+
+Response shape (per provider):
+
+```json
+[
+    {
+        "providerId": "db",
+        "type": "db",
+        "ok": true,
+        "latencyMs": 0
+    },
+    {
+        "providerId": "vault",
+        "type": "vault",
+        "ok": true,
+        "latencyMs": 12
+    },
+    {
+        "providerId": "aws",
+        "type": "aws-kms",
+        "ok": false,
+        "error": "AccessDenied: User is not authorized to perform: kms:ListKeys"
+    }
+]
+```
+
+What each adapter checks:
+
+| Adapter   | Probe                                              |
+| --------- | -------------------------------------------------- |
+| `db`      | Always `ok: true` with `latencyMs: 0` (in-process) |
+| `vault`   | `GET ${vaultUrl}/v1/sys/health`                    |
+| `aws-kms` | `ListKeys` with `Limit: 1`                         |
+
+Probes run in parallel and a failure of one provider does not affect the
+others. Use this endpoint as a readiness signal for orchestration and for
+alerting on stale credentials.

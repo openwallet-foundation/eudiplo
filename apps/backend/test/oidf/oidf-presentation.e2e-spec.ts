@@ -118,7 +118,7 @@ describe("OIDF", () => {
         );
 
         // Export the active private key as JWK for the OIDF suite
-        const signingJwk = attestationEntity.activeKey;
+        const signingJwk = attestationEntity.activeJwk;
 
         // Create OIDF test plan with the attestation signing key (matches trust list)
         const planId = "oid4vp-1final-verifier-test-plan";

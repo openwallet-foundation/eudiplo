@@ -50,6 +50,20 @@ export class KeyChainController {
     }
 
     /**
+     * Liveness/readiness probe for every registered KMS provider.
+     */
+    @Get("providers/health")
+    @ApiOperation({ summary: "Health probe for every KMS provider" })
+    @ApiResponse({
+        status: 200,
+        description:
+            "Per-provider health result (ok, latencyMs, optional error).",
+    })
+    getProvidersHealth() {
+        return this.keyChainService.getProviderHealth();
+    }
+
+    /**
      * List all key chains for the tenant.
      */
     @Get()

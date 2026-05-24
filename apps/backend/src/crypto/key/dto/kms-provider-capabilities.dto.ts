@@ -22,6 +22,21 @@ export class KmsProviderCapabilitiesDto {
         example: true,
     })
     canDelete!: boolean;
+
+    @ApiProperty({
+        description: "Signing algorithms supported by the provider.",
+        example: ["ES256"],
+        isArray: true,
+        type: String,
+    })
+    supportedAlgs!: string[];
+
+    @ApiProperty({
+        description:
+            "Default signing algorithm used when caller does not specify one.",
+        example: "ES256",
+    })
+    defaultAlg!: string;
 }
 
 /**

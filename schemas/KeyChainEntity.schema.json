@@ -51,14 +51,14 @@
       "type": "string",
       "description": "External key identifier for cloud KMS providers.\nThis field stores the provider-specific key reference for the active signing key."
     },
-    "rootKey": {
+    "rootJwk": {
       "type": "object"
     },
     "rootCertificate": {
       "type": "string",
       "description": "Root CA certificate in PEM format.\nSelf-signed certificate for the root CA key."
     },
-    "activeKey": {
+    "activeJwk": {
       "type": "object"
     },
     "activeCertificate": {
@@ -81,7 +81,7 @@
       "type": "string",
       "description": "Timestamp of when the key was last rotated."
     },
-    "previousKey": {
+    "previousJwk": {
       "type": "object"
     },
     "previousCertificate": {
@@ -110,7 +110,7 @@
     "usageType",
     "usage",
     "kmsProvider",
-    "activeKey",
+    "activeJwk",
     "activeCertificate",
     "rotationEnabled",
     "createdAt",

@@ -18,12 +18,29 @@
       "type": "boolean",
       "description": "Whether the provider supports deleting keys.",
       "example": true
+    },
+    "supportedAlgs": {
+      "description": "Signing algorithms supported by the provider.",
+      "example": [
+        "ES256"
+      ],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "defaultAlg": {
+      "type": "string",
+      "description": "Default signing algorithm used when caller does not specify one.",
+      "example": "ES256"
     }
   },
   "required": [
     "canImport",
     "canCreate",
-    "canDelete"
+    "canDelete",
+    "supportedAlgs",
+    "defaultAlg"
   ],
   "additionalProperties": false
 }
