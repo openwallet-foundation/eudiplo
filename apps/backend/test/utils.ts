@@ -749,7 +749,7 @@ export async function setupPresentationTestApp(): Promise<PresentationTestContex
         attestationKeyChain.id!,
     );
     const privateIssuerKey = (await importJWK(
-        attestationEntity.activeKey,
+        attestationEntity.activeJwk,
         "ES256",
         { extractable: true },
     )) as CryptoKey;

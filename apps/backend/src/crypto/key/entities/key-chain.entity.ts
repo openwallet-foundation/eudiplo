@@ -127,7 +127,7 @@ export class KeyChainEntity {
         transformer: EncryptedJsonTransformer,
         nullable: true,
     })
-    rootKey?: JWK;
+    rootJwk?: JWK;
 
     /**
      * Root CA certificate in PEM format.
@@ -148,7 +148,7 @@ export class KeyChainEntity {
      * This is the key used for signing operations.
      */
     @Column("text", { transformer: EncryptedJsonTransformer })
-    activeKey!: JWK;
+    activeJwk!: JWK;
 
     /**
      * Certificate for the active signing key in PEM format.
@@ -204,7 +204,7 @@ export class KeyChainEntity {
         transformer: EncryptedJsonTransformer,
         nullable: true,
     })
-    previousKey?: JWK;
+    previousJwk?: JWK;
 
     /**
      * Certificate for the previous signing key in PEM format.
@@ -245,7 +245,7 @@ export class KeyChainEntity {
      * Returns true if this key chain has an internal CA (root key).
      */
     hasInternalCa(): boolean {
-        return this.rootKey != null && this.rootCertificate != null;
+        return this.rootJwk != null && this.rootCertificate != null;
     }
 
     /**
@@ -253,11 +253,11 @@ export class KeyChainEntity {
      */
     getPublicKeys(): JWK[] {
         const keys: JWK[] = [];
-        if (this.activeKey) {
-            keys.push(this.getPublicJwk(this.activeKey));
+        if (this.activeJwk) {
+            keys.push(this.getPublicJwk(this.activeJwk));
         }
-        if (this.previousKey) {
-            keys.push(this.getPublicJwk(this.previousKey));
+        if (this.previousJwk) {
+            keys.push(this.getPublicJwk(this.previousJwk));
         }
         return keys;
     }

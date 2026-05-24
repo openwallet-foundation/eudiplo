@@ -2904,14 +2904,14 @@ export const KeyChainEntitySchema = {
             type: 'string',
             description: 'External key identifier for cloud KMS providers.\nThis field stores the provider-specific key reference for the active signing key.'
         },
-        rootKey: {
+        rootJwk: {
             type: 'object'
         },
         rootCertificate: {
             type: 'string',
             description: 'Root CA certificate in PEM format.\nSelf-signed certificate for the root CA key.'
         },
-        activeKey: {
+        activeJwk: {
             type: 'object'
         },
         activeCertificate: {
@@ -2934,7 +2934,7 @@ export const KeyChainEntitySchema = {
             type: 'string',
             description: 'Timestamp of when the key was last rotated.'
         },
-        previousKey: {
+        previousJwk: {
             type: 'object'
         },
         previousCertificate: {
@@ -2963,7 +2963,7 @@ export const KeyChainEntitySchema = {
         'usageType',
         'usage',
         'kmsProvider',
-        'activeKey',
+        'activeJwk',
         'activeCertificate',
         'rotationEnabled',
         'createdAt',
@@ -5170,12 +5170,29 @@ export const KmsProviderCapabilitiesDtoSchema = {
             type: 'boolean',
             description: 'Whether the provider supports deleting keys.',
             example: true
+        },
+        supportedAlgs: {
+            description: 'Signing algorithms supported by the provider.',
+            example: [
+                'ES256'
+            ],
+            type: 'array',
+            items: {
+                type: 'string'
+            }
+        },
+        defaultAlg: {
+            type: 'string',
+            description: 'Default signing algorithm used when caller does not specify one.',
+            example: 'ES256'
         }
     },
     required: [
         'canImport',
         'canCreate',
-        'canDelete'
+        'canDelete',
+        'supportedAlgs',
+        'defaultAlg'
     ]
 } as const;
 
