@@ -212,7 +212,7 @@
                             <a href="#extractRequestMeta" title="src/shared/utils/audit-log-context.util.ts" ><b>extractRequestMeta</b>&nbsp;&nbsp;&nbsp;(src/.../audit-log-context.util.ts)</a>
                         </li>
                         <li>
-                            <a href="#filterOpenApiPaths" title="src/main.ts" ><b>filterOpenApiPaths</b>&nbsp;&nbsp;&nbsp;(src/.../main.ts)</a>
+                            <a href="#filterOpenApiPaths" title="src/main.helpers.ts" ><b>filterOpenApiPaths</b>&nbsp;&nbsp;&nbsp;(src/.../main.helpers.ts)</a>
                         </li>
                         <li>
                             <a href="#findServiceByType" title="src/shared/trust/types.ts" ><b>findServiceByType</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
@@ -1474,81 +1474,6 @@ Converts to PEM format which is more reliably parsed by</p>
                         <div class="io-description"><p>Bootstrap function to initialize the NestJS application.</p>
 </div>
 
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="filterOpenApiPaths"></a>
-                    <span class="name">
-                        <span ><b>filterOpenApiPaths</b></span>
-                        <a href="#filterOpenApiPaths"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>filterOpenApiPaths(document: OpenAPIObject, predicate)</code>
-                </td>
-            </tr>
-
-
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Filter an OpenAPI document to only include paths matching (or not matching)
-a given prefix. Also prunes the tag list to only include used tags.</p>
-</div>
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>document</td>
-                                            <td>
-                                                        <code>OpenAPIObject</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>predicate</td>
-                                            <td>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>OpenAPIObject</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
                 </td>
             </tr>
         </tbody>
@@ -3513,6 +3438,84 @@ Supporting Multi-Credential-Flows by evaluating the descriptor_map or falling ba
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>        <code><a href="../interfaces/AuditLogActor.html" target="_self" >AuditLogActor</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/main.helpers.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filterOpenApiPaths"></a>
+                    <span class="name">
+                        <span ><b>filterOpenApiPaths</b></span>
+                        <a href="#filterOpenApiPaths"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>filterOpenApiPaths(document: OpenAPIObject, predicate)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Filter an OpenAPI document to only include paths matching (or not matching)
+a given predicate. Also prunes the tag list to only include tags that are
+actually referenced by the remaining paths.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>document</td>
+                                            <td>
+                                                        <code>OpenAPIObject</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>predicate</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>OpenAPIObject</code>
 
                         </div>
                             <div class="io-description">

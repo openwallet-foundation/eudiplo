@@ -224,7 +224,7 @@
                             <a href="#FORMAT_VALUES" title="src/registrar/dto/schema-metadata.dto.ts" ><b>FORMAT_VALUES</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</a>
                         </li>
                         <li>
-                            <a href="#GLOBAL_PREFIX_EXCLUSIONS" title="src/main.ts" ><b>GLOBAL_PREFIX_EXCLUSIONS</b>&nbsp;&nbsp;&nbsp;(src/.../main.ts)</a>
+                            <a href="#GLOBAL_PREFIX_EXCLUSIONS" title="src/main.helpers.ts" ><b>GLOBAL_PREFIX_EXCLUSIONS</b>&nbsp;&nbsp;&nbsp;(src/.../main.helpers.ts)</a>
                         </li>
                         <li>
                             <a href="#HTTP_AUTH_TYPES" title="src/crypto/key/dto/kms-config.dto.ts" ><b>HTTP_AUTH_TYPES</b>&nbsp;&nbsp;&nbsp;(src/.../kms-config.dto.ts)</a>
@@ -1221,7 +1221,7 @@ This decorator can be used to determine the media type of the request.</p>
                 targets,
             },
             formatters: {
-                log: (object) &#x3D;&gt; {
+                log: (object: any) &#x3D;&gt; {
                     object.hostname &#x3D; undefined;
                     return object;
                 },
@@ -1880,7 +1880,7 @@ This is necessary because TypeORM transformers don&#39;t support dependency inje
         </tbody>
     </table>
 </section>
-    <h3>src/main.ts</h3>
+    <h3>src/main.helpers.ts</h3>
     <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>

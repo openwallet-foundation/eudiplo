@@ -920,7 +920,7 @@ According to OID4VCI Section 6.3:</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>sendAuthorizationResponse(values: <a href="../classes/AuthorizeQueries.html" target="_self">AuthorizeQueries</a>, tenantId: unknown)</code>
+<code>sendAuthorizationResponse(values: <a href="../classes/AuthorizeQueries.html" target="_self">AuthorizeQueries</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -963,7 +963,7 @@ According to OID4VCI Section 6.3:</p>
                                         <tr>
                                                 <td>tenantId</td>
                                             <td>
-                                                        <code>unknown</code>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                             </td>
 
                                             <td>
@@ -1520,7 +1520,7 @@ export class AuthorizeService {
         return { expires_in: 500, request_uri };
     }
 
-    sendAuthorizationResponse(values: AuthorizeQueries, tenantId) {
+    sendAuthorizationResponse(values: AuthorizeQueries, tenantId: string) {
         if (values.request_uri) {
             return this.sessionService
                 .getBy({ request_uri: values.request_uri })
