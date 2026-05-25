@@ -17,6 +17,12 @@ When upgrading EUDIPLO, follow this general process:
 
     If you are multiple major versions behind, upgrade one major version at a time. Do not skip major versions.
 
+!!! danger "Using the `main` branch image? Start with a fresh database"
+
+    The `main` branch image tracks active development and **does not guarantee complete database migrations between snapshots**. Migration files are only finalized when a version is released. If you are running `main` and pull a newer snapshot, schema changes may have been added without a corresponding migration, causing startup failures or data corruption.
+
+    **The only safe approach for `main` is to start with a fresh database each time you update.** If you need a stable, upgradeable deployment, use a tagged release image instead.
+
 ## Version History
 
 | Version | Status             | Notes                                                                                                                                                                 |
