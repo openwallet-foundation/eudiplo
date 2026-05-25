@@ -11,10 +11,7 @@ import { Logger } from "nestjs-pino";
 import { cleanupOpenApiDoc } from "nestjs-zod";
 import { AllExceptionsFilter } from "./all-exceptions.filter";
 import { AppModule } from "./app.module";
-import {
-    filterOpenApiPaths,
-    GLOBAL_PREFIX_EXCLUSIONS,
-} from "./main.helpers";
+import { filterOpenApiPaths, GLOBAL_PREFIX_EXCLUSIONS } from "./main.helpers";
 import { ValidationErrorFilter } from "./shared/common/filters/validation-error.filter";
 import { NextFunction, Request, Response } from "express";
 
@@ -252,15 +249,18 @@ async function bootstrap() {
 
         // Cache-control headers for Swagger UI assets
         for (const swaggerPath of ["/api/docs", "/docs"]) {
-            app.use(swaggerPath, (_req: Request, res: Response, next: NextFunction) => {
-                res.setHeader(
-                    "Cache-Control",
-                    "no-cache, no-store, must-revalidate",
-                );
-                res.setHeader("Pragma", "no-cache");
-                res.setHeader("Expires", "0");
-                next();
-            });
+            app.use(
+                swaggerPath,
+                (_req: Request, res: Response, next: NextFunction) => {
+                    res.setHeader(
+                        "Cache-Control",
+                        "no-cache, no-store, must-revalidate",
+                    );
+                    res.setHeader("Pragma", "no-cache");
+                    res.setHeader("Expires", "0");
+                    next();
+                },
+            );
         }
 
         SwaggerModule.setup("/api/docs", app, managementDocFactory, {

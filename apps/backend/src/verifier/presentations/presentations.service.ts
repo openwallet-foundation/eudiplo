@@ -1252,7 +1252,7 @@ export class PresentationsService {
                                     ),
                                 },
                                 "SD-JWT-VC disclosed claims after verification",
-                            );                            
+                            );
                             this.logger.trace(
                                 {
                                     credentialId: attId,
@@ -1289,7 +1289,8 @@ export class PresentationsService {
     getType(jwt: string, att: string): CredentialType {
         const payload = decodeJwt<any>(jwt);
         return payload.dcql_query.credentials.find(
-            (credential: { id: string; format: CredentialType }) => credential.id === att,
+            (credential: { id: string; format: CredentialType }) =>
+                credential.id === att,
         ).format;
     }
 
