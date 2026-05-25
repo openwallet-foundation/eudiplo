@@ -90,7 +90,7 @@ export const createLoggerOptions = (configService: ConfigService) => {
                 targets,
             },
             formatters: {
-                log: (object) => {
+                log: (object: any) => {
                     object.hostname = undefined;
                     return object;
                 },

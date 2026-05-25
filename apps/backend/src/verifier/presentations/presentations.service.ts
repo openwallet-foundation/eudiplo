@@ -1236,6 +1236,7 @@ export class PresentationsService {
 
                             return result.claims;
                         } else if (type === "dc+sd-jwt") {
+                            console.log(cred);
                             const result =
                                 await this.sdjwtvcverifierService.verify(cred, {
                                     requiredClaimKeys,
@@ -1251,7 +1252,7 @@ export class PresentationsService {
                                     ),
                                 },
                                 "SD-JWT-VC disclosed claims after verification",
-                            );
+                            );                            
                             this.logger.trace(
                                 {
                                     credentialId: attId,
@@ -1288,7 +1289,7 @@ export class PresentationsService {
     getType(jwt: string, att: string): CredentialType {
         const payload = decodeJwt<any>(jwt);
         return payload.dcql_query.credentials.find(
-            (credential) => credential.id === att,
+            (credential: { id: string; format: CredentialType }) => credential.id === att,
         ).format;
     }
 

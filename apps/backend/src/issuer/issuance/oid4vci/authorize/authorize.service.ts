@@ -319,7 +319,7 @@ export class AuthorizeService {
         return { expires_in: 500, request_uri };
     }
 
-    sendAuthorizationResponse(values: AuthorizeQueries, tenantId) {
+    sendAuthorizationResponse(values: AuthorizeQueries, tenantId: string) {
         if (values.request_uri) {
             return this.sessionService
                 .getBy({ request_uri: values.request_uri })

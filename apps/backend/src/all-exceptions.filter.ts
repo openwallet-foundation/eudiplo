@@ -18,22 +18,28 @@ export class AllExceptionsFilter implements ExceptionFilter {
         const response = ctx.getResponse<Response>();
         const request = ctx.getRequest<Request>();
 
-        const status =
-            exception instanceof HttpException
-                ? exception.getStatus()
-                : exception instanceof EntityNotFoundError
-                  ? HttpStatus.NOT_FOUND
-                  : HttpStatus.INTERNAL_SERVER_ERROR;
+        let status: number;
+        if (exception instanceof HttpException) {
+            status = exception.getStatus();
+        } else if (exception instanceof EntityNotFoundError) {
+            status = HttpStatus.NOT_FOUND;
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
 
-        const message =
-            exception instanceof HttpException
-                ? exception.getResponse()
-                : (exception as any)?.message || exception;
+        let message: unknown;
+        if (exception instanceof HttpException) {
+            message = exception.getResponse();
+        } else if (exception instanceof Error) {
+            message = exception.message;
+        } else {
+            message = "Internal Server Error";
+        }
 
         // Log the error with stack trace if available using NestJS Logger
         this.logger.error(
             `[${request.method}] ${request.url} ${status} - ${JSON.stringify(message)}`,
-            (exception as any)?.stack,
+            exception instanceof Error ? exception.stack : undefined,
         );
 
         response.status(status).json({

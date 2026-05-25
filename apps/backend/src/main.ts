@@ -2,95 +2,21 @@
 // Auto-instrumentations patch Node built-ins at import time.
 
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { RequestMethod, ValidationPipe } from "@nestjs/common";
+import { ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
-import {
-    DocumentBuilder,
-    type OpenAPIObject,
-    SwaggerModule,
-} from "@nestjs/swagger";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { Logger } from "nestjs-pino";
 import { cleanupOpenApiDoc } from "nestjs-zod";
 import { AllExceptionsFilter } from "./all-exceptions.filter";
 import { AppModule } from "./app.module";
+import {
+    filterOpenApiPaths,
+    GLOBAL_PREFIX_EXCLUSIONS,
+} from "./main.helpers";
 import { ValidationErrorFilter } from "./shared/common/filters/validation-error.filter";
-
-/**
- * Routes excluded from the automatic `/api` global prefix.
- * Wallet-facing and infrastructure endpoints stay at the root path for protocol
- * compliance and discoverability. The integrated OAuth2 token endpoint is
- * already mounted under `/api` so firewalls can treat it as part of the admin
- * surface without receiving a duplicate `/api/api` prefix.
- */
-const GLOBAL_PREFIX_EXCLUSIONS: { path: string; method: RequestMethod }[] = [
-    // Infrastructure
-    { path: "/", method: RequestMethod.GET },
-    { path: "health", method: RequestMethod.ALL },
-    // Admin authentication
-    { path: "api/oauth2/{*path}", method: RequestMethod.ALL },
-    // Discovery
-    { path: ".well-known/{*path}", method: RequestMethod.ALL },
-    // OID4VCI Protocol
-    { path: "issuers/:tenantId/vci/{*path}", method: RequestMethod.ALL },
-    { path: "issuers/:tenantId/authorize", method: RequestMethod.ALL },
-    { path: "issuers/:tenantId/authorize/{*path}", method: RequestMethod.ALL },
-    {
-        path: "issuers/:tenantId/credentials-metadata/{*path}",
-        method: RequestMethod.ALL,
-    },
-    { path: "issuers/:tenantId/chained-as/{*path}", method: RequestMethod.ALL },
-    // OID4VP Protocol
-    { path: "presentations/:sessionId/oid4vp", method: RequestMethod.ALL },
-    {
-        path: "presentations/:sessionId/oid4vp/{*path}",
-        method: RequestMethod.ALL,
-    },
-    // Public Status & Trust Lists
-    {
-        path: "issuers/:tenantId/status-management/{*path}",
-        method: RequestMethod.ALL,
-    },
-    { path: "issuers/:tenantId/trust-list/{*path}", method: RequestMethod.ALL },
-    // Public Storage (credential images, logos)
-    { path: "storage/:key", method: RequestMethod.GET },
-];
-
-/**
- * Filter an OpenAPI document to only include paths matching (or not matching)
- * a given prefix. Also prunes the tag list to only include used tags.
- */
-function filterOpenApiPaths(
-    document: OpenAPIObject,
-    predicate: (path: string) => boolean,
-): OpenAPIObject {
-    const filteredPaths: OpenAPIObject["paths"] = {};
-    const usedTags = new Set<string>();
-
-    for (const [path, pathItem] of Object.entries(document.paths)) {
-        if (predicate(path)) {
-            filteredPaths[path] = pathItem;
-            for (const operation of Object.values(
-                pathItem as Record<string, any>,
-            )) {
-                if (operation?.tags) {
-                    for (const tag of operation.tags) {
-                        usedTags.add(tag);
-                    }
-                }
-            }
-        }
-    }
-
-    return {
-        ...document,
-        paths: filteredPaths,
-        tags: document.tags?.filter((tag: { name: string }) =>
-            usedTags.has(tag.name),
-        ),
-    };
-}
+import { NextFunction, Request, Response } from "express";
 
 /**
  * TLS configuration options for HTTPS server.
@@ -326,7 +252,7 @@ async function bootstrap() {
 
         // Cache-control headers for Swagger UI assets
         for (const swaggerPath of ["/api/docs", "/docs"]) {
-            app.use(swaggerPath, (_req, res, next) => {
+            app.use(swaggerPath, (_req: Request, res: Response, next: NextFunction) => {
                 res.setHeader(
                     "Cache-Control",
                     "no-cache, no-store, must-revalidate",

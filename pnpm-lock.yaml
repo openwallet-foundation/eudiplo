@@ -291,16 +291,16 @@ importers:
         version: 0.97.1(magicast@0.5.2)(typescript@6.0.3)
       '@nestjs/cli':
         specifier: ^11.0.16
-        version: 11.0.21(@swc/cli@0.8.1(@swc/core@1.15.33)(chokidar@4.0.3))(@swc/core@1.15.33)(@types/node@25.6.2)(prettier@3.8.3)
+        version: 11.0.21(@swc/cli@0.8.1(@swc/core@1.15.33)(chokidar@5.0.0))(@swc/core@1.15.33)(@types/node@25.6.2)(prettier@3.8.3)
       '@nestjs/schematics':
         specifier: ^11.0.9
-        version: 11.1.0(chokidar@4.0.3)(prettier@3.8.3)(typescript@6.0.3)
+        version: 11.1.0(chokidar@5.0.0)(prettier@3.8.3)(typescript@6.0.3)
       '@nestjs/testing':
         specifier: ^11.1.14
         version: 11.1.19(@nestjs/common@11.1.19(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.19)(@nestjs/platform-express@11.1.19)
       '@swc/cli':
         specifier: ^0.8.0
-        version: 0.8.1(@swc/core@1.15.33)(chokidar@4.0.3)
+        version: 0.8.1(@swc/core@1.15.33)(chokidar@5.0.0)
       '@swc/core':
         specifier: ^1.15.18
         version: 1.15.33
@@ -319,6 +319,9 @@ importers:
       '@types/node':
         specifier: ^25.3.3
         version: 25.6.2
+      '@types/passport-jwt':
+        specifier: ^4.0.1
+        version: 4.0.1
       '@types/supertest':
         specifier: ^7.2.0
         version: 7.2.0
@@ -5063,6 +5066,15 @@ packages:
 
   '@types/oracledb@6.5.2':
     resolution: {integrity: sha512-kK1eBS/Adeyis+3OlBDMeQQuasIDLUYXsi2T15ccNJ0iyUpQ4xDF7svFu3+bGVrI0CMBUclPciz+lsQR3JX3TQ==}
+
+  '@types/passport-jwt@4.0.1':
+    resolution: {integrity: sha512-Y0Ykz6nWP4jpxgEUYq8NoVZeCQPo1ZndJLfapI249g1jHChvRfZRO/LS3tqu26YgAS/laI1qx98sYGz0IalRXQ==}
+
+  '@types/passport-strategy@0.2.38':
+    resolution: {integrity: sha512-GC6eMqqojOooq993Tmnmp7AUTbbQSgilyvpCYQjT+H6JfG/g6RGc7nXEniZlp0zyKJ0WUdOiZWLBZft9Yug1uA==}
+
+  '@types/passport@1.0.17':
+    resolution: {integrity: sha512-aciLyx+wDwT2t2/kJGJR2AEeBz0nJU4WuRX04Wu9Dqc5lSUtwu0WERPHYsLhF9PtseiAMPBGNUOtFjxZ56prsg==}
 
   '@types/pg-pool@2.0.7':
     resolution: {integrity: sha512-U4CwmGVQcbEuqpyju8/ptOKg6gEC+Tqsvj2xS9o1g71bUh8twxnC6ZL5rZKCsGN0iyH0CwgUyc9VR5owNQF9Ng==}
@@ -10989,6 +11001,17 @@ snapshots:
     optionalDependencies:
       chokidar: 4.0.3
 
+  '@angular-devkit/core@19.2.24(chokidar@5.0.0)':
+    dependencies:
+      ajv: 8.18.0
+      ajv-formats: 3.0.1(ajv@8.18.0)
+      jsonc-parser: 3.3.1
+      picomatch: 4.0.4
+      rxjs: 7.8.1
+      source-map: 0.7.4
+    optionalDependencies:
+      chokidar: 5.0.0
+
   '@angular-devkit/core@21.1.0(chokidar@5.0.0)':
     dependencies:
       ajv: 8.17.1
@@ -11026,6 +11049,16 @@ snapshots:
   '@angular-devkit/schematics@19.2.24(chokidar@4.0.3)':
     dependencies:
       '@angular-devkit/core': 19.2.24(chokidar@4.0.3)
+      jsonc-parser: 3.3.1
+      magic-string: 0.30.17
+      ora: 5.4.1
+      rxjs: 7.8.1
+    transitivePeerDependencies:
+      - chokidar
+
+  '@angular-devkit/schematics@19.2.24(chokidar@5.0.0)':
+    dependencies:
+      '@angular-devkit/core': 19.2.24(chokidar@5.0.0)
       jsonc-parser: 3.3.1
       magic-string: 0.30.17
       ora: 5.4.1
@@ -13773,7 +13806,7 @@ snapshots:
       axios: 1.16.0
       rxjs: 7.8.2
 
-  '@nestjs/cli@11.0.21(@swc/cli@0.8.1(@swc/core@1.15.33)(chokidar@4.0.3))(@swc/core@1.15.33)(@types/node@25.6.2)(prettier@3.8.3)':
+  '@nestjs/cli@11.0.21(@swc/cli@0.8.1(@swc/core@1.15.33)(chokidar@5.0.0))(@swc/core@1.15.33)(@types/node@25.6.2)(prettier@3.8.3)':
     dependencies:
       '@angular-devkit/core': 19.2.24(chokidar@4.0.3)
       '@angular-devkit/schematics': 19.2.24(chokidar@4.0.3)
@@ -13794,7 +13827,7 @@ snapshots:
       webpack: 5.106.0(@swc/core@1.15.33)
       webpack-node-externals: 3.0.0
     optionalDependencies:
-      '@swc/cli': 0.8.1(@swc/core@1.15.33)(chokidar@4.0.3)
+      '@swc/cli': 0.8.1(@swc/core@1.15.33)(chokidar@5.0.0)
       '@swc/core': 1.15.33
     transitivePeerDependencies:
       - '@types/node'
@@ -13890,10 +13923,10 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@nestjs/schematics@11.1.0(chokidar@4.0.3)(prettier@3.8.3)(typescript@6.0.3)':
+  '@nestjs/schematics@11.1.0(chokidar@5.0.0)(prettier@3.8.3)(typescript@6.0.3)':
     dependencies:
-      '@angular-devkit/core': 19.2.24(chokidar@4.0.3)
-      '@angular-devkit/schematics': 19.2.24(chokidar@4.0.3)
+      '@angular-devkit/core': 19.2.24(chokidar@5.0.0)
+      '@angular-devkit/schematics': 19.2.24(chokidar@5.0.0)
       comment-json: 5.0.0
       jsonc-parser: 3.3.1
       pluralize: 8.0.0
@@ -15950,7 +15983,7 @@ snapshots:
 
   '@std-uritemplate/std-uritemplate@2.0.8': {}
 
-  '@swc/cli@0.8.1(@swc/core@1.15.33)(chokidar@4.0.3)':
+  '@swc/cli@0.8.1(@swc/core@1.15.33)(chokidar@5.0.0)':
     dependencies:
       '@swc/core': 1.15.33
       '@swc/counter': 0.1.3
@@ -15963,7 +15996,7 @@ snapshots:
       source-map: 0.7.6
       tinyglobby: 0.2.16
     optionalDependencies:
-      chokidar: 4.0.3
+      chokidar: 5.0.0
     transitivePeerDependencies:
       - bare-abort-controller
       - react-native-b4a
@@ -16214,6 +16247,20 @@ snapshots:
   '@types/oracledb@6.5.2':
     dependencies:
       '@types/node': 25.6.2
+
+  '@types/passport-jwt@4.0.1':
+    dependencies:
+      '@types/jsonwebtoken': 9.0.10
+      '@types/passport-strategy': 0.2.38
+
+  '@types/passport-strategy@0.2.38':
+    dependencies:
+      '@types/express': 5.0.6
+      '@types/passport': 1.0.17
+
+  '@types/passport@1.0.17':
+    dependencies:
+      '@types/express': 5.0.6
 
   '@types/pg-pool@2.0.7':
     dependencies:
