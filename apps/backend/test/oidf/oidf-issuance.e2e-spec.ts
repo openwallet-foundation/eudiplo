@@ -306,6 +306,76 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
     );
 
     /**
+     * Cache of plan modules keyed by planId. Avoids redundant OIDF API calls
+     * when multiple tests need to check module availability for the same plan.
+     */
+    const planModulesCache = new Map<
+        string,
+        Awaited<ReturnType<typeof oidfSuite.getPlanModules>>
+    >();
+
+    const getPlanModulesCached = async (planId: string) => {
+        if (!planModulesCache.has(planId)) {
+            planModulesCache.set(
+                planId,
+                await oidfSuite.getPlanModules(planId),
+            );
+        }
+        return planModulesCache.get(planId)!;
+    };
+
+    /**
+     * Runs a module test against every plan in the created matrix.
+     * Set `issuerInitiatedOnly: true` for tests that call `sendOfferToTestRunner`,
+     * since wallet-initiated plans do not expose a credential_offer_endpoint.
+     * Skips plans where the module does not exist (e.g. format-specific modules).
+     */
+    const forEachPlan = async (
+        moduleName: string,
+        action: (
+            testInstance: TestInstance,
+            variant: IssuerVariant,
+            planId: string,
+        ) => Promise<void>,
+        options?: { issuerInitiatedOnly?: boolean },
+    ): Promise<void> => {
+        const targetPlans = createdPlans.filter(({ planId, variant }) => {
+            if (planId === PLAN_ID_KEY_ATTESTATION) return false;
+            if (
+                options?.issuerInitiatedOnly &&
+                variant.vci_authorization_code_flow_variant !==
+                    "issuer_initiated"
+            ) {
+                return false;
+            }
+            return true;
+        });
+
+        let ranCount = 0;
+        for (const { planId, variant } of targetPlans) {
+            const modules = await getPlanModulesCached(planId);
+            if (!modules.some((m) => m.testModule === moduleName)) {
+                console.warn(
+                    `Module '${moduleName}' not found in plan ${variant.credential_format}/${variant.vci_authorization_code_flow_variant}, skipping.`,
+                );
+                continue;
+            }
+            const testInstance = await oidfSuite.startTest(planId, moduleName);
+            console.log(
+                `Test details (${variant.credential_format}/${variant.vci_authorization_code_flow_variant}): ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
+            );
+            await action(testInstance, variant, planId);
+            ranCount++;
+        }
+
+        if (ranCount === 0) {
+            console.warn(
+                `Module '${moduleName}' was not found in any target plan.`,
+            );
+        }
+    };
+
+    /**
      * Helper function to send a credential offer to the OIDF test runner.
      * Creates an offer via the backend API and forwards it to the test instance endpoint.
      * Uses authorization code flow as required by HAIP.
@@ -680,7 +750,7 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
 
         const availableScenarioKeys = new Set<string>();
         const skippedScenarioKeys = new Set<string>();
-        const primaryPlanModules = await oidfSuite.getPlanModules(PLAN_ID);
+        const primaryPlanModules = await getPlanModulesCached(PLAN_ID);
 
         for (const { planId, variant } of createdPlans) {
             const modules = await oidfSuite.getPlanModules(planId);
@@ -704,23 +774,25 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
             }
         }
 
+        // Build covered scenario keys across all plans in the matrix so that
+        // mdoc / wallet-initiated variants are accounted for alongside the primary plan.
         const coveredScenarioKeys = new Set<string>();
-        for (const coveredModuleName of COVERED_ISSUER_MODULES) {
-            const module = primaryPlanModules.find(
-                (planModule) => planModule.testModule === coveredModuleName,
-            );
-
-            if (!module) {
-                continue;
+        for (const { planId, variant } of createdPlans) {
+            if (planId === PLAN_ID_KEY_ATTESTATION) continue;
+            const planModules = await getPlanModulesCached(planId);
+            for (const coveredModuleName of COVERED_ISSUER_MODULES) {
+                const module = planModules.find(
+                    (planModule) => planModule.testModule === coveredModuleName,
+                );
+                if (!module) continue;
+                coveredScenarioKeys.add(
+                    oidfSuite.buildScenarioKey({
+                        testModule: module.testModule,
+                        planVariant: variant,
+                        moduleVariant: module.variant,
+                    }),
+                );
             }
-
-            coveredScenarioKeys.add(
-                oidfSuite.buildScenarioKey({
-                    testModule: module.testModule,
-                    planVariant: createdPlans[0].variant,
-                    moduleVariant: module.variant,
-                }),
-            );
         }
 
         const missingScenarios = [...availableScenarioKeys].filter(
@@ -764,33 +836,31 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
     // ============================================================================
 
     test("oid4vci-1_0-issuer-metadata-test", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+        await forEachPlan(
             "oid4vci-1_0-issuer-metadata-test",
+            async (testInstance) => {
+                const logResult = await oidfSuite.waitForFinished(
+                    testInstance.id,
+                );
+                // Warning is fine because unknown entries are in the metadata (iae and status list information)
+                expect(logResult.result).toBe("WARNING");
+            },
         );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Warning is fine because unknown entries are in the metadata (iae and status list information)
-        expect(logResult.result).toBe("WARNING");
     });
 
     test("oid4vci-1_0-issuer-metadata-test-signed", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+        await forEachPlan(
             "oid4vci-1_0-issuer-metadata-test-signed",
+            async (testInstance) => {
+                const logResult = await oidfSuite.waitForFinished(
+                    testInstance.id,
+                );
+                // Test is skipped if signed metadata is not supported
+                expect(["PASSED", "SKIPPED", "WARNING"]).toContain(
+                    logResult.result,
+                );
+            },
         );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Test is skipped if signed metadata is not supported
-        expect(["PASSED", "SKIPPED", "WARNING"]).toContain(logResult.result);
     });
 
     // ============================================================================
@@ -799,19 +869,17 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
     // ============================================================================
 
     test("oid4vci-1_0-issuer-happy-flow", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+        await forEachPlan(
             "oid4vci-1_0-issuer-happy-flow",
+            async (testInstance) => {
+                await sendOfferToTestRunner(testInstance);
+                const logResult = await oidfSuite.waitForFinished(
+                    testInstance.id,
+                );
+                expect(logResult.result).toBe("PASSED");
+            },
+            { issuerInitiatedOnly: true },
         );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
     }, 10000);
 
     //TODO: fix test with TLS connection (not a basic problem of oid4vc)
@@ -848,19 +916,17 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
     }, 15000); */
 
     test("oid4vci-1_0-issuer-happy-flow-skip-notification", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+        await forEachPlan(
             "oid4vci-1_0-issuer-happy-flow-skip-notification",
+            async (testInstance) => {
+                await sendOfferToTestRunner(testInstance);
+                const logResult = await oidfSuite.waitForFinished(
+                    testInstance.id,
+                );
+                expect(logResult.result).toBe("PASSED");
+            },
+            { issuerInitiatedOnly: true },
         );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
     }, 10000);
 
     // ============================================================================
@@ -869,37 +935,33 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
     // ============================================================================
 
     test("oid4vci-1_0-issuer-fail-invalid-nonce", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+        await forEachPlan(
             "oid4vci-1_0-issuer-fail-invalid-nonce",
+            async (testInstance) => {
+                await sendOfferToTestRunner(testInstance);
+                const logResult = await oidfSuite.waitForFinished(
+                    testInstance.id,
+                );
+                // Test may be skipped if credential configuration does not require proof
+                expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
+            },
+            { issuerInitiatedOnly: true },
         );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Test may be skipped if credential configuration does not require proof
-        expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
     }, 10000);
 
     test("oid4vci-1_0-issuer-fail-invalid-jwt-proof-signature", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+        await forEachPlan(
             "oid4vci-1_0-issuer-fail-invalid-jwt-proof-signature",
+            async (testInstance) => {
+                await sendOfferToTestRunner(testInstance);
+                const logResult = await oidfSuite.waitForFinished(
+                    testInstance.id,
+                );
+                // Test may be skipped for attestation proof type
+                expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
+            },
+            { issuerInitiatedOnly: true },
         );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Test may be skipped for attestation proof type
-        expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
     }, 10000);
 
     test("oid4vci-1_0-issuer-fail-invalid-key-attestation-signature", async () => {
@@ -923,70 +985,62 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
     }, 10000);
 
     test("oid4vci-1_0-issuer-fail-invalid-client-attestation-signature", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+        await forEachPlan(
             "oid4vci-1_0-issuer-fail-invalid-client-attestation-signature",
+            async (testInstance) => {
+                await sendOfferToTestRunner(testInstance);
+                const logResult = await oidfSuite.waitForFinished(
+                    testInstance.id,
+                );
+                expect(logResult.result).toBe("PASSED");
+            },
+            { issuerInitiatedOnly: true },
         );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
     }, 10000);
 
     test("oid4vci-1_0-issuer-fail-invalid-client-attestation-pop-signature", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+        await forEachPlan(
             "oid4vci-1_0-issuer-fail-invalid-client-attestation-pop-signature",
+            async (testInstance) => {
+                await sendOfferToTestRunner(testInstance);
+                const logResult = await oidfSuite.waitForFinished(
+                    testInstance.id,
+                );
+                // Test may be skipped for non-client_attestation auth methods
+                expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
+            },
+            { issuerInitiatedOnly: true },
         );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Test may be skipped for non-client_attestation auth methods
-        expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
     }, 10000);
 
     test("oid4vci-1_0-issuer-fail-mismatched-client-attestation-pop-key", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+        await forEachPlan(
             "oid4vci-1_0-issuer-fail-mismatched-client-attestation-pop-key",
+            async (testInstance) => {
+                await sendOfferToTestRunner(testInstance);
+                const logResult = await oidfSuite.waitForFinished(
+                    testInstance.id,
+                );
+                // Test may be skipped for non-client_attestation auth methods
+                expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
+            },
+            { issuerInitiatedOnly: true },
         );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Test may be skipped for non-client_attestation auth methods
-        expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
     }, 10000);
 
     test("oid4vci-1_0-issuer-fail-missing-proof", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+        await forEachPlan(
             "oid4vci-1_0-issuer-fail-missing-proof",
+            async (testInstance) => {
+                await sendOfferToTestRunner(testInstance);
+                const logResult = await oidfSuite.waitForFinished(
+                    testInstance.id,
+                );
+                // Test may be skipped if credential configuration does not require proof
+                expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
+            },
+            { issuerInitiatedOnly: true },
         );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Test may be skipped if credential configuration does not require proof
-        expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
     }, 10000);
 
     // ============================================================================
@@ -994,35 +1048,31 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
     // ============================================================================
 
     test("oid4vci-1_0-issuer-fail-unknown-credential-configuration", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+        await forEachPlan(
             "oid4vci-1_0-issuer-fail-unknown-credential-configuration",
+            async (testInstance) => {
+                await sendOfferToTestRunner(testInstance);
+                const logResult = await oidfSuite.waitForFinished(
+                    testInstance.id,
+                );
+                expect(logResult.result).toBe("PASSED");
+            },
+            { issuerInitiatedOnly: true },
         );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
     }, 10000);
 
     test("oid4vci-1_0-issuer-fail-unknown-credential-identifier", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+        await forEachPlan(
             "oid4vci-1_0-issuer-fail-unknown-credential-identifier",
+            async (testInstance) => {
+                await sendOfferToTestRunner(testInstance);
+                const logResult = await oidfSuite.waitForFinished(
+                    testInstance.id,
+                );
+                expect(logResult.result).toBe("PASSED");
+            },
+            { issuerInitiatedOnly: true },
         );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
     }, 10000);
 
     // ============================================================================
@@ -1030,34 +1080,30 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
     // ============================================================================
 
     test("oid4vci-1_0-issuer-fail-on-access-token-in-query", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+        await forEachPlan(
             "oid4vci-1_0-issuer-fail-on-access-token-in-query",
+            async (testInstance) => {
+                await sendOfferToTestRunner(testInstance);
+                const logResult = await oidfSuite.waitForFinished(
+                    testInstance.id,
+                );
+                expect(logResult.result).toBe("PASSED");
+            },
+            { issuerInitiatedOnly: true },
         );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
     }, 10000);
 
     test("oid4vci-1_0-issuer-fail-unsupported-encryption-algorithm", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
+        await forEachPlan(
             "oid4vci-1_0-issuer-fail-unsupported-encryption-algorithm",
+            async (testInstance) => {
+                await sendOfferToTestRunner(testInstance);
+                const logResult = await oidfSuite.waitForFinished(
+                    testInstance.id,
+                );
+                expect(logResult.result).toBe("PASSED");
+            },
+            { issuerInitiatedOnly: true },
         );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
     }, 10000);
 });

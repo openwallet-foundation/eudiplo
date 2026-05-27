@@ -24,6 +24,7 @@ import { IncompletePresentationException } from "../presentations/exceptions/inc
 import { PresentationsService } from "../presentations/presentations.service";
 import { AuthorizationResponse } from "./dto/authorization-response.dto";
 import { PresentationRequestOptions } from "./dto/presentation-request-options.dto";
+import { CredentialFormat } from "../../issuer/configuration/credentials/entities/credential.entity";
 
 @Injectable()
 export class Oid4vpService {
@@ -229,13 +230,19 @@ export class Oid4vpService {
                         },
                         vp_formats_supported: {
                             mso_mdoc: {
-                                alg: ["ES256"],
+                                alg: this.cryptoImplementationService.getAlgs(
+                                    CredentialFormat.MSO_MDOC,
+                                ),
                             },
                             "dc+sd-jwt": {
                                 "kb-jwt_alg_values":
-                                    this.cryptoImplementationService.getSupportedAlgorithms(),
+                                    this.cryptoImplementationService.getAlgs(
+                                        CredentialFormat.SD_JWT_VC,
+                                    ),
                                 "sd-jwt_alg_values":
-                                    this.cryptoImplementationService.getSupportedAlgorithms(),
+                                    this.cryptoImplementationService.getAlgs(
+                                        CredentialFormat.SD_JWT_VC,
+                                    ),
                             },
                         },
                         encrypted_response_enc_values_supported: [

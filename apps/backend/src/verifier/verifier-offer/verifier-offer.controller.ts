@@ -94,6 +94,6 @@ export class VerifierOfferController {
         );
         values.uri = `openid4vp://?${values.uri}`;
         values.crossDeviceUri = `openid4vp://?${values.crossDeviceUri}`;
-        res.send(values);
+        res.status(201).json(values);
     }
 }

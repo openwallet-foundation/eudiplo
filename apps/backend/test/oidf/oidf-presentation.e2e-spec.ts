@@ -16,7 +16,7 @@ import {
     OIDF_HTTPD_CA_PATH,
     useOidfContainers,
 } from "./oidf-setup";
-import { OIDFSuite, TestInstance } from "./oidf-suite";
+import { OIDFSuite } from "./oidf-suite";
 
 // Setup OIDF containers for this test file
 useOidfContainers();
@@ -31,11 +31,40 @@ describe("OIDF", () => {
     const OIDF_DEMO_TOKEN = import.meta.env.VITE_OIDF_DEMO_TOKEN;
     const ENFORCE_MODULE_COVERAGE_GUARD =
         import.meta.env.VITE_OIDF_ENFORCE_MODULE_COVERAGE === "true";
+    const RUN_FULL_MATRIX = import.meta.env.VITE_OIDF_FULL_MATRIX === "true";
+
+    const VERIFIER_VARIANT_MATRIX = [
+        {
+            credential_format: "sd_jwt_vc",
+            client_id_prefix: "x509_hash",
+            request_method: "request_uri_signed",
+            response_mode: "direct_post.jwt",
+        },
+        {
+            credential_format: "mso_mdoc",
+            client_id_prefix: "x509_hash",
+            request_method: "request_uri_signed",
+            response_mode: "direct_post.jwt",
+        },
+    ] as const;
+
+    type VerifierVariant = (typeof VERIFIER_VARIANT_MATRIX)[number];
+
+    // Fast mode keeps runtime lower while still validating the primary credential format.
+    const ENFORCED_VERIFIER_VARIANTS = RUN_FULL_MATRIX
+        ? [...VERIFIER_VARIANT_MATRIX]
+        : [VERIFIER_VARIANT_MATRIX[0]];
+
+    // Maps credential_format to the verifier offer requestId for that format.
+    const REQUEST_ID_BY_FORMAT: Record<string, string> = {
+        sd_jwt_vc: "pid-no-hook",
+        mso_mdoc: "pid-mdoc-no-hook",
+    };
 
     let app: INestApplication;
-    let PLAN_ID: string;
     let authToken: string;
-    let testInstance: TestInstance;
+    const createdPlans: Array<{ planId: string; variant: VerifierVariant }> =
+        [];
 
     const axiosBackendInstance = axios.default.create({
         baseURL: "https://localhost:3000",
@@ -120,14 +149,8 @@ describe("OIDF", () => {
         // Export the active private key as JWK for the OIDF suite
         const signingJwk = attestationEntity.activeJwk;
 
-        // Create OIDF test plan with the attestation signing key (matches trust list)
-        const planId = "oid4vp-1final-verifier-test-plan";
-        const variant = {
-            credential_format: "sd_jwt_vc",
-            client_id_prefix: "x509_hash",
-            request_method: "request_uri_signed",
-            response_mode: "direct_post.jwt",
-        };
+        // Create OIDF test plans for each variant with the attestation signing key (matches trust list)
+        const planName = "oid4vp-1final-verifier-test-plan";
         const body = {
             alias: "test-plan",
             description: "test plan created via e2e tests",
@@ -142,92 +165,126 @@ describe("OIDF", () => {
             publish: "everything",
         };
 
-        PLAN_ID = await oidfSuite.createPlan(planId, variant, body);
-
-        // Create test instance
-        testInstance = await oidfSuite.getInstance(PLAN_ID);
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
+        for (const variant of ENFORCED_VERIFIER_VARIANTS) {
+            const planId = await oidfSuite.createPlan(planName, variant, body);
+            createdPlans.push({ planId, variant });
+            console.log(
+                `Created plan for ${variant.credential_format}: ${OIDF_URL}/plan-detail.html?plan=${planId}`,
+            );
+        }
     });
 
     afterAll(async () => {
-        const outputDir = resolve(
-            __dirname,
-            `../../../../tmp/oidf-logs/${PLAN_ID}`,
-        );
-        await oidfSuite.storeLog(PLAN_ID, outputDir);
-
-        console.log(`Logs stored in: ${outputDir}`);
+        for (const { planId } of createdPlans) {
+            const outputDir = resolve(
+                __dirname,
+                `../../../../tmp/oidf-logs/${planId}`,
+            );
+            await oidfSuite.storeLog(planId, outputDir);
+            console.log(`Logs stored in: ${outputDir}`);
+        }
 
         if (app) {
             await app.close();
         }
     });
 
-    test("oidf conformance suite presentation", async () => {
-        // Request presentation URI from backend
-        const presentationResponse = await axiosBackendInstance.post<{
-            uri: string;
-            session: string;
-        }>(
-            `/verifier/offer`,
-            {
-                response_type: "uri",
-                requestId: "pid-no-hook",
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${authToken}`,
-                },
-            },
+    // Register one test per variant so the Vitest VS Code plugin shows individual pass/fail.
+    // Tests not in ENFORCED_VERIFIER_VARIANTS are registered but skipped (visible in the panel).
+    for (const variant of VERIFIER_VARIANT_MATRIX) {
+        const isEnforced = ENFORCED_VERIFIER_VARIANTS.some(
+            (v) => v.credential_format === variant.credential_format,
         );
 
-        expect(presentationResponse.data.uri).toBeDefined();
+        test.skipIf(!isEnforced)(
+            `oidf conformance suite presentation [${variant.credential_format}]`,
+            async () => {
+                const plan = createdPlans.find(
+                    (p) =>
+                        p.variant.credential_format ===
+                        variant.credential_format,
+                );
+                if (!plan) {
+                    throw new Error(
+                        `Plan for '${variant.credential_format}' not found in createdPlans`,
+                    );
+                }
 
-        // Extract query parameters from URI (format: openid4vp://...?params)
-        const uri = presentationResponse.data.uri;
-        const queryStart = uri.indexOf("?");
-        if (queryStart === -1) {
-            throw new Error(`URI missing query parameters: ${uri}`);
-        }
-        const queryString = uri.substring(queryStart);
+                const testInstance = await oidfSuite.getInstance(plan.planId);
+                console.log(
+                    `Test details (${variant.credential_format}): ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
+                );
 
-        // Simulate wallet authorization via OIDF runner
-        const authorizeUrl = `${testInstance.url}/authorize${queryString}`;
-        await axios.default.get(authorizeUrl, {
-            httpsAgent: new https.Agent({
-                ca: readFileSync(OIDF_HTTPD_CA_PATH),
-                checkServerIdentity: () => undefined,
-            }),
-        });
+                const requestId =
+                    REQUEST_ID_BY_FORMAT[variant.credential_format] ??
+                    "pid-no-hook";
 
-        // Wait for test completion (2s polling delay)
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+                // Request presentation URI from backend
+                const presentationResponse = await axiosBackendInstance.post<{
+                    uri: string;
+                    session: string;
+                }>(
+                    `/verifier/offer`,
+                    {
+                        response_type: "uri",
+                        requestId,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${authToken}`,
+                        },
+                    },
+                );
 
-        const result = await oidfSuite.getResult(testInstance.id);
-        expect(result).toBe("PASSED");
-    }, 10000);
+                expect(presentationResponse.data.uri).toBeDefined();
+
+                // Extract query parameters from URI (format: openid4vp://...?params)
+                const uri = presentationResponse.data.uri;
+                const queryStart = uri.indexOf("?");
+                if (queryStart === -1) {
+                    throw new Error(`URI missing query parameters: ${uri}`);
+                }
+                const queryString = uri.substring(queryStart);
+
+                // Simulate wallet authorization via OIDF runner
+                const authorizeUrl = `${testInstance.url}/authorize${queryString}`;
+                await axios.default.get(authorizeUrl, {
+                    httpsAgent: new https.Agent({
+                        ca: readFileSync(OIDF_HTTPD_CA_PATH),
+                        checkServerIdentity: () => undefined,
+                    }),
+                });
+
+                // Wait for test completion (2s polling delay)
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+
+                const result = await oidfSuite.getResult(testInstance.id);
+                expect(result).toBe("PASSED");
+            },
+            10000,
+        );
+    }
 
     test("module coverage guard - verifier plan", async () => {
-        const availableModules = [
-            ...new Set(await oidfSuite.getAllTestsModules(PLAN_ID)),
-        ];
+        for (const { planId, variant } of createdPlans) {
+            const availableModules = [
+                ...new Set(await oidfSuite.getAllTestsModules(planId)),
+            ];
 
-        if (!ENFORCE_MODULE_COVERAGE_GUARD) {
-            if (availableModules.length > 1) {
-                console.warn(
-                    `OIDF verifier coverage guard warning: plan exposes ${availableModules.length} modules (${availableModules.join(", ")}). Set VITE_OIDF_ENFORCE_MODULE_COVERAGE=true to fail on this.`,
-                );
+            if (!ENFORCE_MODULE_COVERAGE_GUARD) {
+                if (availableModules.length > 1) {
+                    console.warn(
+                        `OIDF verifier coverage guard warning: ${variant.credential_format} plan exposes ${availableModules.length} modules (${availableModules.join(", ")}). Set VITE_OIDF_ENFORCE_MODULE_COVERAGE=true to fail on this.`,
+                    );
+                }
+                continue;
             }
-            return;
-        }
 
-        // Strict mode: guard against plan expansion without adding dedicated tests.
-        expect(
-            availableModules.length,
-            `Verifier plan contains ${availableModules.length} modules (${availableModules.join(", ")}). Add dedicated tests per new module.`,
-        ).toBe(1);
+            // Strict mode: guard against plan expansion without adding dedicated tests.
+            expect(
+                availableModules.length,
+                `Verifier ${variant.credential_format} plan contains ${availableModules.length} modules (${availableModules.join(", ")}). Add dedicated tests per new module.`,
+            ).toBe(1);
+        }
     });
 });

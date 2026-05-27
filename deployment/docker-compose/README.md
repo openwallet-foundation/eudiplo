@@ -22,6 +22,47 @@ docker compose --profile standard up -d   # Standard
 docker compose --profile full up -d       # Full
 ```
 
+## Config Mounting
+
+By default, EUDIPLO mounts `/app/config` from a named Docker volume.
+
+- Default behavior (persistent named volume):
+   - `EUDIPLO_CONFIG_MOUNT` unset
+   - Compose uses `eudiplo-config:/app/config`
+- Use repository config files (useful for load tests and config import):
+   - Set `EUDIPLO_CONFIG_MOUNT=../../assets:/app/config`
+
+Example:
+
+```bash
+cp .env.standard.example .env
+echo 'EUDIPLO_CONFIG_MOUNT=../../assets:/app/config' >> .env
+docker compose --profile standard up -d
+```
+
+Note: paths are resolved relative to this directory (`deployment/docker-compose`).
+
+## k6 Load Test Env
+
+For load testing, use `k6.env` in this directory as a single config source for
+startup and test import data.
+
+```bash
+cd ../../
+bash scripts/load-test/run-all.sh
+```
+
+By default the runner starts compose with:
+
+- `--env-file deployment/docker-compose/k6.env`
+- `--profile standard`
+
+You can override this behavior with:
+
+- `START_STACK=false` to skip compose startup
+- `K6_ENV_FILE=/absolute/path/to/env` to use a different env file
+- `COMPOSE_PROFILE=minimal|standard|full` to change the profile
+
 ## Deployment Profiles
 
 | Profile      | Command                                | Components                 | Use Case                  |
