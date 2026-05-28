@@ -474,6 +474,7 @@ export class Oid4vpService {
             });
 
             // Return redirect_uri with error if configured
+            // and propagate HTTP 400 while preserving response body shape.
             if (session.redirectUri) {
                 const processedRedirectUri = decodeURIComponent(
                     session.redirectUri,
@@ -482,13 +483,14 @@ export class Oid4vpService {
                 const separator = processedRedirectUri.includes("?")
                     ? "&"
                     : "?";
-                return {
+                throw new BadRequestException({
                     redirect_uri: `${processedRedirectUri}${separator}error=${encodeURIComponent(body.error)}${body.error_description ? `&error_description=${encodeURIComponent(body.error_description)}` : ""}`,
-                };
+                });
             }
 
-            // Return empty response (session status indicates failure)
-            return {};
+            // Return empty response body (session status indicates failure)
+            // and propagate HTTP 400.
+            throw new BadRequestException({});
         }
 
         // Ensure response field is present for success path
@@ -630,10 +632,11 @@ export class Oid4vpService {
                     redirect_uri: `${processedRedirectUri}${separator}response_code=${responseCode}`,
                 };
             }
-
+            
             if (body.sendResponse) {
                 return credentials;
             }
+
 
             return {};
         } catch (error: any) {
@@ -655,7 +658,8 @@ export class Oid4vpService {
                 errorReason: errorMessage,
             });
 
-            // If redirect_uri is configured, return it with error parameter
+            // If redirect_uri is configured, return it with error parameter,
+            // while propagating HTTP 400.
             if (session.redirectUri) {
                 const processedRedirectUri = decodeURIComponent(
                     session.redirectUri,
@@ -665,13 +669,14 @@ export class Oid4vpService {
                 const separator = processedRedirectUri.includes("?")
                     ? "&"
                     : "?";
-                return {
+                throw new BadRequestException({
                     redirect_uri: `${processedRedirectUri}${separator}error=invalid_request&error_description=${encodeURIComponent(errorMessage)}`,
-                };
+                });
             }
 
-            // Return empty response (session status indicates failure)
-            return {};
+            // Return empty response body (session status indicates failure)
+            // and propagate HTTP 400.
+            throw new BadRequestException({});
         }
     }
 }
