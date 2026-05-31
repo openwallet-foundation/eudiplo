@@ -108,7 +108,7 @@ EUDIPLO provides two ways to interact with the system:
 
 === "🔧 Swagger API (For developers)"
 
-    **Open the API Documentation**: http://localhost:3000/api
+    **Open the API Documentation**: http://localhost:3000/api/docs
 
     The Swagger UI provides direct API access for:
 
@@ -141,7 +141,7 @@ Choose your preferred approach:
 
     ### Authenticate via Swagger UI
 
-    1. **Open the API Documentation**: http://localhost:3000/api
+    1. **Open the API Documentation**: http://localhost:3000/api/docs
     2. **Click the "Authorize" button** (🔓 lock icon) in the top-right
     3. **Enter your credentials**:
         - **Client ID**: `root`
