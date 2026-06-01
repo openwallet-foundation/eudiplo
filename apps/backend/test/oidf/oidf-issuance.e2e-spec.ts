@@ -385,26 +385,28 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         credentialConfigurationId = DEFAULT_CREDENTIAL_CONFIGURATION_ID,
     ): Promise<void> {
         // Request an issuance offer from the local backend using authorization code flow
-        const offerResponse = await axiosBackendInstance.post<
-            OfferResponse,
-            axios.AxiosResponse<OfferResponse, OfferRequestDto>,
-            OfferRequestDto
-        >(
-            "/issuer/offer",
-            {
-                response_type: ResponseType.URI,
-                credentialConfigurationIds: [credentialConfigurationId],
-                flow: FlowType.AUTH_CODE,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${authToken}`,
+        const offerResponse = await axiosBackendInstance
+            .post<
+                OfferResponse,
+                axios.AxiosResponse<OfferResponse, OfferRequestDto>,
+                OfferRequestDto
+            >(
+                "/issuer/offer",
+                {
+                    response_type: ResponseType.URI,
+                    credentialConfigurationIds: [credentialConfigurationId],
+                    flow: FlowType.AUTH_CODE,
                 },
-            },
-        ).catch(err => {
-            console.log(err);
-            throw new Error(err);
-        });
+                {
+                    headers: {
+                        Authorization: `Bearer ${authToken}`,
+                    },
+                },
+            )
+            .catch((err) => {
+                console.log(err);
+                throw new Error(err);
+            });
 
         expect(offerResponse.data.uri).toBeDefined();
 

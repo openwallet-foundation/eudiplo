@@ -183,8 +183,9 @@ describe("OIDF", () => {
         planId: string,
         variant: VerifierVariant,
     ): Promise<void> => {
-        const planModuleNames =
-            (await oidfSuite.getAllTestsModules(planId)) as string[];
+        const planModuleNames = (await oidfSuite.getAllTestsModules(
+            planId,
+        )) as string[];
         const uniqueModules = [...new Set<string>(planModuleNames)].sort(
             (a, b) => a.localeCompare(b),
         );
