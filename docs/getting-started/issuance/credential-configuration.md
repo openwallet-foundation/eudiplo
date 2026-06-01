@@ -1,7 +1,7 @@
 # Credential Configuration
 
-Credential configurations define the structure and properties of individual
-credentials. Each credential type has its own configuration file.
+Credential configurations define the structure and behavior of individual
+credentials. Each credential type has its own configuration.
 
 ---
 
@@ -39,7 +39,7 @@ For a complete configuration example, see the [Complete Configuration Example](#
 - `vct`: **OPTIONAL** -
   [VC Type Metadata](https://www.ietf.org/archive/id/draft-ietf-oauth-sd-jwt-vc-09.html#name-sd-jwt-vc-type-metadata)
   provided via the `/{tenantId}/credentials-metadata/vct/{id}` endpoint. This link will
-  automatically added into the credential.
+  be automatically added to the credential.
 - `keyChainId`: **OPTIONAL** - Unique identifier for the key chain used to sign the credential. If not provided, the key chain with `attestation` usage type will be used. See [Signing Key Chain](#signing-key-chain) for details.
 - `lifeTime`: **OPTIONAL** - Credential expiration time in seconds. If
   specified, credentials will include an `exp` claim calculated as
@@ -53,7 +53,9 @@ For a complete configuration example, see the [Complete Configuration Example](#
 - `fields`: **REQUIRED for v2** - Field definitions (`ClaimFieldDefinition[]`) that describe claim paths, data types, defaults, disclosure behavior, and optional display labels.
 - `attributeProviderId`: **OPTIONAL** - Reference to an Attribute Provider that fetches claims dynamically. See [Attribute Providers](attribute-provider.md) for details.
 - `webhookEndpointId`: **OPTIONAL** - Reference to a Webhook Endpoint for receiving notifications about the issuance process. See [Notification Webhook Endpoint](#notification-webhook-endpoint) for details.
-- `sdJwtTrustFormat`: **OPTIONAL (SD-JWT only)** - Controls trust signaling in issued SD-JWT credentials: - `x5c` (default): include X.509 chain in JWT header - `federation`: use federation issuer identity (`iss`) for trust resolution
+- `sdJwtTrustFormat`: **OPTIONAL (SD-JWT only)** - Controls trust signaling in issued SD-JWT credentials:
+    - `x5c` (default): include the X.509 chain in the JWT header
+    - `federation`: use federation issuer identity (`iss`) for trust resolution
 - `embeddedDisclosurePolicy`: **OPTIONAL** - Defines the embedded disclosure policy for the credential. See [Embedded Disclosure Policy](#embedded-disclosure-policy) for details.
 - `iaeActions`: **OPTIONAL** - Sequence of Interactive Authorization actions required before credential issuance. See [Interactive Authorization Actions](#interactive-authorization-actions) for details.
 
@@ -115,7 +117,7 @@ Static field defaults are useful for:
 - Fixed metadata (e.g., issuing country, issuing authority)
 - Development and testing scenarios
 
-### Claims Webhook
+### Attribute Provider
 
 For dynamic claim retrieval, configure an Attribute Provider that is called during issuance:
 
@@ -159,7 +161,7 @@ For more details about the webhook implementation and payload structure, see [No
 
 !!! Info
 
-    When a webhook endpoint is configured on credential config level, notifications will be sent to this endpoint instead of the one provided in the issuance config. It can also be overwritten via the credential offer.
+    When a webhook endpoint is configured on credential config level, notifications are sent to this endpoint by default. It can be overridden per issuance by setting `webhookEndpointId` on the credential offer request.
 
 ---
 

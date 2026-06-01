@@ -1,6 +1,6 @@
 # Configuring Credential Issuance Flows
 
-The issuance system uses a **three-part configuration approach**:
+Issuance configuration is split into **three layers**:
 
 1. **Credential Configurations** - Define the structure, format, and metadata of
    individual credentials
@@ -13,7 +13,7 @@ The issuance system uses a **three-part configuration approach**:
 
 ## API Endpoints
 
-The system uses separate endpoints for each configuration layer:
+Each layer has its own API endpoints:
 
 ### Credential Configurations
 
@@ -43,9 +43,9 @@ format are documented in [Credential Offers](credential-offers.md).
 
 ## Credential Issuance Flow
 
-This flow describes how a backend service starts an issuance flow of an
-attestation. EUDIPLO creates the OID4VCI request and handles the protocol flow
-with the wallet. It also shows the interactions with [webhooks](../../architecture/webhooks.md) when they are configured.
+This flow shows how a backend service starts issuance. EUDIPLO creates the
+OID4VCI request, runs the protocol with the wallet, and optionally calls
+[webhooks](../../architecture/webhooks.md).
 
 ```mermaid
 sequenceDiagram
@@ -93,7 +93,8 @@ sequenceDiagram
     end
 ```
 
-The response with the credential offer link will also provide the session ID. It is included in the requests from the optional webhooks to identify the specific issuance flow. You can also use the id to query the issuance status at the API.
+The offer response also contains the session ID. EUDIPLO includes this ID in
+optional webhook calls, and you can use it to query issuance status via the API.
 
 ---
 
@@ -419,7 +420,7 @@ This issuance documentation is organized into the following sections:
   dedicated, reusable registrar-backed resource
 - **[Issuance Configuration](issuance-configuration.md)** - Understand how to
   create issuance configurations that group multiple credentials and define
-  issuance parameters such as authorization and webhooks
+  issuance parameters such as authorization, token behavior, and trust settings
 - **[Attribute Providers](attribute-provider.md)** - Configure reusable webhook
   endpoints for fetching claims dynamically during credential issuance
 

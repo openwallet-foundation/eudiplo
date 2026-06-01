@@ -1,12 +1,12 @@
 # Attribute Providers
 
-Attribute Providers are external HTTPS endpoints that EUDIPLO calls during credential issuance to dynamically fetch claim values. They provide a centralized, reusable way to configure claims webhooks at the tenant level.
+Attribute Providers are external HTTPS endpoints that EUDIPLO calls during credential issuance to dynamically fetch claim values. They provide a centralized, reusable way to configure claim sources at the tenant level.
 
 ---
 
 ## Overview
 
-Instead of configuring webhook URLs and authentication directly on each credential configuration, you can:
+Instead of repeating claim source settings on each credential configuration, you can:
 
 1. Create an Attribute Provider with the endpoint URL and authentication settings
 2. Reference the Attribute Provider by ID in one or more credential configurations
@@ -131,9 +131,9 @@ Once created, reference the Attribute Provider in your credential configuration:
 
 ---
 
-## Webhook Request & Response
+## Request and Response
 
-When EUDIPLO calls your Attribute Provider endpoint, it sends a POST request with information about the issuance session.
+When EUDIPLO calls your Attribute Provider endpoint, it sends a POST request with issuance session context.
 
 ### Request Format
 

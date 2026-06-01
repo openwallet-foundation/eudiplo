@@ -1,6 +1,7 @@
 # Issuance Configuration
 
-Issuance configurations define the parameters and settings for the issuance of credentials. This includes details such as the supported credential types, issuance policies, and any specific requirements for the issuance process.
+Issuance configurations define runtime behavior for issuing credentials, such as
+authorization, token behavior, and trust-related requirements.
 
 ---
 

@@ -1,17 +1,17 @@
 # Credential Offers
 
-Credential offers are the entry point into OID4VCI issuance. Your backend creates
-an offer via the API, EUDIPLO returns an offer URI, and that URI is then
-presented to the wallet as a QR code, deep link, or button.
+Credential offers start OID4VCI issuance. Your backend creates an offer via the
+API, EUDIPLO returns an offer URI, and you present that URI to the wallet
+(for example as a QR code or deep link).
 
-Use this page for the request shape and offer-specific behavior. For guidance on
-which issuance mode to choose, see the [Issuance Overview](index.md).
+This page covers request shape and offer behavior. For flow selection guidance,
+see the [Issuance Overview](index.md).
 
 ---
 
 ## Before You Create an Offer
 
-You typically need these resources in place first:
+Usually you create these resources first:
 
 1. A [Credential Configuration](credential-configuration.md)
 2. An [Issuance Configuration](issuance-configuration.md)
@@ -21,8 +21,7 @@ You typically need these resources in place first:
 
 ## Creating Credential Offers
 
-Via the [credential offer endpoint](../../api/openapi.md) you can create a
-credential offer that can be presented to the user.
+Use the [credential offer endpoint](../../api/openapi.md) to create the offer.
 
 When creating an offer, you can:
 
@@ -43,6 +42,12 @@ When creating an offer, you can:
 - `tx_code` - optional transaction code for pre-authorized flows
 - `tx_code_description` - optional prompt shown with the transaction code
 - `webhookEndpointId` - optional notification webhook endpoint ID
+
+!!! info "Notification webhook endpoint references"
+
+    `webhookEndpointId` references a standalone Webhook Endpoint resource. Create the endpoint first, then reference it by ID.
+
+    If both a credential configuration and an offer specify `webhookEndpointId`, the offer-level value is used for that session.
 
 ### Example: Pre-authorized Offer with Inline Claims
 
@@ -78,8 +83,8 @@ When creating an offer, you can:
 
 ## Single-Use Offers
 
-All credential offers are single-use and non-replayable. Once a wallet completes
-the issuance flow with a credential offer:
+Credential offers are single-use and non-replayable. Once a wallet completes
+issuance with an offer:
 
 - Token replay with the same authorization or pre-authorized code is rejected with an `invalid_grant` error
 - The offer is marked as consumed at the credential endpoint and cannot be used again after successful credential processing
@@ -172,7 +177,7 @@ Notes:
 - `credentialClaims` keys must be a subset of `credentialConfigurationIds`
 - values are resolved per credential configuration, not globally for the whole offer
 - if you want to override only one credential in a multi-credential offer, include only that credential in `credentialClaims`
-- for the full webhook shape, see [Attribute Providers](attribute-provider.md) and the [API documentation](../../api/openapi.md)
+- for the full webhook shape, see [Attribute Providers](attribute-provider.md), [Webhooks](../../architecture/webhooks.md), and the [API documentation](../../api/openapi.md)
 
 ### When to Use Each Method
 
