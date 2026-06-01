@@ -401,7 +401,10 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
                     Authorization: `Bearer ${authToken}`,
                 },
             },
-        );
+        ).catch(err => {
+            console.log(err);
+            throw new Error(err);
+        });
 
         expect(offerResponse.data.uri).toBeDefined();
 

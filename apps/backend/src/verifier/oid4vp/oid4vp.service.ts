@@ -632,11 +632,10 @@ export class Oid4vpService {
                     redirect_uri: `${processedRedirectUri}${separator}response_code=${responseCode}`,
                 };
             }
-            
+
             if (body.sendResponse) {
                 return credentials;
             }
-
 
             return {};
         } catch (error: any) {

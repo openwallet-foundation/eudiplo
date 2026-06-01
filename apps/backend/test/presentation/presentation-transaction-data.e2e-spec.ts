@@ -236,7 +236,7 @@ describe("Presentation - Transaction Data", () => {
         const vp_token = await preparePresentationWithTransactionData(
             {
                 iat: Math.floor(Date.now() / 1000),
-                aud: resolved.authorizationRequestPayload.aud as string,
+                aud: resolved.authorizationRequestPayload.client_id as string,
                 nonce: resolved.authorizationRequestPayload.nonce,
                 ...(transactionDataHashes && {
                     transaction_data_hashes: transactionDataHashes,
@@ -436,8 +436,8 @@ describe("Presentation - Transaction Data", () => {
             overrideTransactionDataHashes: ["INVALID_HASH_THAT_WONT_MATCH"],
         });
 
-        // Per OID4VP spec, the verifier MUST return 200 even on validation failure
-        expect(submitRes.response.status).toBe(200);
+        // Per OID4VP spec, the verifier MUST return 400
+        expect(submitRes.response.status).toBe(400);
 
         // Verify the session is marked as failed with error reason
         const sessionRes = await request(app.getHttpServer())
@@ -473,8 +473,8 @@ describe("Presentation - Transaction Data", () => {
             overrideTransactionDataHashes: [], // Empty hashes when data was expected
         });
 
-        // Per OID4VP spec, the verifier MUST return 200 even on validation failure
-        expect(submitRes.response.status).toBe(200);
+        // Per OID4VP spec, the verifier MUST return 400
+        expect(submitRes.response.status).toBe(400);
 
         // Verify the session is marked as failed with error reason
         const sessionRes = await request(app.getHttpServer())

@@ -199,13 +199,12 @@ export class SdjwtvcverifierService {
             const crypto = this.cryptoService.getCryptoFromJwk(publicKey);
             const verifier = await crypto.getVerifier(publicKey);
 
-            const sigOk = await verifier(data, signature)
-                .catch((e) => {
-                    this.logger.debug(
-                        `SD-JWT signature invalid: ${e?.message ?? e}`,
-                    );
-                    return false;
-                });
+            const sigOk = await verifier(data, signature).catch((e) => {
+                this.logger.debug(
+                    `SD-JWT signature invalid: ${e?.message ?? e}`,
+                );
+                return false;
+            });
             if (!sigOk) return { verified: false, matchedEntity: null };
 
             // 2) Validate certificate chain using shared service
@@ -338,7 +337,10 @@ export class SdjwtvcverifierService {
             iat?: unknown;
         };
 
-        if (typeof kbPayload.iat !== "number" || !Number.isFinite(kbPayload.iat)) {
+        if (
+            typeof kbPayload.iat !== "number" ||
+            !Number.isFinite(kbPayload.iat)
+        ) {
             throw new BadRequestException("Invalid key binding JWT iat");
         }
 

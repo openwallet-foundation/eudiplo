@@ -46,41 +46,79 @@ useOidfContainers();
  * E2E: OIDF conformance runner integration test
  */
 describe("OIDF", () => {
+    type VerifierVariant = {
+        credential_format: "sd_jwt_vc" | "iso_mdl";
+        client_id_prefix?: string;
+        request_method?: string;
+        response_mode?: string;
+    };
+
     const PUBLIC_DOMAIN =
         import.meta.env.VITE_DOMAIN ?? "host.testcontainers.internal:3000";
     const OIDF_URL = import.meta.env.VITE_OIDF_URL ?? "https://localhost:8443";
     const OIDF_DEMO_TOKEN = import.meta.env.VITE_OIDF_DEMO_TOKEN;
     const ENFORCE_MODULE_COVERAGE_GUARD =
         import.meta.env.VITE_OIDF_ENFORCE_MODULE_COVERAGE === "true";
-    const RUN_FULL_MATRIX = import.meta.env.VITE_OIDF_FULL_MATRIX === "true";
 
-    const VERIFIER_VARIANT_MATRIX = [
-        {
-            credential_format: "sd_jwt_vc",
-            client_id_prefix: "x509_hash",
-            request_method: "request_uri_signed",
-            response_mode: "direct_post.jwt",
-        },
-        {
-            credential_format: "mso_mdoc",
-            client_id_prefix: "x509_hash",
-            request_method: "request_uri_signed",
-            response_mode: "direct_post.jwt",
-        },
-    ] as const;
+    // Run all available verifier approaches for SD-JWT VC by constraining only credential_format.
+    const SD_JWT_VC_ALL_APPROACHES_VARIANT = {
+        credential_format: "sd_jwt_vc",
+        client_id_prefix: "x509_hash",
+        request_method: "request_uri_signed",
+        response_mode: "direct_post.jwt",
+    } as const;
 
-    type VerifierVariant = (typeof VERIFIER_VARIANT_MATRIX)[number];
+    // Keep one representative mDOC baseline approach.
+    const MDOC_BASELINE_VARIANT = {
+        credential_format: "iso_mdl",
+        client_id_prefix: "x509_hash",
+        request_method: "request_uri_signed",
+        response_mode: "direct_post.jwt",
+    } as const;
 
-    // Fast mode keeps runtime lower while still validating the primary credential format.
-    const ENFORCED_VERIFIER_VARIANTS = RUN_FULL_MATRIX
-        ? [...VERIFIER_VARIANT_MATRIX]
-        : [VERIFIER_VARIANT_MATRIX[0]];
+    const ENFORCED_VERIFIER_VARIANTS: VerifierVariant[] = [
+        SD_JWT_VC_ALL_APPROACHES_VARIANT,
+        MDOC_BASELINE_VARIANT,
+    ];
+
+    const formatVariantLabel = (variant: VerifierVariant): string =>
+        [
+            variant.credential_format,
+            variant.client_id_prefix ?? "all-client-id-prefixes",
+            variant.request_method ?? "all-request-methods",
+            variant.response_mode ?? "all-response-modes",
+        ].join("/");
 
     // Maps credential_format to the verifier offer requestId for that format.
     const REQUEST_ID_BY_FORMAT: Record<string, string> = {
         sd_jwt_vc: "pid-no-hook",
-        mso_mdoc: "pid-mdoc-no-hook",
+        iso_mdl: "pid-mdoc-no-hook",
     };
+
+    const MDOC_PRESENTATION_DEFINITION_FIELDS = [
+        "birth_date",
+        "document_number",
+        "driving_privileges",
+        "expiry_date",
+        "family_name",
+        "given_name",
+        "issue_date",
+        "issuing_authority",
+        "issuing_country",
+        "portrait",
+        "un_distinguishing_sign",
+    ] as const;
+
+    const MDOC_ENCRYPTION_JWK = {
+        kty: "EC",
+        d: "7N8jd8HvUp3vHC7a-xitehRnYuyZLy3kqkxG7KmpfMY",
+        use: "enc",
+        crv: "P-256",
+        kid: "A541J5yUqazgE8WBFkIyeh2OtK-udqUR_OC0kB7l3oU",
+        x: "cwYyuS94hcOtcPlrMMtGtflCfbZUwz5Mf1Gfa2m0AM8",
+        y: "KB7sJkFQyB8jZHO9vmWS5LNECL4id3OJO9HX9ChNonA",
+        alg: "ECDH-ES",
+    } as const;
 
     let app: INestApplication;
     let authToken: string;
@@ -117,42 +155,71 @@ describe("OIDF", () => {
 
     const getPlanModulesCached = async (planId: string) => {
         if (!planModulesCache.has(planId)) {
-            planModulesCache.set(planId, await oidfSuite.getPlanModules(planId));
+            planModulesCache.set(
+                planId,
+                await oidfSuite.getPlanModules(planId),
+            );
         }
         return planModulesCache.get(planId)!;
     };
 
-    /**
-     * Runs a verifier module against every created plan variant.
-     * Skips plans where the module does not exist (format-specific modules).
-     */
-    const forEachPlan = async (
-        moduleName: string,
-        action: (
-            testInstance: TestInstance,
-            variant: VerifierVariant,
-            planId: string,
-        ) => Promise<void>,
-    ): Promise<void> => {
-        let ranCount = 0;
+    const getPlanByCredentialFormat = (
+        credentialFormat: VerifierVariant["credential_format"],
+    ): { planId: string; variant: VerifierVariant } => {
+        const targetPlan = createdPlans.find(
+            ({ variant }) => variant.credential_format === credentialFormat,
+        );
 
-        for (const { planId, variant } of createdPlans) {
+        if (!targetPlan) {
+            throw new Error(
+                `No verifier plan found for credential format '${credentialFormat}'`,
+            );
+        }
+
+        return targetPlan;
+    };
+
+    const runVerifierModulesForPlan = async (
+        planId: string,
+        variant: VerifierVariant,
+    ): Promise<void> => {
+        const planModuleNames =
+            (await oidfSuite.getAllTestsModules(planId)) as string[];
+        const uniqueModules = [...new Set<string>(planModuleNames)].sort(
+            (a, b) => a.localeCompare(b),
+        );
+
+        if (uniqueModules.length === 0) {
+            throw new Error(
+                `No verifier modules found for ${formatVariantLabel(variant)}`,
+            );
+        }
+
+        for (const moduleName of uniqueModules) {
             const modules = await getPlanModulesCached(planId);
             const module = modules.find((m) => m.testModule === moduleName);
 
             if (!module) {
                 console.warn(
-                    `Module '${moduleName}' not found in plan ${variant.credential_format}, skipping.`,
+                    `Module '${moduleName}' not found in plan ${formatVariantLabel(variant)}, skipping.`,
                 );
                 continue;
             }
 
             const testInstance = await oidfSuite.startTest(planId, moduleName);
             console.log(
-                `Test details (${variant.credential_format}/${variant.client_id_prefix}/${variant.request_method}/${variant.response_mode}): ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
+                `Test details (${formatVariantLabel(variant)}): ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
             );
 
-            await action(testInstance, variant, planId);
+            await sendPresentationToTestRunner(testInstance, variant);
+
+            const logResult = await oidfSuite.waitForFinished(testInstance.id);
+            const allowedResults = getAllowedResults(moduleName);
+
+            expect(
+                allowedResults,
+                `Unexpected result for module '${moduleName}' on ${formatVariantLabel(variant)}: ${logResult.result}`,
+            ).toContain(logResult.result);
 
             coveredScenarioKeys.add(
                 oidfSuite.buildScenarioKey({
@@ -160,14 +227,6 @@ describe("OIDF", () => {
                     planVariant: variant,
                     moduleVariant: module.variant,
                 }),
-            );
-
-            ranCount++;
-        }
-
-        if (ranCount === 0) {
-            console.warn(
-                `Module '${moduleName}' was not found in any target verifier plan.`,
             );
         }
     };
@@ -237,12 +296,8 @@ describe("OIDF", () => {
             }),
         });
 
-        const logResult = await oidfSuite.waitForFinished(
-            testInstance.id,
-        );
-        expect(["PASSED", "SKIPPED", "WARNING"]).toContain(
-            logResult.result,
-        );
+        const logResult = await oidfSuite.waitForFinished(testInstance.id);
+        expect(["PASSED", "SKIPPED", "WARNING"]).toContain(logResult.result);
     }
 
     beforeAll(async () => {
@@ -318,9 +373,10 @@ describe("OIDF", () => {
         // Export the active private key as JWK for the OIDF suite
         const signingJwk = attestationEntity.activeJwk;
 
-        // Create OIDF test plans for each variant with the attestation signing key (matches trust list)
+        // Create OIDF test plans for each variant.
+        // SD-JWT uses credential.signing_jwk while mDOC expects key material in client.jwks.keys.
         const planName = "oid4vp-1final-verifier-test-plan";
-        const body = {
+        const sdJwtBody = {
             alias: "test-plan",
             description: "test plan created via e2e tests",
             credential: {
@@ -332,9 +388,66 @@ describe("OIDF", () => {
                 },
             },
             publish: "everything",
-        };
+        } as const;
+
+        const mdocBody = {
+            alias: "test-plan",
+            description: "test plan created via e2e tests",
+            server: {
+                authorization_endpoint: "mdoc-openid4vp://",
+            },
+            credential: {
+                // Force issuer-side mDOC signing to use the same trusted HAIP key chain.
+                signing_jwk: {
+                    ...signingJwk,
+                    use: "sig",
+                    x5c,
+                    alg: "ES256",
+                },
+            },
+            client: {
+                presentation_definition: {
+                    id: "mDL",
+                    input_descriptors: [
+                        {
+                            id: "org.iso.18013.5.1.mDL",
+                            format: {
+                                mso_mdoc: {
+                                    alg: ["ES256"],
+                                },
+                            },
+                            constraints: {
+                                fields: MDOC_PRESENTATION_DEFINITION_FIELDS.map(
+                                    (fieldName) => ({
+                                        path: [
+                                            `$['org.iso.18013.5.1']['${fieldName}']`,
+                                        ],
+                                        intent_to_retain: false,
+                                    }),
+                                ),
+                                limit_disclosure: "required",
+                            },
+                        },
+                    ],
+                },
+                jwks: {
+                    keys: [
+                        {
+                            ...signingJwk,
+                            use: "sig",
+                            x5c,
+                            alg: "ES256",
+                        },
+                        MDOC_ENCRYPTION_JWK,
+                    ],
+                },
+            },
+            publish: "everything",
+        } as const;
 
         for (const variant of ENFORCED_VERIFIER_VARIANTS) {
+            const body =
+                variant.credential_format === "iso_mdl" ? mdocBody : sdJwtBody;
             const planId = await oidfSuite.createPlan(planName, variant, body);
             createdPlans.push({ planId, variant });
             console.log(
@@ -399,41 +512,21 @@ describe("OIDF", () => {
         expect(uniqueModules.length).toBeGreaterThan(0);
     });
 
-    test("oidf conformance suite presentation - all verifier modules", async () => {
-        if (createdPlans.length === 0) {
-            throw new Error("No verifier plans were created to execute modules");
-        }
+    test("oidf conformance suite presentation - sd_jwt_vc verifier modules", async () => {
+        const { planId, variant } = getPlanByCredentialFormat("sd_jwt_vc");
+        await runVerifierModulesForPlan(planId, variant);
+    }, 120000);
 
-        const uniqueModules = [
-            ...new Set(
-                (await Promise.all(
-                    createdPlans.map(({ planId }) =>
-                        oidfSuite.getAllTestsModules(planId),
-                    ),
-                )).flat(),
-            ),
-        ].sort((a, b) => a.localeCompare(b));
-
-        for (const moduleName of uniqueModules) {
-            await forEachPlan(moduleName, async (testInstance, variant) => {
-                await sendPresentationToTestRunner(testInstance, variant);
-
-                const logResult = await oidfSuite.waitForFinished(
-                    testInstance.id,
-                );
-                const allowedResults = getAllowedResults(moduleName);
-
-                expect(
-                    allowedResults,
-                    `Unexpected result for module '${moduleName}' on ${variant.credential_format}/${variant.client_id_prefix}/${variant.request_method}/${variant.response_mode}: ${logResult.result}`,
-                ).toContain(logResult.result);
-            });
-        }
+    test("oidf conformance suite presentation - iso_mdl verifier modules", async () => {
+        const { planId, variant } = getPlanByCredentialFormat("iso_mdl");
+        await runVerifierModulesForPlan(planId, variant);
     }, 120000);
 
     test("module coverage guard - verifier plan", async () => {
         if (createdPlans.length === 0) {
-            throw new Error("No verifier plans were created for coverage checks");
+            throw new Error(
+                "No verifier plans were created for coverage checks",
+            );
         }
 
         const availableScenarioKeys = new Set<string>();
@@ -466,10 +559,7 @@ describe("OIDF", () => {
             expect(
                 missingScenarios,
                 `Uncovered OIDF verifier scenarios (${missingScenarios.length}) in matrix ${createdPlans
-                    .map(
-                        ({ variant }) =>
-                            `${variant.credential_format}/${variant.client_id_prefix}/${variant.request_method}/${variant.response_mode}`,
-                    )
+                    .map(({ variant }) => formatVariantLabel(variant))
                     .join(", ")}.`,
             ).toEqual([]);
         }
