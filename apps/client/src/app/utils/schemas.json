@@ -478,7 +478,6 @@
           "type": "string"
         },
         "actionType": {
-          "type": "string",
           "enum": [
             "tenant_created",
             "tenant_updated",
@@ -498,11 +497,12 @@
             "attribute_provider_created",
             "attribute_provider_updated",
             "attribute_provider_deleted"
-          ]
+          ],
+          "type": "string"
         },
         "actorType": {
-          "type": "string",
-          "enum": ["user", "client", "system"]
+          "enum": ["user", "client", "system"],
+          "type": "string"
         },
         "actorId": {
           "type": "string"
@@ -698,9 +698,9 @@
           "example": 10000
         },
         "bits": {
-          "type": "number",
           "description": "Bits per status value. If not provided, uses tenant or global defaults.",
           "enum": [1, 2, 4, 8],
+          "type": "number",
           "example": 1
         }
       },
@@ -750,10 +750,10 @@
           "example": 10000
         },
         "bits": {
-          "type": "number",
           "nullable": true,
           "description": "Bits per status entry. Set to null to reset to global default.",
-          "enum": [1, 2, 4, 8]
+          "enum": [1, 2, 4, 8],
+          "type": "number"
         },
         "ttl": {
           "type": "number",
@@ -808,9 +808,9 @@
           "example": "my-status-list-keychain"
         },
         "bits": {
-          "type": "number",
           "description": "Bits per status value",
           "enum": [1, 2, 4, 8],
+          "type": "number",
           "example": 1
         },
         "capacity": {
@@ -880,9 +880,9 @@
           "example": "my-status-list-keychain"
         },
         "bits": {
-          "type": "number",
           "description": "Bits per status value. More bits allow more status states. Defaults to tenant configuration.",
           "enum": [1, 2, 4, 8],
+          "type": "number",
           "example": 1
         },
         "capacity": {
@@ -995,64 +995,62 @@
         "credentialClaims": {
           "type": "object",
           "description": "Credential claims configuration per credential. Keys must match credentialConfigurationIds.",
-          "properties": {
-            "additionalProperties": {
-              "oneOf": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": ["inline"]
-                    },
-                    "claims": {
-                      "type": "object",
-                      "additionalProperties": true
-                    }
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["inline"]
                   },
-                  "required": ["type", "claims"],
-                  "additionalProperties": false
+                  "claims": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
                 },
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": ["attributeProvider"]
-                    },
-                    "attributeProviderId": {
-                      "type": "string"
-                    }
+                "required": ["type", "claims"],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["attributeProvider"]
                   },
-                  "required": ["type", "attributeProviderId"],
-                  "additionalProperties": false
+                  "attributeProviderId": {
+                    "type": "string"
+                  }
                 },
-                {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": ["webhook"]
-                    },
-                    "webhook": {
-                      "type": "object",
-                      "properties": {
-                        "url": {
-                          "type": "string"
-                        },
-                        "auth": {
-                          "type": "object"
-                        }
+                "required": ["type", "attributeProviderId"],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["webhook"]
+                  },
+                  "webhook": {
+                    "type": "object",
+                    "properties": {
+                      "url": {
+                        "type": "string"
                       },
-                      "required": ["url"],
-                      "additionalProperties": false
-                    }
-                  },
-                  "required": ["type", "webhook"],
-                  "additionalProperties": false
-                }
-              ]
-            }
+                      "auth": {
+                        "type": "object"
+                      }
+                    },
+                    "required": ["url"],
+                    "additionalProperties": false
+                  }
+                },
+                "required": ["type", "webhook"],
+                "additionalProperties": false
+              }
+            ]
           },
           "example": {
             "citizen": {
@@ -1062,8 +1060,7 @@
                 "family_name": "Doe"
               }
             }
-          },
-          "additionalProperties": false
+          }
         },
         "flow": {
           "description": "The flow type for the offer request.",
@@ -2954,8 +2951,8 @@
           }
         },
         "type": {
-          "type": "string",
           "enum": ["string", "number", "integer", "boolean", "object", "array", "date"],
+          "type": "string",
           "description": "Claim value type"
         },
         "defaultValue": {
@@ -3236,7 +3233,6 @@
               "$ref": "./RootOfTrustPolicy.schema.json"
             }
           ],
-          "type": "object",
           "allOf": [
             {
               "$ref": "./EmbeddedDisclosurePolicy.schema.json"
@@ -3380,7 +3376,6 @@
               "$ref": "./RootOfTrustPolicy.schema.json"
             }
           ],
-          "type": "object",
           "allOf": [
             {
               "$ref": "./EmbeddedDisclosurePolicy.schema.json"
@@ -3507,7 +3502,6 @@
               "$ref": "./RootOfTrustPolicy.schema.json"
             }
           ],
-          "type": "object",
           "allOf": [
             {
               "$ref": "./EmbeddedDisclosurePolicy.schema.json"
@@ -3640,9 +3634,9 @@
           "description": "Display label for UI rendering."
         },
         "status": {
+          "enum": ["active", "deprecated"],
           "type": "string",
-          "description": "Vocabulary lifecycle status.",
-          "enum": ["active", "deprecated"]
+          "description": "Vocabulary lifecycle status."
         },
         "replacedBy": {
           "type": "string",
@@ -3699,9 +3693,9 @@
           "description": "Unique identifier for this schema entry"
         },
         "formatIdentifier": {
+          "enum": ["dc+sd-jwt", "mso_mdoc"],
           "type": "string",
-          "description": "The credential format identifier",
-          "enum": ["dc+sd-jwt", "mso_mdoc"]
+          "description": "The credential format identifier"
         },
         "uri": {
           "type": "string",
@@ -3808,27 +3802,27 @@
           "description": "Subresource Integrity hash for the rulebook URI"
         },
         "attestationLoS": {
-          "type": "string",
-          "description": "Level of security (LoS) of this attestation",
           "enum": [
             "iso_18045_high",
             "iso_18045_moderate",
             "iso_18045_enhanced-basic",
             "iso_18045_basic"
-          ]
+          ],
+          "type": "string",
+          "description": "Level of security (LoS) of this attestation"
         },
         "bindingType": {
+          "enum": ["claim", "key", "biometric", "none"],
           "type": "string",
-          "description": "Required binding type between attestation and holder",
-          "enum": ["claim", "key", "biometric", "none"]
+          "description": "Required binding type between attestation and holder"
         },
         "supportedFormats": {
           "type": "array",
-          "description": "Credential formats in which this attestation is available",
           "items": {
             "type": "string",
             "enum": ["dc+sd-jwt", "mso_mdoc"]
-          }
+          },
+          "description": "Credential formats in which this attestation is available"
         },
         "schemaURIs": {
           "description": "Format-specific schema URIs for this schema metadata",
@@ -3845,9 +3839,9 @@
           }
         },
         "category": {
+          "enum": ["identity", "health", "finance", "education", "mobility", "employment", "other"],
           "type": "string",
-          "description": "Domain category for filtering",
-          "enum": ["identity", "health", "finance", "education", "mobility", "employment", "other"]
+          "description": "Domain category for filtering"
         },
         "tags": {
           "description": "Free-form tags for filtering and search",
@@ -3929,13 +3923,12 @@
       "type": "object",
       "properties": {
         "category": {
+          "enum": ["identity", "health", "finance", "education", "mobility", "employment", "other"],
           "type": "string",
-          "description": "Domain category for filtering",
-          "enum": ["identity", "health", "finance", "education", "mobility", "employment", "other"]
+          "description": "Domain category for filtering"
         },
         "tags": {
           "type": "array",
-          "description": "Predefined tags for filtering and search",
           "items": {
             "type": "string",
             "enum": [
@@ -3950,7 +3943,8 @@
               "employment",
               "mobility"
             ]
-          }
+          },
+          "description": "Predefined tags for filtering and search"
         }
       },
       "additionalProperties": false
@@ -5079,7 +5073,8 @@
           "type": "string"
         },
         "event": {
-          "type": "object"
+          "type": "string",
+          "enum": ["credential_accepted", "credential_failure", "credential_deleted"]
         }
       },
       "required": ["notification_id", "event"],

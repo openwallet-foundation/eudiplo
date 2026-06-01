@@ -76,6 +76,8 @@ When creating a presentation request via the `/verifier/offer` endpoint, you can
 
     When `transaction_data` is provided in the request, it completely replaces any transaction data defined in the presentation configuration. The two are not merged.
 
+    The same request-time override model also applies to `webhook` and `redirectUri`. See [Presentation Configuration](presentation-configuration.md#request-time-overrides).
+
 ---
 
 ## Fields

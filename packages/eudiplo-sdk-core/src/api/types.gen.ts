@@ -431,7 +431,7 @@ export type OfferRequestDto = {
      * Credential claims configuration per credential. Keys must match credentialConfigurationIds.
      */
     credentialClaims?: {
-        additionalProperties?: {
+        [key: string]: {
             type: 'inline';
             claims: {
                 [key: string]: unknown;
@@ -2364,9 +2364,7 @@ export type DeferredCredentialRequestDto = {
 
 export type NotificationRequestDto = {
     notification_id: string;
-    event: {
-        [key: string]: unknown;
-    };
+    event: 'credential_accepted' | 'credential_failure' | 'credential_deleted';
 };
 
 export type Object = {

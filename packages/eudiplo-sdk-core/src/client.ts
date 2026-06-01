@@ -319,17 +319,16 @@ export class EudiploClient {
 
     // Build credential claims if provided
     if (options.claims) {
-      body.credentialClaims = {
-        additionalProperties: undefined,
-      };
+      const credentialClaims: NonNullable<OfferRequestDto['credentialClaims']> = {};
       // For simplicity, we use inline claims
       for (const [configId, claims] of Object.entries(options.claims)) {
         // The API expects a specific structure
-        (body.credentialClaims as Record<string, unknown>)[configId] = {
+        credentialClaims[configId] = {
           type: 'inline',
           claims,
         };
       }
+      body.credentialClaims = credentialClaims;
     }
 
     const response = await credentialOfferControllerGetOffer({
