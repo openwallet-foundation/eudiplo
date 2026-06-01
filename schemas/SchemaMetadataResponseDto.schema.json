@@ -21,35 +21,35 @@
       "description": "Subresource Integrity hash for the rulebook URI"
     },
     "attestationLoS": {
-      "type": "string",
-      "description": "Level of security (LoS) of this attestation",
       "enum": [
         "iso_18045_high",
         "iso_18045_moderate",
         "iso_18045_enhanced-basic",
         "iso_18045_basic"
-      ]
+      ],
+      "type": "string",
+      "description": "Level of security (LoS) of this attestation"
     },
     "bindingType": {
-      "type": "string",
-      "description": "Required binding type between attestation and holder",
       "enum": [
         "claim",
         "key",
         "biometric",
         "none"
-      ]
+      ],
+      "type": "string",
+      "description": "Required binding type between attestation and holder"
     },
     "supportedFormats": {
       "type": "array",
-      "description": "Credential formats in which this attestation is available",
       "items": {
         "type": "string",
         "enum": [
           "dc+sd-jwt",
           "mso_mdoc"
         ]
-      }
+      },
+      "description": "Credential formats in which this attestation is available"
     },
     "schemaURIs": {
       "description": "Format-specific schema URIs for this schema metadata",
@@ -66,8 +66,6 @@
       }
     },
     "category": {
-      "type": "string",
-      "description": "Domain category for filtering",
       "enum": [
         "identity",
         "health",
@@ -76,7 +74,9 @@
         "mobility",
         "employment",
         "other"
-      ]
+      ],
+      "type": "string",
+      "description": "Domain category for filtering"
     },
     "tags": {
       "description": "Free-form tags for filtering and search",

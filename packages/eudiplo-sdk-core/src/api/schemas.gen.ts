@@ -430,7 +430,6 @@ export const AuditLogResponseDtoSchema = {
             type: 'string'
         },
         actionType: {
-            type: 'string',
             enum: [
                 'tenant_created',
                 'tenant_updated',
@@ -450,15 +449,16 @@ export const AuditLogResponseDtoSchema = {
                 'attribute_provider_created',
                 'attribute_provider_updated',
                 'attribute_provider_deleted'
-            ]
+            ],
+            type: 'string'
         },
         actorType: {
-            type: 'string',
             enum: [
                 'user',
                 'client',
                 'system'
-            ]
+            ],
+            type: 'string'
         },
         actorId: {
             type: 'string'
@@ -651,7 +651,6 @@ export const StatusListImportDtoSchema = {
             example: 10000
         },
         bits: {
-            type: 'number',
             description: 'Bits per status value. If not provided, uses tenant or global defaults.',
             enum: [
                 1,
@@ -659,6 +658,7 @@ export const StatusListImportDtoSchema = {
                 4,
                 8
             ],
+            type: 'number',
             example: 1
         }
     },
@@ -698,7 +698,6 @@ export const UpdateStatusListConfigDtoSchema = {
             example: 10000
         },
         bits: {
-            type: 'number',
             nullable: true,
             description: 'Bits per status entry. Set to null to reset to global default.',
             enum: [
@@ -706,7 +705,8 @@ export const UpdateStatusListConfigDtoSchema = {
                 2,
                 4,
                 8
-            ]
+            ],
+            type: 'number'
         },
         ttl: {
             type: 'number',
@@ -754,7 +754,6 @@ export const StatusListResponseDtoSchema = {
             example: 'my-status-list-keychain'
         },
         bits: {
-            type: 'number',
             description: 'Bits per status value',
             enum: [
                 1,
@@ -762,6 +761,7 @@ export const StatusListResponseDtoSchema = {
                 4,
                 8
             ],
+            type: 'number',
             example: 1
         },
         capacity: {
@@ -824,7 +824,6 @@ export const CreateStatusListDtoSchema = {
             example: 'my-status-list-keychain'
         },
         bits: {
-            type: 'number',
             description: 'Bits per status value. More bits allow more status states. Defaults to tenant configuration.',
             enum: [
                 1,
@@ -832,6 +831,7 @@ export const CreateStatusListDtoSchema = {
                 4,
                 8
             ],
+            type: 'number',
             example: 1
         },
         capacity: {
@@ -926,77 +926,75 @@ export const OfferRequestDtoSchema = {
         credentialClaims: {
             type: 'object',
             description: 'Credential claims configuration per credential. Keys must match credentialConfigurationIds.',
-            properties: {
-                additionalProperties: {
-                    oneOf: [
-                        {
-                            type: 'object',
-                            properties: {
-                                type: {
-                                    type: 'string',
-                                    enum: [
-                                        'inline'
-                                    ]
-                                },
-                                claims: {
-                                    type: 'object',
-                                    additionalProperties: true
-                                }
+            additionalProperties: {
+                oneOf: [
+                    {
+                        type: 'object',
+                        properties: {
+                            type: {
+                                type: 'string',
+                                enum: [
+                                    'inline'
+                                ]
                             },
-                            required: [
-                                'type',
-                                'claims'
-                            ]
+                            claims: {
+                                type: 'object',
+                                additionalProperties: true
+                            }
                         },
-                        {
-                            type: 'object',
-                            properties: {
-                                type: {
-                                    type: 'string',
-                                    enum: [
-                                        'attributeProvider'
-                                    ]
-                                },
-                                attributeProviderId: {
-                                    type: 'string'
-                                }
+                        required: [
+                            'type',
+                            'claims'
+                        ]
+                    },
+                    {
+                        type: 'object',
+                        properties: {
+                            type: {
+                                type: 'string',
+                                enum: [
+                                    'attributeProvider'
+                                ]
                             },
-                            required: [
-                                'type',
-                                'attributeProviderId'
-                            ]
+                            attributeProviderId: {
+                                type: 'string'
+                            }
                         },
-                        {
-                            type: 'object',
-                            properties: {
-                                type: {
-                                    type: 'string',
-                                    enum: [
-                                        'webhook'
-                                    ]
-                                },
-                                webhook: {
-                                    type: 'object',
-                                    properties: {
-                                        url: {
-                                            type: 'string'
-                                        },
-                                        auth: {
-                                            type: 'object'
-                                        }
+                        required: [
+                            'type',
+                            'attributeProviderId'
+                        ]
+                    },
+                    {
+                        type: 'object',
+                        properties: {
+                            type: {
+                                type: 'string',
+                                enum: [
+                                    'webhook'
+                                ]
+                            },
+                            webhook: {
+                                type: 'object',
+                                properties: {
+                                    url: {
+                                        type: 'string'
                                     },
-                                    required: [
-                                        'url'
-                                    ]
-                                }
-                            },
-                            required: [
-                                'type',
-                                'webhook'
-                            ]
-                        }
-                    ]
-                }
+                                    auth: {
+                                        type: 'object'
+                                    }
+                                },
+                                required: [
+                                    'url'
+                                ]
+                            }
+                        },
+                        required: [
+                            'type',
+                            'webhook'
+                        ]
+                    }
+                ]
             },
             example: {
                 citizen: {
@@ -2744,7 +2742,6 @@ export const ClaimFieldDefinitionDtoSchema = {
             }
         },
         type: {
-            type: 'string',
             enum: [
                 'string',
                 'number',
@@ -2754,6 +2751,7 @@ export const ClaimFieldDefinitionDtoSchema = {
                 'array',
                 'date'
             ],
+            type: 'string',
             description: 'Claim value type'
         },
         defaultValue: {
@@ -3032,7 +3030,6 @@ export const CredentialConfigSchema = {
                     $ref: '#/components/schemas/RootOfTrustPolicy'
                 }
             ],
-            type: 'object',
             allOf: [
                 {
                     $ref: '#/components/schemas/EmbeddedDisclosurePolicy'
@@ -3178,7 +3175,6 @@ export const CredentialConfigCreateSchema = {
                     $ref: '#/components/schemas/RootOfTrustPolicy'
                 }
             ],
-            type: 'object',
             allOf: [
                 {
                     $ref: '#/components/schemas/EmbeddedDisclosurePolicy'
@@ -3306,7 +3302,6 @@ export const CredentialConfigUpdateSchema = {
                     $ref: '#/components/schemas/RootOfTrustPolicy'
                 }
             ],
-            type: 'object',
             allOf: [
                 {
                     $ref: '#/components/schemas/EmbeddedDisclosurePolicy'
@@ -3425,12 +3420,12 @@ export const VocabularyEntryDtoSchema = {
             description: 'Display label for UI rendering.'
         },
         status: {
-            type: 'string',
-            description: 'Vocabulary lifecycle status.',
             enum: [
                 'active',
                 'deprecated'
-            ]
+            ],
+            type: 'string',
+            description: 'Vocabulary lifecycle status.'
         },
         replacedBy: {
             type: 'string',
@@ -3481,12 +3476,12 @@ export const MetadataSchemaDtoSchema = {
             description: 'Unique identifier for this schema entry'
         },
         formatIdentifier: {
-            type: 'string',
-            description: 'The credential format identifier',
             enum: [
                 'dc+sd-jwt',
                 'mso_mdoc'
-            ]
+            ],
+            type: 'string',
+            description: 'The credential format identifier'
         },
         uri: {
             type: 'string',
@@ -3587,35 +3582,35 @@ export const SchemaMetadataResponseDtoSchema = {
             description: 'Subresource Integrity hash for the rulebook URI'
         },
         attestationLoS: {
-            type: 'string',
-            description: 'Level of security (LoS) of this attestation',
             enum: [
                 'iso_18045_high',
                 'iso_18045_moderate',
                 'iso_18045_enhanced-basic',
                 'iso_18045_basic'
-            ]
+            ],
+            type: 'string',
+            description: 'Level of security (LoS) of this attestation'
         },
         bindingType: {
-            type: 'string',
-            description: 'Required binding type between attestation and holder',
             enum: [
                 'claim',
                 'key',
                 'biometric',
                 'none'
-            ]
+            ],
+            type: 'string',
+            description: 'Required binding type between attestation and holder'
         },
         supportedFormats: {
             type: 'array',
-            description: 'Credential formats in which this attestation is available',
             items: {
                 type: 'string',
                 enum: [
                     'dc+sd-jwt',
                     'mso_mdoc'
                 ]
-            }
+            },
+            description: 'Credential formats in which this attestation is available'
         },
         schemaURIs: {
             description: 'Format-specific schema URIs for this schema metadata',
@@ -3632,8 +3627,6 @@ export const SchemaMetadataResponseDtoSchema = {
             }
         },
         category: {
-            type: 'string',
-            description: 'Domain category for filtering',
             enum: [
                 'identity',
                 'health',
@@ -3642,7 +3635,9 @@ export const SchemaMetadataResponseDtoSchema = {
                 'mobility',
                 'employment',
                 'other'
-            ]
+            ],
+            type: 'string',
+            description: 'Domain category for filtering'
         },
         tags: {
             description: 'Free-form tags for filtering and search',
@@ -3717,8 +3712,6 @@ export const UpdateSchemaMetadataDtoSchema = {
     type: 'object',
     properties: {
         category: {
-            type: 'string',
-            description: 'Domain category for filtering',
             enum: [
                 'identity',
                 'health',
@@ -3727,11 +3720,12 @@ export const UpdateSchemaMetadataDtoSchema = {
                 'mobility',
                 'employment',
                 'other'
-            ]
+            ],
+            type: 'string',
+            description: 'Domain category for filtering'
         },
         tags: {
             type: 'array',
-            description: 'Predefined tags for filtering and search',
             items: {
                 type: 'string',
                 enum: [
@@ -3746,7 +3740,8 @@ export const UpdateSchemaMetadataDtoSchema = {
                     'employment',
                     'mobility'
                 ]
-            }
+            },
+            description: 'Predefined tags for filtering and search'
         }
     }
 } as const;
@@ -4746,7 +4741,12 @@ export const NotificationRequestDtoSchema = {
             type: 'string'
         },
         event: {
-            type: 'object'
+            type: 'string',
+            enum: [
+                'credential_accepted',
+                'credential_failure',
+                'credential_deleted'
+            ]
         }
     },
     required: [

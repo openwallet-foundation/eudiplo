@@ -52,7 +52,7 @@ For a complete configuration example, see the [Complete Configuration Example](#
   proof of possession. See [Cryptographic Key Binding](#cryptographic-key-binding) for details.
 - `fields`: **REQUIRED for v2** - Field definitions (`ClaimFieldDefinition[]`) that describe claim paths, data types, defaults, disclosure behavior, and optional display labels.
 - `attributeProviderId`: **OPTIONAL** - Reference to an Attribute Provider that fetches claims dynamically. See [Attribute Providers](attribute-provider.md) for details.
-- `webhookEndpointId`: **OPTIONAL** - Reference to a Webhook Endpoint for receiving notifications about the issuance process. See [Notification Webhook](#notification-webhook) for details.
+- `webhookEndpointId`: **OPTIONAL** - Reference to a Webhook Endpoint for receiving notifications about the issuance process. See [Notification Webhook Endpoint](#notification-webhook-endpoint) for details.
 - `sdJwtTrustFormat`: **OPTIONAL (SD-JWT only)** - Controls trust signaling in issued SD-JWT credentials: - `x5c` (default): include X.509 chain in JWT header - `federation`: use federation issuer identity (`iss`) for trust resolution
 - `embeddedDisclosurePolicy`: **OPTIONAL** - Defines the embedded disclosure policy for the credential. See [Embedded Disclosure Policy](#embedded-disclosure-policy) for details.
 - `iaeActions`: **OPTIONAL** - Sequence of Interactive Authorization actions required before credential issuance. See [Interactive Authorization Actions](#interactive-authorization-actions) for details.
@@ -71,7 +71,7 @@ In v2, claim content is configured through `fields[]`. Each entry describes a si
 
 !!! info "Claims Priority System"
 
-    EUDIPLO supports multiple ways to provide claims (configuration-level and offer-level), with a priority system that determines which claims are used. For a complete explanation of the claims priority order and when to use each method, see [Passing Claims](index.md#passing-claims) in the Issuance Overview.
+    EUDIPLO supports multiple ways to provide claims (configuration-level and offer-level), with a priority system that determines which claims are used. For a complete explanation of the claims priority order and when to use each method, see [Credential Offers](credential-offers.md#passing-claims).
 
 ### Static Defaults via `fields[]`
 
@@ -137,7 +137,7 @@ For detailed information about creating Attribute Providers, request/response fo
 
 ---
 
-## Notification Webhook
+## Notification Webhook Endpoint
 
 You can configure a webhook endpoint to receive notifications about the issuance process. This allows you to track the status of credential issuance and take appropriate actions.
 
@@ -149,13 +149,13 @@ Reference a pre-configured webhook endpoint by its ID:
 }
 ```
 
-The notification webhook will be called at various stages of the issuance process, such as:
+The notification webhook endpoint will be called at various stages of the issuance process, such as:
 
 - When a credential is successfully issued
 - When an issuance request fails
 - When a credential is accepted by the holder
 
-For more details about the webhook implementation and payload structure, see [Notification Webhook](../../architecture/webhooks.md#notification-webhook).
+For more details about the webhook implementation and payload structure, see [Notification Webhook Endpoint](../../architecture/webhooks.md#notification-webhook-endpoint).
 
 !!! Info
 

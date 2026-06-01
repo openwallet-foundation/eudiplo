@@ -33,35 +33,11 @@ Based on your passed access token, endpoints will be scoped to the tenant ID of 
 token. You also need the `issuance:manage` role to access these endpoints.
 The configurations are internally stored in a database.
 
-### Creating Credential Offers
+### Credential Offers
 
-Via the [credential offer endpoint](../../api/openapi.md) you can create a credential offer that can be presented to the user.
-When creating an offer, you can:
-
-1. **Define the flow** - Either go with the pre authorized flow or require user
-   authentication via the authorization code flow
-2. **Provide credentials** - Use `credentialConfigurationIds` to specify which
-   credentials to issue from the issuance configuration
-3. **Optionally override claims** - Use the `credentialClaims` parameter to provide
-   inline claims, webhook, or Attribute Provider reference for specific credentials
-4. **Optionally pass notification webhooks** - Use the `notifyWebhook` parameter to
-   get notified about issuance status changes
-
-### Single-Use Offers (Replay Prevention)
-
-All credential offers are **single-use and non-replayable**. Once a wallet completes the issuance flow with a credential offer:
-
-- Token replay with the same authorization or pre-authorized code is rejected with an `invalid_grant` error
-- The offer is marked as consumed at the credential endpoint and cannot be used again after successful credential processing
-- The `consumedAt` timestamp records when the offer was first used
-
-**Important Considerations:**
-
-- **Create a new offer for each issuance**: If a user needs credentials again, create a fresh credential offer via the API
-- **Offer expiration**: Combine single-use enforcement with TTL-based session cleanup (configured per-tenant) to ensure expired offers don't accumulate
-- **Refresh tokens**: Refresh tokens remain valid and can be used to obtain new access tokens for additional operations on the issued credentials
-
-This design prevents credential offer replay attacks where an attacker could reuse an intercepted offer to obtain credentials fraudulently.
+Creating a credential offer is the operational step that starts issuance. The
+full request model, examples, replay behavior, and `credentialClaims` override
+format are documented in [Credential Offers](credential-offers.md).
 
 ---
 
@@ -435,6 +411,7 @@ For detailed information on implementing deferred issuance, see the [Deferred Is
 
 This issuance documentation is organized into the following sections:
 
+- **[Credential Offers](credential-offers.md)** - Create offers, pass inline or dynamic claims, and understand replay prevention behavior
 - **[Credential Configuration](credential-configuration.md)** - Learn how to
   define individual credential types, their structure, claims, and display
   properties
@@ -460,31 +437,7 @@ For a quick start, follow these steps:
    [Schema Metadata](schema-metadata.md) guide
 4. **Create an issuance configuration** - Define the issuance configuration using
    the [Issuance Configuration](issuance-configuration.md) guide
-5. **Issue credentials** - Start the issuance flow by creating credential offers
+5. **Create a credential offer** - Start the issuance flow using the
+   [Credential Offers](credential-offers.md) guide
 
 ---
-
-## Passing Claims
-
-EUDIPLO provides multiple methods to pass claims (data) for credentials during issuance, with a clear priority system that determines which claims are used.
-
-### Priority Order
-
-Claims are resolved in the following priority order (highest to lowest):
-
-1. **Offer-level claims** - Inline claims, webhook, or Attribute Provider reference passed at offer time
-2. **Configuration-level Attribute Provider** - The `attributeProviderId` on the credential configuration
-3. **Configuration-level static claims** - Claims defined in the credential configuration
-
-!!! warning "Claims are not merged"
-
-    Higher priority sources completely override lower priority sources - claims are not merged. If an offer-level webhook is provided, the configuration-level Attribute Provider will not be called.
-
-For a detailed explanation of the claims priority system and how to configure each method, see the [Fetching Claims](credential-configuration.md#fetching-claims) section in the Credential Configuration documentation.
-
-### When to Use Each Method
-
-- **Configuration-level static claims** - Default values for all credentials of this type, fixed metadata (e.g., issuing country, authority)
-- **Configuration-level Attribute Provider** - Dynamic claims based on authentication context, personalized credentials requiring real-time data
-- **Offer-level inline claims** - Claims known at offer creation time, overriding specific values for individual issuances
-- **Offer-level webhook/Attribute Provider** - Custom data source per offer, testing different webhook endpoints

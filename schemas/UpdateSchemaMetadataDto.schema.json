@@ -5,8 +5,6 @@
   "type": "object",
   "properties": {
     "category": {
-      "type": "string",
-      "description": "Domain category for filtering",
       "enum": [
         "identity",
         "health",
@@ -15,11 +13,12 @@
         "mobility",
         "employment",
         "other"
-      ]
+      ],
+      "type": "string",
+      "description": "Domain category for filtering"
     },
     "tags": {
       "type": "array",
-      "description": "Predefined tags for filtering and search",
       "items": {
         "type": "string",
         "enum": [
@@ -34,7 +33,8 @@
           "employment",
           "mobility"
         ]
-      }
+      },
+      "description": "Predefined tags for filtering and search"
     }
   },
   "additionalProperties": false

@@ -79,27 +79,34 @@ See [Attribute Providers](./attribute-providers.md).
 
 ---
 
-## Notification Webhook
+## Notification Webhook Endpoint
 
-The **notification webhook** receives the outcome of the issuance process (e.g., accepted or denied).  
-This confirms that the wallet has received and accepted the credential.
+The **notification webhook endpoint** is a standalone, reusable tenant resource
+that receives the outcome of the issuance process (e.g., accepted or denied).
+It is not embedded directly in the issuance request or credential configuration.
+
+Instead, reference the endpoint by ID using `webhookEndpointId` on the
+credential configuration or on an offer request.
+
+Example endpoint resource:
 
 ```json
 {
-    "notifyWebhook": {
-        "url": "http://localhost:8787/notify",
-        "auth": {
-            "type": "apiKey",
-            "config": {
-                "headerName": "x-api-key",
-                "value": "your-api-key"
-            }
-        }
+    "id": "notification",
+    "name": "Notification Webhook",
+    "description": "Receives credential issuance lifecycle events",
+    "url": "http://localhost:8787",
+    "auth": {
+        "type": "none"
     }
 }
 ```
 
-If no notification webhook is configured, you can fetch the session result by querying the `/session` endpoint with the `sessionId`.
+If you use authentication for the endpoint, the `auth` object follows the same
+webhook authentication model used by presentation webhooks.
+
+If no notification webhook endpoint is configured, you can fetch the session
+result by querying the `/session` endpoint with the `sessionId`.
 
 ---
 
