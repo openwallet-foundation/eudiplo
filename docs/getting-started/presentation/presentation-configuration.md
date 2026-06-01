@@ -4,6 +4,9 @@ This guide covers how to create, manage, and configure presentation requests in
 EUDIPLO. Presentation configurations define what credentials and claims should
 be requested from users.
 
+For creating request payloads and runtime overrides, see
+[Presentation Requests](presentation-requests.md).
+
 ---
 
 ## Configuration Structure
@@ -29,6 +32,14 @@ be requested from users.
 !!! Info
 
     If no webhook is configured, the presentation result can be fetched by querying the `/session` endpoint with the `sessionId`.
+
+!!! info "Request-time overrides"
+
+    When you create a presentation request (`/verifier/offer`), the request body can override configuration-level values:
+
+    - `webhook` in the request overrides `webhook` from the presentation configuration
+    - `redirectUri` in the request overrides `redirectUri` from the presentation configuration
+    - `transaction_data` in the request overrides `transaction_data` from the presentation configuration
 
 ### registrationCert Structure
 

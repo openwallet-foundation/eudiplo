@@ -102,7 +102,11 @@ Presentation flows create sessions that:
 
 ## Quick Start
 
-To manage presentation configurations, have a look at the [API Documentation](../../api/openapi.md) about the verifier. There you will find the endpoints to manage presentation configs and also to create presentation requests.
+Use the verifier section in the [API Documentation](../../api/openapi.md) to
+manage presentation configurations and create presentation requests.
+
+For request payloads, examples, and runtime override behavior, see
+[Presentation Requests](presentation-requests.md).
 
 ---
 
@@ -178,7 +182,7 @@ sequenceDiagram
     Wallet->>User: Request presentation consent
     User->>Wallet: Approve presentation
     Wallet->>EUDIPLO: Submit OpenID4VP presentation
-    EUDIPLO->>Backend: Claims webhook (verified claims)
+    EUDIPLO->>Backend: Attribute Provider call (verified claims context)
     Backend-->>EUDIPLO: Return issuance claims
     EUDIPLO-->>Wallet: Authorization Code
     Wallet->>EUDIPLO: Token Request
