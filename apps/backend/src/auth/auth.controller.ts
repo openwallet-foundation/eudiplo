@@ -54,6 +54,7 @@ export class AuthController {
                     access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
                     token_type: "Bearer",
                     expires_in: 86400,
+                    state: "abc123",
                 },
             },
         },

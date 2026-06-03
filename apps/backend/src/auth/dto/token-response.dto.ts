@@ -3,4 +3,5 @@ export class TokenResponse {
     refresh_token?: string;
     token_type!: "Bearer";
     expires_in!: number;
+    state!: string;
 }

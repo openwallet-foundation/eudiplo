@@ -57,7 +57,7 @@ describe("Issuance - Authorization Code Flow", () => {
             .set("Authorization", `Bearer ${authToken}`)
             .send({
                 response_type: "uri",
-                credentialConfigurationIds: ["pid"],
+                credentialConfigurationIds: ["pid-no-key"],
                 flow: "authorization_code",
             })
             .expect(201);

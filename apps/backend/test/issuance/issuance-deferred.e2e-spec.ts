@@ -261,7 +261,7 @@ describe("Issuance - Deferred Credential Flow", () => {
             .send({
                 flow: "pre_authorized_code",
                 response_type: "uri",
-                credentialConfigurationIds: ["pid"],
+                credentialConfigurationIds: ["pid-no-key"],
             })
             .expect(201);
 

@@ -33,10 +33,13 @@ interface TestResult {
 
 export class OIDFSuite {
     instance: axios.AxiosInstance;
+    private readonly oidfUrl: string;
     constructor(OIDF_URL: string, OIDF_DEMO_TOKEN?: string) {
+        this.oidfUrl = OIDF_URL;
         // --- Prepare demo OIDF instance ----------------------------------------
         this.instance = axios.default.create({
             baseURL: OIDF_URL,
+            proxy: false,
             headers: {
                 Authorization: OIDF_DEMO_TOKEN
                     ? `Bearer ${OIDF_DEMO_TOKEN}`
@@ -316,7 +319,11 @@ export class OIDFSuite {
     getAllTestsModules(planId: string) {
         return this.instance
             .get(`/api/plan/${planId}`)
-            .then((res) => res.data.modules.map((module) => module.testModule));
+            .then((res) =>
+                res.data.modules.map(
+                    (module: { testModule: string }) => module.testModule,
+                ),
+            );
     }
 
     /**
@@ -406,7 +413,7 @@ export class OIDFSuite {
         // Get the variant from the module
         const variant = module.variant || {};
 
-        //TODO: temporary solution for testing encrypted flow
+        // Keep encrypted happy-flow variant enabled for conformance coverage.
         if (testName === "oid4vci-1_0-issuer-happy-flow") {
             variant["vci_credential_encryption"] = "encrypted";
         }
@@ -439,54 +446,269 @@ export class OIDFSuite {
 
     async getEndpoint(testInstance: TestInstance): Promise<string> {
         let url: string | undefined;
-        const maxAttempts = 100;
+        const maxAttempts = 10;
+        const pollIntervalMs = 300;
         let attempts = 0;
+        const startedAt = Date.now();
+        let lastRunnerData: any;
+        let lastInfoData: any;
+        const checkpoints: Array<{
+            attempt: number;
+            elapsedMs: number;
+            infoStatus?: string;
+            exposedKeys: string[];
+        }> = [];
+
+        const debugPolling =
+            process.env.OIDF_DEBUG_ENDPOINT_POLL === "1" ||
+            process.env.OIDF_DEBUG_ENDPOINT_POLL === "true";
 
         while (!url && attempts < maxAttempts) {
-            const response = await this.instance.get(
+            const runnerResponse = await this.instance.get(
                 `/api/runner/${testInstance.id}`,
             );
-            url = response.data.exposed?.credential_offer_endpoint;
+            lastRunnerData = runnerResponse.data;
+            url = runnerResponse.data.exposed?.credential_offer_endpoint;
+
+            const infoSnapshot = await this.getInfoSnapshot(
+                testInstance.id,
+                debugPolling,
+            );
+            lastInfoData = infoSnapshot.payload;
+
+            if (
+                this.shouldCaptureEndpointCheckpoint(
+                    attempts,
+                    maxAttempts,
+                    debugPolling,
+                )
+            ) {
+                const checkpoint = this.buildEndpointCheckpoint({
+                    attempt: attempts + 1,
+                    elapsedMs: Date.now() - startedAt,
+                    infoStatus: infoSnapshot.status,
+                    runnerData: runnerResponse.data,
+                });
+                checkpoints.push(checkpoint);
+
+                if (debugPolling) {
+                    console.log("OIDF getEndpoint poll checkpoint", checkpoint);
+                }
+            }
+
             if (!url) {
-                await new Promise((r) => setTimeout(r, 300));
+                await new Promise((r) => setTimeout(r, pollIntervalMs));
                 attempts++;
             }
         }
 
         if (!url) {
             throw new Error(
-                `Failed to get credential_offer_endpoint after ${maxAttempts} attempts`,
+                [
+                    `Failed to get credential_offer_endpoint after ${maxAttempts} attempts (${Date.now() - startedAt}ms).`,
+                    `testInstance.id=${testInstance.id}`,
+                    `Poll checkpoints: ${this.toJson(checkpoints)}`,
+                    `Last /api/info payload: ${this.toJson(lastInfoData)}`,
+                    `Last /api/runner payload: ${this.toJson(lastRunnerData)}`,
+                    "Tip: set OIDF_DEBUG_ENDPOINT_POLL=true for per-attempt polling logs.",
+                ].join("\n"),
             );
         }
 
         return url;
     }
 
-    async waitForFinished(testInstanceId: string): Promise<TestResult> {
-        const maxAttempts = 100;
+    private shouldCaptureEndpointCheckpoint(
+        attempts: number,
+        maxAttempts: number,
+        debugPolling: boolean,
+    ): boolean {
+        return (
+            debugPolling ||
+            attempts === 0 ||
+            (attempts + 1) % 10 === 0 ||
+            attempts === maxAttempts - 1
+        );
+    }
+
+    private buildEndpointCheckpoint(input: {
+        attempt: number;
+        elapsedMs: number;
+        infoStatus?: string;
+        runnerData: any;
+    }): {
+        attempt: number;
+        elapsedMs: number;
+        infoStatus?: string;
+        exposedKeys: string[];
+    } {
+        const exposed =
+            input.runnerData?.exposed &&
+            typeof input.runnerData.exposed === "object"
+                ? Object.keys(input.runnerData.exposed)
+                : [];
+
+        return {
+            attempt: input.attempt,
+            elapsedMs: input.elapsedMs,
+            infoStatus: input.infoStatus,
+            exposedKeys: exposed,
+        };
+    }
+
+    private async getInfoSnapshot(
+        testInstanceId: string,
+        debugPolling: boolean,
+    ): Promise<{ status?: string; payload?: unknown }> {
+        try {
+            const infoResponse = await this.instance.get<TestResult>(
+                `/api/info/${testInstanceId}`,
+            );
+            return {
+                status: infoResponse.data?.status,
+                payload: infoResponse.data,
+            };
+        } catch (error) {
+            if (debugPolling) {
+                console.warn(
+                    "OIDF getEndpoint: failed to fetch /api/info snapshot",
+                    error,
+                );
+            }
+            return {};
+        }
+    }
+
+    private toJson(value: unknown, maxLength = 2000): string {
+        if (value === undefined) {
+            return "undefined";
+        }
+        try {
+            const serialized = JSON.stringify(value, null, 2);
+            if (serialized.length > maxLength) {
+                return `${serialized.slice(0, maxLength)}... [truncated]`;
+            }
+            return serialized;
+        } catch {
+            return String(value);
+        }
+    }
+
+    private getPositiveNumberEnv(name: string): number | undefined {
+        const raw = process.env[name];
+        if (!raw) {
+            return undefined;
+        }
+        const parsed = Number(raw);
+        if (!Number.isFinite(parsed) || parsed <= 0) {
+            return undefined;
+        }
+        return Math.floor(parsed);
+    }
+
+    async waitForFinished(
+        testInstanceId: string,
+        options: { maxAttempts?: number; noProgressAttempts?: number } = {},
+    ): Promise<TestResult> {
+        // Terminal statuses: once the runner enters one of these it will not
+        // transition further, so polling is pointless. INTERRUPTED in
+        // particular is reached quickly on failure and used to burn ~30s of
+        // wall time per failing module before this returned.
+        const TERMINAL_STATUSES = new Set(["FINISHED", "INTERRUPTED"]);
+
+        const maxAttempts =
+            options.maxAttempts ??
+            this.getPositiveNumberEnv("OIDF_WAIT_MAX_ATTEMPTS") ??
+            240;
+        // Bail out when status hasn't changed for this many attempts.
+        // Catches FAPI tests that sit in WAITING forever because no browser
+        // drives them, without forcing the full maxAttempts wait.
+        const noProgressAttempts =
+            options.noProgressAttempts ??
+            this.getPositiveNumberEnv("OIDF_WAIT_NO_PROGRESS_ATTEMPTS") ??
+            120;
+        const pollIntervalMs =
+            this.getPositiveNumberEnv("OIDF_WAIT_POLL_INTERVAL_MS") ?? 300;
         let attempts = 0;
         let logResult: TestResult | undefined;
+        let lastStatus: string | undefined;
+        let attemptsSinceStatusChange = 0;
+        const startedAt = Date.now();
+        const checkpoints: Array<{
+            attempt: number;
+            elapsedMs: number;
+            status?: string;
+            result?: string;
+        }> = [];
 
-        while (
-            (!logResult || logResult.status !== "FINISHED") &&
-            attempts < maxAttempts
-        ) {
+        const debugPolling =
+            process.env.OIDF_DEBUG_WAIT_FOR_FINISHED === "1" ||
+            process.env.OIDF_DEBUG_WAIT_FOR_FINISHED === "true";
+
+        while (attempts < maxAttempts) {
             const response = await this.instance.get<TestResult>(
                 `/api/info/${testInstanceId}`,
             );
             logResult = response.data;
-            if (logResult.status !== "FINISHED") {
-                await new Promise((r) => setTimeout(r, 300));
-                attempts++;
+
+            if (logResult?.status === lastStatus) {
+                attemptsSinceStatusChange++;
+            } else {
+                lastStatus = logResult?.status;
+                attemptsSinceStatusChange = 0;
             }
+
+            if (
+                debugPolling ||
+                attempts === 0 ||
+                (attempts + 1) % 10 === 0 ||
+                attempts === maxAttempts - 1
+            ) {
+                const checkpoint = {
+                    attempt: attempts + 1,
+                    elapsedMs: Date.now() - startedAt,
+                    status: logResult?.status,
+                    result: logResult?.result,
+                };
+                checkpoints.push(checkpoint);
+
+                if (debugPolling) {
+                    console.log(
+                        "OIDF waitForFinished poll checkpoint",
+                        checkpoint,
+                    );
+                }
+            }
+
+            if (logResult?.status && TERMINAL_STATUSES.has(logResult.status)) {
+                return logResult;
+            }
+
+            if (attemptsSinceStatusChange >= noProgressAttempts) {
+                throw new Error(
+                    [
+                        `Test made no progress for ${noProgressAttempts} attempts (status="${lastStatus}", ${Date.now() - startedAt}ms).`,
+                        `testInstance.id=${testInstanceId}`,
+                        `Log detail: ${this.oidfUrl}/log-detail.html?log=${testInstanceId}`,
+                        `Poll checkpoints: ${this.toJson(checkpoints)}`,
+                        `Last /api/info payload: ${this.toJson(logResult)}`,
+                    ].join("\n"),
+                );
+            }
+
+            await new Promise((r) => setTimeout(r, pollIntervalMs));
+            attempts++;
         }
 
-        if (!logResult || logResult.status !== "FINISHED") {
-            throw new Error(
-                `Test did not finish after ${maxAttempts} attempts`,
-            );
-        }
-
-        return logResult;
+        throw new Error(
+            [
+                `Test did not finish after ${maxAttempts} attempts (${Date.now() - startedAt}ms).`,
+                `testInstance.id=${testInstanceId}`,
+                `Log detail: ${this.oidfUrl}/log-detail.html?log=${testInstanceId}`,
+                `Poll checkpoints: ${this.toJson(checkpoints)}`,
+                `Last /api/info payload: ${this.toJson(logResult)}`,
+                "Tip: set OIDF_DEBUG_WAIT_FOR_FINISHED=true for per-attempt status logs.",
+            ].join("\n"),
+        );
     }
 }

@@ -47,7 +47,7 @@ describe("Single-Use Validation (Issue #503) - OID4VCI", () => {
             .set("Authorization", `Bearer ${authToken}`)
             .send({
                 response_type: "uri",
-                credentialConfigurationIds: ["pid"],
+                credentialConfigurationIds: ["pid-no-key"],
                 flow: "pre_authorized_code",
             })
             .expect(201);

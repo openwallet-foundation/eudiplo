@@ -357,7 +357,7 @@ describe("OIDF", () => {
         const keyChainService = app.get(KeyChainService);
         const attestationEntity = await keyChainService.getEntity(
             "haip",
-            "9687a941-3f89-476b-b383-aa5fea1bac8e",
+            "c3f24b6e-9b71-4b62-8d37-5f1a2c9e47ad",
         );
 
         // Split the certificate chain into base64 DER entries for x5c

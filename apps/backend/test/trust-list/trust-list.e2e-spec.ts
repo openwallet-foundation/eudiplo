@@ -100,9 +100,9 @@ describe("Trust List e2e Tests", () => {
                     {
                         type: "internal",
                         issuerKeyChainId:
-                            "9687a941-3f89-476b-b383-aa5fea1bac8e",
+                            "c3f24b6e-9b71-4b62-8d37-5f1a2c9e47ad",
                         revocationKeyChainId:
-                            "9687a941-3f89-476b-b383-aa5fea1baa8e",
+                            "1f8c6b29-a4d3-4e7f-b2a0-9c5d13e8f746",
                         info: {
                             name: "Test Provider",
                             lang: "en",
@@ -149,9 +149,9 @@ describe("Trust List e2e Tests", () => {
                     {
                         type: "internal",
                         issuerKeyChainId:
-                            "9687a941-3f89-476b-b383-aa5fea1bac8e",
+                            "c3f24b6e-9b71-4b62-8d37-5f1a2c9e47ad",
                         revocationKeyChainId:
-                            "9687a941-3f89-476b-b383-aa5fea1baa8e",
+                            "1f8c6b29-a4d3-4e7f-b2a0-9c5d13e8f746",
                         info: {
                             name: "Updated Provider",
                             lang: "en",
@@ -218,9 +218,9 @@ describe("Trust List e2e Tests", () => {
                     {
                         type: "internal",
                         issuerKeyChainId:
-                            "9687a941-3f89-476b-b383-aa5fea1bac8e",
+                            "c3f24b6e-9b71-4b62-8d37-5f1a2c9e47ad",
                         revocationKeyChainId:
-                            "9687a941-3f89-476b-b383-aa5fea1baa8e",
+                            "1f8c6b29-a4d3-4e7f-b2a0-9c5d13e8f746",
                         info: {
                             name: "JWT Test Provider",
                             lang: "en",
@@ -314,9 +314,9 @@ describe("Trust List e2e Tests", () => {
                     {
                         type: "internal",
                         issuerKeyChainId:
-                            "9687a941-3f89-476b-b383-aa5fea1bac8e",
+                            "c3f24b6e-9b71-4b62-8d37-5f1a2c9e47ad",
                         revocationKeyChainId:
-                            "9687a941-3f89-476b-b383-aa5fea1baa8e",
+                            "1f8c6b29-a4d3-4e7f-b2a0-9c5d13e8f746",
                         info: { name: "Provider 1", lang: "en" },
                     },
                 ],
@@ -382,9 +382,9 @@ describe("Trust List e2e Tests", () => {
                     {
                         type: "internal",
                         issuerKeyChainId:
-                            "9687a941-3f89-476b-b383-aa5fea1bac8e",
+                            "c3f24b6e-9b71-4b62-8d37-5f1a2c9e47ad",
                         revocationKeyChainId:
-                            "9687a941-3f89-476b-b383-aa5fea1baa8e",
+                            "1f8c6b29-a4d3-4e7f-b2a0-9c5d13e8f746",
                         info: { name: "Public URL Provider", lang: "en" },
                     },
                 ],
@@ -448,7 +448,7 @@ describe("Trust List e2e Tests", () => {
             const createDto: TrustListCreateDto = {
                 id: "wrong-usage-test",
                 description: "Wrong Usage Test",
-                keyChainId: "9687a941-3f89-476b-b383-aa5fea1bac8e", // attestation key
+                keyChainId: "c3f24b6e-9b71-4b62-8d37-5f1a2c9e47ad", // attestation key
                 entities: [],
             };
 
@@ -518,9 +518,9 @@ describe("Trust List e2e Tests", () => {
                     {
                         type: "internal",
                         issuerKeyChainId:
-                            "9687a941-3f89-476b-b383-aa5fea1bac8e",
+                            "c3f24b6e-9b71-4b62-8d37-5f1a2c9e47ad",
                         revocationKeyChainId:
-                            "9687a941-3f89-476b-b383-aa5fea1baa8e",
+                            "1f8c6b29-a4d3-4e7f-b2a0-9c5d13e8f746",
                         info: { name: "Public Access Provider", lang: "en" },
                     },
                 ],
