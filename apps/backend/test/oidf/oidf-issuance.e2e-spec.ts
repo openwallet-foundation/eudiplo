@@ -49,10 +49,11 @@ const ISSUER_HAIP_MODULES: readonly string[] = (() => {
     }
 })();
 
-//TODO: inclue after known issues are resolved and test plan is fully passing
 const FAPI2_SECURITY_PROFILE_FINAL_PREFIX = "fapi2-security-profile-final";
-const EXECUTED_ISSUER_HAIP_MODULES = ISSUER_HAIP_MODULES.filter(
-    (moduleName) => !moduleName.startsWith(FAPI2_SECURITY_PROFILE_FINAL_PREFIX),
+const SKIPPED_ISSUER_MODULES = new Set(
+    ISSUER_HAIP_MODULES.filter((moduleName) =>
+        moduleName.startsWith(FAPI2_SECURITY_PROFILE_FINAL_PREFIX),
+    ),
 );
 
 /**
@@ -133,15 +134,6 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         executedPlanIds.add(planId);
         return oidfSuiteStartTest(planId, testName);
     };
-
-    // Modules intentionally not executed until known issues are resolved.
-    const INTENTIONALLY_SKIPPED_ISSUER_MODULES = [
-        "oid4vci-1_0-issuer-happy-flow-additional-requests",
-        "oid4vci-1_0-issuer-happy-flow-multiple-clients",
-    ] as const;
-    const INTENTIONALLY_SKIPPED_ISSUER_MODULE_SET = new Set<string>(
-        INTENTIONALLY_SKIPPED_ISSUER_MODULES,
-    );
 
     /**
      * Helper function to send a credential offer to the OIDF test runner.
@@ -471,9 +463,8 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
 
     type IssuerModuleCase = {
         moduleName: string;
-        expectedResults: ReadonlyArray<"PASSED" | "SKIPPED" | "WARNING">;
+        expectedResults: ReadonlyArray<"PASSED" | "WARNING">;
         triggerOffer?: boolean;
-        issuerInitiatedOnly?: boolean;
         credentialConfigurationIdForVariant?: (
             variant: IssuerVariant,
         ) => string;
@@ -482,7 +473,6 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
     const DEFAULT_ISSUER_MODULE_CASE: Omit<IssuerModuleCase, "moduleName"> = {
         expectedResults: ["PASSED"],
         triggerOffer: true,
-        issuerInitiatedOnly: true,
     };
 
     const ISSUER_MODULE_CASE_OVERRIDES: Record<
@@ -492,27 +482,25 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         "oid4vci-1_0-issuer-metadata-test": {
             expectedResults: ["WARNING"],
             triggerOffer: false,
-            issuerInitiatedOnly: false,
         },
         "oid4vci-1_0-issuer-metadata-test-signed": {
-            expectedResults: ["PASSED", "SKIPPED", "WARNING"],
+            expectedResults: ["PASSED", "WARNING"],
             triggerOffer: false,
-            issuerInitiatedOnly: false,
         },
         "oid4vci-1_0-issuer-fail-invalid-nonce": {
-            expectedResults: ["PASSED", "SKIPPED"],
+            expectedResults: ["PASSED"],
         },
         "oid4vci-1_0-issuer-fail-invalid-jwt-proof-signature": {
-            expectedResults: ["PASSED", "SKIPPED"],
+            expectedResults: ["PASSED"],
         },
         "oid4vci-1_0-issuer-fail-invalid-client-attestation-pop-signature": {
-            expectedResults: ["PASSED", "SKIPPED"],
+            expectedResults: ["PASSED"],
         },
         "oid4vci-1_0-issuer-fail-mismatched-client-attestation-pop-key": {
-            expectedResults: ["PASSED", "SKIPPED"],
+            expectedResults: ["PASSED"],
         },
         "oid4vci-1_0-issuer-fail-missing-proof": {
-            expectedResults: ["PASSED", "SKIPPED"],
+            expectedResults: ["PASSED"],
         },
     };
 
@@ -525,22 +513,19 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         };
 
         if (normalizedName.includes("metadata-test-signed")) {
-            baseCase.expectedResults = ["PASSED", "SKIPPED", "WARNING"];
+            baseCase.expectedResults = ["PASSED", "WARNING"];
             baseCase.triggerOffer = false;
-            baseCase.issuerInitiatedOnly = false;
         } else if (normalizedName.includes("metadata")) {
             baseCase.expectedResults = ["WARNING"];
             baseCase.triggerOffer = false;
-            baseCase.issuerInitiatedOnly = false;
         } else if (normalizedName.startsWith("fapi2-security-profile")) {
-            // These modules validate token/profile semantics and do not expose
-            // credential_offer_endpoint for driving issuance via /issuer/offer.
             baseCase.triggerOffer = false;
+            baseCase.expectedResults = ["SKIPPED"];
         } else if (
             normalizedName.includes("fail") ||
             normalizedName.includes("invalid")
         ) {
-            baseCase.expectedResults = ["PASSED", "SKIPPED"];
+            baseCase.expectedResults = ["PASSED"];
         }
         return {
             ...baseCase,
@@ -557,13 +542,9 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         | { kind: "ok"; result: string; status: string; durationMs: number }
         | { kind: "error"; error: Error; durationMs: number };
 
-    const buildSkipReason = (
-        moduleName: string,
-        moduleCase: IssuerModuleCase,
-        variant: IssuerVariant,
-    ): string | undefined => {
-        if (INTENTIONALLY_SKIPPED_ISSUER_MODULE_SET.has(moduleName)) {
-            return "intentionally skipped (known issue)";
+    const buildSkipReason = (moduleName: string): string | undefined => {
+        if (SKIPPED_ISSUER_MODULES.has(moduleName)) {
+            return "fapi2 security profile test";
         }
         if (
             MODULE_FILTERS.length > 0 &&
@@ -575,12 +556,6 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         }
         if (MODULE_PATTERN && !MODULE_PATTERN.test(moduleName)) {
             return "filtered out by VITE_OIDF_MODULE_PATTERN";
-        }
-        if (
-            moduleCase.issuerInitiatedOnly &&
-            variant.vci_authorization_code_flow_variant !== "issuer_initiated"
-        ) {
-            return "issuer-initiated-only module";
         }
         return undefined;
     };
@@ -599,7 +574,12 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
                 `Test details (${variantLabel}/${moduleName}): ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
             );
 
-            if (moduleCase.triggerOffer !== false) {
+            const shouldTriggerOffer =
+                moduleCase.triggerOffer !== false &&
+                variant.vci_authorization_code_flow_variant ===
+                    "issuer_initiated";
+
+            if (shouldTriggerOffer) {
                 await sendOfferToTestRunner(
                     testInstance,
                     moduleCase.credentialConfigurationIdForVariant?.(variant) ??
@@ -652,9 +632,9 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
                     return;
                 }
 
-                for (const moduleName of EXECUTED_ISSUER_HAIP_MODULES) {
+                for (const moduleName of ISSUER_HAIP_MODULES) {
                     const moduleCase = buildIssuerModuleCase(moduleName);
-                    if (buildSkipReason(moduleName, moduleCase, variant)) {
+                    if (buildSkipReason(moduleName)) {
                         continue;
                     }
                     outcomes.set(
@@ -669,13 +649,9 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
                 }
             }, 600_000);
 
-            for (const moduleName of EXECUTED_ISSUER_HAIP_MODULES) {
+            for (const moduleName of ISSUER_HAIP_MODULES) {
                 const moduleCase = buildIssuerModuleCase(moduleName);
-                const skipReason = buildSkipReason(
-                    moduleName,
-                    moduleCase,
-                    variant,
-                );
+                const skipReason = buildSkipReason(moduleName);
                 if (skipReason) {
                     test.skip(`${moduleName} (${skipReason})`, () => {});
                     continue;
