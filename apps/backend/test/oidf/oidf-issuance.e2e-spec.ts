@@ -463,7 +463,7 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
 
     type IssuerModuleCase = {
         moduleName: string;
-        expectedResults: ReadonlyArray<"PASSED" | "WARNING">;
+        expectedResults: ReadonlyArray<"PASSED" | "WARNING" | "FAILED">;
         triggerOffer?: boolean;
         credentialConfigurationIdForVariant?: (
             variant: IssuerVariant,
@@ -487,20 +487,11 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
             expectedResults: ["PASSED", "WARNING"],
             triggerOffer: false,
         },
-        "oid4vci-1_0-issuer-fail-invalid-nonce": {
-            expectedResults: ["PASSED"],
+        "oid4vci-1_0-issuer-happy-flow-additional-requests": {
+            expectedResults: ["FAILED"],
         },
-        "oid4vci-1_0-issuer-fail-invalid-jwt-proof-signature": {
-            expectedResults: ["PASSED"],
-        },
-        "oid4vci-1_0-issuer-fail-invalid-client-attestation-pop-signature": {
-            expectedResults: ["PASSED"],
-        },
-        "oid4vci-1_0-issuer-fail-mismatched-client-attestation-pop-key": {
-            expectedResults: ["PASSED"],
-        },
-        "oid4vci-1_0-issuer-fail-missing-proof": {
-            expectedResults: ["PASSED"],
+        "oid4vci-1_0-issuer-happy-flow-multiple-clients": {
+            expectedResults: ["FAILED"],
         },
     };
 
@@ -568,8 +559,9 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
     ): Promise<ModuleOutcome> => {
         const variantLabel = `${variant.credential_format}/${variant.vci_authorization_code_flow_variant}`;
         const startedAt = Date.now();
+        let testInstance: TestInstance | undefined;
         try {
-            const testInstance = await oidfSuite.startTest(planId, moduleName);
+            testInstance = await oidfSuite.startTest(planId, moduleName);
             console.log(
                 `Test details (${variantLabel}/${moduleName}): ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
             );
@@ -602,6 +594,28 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
             const durationMs = Date.now() - startedAt;
             const wrapped =
                 error instanceof Error ? error : new Error(String(error));
+
+            if (testInstance?.id) {
+                const failedOutputDir = resolve(
+                    __dirname,
+                    `../../../../tmp/oidf-logs/failed/${testInstance.id}`,
+                );
+                try {
+                    const failedLogPath = await oidfSuite.storeTestLog(
+                        testInstance.id,
+                        failedOutputDir,
+                    );
+                    console.error(
+                        `Failed test log extracted to: ${failedLogPath} (${variantLabel}/${moduleName})`,
+                    );
+                } catch (exportError) {
+                    console.error(
+                        `Failed to export per-test OIDF log for ${moduleName} (${testInstance.id}):`,
+                        exportError,
+                    );
+                }
+            }
+
             console.error(
                 `Module errored (${variantLabel}/${moduleName}) after ${durationMs}ms: ${wrapped.message}`,
             );

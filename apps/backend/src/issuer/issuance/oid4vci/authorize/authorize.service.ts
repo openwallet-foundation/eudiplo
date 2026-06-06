@@ -389,10 +389,34 @@ export class AuthorizeService {
         }
 
         const request_uri = `urn:${randomUUID()}`;
-        await this.sessionService.add(body.issuer_state!, {
-            request_uri,
-            auth_queries: body,
-        });
+
+        if (body.issuer_state) {
+            const updateResult = await this.sessionService.add(
+                body.issuer_state,
+                {
+                    request_uri,
+                    auth_queries: body,
+                },
+            );
+
+            // Some PAR requests do not have a pre-existing issuer_state session.
+            // In that case we create a dedicated request_uri session for authorize.
+            if (!updateResult.affected) {
+                await this.sessionService.create({
+                    id: v4(),
+                    tenantId,
+                    request_uri,
+                    auth_queries: body,
+                });
+            }
+        } else {
+            await this.sessionService.create({
+                id: v4(),
+                tenantId,
+                request_uri,
+                auth_queries: body,
+            });
+        }
 
         return { expires_in: 500, request_uri };
     }
@@ -408,6 +432,12 @@ export class AuthorizeService {
                 })
                 .catch(async () => {
                     //if not found, this means the flow is initiated by the wallet and not the issuer which is also fine.
+                    if (!values.redirect_uri) {
+                        throw new ConflictException(
+                            "redirect_uri not found for request_uri authorization response",
+                        );
+                    }
+
                     const code = v4();
                     const iss = this.getAuthzIssuer(tenantId);
                     await this.sessionService.create({

@@ -1,5 +1,5 @@
 import * as axios from "axios";
-import { mkdirSync, readFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import https from "node:https";
 import unzipper from "unzipper";
 
@@ -101,6 +101,21 @@ export class OIDFSuite {
         // Extract zip contents
         const directory = await unzipper.Open.buffer(zipBuffer);
         await directory.extract({ path: outputDir });
+    }
+
+    async storeTestLog(
+        testInstanceId: string,
+        outputDir: string,
+    ): Promise<string> {
+        const response = await this.instance.get<string>("/log-detail.html", {
+            params: { log: testInstanceId },
+            responseType: "text",
+        });
+
+        mkdirSync(outputDir, { recursive: true });
+        const outputPath = `${outputDir}/test-log-${testInstanceId}.html`;
+        writeFileSync(outputPath, response.data, "utf-8");
+        return outputPath;
     }
 
     async getInstance(PLAN_ID: string): Promise<TestInstance> {
@@ -606,6 +621,16 @@ export class OIDFSuite {
         return Math.floor(parsed);
     }
 
+    private getNoProgressLimit(
+        status: string | undefined,
+        noProgressAttempts: number,
+        waitingNoProgressAttempts: number,
+    ): number {
+        return status === "WAITING"
+            ? waitingNoProgressAttempts
+            : noProgressAttempts;
+    }
+
     async waitForFinished(
         testInstanceId: string,
         options: { maxAttempts?: number; noProgressAttempts?: number } = {},
@@ -627,6 +652,10 @@ export class OIDFSuite {
             options.noProgressAttempts ??
             this.getPositiveNumberEnv("OIDF_WAIT_NO_PROGRESS_ATTEMPTS") ??
             120;
+        const waitingNoProgressAttempts =
+            this.getPositiveNumberEnv(
+                "OIDF_WAIT_NO_PROGRESS_ATTEMPTS_WAITING",
+            ) ?? Math.min(noProgressAttempts, 40);
         const pollIntervalMs =
             this.getPositiveNumberEnv("OIDF_WAIT_POLL_INTERVAL_MS") ?? 300;
         let attempts = 0;
@@ -684,10 +713,16 @@ export class OIDFSuite {
                 return logResult;
             }
 
-            if (attemptsSinceStatusChange >= noProgressAttempts) {
+            const noProgressLimit = this.getNoProgressLimit(
+                logResult?.status,
+                noProgressAttempts,
+                waitingNoProgressAttempts,
+            );
+
+            if (attemptsSinceStatusChange >= noProgressLimit) {
                 throw new Error(
                     [
-                        `Test made no progress for ${noProgressAttempts} attempts (status="${lastStatus}", ${Date.now() - startedAt}ms).`,
+                        `Test made no progress for ${noProgressLimit} attempts (status="${lastStatus}", ${Date.now() - startedAt}ms).`,
                         `testInstance.id=${testInstanceId}`,
                         `Log detail: ${this.oidfUrl}/log-detail.html?log=${testInstanceId}`,
                         `Poll checkpoints: ${this.toJson(checkpoints)}`,
