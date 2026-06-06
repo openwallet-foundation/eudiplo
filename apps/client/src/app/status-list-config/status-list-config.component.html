@@ -43,7 +43,8 @@
                 placeholder="Leave empty for global default"
               />
               <mat-hint>
-                Current: {{ formatCapacity(configForm.get('capacity')?.value) }}
+                Current:
+                {{ formatCapacity($safeNavigationMigration(configForm.get('capacity')?.value)) }}
               </mat-hint>
               @if (configForm.get('capacity')?.hasError('min')) {
                 <mat-error>Capacity must be at least 100</mat-error>
@@ -132,8 +133,9 @@
                 <mat-icon>info</mat-icon>
                 <span>
                   <strong>{{ configForm.get('bits')?.value }} bits</strong> allows
-                  {{ Math.pow(2, configForm.get('bits')?.value) }} distinct status values, enabling
-                  states like suspended in addition to valid/revoked.
+                  {{ Math.pow(2, $safeNavigationMigration(configForm.get('bits')?.value)) }}
+                  distinct status values, enabling states like suspended in addition to
+                  valid/revoked.
                 </span>
               </div>
             }
@@ -161,7 +163,9 @@
                 formControlName="ttl"
                 placeholder="Leave empty for global default"
               />
-              <mat-hint> Current: {{ formatTtl(configForm.get('ttl')?.value) }} </mat-hint>
+              <mat-hint>
+                Current: {{ formatTtl($safeNavigationMigration(configForm.get('ttl')?.value)) }}
+              </mat-hint>
               @if (configForm.get('ttl')?.hasError('min')) {
                 <mat-error>TTL must be at least 60 seconds</mat-error>
               }

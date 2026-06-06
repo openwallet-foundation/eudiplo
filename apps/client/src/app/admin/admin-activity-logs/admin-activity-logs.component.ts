@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
@@ -28,6 +28,7 @@ import { getApiErrorMessage } from '../../utils/error-message';
     MatFormFieldModule,
   ],
   templateUrl: './admin-activity-logs.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './admin-activity-logs.component.scss',
 })
 export class AdminActivityLogsComponent implements OnInit {

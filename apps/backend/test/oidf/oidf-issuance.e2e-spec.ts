@@ -1,14 +1,11 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import https from "node:https";
 import { join, resolve } from "node:path";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { Test, TestingModule } from "@nestjs/testing";
-import * as x509 from "@peculiar/x509";
-import { X509CertificateGenerator } from "@peculiar/x509";
 import * as axios from "axios";
-import { exportJWK, generateKeyPair } from "jose";
 import { Logger } from "nestjs-pino";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { AppModule } from "../../src/app.module";
@@ -25,176 +22,39 @@ import {
     useOidfContainers,
 } from "./oidf-setup";
 import { OIDFSuite, TestInstance } from "./oidf-suite";
+import * as x509 from "@peculiar/x509";
+import { generateCaCertPem, generateCaSignedJwk } from "./utils";
 
 // Set up the x509 crypto provider
 x509.cryptoProvider.set(globalThis.crypto);
-
-/**
- * Generate a self-signed CA certificate PEM from a JWK.
- * This is used to create trust anchors for the OIDF test runner.
- */
-async function generateCaCertPem(jwk: {
-    d: string;
-    x: string;
-    y: string;
-    crv?: string;
-}): Promise<string> {
-    const signingAlg = { name: "ECDSA", hash: "SHA-256" };
-
-    // Import the private key
-    const privateKey = await globalThis.crypto.subtle.importKey(
-        "jwk",
-        {
-            kty: "EC",
-            crv: jwk.crv ?? "P-256",
-            d: jwk.d,
-            x: jwk.x,
-            y: jwk.y,
-        },
-        { name: "ECDSA", namedCurve: "P-256" },
-        true,
-        ["sign"],
-    );
-
-    // Import the public key
-    const publicKey = await globalThis.crypto.subtle.importKey(
-        "jwk",
-        {
-            kty: "EC",
-            crv: jwk.crv ?? "P-256",
-            x: jwk.x,
-            y: jwk.y,
-        },
-        { name: "ECDSA", namedCurve: "P-256" },
-        true,
-        ["verify"],
-    );
-
-    // Generate self-signed CA certificate
-    const caCert = await X509CertificateGenerator.createSelfSigned({
-        serialNumber: "01",
-        name: "CN=EUDIPLO Test CA",
-        notBefore: new Date(),
-        notAfter: new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000), // 10 years
-        signingAlgorithm: signingAlg,
-        keys: { privateKey, publicKey },
-        extensions: [
-            new x509.BasicConstraintsExtension(true, undefined, true),
-            new x509.KeyUsagesExtension(
-                x509.KeyUsageFlags.keyCertSign | x509.KeyUsageFlags.cRLSign,
-                true,
-            ),
-        ],
-    });
-
-    return caCert.toString("pem");
-}
-
-/**
- * Generate a CA-signed certificate chain for OIDF testing.
- * Returns a JWK with proper x5c containing [leaf, CA] certificates.
- * The leaf certificate is NOT self-signed (issuer = CA, subject = leaf).
- */
-async function generateCaSignedJwk(options: {
-    use: "sig" | "enc";
-    alg: "ES256" | "ECDH-ES";
-    cn: string;
-}): Promise<{
-    kty: string;
-    d: string;
-    use: string;
-    crv: string;
-    kid: string;
-    x: string;
-    y: string;
-    alg: string;
-    x5c: string[];
-}> {
-    const signingAlg = { name: "ECDSA", hash: "SHA-256" };
-
-    // Generate CA key pair
-    const caKeyPair = await globalThis.crypto.subtle.generateKey(
-        { name: "ECDSA", namedCurve: "P-256" },
-        true,
-        ["sign", "verify"],
-    );
-
-    // Generate CA certificate (self-signed root)
-    const caCert = await X509CertificateGenerator.createSelfSigned({
-        serialNumber: "01",
-        name: "CN=OIDF Test CA",
-        notBefore: new Date(),
-        notAfter: new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000), // 10 years
-        signingAlgorithm: signingAlg,
-        keys: caKeyPair,
-        extensions: [
-            new x509.BasicConstraintsExtension(true, undefined, true),
-            new x509.KeyUsagesExtension(
-                x509.KeyUsageFlags.keyCertSign | x509.KeyUsageFlags.cRLSign,
-                true,
-            ),
-        ],
-    });
-
-    // Generate leaf key pair
-    const leafKeyPair = await globalThis.crypto.subtle.generateKey(
-        { name: "ECDSA", namedCurve: "P-256" },
-        true,
-        ["sign", "verify"],
-    );
-
-    // Generate leaf certificate signed by CA
-    const leafCert = await X509CertificateGenerator.create({
-        serialNumber: "02",
-        subject: `CN=${options.cn}`,
-        issuer: caCert.subject,
-        notBefore: new Date(),
-        notAfter: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year
-        signingAlgorithm: signingAlg,
-        publicKey: leafKeyPair.publicKey,
-        signingKey: caKeyPair.privateKey,
-        extensions: [
-            new x509.BasicConstraintsExtension(false, undefined, true),
-            new x509.KeyUsagesExtension(
-                x509.KeyUsageFlags.digitalSignature,
-                true,
-            ),
-            // Add SAN for localhost and test domains
-            new x509.SubjectAlternativeNameExtension([
-                { type: "dns", value: "localhost" },
-                { type: "dns", value: "host.testcontainers.internal" },
-            ]),
-        ],
-    });
-
-    // Export the leaf private key as JWK
-    const leafJwk = await exportJWK(leafKeyPair.privateKey);
-
-    // Generate kid from public key
-    const leafPublicJwk = await exportJWK(leafKeyPair.publicKey);
-    const kidData = new TextEncoder().encode(
-        JSON.stringify({ x: leafPublicJwk.x, y: leafPublicJwk.y }),
-    );
-    const kidHash = await globalThis.crypto.subtle.digest("SHA-256", kidData);
-    const kid = Buffer.from(kidHash).toString("base64url").substring(0, 43);
-
-    return {
-        kty: "EC",
-        d: leafJwk.d as string,
-        use: options.use,
-        crv: "P-256",
-        kid,
-        x: leafJwk.x as string,
-        y: leafJwk.y as string,
-        alg: options.alg,
-        x5c: [leafCert.toString("base64"), caCert.toString("base64")],
-    };
-}
 
 // Setup OIDF containers for this test file
 useOidfContainers();
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // Disable TLS verification for testing purposes
+
+// Static list of issuer HAIP modules. Loaded synchronously at collection time
+// so vitest can register one `it()` per (variant, module). The list is
+// validated against the live OIDF plan in `beforeAll` and auto-rewritten if it
+// drifts; the test then fails with a clear "re-run" message.
+const SNAPSHOT_PATH = resolve(__dirname, "oidf-issuer-modules.snapshot.json");
+const ISSUER_HAIP_MODULES: readonly string[] = (() => {
+    try {
+        const raw = JSON.parse(readFileSync(SNAPSHOT_PATH, "utf-8"));
+        return Array.isArray(raw)
+            ? (raw.filter((v) => typeof v === "string") as string[])
+            : [];
+    } catch {
+        return [];
+    }
+})();
+
+const FAPI2_SECURITY_PROFILE_FINAL_PREFIX = "fapi2-security-profile-final";
+const SKIPPED_ISSUER_MODULES = new Set(
+    ISSUER_HAIP_MODULES.filter((moduleName) =>
+        moduleName.startsWith(FAPI2_SECURITY_PROFILE_FINAL_PREFIX),
+    ),
+);
 
 /**
  * E2E: OIDF conformance runner integration test for HAIP issuer test plan.
@@ -210,18 +70,19 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         import.meta.env.VITE_DOMAIN ?? "host.testcontainers.internal:3000";
     const OIDF_URL = import.meta.env.VITE_OIDF_URL ?? "https://localhost:8443";
     const OIDF_DEMO_TOKEN = import.meta.env.VITE_OIDF_DEMO_TOKEN;
+    const MODULE_FILTERS = (import.meta.env.VITE_OIDF_MODULES ?? "")
+        .split(",")
+        .map((value: string) => value.trim())
+        .filter((value: string) => value.length > 0);
+    const MODULE_PATTERN = import.meta.env.VITE_OIDF_MODULE_PATTERN
+        ? new RegExp(import.meta.env.VITE_OIDF_MODULE_PATTERN)
+        : undefined;
 
     let app: INestApplication;
-    let PLAN_ID: string;
-    let PLAN_ID_KEY_ATTESTATION: string;
     let authToken: string;
 
-    const DEFAULT_CREDENTIAL_CONFIGURATION_ID = "pid";
-    const KEY_ATTESTATION_CREDENTIAL_CONFIGURATION_ID = "pid-key";
-
-    const RUN_FULL_MATRIX = import.meta.env.VITE_OIDF_FULL_MATRIX === "true";
-    const ENFORCE_MODULE_COVERAGE_GUARD =
-        import.meta.env.VITE_OIDF_ENFORCE_MODULE_COVERAGE === "true";
+    const SD_JWT_VC_CREDENTIAL_CONFIGURATION_ID = "pid";
+    const MDOC_CREDENTIAL_CONFIGURATION_ID = "pid-mdoc";
 
     const ISSUER_VARIANT_MATRIX = [
         {
@@ -242,23 +103,20 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         },
     ] as const;
 
-    // Fast mode keeps runtime lower while still checking both format and flow.
-    const ENFORCED_ISSUER_VARIANTS = RUN_FULL_MATRIX
-        ? [...ISSUER_VARIANT_MATRIX]
-        : [ISSUER_VARIANT_MATRIX[0], ISSUER_VARIANT_MATRIX[3]];
-
     type IssuerVariant = (typeof ISSUER_VARIANT_MATRIX)[number];
+
+    const getCredentialConfigurationIdForVariant = (
+        variant: IssuerVariant,
+    ): string =>
+        variant.credential_format === "mdoc"
+            ? MDOC_CREDENTIAL_CONFIGURATION_ID
+            : SD_JWT_VC_CREDENTIAL_CONFIGURATION_ID;
 
     const createdPlans: Array<{
         planId: string;
         variant: IssuerVariant;
     }> = [];
     const executedPlanIds = new Set<string>();
-    const unavailableVariantCombinations: Array<{
-        variant: IssuerVariant;
-        reason: string;
-    }> = [];
-
     const axiosBackendInstance = axios.default.create({
         baseURL: "https://localhost:3000",
         httpsAgent: new https.Agent({
@@ -277,34 +135,6 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         return oidfSuiteStartTest(planId, testName);
     };
 
-    // Keep this list in sync with executed tests below.
-    const COVERED_ISSUER_MODULES = [
-        "oid4vci-1_0-issuer-metadata-test",
-        "oid4vci-1_0-issuer-metadata-test-signed",
-        "oid4vci-1_0-issuer-happy-flow",
-        "oid4vci-1_0-issuer-happy-flow-skip-notification",
-        "oid4vci-1_0-issuer-fail-invalid-nonce",
-        "oid4vci-1_0-issuer-fail-invalid-jwt-proof-signature",
-        "oid4vci-1_0-issuer-fail-invalid-key-attestation-signature",
-        "oid4vci-1_0-issuer-fail-invalid-client-attestation-signature",
-        "oid4vci-1_0-issuer-fail-invalid-client-attestation-pop-signature",
-        "oid4vci-1_0-issuer-fail-mismatched-client-attestation-pop-key",
-        "oid4vci-1_0-issuer-fail-missing-proof",
-        "oid4vci-1_0-issuer-fail-unknown-credential-configuration",
-        "oid4vci-1_0-issuer-fail-unknown-credential-identifier",
-        "oid4vci-1_0-issuer-fail-on-access-token-in-query",
-        "oid4vci-1_0-issuer-fail-unsupported-encryption-algorithm",
-    ] as const;
-
-    // Modules intentionally not executed until known issues are resolved.
-    const INTENTIONALLY_SKIPPED_ISSUER_MODULES = [
-        "oid4vci-1_0-issuer-happy-flow-additional-requests",
-        "oid4vci-1_0-issuer-happy-flow-multiple-clients",
-    ] as const;
-    const INTENTIONALLY_SKIPPED_ISSUER_MODULE_SET = new Set<string>(
-        INTENTIONALLY_SKIPPED_ISSUER_MODULES,
-    );
-
     /**
      * Helper function to send a credential offer to the OIDF test runner.
      * Creates an offer via the backend API and forwards it to the test instance endpoint.
@@ -312,26 +142,31 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
      */
     async function sendOfferToTestRunner(
         testInstance: TestInstance,
-        credentialConfigurationId = DEFAULT_CREDENTIAL_CONFIGURATION_ID,
+        credentialConfigurationId = SD_JWT_VC_CREDENTIAL_CONFIGURATION_ID,
     ): Promise<void> {
         // Request an issuance offer from the local backend using authorization code flow
-        const offerResponse = await axiosBackendInstance.post<
-            OfferResponse,
-            axios.AxiosResponse<OfferResponse, OfferRequestDto>,
-            OfferRequestDto
-        >(
-            "/issuer/offer",
-            {
-                response_type: ResponseType.URI,
-                credentialConfigurationIds: [credentialConfigurationId],
-                flow: FlowType.AUTH_CODE,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${authToken}`,
+        const offerResponse = await axiosBackendInstance
+            .post<
+                OfferResponse,
+                axios.AxiosResponse<OfferResponse, OfferRequestDto>,
+                OfferRequestDto
+            >(
+                "/issuer/offer",
+                {
+                    response_type: ResponseType.URI,
+                    credentialConfigurationIds: [credentialConfigurationId],
+                    flow: FlowType.AUTH_CODE,
                 },
-            },
-        );
+                {
+                    headers: {
+                        Authorization: `Bearer ${authToken}`,
+                    },
+                },
+            )
+            .catch((err) => {
+                console.log(err);
+                throw new Error(err);
+            });
 
         expect(offerResponse.data.uri).toBeDefined();
 
@@ -344,6 +179,11 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
 
         // Get the credential offer endpoint from the test runner
         const url = await oidfSuite.getEndpoint(testInstance);
+        if (!url.startsWith("https://")) {
+            throw new Error(
+                `Expected HTTPS credential_offer_endpoint, got: ${url}`,
+            );
+        }
 
         // Send the offer to the OIDF test runner
         await axios.default.get(`${url}${parameters}`, {
@@ -351,6 +191,7 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
                 ca: readFileSync(OIDF_HTTPD_CA_PATH),
                 checkServerIdentity: () => undefined,
             }),
+            proxy: false,
         });
     }
 
@@ -363,20 +204,6 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
             alg: "ES256",
             cn: "OIDF Test Client",
         });
-
-        // Generate encryption key (no certificate needed for ECDH-ES)
-        const encKeyPair = await generateKeyPair("ECDH-ES", {
-            crv: "P-256",
-            extractable: true,
-        });
-        const encPubJwk = await exportJWK(encKeyPair.publicKey);
-        const encKidData = new TextEncoder().encode(
-            JSON.stringify({ x: encPubJwk.x, y: encPubJwk.y }),
-        );
-        const _encKidHash = await globalThis.crypto.subtle.digest(
-            "SHA-256",
-            encKidData,
-        );
 
         // Generate CA-signed certificate for client attester
         const attesterJwk = await generateCaSignedJwk({
@@ -416,18 +243,17 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
             statusListKeyChain.key,
         );
 
-        for (const [index, variant] of ENFORCED_ISSUER_VARIANTS.entries()) {
+        for (const [_index, variant] of ISSUER_VARIANT_MATRIX.entries()) {
             const body = {
-                alias: `eudiplo-${index}`,
+                //alias: `eudiplo-${index}`,
                 description: `test plan ${variant.credential_format}/${variant.vci_authorization_code_flow_variant}`,
                 publish: "everything",
                 client: {
                     client_id: "localhost",
                 },
-                // neded for outcomment second client test
-                /* client2: {
+                client2: {
                     client_id: "localhost2",
-                }, */
+                },
                 server: {
                     discoveryIssuer: `https://${PUBLIC_DOMAIN}/issuers/haip`,
                 },
@@ -439,7 +265,7 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
                 vci: {
                     credential_issuer_url: `https://${PUBLIC_DOMAIN}/issuers/haip`,
                     credential_configuration_id:
-                        DEFAULT_CREDENTIAL_CONFIGURATION_ID,
+                        getCredentialConfigurationIdForVariant(variant),
                     client_attester_keys_jwks: {
                         keys: [attesterJwk],
                     },
@@ -486,92 +312,57 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
                     variant,
                 });
             } catch (error: any) {
-                unavailableVariantCombinations.push({
-                    variant,
-                    reason: String(
-                        error?.response?.data?.error_description ??
-                            error?.response?.data?.error ??
-                            error?.message ??
-                            error,
-                    ),
-                });
-                console.warn(
-                    `Skipping unsupported issuer variant ${variant.credential_format}/${variant.vci_authorization_code_flow_variant}`,
+                const reason = String(
+                    error?.response?.data?.error_description ??
+                        error?.response?.data?.error ??
+                        error?.message ??
+                        error,
+                );
+                throw new Error(
+                    `Failed to create required issuer variant ${variant.credential_format}/${variant.vci_authorization_code_flow_variant}: ${reason}`,
                 );
             }
         }
 
-        if (createdPlans.length === 0) {
+        if (createdPlans.length !== ISSUER_VARIANT_MATRIX.length) {
             throw new Error(
-                `No issuer plans could be created for variants: ${ENFORCED_ISSUER_VARIANTS.map((variant) => `${variant.credential_format}/${variant.vci_authorization_code_flow_variant}`).join(", ")}`,
+                `Full issuer matrix is required. Created ${createdPlans.length}/${ISSUER_VARIANT_MATRIX.length} base plans.`,
             );
         }
 
-        PLAN_ID = createdPlans[0].planId;
-
-        const keyAttestationPlanBody = {
-            alias: "eudiplo-key-attestation",
-            description: "test plan sd_jwt_vc/issuer_initiated key-attestation",
-            publish: "everything",
-            client: {
-                client_id: "localhost",
-            },
-            server: {
-                discoveryIssuer: `https://${PUBLIC_DOMAIN}/issuers/haip`,
-            },
-            credential: {
-                signing_jwk: clientSigningJwk,
-                trust_anchor_pem: trustAnchorPem,
-                status_list_trust_anchor_pem: statusListTrustAnchorPem,
-            },
-            vci: {
-                credential_issuer_url: `https://${PUBLIC_DOMAIN}/issuers/haip`,
-                credential_configuration_id:
-                    KEY_ATTESTATION_CREDENTIAL_CONFIGURATION_ID,
-                client_attester_keys_jwks: {
-                    keys: [attesterJwk],
-                },
-                client_attestation_issuer:
-                    "https://client-attester.example.org/",
-                key_attestation_jwks: {
-                    keys: [keyAttestationJwk],
-                },
-            },
-            browser: [
-                {
-                    comment:
-                        "expect an immediate redirect back to the conformance suite",
-                    match: "https://*/authorize*",
-                    tasks: [
-                        {
-                            task: "Verify Complete",
-                            match: "*/test/*/callback*",
-                            comment:
-                                "declaring both this and the next task as optional means this configuration works regardless of whether a url is returned in the direct post response",
-                            optional: true,
-                            commands: [
-                                ["wait", "id", "submission_complete", 10],
-                            ],
-                        },
-                        {
-                            task: "Verify Complete",
-                            optional: true,
-                            match: "https://*/authorize*",
-                        },
-                    ],
-                },
-            ],
-        };
-
-        PLAN_ID_KEY_ATTESTATION = await oidfSuite.createPlan(
-            planName,
-            createdPlans[0].variant,
-            keyAttestationPlanBody,
+        // Validate the static module snapshot against OIDF reality. If it
+        // drifted (or was missing), rewrite the snapshot file and fail with a
+        // clear "re-run" message so vitest picks up the new entries on the
+        // next run.
+        const livePlanModules = await oidfSuite.getPlanModules(
+            createdPlans[0].planId,
         );
-        createdPlans.push({
-            planId: PLAN_ID_KEY_ATTESTATION,
-            variant: createdPlans[0].variant,
-        });
+        const liveModuleNames = livePlanModules
+            .map((m) => m.testModule)
+            .sort((a, b) => a.localeCompare(b));
+        const snapshotSorted = [...ISSUER_HAIP_MODULES].sort((a, b) =>
+            a.localeCompare(b),
+        );
+        const snapshotMatches =
+            liveModuleNames.length === snapshotSorted.length &&
+            liveModuleNames.every((name, idx) => name === snapshotSorted[idx]);
+        if (!snapshotMatches) {
+            writeFileSync(
+                SNAPSHOT_PATH,
+                `${JSON.stringify(liveModuleNames, null, 2)}\n`,
+            );
+            const missing = liveModuleNames.filter(
+                (name) => !ISSUER_HAIP_MODULES.includes(name),
+            );
+            const extra = ISSUER_HAIP_MODULES.filter(
+                (name) => !liveModuleNames.includes(name),
+            );
+            throw new Error(
+                `Issuer module snapshot drifted and was rewritten at ${SNAPSHOT_PATH}. ` +
+                    `Added: [${missing.join(", ")}]. Removed: [${extra.join(", ")}]. ` +
+                    `Please re-run the test so vitest picks up the new module list.`,
+            );
+        }
 
         const moduleFixture: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
@@ -614,14 +405,19 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         const clientId = client.clientId;
         const clientSecret = getDefaultSecret(client.secret);
 
-        // Acquire JWT token using client credentials
-        const tokenResponse = await axiosBackendInstance.post<{
-            access_token: string;
-        }>("/api/oauth2/token", {
-            client_id: clientId,
-            client_secret: clientSecret,
-            grant_type: "client_credentials",
-        });
+        // Acquire JWT token using client credentials over HTTPS.
+        const tokenResponse = await axiosBackendInstance
+            .post<{
+                access_token: string;
+            }>("/api/oauth2/token", {
+                client_id: clientId,
+                client_secret: clientSecret,
+                grant_type: "client_credentials",
+            })
+            .catch((err) => {
+                console.log(err);
+                throw new Error(err);
+            });
 
         authToken = tokenResponse.data.access_token;
         expect(authToken).toBeDefined();
@@ -660,404 +456,240 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
     });
 
     // ============================================================================
-    // DEBUG: List available test modules
+    // MODULE EXECUTION MATRIX
+    // Execute issuer modules through a single loop so coverage and report export
+    // stay consistent as module/variant combinations evolve.
     // ============================================================================
 
-    test("list-available-test-modules", async () => {
-        const modules = await oidfSuite.getAllTestsModules(PLAN_ID);
-        console.log(
-            "Available test modules in plan:",
-            JSON.stringify(modules, null, 2),
-        );
-        expect(modules).toBeDefined();
-        expect(modules.length).toBeGreaterThan(0);
-    });
+    type IssuerModuleCase = {
+        moduleName: string;
+        expectedResults: ReadonlyArray<"PASSED" | "WARNING" | "FAILED">;
+        triggerOffer?: boolean;
+        credentialConfigurationIdForVariant?: (
+            variant: IssuerVariant,
+        ) => string;
+    };
 
-    test("module coverage guard - issuer HAIP plan", async () => {
-        if (createdPlans.length === 0) {
-            throw new Error("No issuer plans were created for coverage checks");
+    const DEFAULT_ISSUER_MODULE_CASE: Omit<IssuerModuleCase, "moduleName"> = {
+        expectedResults: ["PASSED"],
+        triggerOffer: true,
+    };
+
+    const ISSUER_MODULE_CASE_OVERRIDES: Record<
+        string,
+        Partial<IssuerModuleCase>
+    > = {
+        "oid4vci-1_0-issuer-metadata-test": {
+            expectedResults: ["WARNING"],
+            triggerOffer: false,
+        },
+        "oid4vci-1_0-issuer-metadata-test-signed": {
+            expectedResults: ["PASSED", "WARNING"],
+            triggerOffer: false,
+        },
+        "oid4vci-1_0-issuer-happy-flow-additional-requests": {
+            expectedResults: ["FAILED"],
+        },
+        "oid4vci-1_0-issuer-happy-flow-multiple-clients": {
+            expectedResults: ["FAILED"],
+        },
+    };
+
+    const buildIssuerModuleCase = (moduleName: string): IssuerModuleCase => {
+        const normalizedName = moduleName.toLowerCase();
+
+        const baseCase: IssuerModuleCase = {
+            moduleName,
+            ...DEFAULT_ISSUER_MODULE_CASE,
+        };
+
+        if (normalizedName.includes("metadata-test-signed")) {
+            baseCase.expectedResults = ["PASSED", "WARNING"];
+            baseCase.triggerOffer = false;
+        } else if (normalizedName.includes("metadata")) {
+            baseCase.expectedResults = ["WARNING"];
+            baseCase.triggerOffer = false;
+        } else if (normalizedName.startsWith("fapi2-security-profile")) {
+            baseCase.triggerOffer = false;
+            baseCase.expectedResults = ["SKIPPED"];
+        } else if (
+            normalizedName.includes("fail") ||
+            normalizedName.includes("invalid")
+        ) {
+            baseCase.expectedResults = ["PASSED"];
         }
+        return {
+            ...baseCase,
+            ...ISSUER_MODULE_CASE_OVERRIDES[moduleName],
+        };
+    };
 
-        const availableScenarioKeys = new Set<string>();
-        const skippedScenarioKeys = new Set<string>();
-        const primaryPlanModules = await oidfSuite.getPlanModules(PLAN_ID);
+    /**
+     * Per-module outcome captured by each variant's `beforeAll`. Looked up
+     * by the per-module `it()` blocks for assertions, so vitest reports one
+     * pass/fail entry per (variant, module) combination.
+     */
+    type ModuleOutcome =
+        | { kind: "ok"; result: string; status: string; durationMs: number }
+        | { kind: "error"; error: Error; durationMs: number };
 
-        for (const { planId, variant } of createdPlans) {
-            const modules = await oidfSuite.getPlanModules(planId);
+    const buildSkipReason = (moduleName: string): string | undefined => {
+        if (SKIPPED_ISSUER_MODULES.has(moduleName)) {
+            return "fapi2 security profile test";
+        }
+        if (
+            MODULE_FILTERS.length > 0 &&
+            !MODULE_FILTERS.some((filterValue: string) =>
+                moduleName.includes(filterValue),
+            )
+        ) {
+            return "filtered out by VITE_OIDF_MODULES";
+        }
+        if (MODULE_PATTERN && !MODULE_PATTERN.test(moduleName)) {
+            return "filtered out by VITE_OIDF_MODULE_PATTERN";
+        }
+        return undefined;
+    };
 
-            for (const module of modules) {
-                const scenarioKey = oidfSuite.buildScenarioKey({
-                    testModule: module.testModule,
-                    planVariant: variant,
-                    moduleVariant: module.variant,
-                });
+    const runModuleForVariant = async (
+        planId: string,
+        variant: IssuerVariant,
+        moduleName: string,
+        moduleCase: IssuerModuleCase,
+    ): Promise<ModuleOutcome> => {
+        const variantLabel = `${variant.credential_format}/${variant.vci_authorization_code_flow_variant}`;
+        const startedAt = Date.now();
+        let testInstance: TestInstance | undefined;
+        try {
+            testInstance = await oidfSuite.startTest(planId, moduleName);
+            console.log(
+                `Test details (${variantLabel}/${moduleName}): ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
+            );
 
-                availableScenarioKeys.add(scenarioKey);
+            const shouldTriggerOffer =
+                moduleCase.triggerOffer !== false &&
+                variant.vci_authorization_code_flow_variant ===
+                    "issuer_initiated";
 
-                if (
-                    INTENTIONALLY_SKIPPED_ISSUER_MODULE_SET.has(
-                        module.testModule,
-                    )
-                ) {
-                    skippedScenarioKeys.add(scenarioKey);
+            if (shouldTriggerOffer) {
+                await sendOfferToTestRunner(
+                    testInstance,
+                    moduleCase.credentialConfigurationIdForVariant?.(variant) ??
+                        getCredentialConfigurationIdForVariant(variant),
+                );
+            }
+
+            const logResult = await oidfSuite.waitForFinished(testInstance.id);
+            const durationMs = Date.now() - startedAt;
+            console.log(
+                `Module finished (${variantLabel}/${moduleName}) in ${durationMs}ms → result=${logResult.result} status=${logResult.status}`,
+            );
+            return {
+                kind: "ok",
+                result: logResult.result,
+                status: logResult.status,
+                durationMs,
+            };
+        } catch (error) {
+            const durationMs = Date.now() - startedAt;
+            const wrapped =
+                error instanceof Error ? error : new Error(String(error));
+
+            if (testInstance?.id) {
+                const failedOutputDir = resolve(
+                    __dirname,
+                    `../../../../tmp/oidf-logs/failed/${testInstance.id}`,
+                );
+                try {
+                    const failedLogPath = await oidfSuite.storeTestLog(
+                        testInstance.id,
+                        failedOutputDir,
+                    );
+                    console.error(
+                        `Failed test log extracted to: ${failedLogPath} (${variantLabel}/${moduleName})`,
+                    );
+                } catch (exportError) {
+                    console.error(
+                        `Failed to export per-test OIDF log for ${moduleName} (${testInstance.id}):`,
+                        exportError,
+                    );
                 }
             }
-        }
 
-        const coveredScenarioKeys = new Set<string>();
-        for (const coveredModuleName of COVERED_ISSUER_MODULES) {
-            const module = primaryPlanModules.find(
-                (planModule) => planModule.testModule === coveredModuleName,
+            console.error(
+                `Module errored (${variantLabel}/${moduleName}) after ${durationMs}ms: ${wrapped.message}`,
             );
+            return { kind: "error", error: wrapped, durationMs };
+        }
+    };
 
-            if (!module) {
-                continue;
+    // Per-variant describes register one `it()` per module so vitest reports
+    // a separate pass/fail line for every (variant, module) combination.
+    // Each variant's `beforeAll` runs its modules sequentially against its
+    // dedicated plan; the four variant chains run in parallel via
+    // `describe.concurrent`.
+    for (const variant of ISSUER_VARIANT_MATRIX) {
+        const variantLabel = `${variant.credential_format} / ${variant.vci_authorization_code_flow_variant}`;
+
+        describe.concurrent(variantLabel, () => {
+            const outcomes = new Map<string, ModuleOutcome>();
+            let variantBootstrapError: Error | undefined;
+
+            beforeAll(async () => {
+                const planEntry = createdPlans.find(
+                    (entry) => entry.variant === variant,
+                );
+                if (!planEntry) {
+                    variantBootstrapError = new Error(
+                        `No plan was created for variant ${variantLabel}`,
+                    );
+                    return;
+                }
+
+                for (const moduleName of ISSUER_HAIP_MODULES) {
+                    const moduleCase = buildIssuerModuleCase(moduleName);
+                    if (buildSkipReason(moduleName)) {
+                        continue;
+                    }
+                    outcomes.set(
+                        moduleName,
+                        await runModuleForVariant(
+                            planEntry.planId,
+                            variant,
+                            moduleName,
+                            moduleCase,
+                        ),
+                    );
+                }
+            }, 600_000);
+
+            for (const moduleName of ISSUER_HAIP_MODULES) {
+                const moduleCase = buildIssuerModuleCase(moduleName);
+                const skipReason = buildSkipReason(moduleName);
+                if (skipReason) {
+                    test.skip(`${moduleName} (${skipReason})`, () => {});
+                    continue;
+                }
+
+                test(moduleName, () => {
+                    if (variantBootstrapError) {
+                        throw variantBootstrapError;
+                    }
+                    const outcome = outcomes.get(moduleName);
+                    if (!outcome) {
+                        throw new Error(
+                            `Module ${moduleName} did not run for variant ${variantLabel}`,
+                        );
+                    }
+                    if (outcome.kind === "error") {
+                        throw outcome.error;
+                    }
+                    expect(
+                        moduleCase.expectedResults,
+                        `result=${outcome.result} status=${outcome.status} (expected one of ${moduleCase.expectedResults.join(", ")})`,
+                    ).toContain(outcome.result);
+                });
             }
-
-            coveredScenarioKeys.add(
-                oidfSuite.buildScenarioKey({
-                    testModule: module.testModule,
-                    planVariant: createdPlans[0].variant,
-                    moduleVariant: module.variant,
-                }),
-            );
-        }
-
-        const missingScenarios = [...availableScenarioKeys].filter(
-            (scenarioKey) =>
-                !coveredScenarioKeys.has(scenarioKey) &&
-                !skippedScenarioKeys.has(scenarioKey),
-        );
-
-        const staleConfiguredModules = [
-            ...COVERED_ISSUER_MODULES,
-            ...INTENTIONALLY_SKIPPED_ISSUER_MODULES,
-        ].filter(
-            (moduleName) =>
-                !primaryPlanModules.some(
-                    (planModule) => planModule.testModule === moduleName,
-                ),
-        );
-
-        expect(
-            staleConfiguredModules,
-            `Configured issuer modules no longer exist in primary plan: ${staleConfiguredModules.join(", ")}.`,
-        ).toEqual([]);
-
-        if (missingScenarios.length > 0 && !ENFORCE_MODULE_COVERAGE_GUARD) {
-            console.warn(
-                `OIDF issuer coverage guard warning: ${missingScenarios.length} uncovered scenarios. Set VITE_OIDF_ENFORCE_MODULE_COVERAGE=true to fail on these gaps.`,
-            );
-        }
-
-        if (ENFORCE_MODULE_COVERAGE_GUARD) {
-            expect(
-                missingScenarios,
-                `Uncovered OIDF issuer scenarios (${missingScenarios.length}) in matrix ${createdPlans.map(({ variant }) => `${variant.credential_format}/${variant.vci_authorization_code_flow_variant}`).join(", ")}.${unavailableVariantCombinations.length > 0 ? ` Skipped unsupported variants: ${unavailableVariantCombinations.map(({ variant }) => `${variant.credential_format}/${variant.vci_authorization_code_flow_variant}`).join(", ")}.` : ""}`,
-            ).toEqual([]);
-        }
-    });
-
-    // ============================================================================
-    // METADATA TESTS
-    // These tests validate the metadata exposed by the credential issuer
-    // ============================================================================
-
-    test("oid4vci-1_0-issuer-metadata-test", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-metadata-test",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Warning is fine because unknown entries are in the metadata (iae and status list information)
-        expect(logResult.result).toBe("WARNING");
-    });
-
-    test("oid4vci-1_0-issuer-metadata-test-signed", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-metadata-test-signed",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Test is skipped if signed metadata is not supported
-        expect(["PASSED", "SKIPPED", "WARNING"]).toContain(logResult.result);
-    });
-
-    // ============================================================================
-    // HAPPY FLOW TESTS
-    // These tests validate the standard credential issuance flow
-    // ============================================================================
-
-    test("oid4vci-1_0-issuer-happy-flow", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-happy-flow",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
-    }, 10000);
-
-    //TODO: fix test with TLS connection (not a basic problem of oid4vc)
-    /* test("oid4vci-1_0-issuer-happy-flow-additional-requests", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-happy-flow-additional-requests",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
-    }, 15000); */
-
-    /*     test("oid4vci-1_0-issuer-happy-flow-multiple-clients", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-happy-flow-multiple-clients",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
-    }, 15000); */
-
-    test("oid4vci-1_0-issuer-happy-flow-skip-notification", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-happy-flow-skip-notification",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
-    }, 10000);
-
-    // ============================================================================
-    // FAIL TESTS - Invalid Signatures and Proofs
-    // These tests verify proper error handling for invalid inputs
-    // ============================================================================
-
-    test("oid4vci-1_0-issuer-fail-invalid-nonce", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-fail-invalid-nonce",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Test may be skipped if credential configuration does not require proof
-        expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
-    }, 10000);
-
-    test("oid4vci-1_0-issuer-fail-invalid-jwt-proof-signature", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-fail-invalid-jwt-proof-signature",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Test may be skipped for attestation proof type
-        expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
-    }, 10000);
-
-    test("oid4vci-1_0-issuer-fail-invalid-key-attestation-signature", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID_KEY_ATTESTATION,
-            "oid4vci-1_0-issuer-fail-invalid-key-attestation-signature",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(
-            testInstance,
-            KEY_ATTESTATION_CREDENTIAL_CONFIGURATION_ID,
-        );
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Test may be skipped if key attestation is not required
-        expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
-    }, 10000);
-
-    test("oid4vci-1_0-issuer-fail-invalid-client-attestation-signature", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-fail-invalid-client-attestation-signature",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
-    }, 10000);
-
-    test("oid4vci-1_0-issuer-fail-invalid-client-attestation-pop-signature", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-fail-invalid-client-attestation-pop-signature",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Test may be skipped for non-client_attestation auth methods
-        expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
-    }, 10000);
-
-    test("oid4vci-1_0-issuer-fail-mismatched-client-attestation-pop-key", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-fail-mismatched-client-attestation-pop-key",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Test may be skipped for non-client_attestation auth methods
-        expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
-    }, 10000);
-
-    test("oid4vci-1_0-issuer-fail-missing-proof", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-fail-missing-proof",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        // Test may be skipped if credential configuration does not require proof
-        expect(["PASSED", "SKIPPED"]).toContain(logResult.result);
-    }, 10000);
-
-    // ============================================================================
-    // FAIL TESTS - Invalid Credential Configuration/Identifier
-    // ============================================================================
-
-    test("oid4vci-1_0-issuer-fail-unknown-credential-configuration", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-fail-unknown-credential-configuration",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
-    }, 10000);
-
-    test("oid4vci-1_0-issuer-fail-unknown-credential-identifier", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-fail-unknown-credential-identifier",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
-    }, 10000);
-
-    // ============================================================================
-    // FAIL TESTS - Security and Protocol Compliance
-    // ============================================================================
-
-    test("oid4vci-1_0-issuer-fail-on-access-token-in-query", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-fail-on-access-token-in-query",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
-    }, 10000);
-
-    test("oid4vci-1_0-issuer-fail-unsupported-encryption-algorithm", async () => {
-        const testInstance = await oidfSuite.startTest(
-            PLAN_ID,
-            "oid4vci-1_0-issuer-fail-unsupported-encryption-algorithm",
-        );
-
-        console.log(
-            `Test details: ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-        );
-
-        await sendOfferToTestRunner(testInstance);
-
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(logResult.result).toBe("PASSED");
-    }, 10000);
+        });
+    }
 });

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { clientControllerGetClient, ClientEntity } from '@eudiplo/sdk-core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -21,6 +21,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatChipsModule,
   ],
   templateUrl: './client-show.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './client-show.component.scss',
 })
 export class ClientShowComponent implements OnInit {

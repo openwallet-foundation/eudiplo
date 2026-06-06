@@ -41,7 +41,10 @@
                 formControlName="ttlSeconds"
                 placeholder="Leave empty for global default"
               />
-              <mat-hint> Current: {{ formatTtl(configForm.get('ttlSeconds')?.value) }} </mat-hint>
+              <mat-hint>
+                Current:
+                {{ formatTtl($safeNavigationMigration(configForm.get('ttlSeconds')?.value)) }}
+              </mat-hint>
               @if (configForm.get('ttlSeconds')?.hasError('min')) {
                 <mat-error>TTL must be at least 60 seconds</mat-error>
               }

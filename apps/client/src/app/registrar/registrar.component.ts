@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -43,6 +43,7 @@ interface RegistrarPreset {
     RouterModule,
   ],
   templateUrl: './registrar.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './registrar.component.scss',
 })
 export class RegistrarComponent implements OnInit {

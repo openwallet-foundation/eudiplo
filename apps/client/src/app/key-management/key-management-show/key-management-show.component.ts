@@ -1,4 +1,4 @@
-import { Component, type OnInit, type OnDestroy } from '@angular/core';
+import { Component, type OnInit, type OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -29,6 +29,7 @@ import { JsonViewDialogComponent } from '../../issuance/credential-config/creden
     RouterModule,
   ],
   templateUrl: './key-management-show.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './key-management-show.component.scss',
 })
 export class KeyManagementShowComponent implements OnInit, OnDestroy {

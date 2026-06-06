@@ -1236,13 +1236,15 @@ export class PresentationsService {
 
                             return result.claims;
                         } else if (type === "dc+sd-jwt") {
-                            console.log(cred);
                             const result =
                                 await this.sdjwtvcverifierService.verify(cred, {
                                     requiredClaimKeys,
                                     keyBindingNonce: session.vp_nonce!,
+                                    keyBindingAudience:
+                                        requestObjectSessionData?.client_id ??
+                                        session.clientId,
                                     ...verifyOptions,
-                                } as any);
+                                });
                             this.logger.debug(
                                 {
                                     credentialId: attId,

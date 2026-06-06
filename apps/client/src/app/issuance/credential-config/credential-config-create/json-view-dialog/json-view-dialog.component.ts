@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -36,6 +36,7 @@ export interface JsonViewDialogData {
     EditorComponent,
   ],
   templateUrl: './json-view-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './json-view-dialog.component.scss',
 })
 export class JsonViewDialogComponent {

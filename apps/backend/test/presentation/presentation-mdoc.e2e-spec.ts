@@ -291,8 +291,8 @@ describe("Presentation - mDOC Credential", () => {
                 resolved.authorizationRequestPayload as Openid4vpAuthorizationRequest,
         });
 
-        // The submission should succeed (200 per OID4VP spec) but session should fail
-        expect(submitRes.response.status).toBe(200);
+        // The submission should be rejected with 400 per OID4VP spec when the credential fails verification
+        expect(submitRes.response.status).toBe(400);
 
         // Verify the session is marked as failed with a trust-chain specific error
         const sessionRes = await request(app.getHttpServer())

@@ -186,7 +186,7 @@
               <app-editor
                 formControlName="dcql_query"
                 [schema]="DCQLSchema"
-                [errors]="form.get('dcql_query')?.errors"
+                [errors]="$safeNavigationMigration(form.get('dcql_query')?.errors)"
               ></app-editor>
             </mat-card-content>
           </mat-card>
@@ -206,7 +206,7 @@
               <app-editor
                 formControlName="transaction_data"
                 [schema]="transactionDataArraySchema"
-                [errors]="form.controls['transaction_data']?.errors"
+                [errors]="$safeNavigationMigration(form.controls['transaction_data']?.errors)"
               ></app-editor>
               <mat-hint>
                 Transaction data is an array of objects with at least <code>type</code> and

@@ -31,14 +31,6 @@ export class CryptoImplementationService {
     }
 
     /**
-     * Returns the list of supported algorithm types
-     * @returns Array of supported algorithm types
-     */
-    getSupportedAlgorithms(): CryptoType[] {
-        return [...this.supportedAlgorithms];
-    }
-
-    /**
      * Returns the supported algorithms based on the credential format.
      * - For SD-JWT VC: Returns JOSE algorithm names (ES256)
      * - For mDOC: Returns COSE algorithm identifiers (-7)

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -16,6 +16,7 @@ export interface UserTemporaryPasswordDialogData {
   standalone: true,
   imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule, FlexLayoutModule],
   templateUrl: './user-temporary-password-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './user-temporary-password-dialog.component.scss',
 })
 export class UserTemporaryPasswordDialogComponent {

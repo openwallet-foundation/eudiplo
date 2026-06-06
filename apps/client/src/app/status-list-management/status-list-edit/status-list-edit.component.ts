@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -43,6 +43,7 @@ import { StatusListManagementService } from '../status-list-management.service';
     RouterModule,
   ],
   templateUrl: './status-list-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './status-list-edit.component.scss',
 })
 export class StatusListEditComponent implements OnInit {

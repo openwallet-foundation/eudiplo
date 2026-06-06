@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  signal,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -19,6 +27,7 @@ import { FlexLayoutModule } from 'ngx-flexible-layout';
     MatButtonModule,
   ],
   templateUrl: './credential-ids.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './credential-ids.component.scss',
 })
 export class CredentialIdsComponent implements OnInit {

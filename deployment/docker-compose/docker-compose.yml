@@ -17,12 +17,19 @@ services:
     image: ghcr.io/openwallet-foundation/eudiplo:latest
     restart: always
     env_file:
-      - .env
+      - ${EUDIPLO_ENV_FILE:-.env}
     ports:
       - '3000:3000'
     volumes:
-      - eudiplo-config:/app/config
+      - ${EUDIPLO_CONFIG_MOUNT:-eudiplo-config:/app/config}
       - eudiplo-uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+        required: false
+      minio:
+        condition: service_healthy
+        required: false
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
       interval: 30s

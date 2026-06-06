@@ -66,7 +66,7 @@ describe("Client Resource-Level Access Control (e2e)", () => {
                 clientId: "restricted-client",
                 roles: [Role.PresentationRequest, Role.IssuanceOffer],
                 allowedPresentationConfigs: ["pid-no-hook"], // Can only use pid-no-hook
-                allowedIssuanceConfigs: ["pid"], // Can only use pid
+                allowedIssuanceConfigs: ["pid-no-key"], // Can only use pid
             })
             .then((res) => res.body);
 
@@ -127,7 +127,7 @@ describe("Client Resource-Level Access Control (e2e)", () => {
                 .set("Authorization", `Bearer ${restrictedClientToken}`)
                 .send({
                     response_type: ResponseType.URI,
-                    requestId: "pid", // This is NOT in allowedPresentationConfigs
+                    requestId: "pid-no-key", // This is NOT in allowedPresentationConfigs
                 });
 
             expect(res.status).toBe(403);
@@ -168,7 +168,7 @@ describe("Client Resource-Level Access Control (e2e)", () => {
                 .set("Authorization", `Bearer ${restrictedClientToken}`)
                 .send({
                     response_type: ResponseType.URI,
-                    credentialConfigurationIds: ["pid"], // This is in allowedIssuanceConfigs
+                    credentialConfigurationIds: ["pid-no-key"], // This is in allowedIssuanceConfigs
                     flow: "pre_authorized_code",
                 });
 
@@ -197,7 +197,7 @@ describe("Client Resource-Level Access Control (e2e)", () => {
                 .set("Authorization", `Bearer ${restrictedClientToken}`)
                 .send({
                     response_type: ResponseType.URI,
-                    credentialConfigurationIds: ["pid", "citizen"], // citizen is not allowed
+                    credentialConfigurationIds: ["pid-no-key", "citizen"], // citizen is not allowed
                     flow: "pre_authorized_code",
                 });
 
@@ -212,7 +212,7 @@ describe("Client Resource-Level Access Control (e2e)", () => {
                 .set("Authorization", `Bearer ${unrestrictedClientToken}`)
                 .send({
                     response_type: ResponseType.URI,
-                    credentialConfigurationIds: ["pid"],
+                    credentialConfigurationIds: ["pid-no-key"],
                     flow: "pre_authorized_code",
                 });
 
@@ -242,7 +242,7 @@ describe("Client Resource-Level Access Control (e2e)", () => {
             expect(res.body.allowedPresentationConfigs).toEqual([
                 "pid-no-hook",
             ]);
-            expect(res.body.allowedIssuanceConfigs).toEqual(["pid"]);
+            expect(res.body.allowedIssuanceConfigs).toEqual(["pid-no-key"]);
         });
 
         test("can update client allowed configs", async () => {
@@ -253,9 +253,9 @@ describe("Client Resource-Level Access Control (e2e)", () => {
                 .send({
                     roles: [Role.PresentationRequest, Role.IssuanceOffer],
                     allowedPresentationConfigs: ["pid", "pid-no-hook"], // Add pid
-                    allowedIssuanceConfigs: ["pid", "citizen"], // Add citizen
+                    allowedIssuanceConfigs: ["pid-no-key", "citizen"], // Add citizen
                 })
-                .then((res) => res.body);
+                .expect(200);
 
             const newTokenRes = await request(ctx.app.getHttpServer())
                 .post("/api/oauth2/token")

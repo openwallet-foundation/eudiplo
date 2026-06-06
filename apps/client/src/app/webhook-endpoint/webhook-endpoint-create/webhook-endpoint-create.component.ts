@@ -1,4 +1,4 @@
-import { Component, type OnInit } from '@angular/core';
+import { Component, type OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -33,6 +33,7 @@ import { webhookSchema } from '../../utils/schemas';
     RouterModule,
   ],
   templateUrl: './webhook-endpoint-create.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './webhook-endpoint-create.component.scss',
 })
 export class WebhookEndpointCreateComponent implements OnInit {

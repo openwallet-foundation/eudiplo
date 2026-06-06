@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators, type FormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -38,6 +38,7 @@ import { SecretDialogComponent } from '../secret-dialog/secret-dialog.component'
     MatDialogModule,
   ],
   templateUrl: './client-create.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './client-create.component.scss',
 })
 export class ClientCreateComponent implements OnInit {

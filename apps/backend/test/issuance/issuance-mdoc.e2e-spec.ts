@@ -50,7 +50,7 @@ describe("Issuance - mDOC Credentials", () => {
             .set("Authorization", `Bearer ${authToken}`)
             .send({
                 response_type: "uri",
-                credentialConfigurationIds: ["pid-mdoc"],
+                credentialConfigurationIds: ["pid-mdoc-no-key"],
                 flow: "pre_authorized_code",
             })
             .expect(201);

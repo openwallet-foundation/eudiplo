@@ -47,7 +47,7 @@ describe("Single-Use Validation (Issue #503) - OID4VCI", () => {
             .set("Authorization", `Bearer ${authToken}`)
             .send({
                 response_type: "uri",
-                credentialConfigurationIds: ["pid"],
+                credentialConfigurationIds: ["pid-no-key"],
                 flow: "pre_authorized_code",
             })
             .expect(201);
@@ -171,7 +171,7 @@ describe("Single-Use Validation (Issue #503) - OID4VP", () => {
         const vpToken = await preparePresentation(
             {
                 iat: Math.floor(Date.now() / 1000),
-                aud: resolved.authorizationRequestPayload.aud as string,
+                aud: resolved.authorizationRequestPayload.client_id as string,
                 nonce: resolved.authorizationRequestPayload.nonce,
             },
             privateIssuerKey,

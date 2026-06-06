@@ -1,6 +1,13 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, AfterViewInit, DestroyRef, inject } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  AfterViewInit,
+  DestroyRef,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -44,6 +51,7 @@ export type SessionStatus = 'active' | 'fetched' | 'completed' | 'expired' | 'fa
     MatPaginatorModule,
   ],
   templateUrl: './session-management-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './session-management-list.component.scss',
 })
 export class SessionManagementListComponent implements AfterViewInit {

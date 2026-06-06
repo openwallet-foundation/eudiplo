@@ -61,7 +61,7 @@ describe("Issuance - Refresh Token Flow", () => {
             .set("Authorization", `Bearer ${authToken}`)
             .send({
                 response_type: "uri",
-                credentialConfigurationIds: ["pid"],
+                credentialConfigurationIds: ["pid-no-key"],
                 flow: "pre_authorized_code",
             })
             .expect(201);
@@ -103,7 +103,7 @@ describe("Issuance - Refresh Token Flow", () => {
             .set("Authorization", `Bearer ${authToken}`)
             .send({
                 response_type: "uri",
-                credentialConfigurationIds: ["pid"],
+                credentialConfigurationIds: ["pid-no-key"],
                 flow: "pre_authorized_code",
             })
             .expect(201);
@@ -197,7 +197,7 @@ describe("Issuance - Refresh Token Flow", () => {
             .set("Authorization", `Bearer ${authToken}`)
             .send({
                 response_type: "uri",
-                credentialConfigurationIds: ["pid"],
+                credentialConfigurationIds: ["pid-no-key"],
                 flow: "pre_authorized_code",
             })
             .expect(201);

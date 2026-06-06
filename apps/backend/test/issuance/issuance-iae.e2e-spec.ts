@@ -120,7 +120,7 @@ describe("Interactive Authorization Endpoint (IAE)", () => {
                     authorization_details: JSON.stringify([
                         {
                             type: "openid_credential",
-                            credential_configuration_id: "pid",
+                            credential_configuration_id: "pid-no-key",
                         },
                     ]),
                 })
@@ -137,7 +137,7 @@ describe("Interactive Authorization Endpoint (IAE)", () => {
                 .set("Authorization", `Bearer ${authToken}`)
                 .send({
                     response_type: "uri",
-                    credentialConfigurationIds: ["pid"],
+                    credentialConfigurationIds: ["pid-no-key"],
                     flow: "authorization_code",
                 })
                 .expect(201);
@@ -481,7 +481,7 @@ describe("Interactive Authorization Endpoint (IAE)", () => {
                     authorization_details: JSON.stringify([
                         {
                             type: "openid_credential",
-                            credential_configuration_id: "pid", // Uses default presentation config
+                            credential_configuration_id: "pid-no-key", // Uses default presentation config
                         },
                     ]),
                 })

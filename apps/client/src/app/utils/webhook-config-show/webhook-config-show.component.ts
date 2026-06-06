@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,6 +8,7 @@ import { WebhookConfig } from '@eudiplo/sdk-core';
   selector: 'app-webhook-config-show',
   imports: [MatCardModule, MatIconModule, MatExpansionModule],
   templateUrl: './webhook-config-show.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './webhook-config-show.component.scss',
 })
 export class WebhookConfigShowComponent {

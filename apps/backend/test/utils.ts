@@ -42,7 +42,6 @@ import { App } from "supertest/types";
 import { AppModule } from "../src/app.module";
 import { Role } from "../src/auth/roles/role.enum";
 import { KeyChainImportDto } from "../src/crypto/key/dto/key-chain-import.dto";
-import { KeyUsageType } from "../src/crypto/key/entities/key-chain.entity";
 import { KeyChainService } from "../src/crypto/key/key-chain.service";
 import { CredentialConfigCreate } from "../src/issuer/configuration/credentials/dto/credential-config-create.dto";
 import { IssuanceDto } from "../src/issuer/configuration/issuance/dto/issuance.dto";
@@ -460,26 +459,17 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
 
     const authToken = await getToken(app, clientId, clientSecret);
 
-    // Create key chains with different usage types
-    const keyMaterial = {
-        kty: "EC",
-        x: "pmn8SKQKZ0t2zFlrUXzJaJwwQ0WnQxcSYoS_D6ZSGho",
-        y: "rMd9JTAovcOI_OvOXWCWZ1yVZieVYK2UgvB2IPuSk2o",
-        crv: "P-256",
-        d: "rqv47L1jWkbFAGMCK8TORQ1FknBUYGY6OLU1dYHNDqU",
-        alg: "ES256",
-    };
+    const configFolder = resolve(__dirname + "/fixtures");
 
     // Create attestation key chain for credential signing
     await request(app.getHttpServer())
         .post("/key-chain/import")
         .set("Authorization", `Bearer ${authToken}`)
         .send({
-            id: "039af178-3ca0-48f4-a2e4-7b1209f30376",
-            key: keyMaterial,
-            usageType: KeyUsageType.Attestation,
-            description: "Attestation key for credential signing",
-        } as KeyChainImportDto)
+            ...readConfig<KeyChainImportDto>(
+                join(configFolder, "haip/key-chains/attestation.json"),
+            ),
+        })
         .expect(201);
 
     // Create access key chain for access tokens
@@ -487,11 +477,10 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
         .post("/key-chain/import")
         .set("Authorization", `Bearer ${authToken}`)
         .send({
-            id: "access-key-chain",
-            key: keyMaterial,
-            usageType: KeyUsageType.Access,
-            description: "Access key for tokens",
-        } as KeyChainImportDto)
+            ...readConfig<KeyChainImportDto>(
+                join(configFolder, "haip/key-chains/access.json"),
+            ),
+        })
         .expect(201);
 
     // Create status list key chain
@@ -499,11 +488,10 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
         .post("/key-chain/import")
         .set("Authorization", `Bearer ${authToken}`)
         .send({
-            id: "status-list-key-chain",
-            key: keyMaterial,
-            usageType: KeyUsageType.StatusList,
-            description: "Status list key",
-        } as KeyChainImportDto)
+            ...readConfig<KeyChainImportDto>(
+                join(configFolder, "haip/key-chains/status-list.json"),
+            ),
+        })
         .expect(201);
 
     // Create trust list key chain
@@ -511,14 +499,11 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
         .post("/key-chain/import")
         .set("Authorization", `Bearer ${authToken}`)
         .send({
-            id: "trust-list-key-chain",
-            key: keyMaterial,
-            usageType: KeyUsageType.TrustList,
-            description: "Trust list key",
-        } as KeyChainImportDto)
+            ...readConfig<KeyChainImportDto>(
+                join(configFolder, "haip/key-chains/trust-list.json"),
+            ),
+        })
         .expect(201);
-
-    const configFolder = resolve(__dirname + "/fixtures");
 
     // Import image
     await request(app.getHttpServer())
@@ -537,19 +522,22 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
             ...readConfig<IssuanceDto>(
                 join(configFolder, "haip/issuance/issuance.json"),
             ),
-            walletAttestationRequired: false,
             dPopRequired: false,
-        })
+            credentialResponseEncryption: false,
+            credentialRequestEncryption: false,
+            walletAttestationRequired: false,
+        } as IssuanceDto)
         .expect(201);
 
     // Import the pid credential configuration
+
     await request(app.getHttpServer())
         .post("/issuer/credentials")
         .trustLocalhost()
         .set("Authorization", `Bearer ${authToken}`)
         .send(
             readConfig<CredentialConfigCreate>(
-                join(configFolder, "haip/issuance/credentials/pid.json"),
+                join(configFolder, "haip/issuance/credentials/pid-no-key.json"),
             ),
         )
         .expect(201);
@@ -601,6 +589,20 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
         .send(
             readConfig<CredentialConfigCreate>(
                 join(configFolder, "haip/issuance/credentials/pid-mdoc.json"),
+            ),
+        )
+        .expect(201);
+
+    await request(app.getHttpServer())
+        .post("/issuer/credentials")
+        .trustLocalhost()
+        .set("Authorization", `Bearer ${authToken}`)
+        .send(
+            readConfig<CredentialConfigCreate>(
+                join(
+                    configFolder,
+                    "haip/issuance/credentials/pid-mdoc-no-key.json",
+                ),
             ),
         )
         .expect(201);

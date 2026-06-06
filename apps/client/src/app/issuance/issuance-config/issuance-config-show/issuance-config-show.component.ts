@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -33,6 +33,7 @@ import { IssuanceConfigService } from '../issuance-config.service';
     ClipboardModule,
   ],
   templateUrl: './issuance-config-show.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './issuance-config-show.component.scss',
 })
 export class IssuanceConfigShowComponent implements OnInit {

@@ -56,7 +56,13 @@ export class SdjwtvcverifierService {
                 matchedEntity = result.matchedEntity;
                 return result.verified;
             },
-            kbVerifier: this.kbVerifier.bind(this),
+            kbVerifier: (data, signature, payload) =>
+                this.verifyKeyBindingJwt(
+                    data,
+                    signature,
+                    payload,
+                    options.keyBindingAudience,
+                ),
             statusListFetcher: (uri: string) =>
                 this.chainValidation.fetchStatusListJwt(uri),
             statusVerifier: (data: string, signature: string) => {
@@ -70,7 +76,7 @@ export class SdjwtvcverifierService {
             },
         });
 
-        const result = await sdjwtInstance.verify(cred, options as any);
+        const result = await sdjwtInstance.verify(cred, options);
 
         // Validate transaction data hashes if transaction data was provided
         if (options.transactionData && options.transactionData.length > 0) {
@@ -193,14 +199,12 @@ export class SdjwtvcverifierService {
             const crypto = this.cryptoService.getCryptoFromJwk(publicKey);
             const verifier = await crypto.getVerifier(publicKey);
 
-            const sigOk = await verifier(data, signature)
-                .then(() => true)
-                .catch((e) => {
-                    this.logger.debug(
-                        `SD-JWT signature invalid: ${e?.message ?? e}`,
-                    );
-                    return false;
-                });
+            const sigOk = await verifier(data, signature).catch((e) => {
+                this.logger.debug(
+                    `SD-JWT signature invalid: ${e?.message ?? e}`,
+                );
+                return false;
+            });
             if (!sigOk) return { verified: false, matchedEntity: null };
 
             // 2) Validate certificate chain using shared service
@@ -305,12 +309,84 @@ export class SdjwtvcverifierService {
         signature,
         payload,
     ) => {
+        return this.verifyKeyBindingJwt(data, signature, payload);
+    };
+
+    private async verifyKeyBindingJwt(
+        data: string,
+        signature: string,
+        payload: Record<string, unknown>,
+        expectedAudience?: string,
+    ): Promise<boolean> {
         if (!payload.cnf) {
             throw new Error("No cnf found in the payload");
         }
+
+        const MAX_FUTURE_IAT_SKEW_SECONDS = 60;
+        const MAX_PAST_IAT_AGE_SECONDS = 300;
+        const [, kbPayloadB64] = data.split(".");
+        if (!kbPayloadB64) {
+            throw new Error("Invalid key binding JWT payload");
+        }
+
+        const kbPayloadJson = Buffer.from(kbPayloadB64, "base64url").toString(
+            "utf8",
+        );
+        const kbPayload = JSON.parse(kbPayloadJson) as {
+            aud?: unknown;
+            iat?: unknown;
+        };
+
+        if (
+            typeof kbPayload.iat !== "number" ||
+            !Number.isFinite(kbPayload.iat)
+        ) {
+            throw new BadRequestException("Invalid key binding JWT iat");
+        }
+
+        const nowInSeconds = Math.floor(Date.now() / 1000);
+        if (kbPayload.iat > nowInSeconds + MAX_FUTURE_IAT_SKEW_SECONDS) {
+            this.logger.debug(
+                {
+                    kbJwtIat: kbPayload.iat,
+                    nowInSeconds,
+                    maxSkewSeconds: MAX_FUTURE_IAT_SKEW_SECONDS,
+                },
+                "KB-JWT iat is in the future",
+            );
+            throw new BadRequestException("Invalid key binding JWT iat");
+        }
+
+        if (nowInSeconds - kbPayload.iat > MAX_PAST_IAT_AGE_SECONDS) {
+            this.logger.debug(
+                {
+                    kbJwtIat: kbPayload.iat,
+                    nowInSeconds,
+                    maxAgeSeconds: MAX_PAST_IAT_AGE_SECONDS,
+                },
+                "KB-JWT iat is too old",
+            );
+            throw new BadRequestException("Invalid key binding JWT iat");
+        }
+
+        if (expectedAudience) {
+            if (kbPayload.aud !== expectedAudience) {
+                this.logger.debug(
+                    {
+                        expectedAudience,
+                        actualAudience: kbPayload.aud,
+                    },
+                    "KB-JWT audience mismatch",
+                );
+                throw new BadRequestException(
+                    "Invalid key binding JWT audience",
+                );
+            }
+        }
+
         const jwk: JWK = (payload.cnf as any).jwk;
         const crypto = this.cryptoService.getCryptoFromJwk(jwk);
         const verifier = await crypto.getVerifier(jwk);
         return verifier(data, signature);
-    };
+    }
 }

@@ -466,7 +466,8 @@ export class Oid4vciService {
                         uri: offer.credentialOffer,
                     } as OfferResponse;
                 },
-                () => {
+                (err) => {
+                    console.log(err);
                     throw new ConflictException(
                         `Invalid credential configuration ID`,
                     );
