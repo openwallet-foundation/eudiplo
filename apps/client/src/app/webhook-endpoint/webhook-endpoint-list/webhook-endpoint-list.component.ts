@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -13,6 +13,7 @@ import { WebhookEndpointService } from '../webhook-endpoint.service';
   selector: 'app-webhook-endpoint-list',
   imports: [MatTableModule, MatIconModule, MatButtonModule, RouterModule, FlexLayoutModule],
   templateUrl: './webhook-endpoint-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './webhook-endpoint-list.component.scss',
 })
 export class WebhookEndpointListComponent extends BaseAsyncListComponent<WebhookEndpointEntity> {

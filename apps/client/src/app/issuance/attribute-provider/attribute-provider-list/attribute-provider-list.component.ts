@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -13,6 +13,7 @@ import { AttributeProviderService } from '../attribute-provider.service';
   selector: 'app-attribute-provider-list',
   imports: [MatTableModule, MatIconModule, MatButtonModule, RouterModule, FlexLayoutModule],
   templateUrl: './attribute-provider-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './attribute-provider-list.component.scss',
 })
 export class AttributeProviderListComponent extends BaseAsyncListComponent<AttributeProviderEntity> {

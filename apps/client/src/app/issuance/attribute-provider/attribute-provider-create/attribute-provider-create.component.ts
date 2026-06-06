@@ -1,4 +1,4 @@
-import { Component, type OnInit } from '@angular/core';
+import { Component, type OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -33,6 +33,7 @@ import { webhookSchema } from '../../../utils/schemas';
     RouterModule,
   ],
   templateUrl: './attribute-provider-create.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './attribute-provider-create.component.scss',
 })
 export class AttributeProviderCreateComponent implements OnInit {

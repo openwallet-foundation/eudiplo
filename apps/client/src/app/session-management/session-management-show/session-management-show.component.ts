@@ -1,4 +1,4 @@
-import { Component, type OnDestroy, type OnInit } from '@angular/core';
+import { Component, type OnDestroy, type OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UpperCasePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -32,6 +32,7 @@ import { decodeJwt } from 'jose';
     UpperCasePipe,
   ],
   templateUrl: './session-management-show.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './session-management-show.component.scss',
 })
 export class SessionManagementShowComponent implements OnInit, OnDestroy {

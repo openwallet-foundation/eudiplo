@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -18,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
   ],
   templateUrl: './image-field.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./image-field.component.scss'],
 })
 export class ImageFieldComponent {

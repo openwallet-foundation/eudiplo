@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, type OnInit } from '@angular/core';
+import { Component, type OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -27,6 +27,7 @@ import {
     MatTooltipModule,
   ],
   templateUrl: './presentation-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './presentation-list.component.scss',
 })
 export class PresentationListComponent implements OnInit {

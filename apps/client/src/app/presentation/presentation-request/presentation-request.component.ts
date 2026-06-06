@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, type OnInit } from '@angular/core';
+import { Component, type OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -45,6 +45,7 @@ import { transactionDataArraySchema } from '../../utils/schemas';
     EditorComponent,
   ],
   templateUrl: './presentation-request.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './presentation-request.component.scss',
 })
 export class PresentationRequestComponent implements OnInit {

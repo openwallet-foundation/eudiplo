@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,6 +37,7 @@ import { StatusListManagementService } from '../status-list-management.service';
     FlexLayoutModule,
   ],
   templateUrl: './status-list-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './status-list-list.component.scss',
 })
 export class StatusListListComponent implements OnInit, AfterViewInit {

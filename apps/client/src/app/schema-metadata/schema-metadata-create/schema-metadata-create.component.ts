@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, isDevMode } from '@angular/core';
+import { Component, OnInit, inject, isDevMode, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -50,6 +50,7 @@ const SEMVER_REGEX =
     RouterModule,
   ],
   templateUrl: './schema-metadata-create.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './schema-metadata-create.component.scss',
 })
 export class SchemaMetadataCreateComponent implements OnInit {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -44,6 +44,7 @@ import { downloadJsonFile } from '../../../common/download-json.util';
     WebhookConfigShowComponent,
   ],
   templateUrl: './presentation-show.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./presentation-show.component.scss'],
 })
 export class PresentationShowComponent implements OnInit {

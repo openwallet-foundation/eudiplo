@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,6 +26,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatSnackBarModule,
   ],
   templateUrl: './tenant-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './tenant-list.component.scss',
 })
 export class TenantListComponent implements OnInit {

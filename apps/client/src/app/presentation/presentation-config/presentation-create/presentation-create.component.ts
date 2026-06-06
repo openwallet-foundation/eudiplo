@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -63,6 +63,7 @@ import { RegistrarService } from '../../../registrar/registrar.service';
     CredentialIdsComponent,
   ],
   templateUrl: './presentation-create.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./presentation-create.component.scss'],
 })
 export class PresentationCreateComponent implements OnInit {

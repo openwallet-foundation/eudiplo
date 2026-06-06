@@ -1,4 +1,4 @@
-import { Component, type OnInit } from '@angular/core';
+import { Component, type OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -82,6 +82,7 @@ import { getApiErrorMessage } from '../../../utils/error-message';
     DragDropModule,
   ],
   templateUrl: './credential-config-create.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './credential-config-create.component.scss',
 })
 export class CredentialConfigCreateComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FieldArrayType } from '@ngx-formly/core';
 import { FormlyField, FormlyValidationMessage } from '@ngx-formly/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -41,6 +41,7 @@ import { MatIconModule } from '@angular/material/icon';
     </div>
   `,
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormlyField, FormlyValidationMessage, MatButtonModule, MatIconModule, MatButtonModule],
 })
 export class ArrayTypeComponent extends FieldArrayType {}

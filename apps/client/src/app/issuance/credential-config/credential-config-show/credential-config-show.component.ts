@@ -1,4 +1,4 @@
-import { Component, type OnInit } from '@angular/core';
+import { Component, type OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { MatButtonModule } from '@angular/material/button';
@@ -52,6 +52,7 @@ interface SchemaPathInfo {
     ClipboardModule,
   ],
   templateUrl: './credential-config-show.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './credential-config-show.component.scss',
 })
 export class CredentialConfigShowComponent implements OnInit {

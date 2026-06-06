@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { tenantControllerGetTenant, TenantEntity } from '@eudiplo/sdk-core';
 
@@ -23,6 +23,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTooltipModule,
   ],
   templateUrl: './tenant-show.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './tenant-show.component.scss',
 })
 export class TenantShowComponent implements OnInit {

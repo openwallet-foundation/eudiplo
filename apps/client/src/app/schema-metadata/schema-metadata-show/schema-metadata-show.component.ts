@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -46,6 +46,7 @@ const SEMVER_REGEX =
     RouterModule,
   ],
   templateUrl: './schema-metadata-show.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './schema-metadata-show.component.scss',
 })
 export class SchemaMetadataShowComponent implements OnInit {

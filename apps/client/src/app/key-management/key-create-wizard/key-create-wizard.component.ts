@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -43,6 +43,7 @@ export type AccessSourceSelection = 'selfSigned' | 'registrar';
     RouterModule,
   ],
   templateUrl: './key-create-wizard.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './key-create-wizard.component.scss',
 })
 export class KeyCreateWizardComponent implements OnInit {
