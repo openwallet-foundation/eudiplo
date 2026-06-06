@@ -133,9 +133,7 @@
                 <mat-icon>info</mat-icon>
                 <span>
                   <strong>{{ configForm.get('bits')?.value }} bits</strong> allows
-                  {{
-                    Math.pow(2, $safeNavigationMigration(configForm.get('bits')?.value))
-                  }}
+                  {{ Math.pow(2, $safeNavigationMigration(configForm.get('bits')?.value)) }}
                   distinct status values, enabling states like suspended in addition to
                   valid/revoked.
                 </span>
