@@ -24,7 +24,7 @@
  */
 
 import http from 'k6/http';
-import { check, group, fail } from 'k6';
+import { check, group } from 'k6';
 import { Counter, Trend } from 'k6/metrics';
 import type { Options } from 'k6/options';
 import {
