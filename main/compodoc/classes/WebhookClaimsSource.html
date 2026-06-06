@@ -442,51 +442,49 @@ export class OfferRequestDto {
         description:
             &quot;Credential claims configuration per credential. Keys must match credentialConfigurationIds.&quot;,
         type: &quot;object&quot;,
-        properties: {
-            additionalProperties: {
-                oneOf: [
-                    {
-                        type: &quot;object&quot;,
-                        properties: {
-                            type: { type: &quot;string&quot;, enum: [&quot;inline&quot;] },
-                            claims: {
-                                type: &quot;object&quot;,
-                                additionalProperties: true,
-                            },
+        additionalProperties: {
+            oneOf: [
+                {
+                    type: &quot;object&quot;,
+                    properties: {
+                        type: { type: &quot;string&quot;, enum: [&quot;inline&quot;] },
+                        claims: {
+                            type: &quot;object&quot;,
+                            additionalProperties: true,
                         },
-                        required: [&quot;type&quot;, &quot;claims&quot;],
                     },
-                    {
-                        type: &quot;object&quot;,
-                        properties: {
-                            type: {
-                                type: &quot;string&quot;,
-                                enum: [&quot;attributeProvider&quot;],
-                            },
-                            attributeProviderId: { type: &quot;string&quot; },
+                    required: [&quot;type&quot;, &quot;claims&quot;],
+                },
+                {
+                    type: &quot;object&quot;,
+                    properties: {
+                        type: {
+                            type: &quot;string&quot;,
+                            enum: [&quot;attributeProvider&quot;],
                         },
-                        required: [&quot;type&quot;, &quot;attributeProviderId&quot;],
+                        attributeProviderId: { type: &quot;string&quot; },
                     },
-                    {
-                        type: &quot;object&quot;,
-                        properties: {
-                            type: {
-                                type: &quot;string&quot;,
-                                enum: [&quot;webhook&quot;],
-                            },
-                            webhook: {
-                                type: &quot;object&quot;,
-                                properties: {
-                                    url: { type: &quot;string&quot; },
-                                    auth: { type: &quot;object&quot; },
-                                },
-                                required: [&quot;url&quot;],
-                            },
+                    required: [&quot;type&quot;, &quot;attributeProviderId&quot;],
+                },
+                {
+                    type: &quot;object&quot;,
+                    properties: {
+                        type: {
+                            type: &quot;string&quot;,
+                            enum: [&quot;webhook&quot;],
                         },
-                        required: [&quot;type&quot;, &quot;webhook&quot;],
+                        webhook: {
+                            type: &quot;object&quot;,
+                            properties: {
+                                url: { type: &quot;string&quot; },
+                                auth: { type: &quot;object&quot; },
+                            },
+                            required: [&quot;url&quot;],
+                        },
                     },
-                ],
-            },
+                    required: [&quot;type&quot;, &quot;webhook&quot;],
+                },
+            ],
         },
         example: {
             citizen: {

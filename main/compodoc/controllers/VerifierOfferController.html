@@ -401,7 +401,7 @@ export class VerifierOfferController {
         );
         values.uri &#x3D; &#x60;openid4vp://?${values.uri}&#x60;;
         values.crossDeviceUri &#x3D; &#x60;openid4vp://?${values.crossDeviceUri}&#x60;;
-        res.send(values);
+        res.status(201).json(values);
     }
 }
 </code></pre>

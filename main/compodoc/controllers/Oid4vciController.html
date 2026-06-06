@@ -234,8 +234,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="42"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.controller.ts:42</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="43"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.controller.ts:43</a></div>
                         </td>
                     </tr>
 
@@ -337,8 +337,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="95"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.controller.ts:95</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="136"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.controller.ts:136</a></div>
                         </td>
                     </tr>
 
@@ -457,8 +457,8 @@ for credentials that were not immediately available.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="120"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.controller.ts:120</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="161"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.controller.ts:161</a></div>
                         </td>
                     </tr>
 
@@ -533,8 +533,8 @@ for credentials that were not immediately available.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="109"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.controller.ts:109</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="150"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.controller.ts:150</a></div>
                         </td>
                     </tr>
 
@@ -615,6 +615,7 @@ for credentials that were not immediately available.</p>
     Controller,
     Header,
     HttpCode,
+    HttpException,
     HttpStatus,
     Param,
     Post,
@@ -682,6 +683,46 @@ export class Oid4vciController {
                 if (err instanceof CredentialRequestException) {
                     throw err;
                 }
+
+                // Preserve OAuth2 resource auth semantics (e.g. DPoP scheme
+                // validation) so conformance tests can assert 401 +
+                // WWW-Authenticate correctly.
+                const resourceAuthError &#x3D; err as
+                    | {
+                          message?: string;
+                          wwwAuthenticateHeaders?: Array&lt;{
+                              scheme?: string;
+                          }&gt;;
+                      }
+                    | undefined;
+
+                if (
+                    Array.isArray(resourceAuthError?.wwwAuthenticateHeaders) &amp;&amp;
+                    resourceAuthError.wwwAuthenticateHeaders.length &gt; 0
+                ) {
+                    const wwwAuthenticateValue &#x3D;
+                        resourceAuthError.wwwAuthenticateHeaders
+                            .map((header) &#x3D;&gt; header.scheme)
+                            .filter((scheme): scheme is string &#x3D;&gt;
+                                Boolean(scheme),
+                            )
+                            .join(&quot;, &quot;);
+
+                    if (wwwAuthenticateValue) {
+                        res.setHeader(&quot;WWW-Authenticate&quot;, wwwAuthenticateValue);
+                    }
+
+                    throw new HttpException(
+                        {
+                            error: &quot;invalid_token&quot;,
+                            error_description:
+                                resourceAuthError.message ??
+                                &quot;Access token validation failed&quot;,
+                        },
+                        HttpStatus.UNAUTHORIZED,
+                    );
+                }
+
                 // Wrap other errors according to OID4VCI spec Section 8.3.1.2
                 throw new CredentialRequestException(
                     &quot;invalid_credential_request&quot;,

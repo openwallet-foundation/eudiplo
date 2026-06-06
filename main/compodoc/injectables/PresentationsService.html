@@ -1119,8 +1119,8 @@ the registrar is not enabled for this tenant.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1368"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1368</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1370"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1370</a></div>
                         </td>
                     </tr>
 
@@ -1216,8 +1216,8 @@ For mDOC: the first path element is the namespace, so we return the claim name (
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1289"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1289</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1291"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1291</a></div>
                         </td>
                     </tr>
 
@@ -2533,8 +2533,8 @@ happens asynchronously.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1307"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1307</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1309"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1309</a></div>
                         </td>
                     </tr>
 
@@ -2649,8 +2649,8 @@ If no credential_sets are defined, all credentials in the query are required.</p
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1398"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1398</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1400"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1400</a></div>
                         </td>
                     </tr>
 
@@ -4057,13 +4057,15 @@ export class PresentationsService {
 
                             return result.claims;
                         } else if (type &#x3D;&#x3D;&#x3D; &quot;dc+sd-jwt&quot;) {
-                            console.log(cred);
                             const result &#x3D;
                                 await this.sdjwtvcverifierService.verify(cred, {
                                     requiredClaimKeys,
                                     keyBindingNonce: session.vp_nonce!,
+                                    keyBindingAudience:
+                                        requestObjectSessionData?.client_id ??
+                                        session.clientId,
                                     ...verifyOptions,
-                                } as any);
+                                });
                             this.logger.debug(
                                 {
                                     credentialId: attId,

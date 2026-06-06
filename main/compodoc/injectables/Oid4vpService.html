@@ -217,7 +217,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:29</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:30</a></div>
                             </td>
                         </tr>
 
@@ -422,8 +422,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="111"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:111</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="112"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:112</a></div>
                         </td>
                     </tr>
 
@@ -527,8 +527,8 @@ It initializes the session logging context and logs the start of the flow.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="296"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:296</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="303"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:303</a></div>
                         </td>
                     </tr>
 
@@ -654,8 +654,8 @@ It initializes the session logging context and logs the start of the flow.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="69"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:69</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="70"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:70</a></div>
                         </td>
                     </tr>
 
@@ -769,8 +769,8 @@ session creation, which is essential for transaction_data hash validation.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="416"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:416</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="423"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:423</a></div>
                         </td>
                     </tr>
 
@@ -864,8 +864,8 @@ from the URL path (not the session ID).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="52"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:52</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="53"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:53</a></div>
                         </td>
                     </tr>
 
@@ -943,7 +943,7 @@ compatibility with sessions created before the walletNonce migration.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:34</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:35</a></div>
                         </td>
                     </tr>
 
@@ -982,6 +982,7 @@ import { IncompletePresentationException } from &quot;../presentations/exception
 import { PresentationsService } from &quot;../presentations/presentations.service&quot;;
 import { AuthorizationResponse } from &quot;./dto/authorization-response.dto&quot;;
 import { PresentationRequestOptions } from &quot;./dto/presentation-request-options.dto&quot;;
+import { CredentialFormat } from &quot;../../issuer/configuration/credentials/entities/credential.entity&quot;;
 
 @Injectable()
 export class Oid4vpService {
@@ -1187,13 +1188,19 @@ export class Oid4vpService {
                         },
                         vp_formats_supported: {
                             mso_mdoc: {
-                                alg: [&quot;ES256&quot;],
+                                alg: this.cryptoImplementationService.getAlgs(
+                                    CredentialFormat.MSO_MDOC,
+                                ),
                             },
                             &quot;dc+sd-jwt&quot;: {
                                 &quot;kb-jwt_alg_values&quot;:
-                                    this.cryptoImplementationService.getSupportedAlgorithms(),
+                                    this.cryptoImplementationService.getAlgs(
+                                        CredentialFormat.SD_JWT_VC,
+                                    ),
                                 &quot;sd-jwt_alg_values&quot;:
-                                    this.cryptoImplementationService.getSupportedAlgorithms(),
+                                    this.cryptoImplementationService.getAlgs(
+                                        CredentialFormat.SD_JWT_VC,
+                                    ),
                             },
                         },
                         encrypted_response_enc_values_supported: [
@@ -1425,6 +1432,7 @@ export class Oid4vpService {
             });
 
             // Return redirect_uri with error if configured
+            // and propagate HTTP 400 while preserving response body shape.
             if (session.redirectUri) {
                 const processedRedirectUri &#x3D; decodeURIComponent(
                     session.redirectUri,
@@ -1433,13 +1441,14 @@ export class Oid4vpService {
                 const separator &#x3D; processedRedirectUri.includes(&quot;?&quot;)
                     ? &quot;&amp;&quot;
                     : &quot;?&quot;;
-                return {
+                throw new BadRequestException({
                     redirect_uri: &#x60;${processedRedirectUri}${separator}error&#x3D;${encodeURIComponent(body.error)}${body.error_description ? &#x60;&amp;error_description&#x3D;${encodeURIComponent(body.error_description)}&#x60; : &quot;&quot;}&#x60;,
-                };
+                });
             }
 
-            // Return empty response (session status indicates failure)
-            return {};
+            // Return empty response body (session status indicates failure)
+            // and propagate HTTP 400.
+            throw new BadRequestException({});
         }
 
         // Ensure response field is present for success path
@@ -1606,7 +1615,8 @@ export class Oid4vpService {
                 errorReason: errorMessage,
             });
 
-            // If redirect_uri is configured, return it with error parameter
+            // If redirect_uri is configured, return it with error parameter,
+            // while propagating HTTP 400.
             if (session.redirectUri) {
                 const processedRedirectUri &#x3D; decodeURIComponent(
                     session.redirectUri,
@@ -1616,13 +1626,14 @@ export class Oid4vpService {
                 const separator &#x3D; processedRedirectUri.includes(&quot;?&quot;)
                     ? &quot;&amp;&quot;
                     : &quot;?&quot;;
-                return {
+                throw new BadRequestException({
                     redirect_uri: &#x60;${processedRedirectUri}${separator}error&#x3D;invalid_request&amp;error_description&#x3D;${encodeURIComponent(errorMessage)}&#x60;,
-                };
+                });
             }
 
-            // Return empty response (session status indicates failure)
-            return {};
+            // Return empty response body (session status indicates failure)
+            // and propagate HTTP 400.
+            throw new BadRequestException({});
         }
     }
 }
