@@ -1,4 +1,4 @@
-import { Component, type OnInit } from '@angular/core';
+import { Component, type OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -26,6 +26,7 @@ import { WebhookEndpointService } from '../webhook-endpoint.service';
     RouterModule,
   ],
   templateUrl: './webhook-endpoint-show.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './webhook-endpoint-show.component.scss',
 })
 export class WebhookEndpointShowComponent implements OnInit {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -37,6 +37,7 @@ import { KeyChainResponseDto, KeyChainUpdateDto, RotationPolicyUpdateDto } from 
     RouterModule,
   ],
   templateUrl: './key-management-create.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './key-management-create.component.scss',
 })
 export class KeyManagementCreateComponent implements OnInit {

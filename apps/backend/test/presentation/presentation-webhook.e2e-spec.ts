@@ -83,7 +83,7 @@ describe("Presentation - Webhook Integration", () => {
         const vp_token = await preparePresentation(
             {
                 iat: Math.floor(Date.now() / 1000),
-                aud: resolved.authorizationRequestPayload.aud as string,
+                aud: resolved.authorizationRequestPayload.client_id as string,
                 nonce: resolved.authorizationRequestPayload.nonce,
             },
             values.privateKey,

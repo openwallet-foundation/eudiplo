@@ -10,7 +10,14 @@ import {
 import { MonacoEditorModule, NgxEditorModel } from 'ngx-monaco-editor-v2';
 import Ajv, { ValidateFunction } from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
-import { Component, forwardRef, OnChanges, Input, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  forwardRef,
+  OnChanges,
+  Input,
+  SimpleChanges,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { SchemaValidation } from '../schemas';
 import schemas from '../schemas.json';
@@ -37,6 +44,7 @@ export function extractSchema(obj: any) {
   imports: [FormsModule, ReactiveFormsModule, MonacoEditorModule, MatInputModule, FlexLayoutModule],
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => EditorComponent), multi: true },
     { provide: NG_VALIDATORS, useExisting: forwardRef(() => EditorComponent), multi: true },

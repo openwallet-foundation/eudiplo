@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -17,6 +17,7 @@ import { MatAnchor } from '@angular/material/button';
     MatAnchor,
   ],
   templateUrl: './webhook-config-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './webhook-config-edit.component.scss',
 })
 export class WebhookConfigEditComponent implements OnInit {

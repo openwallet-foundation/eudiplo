@@ -78,7 +78,7 @@ describe("Presentation - SD-JWT Credential", () => {
         const vp_token = await preparePresentation(
             {
                 iat: Math.floor(Date.now() / 1000),
-                aud: resolved.authorizationRequestPayload.aud as string,
+                aud: resolved.authorizationRequestPayload.client_id as string,
                 nonce: resolved.authorizationRequestPayload.nonce,
             },
             values.privateKey,
@@ -175,7 +175,7 @@ describe("Presentation - SD-JWT Credential", () => {
         const vp_token = await preparePresentation(
             {
                 iat: Math.floor(Date.now() / 1000),
-                aud: resolved.authorizationRequestPayload.aud as string,
+                aud: resolved.authorizationRequestPayload.client_id as string,
                 nonce: resolved.authorizationRequestPayload.nonce,
             },
             privateIssuerKey,
@@ -232,7 +232,7 @@ describe("Presentation - SD-JWT Credential", () => {
                 error_description: "User cancelled the presentation request",
                 state: sessionId,
             })
-            .expect(200); // OID4VP spec requires 200 response
+            .expect(400); // OID4VP spec requires 400 response
 
         // Verify response is empty (no redirect_uri configured)
         expect(errorResponse.body).toEqual({});
@@ -303,7 +303,7 @@ describe("Presentation - SD-JWT Credential", () => {
         const vp_token = await preparePresentation(
             {
                 iat: Math.floor(Date.now() / 1000),
-                aud: resolved.authorizationRequestPayload.aud as string,
+                aud: resolved.authorizationRequestPayload.client_id as string,
                 nonce: resolved.authorizationRequestPayload.nonce,
             },
             untrustedKeyPair.privateKey,
@@ -332,7 +332,7 @@ describe("Presentation - SD-JWT Credential", () => {
         });
 
         // The submission should succeed (200 per OID4VP spec) but session should fail
-        expect(submitRes.response.status).toBe(200);
+        expect(submitRes.response.status).toBe(400);
 
         // Verify the session is marked as failed with trust-related error
         const sessionRes = await request(app.getHttpServer())

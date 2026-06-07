@@ -121,6 +121,84 @@ export class AuthorizeService {
         return "invalid_request";
     }
 
+    private extractTokenErrorDescription(error: unknown): string | undefined {
+        if (typeof error === "string" && error.trim().length > 0) {
+            return error;
+        }
+
+        if (!error || typeof error !== "object") {
+            return undefined;
+        }
+
+        const candidate = error as {
+            error_description?: unknown;
+            message?: unknown;
+            cause?: { message?: unknown };
+        };
+
+        if (
+            typeof candidate.error_description === "string" &&
+            candidate.error_description.trim().length > 0
+        ) {
+            return candidate.error_description;
+        }
+
+        if (
+            typeof candidate.message === "string" &&
+            candidate.message.trim().length > 0
+        ) {
+            return candidate.message;
+        }
+
+        if (
+            typeof candidate.cause?.message === "string" &&
+            candidate.cause.message.trim().length > 0
+        ) {
+            return candidate.cause.message;
+        }
+
+        return undefined;
+    }
+
+    private describeMalformedTokenRequest(body: unknown): string {
+        if (!body || typeof body !== "object") {
+            return "Malformed token request body";
+        }
+
+        const tokenRequest = body as Record<string, unknown>;
+        const grantType =
+            typeof tokenRequest.grant_type === "string"
+                ? tokenRequest.grant_type
+                : undefined;
+
+        if (!grantType) {
+            return "Missing required parameter: grant_type";
+        }
+
+        if (
+            grantType === authorizationCodeGrantIdentifier &&
+            typeof tokenRequest.code !== "string"
+        ) {
+            return "Missing required parameter: code";
+        }
+
+        if (
+            grantType === preAuthorizedCodeGrantIdentifier &&
+            typeof tokenRequest["pre-authorized_code"] !== "string"
+        ) {
+            return "Missing required parameter: pre-authorized_code";
+        }
+
+        if (
+            grantType === refreshTokenGrantIdentifier &&
+            typeof tokenRequest.refresh_token !== "string"
+        ) {
+            return "Missing required parameter: refresh_token";
+        }
+
+        return `Invalid token request for grant_type: ${grantType}`;
+    }
+
     getAuthzIssuer(tenantId: string) {
         return `${this.configService.getOrThrow<string>("PUBLIC_URL")}/issuers/${tenantId}`;
     }
@@ -311,10 +389,34 @@ export class AuthorizeService {
         }
 
         const request_uri = `urn:${randomUUID()}`;
-        await this.sessionService.add(body.issuer_state!, {
-            request_uri,
-            auth_queries: body,
-        });
+
+        if (body.issuer_state) {
+            const updateResult = await this.sessionService.add(
+                body.issuer_state,
+                {
+                    request_uri,
+                    auth_queries: body,
+                },
+            );
+
+            // Some PAR requests do not have a pre-existing issuer_state session.
+            // In that case we create a dedicated request_uri session for authorize.
+            if (!updateResult.affected) {
+                await this.sessionService.create({
+                    id: v4(),
+                    tenantId,
+                    request_uri,
+                    auth_queries: body,
+                });
+            }
+        } else {
+            await this.sessionService.create({
+                id: v4(),
+                tenantId,
+                request_uri,
+                auth_queries: body,
+            });
+        }
 
         return { expires_in: 500, request_uri };
     }
@@ -330,14 +432,27 @@ export class AuthorizeService {
                 })
                 .catch(async () => {
                     //if not found, this means the flow is initiated by the wallet and not the issuer which is also fine.
+                    if (!values.redirect_uri) {
+                        throw new ConflictException(
+                            "redirect_uri not found for request_uri authorization response",
+                        );
+                    }
+
                     const code = v4();
+                    const iss = this.getAuthzIssuer(tenantId);
                     await this.sessionService.create({
                         id: v4(),
                         tenantId,
                         authorization_code: code,
                         request_uri: values.request_uri,
                     });
-                    return `${values.redirect_uri}?code=${code}`;
+
+                    const params = new URLSearchParams({ code, iss });
+                    if (values.state) {
+                        params.set("state", values.state);
+                    }
+
+                    return `${values.redirect_uri}?${params.toString()}`;
                 });
         } else {
             throw new ConflictException(
@@ -378,7 +493,8 @@ export class AuthorizeService {
             // Malformed token request
             throw new TokenErrorException(
                 "invalid_request",
-                err?.message ?? "The token request is malformed",
+                this.extractTokenErrorDescription(err) ??
+                    this.describeMalformedTokenRequest(body),
             );
         }
 
@@ -515,7 +631,7 @@ export class AuthorizeService {
                     }
                     throw new TokenErrorException(
                         errorCode,
-                        err.error_description,
+                        this.extractTokenErrorDescription(err),
                     );
                 });
             dpopValue = dpop;
@@ -553,7 +669,7 @@ export class AuthorizeService {
                     const errorCode = this.mapToTokenErrorCode(err.error);
                     throw new TokenErrorException(
                         errorCode,
-                        err.error_description,
+                        this.extractTokenErrorDescription(err),
                     );
                 });
             dpopValue = dpop;
@@ -583,7 +699,7 @@ export class AuthorizeService {
                     const errorCode = this.mapToTokenErrorCode(err.error);
                     throw new TokenErrorException(
                         errorCode,
-                        err.error_description,
+                        this.extractTokenErrorDescription(err),
                     );
                 });
             // Note: dpopValue remains undefined for refresh_token grant

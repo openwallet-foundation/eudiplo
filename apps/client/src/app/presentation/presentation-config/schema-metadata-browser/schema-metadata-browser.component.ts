@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -50,6 +50,7 @@ export interface SchemaMetadataBrowserDialogData {
   ],
   providers: [SchemaMetadataBrowserService],
   templateUrl: './schema-metadata-browser.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './schema-metadata-browser.component.scss',
 })
 export class SchemaMetadataBrowserComponent implements OnInit {

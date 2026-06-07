@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, type OnInit } from '@angular/core';
+import { Component, type OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
@@ -49,6 +49,7 @@ interface UsageGroup {
     FlexLayoutModule,
   ],
   templateUrl: './key-management-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './key-management-list.component.scss',
 })
 export class KeyManagementListComponent implements OnInit {

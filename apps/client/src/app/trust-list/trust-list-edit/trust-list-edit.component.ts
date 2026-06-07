@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -69,6 +69,7 @@ interface ExternalEntityForm extends EntityInfoForm {
     EditorComponent,
   ],
   templateUrl: './trust-list-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './trust-list-edit.component.scss',
 })
 export class TrustListEditComponent implements OnInit {

@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -71,6 +71,7 @@ type TrustListEntity = InternalEntity | ExternalEntity;
     RouterModule,
   ],
   templateUrl: './trust-list-show.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './trust-list-show.component.scss',
 })
 export class TrustListShowComponent implements OnInit {

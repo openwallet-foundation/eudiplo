@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, ViewChild, type OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ViewChild,
+  type OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -82,6 +88,7 @@ function arrayNotEmpty(control: AbstractControl): ValidationErrors | null {
     },
   ],
   templateUrl: './issuance-offer.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./issuance-offer.component.scss'],
 })
 export class IssuanceOfferComponent implements OnInit {

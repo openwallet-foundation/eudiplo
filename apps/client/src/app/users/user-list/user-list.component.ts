@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -26,6 +26,7 @@ import {
     MatChipsModule,
     MatTooltipModule,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './user-list.component.html',
 })
 export class UserListComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, type OnInit, type OnDestroy } from '@angular/core';
+import { Component, type OnInit, type OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -55,6 +55,7 @@ import { MatCardModule } from '@angular/material/card';
     ImageFieldComponent,
   ],
   templateUrl: './issuance-config-create.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './issuance-config-create.component.scss',
 })
 export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {

@@ -3,6 +3,7 @@ import {
     Controller,
     Header,
     HttpCode,
+    HttpException,
     HttpStatus,
     Param,
     Post,
@@ -70,6 +71,46 @@ export class Oid4vciController {
                 if (err instanceof CredentialRequestException) {
                     throw err;
                 }
+
+                // Preserve OAuth2 resource auth semantics (e.g. DPoP scheme
+                // validation) so conformance tests can assert 401 +
+                // WWW-Authenticate correctly.
+                const resourceAuthError = err as
+                    | {
+                          message?: string;
+                          wwwAuthenticateHeaders?: Array<{
+                              scheme?: string;
+                          }>;
+                      }
+                    | undefined;
+
+                if (
+                    Array.isArray(resourceAuthError?.wwwAuthenticateHeaders) &&
+                    resourceAuthError.wwwAuthenticateHeaders.length > 0
+                ) {
+                    const wwwAuthenticateValue =
+                        resourceAuthError.wwwAuthenticateHeaders
+                            .map((header) => header.scheme)
+                            .filter((scheme): scheme is string =>
+                                Boolean(scheme),
+                            )
+                            .join(", ");
+
+                    if (wwwAuthenticateValue) {
+                        res.setHeader("WWW-Authenticate", wwwAuthenticateValue);
+                    }
+
+                    throw new HttpException(
+                        {
+                            error: "invalid_token",
+                            error_description:
+                                resourceAuthError.message ??
+                                "Access token validation failed",
+                        },
+                        HttpStatus.UNAUTHORIZED,
+                    );
+                }
+
                 // Wrap other errors according to OID4VCI spec Section 8.3.1.2
                 throw new CredentialRequestException(
                     "invalid_credential_request",

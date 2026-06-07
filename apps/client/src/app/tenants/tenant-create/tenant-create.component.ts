@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -42,6 +42,7 @@ import { ApiService } from '../../core';
     MatDialogModule,
   ],
   templateUrl: './tenant-create.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './tenant-create.component.scss',
 })
 export class TenantCreateComponent implements OnInit {

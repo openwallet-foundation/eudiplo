@@ -1,4 +1,4 @@
-import { Component, type OnDestroy, type OnInit } from '@angular/core';
+import { Component, type OnDestroy, type OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -39,6 +39,7 @@ import { DashboardService } from './dashboard.service';
     RouterModule,
   ],
   templateUrl: './dashboard.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {

@@ -91,6 +91,19 @@ export type VerifierOptions = {
      * See OID4VP spec Appendix B.3.3.1 for details.
      */
     transactionData?: string[];
+    /**
+     * Expected KB-JWT audience for SD-JWT VC key binding validation.
+     * Usually the verifier client_id from the presentation request.
+     */
+    keyBindingAudience?: string;
+    /**
+     * SD-JWT required disclosed claim keys.
+     */
+    requiredClaimKeys?: string[];
+    /**
+     * SD-JWT key binding nonce.
+     */
+    keyBindingNonce?: string;
 };
 
 export type TrustListSource = {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -26,6 +26,7 @@ import { FlexLayoutModule } from 'ngx-flexible-layout';
     FlexLayoutModule,
   ],
   templateUrl: './trust-list-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './trust-list-list.component.scss',
 })
 export class TrustListListComponent implements OnInit {

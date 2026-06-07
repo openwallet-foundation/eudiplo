@@ -24,6 +24,7 @@ import { IncompletePresentationException } from "../presentations/exceptions/inc
 import { PresentationsService } from "../presentations/presentations.service";
 import { AuthorizationResponse } from "./dto/authorization-response.dto";
 import { PresentationRequestOptions } from "./dto/presentation-request-options.dto";
+import { CredentialFormat } from "../../issuer/configuration/credentials/entities/credential.entity";
 
 @Injectable()
 export class Oid4vpService {
@@ -229,13 +230,19 @@ export class Oid4vpService {
                         },
                         vp_formats_supported: {
                             mso_mdoc: {
-                                alg: ["ES256"],
+                                alg: this.cryptoImplementationService.getAlgs(
+                                    CredentialFormat.MSO_MDOC,
+                                ),
                             },
                             "dc+sd-jwt": {
                                 "kb-jwt_alg_values":
-                                    this.cryptoImplementationService.getSupportedAlgorithms(),
+                                    this.cryptoImplementationService.getAlgs(
+                                        CredentialFormat.SD_JWT_VC,
+                                    ),
                                 "sd-jwt_alg_values":
-                                    this.cryptoImplementationService.getSupportedAlgorithms(),
+                                    this.cryptoImplementationService.getAlgs(
+                                        CredentialFormat.SD_JWT_VC,
+                                    ),
                             },
                         },
                         encrypted_response_enc_values_supported: [
@@ -467,6 +474,7 @@ export class Oid4vpService {
             });
 
             // Return redirect_uri with error if configured
+            // and propagate HTTP 400 while preserving response body shape.
             if (session.redirectUri) {
                 const processedRedirectUri = decodeURIComponent(
                     session.redirectUri,
@@ -475,13 +483,14 @@ export class Oid4vpService {
                 const separator = processedRedirectUri.includes("?")
                     ? "&"
                     : "?";
-                return {
+                throw new BadRequestException({
                     redirect_uri: `${processedRedirectUri}${separator}error=${encodeURIComponent(body.error)}${body.error_description ? `&error_description=${encodeURIComponent(body.error_description)}` : ""}`,
-                };
+                });
             }
 
-            // Return empty response (session status indicates failure)
-            return {};
+            // Return empty response body (session status indicates failure)
+            // and propagate HTTP 400.
+            throw new BadRequestException({});
         }
 
         // Ensure response field is present for success path
@@ -648,7 +657,8 @@ export class Oid4vpService {
                 errorReason: errorMessage,
             });
 
-            // If redirect_uri is configured, return it with error parameter
+            // If redirect_uri is configured, return it with error parameter,
+            // while propagating HTTP 400.
             if (session.redirectUri) {
                 const processedRedirectUri = decodeURIComponent(
                     session.redirectUri,
@@ -658,13 +668,14 @@ export class Oid4vpService {
                 const separator = processedRedirectUri.includes("?")
                     ? "&"
                     : "?";
-                return {
+                throw new BadRequestException({
                     redirect_uri: `${processedRedirectUri}${separator}error=invalid_request&error_description=${encodeURIComponent(errorMessage)}`,
-                };
+                });
             }
 
-            // Return empty response (session status indicates failure)
-            return {};
+            // Return empty response body (session status indicates failure)
+            // and propagate HTTP 400.
+            throw new BadRequestException({});
         }
     }
 }

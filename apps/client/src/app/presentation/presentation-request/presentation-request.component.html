@@ -78,7 +78,7 @@
                 <app-editor
                   formControlName="transaction_data"
                   [schema]="transactionDataArraySchema"
-                  [errors]="form.get('transaction_data')?.errors"
+                  [errors]="$safeNavigationMigration(form.get('transaction_data')?.errors)"
                 ></app-editor>
                 <mat-hint>
                   Provide custom transaction data to override the configuration default. Format:

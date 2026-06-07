@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -33,6 +33,7 @@ import { StatusListConfig } from '@eudiplo/sdk-core';
     FlexLayoutModule,
   ],
   templateUrl: './status-list-config.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './status-list-config.component.scss',
 })
 export class StatusListConfigComponent implements OnInit {
