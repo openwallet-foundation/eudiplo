@@ -186,4 +186,4 @@ Notes:
 - Offer-level inline claims when claim values are already known at offer creation time
 - Offer-level webhook or Attribute Provider overrides when claim resolution should vary per offer
 
-For the broader claims model, see [Fetching Claims](credential-configuration.md#fetching-claims).
+For the broader claims model, see [Fetching Claims](../../architecture/webhooks.md#fetching-claims-attribute-providers).

@@ -453,5 +453,4 @@ await api.issuer.postIssuanceConfig(config);
 
 - [OpenID Federation 1.0](https://openid.net/specs/openid-federation-1_0.html)
 - [RFC 8414 OAuth 2.0 Authorization Server Metadata](https://tools.ietf.org/html/rfc8414)
-- EUDIPLO Architecture: [docs/architecture/](../architecture/)
-- Trust Validation: [docs/trust-model/](../trust-model/)
+- EUDIPLO Architecture: [docs/architecture/](../index.md)
