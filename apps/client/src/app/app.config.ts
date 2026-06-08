@@ -54,7 +54,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(FlexLayoutModule),
     provideHttpClient(withInterceptors([authInterceptor]), withFetch()),
     provideMonacoEditor({
-      baseUrl: window.location.origin + '/assets/monaco/min/vs',
+      baseUrl: window.location.origin + window.location.pathname + '/assets/monaco/min/vs',
       onMonacoLoad,
       //monacoRequire: (window as any).monacoRequire,
       //requireConfig: { preferScriptTags: true }
