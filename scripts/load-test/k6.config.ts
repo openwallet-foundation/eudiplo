@@ -34,6 +34,19 @@ export const smokeOptions: Options = {
 };
 
 /**
+ * Fast feedback mode — run exactly one iteration with one VU.
+ *
+ * Useful for validating that every scenario still works end-to-end without
+ * waiting for sustained load stages.
+ */
+export const onceOptions: Options = {
+    thresholds: commonThresholds,
+    vus: 1,
+    iterations: 1,
+    maxDuration: '2m',
+};
+
+/**
  * Average load test — simulates typical production traffic.
  * Ramp up to 50 VUs over 2 min, hold for 5 min, ramp down.
  */
@@ -89,13 +102,14 @@ export const spikeOptions: Options = {
 export function profileOptions(): Options {
     const profile = (__ENV.K6_PROFILE || 'smoke').toLowerCase();
     const map: Record<string, Options> = {
+        once: onceOptions,
         smoke: smokeOptions,
         load: loadOptions,
         stress: stressOptions,
         spike: spikeOptions,
     };
     if (!map[profile]) {
-        throw new Error(`Unknown K6_PROFILE "${profile}". Choose: smoke, load, stress, spike`);
+        throw new Error(`Unknown K6_PROFILE "${profile}". Choose: once, smoke, load, stress, spike`);
     }
     return map[profile];
 }

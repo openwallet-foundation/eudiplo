@@ -6,10 +6,11 @@
 # Runs one or more k6 load test scenarios against an EUDIPLO backend.
 #
 # Usage:
-#   ./run-all.sh [scenario...]
+#   ./run-all.sh [--once] [scenario...]
 #
 #   If no scenario is specified all scenarios are run in sequence.
 #   Available scenarios: api-auth, pre-auth-issuance, oid4vp-presentation, status-list
+#   --once forces K6_PROFILE=once and PAUSE_BETWEEN=0 for fast feedback.
 #
 # Environment variables:
 #   BASE_URL            Backend base URL          (default: http://localhost:3000)
@@ -21,16 +22,20 @@
 #   K6_ENV_FILE         Compose env file path      (default:
 #                         deployment/docker-compose/.env)
 #   K6_PROFILE          Load profile              (default: smoke)
-#                         smoke | load | stress | spike
+#                         once | smoke | load | stress | spike
 #   PROMETHEUS_RW_URL   If set, metrics are pushed to this Prometheus remote-
 #                         write endpoint in addition to stdout.
 #                         Example: http://localhost:9090/api/v1/write
 #   SUMMARY_DIR         Directory for JSON summaries (default: ./results)
+#   CLEAN_RESULTS       Delete SUMMARY_DIR before running (default: true)
 #   PAUSE_BETWEEN       Seconds to pause between scenarios (default: 5)
 #
 # Examples:
 #   # Smoke test all scenarios
 #   ./run-all.sh
+#
+#   # Fast one-pass validation of all scenarios
+#   ./run-all.sh --once
 #
 #   # Load test pre-auth issuance only
 #   K6_PROFILE=load ./run-all.sh pre-auth-issuance
@@ -63,15 +68,44 @@ COMPOSE_PROFILE="${COMPOSE_PROFILE:-standard}"
 K6_ENV_FILE="${K6_ENV_FILE:-${COMPOSE_DIR}/.env}"
 K6_PROFILE="${K6_PROFILE:-smoke}"
 SUMMARY_DIR="${SUMMARY_DIR:-${SCRIPT_DIR}/results}"
+CLEAN_RESULTS="${CLEAN_RESULTS:-true}"
 PAUSE_BETWEEN="${PAUSE_BETWEEN:-5}"
 
 ALL_SCENARIOS=(api-auth pre-auth-issuance oid4vp-presentation status-list)
 
 # ---------------------------------------------------------------------------
+# Optional flags
+# ---------------------------------------------------------------------------
+FORCE_ONCE=false
+POSITIONAL_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --once)
+            FORCE_ONCE=true
+            shift
+            ;;
+        --help|-h)
+            sed -n '1,60p' "$0"
+            exit 0
+            ;;
+        *)
+            POSITIONAL_ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+if [[ "${FORCE_ONCE}" == "true" ]]; then
+    K6_PROFILE="once"
+    PAUSE_BETWEEN="0"
+fi
+
+# ---------------------------------------------------------------------------
 # Determine which scenarios to run
 # ---------------------------------------------------------------------------
-if [[ $# -gt 0 ]]; then
-    RUN_SCENARIOS=("$@")
+if [[ ${#POSITIONAL_ARGS[@]} -gt 0 ]]; then
+    RUN_SCENARIOS=("${POSITIONAL_ARGS[@]}")
 else
     RUN_SCENARIOS=("${ALL_SCENARIOS[@]}")
 fi
@@ -114,6 +148,21 @@ wait_for_backend() {
     return 1
 }
 
+ensure_backend_reachable_when_not_starting_stack() {
+    if [[ "${START_STACK}" == "true" ]]; then
+        return 0
+    fi
+
+    local health_url="${BASE_URL%/}/health"
+    if curl -sf "${health_url}" >/dev/null 2>&1; then
+        return 0
+    fi
+
+    echo "ERROR: Backend is not reachable at ${health_url} and START_STACK=false" >&2
+    echo "  Either start backend manually or run with START_STACK=true." >&2
+    return 1
+}
+
 start_stack_if_requested() {
     if [[ "${START_STACK}" != "true" ]]; then
         return 0
@@ -146,10 +195,14 @@ start_stack_if_requested() {
 }
 
 start_stack_if_requested
+ensure_backend_reachable_when_not_starting_stack
 
 # ---------------------------------------------------------------------------
 # Create results directory
 # ---------------------------------------------------------------------------
+if [[ "${CLEAN_RESULTS}" == "true" && -d "${SUMMARY_DIR}" ]]; then
+    rm -rf "${SUMMARY_DIR}"
+fi
 mkdir -p "${SUMMARY_DIR}"
 
 # ---------------------------------------------------------------------------

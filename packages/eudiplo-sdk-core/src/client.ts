@@ -25,6 +25,8 @@ export interface DigitalCredentialResponse {
   };
 }
 
+type DcApiWalletResponse = DigitalCredentialResponse['data'];
+
 /**
  * Result of a DC API presentation
  */
@@ -71,6 +73,31 @@ function decodeJwtPayload<T = Record<string, unknown>>(jwt: string): T {
   const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
   const jsonPayload = atob(base64);
   return JSON.parse(jsonPayload) as T;
+}
+
+function extractResponseUriFromRequestObject(requestObject: string): string {
+  const requestPayload = decodeJwtPayload<{ response_uri?: string }>(requestObject);
+
+  if (!requestPayload.response_uri) {
+    throw new Error('No response_uri found in request object');
+  }
+
+  return requestPayload.response_uri;
+}
+
+function mapDcApiPresentationResult(result: any): DcApiPresentationResult {
+  let resolvedCredentials: Array<Record<string, unknown>> | undefined;
+  if (Array.isArray(result)) {
+    resolvedCredentials = result;
+  } else if (Array.isArray(result?.credentials)) {
+    resolvedCredentials = result.credentials;
+  }
+
+  return {
+    credentials: resolvedCredentials,
+    response: result,
+    redirectUri: result?.redirect_uri,
+  };
 }
 
 /**
@@ -162,7 +189,14 @@ export interface PresentationRequestOptions {
   responseType?: 'uri' | 'dc-api';
   /** Optional redirect URI after presentation completes */
   redirectUri?: string;
+  /**
+   * Optional browser origin used for DC API audience binding.
+   * For server-side flows, pass the caller origin explicitly.
+   */
+  origin?: string;
 }
+
+type DcApiRequestOptions = Omit<PresentationRequestOptions, 'responseType'>;
 
 /**
  * Result of creating an offer or request
@@ -374,10 +408,18 @@ export class EudiploClient {
   async createPresentationRequest(options: PresentationRequestOptions): Promise<OfferResult> {
     await this.ensureAuthenticated();
 
+    const inferredOrigin =
+      options.origin ??
+      (typeof globalThis.location === 'object'
+        ? globalThis.location.origin
+        : undefined);
+
     const body: PresentationRequest = {
       response_type: options.responseType ?? 'uri',
       requestId: options.configId,
       redirectUri: options.redirectUri,
+      expected_origin:
+        options.responseType === 'dc-api' ? inferredOrigin : undefined,
     };
 
     const response = await verifierOfferControllerGetOffer({
@@ -647,14 +689,21 @@ export class EudiploClient {
    * ```
    */
   async createDcApiPresentationRequest(
-    options: Omit<PresentationRequestOptions, 'responseType'>
+    options: DcApiRequestOptions
   ): Promise<Session> {
     await this.ensureAuthenticated();
 
-    const body: PresentationRequest = {
-      response_type: 'dc-api',
+    const inferredOrigin =
+      options.origin ??
+      (typeof globalThis.location === 'object'
+        ? globalThis.location.origin
+        : undefined);
+
+    const body = {
+      response_type: 'dc-api' as const,
       requestId: options.configId,
       redirectUri: options.redirectUri,
+      expected_origin: inferredOrigin,
     };
 
     const response = await verifierOfferControllerGetOffer({
@@ -665,8 +714,40 @@ export class EudiploClient {
       throw new Error('Failed to create DC API presentation request');
     }
 
-    // Fetch the full session to get the requestObject
-    return this.getSession(response.data.session);
+    // Fetch the full session and lazily resolve requestObject when needed.
+    const session = await this.getSession(response.data.session);
+
+    if (session.requestObject) {
+      return session;
+    }
+
+    const nonceOrId = session.walletNonce ?? session.id;
+    const requestObjectUrl = `${this.config.baseUrl}/api/presentations/${encodeURIComponent(nonceOrId)}/oid4vp/request`;
+    const fetchImpl = this.config.fetch ?? fetch;
+    const requestObjectResponse = await fetchImpl(requestObjectUrl, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/oauth-authz-req+jwt',
+        ...(inferredOrigin ? { Origin: inferredOrigin } : {}),
+      },
+    });
+
+    if (!requestObjectResponse.ok) {
+      const errorText = await requestObjectResponse.text();
+      throw new Error(
+        `Failed to fetch DC API request object: ${requestObjectResponse.status} ${errorText}`
+      );
+    }
+
+    const requestObject = (await requestObjectResponse.text()).trim();
+    if (!requestObject) {
+      throw new Error('DC API request endpoint returned an empty requestObject');
+    }
+
+    return {
+      ...session,
+      requestObject,
+    };
   }
 
   /**
@@ -706,69 +787,13 @@ export class EudiploClient {
       );
     }
 
-    // Call the Digital Credentials API
-    const dcResponse = (await navigator.credentials.get({
-      mediation: 'required',
-      digital: {
-        requests: [
-          {
-            protocol: 'openid4vp-v1-signed',
-            data: { request: session.requestObject },
-          },
-        ],
-      },
-    } as CredentialRequestOptions)) as DigitalCredentialResponse | null;
-
-    if (!dcResponse) {
-      throw new Error('No response from Digital Credentials API');
-    }
-
-    if (dcResponse.data?.error) {
-      throw new Error(
-        `Wallet error: ${dcResponse.data.error}${
-          dcResponse.data.error_description
-            ? ` - ${dcResponse.data.error_description}`
-            : ''
-        }`
-      );
-    }
-
-    // Extract response_uri from the request object
-    const requestPayload = decodeJwtPayload<{ response_uri?: string }>(
-      session.requestObject
-    );
-
-    if (!requestPayload.response_uri) {
-      throw new Error('No response_uri found in request object');
-    }
-
-    // Submit the response to the verifier
-    const fetchImpl = this.config.fetch ?? fetch;
-    const submitResponse = await fetchImpl(requestPayload.response_uri, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...dcResponse.data,
-        sendResponse: options.sendResponse ?? true,
-      }),
+    const walletResponse = await invokeDcApi(session.requestObject);
+    return submitDcApiResponse({
+      responseUri: extractResponseUriFromRequestObject(session.requestObject),
+      walletResponse,
+      sendResponse: options.sendResponse,
+      fetch: this.config.fetch,
     });
-
-    if (!submitResponse.ok) {
-      const errorText = await submitResponse.text();
-      throw new Error(
-        `Failed to submit presentation: ${submitResponse.status} ${errorText}`
-      );
-    }
-
-    const result = await submitResponse.json();
-
-    return {
-      credentials: result.credentials ?? result,
-      response: result,
-      redirectUri: result.redirect_uri,
-    };
   }
 
   /**
@@ -784,7 +809,7 @@ export class EudiploClient {
    * ```
    */
   async verifyWithDcApi(
-    options: Omit<PresentationRequestOptions, 'responseType'>,
+    options: DcApiRequestOptions,
     dcOptions: DcApiPresentationOptions = {}
   ): Promise<DcApiPresentationResult> {
     const session = await this.createDcApiPresentationRequest(options);
@@ -805,416 +830,7 @@ export interface EudiploCredentials {
   clientSecret: string;
 }
 
-/**
- * Options for the verify function
- */
-export interface VerifyOptions extends EudiploCredentials {
-  /** Presentation configuration ID */
-  configId: string;
-  /** Optional redirect URI */
-  redirectUri?: string;
-  /** Polling options */
-  polling?: SessionPollingOptions;
-}
-
-/**
- * Options for the issue function
- */
-export interface IssueOptions extends EudiploCredentials {
-  /** Credential configuration IDs */
-  credentialConfigurationIds: string[];
-  /** Claims per credential config */
-  claims?: Record<string, Record<string, unknown>>;
-  /** Transaction code (optional) */
-  txCode?: string;
-  /** Polling options */
-  polling?: SessionPollingOptions;
-}
-
-/**
- * Result of a verification or issuance flow
- */
-export interface FlowResult {
-  /** URI for QR code */
-  uri: string;
-  /** Session ID */
-  sessionId: string;
-  /** Wait for the session to complete */
-  waitForCompletion: (options?: SessionPollingOptions) => Promise<Session>;
-  /** Get current session status */
-  getStatus: () => Promise<Session>;
-}
-
-/**
- * Create a presentation request for verification.
- * Returns a URI for QR code and a function to wait for completion.
- *
- * @example
- * ```typescript
- * import { verify } from '@eudiplo/sdk-core';
- *
- * const { uri, waitForCompletion } = await verify({
- *   baseUrl: 'https://eudiplo.example.com',
- *   clientId: 'demo',
- *   clientSecret: 'secret',
- *   configId: 'age-over-18'
- * });
- *
- * console.log('Scan this:', uri);
- * const session = await waitForCompletion();
- * console.log('Verified!', session.credentials);
- * ```
- */
-export async function verify(options: VerifyOptions): Promise<FlowResult> {
-  const client = new EudiploClient({
-    baseUrl: options.baseUrl,
-    clientId: options.clientId,
-    clientSecret: options.clientSecret,
-  });
-
-  const { uri, sessionId } = await client.createPresentationRequest({
-    configId: options.configId,
-    redirectUri: options.redirectUri,
-  });
-
-  // same device uri
-  const sameDeviceUri = uri;
-  const crossDeviceUri = `${uri}`;
-
-  return {
-    uri,
-    sessionId,
-    waitForCompletion: (pollingOptions?: SessionPollingOptions) =>
-      client.waitForSession(sessionId, { ...options.polling, ...pollingOptions }),
-    getStatus: () => client.getSession(sessionId),
-  };
-}
-
-/**
- * Create a credential issuance offer.
- * Returns a URI for QR code and a function to wait for completion.
- *
- * @example
- * ```typescript
- * import { issue } from '@eudiplo/sdk-core';
- *
- * const { uri, waitForCompletion } = await issue({
- *   baseUrl: 'https://eudiplo.example.com',
- *   clientId: 'demo',
- *   clientSecret: 'secret',
- *   credentialConfigurationIds: ['PID'],
- *   claims: {
- *     PID: { given_name: 'John', family_name: 'Doe' }
- *   }
- * });
- *
- * console.log('Scan this:', uri);
- * const session = await waitForCompletion();
- * ```
- */
-export async function issue(options: IssueOptions): Promise<FlowResult> {
-  const client = new EudiploClient({
-    baseUrl: options.baseUrl,
-    clientId: options.clientId,
-    clientSecret: options.clientSecret,
-  });
-
-  const { uri, sessionId } = await client.createIssuanceOffer({
-    credentialConfigurationIds: options.credentialConfigurationIds,
-    claims: options.claims,
-    txCode: options.txCode,
-  });
-
-  return {
-    uri,
-    sessionId,
-    waitForCompletion: (pollingOptions?: SessionPollingOptions) =>
-      client.waitForSession(sessionId, { ...options.polling, ...pollingOptions }),
-    getStatus: () => client.getSession(sessionId),
-  };
-}
-
-/**
- * One-liner: Verify and wait for result in a single call.
- *
- * @example
- * ```typescript
- * import { verifyAndWait } from '@eudiplo/sdk-core';
- *
- * const session = await verifyAndWait({
- *   baseUrl: 'https://eudiplo.example.com',
- *   clientId: 'demo',
- *   clientSecret: 'secret',
- *   configId: 'age-over-18',
- *   onUri: (uri) => showQRCode(uri),
- *   onUpdate: (s) => console.log('Status:', s.status)
- * });
- * ```
- */
-export async function verifyAndWait(
-  options: VerifyOptions & {
-    /** Called with the URI when available - use to display QR code */
-    onUri: (uri: string) => void;
-  }
-): Promise<Session> {
-  const { uri, waitForCompletion } = await verify(options);
-  options.onUri(uri);
-  return waitForCompletion(options.polling);
-}
-
-/**
- * One-liner: Issue credential and wait for completion in a single call.
- *
- * @example
- * ```typescript
- * import { issueAndWait } from '@eudiplo/sdk-core';
- *
- * const session = await issueAndWait({
- *   baseUrl: 'https://eudiplo.example.com',
- *   clientId: 'demo',
- *   clientSecret: 'secret',
- *   credentialConfigurationIds: ['PID'],
- *   claims: { PID: { given_name: 'John' } },
- *   onUri: (uri) => showQRCode(uri)
- * });
- * ```
- */
-export async function issueAndWait(
-  options: IssueOptions & {
-    /** Called with the URI when available - use to display QR code */
-    onUri: (uri: string) => void;
-  }
-): Promise<Session> {
-  const { uri, waitForCompletion } = await issue(options);
-  options.onUri(uri);
-  return waitForCompletion(options.polling);
-}
-
-// ============================================================================
-// Digital Credentials API Factory Functions
-// ============================================================================
-
-/**
- * Options for DC API verification
- */
-export interface DcApiVerifyOptions extends EudiploCredentials {
-  /** Presentation configuration ID */
-  configId: string;
-  /** Optional redirect URI */
-  redirectUri?: string;
-  /** Whether to return full credential data (default: true) */
-  sendResponse?: boolean;
-}
-
-/**
- * Verify a credential using the Digital Credentials API (browser-native flow).
- * This is the simplest way to verify credentials when the DC API is available.
- *
- * @example
- * ```typescript
- * import { verifyWithDcApi, isDcApiAvailable } from '@eudiplo/sdk-core';
- *
- * if (isDcApiAvailable()) {
- *   const result = await verifyWithDcApi({
- *     baseUrl: 'https://eudiplo.example.com',
- *     clientId: 'demo',
- *     clientSecret: 'secret',
- *     configId: 'age-over-18'
- *   });
- *   console.log('Verified!', result.credentials);
- * } else {
- *   // Fall back to QR code flow
- *   const { uri } = await verify({ ... });
- * }
- * ```
- */
-export async function verifyWithDcApi(
-  options: DcApiVerifyOptions
-): Promise<DcApiPresentationResult> {
-  const eudiploClient = new EudiploClient({
-    baseUrl: options.baseUrl,
-    clientId: options.clientId,
-    clientSecret: options.clientSecret,
-  });
-
-  return eudiploClient.verifyWithDcApi(
-    {
-      configId: options.configId,
-      redirectUri: options.redirectUri,
-    },
-    {
-      sendResponse: options.sendResponse,
-    }
-  );
-}
-
-/**
- * Create a presentation request for DC API and get the session.
- * Use this when you need more control over the DC API flow.
- *
- * @example
- * ```typescript
- * import { createDcApiRequest, submitDcApiPresentation, isDcApiAvailable } from '@eudiplo/sdk-core';
- *
- * if (isDcApiAvailable()) {
- *   const { session, submit } = await createDcApiRequest({
- *     baseUrl: 'https://eudiplo.example.com',
- *     clientId: 'demo',
- *     clientSecret: 'secret',
- *     configId: 'age-over-18'
- *   });
- *
- *   // Show some UI, then submit when user is ready
- *   const result = await submit();
- *   console.log('Verified!', result.credentials);
- * }
- * ```
- */
-export async function createDcApiRequest(
-  options: DcApiVerifyOptions
-): Promise<{
-  session: Session;
-  submit: (dcOptions?: DcApiPresentationOptions) => Promise<DcApiPresentationResult>;
-}> {
-  const eudiploClient = new EudiploClient({
-    baseUrl: options.baseUrl,
-    clientId: options.clientId,
-    clientSecret: options.clientSecret,
-  });
-
-  const session = await eudiploClient.createDcApiPresentationRequest({
-    configId: options.configId,
-    redirectUri: options.redirectUri,
-  });
-
-  return {
-    session,
-    submit: (dcOptions?: DcApiPresentationOptions) =>
-      eudiploClient.submitDcApiPresentation(session, {
-        sendResponse: options.sendResponse,
-        ...dcOptions,
-      }),
-  };
-}
-
-// ============================================================================
-// Server/Client Split Helper Functions
-// ============================================================================
-// These functions help when you need to keep credentials on your server
-// but call the DC API from the browser.
-
-/**
- * Data returned from server to browser for DC API flow
- */
-export interface DcApiRequestData {
-  /** The signed JWT request object to pass to the DC API */
-  requestObject: string;
-  /** Session ID for tracking */
-  sessionId: string;
-  /** The response_uri where wallet responses should be submitted */
-  responseUri: string;
-}
-
-/**
- * Wallet response data from the DC API to send back to server
- */
-export interface DcApiWalletResponse {
-  /** The encrypted VP token response from the wallet */
-  response?: string;
-  /** Error code if the wallet returned an error */
-  error?: string;
-  /** Error description if available */
-  error_description?: string;
-}
-
-/**
- * SERVER-SIDE: Create a DC API request and return the data needed by the browser.
- * Use this on your server where credentials are stored securely.
- *
- * @example
- * ```typescript
- * // On your server (e.g., Express/Next.js API route)
- * import { createDcApiRequestForBrowser } from '@eudiplo/sdk-core';
- *
- * app.post('/api/start-verification', async (req, res) => {
- *   const requestData = await createDcApiRequestForBrowser({
- *     baseUrl: 'https://eudiplo.example.com',
- *     clientId: process.env.EUDIPLO_CLIENT_ID,     // Safe on server
- *     clientSecret: process.env.EUDIPLO_SECRET,   // Safe on server
- *     configId: 'age-over-18',
- *   });
- *
- *   // Send only the safe data to the browser
- *   res.json(requestData);
- * });
- * ```
- */
-export async function createDcApiRequestForBrowser(
-  options: DcApiVerifyOptions
-): Promise<DcApiRequestData> {
-  const eudiploClient = new EudiploClient({
-    baseUrl: options.baseUrl,
-    clientId: options.clientId,
-    clientSecret: options.clientSecret,
-  });
-
-  const session = await eudiploClient.createDcApiPresentationRequest({
-    configId: options.configId,
-    redirectUri: options.redirectUri,
-  });
-
-  if (!session.requestObject) {
-    throw new Error('Session does not contain a requestObject');
-  }
-
-  // Extract response_uri from the signed JWT
-  const requestPayload = decodeJwtPayload<{ response_uri?: string }>(
-    session.requestObject
-  );
-
-  if (!requestPayload.response_uri) {
-    throw new Error('No response_uri found in request object');
-  }
-
-  return {
-    requestObject: session.requestObject,
-    sessionId: session.id,
-    responseUri: requestPayload.response_uri,
-  };
-}
-
-/**
- * BROWSER-SIDE: Call the Digital Credentials API with a request from your server.
- * This function runs in the browser and invokes the native DC API.
- *
- * @example
- * ```typescript
- * // In your browser code
- * import { callDcApi, isDcApiAvailable } from '@eudiplo/sdk-core';
- *
- * // Get request data from your server
- * const requestData = await fetch('/api/start-verification', { method: 'POST' })
- *   .then(r => r.json());
- *
- * if (isDcApiAvailable()) {
- *   // This calls the browser's native Digital Credentials API
- *   const walletResponse = await callDcApi(requestData.requestObject);
- *
- *   // Send the wallet response back to your server for verification
- *   const result = await fetch('/api/complete-verification', {
- *     method: 'POST',
- *     headers: { 'Content-Type': 'application/json' },
- *     body: JSON.stringify({
- *       sessionId: requestData.sessionId,
- *       walletResponse,
- *     }),
- *   }).then(r => r.json());
- * }
- * ```
- */
-export async function callDcApi(
-  requestObject: string
-): Promise<DcApiWalletResponse> {
+async function invokeDcApi(requestObject: string): Promise<DcApiWalletResponse> {
   if (!isDcApiAvailable()) {
     throw new Error(
       'Digital Credentials API is not available in this browser. ' +
@@ -1250,32 +866,7 @@ export async function callDcApi(
 
   return dcResponse.data;
 }
-
-/**
- * SERVER-SIDE: Submit the wallet response to EUDIPLO and get verified credentials.
- * Use this on your server after receiving the wallet response from the browser.
- *
- * @example
- * ```typescript
- * // On your server
- * import { submitDcApiWalletResponse } from '@eudiplo/sdk-core';
- *
- * app.post('/api/complete-verification', async (req, res) => {
- *   const { sessionId, walletResponse } = req.body;
- *
- *   // You stored the responseUri when creating the request, or pass it from client
- *   const result = await submitDcApiWalletResponse({
- *     responseUri: storedResponseUri,  // or from request
- *     walletResponse,
- *     sendResponse: true,  // Get verified claims back
- *   });
- *
- *   // result.credentials contains the verified data
- *   res.json(result);
- * });
- * ```
- */
-export async function submitDcApiWalletResponse(options: {
+async function submitDcApiResponse(options: {
   /** The response_uri from the request (from DcApiRequestData.responseUri) */
   responseUri: string;
   /** The wallet response from callDcApi() */
@@ -1306,10 +897,5 @@ export async function submitDcApiWalletResponse(options: {
   }
 
   const result = await submitResponse.json();
-
-  return {
-    credentials: result.credentials ?? result,
-    response: result,
-    redirectUri: result.redirect_uri,
-  };
+  return mapDcApiPresentationResult(result);
 }

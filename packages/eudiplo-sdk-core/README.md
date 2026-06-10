@@ -12,227 +12,102 @@ pnpm add @eudiplo/sdk-core
 yarn add @eudiplo/sdk-core
 ```
 
-## Quick Start - The Simplest Way
-
-### One-liner for Age Verification
+## Quick Start
 
 ```typescript
-import { verifyAndWait } from '@eudiplo/sdk-core';
+import { EudiploClient } from '@eudiplo/sdk-core';
 
-const session = await verifyAndWait({
+const client = new EudiploClient({
   baseUrl: 'https://eudiplo.example.com',
   clientId: 'my-demo',
   clientSecret: 'secret',
-  configId: 'age-over-18',
-  onUri: (uri) => showQRCode(uri), // Your QR code display function
-  onUpdate: (s) => console.log('Status:', s.status),
 });
 
-console.log('Verified!', session.credentials);
-```
-
-### Two-step Flow (More Control)
-
-```typescript
-import { verify } from '@eudiplo/sdk-core';
-
-// Step 1: Create the request
-const { uri, sessionId, waitForCompletion } = await verify({
-  baseUrl: 'https://eudiplo.example.com',
-  clientId: 'my-demo',
-  clientSecret: 'secret',
+// Verification (QR flow)
+const verifyOffer = await client.createPresentationRequest({
   configId: 'age-over-18',
 });
+showQRCode(verifyOffer.uri);
+const verifiedSession = await client.waitForSession(verifyOffer.sessionId);
 
-// Step 2: Show QR code
-showQRCode(uri);
-
-// Step 3: Wait for user to scan and respond
-const session = await waitForCompletion();
-console.log('Verified credentials:', session.credentials);
-```
-
-### Credential Issuance
-
-```typescript
-import { issue } from '@eudiplo/sdk-core';
-
-const { uri, waitForCompletion } = await issue({
-  baseUrl: 'https://eudiplo.example.com',
-  clientId: 'my-demo',
-  clientSecret: 'secret',
+// Issuance (QR flow)
+const issuanceOffer = await client.createIssuanceOffer({
   credentialConfigurationIds: ['PID'],
   claims: {
     PID: { given_name: 'John', family_name: 'Doe', birthdate: '1990-01-15' },
   },
 });
-
-showQRCode(uri);
-await waitForCompletion();
+showQRCode(issuanceOffer.uri);
+await client.waitForSession(issuanceOffer.sessionId);
 ```
 
 ## Full API
 
-### Factory Functions (Easiest)
+### Class API
 
-| Function                 | Description                                                                               |
-| ------------------------ | ----------------------------------------------------------------------------------------- |
-| `verify(options)`        | Create a presentation request, returns `{ uri, sessionId, waitForCompletion, getStatus }` |
-| `issue(options)`         | Create an issuance offer, returns `{ uri, sessionId, waitForCompletion, getStatus }`      |
-| `verifyAndWait(options)` | One-liner: create request + wait for result                                               |
-| `issueAndWait(options)`  | One-liner: create offer + wait for result                                                 |
+Use `EudiploClient` methods directly:
+
+| Method                        | Description                                    |
+| ----------------------------- | ---------------------------------------------- |
+| `createPresentationRequest()` | Create verification request URI and session ID |
+| `createIssuanceOffer()`       | Create issuance offer URI and session ID       |
+| `waitForSession()`            | Poll session until terminal state              |
+| `subscribeToSession()`        | Subscribe via SSE                              |
+| `verifyWithDcApi()`           | Browser-native DC API end-to-end flow          |
 
 ### Digital Credentials API (Browser Native)
 
 The SDK includes utilities for the [Digital Credentials API](https://wicg.github.io/digital-credentials/), enabling browser-native credential presentation without QR codes.
 
 ```typescript
-import { isDcApiAvailable, verifyWithDcApi } from '@eudiplo/sdk-core';
+import { isDcApiAvailable, EudiploClient } from '@eudiplo/sdk-core';
+
+const client = new EudiploClient({
+  baseUrl: 'https://eudiplo.example.com',
+  clientId: 'my-demo',
+  clientSecret: 'secret',
+});
 
 // Check if browser supports DC API
 if (isDcApiAvailable()) {
-  const result = await verifyWithDcApi({
-    baseUrl: 'https://eudiplo.example.com',
-    clientId: 'my-demo',
-    clientSecret: 'secret',
+  const result = await client.verifyWithDcApi({
     configId: 'age-over-18',
   });
 
-  console.log('Verified!', result.session.credentials);
+  console.log('Verified!', result.credentials);
 } else {
-  // Fall back to QR code flow
-  const session = await verifyAndWait({...});
+  // Fall back to QR code flow using EudiploClient methods
 }
 ```
 
-#### DC API Functions
+#### DC API Methods
 
-| Function               | Description                                         |
-| ---------------------- | --------------------------------------------------- |
-| `isDcApiAvailable()`   | Check if browser supports Digital Credentials API   |
-| `verifyWithDcApi()`    | Complete verification flow using browser-native API |
-| `createDcApiRequest()` | Create a `DigitalCredentialRequestOptions` object   |
+| Method                                       | Description                                         |
+| -------------------------------------------- | --------------------------------------------------- |
+| `isDcApiAvailable()`                         | Check if browser supports Digital Credentials API   |
+| `client.verifyWithDcApi()`                   | Complete verification flow using browser-native API |
+| `client.createDcApiPresentationRequest(...)` | Create DC API session with request object           |
 
 #### Lower-level DC API Usage
 
 ```typescript
-import { createDcApiRequest, EudiploClient } from '@eudiplo/sdk-core';
+import { EudiploClient } from '@eudiplo/sdk-core';
 
 const client = new EudiploClient({...});
 
-// Create presentation request
-const { uri, sessionId } = await client.createPresentationRequest({
+// Create DC API session with request object
+const session = await client.createDcApiPresentationRequest({
   configId: 'age-over-18',
-  responseType: 'dc-api',
 });
 
-// Create the browser request object
-const request = createDcApiRequest(uri);
-
-// Call the browser API directly
-const credential = await navigator.credentials.get(request);
-
-// Submit the response and get verified session
-const session = await client.submitDcApiResponse(sessionId, credential);
+// Submit using the browser-native DC API end-to-end
+const result = await client.submitDcApiPresentation(session);
 ```
 
-#### Secure Server/Client Deployment (Recommended for Production)
+#### Secure Deployment Note
 
-When deploying to production, you should **never expose your client credentials to the browser**. The SDK provides helper functions to split the DC API flow between your server (where credentials are safe) and the browser (where the DC API runs).
-
-**Server-side Functions:**
-
-| Function                         | Description                                            |
-| -------------------------------- | ------------------------------------------------------ |
-| `createDcApiRequestForBrowser()` | Create request on server, return safe data for browser |
-| `submitDcApiWalletResponse()`    | Submit wallet response to EUDIPLO from server          |
-
-**Browser-side Functions:**
-
-| Function      | Description                                            |
-| ------------- | ------------------------------------------------------ |
-| `callDcApi()` | Call the native DC API with a request from your server |
-
-##### Example: Express.js Backend + Browser Frontend
-
-**Server (Express.js / Next.js API route):**
-
-```typescript
-import {
-  createDcApiRequestForBrowser,
-  submitDcApiWalletResponse,
-} from '@eudiplo/sdk-core';
-
-// POST /api/start-verification
-app.post('/api/start-verification', async (req, res) => {
-  const requestData = await createDcApiRequestForBrowser({
-    baseUrl: process.env.EUDIPLO_URL,
-    clientId: process.env.EUDIPLO_CLIENT_ID, // ✅ Safe on server
-    clientSecret: process.env.EUDIPLO_SECRET, // ✅ Safe on server
-    configId: 'age-over-18',
-  });
-
-  // Only safe data is sent to browser (no secrets)
-  res.json(requestData);
-});
-
-// POST /api/complete-verification
-app.post('/api/complete-verification', async (req, res) => {
-  const { responseUri, walletResponse } = req.body;
-
-  const result = await submitDcApiWalletResponse({
-    responseUri,
-    walletResponse,
-    sendResponse: true, // Get verified claims back
-  });
-
-  // result.credentials contains the verified data
-  res.json(result);
-});
-```
-
-**Browser (React / vanilla JS):**
-
-```typescript
-import { callDcApi, isDcApiAvailable } from '@eudiplo/sdk-core';
-
-async function verifyAge() {
-  // 1. Get the request from your server (credentials stay on server)
-  const requestData = await fetch('/api/start-verification', {
-    method: 'POST',
-  }).then((r) => r.json());
-
-  // 2. Check DC API support and call it locally
-  if (!isDcApiAvailable()) {
-    throw new Error('Digital Credentials API not supported');
-  }
-
-  const walletResponse = await callDcApi(requestData.requestObject);
-
-  // 3. Send the wallet response back to your server for verification
-  const result = await fetch('/api/complete-verification', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      responseUri: requestData.responseUri,
-      walletResponse,
-    }),
-  }).then((r) => r.json());
-
-  console.log('Verified!', result.credentials);
-  return result;
-}
-```
-
-**What stays where:**
-
-| Data                           | Location         | Safe to expose?     |
-| ------------------------------ | ---------------- | ------------------- |
-| `clientId` / `clientSecret`    | Server only      | ❌ Never expose     |
-| `requestObject` (signed JWT)   | Server → Browser | ✅ Yes              |
-| `responseUri`                  | Server → Browser | ✅ Yes              |
-| Wallet response (encrypted VP) | Browser → Server | ✅ Yes              |
-| Verified credentials           | Server only      | Depends on use case |
+For production deployments, keep `clientId` and `clientSecret` on the server.
+Use `EudiploClient` methods to run the full flow (`createDcApiPresentationRequest` + `submitDcApiPresentation`) from trusted backend/application code.
 
 ### Class-based API (More Control)
 

@@ -12,6 +12,7 @@ import { CertService } from "../../crypto/key/cert/cert.service";
 import { CryptoImplementationService } from "../../crypto/key/crypto-implementation/crypto-implementation.service";
 import { KeyUsageType } from "../../crypto/key/entities/key-chain.entity";
 import { KeyChainService } from "../../crypto/key/key-chain.service";
+import { CredentialFormat } from "../../issuer/configuration/credentials/entities/credential.entity";
 import { OfferResponse } from "../../issuer/issuance/oid4vci/dto/offer-request.dto";
 import { RegistrarService } from "../../registrar/registrar.service";
 import { SessionStatus } from "../../session/entities/session.entity";
@@ -23,8 +24,7 @@ import { AuthResponse } from "../presentations/dto/auth-response.dto";
 import { IncompletePresentationException } from "../presentations/exceptions/incomplete-presentation.exception";
 import { PresentationsService } from "../presentations/presentations.service";
 import { AuthorizationResponse } from "./dto/authorization-response.dto";
-import { PresentationRequestOptions } from "./dto/presentation-request-options.dto";
-import { CredentialFormat } from "../../issuer/configuration/credentials/entities/credential.entity";
+import { PresentationRequestOptions } from "./dto/presentation-request.dto";
 
 @Injectable()
 export class Oid4vpService {
@@ -95,8 +95,17 @@ export class Oid4vpService {
             return session.requestObject;
         }
 
-        // No cached request - generate new one (for request_uri_method="post" flows)
-        return this.createAuthorizationRequest(session.id, origin, noRedirect);
+        // No cached request - generate and persist so nonce/audience stay stable
+        // across repeated request_uri fetches.
+        const requestObject = await this.createAuthorizationRequest(
+            session.id,
+            origin,
+            noRedirect,
+        );
+        await this.sessionService.add(session.id, {
+            requestObject,
+        });
+        return requestObject;
     }
 
     /**
@@ -208,6 +217,16 @@ export class Oid4vpService {
             // to separate the wallet-facing identifier (request-id) from the
             // frontend-facing session ID (transaction-id).
             const walletFacingId = session.walletNonce ?? session.id;
+            const normalizedExpectedOrigin = session.useDcApi
+                ? this.normalizeExpectedOrigin(origin)
+                : undefined;
+
+            if (session.useDcApi && !normalizedExpectedOrigin) {
+                this.logger.warn(
+                    { sessionId: session.id, origin },
+                    "Missing or invalid Origin header for DC API request; expected_origins omitted",
+                );
+            }
 
             const request = {
                 payload: {
@@ -218,7 +237,9 @@ export class Oid4vpService {
                         ? "dc_api.jwt"
                         : "direct_post.jwt",
                     nonce,
-                    expected_origins: session.useDcApi ? [origin] : undefined,
+                    expected_origins: normalizedExpectedOrigin
+                        ? [normalizedExpectedOrigin]
+                        : undefined,
                     dcql_query,
                     client_metadata: {
                         jwks: {
@@ -290,6 +311,23 @@ export class Oid4vpService {
                 action: "create_authorization_request",
             });
             throw error;
+        }
+    }
+
+    private normalizeExpectedOrigin(origin: string): string | undefined {
+        const trimmed = origin.trim();
+        if (!trimmed) {
+            return undefined;
+        }
+
+        const prefixed = /^https?:\/\//i.test(trimmed)
+            ? trimmed
+            : `http://${trimmed}`;
+
+        try {
+            return new URL(prefixed).origin;
+        } catch {
+            return undefined;
         }
     }
 

@@ -2,7 +2,6 @@ import { createHash } from "node:crypto";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { digest } from "@sd-jwt/crypto-nodejs";
 import { SDJwtVcInstance, VerificationResult } from "@sd-jwt/sd-jwt-vc";
-import { KbVerifier } from "@sd-jwt/types";
 import { base64url, JWK } from "jose";
 import { Span } from "nestjs-otel";
 import { PinoLogger } from "nestjs-pino";
@@ -296,21 +295,6 @@ export class SdjwtvcverifierService {
             return false;
         }
     }
-
-    /**
-     * Verifier for keybindings. It will verify the signature of the keybinding and return true if it is valid.
-     * @param data
-     * @param signature
-     * @param payload
-     * @returns
-     */
-    private readonly kbVerifier: KbVerifier = async (
-        data,
-        signature,
-        payload,
-    ) => {
-        return this.verifyKeyBindingJwt(data, signature, payload);
-    };
 
     private async verifyKeyBindingJwt(
         data: string,

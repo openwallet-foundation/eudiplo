@@ -79,7 +79,7 @@ export default function (): void {
     // -----------------------------------------------------------------------
     let adminToken!: string;
     group('admin_auth', () => {
-        adminToken = getAdminToken(BASE_URL, CLIENT_ID, CLIENT_SECRET);
+        adminToken = getAdminToken(BASE_URL, CLIENT_ID, CLIENT_SECRET);        
     });
 
     // -----------------------------------------------------------------------

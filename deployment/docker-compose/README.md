@@ -27,10 +27,10 @@ docker compose --profile full up -d       # Full
 By default, EUDIPLO mounts `/app/config` from a named Docker volume.
 
 - Default behavior (persistent named volume):
-   - `EUDIPLO_CONFIG_MOUNT` unset
-   - Compose uses `eudiplo-config:/app/config`
+  - `EUDIPLO_CONFIG_MOUNT` unset
+  - Compose uses `eudiplo-config:/app/config`
 - Use repository config files (useful for load tests and config import):
-   - Set `EUDIPLO_CONFIG_MOUNT=../../assets:/app/config`
+  - Set `EUDIPLO_CONFIG_MOUNT=../../assets:/app/config`
 
 Example:
 
@@ -50,6 +50,8 @@ startup and test import data.
 ```bash
 cd ../../
 bash scripts/load-test/run-all.sh
+# fast feedback (one iteration per scenario)
+bash scripts/load-test/run-all.sh --once
 ```
 
 By default the runner starts compose with:
