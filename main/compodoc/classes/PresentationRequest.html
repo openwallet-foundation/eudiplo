@@ -169,6 +169,12 @@
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
+                                <a href="#expected_origin" >expected_origin</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
                                 <a href="#redirectUri" >redirectUri</a>
                             </li>
                             <li>
@@ -212,6 +218,51 @@
     <h3 id="inputs">
         Properties
     </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="expected_origin"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>expected_origin</b></span>
+                        <a href="#expected_origin"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @IsOptional()<br />@IsString()<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:66</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Optional expected browser origin for DC API key-binding audience.
+Example: &quot;<a href="http://localhost:8080">http://localhost:8080</a>&quot;</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -374,7 +425,7 @@ You can use the <code>{sessionId}</code> placeholder in the URI, which will be r
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:68</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:76</a></div>
                         </td>
                     </tr>
 
@@ -505,6 +556,14 @@ export class PresentationRequest {
     redirectUri?: string;
 
     /**
+     * Optional expected browser origin for DC API key-binding audience.
+     * Example: &quot;http://localhost:8080&quot;
+     */
+    @IsOptional()
+    @IsString()
+    expected_origin?: string;
+
+    /**
      * Optional transaction data to include in the OID4VP request.
      * If provided, this will override the transaction_data from the presentation configuration.
      */
@@ -514,6 +573,13 @@ export class PresentationRequest {
     @Type(() &#x3D;&gt; TransactionData)
     transaction_data?: TransactionData[];
 }
+
+export type PresentationRequestOptions &#x3D; Pick&lt;
+    PresentationRequest,
+    &quot;webhook&quot; | &quot;redirectUri&quot; | &quot;expected_origin&quot; | &quot;transaction_data&quot;
+&gt; &amp; {
+    session?: string;
+};
 </code></pre>
     </div>
 </div>

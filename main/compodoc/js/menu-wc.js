@@ -1817,9 +1817,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/Pkcs11Module.html" data-type="entity-link" >Pkcs11Module</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/PresentationRequestOptions.html" data-type="entity-link" >PresentationRequestOptions</a>
-                            </li>
-                            <li class="link">
                                 <a href="interfaces/RecordAuditLogInput.html" data-type="entity-link" >RecordAuditLogInput</a>
                             </li>
                             <li class="link">

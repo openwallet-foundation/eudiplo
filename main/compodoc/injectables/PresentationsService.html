@@ -231,6 +231,10 @@
                                 <a href="#listSchemaMetadataCatalog" >listSchemaMetadataCatalog</a>
                             </li>
                             <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#normalizeDcApiOrigin" >normalizeDcApiOrigin</a>
+                            </li>
+                            <li>
                                     <span class="modifier"></span>
                                     <span class="modifier">Async</span>
                                 <a href="#parseResponse" >parseResponse</a>
@@ -256,6 +260,10 @@
                             <li>
                                     <span class="modifier">Async</span>
                                 <a href="#resolveSchemaMetadata" >resolveSchemaMetadata</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#resolveSdJwtKeyBindingAudience" >resolveSdJwtKeyBindingAudience</a>
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
@@ -1119,8 +1127,8 @@ the registrar is not enabled for this tenant.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1370"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1370</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1437"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1437</a></div>
                         </td>
                     </tr>
 
@@ -1216,8 +1224,8 @@ For mDOC: the first path element is the namespace, so we return the claim name (
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1291"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1291</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1358"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1358</a></div>
                         </td>
                     </tr>
 
@@ -1481,6 +1489,75 @@ Returns an empty array when the registrar is not enabled for the tenant.</p>
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="normalizeDcApiOrigin"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>normalizeDcApiOrigin</b></span>
+                        <a href="#normalizeDcApiOrigin"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>normalizeDcApiOrigin(origin: string | undefined)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="1321"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1321</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>origin</td>
+                                            <td>
+                                                        <code>string | undefined</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | undefined</code>
 
                         </div>
                             <div class="io-description">
@@ -1989,6 +2066,87 @@ This is used by the web client to avoid browser CORS restrictions.</p>
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resolveSdJwtKeyBindingAudience"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>resolveSdJwtKeyBindingAudience</b></span>
+                        <a href="#resolveSdJwtKeyBindingAudience"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resolveSdJwtKeyBindingAudience(session: <a href="../entitys/Session.html" target="_self">Session</a>, requestObjectSessionData: literal type | undefined)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="1288"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1288</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                            <code><a href="../entitys/Session.html" target="_self" >Session</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>requestObjectSessionData</td>
+                                            <td>
+                                                        <code>literal type | undefined</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | undefined</code>
 
                         </div>
                             <div class="io-description">
@@ -2533,8 +2691,8 @@ happens asynchronously.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1309"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1309</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1376"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1376</a></div>
                         </td>
                     </tr>
 
@@ -2649,8 +2807,8 @@ If no credential_sets are defined, all credentials in the query are required.</p
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1400"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1400</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1467"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1467</a></div>
                         </td>
                     </tr>
 
@@ -3840,6 +3998,7 @@ export class PresentationsService {
                   client_id?: string;
                   response_uri?: string;
                   response_mode?: string;
+                  expected_origins?: string[];
               }
             | undefined;
         let requestObjectJwkThumbprint: Uint8Array | undefined;
@@ -4062,8 +4221,10 @@ export class PresentationsService {
                                     requiredClaimKeys,
                                     keyBindingNonce: session.vp_nonce!,
                                     keyBindingAudience:
-                                        requestObjectSessionData?.client_id ??
-                                        session.clientId,
+                                        this.resolveSdJwtKeyBindingAudience(
+                                            session,
+                                            requestObjectSessionData,
+                                        ),
                                     ...verifyOptions,
                                 });
                             this.logger.debug(
@@ -4101,6 +4262,70 @@ export class PresentationsService {
         );
 
         return results;
+    }
+
+    private resolveSdJwtKeyBindingAudience(
+        session: Session,
+        requestObjectSessionData:
+            | {
+                  client_id?: string;
+                  expected_origins?: string[];
+              }
+            | undefined,
+    ): string | undefined {
+        const defaultAudience &#x3D;
+            requestObjectSessionData?.client_id ?? session.clientId;
+
+        if (!session.useDcApi) {
+            return defaultAudience;
+        }
+
+        const expectedOrigin &#x3D; requestObjectSessionData?.expected_origins?.[0];
+        const normalizedOrigin &#x3D; this.normalizeDcApiOrigin(expectedOrigin);
+        if (normalizedOrigin) {
+            return &#x60;origin:${normalizedOrigin}&#x60;;
+        }
+
+        this.logger.warn(
+            {
+                sessionId: session.id,
+                expectedOrigin,
+                defaultAudience,
+            },
+            &quot;Missing or invalid expected_origin for DC API; falling back to client_id for SD-JWT key binding audience&quot;,
+        );
+        return defaultAudience;
+    }
+
+    private normalizeDcApiOrigin(
+        origin: string | undefined,
+    ): string | undefined {
+        if (!origin) {
+            return undefined;
+        }
+
+        const trimmed &#x3D; origin.trim();
+        if (!trimmed) {
+            return undefined;
+        }
+
+        const withoutPrefix &#x3D; trimmed.startsWith(&quot;origin:&quot;)
+            ? trimmed.slice(&quot;origin:&quot;.length)
+            : trimmed;
+        const withProtocol &#x3D; /^https?:\/\//i.test(withoutPrefix)
+            ? withoutPrefix
+            : &#x60;http://${withoutPrefix}&#x60;;
+
+        try {
+            const parsed &#x3D; new URL(withProtocol);
+            if (parsed.protocol !&#x3D;&#x3D; &quot;https:&quot; &amp;&amp; parsed.protocol !&#x3D;&#x3D; &quot;http:&quot;) {
+                return undefined;
+            }
+
+            return parsed.origin;
+        } catch {
+            return undefined;
+        }
     }
 
     /**

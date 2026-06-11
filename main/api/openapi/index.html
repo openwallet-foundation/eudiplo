@@ -24522,8 +24522,9 @@ Creates a new version for audit and regenerates the JWT</p>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-179-1" name="__codelineno-179-1" href="#__codelineno-179-1"></a><span class="p">{</span>
 <a id="__codelineno-179-2" name="__codelineno-179-2" href="#__codelineno-179-2"></a><span class="w">    </span><span class="nt">"response_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dc-api"</span><span class="p">,</span>
-<a id="__codelineno-179-3" name="__codelineno-179-3" href="#__codelineno-179-3"></a><span class="w">    </span><span class="nt">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pid"</span>
-<a id="__codelineno-179-4" name="__codelineno-179-4" href="#__codelineno-179-4"></a><span class="p">}</span>
+<a id="__codelineno-179-3" name="__codelineno-179-3" href="#__codelineno-179-3"></a><span class="w">    </span><span class="nt">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pid"</span><span class="p">,</span>
+<a id="__codelineno-179-4" name="__codelineno-179-4" href="#__codelineno-179-4"></a><span class="w">    </span><span class="nt">"expected_origin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:8080"</span>
+<a id="__codelineno-179-5" name="__codelineno-179-5" href="#__codelineno-179-5"></a><span class="p">}</span>
 </code></pre></div>
 <details class="hint">
 <summary>Schema of the request body</summary>
@@ -24555,19 +24556,23 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-180-26" name="__codelineno-180-26" href="#__codelineno-180-26"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Optional redirect URI to which the user-agent should be redirected after the presentation is completed.\nYou can use the `{sessionId}` placeholder in the URI, which will be replaced with the actual session ID."</span><span class="p">,</span>
 <a id="__codelineno-180-27" name="__codelineno-180-27" href="#__codelineno-180-27"></a><span class="w">            </span><span class="nt">"example"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/callback?session={sessionId}"</span>
 <a id="__codelineno-180-28" name="__codelineno-180-28" href="#__codelineno-180-28"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-180-29" name="__codelineno-180-29" href="#__codelineno-180-29"></a><span class="w">        </span><span class="nt">"transaction_data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-180-30" name="__codelineno-180-30" href="#__codelineno-180-30"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Optional transaction data to include in the OID4VP request.\nIf provided, this will override the transaction_data from the presentation configuration."</span><span class="p">,</span>
-<a id="__codelineno-180-31" name="__codelineno-180-31" href="#__codelineno-180-31"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span>
-<a id="__codelineno-180-32" name="__codelineno-180-32" href="#__codelineno-180-32"></a><span class="w">            </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-180-33" name="__codelineno-180-33" href="#__codelineno-180-33"></a><span class="w">                </span><span class="nt">"$ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#/components/schemas/TransactionData"</span>
-<a id="__codelineno-180-34" name="__codelineno-180-34" href="#__codelineno-180-34"></a><span class="w">            </span><span class="p">}</span>
-<a id="__codelineno-180-35" name="__codelineno-180-35" href="#__codelineno-180-35"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-180-36" name="__codelineno-180-36" href="#__codelineno-180-36"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-180-37" name="__codelineno-180-37" href="#__codelineno-180-37"></a><span class="w">    </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-180-38" name="__codelineno-180-38" href="#__codelineno-180-38"></a><span class="w">        </span><span class="s2">"response_type"</span><span class="p">,</span>
-<a id="__codelineno-180-39" name="__codelineno-180-39" href="#__codelineno-180-39"></a><span class="w">        </span><span class="s2">"requestId"</span>
-<a id="__codelineno-180-40" name="__codelineno-180-40" href="#__codelineno-180-40"></a><span class="w">    </span><span class="p">]</span>
-<a id="__codelineno-180-41" name="__codelineno-180-41" href="#__codelineno-180-41"></a><span class="p">}</span>
+<a id="__codelineno-180-29" name="__codelineno-180-29" href="#__codelineno-180-29"></a><span class="w">        </span><span class="nt">"expected_origin"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-180-30" name="__codelineno-180-30" href="#__codelineno-180-30"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-180-31" name="__codelineno-180-31" href="#__codelineno-180-31"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Optional expected browser origin for DC API key-binding audience.\nExample: \"http://localhost:8080\""</span>
+<a id="__codelineno-180-32" name="__codelineno-180-32" href="#__codelineno-180-32"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-180-33" name="__codelineno-180-33" href="#__codelineno-180-33"></a><span class="w">        </span><span class="nt">"transaction_data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-180-34" name="__codelineno-180-34" href="#__codelineno-180-34"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Optional transaction data to include in the OID4VP request.\nIf provided, this will override the transaction_data from the presentation configuration."</span><span class="p">,</span>
+<a id="__codelineno-180-35" name="__codelineno-180-35" href="#__codelineno-180-35"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span>
+<a id="__codelineno-180-36" name="__codelineno-180-36" href="#__codelineno-180-36"></a><span class="w">            </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-180-37" name="__codelineno-180-37" href="#__codelineno-180-37"></a><span class="w">                </span><span class="nt">"$ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#/components/schemas/TransactionData"</span>
+<a id="__codelineno-180-38" name="__codelineno-180-38" href="#__codelineno-180-38"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-180-39" name="__codelineno-180-39" href="#__codelineno-180-39"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-180-40" name="__codelineno-180-40" href="#__codelineno-180-40"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-180-41" name="__codelineno-180-41" href="#__codelineno-180-41"></a><span class="w">    </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-180-42" name="__codelineno-180-42" href="#__codelineno-180-42"></a><span class="w">        </span><span class="s2">"response_type"</span><span class="p">,</span>
+<a id="__codelineno-180-43" name="__codelineno-180-43" href="#__codelineno-180-43"></a><span class="w">        </span><span class="s2">"requestId"</span>
+<a id="__codelineno-180-44" name="__codelineno-180-44" href="#__codelineno-180-44"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-180-45" name="__codelineno-180-45" href="#__codelineno-180-45"></a><span class="p">}</span>
 </code></pre></div>
 </details>
 </div>
@@ -29992,6 +29997,12 @@ You can use the `{sessionId}` placeholder in the URI, which will be replaced wit
         </tr>
     </thead>
     <tbody>
+        <tr>
+            <td><code>expected_origin</code></td>
+            <td><span class="string-type">string</span></td>
+            <td>Optional expected browser origin for DC API key-binding audience.
+Example: "http://localhost:8080"</td>
+        </tr>
         <tr>
             <td><code>redirectUri</code></td>
             <td><span class="string-type">string</span></td>
@@ -38545,6 +38556,12 @@ You can use the `{sessionId}` placeholder in the URI, which will be replaced wit
         </tr>
     </thead>
     <tbody>
+        <tr>
+            <td><code>expected_origin</code></td>
+            <td><span class="string-type">string</span></td>
+            <td>Optional expected browser origin for DC API key-binding audience.
+Example: "http://localhost:8080"</td>
+        </tr>
         <tr>
             <td><code>redirectUri</code></td>
             <td><span class="string-type">string</span></td>
