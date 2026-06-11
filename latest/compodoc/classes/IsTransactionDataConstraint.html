@@ -210,8 +210,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="25"
-                                    class="link-to-prism">src/verifier/presentations/validators/transaction-data.validator.ts:25</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="23"
+                                    class="link-to-prism">src/verifier/presentations/validators/transaction-data.validator.ts:23</a></div>
                         </td>
                     </tr>
 
@@ -247,8 +247,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="12"
-                                    class="link-to-prism">src/verifier/presentations/validators/transaction-data.validator.ts:12</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="10"
+                                    class="link-to-prism">src/verifier/presentations/validators/transaction-data.validator.ts:10</a></div>
                         </td>
                     </tr>
 
@@ -312,9 +312,7 @@
 } from &quot;class-validator&quot;;
 
 @ValidatorConstraint({ name: &quot;isTransactionDataValid&quot;, async: false })
-export class IsTransactionDataConstraint
-    implements ValidatorConstraintInterface
-{
+class IsTransactionDataConstraint implements ValidatorConstraintInterface {
     validate(values: any[]) {
         if (!values) return true;
         if (!Array.isArray(values)) return false;

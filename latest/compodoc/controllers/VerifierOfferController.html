@@ -216,8 +216,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="67"
-                                    class="link-to-prism">src/verifier/verifier-offer/verifier-offer.controller.ts:67</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="68"
+                                    class="link-to-prism">src/verifier/verifier-offer/verifier-offer.controller.ts:68</a></div>
                         </td>
                     </tr>
 
@@ -366,6 +366,7 @@ export class VerifierOfferController {
                 value: {
                     response_type: ResponseType.DC_API,
                     requestId: &quot;pid&quot;,
+                    expected_origin: &quot;http://localhost:8080&quot;,
                 },
             },
         },
@@ -397,11 +398,11 @@ export class VerifierOfferController {
             },
             user.entity!.id,
             body.response_type &#x3D;&#x3D;&#x3D; ResponseType.DC_API,
-            req.get(&quot;origin&quot;) || req.get(&quot;host&quot;) || &quot;&quot;,
+            body.expected_origin ?? req.get(&quot;origin&quot;) ?? req.get(&quot;host&quot;) ?? &quot;&quot;,
         );
         values.uri &#x3D; &#x60;openid4vp://?${values.uri}&#x60;;
         values.crossDeviceUri &#x3D; &#x60;openid4vp://?${values.crossDeviceUri}&#x60;;
-        res.send(values);
+        res.status(201).json(values);
     }
 }
 </code></pre>

@@ -671,7 +671,7 @@ export class EncryptionService {
         );
 
         const privateEncryptionKey &#x3D; (await importJWK(
-            keyChain.activeKey,
+            keyChain.activeJwk,
             &quot;ECDH-ES&quot;,
         )) as CryptoKey;
 
@@ -691,7 +691,7 @@ export class EncryptionService {
         );
 
         // Return public key (without private key component &#x27;d&#x27;)
-        const publicKey: JWK &#x3D; { ...keyChain.activeKey };
+        const publicKey: JWK &#x3D; { ...keyChain.activeJwk };
         delete publicKey.d;
         publicKey.kid &#x3D; keyChain.id;
         publicKey.use &#x3D; &quot;enc&quot;;
@@ -716,7 +716,7 @@ export class EncryptionService {
         );
 
         const privateEncryptionKey &#x3D; (await importJWK(
-            keyChain.activeKey,
+            keyChain.activeJwk,
             &quot;ECDH-ES&quot;,
         )) as CryptoKey;
 

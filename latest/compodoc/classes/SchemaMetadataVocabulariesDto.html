@@ -224,7 +224,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="176" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:176</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="117" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:117</a></div>
                         </td>
                     </tr>
 
@@ -262,7 +262,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="185" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:185</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="126" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:126</a></div>
                         </td>
                     </tr>
 
@@ -298,7 +298,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="167" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:167</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="108" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:108</a></div>
                         </td>
                     </tr>
 
@@ -372,65 +372,6 @@ export type VocabularyStatus &#x3D; (typeof VOCABULARY_STATUS_VALUES)[number];
 // ─────────────────────────────────────────────────────────────────────────────
 // Request bodies
 // ─────────────────────────────────────────────────────────────────────────────
-
-/**
- * Request body for &#x60;POST /registrar/schema-metadata/reserve&#x60;.
- */
-export class ReserveSchemaMetadataDto {
-    /**
-     * Optional human-readable name hint used by the registrar when generating
-     * the reserved attestation ID. Used in documentation only.
-     */
-    @ApiPropertyOptional({
-        description:
-            &quot;Optional human-readable name hint for the schema (used in documentation only)&quot;,
-    })
-    @IsOptional()
-    @IsString()
-    nameHint?: string;
-}
-
-/**
- * Response of &#x60;POST /registrar/schema-metadata/reserve&#x60;.
- */
-export class ReservationResponseDto {
-    @ApiProperty({
-        description:
-            &quot;The full reserved schema ID URL that should be used as the &#x60;id&#x60; in the signed JWT&quot;,
-    })
-    reservedId!: string;
-
-    @ApiProperty({
-        description: &quot;When this reservation expires (ISO 8601)&quot;,
-    })
-    expiresAt!: string;
-
-    @ApiProperty({
-        description:
-            &quot;Secret token to include in the &#x60;X-Reservation-Token&#x60; header when submitting the schema metadata JWT&quot;,
-    })
-    reservationToken!: string;
-}
-
-/**
- * Request body for &#x60;POST /registrar/schema-metadata&#x60;.
- */
-export class SubmitSchemaMetadataDto {
-    @ApiProperty({
-        description:
-            &quot;The signed schema metadata JWS (compact serialization). Sign via &#x60;POST /api/issuer/credentials/schema-metadata/sign&#x60;.&quot;,
-    })
-    @IsString()
-    signedJwt!: string;
-
-    @ApiPropertyOptional({
-        description:
-            &quot;Reservation token returned by &#x60;/schema-metadata/reserve&#x60;. Required when the JWT&#x27;s &#x60;id&#x60; is a registrar-reserved URL.&quot;,
-    })
-    @IsOptional()
-    @IsString()
-    reservationToken?: string;
-}
 
 /**
  * Request body for &#x60;PATCH /registrar/schema-metadata/:id&#x60;.

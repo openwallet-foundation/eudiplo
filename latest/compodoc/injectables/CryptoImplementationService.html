@@ -191,9 +191,6 @@
                             <li>
                                 <a href="#getCryptoFromJwk" >getCryptoFromJwk</a>
                             </li>
-                            <li>
-                                <a href="#getSupportedAlgorithms" >getSupportedAlgorithms</a>
-                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -280,8 +277,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="83"
-                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:83</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="75"
+                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:75</a></div>
                         </td>
                     </tr>
 
@@ -323,8 +320,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="48"
-                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:48</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -402,8 +399,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="128"
-                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:128</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="120"
+                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:120</a></div>
                         </td>
                     </tr>
 
@@ -479,8 +476,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="107"
-                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:107</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="99"
+                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:99</a></div>
                         </td>
                     </tr>
 
@@ -531,49 +528,6 @@ Currently supports ES256 (P-256 curve).</p>
                         </div>
                             <div class="io-description">
                                 <p>The appropriate crypto implementation</p>
-
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getSupportedAlgorithms"></a>
-                    <span class="name">
-                        <span ><b>getSupportedAlgorithms</b></span>
-                        <a href="#getSupportedAlgorithms"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>getSupportedAlgorithms()</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="37"
-                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:37</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Returns the list of supported algorithm types</p>
-</div>
-
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#CryptoType" target="_self" >CryptoType[]</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                <p>Array of supported algorithm types</p>
 
                             </div>
                 </td>
@@ -718,14 +672,6 @@ export class CryptoImplementationService {
     }
 
     /**
-     * Returns the list of supported algorithm types
-     * @returns Array of supported algorithm types
-     */
-    getSupportedAlgorithms(): CryptoType[] {
-        return [...this.supportedAlgorithms];
-    }
-
-    /**
      * Returns the supported algorithms based on the credential format.
      * - For SD-JWT VC: Returns JOSE algorithm names (ES256)
      * - For mDOC: Returns COSE algorithm identifiers (-7)
@@ -742,12 +688,12 @@ export class CryptoImplementationService {
                     case &quot;ES256&quot;:
                         return &quot;ES256&quot;;
                     default:
-                        return &quot;ES256&quot;;
+                        throw new Error(&#x60;Unsupported algorithm: ${alg}&#x60;);
                 }
             },
         );
 
-        if (credentialFormat &#x3D;&#x3D;&#x3D; CredentialFormat.SD_JWT) {
+        if (credentialFormat &#x3D;&#x3D;&#x3D; CredentialFormat.SD_JWT_VC) {
             return joseAlgs;
         }
 

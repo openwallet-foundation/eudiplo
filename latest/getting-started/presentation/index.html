@@ -9,7 +9,7 @@
         <link rel="prev" href="../issuance/issuance-configuration/">
       
       
-        <link rel="next" href="presentation-configuration/">
+        <link rel="next" href="presentation-requests/">
       
       
         
@@ -717,6 +717,8 @@
       
         
       
+        
+      
     
     
     
@@ -771,6 +773,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../issuance/credential-offers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Credential Offers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -912,6 +942,8 @@
       
         
       
+        
+      
     
     
     
@@ -964,6 +996,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="presentation-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentation Requests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1383,6 +1443,8 @@
       
         
       
+        
+      
     
     
     
@@ -1437,6 +1499,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration/4.x-to-5.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.x to 5.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1720,6 +1810,8 @@
       
         
       
+        
+      
     
     
     
@@ -1838,6 +1930,34 @@
     
   
     Interactive Authorization (IAE)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/federation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenID Federation
   
 
     
@@ -2948,7 +3068,10 @@ to define presentation requests:</p>
 </ul>
 <hr>
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">¶</a></h2>
-<p>To manage presentation configurations, have a look at the <a href="../../api/openapi/">API Documentation</a> about the verifier. There you will find the endpoints to manage presentation configs and also to create presentation requests.</p>
+<p>Use the verifier section in the <a href="../../api/openapi/">API Documentation</a> to
+manage presentation configurations and create presentation requests.</p>
+<p>For request payloads, examples, and runtime override behavior, see
+<a href="presentation-requests/">Presentation Requests</a>.</p>
 <hr>
 <h2 id="flow-diagrams">Flow Diagrams<a class="headerlink" href="#flow-diagrams" title="Permanent link">¶</a></h2>
 <h3 id="standard-presentation-flow-same-device">Standard Presentation Flow (Same-Device)<a class="headerlink" href="#standard-presentation-flow-same-device" title="Permanent link">¶</a></h3>
@@ -3008,7 +3131,7 @@ This flow uses OID4VCI 1.1's authorization code flow with interactive authorizat
     Wallet-&gt;&gt;User: Request presentation consent
     User-&gt;&gt;Wallet: Approve presentation
     Wallet-&gt;&gt;EUDIPLO: Submit OpenID4VP presentation
-    EUDIPLO-&gt;&gt;Backend: Claims webhook (verified claims)
+    EUDIPLO-&gt;&gt;Backend: Attribute Provider call (verified claims context)
     Backend--&gt;&gt;EUDIPLO: Return issuance claims
     EUDIPLO--&gt;&gt;Wallet: Authorization Code
     Wallet-&gt;&gt;EUDIPLO: Token Request
@@ -3138,13 +3261,13 @@ session.</p>
         
         
           
-          <a href="presentation-configuration/" class="md-footer__link md-footer__link--next" aria-label="Next: Presentation Configuration">
+          <a href="presentation-requests/" class="md-footer__link md-footer__link--next" aria-label="Next: Presentation Requests">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Presentation Configuration
+                Presentation Requests
               </div>
             </div>
             <div class="md-footer__button md-icon">

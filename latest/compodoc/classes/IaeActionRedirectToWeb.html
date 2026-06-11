@@ -254,7 +254,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="98" class="link-to-prism">src/issuer/configuration/credentials/entities/iae-action.dto.ts:98</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">src/issuer/configuration/credentials/entities/iae-action.dto.ts:88</a></div>
                         </td>
                     </tr>
 
@@ -293,7 +293,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="107" class="link-to-prism">src/issuer/configuration/credentials/entities/iae-action.dto.ts:107</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="97" class="link-to-prism">src/issuer/configuration/credentials/entities/iae-action.dto.ts:97</a></div>
                         </td>
                     </tr>
 
@@ -337,7 +337,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/IaeActionBase.html#source" target="_self" >IaeActionBase:80</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/IaeActionBase.html#source" target="_self" >IaeActionBase:70</a></code>
 </div>
                         </td>
                     </tr>
@@ -375,7 +375,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="87" class="link-to-prism">src/issuer/configuration/credentials/entities/iae-action.dto.ts:87</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/issuer/configuration/credentials/entities/iae-action.dto.ts:77</a></div>
                         </td>
                     </tr>
 
@@ -420,7 +420,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/IaeActionBase.html#source" target="_self" >IaeActionBase:46</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/IaeActionBase.html#source" target="_self" >IaeActionBase:36</a></code>
 </div>
                         </td>
                     </tr>
@@ -440,19 +440,9 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
-    ApiProperty,
-    ApiPropertyOptional,
-    getSchemaPath,
-} from &quot;@nestjs/swagger&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
 import { Type } from &quot;class-transformer&quot;;
-import {
-    IsEnum,
-    IsOptional,
-    IsString,
-    IsUrl,
-    ValidateNested,
-} from &quot;class-validator&quot;;
+import { IsEnum, IsOptional, IsString, IsUrl } from &quot;class-validator&quot;;
 
 /**
  * Discriminator for IAE action types.
@@ -556,43 +546,9 @@ export class IaeActionRedirectToWeb extends IaeActionBase {
 export type IaeAction &#x3D; IaeActionOpenid4vpPresentation | IaeActionRedirectToWeb;
 
 /**
- * Array validator class for IAE actions with class-transformer support.
- */
-export class IaeActionsWrapper {
-    @ApiProperty({
-        description: &quot;List of IAE actions to execute in order&quot;,
-        type: &quot;array&quot;,
-        items: {
-            oneOf: [
-                { $ref: getSchemaPath(IaeActionOpenid4vpPresentation) },
-                { $ref: getSchemaPath(IaeActionRedirectToWeb) },
-            ],
-        },
-    })
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; IaeActionBase, {
-        discriminator: {
-            property: &quot;type&quot;,
-            subTypes: [
-                {
-                    name: IaeActionType.OPENID4VP_PRESENTATION,
-                    value: IaeActionOpenid4vpPresentation,
-                },
-                {
-                    name: IaeActionType.REDIRECT_TO_WEB,
-                    value: IaeActionRedirectToWeb,
-                },
-            ],
-        },
-        keepDiscriminatorProperty: true,
-    })
-    actions!: IaeAction[];
-}
-
-/**
  * Helper function to validate and transform IAE actions array.
  */
-export function transformIaeActions(): ReturnType&lt;typeof Type&gt; {
+function _transformIaeActions(): ReturnType&lt;typeof Type&gt; {
     return Type(() &#x3D;&gt; IaeActionBase, {
         discriminator: {
             property: &quot;type&quot;,

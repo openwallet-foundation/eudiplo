@@ -137,9 +137,6 @@
                             <a href="#AuthConfig" title="src/shared/utils/webhook/webhook.dto.ts" ><b>AuthConfig</b>&nbsp;&nbsp;&nbsp;(src/.../webhook.dto.ts)</a>
                         </li>
                         <li>
-                            <a href="#AuthenticationMethod" title="src/issuer/configuration/issuance/dto/authentication-config.dto.ts" ><b>AuthenticationMethod</b>&nbsp;&nbsp;&nbsp;(src/.../authentication-config.dto.ts)</a>
-                        </li>
-                        <li>
                             <a href="#ChainedAsSessionStatus" title="src/issuer/issuance/oid4vci/chained-as/entities/chained-as-session.entity.ts" ><b>ChainedAsSessionStatus</b>&nbsp;&nbsp;&nbsp;(src/.../chained-as-session.entity.ts)</a>
                         </li>
                         <li>
@@ -147,6 +144,12 @@
                         </li>
                         <li>
                             <a href="#DeferredTransactionStatus" title="src/issuer/issuance/oid4vci/entities/deferred-transaction.entity.ts" ><b>DeferredTransactionStatus</b>&nbsp;&nbsp;&nbsp;(src/.../deferred-transaction.entity.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FederationEntityRole" title="src/issuer/configuration/issuance/dto/federation-config.dto.ts" ><b>FederationEntityRole</b>&nbsp;&nbsp;&nbsp;(src/.../federation-config.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FederationTrustMode" title="src/issuer/configuration/issuance/dto/federation-config.dto.ts" ><b>FederationTrustMode</b>&nbsp;&nbsp;&nbsp;(src/.../federation-config.dto.ts)</a>
                         </li>
                         <li>
                             <a href="#FlowType" title="src/issuer/issuance/oid4vci/dto/offer-request.dto.ts" ><b>FlowType</b>&nbsp;&nbsp;&nbsp;(src/.../offer-request.dto.ts)</a>
@@ -189,6 +192,9 @@
                         </li>
                         <li>
                             <a href="#SchemaMetaFrameworkType" title="src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts" ><b>SchemaMetaFrameworkType</b>&nbsp;&nbsp;&nbsp;(src/.../schema-meta-config.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SdJwtTrustFormat" title="src/issuer/configuration/credentials/entities/credential.entity.ts" ><b>SdJwtTrustFormat</b>&nbsp;&nbsp;&nbsp;(src/.../credential.entity.ts)</a>
                         </li>
                         <li>
                             <a href="#ServiceTypeIdentifier" title="src/issuer/trust-list/trustlist.service.ts" ><b>ServiceTypeIdentifier</b>&nbsp;&nbsp;&nbsp;(src/.../trustlist.service.ts)</a>
@@ -412,49 +418,6 @@
             </tbody>
         </table>
 </section>
-    <h3>src/issuer/configuration/issuance/dto/authentication-config.dto.ts</h3>
-    <section data-compodoc="block-enums">
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="AuthenticationMethod"></a>
-                        <span class="name "><b>AuthenticationMethod</b><a href="#AuthenticationMethod"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;NONE
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>none</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;AUTH
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>auth</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;PRESENTATION_DURING_ISSUANCE
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>presentationDuringIssuance</code>
-                            </td>
-                        </tr>
-            </tbody>
-        </table>
-</section>
     <h3>src/issuer/issuance/oid4vci/chained-as/entities/chained-as-session.entity.ts</h3>
     <section data-compodoc="block-enums">
         <table class="table table-sm table-bordered">
@@ -546,12 +509,53 @@
                         </tr>
                         <tr>
                             <td class="col-md-4">
-                                &nbsp;SD_JWT
+                                &nbsp;SD_JWT_VC
                             </td>
                         </tr>
                         <tr>
                             <td class="col-md-4">
                                 <i>Value : </i><code>dc+sd-jwt</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="SdJwtTrustFormat"></a>
+                        <span class="name "><b>SdJwtTrustFormat</b><a href="#SdJwtTrustFormat"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-description"><p>Determines how SD-JWT credentials are signed and trust is established.</p>
+<ul>
+<li>&quot;x5c&quot;: Include certificate chain in JWT header (certificate-based trust)</li>
+<li>&quot;federation&quot;: Include issuer entity ID in &#39;iss&#39; claim (federation-based trust)</li>
+<li>&quot;auto&quot;: Legacy mode kept for backward compatibility (treated like x5c)</li>
+</ul>
+</div>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;X5C
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>x5c</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;FEDERATION
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>federation</code>
                             </td>
                         </tr>
             </tbody>
@@ -621,6 +625,79 @@
                         <tr>
                             <td class="col-md-4">
                                 <i>Value : </i><code>failed</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+    <h3>src/issuer/configuration/issuance/dto/federation-config.dto.ts</h3>
+    <section data-compodoc="block-enums">
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="FederationEntityRole"></a>
+                        <span class="name "><b>FederationEntityRole</b><a href="#FederationEntityRole"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;TRUST_ANCHOR
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>trust_anchor</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;INTERMEDIATE
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>intermediate</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;LEAF
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>leaf</code>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="FederationTrustMode"></a>
+                        <span class="name "><b>FederationTrustMode</b><a href="#FederationTrustMode"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;FEDERATION_ONLY
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>federation-only</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;HYBRID
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>hybrid</code>
                             </td>
                         </tr>
             </tbody>
@@ -861,62 +938,12 @@ Lower numbers run first.</p>
                         </tr>
                         <tr>
                             <td class="col-md-4">
-                                &nbsp;PresentationReceived
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>presentation_received</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;WebAuthCompleted
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>web_auth_completed</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
                                 &nbsp;AllStepsCompleted
                             </td>
                         </tr>
                         <tr>
                             <td class="col-md-4">
                                 <i>Value : </i><code>all_steps_completed</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;CodeIssued
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>code_issued</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;Expired
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>expired</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;Failed
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>failed</code>
                             </td>
                         </tr>
             </tbody>
@@ -1265,16 +1292,6 @@ Lower numbers run first.</p>
                         </tr>
                         <tr>
                             <td class="col-md-4">
-                                &nbsp;PIDRevocation
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>http://uri.etsi.org/19602/SvcType/PID/Revocation</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
                                 &nbsp;EaaIssuance
                             </td>
                         </tr>
@@ -1454,22 +1471,22 @@ Lower numbers run first.</p>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                &nbsp;AKI
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>aki</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
                                 &nbsp;ETSI_TL
                             </td>
                         </tr>
                         <tr>
                             <td class="col-md-4">
                                 <i>Value : </i><code>etsi_tl</code>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                &nbsp;OPENID_FEDERATION
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <i>Value : </i><code>openid_federation</code>
                             </td>
                         </tr>
             </tbody>

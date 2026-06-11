@@ -181,6 +181,7 @@ and create access certificates for their keys.</p>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                     <span class="modifier">Async</span>
                                 <a href="#createConfig" >createConfig</a>
                             </li>
@@ -201,6 +202,7 @@ and create access certificates for their keys.</p>
                                 <a href="#getConfig" >getConfig</a>
                             </li>
                             <li>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
@@ -260,8 +262,8 @@ and create access certificates for their keys.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="173"
-                                    class="link-to-prism">src/registrar/registrar.controller.ts:173</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="187"
+                                    class="link-to-prism">src/registrar/registrar.controller.ts:187</a></div>
                         </td>
                     </tr>
 
@@ -347,6 +349,7 @@ Requires a relying party to be already registered at the registrar.</p>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                             <span class="modifier">Async</span>
                         <span ><b>createConfig</b></span>
                         <a href="#createConfig"><span class="icon ion-ios-link"></span></a>
@@ -364,14 +367,14 @@ Requires a relying party to be already registered at the registrar.</p>
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post(&#x27;config&#x27;)<br />@ApiOperation({summary: &#x27;Create or replace registrar configuration&#x27;})<br />@ApiResponse({status: 201, description: &#x27;Configuration created successfully&#x27;, type: RegistrarConfigResponseDto})<br />@ApiResponse({status: 400, description: &#x27;Invalid credentials&#x27;})<br /></code>
+                    <code>@Post(&#x27;config&#x27;)<br />@ApiOperation({summary: &#x27;Create or replace registrar configuration&#x27;})<br />@ApiResponse({status: 201, description: &#x27;Configuration created successfully&#x27;, type: RegistrarConfigResponseDto})<br />@ApiResponse({status: 400, description: &#x27;Invalid credentials&#x27;})<br />@ApiResponse({status: 503, description: &#x27;Registrar OIDC endpoint unreachable — credentials could not be verified&#x27;})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="72"
-                                    class="link-to-prism">src/registrar/registrar.controller.ts:72</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="81"
+                                    class="link-to-prism">src/registrar/registrar.controller.ts:81</a></div>
                         </td>
                     </tr>
 
@@ -479,8 +482,8 @@ Credentials are validated before saving.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="127"
-                                    class="link-to-prism">src/registrar/registrar.controller.ts:127</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="141"
+                                    class="link-to-prism">src/registrar/registrar.controller.ts:141</a></div>
                         </td>
                     </tr>
 
@@ -568,8 +571,8 @@ Credentials are validated before saving.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="47"
-                                    class="link-to-prism">src/registrar/registrar.controller.ts:47</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="48"
+                                    class="link-to-prism">src/registrar/registrar.controller.ts:48</a></div>
                         </td>
                     </tr>
 
@@ -607,7 +610,7 @@ Credentials are validated before saving.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/RegistrarConfigResponseDto.html" target="_self" >Promise&lt;RegistrarConfigResponseDto | null&gt;</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/RegistrarConfigResponseDto.html" target="_self" >Promise&lt;RegistrarConfigResponseDto&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -624,6 +627,7 @@ Credentials are validated before saving.</p>
                 <td class="col-md-4">
                     <a name="updateConfig"></a>
                     <span class="name">
+                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
@@ -646,14 +650,14 @@ Credentials are validated before saving.</p>
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Patch(&#x27;config&#x27;)<br />@ApiOperation({summary: &#x27;Update registrar configuration&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Configuration updated successfully&#x27;, type: RegistrarConfigResponseDto})<br />@ApiResponse({status: 400, description: &#x27;Invalid credentials&#x27;})<br />@ApiResponse({status: 404, description: &#x27;No registrar configuration found&#x27;})<br /></code>
+                    <code>@Patch(&#x27;config&#x27;)<br />@ApiOperation({summary: &#x27;Update registrar configuration&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Configuration updated successfully&#x27;, type: RegistrarConfigResponseDto})<br />@ApiResponse({status: 400, description: &#x27;Invalid credentials&#x27;})<br />@ApiResponse({status: 503, description: &#x27;Registrar OIDC endpoint unreachable — credentials could not be verified&#x27;})<br />@ApiResponse({status: 404, description: &#x27;No registrar configuration found&#x27;})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="105"
-                                    class="link-to-prism">src/registrar/registrar.controller.ts:105</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="119"
+                                    class="link-to-prism">src/registrar/registrar.controller.ts:119</a></div>
                         </td>
                     </tr>
 
@@ -739,6 +743,7 @@ Credentials are validated if auth-related fields are changed.</p>
     Get,
     HttpCode,
     HttpStatus,
+    NotFoundException,
     Patch,
     Post,
 } from &quot;@nestjs/common&quot;;
@@ -780,9 +785,12 @@ export class RegistrarController {
     })
     async getConfig(
         @Token() token: TokenPayload,
-    ): Promise&lt;RegistrarConfigResponseDto | null&gt; {
+    ): Promise&lt;RegistrarConfigResponseDto&gt; {
         const config &#x3D; await this.registrarService.getConfig(token.entity!.id);
-        return config ? RegistrarConfigResponseDto.fromEntity(config) : null;
+        if (!config) {
+            throw new NotFoundException(&quot;No registrar configuration found&quot;);
+        }
+        return RegistrarConfigResponseDto.fromEntity(config);
     }
 
     /**
@@ -802,6 +810,11 @@ export class RegistrarController {
     @ApiResponse({
         status: 400,
         description: &quot;Invalid credentials&quot;,
+    })
+    @ApiResponse({
+        status: 503,
+        description:
+            &quot;Registrar OIDC endpoint unreachable — credentials could not be verified&quot;,
     })
     async createConfig(
         @Token() token: TokenPayload,
@@ -831,6 +844,11 @@ export class RegistrarController {
     @ApiResponse({
         status: 400,
         description: &quot;Invalid credentials&quot;,
+    })
+    @ApiResponse({
+        status: 503,
+        description:
+            &quot;Registrar OIDC endpoint unreachable — credentials could not be verified&quot;,
     })
     @ApiResponse({
         status: 404,

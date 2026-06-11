@@ -719,6 +719,8 @@
       
         
       
+        
+      
     
     
     
@@ -771,6 +773,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credential-offers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Credential Offers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -979,15 +1009,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#webhook-request-response" class="md-nav__link">
+  <a href="#request-and-response" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Webhook Request &amp; Response
+        Request and Response
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Webhook Request &amp; Response">
+    <nav class="md-nav" aria-label="Request and Response">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1201,6 +1231,8 @@
       
         
       
+        
+      
     
     
     
@@ -1255,6 +1287,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../presentation/presentation-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentation Requests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1674,6 +1734,8 @@
       
         
       
+        
+      
     
     
     
@@ -1728,6 +1790,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../migration/4.x-to-5.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.x to 5.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -2011,6 +2101,8 @@
       
         
       
+        
+      
     
     
     
@@ -2129,6 +2221,34 @@
     
   
     Interactive Authorization (IAE)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/federation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenID Federation
   
 
     
@@ -2917,15 +3037,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#webhook-request-response" class="md-nav__link">
+  <a href="#request-and-response" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Webhook Request &amp; Response
+        Request and Response
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Webhook Request &amp; Response">
+    <nav class="md-nav" aria-label="Request and Response">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3158,10 +3278,10 @@
 
 
 <h1 id="attribute-providers">Attribute Providers<a class="headerlink" href="#attribute-providers" title="Permanent link">¶</a></h1>
-<p>Attribute Providers are external HTTPS endpoints that EUDIPLO calls during credential issuance to dynamically fetch claim values. They provide a centralized, reusable way to configure claims webhooks at the tenant level.</p>
+<p>Attribute Providers are external HTTPS endpoints that EUDIPLO calls during credential issuance to dynamically fetch claim values. They provide a centralized, reusable way to configure claim sources at the tenant level.</p>
 <hr>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
-<p>Instead of configuring webhook URLs and authentication directly on each credential configuration, you can:</p>
+<p>Instead of repeating claim source settings on each credential configuration, you can:</p>
 <ol>
 <li>Create an Attribute Provider with the endpoint URL and authentication settings</li>
 <li>Reference the Attribute Provider by ID in one or more credential configurations</li>
@@ -3325,8 +3445,8 @@
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="p">}</span>
 </code></pre></div>
 <hr>
-<h2 id="webhook-request-response">Webhook Request &amp; Response<a class="headerlink" href="#webhook-request-response" title="Permanent link">¶</a></h2>
-<p>When EUDIPLO calls your Attribute Provider endpoint, it sends a POST request with information about the issuance session.</p>
+<h2 id="request-and-response">Request and Response<a class="headerlink" href="#request-and-response" title="Permanent link">¶</a></h2>
+<p>When EUDIPLO calls your Attribute Provider endpoint, it sends a POST request with issuance session context.</p>
 <h3 id="request-format">Request Format<a class="headerlink" href="#request-format" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nt">"session"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a6318799-dff4-4b60-9d1d-58703611bd23"</span><span class="p">,</span>

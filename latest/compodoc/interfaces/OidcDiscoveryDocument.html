@@ -536,6 +536,8 @@ import { LessThan, Repository } from &quot;typeorm&quot;;
 import { v4 } from &quot;uuid&quot;;
 import { KeyChainService } from &quot;../../../../crypto/key/key-chain.service&quot;;
 import { SessionService } from &quot;../../../../session/session.service&quot;;
+import { FederationTrustService } from &quot;../../../../shared/trust/federation-trust.service&quot;;
+import { FederationTrustSource } from &quot;../../../../shared/trust/types&quot;;
 import { WalletAttestationService } from &quot;../../../../shared/trust/wallet-attestation.service&quot;;
 import { AuthorizationIdentity } from &quot;../../../configuration/credentials/dto/authorization-identity&quot;;
 import type { ChainedAsConfig } from &quot;../../../configuration/issuance/dto/chained-as-config.dto&quot;;
@@ -629,6 +631,7 @@ export class ChainedAsService {
         private readonly keyChainService: KeyChainService,
         private readonly sessionService: SessionService,
         private readonly issuanceService: IssuanceService,
+        private readonly federationTrustService: FederationTrustService,
         private readonly walletAttestationService: WalletAttestationService,
         private readonly traceService: TraceService,
         @InjectRepository(ChainedAsSessionEntity)
@@ -664,7 +667,31 @@ export class ChainedAsService {
      * Fetch the OIDC discovery document from an upstream provider.
      * Results are cached for 5 minutes.
      */
-    async getUpstreamDiscovery(issuer: string): Promise&lt;OidcDiscoveryDocument&gt; {
+    async getUpstreamDiscovery(
+        tenantId: string,
+        issuer: string,
+    ): Promise&lt;OidcDiscoveryDocument&gt; {
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const federationTrustSource &#x3D;
+            issuanceConfig.federation &amp;&amp;
+            issuanceConfig.federation.trustAnchors?.length
+                ? ({
+                      mode: issuanceConfig.federation.mode,
+                      entityId: issuanceConfig.federation.entityId,
+                      trustAnchors: issuanceConfig.federation.trustAnchors,
+                      cacheTtlSeconds:
+                          issuanceConfig.federation.cacheTtlSeconds,
+                      enforceSigningPolicy:
+                          issuanceConfig.federation.enforceSigningPolicy,
+                  } as FederationTrustSource)
+                : undefined;
+
+        await this.assertFederationTrustForUpstreamIssuer(
+            issuer,
+            federationTrustSource,
+        );
+
         const cached &#x3D; this.discoveryCache.get(issuer);
         if (cached &amp;&amp; cached.expiresAt &gt; Date.now()) {
             return cached.doc;
@@ -692,6 +719,32 @@ export class ChainedAsService {
             );
             throw new BadRequestException(
                 &quot;Failed to fetch upstream OIDC configuration&quot;,
+            );
+        }
+    }
+
+    private async assertFederationTrustForUpstreamIssuer(
+        upstreamIssuer: string,
+        federationTrustSource?: FederationTrustSource,
+    ): Promise&lt;void&gt; {
+        if (!federationTrustSource) {
+            return;
+        }
+
+        const mode &#x3D; this.federationTrustService.getMode(federationTrustSource);
+        if (mode &#x3D;&#x3D;&#x3D; &quot;lote-only&quot;) {
+            return;
+        }
+
+        const trustEvaluation &#x3D;
+            await this.federationTrustService.evaluateAuthorizationServerTrust(
+                upstreamIssuer,
+                federationTrustSource,
+            );
+
+        if (!trustEvaluation.trusted) {
+            throw new BadRequestException(
+                &#x60;Upstream issuer is not trusted by OpenID Federation policy: ${trustEvaluation.reason}&#x60;,
             );
         }
     }
@@ -851,6 +904,7 @@ export class ChainedAsService {
 
         // Fetch upstream discovery
         const discovery &#x3D; await this.getUpstreamDiscovery(
+            tenantId,
             config.upstream.issuer,
         );
 
@@ -1032,6 +1086,7 @@ export class ChainedAsService {
             );
         }
         const discovery &#x3D; await this.getUpstreamDiscovery(
+            tenantId,
             config.upstream.issuer,
         );
         const callbackUrl &#x3D; &#x60;${this.getChainedAsBaseUrl(tenantId)}/callback&#x60;;

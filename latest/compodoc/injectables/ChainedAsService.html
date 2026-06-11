@@ -207,6 +207,11 @@ the upstream OIDC provider (e.g., Keycloak).</p>
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#assertFederationTrustForUpstreamIssuer" >assertFederationTrustForUpstreamIssuer</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
                                 <a href="#buildErrorRedirect" >buildErrorRedirect</a>
                             </li>
                             <li>
@@ -289,12 +294,12 @@ the upstream OIDC provider (e.g., Keycloak).</p>
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(configService: ConfigService, httpService: HttpService, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>, sessionService: <a href="../injectables/SessionService.html" target="_self">SessionService</a>, issuanceService: <a href="../injectables/IssuanceService.html" target="_self">IssuanceService</a>, walletAttestationService: <a href="../injectables/WalletAttestationService.html" target="_self">WalletAttestationService</a>, traceService: TraceService, sessionRepository: Repository<ChainedAsSessionEntity>)</code>
+<code>constructor(configService: ConfigService, httpService: HttpService, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>, sessionService: <a href="../injectables/SessionService.html" target="_self">SessionService</a>, issuanceService: <a href="../injectables/IssuanceService.html" target="_self">IssuanceService</a>, federationTrustService: <a href="../injectables/FederationTrustService.html" target="_self">FederationTrustService</a>, walletAttestationService: <a href="../injectables/WalletAttestationService.html" target="_self">WalletAttestationService</a>, traceService: TraceService, sessionRepository: Repository<ChainedAsSessionEntity>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="104" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:104</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="106" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:106</a></div>
                             </td>
                         </tr>
 
@@ -372,6 +377,18 @@ the upstream OIDC provider (e.g., Keycloak).</p>
                                                     
                                                 </tr>
                                                 <tr>
+                                                        <td>federationTrustService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/FederationTrustService.html" target="_self" >FederationTrustService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
                                                         <td>walletAttestationService</td>
                                                   
                                                         <td>
@@ -425,6 +442,88 @@ the upstream OIDC provider (e.g., Keycloak).</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="assertFederationTrustForUpstreamIssuer"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>assertFederationTrustForUpstreamIssuer</b></span>
+                        <a href="#assertFederationTrustForUpstreamIssuer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>assertFederationTrustForUpstreamIssuer(upstreamIssuer: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, federationTrustSource?: <a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self">FederationTrustSource</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="206"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:206</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>upstreamIssuer</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>federationTrustSource</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self" >FederationTrustSource</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="buildErrorRedirect"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -443,8 +542,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="376"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:376</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="430"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:430</a></div>
                         </td>
                     </tr>
 
@@ -550,8 +649,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="586"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:586</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="641"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:641</a></div>
                         </td>
                     </tr>
 
@@ -669,8 +768,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="864"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:864</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="919"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:919</a></div>
                         </td>
                     </tr>
 
@@ -711,8 +810,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="422"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:422</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="476"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:476</a></div>
                         </td>
                     </tr>
 
@@ -830,8 +929,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="121"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:121</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="124"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:124</a></div>
                         </td>
                     </tr>
 
@@ -901,8 +1000,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="130"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:130</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:133</a></div>
                         </td>
                     </tr>
 
@@ -972,8 +1071,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="795"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:795</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="850"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:850</a></div>
                         </td>
                     </tr>
 
@@ -1043,8 +1142,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="825"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:825</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="880"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:880</a></div>
                         </td>
                     </tr>
 
@@ -1107,15 +1206,15 @@ the upstream OIDC provider (e.g., Keycloak).</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getUpstreamDiscovery(issuer: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>getUpstreamDiscovery(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, issuer: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="147"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:147</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="150"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:150</a></div>
                         </td>
                     </tr>
 
@@ -1138,6 +1237,18 @@ Results are cached for 5 minutes.</p>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
                                         <tr>
                                                 <td>issuer</td>
                                             <td>
@@ -1186,8 +1297,8 @@ Results are cached for 5 minutes.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="878"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:878</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="933"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:933</a></div>
                         </td>
                     </tr>
 
@@ -1264,8 +1375,8 @@ Used to retrieve the upstream OIDC provider&#39;s claims for webhook calls.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="279"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:279</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="332"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:332</a></div>
                         </td>
                     </tr>
 
@@ -1360,8 +1471,8 @@ Validates the request_uri and redirects to the upstream OIDC provider.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="183"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:183</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="236"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:236</a></div>
                         </td>
                     </tr>
 
@@ -1468,8 +1579,8 @@ Creates a session and returns a request_uri for the authorize endpoint.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="627"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:627</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="682"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:682</a></div>
                         </td>
                     </tr>
 
@@ -1564,8 +1675,8 @@ Exchanges the authorization code for an access token.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="472"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:472</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="526"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:526</a></div>
                         </td>
                     </tr>
 
@@ -1685,8 +1796,8 @@ Exchanges the code for tokens and redirects back to the wallet.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="396"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:396</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="450"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:450</a></div>
                         </td>
                     </tr>
 
@@ -1792,8 +1903,8 @@ Exchanges the code for tokens and redirects back to the wallet.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="564"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:564</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="619"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:619</a></div>
                         </td>
                     </tr>
 
@@ -1885,7 +1996,7 @@ Exchanges the code for tokens and redirects back to the wallet.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="104" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:104</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="106" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:106</a></div>
                         </td>
                     </tr>
 
@@ -1927,7 +2038,7 @@ Exchanges the code for tokens and redirects back to the wallet.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:92</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="94" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:94</a></div>
                         </td>
                     </tr>
 
@@ -1966,7 +2077,7 @@ Exchanges the code for tokens and redirects back to the wallet.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="89" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:89</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="91" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:91</a></div>
                         </td>
                     </tr>
 
@@ -1999,7 +2110,7 @@ Exchanges the code for tokens and redirects back to the wallet.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="98" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:98</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="100" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:100</a></div>
                         </td>
                     </tr>
 
@@ -2038,7 +2149,7 @@ Exchanges the code for tokens and redirects back to the wallet.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="101" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:101</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="103" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:103</a></div>
                         </td>
                     </tr>
 
@@ -2075,6 +2186,8 @@ import { LessThan, Repository } from &quot;typeorm&quot;;
 import { v4 } from &quot;uuid&quot;;
 import { KeyChainService } from &quot;../../../../crypto/key/key-chain.service&quot;;
 import { SessionService } from &quot;../../../../session/session.service&quot;;
+import { FederationTrustService } from &quot;../../../../shared/trust/federation-trust.service&quot;;
+import { FederationTrustSource } from &quot;../../../../shared/trust/types&quot;;
 import { WalletAttestationService } from &quot;../../../../shared/trust/wallet-attestation.service&quot;;
 import { AuthorizationIdentity } from &quot;../../../configuration/credentials/dto/authorization-identity&quot;;
 import type { ChainedAsConfig } from &quot;../../../configuration/issuance/dto/chained-as-config.dto&quot;;
@@ -2168,6 +2281,7 @@ export class ChainedAsService {
         private readonly keyChainService: KeyChainService,
         private readonly sessionService: SessionService,
         private readonly issuanceService: IssuanceService,
+        private readonly federationTrustService: FederationTrustService,
         private readonly walletAttestationService: WalletAttestationService,
         private readonly traceService: TraceService,
         @InjectRepository(ChainedAsSessionEntity)
@@ -2203,7 +2317,31 @@ export class ChainedAsService {
      * Fetch the OIDC discovery document from an upstream provider.
      * Results are cached for 5 minutes.
      */
-    async getUpstreamDiscovery(issuer: string): Promise&lt;OidcDiscoveryDocument&gt; {
+    async getUpstreamDiscovery(
+        tenantId: string,
+        issuer: string,
+    ): Promise&lt;OidcDiscoveryDocument&gt; {
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const federationTrustSource &#x3D;
+            issuanceConfig.federation &amp;&amp;
+            issuanceConfig.federation.trustAnchors?.length
+                ? ({
+                      mode: issuanceConfig.federation.mode,
+                      entityId: issuanceConfig.federation.entityId,
+                      trustAnchors: issuanceConfig.federation.trustAnchors,
+                      cacheTtlSeconds:
+                          issuanceConfig.federation.cacheTtlSeconds,
+                      enforceSigningPolicy:
+                          issuanceConfig.federation.enforceSigningPolicy,
+                  } as FederationTrustSource)
+                : undefined;
+
+        await this.assertFederationTrustForUpstreamIssuer(
+            issuer,
+            federationTrustSource,
+        );
+
         const cached &#x3D; this.discoveryCache.get(issuer);
         if (cached &amp;&amp; cached.expiresAt &gt; Date.now()) {
             return cached.doc;
@@ -2231,6 +2369,32 @@ export class ChainedAsService {
             );
             throw new BadRequestException(
                 &quot;Failed to fetch upstream OIDC configuration&quot;,
+            );
+        }
+    }
+
+    private async assertFederationTrustForUpstreamIssuer(
+        upstreamIssuer: string,
+        federationTrustSource?: FederationTrustSource,
+    ): Promise&lt;void&gt; {
+        if (!federationTrustSource) {
+            return;
+        }
+
+        const mode &#x3D; this.federationTrustService.getMode(federationTrustSource);
+        if (mode &#x3D;&#x3D;&#x3D; &quot;lote-only&quot;) {
+            return;
+        }
+
+        const trustEvaluation &#x3D;
+            await this.federationTrustService.evaluateAuthorizationServerTrust(
+                upstreamIssuer,
+                federationTrustSource,
+            );
+
+        if (!trustEvaluation.trusted) {
+            throw new BadRequestException(
+                &#x60;Upstream issuer is not trusted by OpenID Federation policy: ${trustEvaluation.reason}&#x60;,
             );
         }
     }
@@ -2390,6 +2554,7 @@ export class ChainedAsService {
 
         // Fetch upstream discovery
         const discovery &#x3D; await this.getUpstreamDiscovery(
+            tenantId,
             config.upstream.issuer,
         );
 
@@ -2571,6 +2736,7 @@ export class ChainedAsService {
             );
         }
         const discovery &#x3D; await this.getUpstreamDiscovery(
+            tenantId,
             config.upstream.issuer,
         );
         const callbackUrl &#x3D; &#x60;${this.getChainedAsBaseUrl(tenantId)}/callback&#x60;;

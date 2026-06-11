@@ -351,96 +351,18 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { existsSync, readFileSync, writeFileSync } from &quot;node:fs&quot;;
-import { RequestMethod, ValidationPipe } from &quot;@nestjs/common&quot;;
+import { ValidationPipe } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
 import { NestFactory } from &quot;@nestjs/core&quot;;
 import { NestExpressApplication } from &quot;@nestjs/platform-express&quot;;
-import {
-    DocumentBuilder,
-    type OpenAPIObject,
-    SwaggerModule,
-} from &quot;@nestjs/swagger&quot;;
+import { DocumentBuilder, SwaggerModule } from &quot;@nestjs/swagger&quot;;
 import { Logger } from &quot;nestjs-pino&quot;;
 import { cleanupOpenApiDoc } from &quot;nestjs-zod&quot;;
 import { AllExceptionsFilter } from &quot;./all-exceptions.filter&quot;;
 import { AppModule } from &quot;./app.module&quot;;
+import { filterOpenApiPaths, GLOBAL_PREFIX_EXCLUSIONS } from &quot;./main.helpers&quot;;
 import { ValidationErrorFilter } from &quot;./shared/common/filters/validation-error.filter&quot;;
-import otelSDK from &quot;./tracing&quot;;
-
-/**
- * Routes excluded from the automatic &#x60;/api&#x60; global prefix.
- * Wallet-facing and infrastructure endpoints stay at the root path for protocol
- * compliance and discoverability. The integrated OAuth2 token endpoint is
- * already mounted under &#x60;/api&#x60; so firewalls can treat it as part of the admin
- * surface without receiving a duplicate &#x60;/api/api&#x60; prefix.
- */
-const GLOBAL_PREFIX_EXCLUSIONS: { path: string; method: RequestMethod }[] &#x3D; [
-    // Infrastructure
-    { path: &quot;/&quot;, method: RequestMethod.GET },
-    { path: &quot;health&quot;, method: RequestMethod.ALL },
-    // Admin authentication
-    { path: &quot;api/oauth2/{*path}&quot;, method: RequestMethod.ALL },
-    // Discovery
-    { path: &quot;.well-known/{*path}&quot;, method: RequestMethod.ALL },
-    // OID4VCI Protocol
-    { path: &quot;issuers/:tenantId/vci/{*path}&quot;, method: RequestMethod.ALL },
-    { path: &quot;issuers/:tenantId/authorize&quot;, method: RequestMethod.ALL },
-    { path: &quot;issuers/:tenantId/authorize/{*path}&quot;, method: RequestMethod.ALL },
-    {
-        path: &quot;issuers/:tenantId/credentials-metadata/{*path}&quot;,
-        method: RequestMethod.ALL,
-    },
-    { path: &quot;issuers/:tenantId/chained-as/{*path}&quot;, method: RequestMethod.ALL },
-    // OID4VP Protocol
-    { path: &quot;presentations/:sessionId/oid4vp&quot;, method: RequestMethod.ALL },
-    {
-        path: &quot;presentations/:sessionId/oid4vp/{*path}&quot;,
-        method: RequestMethod.ALL,
-    },
-    // Public Status &amp; Trust Lists
-    {
-        path: &quot;issuers/:tenantId/status-management/{*path}&quot;,
-        method: RequestMethod.ALL,
-    },
-    { path: &quot;issuers/:tenantId/trust-list/{*path}&quot;, method: RequestMethod.ALL },
-    // Public Storage (credential images, logos)
-    { path: &quot;storage/:key&quot;, method: RequestMethod.GET },
-];
-
-/**
- * Filter an OpenAPI document to only include paths matching (or not matching)
- * a given prefix. Also prunes the tag list to only include used tags.
- */
-function filterOpenApiPaths(
-    document: OpenAPIObject,
-    predicate: (path: string) &#x3D;&gt; boolean,
-): OpenAPIObject {
-    const filteredPaths: OpenAPIObject[&quot;paths&quot;] &#x3D; {};
-    const usedTags &#x3D; new Set&lt;string&gt;();
-
-    for (const [path, pathItem] of Object.entries(document.paths)) {
-        if (predicate(path)) {
-            filteredPaths[path] &#x3D; pathItem;
-            for (const operation of Object.values(
-                pathItem as Record&lt;string, any&gt;,
-            )) {
-                if (operation?.tags) {
-                    for (const tag of operation.tags) {
-                        usedTags.add(tag);
-                    }
-                }
-            }
-        }
-    }
-
-    return {
-        ...document,
-        paths: filteredPaths,
-        tags: document.tags?.filter((tag: { name: string }) &#x3D;&gt;
-            usedTags.has(tag.name),
-        ),
-    };
-}
+import { NextFunction, Request, Response } from &quot;express&quot;;
 
 /**
  * TLS configuration options for HTTPS server.
@@ -512,7 +434,11 @@ function loadTlsOptions(): TlsOptions | undefined {
 async function bootstrap() {
     // Start OpenTelemetry SDK before NestJS initializes —
     // instrumentations must be registered before any framework code runs.
-    await otelSDK.start();
+    // During DOC_GENERATE we skip OTel bootstrap entirely.
+    if (!process.env.DOC_GENERATE) {
+        const { default: otelSDK } &#x3D; await import(&quot;./tracing&quot;);
+        await otelSDK.start();
+    }
 
     // Load TLS options if configured
     const tlsOptions &#x3D; loadTlsOptions();
@@ -672,15 +598,18 @@ async function bootstrap() {
 
         // Cache-control headers for Swagger UI assets
         for (const swaggerPath of [&quot;/api/docs&quot;, &quot;/docs&quot;]) {
-            app.use(swaggerPath, (_req, res, next) &#x3D;&gt; {
-                res.setHeader(
-                    &quot;Cache-Control&quot;,
-                    &quot;no-cache, no-store, must-revalidate&quot;,
-                );
-                res.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);
-                res.setHeader(&quot;Expires&quot;, &quot;0&quot;);
-                next();
-            });
+            app.use(
+                swaggerPath,
+                (_req: Request, res: Response, next: NextFunction) &#x3D;&gt; {
+                    res.setHeader(
+                        &quot;Cache-Control&quot;,
+                        &quot;no-cache, no-store, must-revalidate&quot;,
+                    );
+                    res.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);
+                    res.setHeader(&quot;Expires&quot;, &quot;0&quot;);
+                    next();
+                },
+            );
         }
 
         SwaggerModule.setup(&quot;/api/docs&quot;, app, managementDocFactory, {

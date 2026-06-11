@@ -207,7 +207,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="255" class="link-to-prism">src/issuer/issuance/oid4vci/dto/offer-request.dto.ts:255</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="253" class="link-to-prism">src/issuer/issuance/oid4vci/dto/offer-request.dto.ts:253</a></div>
                         </td>
                     </tr>
 
@@ -239,7 +239,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="256" class="link-to-prism">src/issuer/issuance/oid4vci/dto/offer-request.dto.ts:256</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="254" class="link-to-prism">src/issuer/issuance/oid4vci/dto/offer-request.dto.ts:254</a></div>
                         </td>
                     </tr>
 
@@ -265,7 +265,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="253" class="link-to-prism">src/issuer/issuance/oid4vci/dto/offer-request.dto.ts:253</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="251" class="link-to-prism">src/issuer/issuance/oid4vci/dto/offer-request.dto.ts:251</a></div>
                         </td>
                     </tr>
 
@@ -310,7 +310,7 @@ export enum FlowType {
 /**
  * Inline claims source - claims provided directly in the request.
  */
-export class InlineClaimsSource {
+class InlineClaimsSource {
     @IsIn([&quot;inline&quot;])
     type!: &quot;inline&quot;;
 
@@ -321,7 +321,7 @@ export class InlineClaimsSource {
 /**
  * Attribute provider claims source - claims fetched dynamically via a configured attribute provider.
  */
-export class AttributeProviderClaimsSource {
+class AttributeProviderClaimsSource {
     @IsIn([&quot;attributeProvider&quot;])
     type!: &quot;attributeProvider&quot;;
 
@@ -332,7 +332,7 @@ export class AttributeProviderClaimsSource {
 /**
  * Webhook claims source - claims fetched dynamically via an inline webhook configuration.
  */
-export class WebhookClaimsSource {
+class WebhookClaimsSource {
     @IsIn([&quot;webhook&quot;])
     type!: &quot;webhook&quot;;
 
@@ -353,7 +353,7 @@ export type ClaimsSource &#x3D;
  * Custom validator to ensure credentialClaims keys are subset of credentialConfigurationIds
  */
 @ValidatorConstraint({ name: &quot;credentialClaimsMatchIds&quot;, async: false })
-export class CredentialClaimsMatchIdsConstraint
+class CredentialClaimsMatchIdsConstraint
     implements ValidatorConstraintInterface
 {
     validate(
@@ -448,51 +448,49 @@ export class OfferRequestDto {
         description:
             &quot;Credential claims configuration per credential. Keys must match credentialConfigurationIds.&quot;,
         type: &quot;object&quot;,
-        properties: {
-            additionalProperties: {
-                oneOf: [
-                    {
-                        type: &quot;object&quot;,
-                        properties: {
-                            type: { type: &quot;string&quot;, enum: [&quot;inline&quot;] },
-                            claims: {
-                                type: &quot;object&quot;,
-                                additionalProperties: true,
-                            },
+        additionalProperties: {
+            oneOf: [
+                {
+                    type: &quot;object&quot;,
+                    properties: {
+                        type: { type: &quot;string&quot;, enum: [&quot;inline&quot;] },
+                        claims: {
+                            type: &quot;object&quot;,
+                            additionalProperties: true,
                         },
-                        required: [&quot;type&quot;, &quot;claims&quot;],
                     },
-                    {
-                        type: &quot;object&quot;,
-                        properties: {
-                            type: {
-                                type: &quot;string&quot;,
-                                enum: [&quot;attributeProvider&quot;],
-                            },
-                            attributeProviderId: { type: &quot;string&quot; },
+                    required: [&quot;type&quot;, &quot;claims&quot;],
+                },
+                {
+                    type: &quot;object&quot;,
+                    properties: {
+                        type: {
+                            type: &quot;string&quot;,
+                            enum: [&quot;attributeProvider&quot;],
                         },
-                        required: [&quot;type&quot;, &quot;attributeProviderId&quot;],
+                        attributeProviderId: { type: &quot;string&quot; },
                     },
-                    {
-                        type: &quot;object&quot;,
-                        properties: {
-                            type: {
-                                type: &quot;string&quot;,
-                                enum: [&quot;webhook&quot;],
-                            },
-                            webhook: {
-                                type: &quot;object&quot;,
-                                properties: {
-                                    url: { type: &quot;string&quot; },
-                                    auth: { type: &quot;object&quot; },
-                                },
-                                required: [&quot;url&quot;],
-                            },
+                    required: [&quot;type&quot;, &quot;attributeProviderId&quot;],
+                },
+                {
+                    type: &quot;object&quot;,
+                    properties: {
+                        type: {
+                            type: &quot;string&quot;,
+                            enum: [&quot;webhook&quot;],
                         },
-                        required: [&quot;type&quot;, &quot;webhook&quot;],
+                        webhook: {
+                            type: &quot;object&quot;,
+                            properties: {
+                                url: { type: &quot;string&quot; },
+                                auth: { type: &quot;object&quot; },
+                            },
+                            required: [&quot;url&quot;],
+                        },
                     },
-                ],
-            },
+                    required: [&quot;type&quot;, &quot;webhook&quot;],
+                },
+            ],
         },
         example: {
             citizen: {

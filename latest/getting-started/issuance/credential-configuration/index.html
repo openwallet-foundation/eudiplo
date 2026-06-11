@@ -6,7 +6,7 @@
       
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../credential-offers/">
       
       
         <link rel="next" href="../attribute-provider/">
@@ -719,6 +719,8 @@
       
         
       
+        
+      
     
     
     
@@ -771,6 +773,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credential-offers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Credential Offers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -890,22 +920,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#fetching-claims" class="md-nav__link">
+  <a href="#configuring-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fetching Claims
+        Configuring Fields
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Fetching Claims">
+    <nav class="md-nav" aria-label="Configuring Fields">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#static-claims" class="md-nav__link">
+  <a href="#static-defaults-via-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Static Claims
+        Static Defaults via fields[]
       
     </span>
   </a>
@@ -913,10 +943,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#claims-webhook" class="md-nav__link">
+  <a href="#attribute-provider" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Claims Webhook
+        Attribute Provider
       
     </span>
   </a>
@@ -929,10 +959,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#notification-webhook" class="md-nav__link">
+  <a href="#notification-webhook-endpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notification Webhook
+        Notification Webhook Endpoint
       
     </span>
   </a>
@@ -1468,6 +1498,8 @@
       
         
       
+        
+      
     
     
     
@@ -1522,6 +1554,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../presentation/presentation-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentation Requests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1941,6 +2001,8 @@
       
         
       
+        
+      
     
     
     
@@ -1995,6 +2057,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../migration/4.x-to-5.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.x to 5.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -2278,6 +2368,8 @@
       
         
       
+        
+      
     
     
     
@@ -2396,6 +2488,34 @@
     
   
     Interactive Authorization (IAE)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/federation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenID Federation
   
 
     
@@ -3123,22 +3243,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#fetching-claims" class="md-nav__link">
+  <a href="#configuring-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Fetching Claims
+        Configuring Fields
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Fetching Claims">
+    <nav class="md-nav" aria-label="Configuring Fields">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#static-claims" class="md-nav__link">
+  <a href="#static-defaults-via-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Static Claims
+        Static Defaults via fields[]
       
     </span>
   </a>
@@ -3146,10 +3266,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#claims-webhook" class="md-nav__link">
+  <a href="#attribute-provider" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Claims Webhook
+        Attribute Provider
       
     </span>
   </a>
@@ -3162,10 +3282,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#notification-webhook" class="md-nav__link">
+  <a href="#notification-webhook-endpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Notification Webhook
+        Notification Webhook Endpoint
       
     </span>
   </a>
@@ -3692,11 +3812,11 @@
 
 
 <h1 id="credential-configuration">Credential Configuration<a class="headerlink" href="#credential-configuration" title="Permanent link">¶</a></h1>
-<p>Credential configurations define the structure and properties of individual
-credentials. Each credential type has its own configuration file.</p>
+<p>Credential configurations define the structure and behavior of individual
+credentials. Each credential type has its own configuration.</p>
 <hr>
 <h2 id="basic-structure">Basic Structure<a class="headerlink" href="#basic-structure" title="Permanent link">¶</a></h2>
-<p>Each credential configuration is a JSON object that defines how a specific credential type should be issued. The configuration includes metadata, display information, claims, and various optional features like key binding and status management.</p>
+<p>Each credential configuration is a JSON object that defines how a specific credential type should be issued. The configuration includes metadata, display information, field definitions (<code>fields[]</code>), and optional features like key binding and status management.</p>
 <p>For a complete configuration example, see the <a href="#complete-configuration-example">Complete Configuration Example</a> section at the bottom of this page.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
@@ -3724,10 +3844,11 @@ credentials. Each credential type has its own configuration file.</p>
 <h3 id="optional-fields">Optional Fields<a class="headerlink" href="#optional-fields" title="Permanent link">¶</a></h3>
 <ul>
 <li><code>description</code>: <strong>OPTIONAL</strong> - Human-readable description of the credential. Will not be displayed to the end user.</li>
+<li><code>configVersion</code>: <strong>OPTIONAL</strong> - Configuration format version. Use <code>2</code> for the field format.</li>
 <li><code>vct</code>: <strong>OPTIONAL</strong> -
   <a href="https://www.ietf.org/archive/id/draft-ietf-oauth-sd-jwt-vc-09.html#name-sd-jwt-vc-type-metadata">VC Type Metadata</a>
   provided via the <code>/{tenantId}/credentials-metadata/vct/{id}</code> endpoint. This link will
-  automatically added into the credential.</li>
+  be automatically added to the credential.</li>
 <li><code>keyChainId</code>: <strong>OPTIONAL</strong> - Unique identifier for the key chain used to sign the credential. If not provided, the key chain with <code>attestation</code> usage type will be used. See <a href="#signing-key-chain">Signing Key Chain</a> for details.</li>
 <li><code>lifeTime</code>: <strong>OPTIONAL</strong> - Credential expiration time in seconds. If
   specified, credentials will include an <code>exp</code> claim calculated as
@@ -3738,15 +3859,16 @@ credentials. Each credential type has its own configuration file.</p>
 <li><code>keyBinding</code>: <strong>OPTIONAL</strong> - Enable cryptographic key binding. When <code>true</code>,
   credentials include a <code>cnf</code> claim with the holder's public key and require
   proof of possession. See <a href="#cryptographic-key-binding">Cryptographic Key Binding</a> for details.</li>
-<li><code>claims</code>: <strong>OPTIONAL</strong> - Static claims to include in the credential. Can be
-  overridden by webhook responses or claims passed during credential offer.</li>
+<li><code>fields</code>: <strong>REQUIRED for v2</strong> - Field definitions (<code>ClaimFieldDefinition[]</code>) that describe claim paths, data types, defaults, disclosure behavior, and optional display labels.</li>
 <li><code>attributeProviderId</code>: <strong>OPTIONAL</strong> - Reference to an Attribute Provider that fetches claims dynamically. See <a href="../attribute-provider/">Attribute Providers</a> for details.</li>
-<li><code>webhookEndpointId</code>: <strong>OPTIONAL</strong> - Reference to a Webhook Endpoint for receiving notifications about the issuance process. See <a href="#notification-webhook">Notification Webhook</a> for details.</li>
-<li><code>disclosureFrame</code>: <strong>OPTIONAL</strong> - Defines which claims should be selectively
-  disclosable in SD-JWT format.</li>
+<li><code>webhookEndpointId</code>: <strong>OPTIONAL</strong> - Reference to a Webhook Endpoint for receiving notifications about the issuance process. See <a href="#notification-webhook-endpoint">Notification Webhook Endpoint</a> for details.</li>
+<li><code>sdJwtTrustFormat</code>: <strong>OPTIONAL (SD-JWT only)</strong> - Controls trust signaling in issued SD-JWT credentials:<ul>
+<li><code>x5c</code> (default): include the X.509 chain in the JWT header</li>
+<li><code>federation</code>: use federation issuer identity (<code>iss</code>) for trust resolution</li>
+</ul>
+</li>
 <li><code>embeddedDisclosurePolicy</code>: <strong>OPTIONAL</strong> - Defines the embedded disclosure policy for the credential. See <a href="#embedded-disclosure-policy">Embedded Disclosure Policy</a> for details.</li>
 <li><code>iaeActions</code>: <strong>OPTIONAL</strong> - Sequence of Interactive Authorization actions required before credential issuance. See <a href="#interactive-authorization-actions">Interactive Authorization Actions</a> for details.</li>
-<li><code>schema</code>: <strong>OPTIONAL</strong> - JSON schema for validating the credential claims.</li>
 </ul>
 <div class="admonition info">
 <p class="admonition-title">Schema Metadata is managed separately</p>
@@ -3755,57 +3877,57 @@ the Credential Configuration editor. Use <a href="../schema-metadata/">Schema Me
 to create and version schema metadata entries.</p>
 </div>
 <hr>
-<h2 id="fetching-claims">Fetching Claims<a class="headerlink" href="#fetching-claims" title="Permanent link">¶</a></h2>
-<p>Claims define the data that will be included in the credential. This section covers how to configure claims at the credential configuration level.</p>
+<h2 id="configuring-fields">Configuring Fields<a class="headerlink" href="#configuring-fields" title="Permanent link">¶</a></h2>
+<p>In v2, claim content is configured through <code>fields[]</code>. Each entry describes a single claim path (or object/array node), with type information and optional defaults.</p>
 <div class="admonition info">
 <p class="admonition-title">Claims Priority System</p>
-<p>EUDIPLO supports multiple ways to provide claims (configuration-level and offer-level), with a priority system that determines which claims are used. For a complete explanation of the claims priority order and when to use each method, see <a href="../#passing-claims">Passing Claims</a> in the Issuance Overview.</p>
+<p>EUDIPLO supports multiple ways to provide claims (configuration-level and offer-level), with a priority system that determines which claims are used. For a complete explanation of the claims priority order and when to use each method, see <a href="../credential-offers/#passing-claims">Credential Offers</a>.</p>
 </div>
-<h3 id="static-claims">Static Claims<a class="headerlink" href="#static-claims" title="Permanent link">¶</a></h3>
-<p>You can specify static claims directly in the credential configuration. These claims will be used as defaults for every credential issued using this configuration:</p>
+<h3 id="static-defaults-via-fields">Static Defaults via <code>fields[]</code><a class="headerlink" href="#static-defaults-via-fields" title="Permanent link">¶</a></h3>
+<p>You can define defaults directly in each field using <code>defaultValue</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">"claims"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">        </span><span class="nt">"issuing_country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE"</span><span class="p">,</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span><span class="nt">"issuing_authority"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE"</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERIKA"</span><span class="p">,</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MUSTERMANN"</span><span class="p">,</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="nt">"birth_family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GABLER"</span><span class="p">,</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="nt">"birthdate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1964-08-12"</span><span class="p">,</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="nt">"age_birth_year"</span><span class="p">:</span><span class="w"> </span><span class="mi">1964</span><span class="p">,</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="nt">"age_in_years"</span><span class="p">:</span><span class="w"> </span><span class="mi">59</span><span class="p">,</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="nt">"age_equal_or_over"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">            </span><span class="nt">"12"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">            </span><span class="nt">"14"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">            </span><span class="nt">"16"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">            </span><span class="nt">"18"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">            </span><span class="nt">"21"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">            </span><span class="nt">"65"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">        </span><span class="nt">"place_of_birth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">            </span><span class="nt">"locality"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BERLIN"</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">"configVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">],</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERIKA"</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">            </span><span class="nt">"mandatory"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">            </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">            </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="p">,</span><span class="w"> </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Given Name"</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">                </span><span class="p">{</span><span class="w"> </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"de-DE"</span><span class="p">,</span><span class="w"> </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Vorname"</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">            </span><span class="p">]</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"family_name"</span><span class="p">],</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MUSTERMANN"</span><span class="p">,</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">            </span><span class="nt">"mandatory"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">            </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">        </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">            </span><span class="nt">"locality"</span><span class="p">:</span><span class="w"> </span><span class="s2">"KÖLN"</span><span class="p">,</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">            </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51147"</span><span class="p">,</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">            </span><span class="nt">"street_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HEIDESTRAẞE 17"</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">        </span><span class="nt">"nationalities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"DE"</span><span class="p">]</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"address"</span><span class="p">,</span><span class="w"> </span><span class="s2">"postal_code"</span><span class="p">],</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51147"</span><span class="p">,</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">            </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">    </span><span class="p">]</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="p">}</span>
 </code></pre></div>
-<p>Static claims are useful for:</p>
+<p>Static field defaults are useful for:</p>
 <ul>
 <li>Default values for all credentials of this type</li>
 <li>Fixed metadata (e.g., issuing country, issuing authority)</li>
 <li>Development and testing scenarios</li>
 </ul>
-<h3 id="claims-webhook">Claims Webhook<a class="headerlink" href="#claims-webhook" title="Permanent link">¶</a></h3>
-<p>For dynamic claim retrieval, you can configure an Attribute Provider that will be called during the issuance process to fetch claims:</p>
+<h3 id="attribute-provider">Attribute Provider<a class="headerlink" href="#attribute-provider" title="Permanent link">¶</a></h3>
+<p>For dynamic claim retrieval, configure an Attribute Provider that is called during issuance:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">"attributeProviderId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-claims-provider"</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">}</span>
 </code></pre></div>
-<p>The Attribute Provider endpoint will receive information about the issuance session and must return the claims to be included in the credential.</p>
+<p>The Attribute Provider endpoint receives issuance context and returns claim values.</p>
 <p>Attribute Providers are useful when:</p>
 <ul>
 <li>Claims need to be fetched from an external system or database</li>
@@ -3814,54 +3936,47 @@ to create and version schema metadata entries.</p>
 </ul>
 <p>For detailed information about creating Attribute Providers, request/response formats, and implementation examples, see <a href="../attribute-provider/">Attribute Providers</a>.</p>
 <hr>
-<h2 id="notification-webhook">Notification Webhook<a class="headerlink" href="#notification-webhook" title="Permanent link">¶</a></h2>
+<h2 id="notification-webhook-endpoint">Notification Webhook Endpoint<a class="headerlink" href="#notification-webhook-endpoint" title="Permanent link">¶</a></h2>
 <p>You can configure a webhook endpoint to receive notifications about the issuance process. This allows you to track the status of credential issuance and take appropriate actions.</p>
 <p>Reference a pre-configured webhook endpoint by its ID:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">"webhookEndpointId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-notification-webhook"</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">}</span>
 </code></pre></div>
-<p>The notification webhook will be called at various stages of the issuance process, such as:</p>
+<p>The notification webhook endpoint will be called at various stages of the issuance process, such as:</p>
 <ul>
 <li>When a credential is successfully issued</li>
 <li>When an issuance request fails</li>
 <li>When a credential is accepted by the holder</li>
 </ul>
-<p>For more details about the webhook implementation and payload structure, see <a href="../../../architecture/webhooks/#notification-webhook">Notification Webhook</a>.</p>
+<p>For more details about the webhook implementation and payload structure, see <a href="../../../architecture/webhooks/#notification-webhook-endpoint">Notification Webhook Endpoint</a>.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
-<p>When a webhook endpoint is configured on credential config level, notifications will be sent to this endpoint instead of the one provided in the issuance config. It can also be overwritten via the credential offer.</p>
+<p>When a webhook endpoint is configured on credential config level, notifications are sent to this endpoint by default. It can be overridden per issuance by setting <code>webhookEndpointId</code> on the credential offer request.</p>
 </div>
 <hr>
 <h2 id="selective-disclosure">Selective Disclosure<a class="headerlink" href="#selective-disclosure" title="Permanent link">¶</a></h2>
-<p>Use the <code>disclosureFrame</code> to make specific claims selectively disclosable in
-<a href="https://www.rfc-editor.org/rfc/rfc9901.html">SD-JWT</a> format:</p>
+<p>In v2, selective disclosure for <a href="https://www.rfc-editor.org/rfc/rfc9901.html">SD-JWT</a> is defined per field using <code>disclosable</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">"disclosureFrame"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">        </span><span class="nt">"_sd"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">            </span><span class="s2">"issuing_country"</span><span class="p">,</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">            </span><span class="s2">"issuing_authority"</span><span class="p">,</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">            </span><span class="s2">"given_name"</span><span class="p">,</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">            </span><span class="s2">"family_name"</span><span class="p">,</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">            </span><span class="s2">"birth_family_name"</span><span class="p">,</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">            </span><span class="s2">"birthdate"</span><span class="p">,</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">            </span><span class="s2">"age_birth_year"</span><span class="p">,</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">            </span><span class="s2">"age_in_years"</span><span class="p">,</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">            </span><span class="s2">"age_equal_or_over"</span><span class="p">,</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">            </span><span class="s2">"place_of_birth"</span><span class="p">,</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">            </span><span class="s2">"address"</span><span class="p">,</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">            </span><span class="s2">"nationalities"</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">        </span><span class="p">],</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">        </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">            </span><span class="nt">"_sd"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"locality"</span><span class="p">,</span><span class="w"> </span><span class="s2">"postal_code"</span><span class="p">,</span><span class="w"> </span><span class="s2">"street_address"</span><span class="p">]</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="p">}</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">"configVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">],</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">            </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"birthdate"</span><span class="p">],</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">            </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="p">}</span>
 </code></pre></div>
 <p>This configuration allows:</p>
 <ul>
-<li>Individual disclosure of personal information fields</li>
-<li>Selective disclosure of address components</li>
+<li>Individual disclosure control per field</li>
+<li>Mixing disclosable and non-disclosable fields in one credential</li>
 <li>Holders can choose which claims to reveal during presentation</li>
 </ul>
 <hr>
@@ -3884,14 +3999,31 @@ to create and version schema metadata entries.</p>
 <a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">            </span><span class="p">}</span>
 <a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">        </span><span class="p">]</span>
 <a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span><span class="nt">"claims"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">        </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERIKA"</span><span class="p">,</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">        </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MUSTERMANN"</span><span class="p">,</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">        </span><span class="nt">"birth_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1964-08-12"</span><span class="p">,</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">        </span><span class="nt">"issuing_country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE"</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">    </span><span class="nt">"keyBinding"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="p">}</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span><span class="nt">"configVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">],</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERIKA"</span><span class="p">,</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">            </span><span class="nt">"mandatory"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">            </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.iso.18013.5.1"</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"family_name"</span><span class="p">],</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MUSTERMANN"</span><span class="p">,</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">            </span><span class="nt">"mandatory"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">            </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.iso.18013.5.1"</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"issuing_country"</span><span class="p">],</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE"</span><span class="p">,</span>
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">            </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.iso.18013.5.1"</span>
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="w">    </span><span class="p">],</span>
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="w">    </span><span class="nt">"keyBinding"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="mdoc-specific-fields">mDOC-Specific Fields<a class="headerlink" href="#mdoc-specific-fields" title="Permanent link">¶</a></h3>
 <table>
@@ -3911,33 +4043,45 @@ to create and version schema metadata entries.</p>
 <tr>
 <td><code>namespace</code></td>
 <td>No</td>
-<td>Default namespace for claims. If not provided, derived from <code>docType</code>. For mDL, this is typically <code>org.iso.18013.5.1</code></td>
+<td>Default namespace for fields. If not provided, derived from <code>docType</code>. For mDL, typically <code>org.iso.18013.5.1</code></td>
 </tr>
 <tr>
-<td><code>claimsByNamespace</code></td>
+<td><code>fields[].namespace</code></td>
 <td>No</td>
-<td>Alternative to <code>claims</code> - allows specifying claims across multiple namespaces</td>
+<td>Per-field namespace override. Use this when one credential includes claims from multiple namespaces.</td>
 </tr>
 </tbody>
 </table>
 <h3 id="multiple-namespaces">Multiple Namespaces<a class="headerlink" href="#multiple-namespaces" title="Permanent link">¶</a></h3>
-<p>For credentials that require claims from multiple namespaces, use <code>claimsByNamespace</code>:</p>
+<p>For credentials that require claims from multiple namespaces, set <code>namespace</code> per field:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="nt">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">        </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mso_mdoc"</span><span class="p">,</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">        </span><span class="nt">"docType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.iso.18013.5.1.mDL"</span><span class="p">,</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">        </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mDL"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">}]</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nt">"claimsByNamespace"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">        </span><span class="nt">"org.iso.18013.5.1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">            </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERIKA"</span><span class="p">,</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">            </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MUSTERMANN"</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">        </span><span class="nt">"org.iso.18013.5.1.aamva"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">            </span><span class="nt">"DHS_compliance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"F"</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="p">}</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="nt">"configVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="nt">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">        </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mso_mdoc"</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">        </span><span class="nt">"docType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.iso.18013.5.1.mDL"</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">        </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mDL"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">}]</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">],</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERIKA"</span><span class="p">,</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">            </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.iso.18013.5.1"</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"family_name"</span><span class="p">],</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MUSTERMANN"</span><span class="p">,</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">            </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.iso.18013.5.1"</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"DHS_compliance"</span><span class="p">],</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"F"</span><span class="p">,</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">            </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.iso.18013.5.1.aamva"</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="p">}</span>
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Key Binding Required</p>
@@ -3945,7 +4089,7 @@ to create and version schema metadata entries.</p>
 </div>
 <div class="admonition info">
 <p class="admonition-title">Selective Disclosure</p>
-<p>Unlike SD-JWT, mDOC credentials have built-in selective disclosure at the namespace and claim level. The <code>disclosureFrame</code> field is not used for mDOC format.</p>
+<p>Unlike SD-JWT, mDOC credentials have built-in selective disclosure at the namespace and claim level. The <code>fields[].disclosable</code> flag is ignored for mDOC format.</p>
 </div>
 <hr>
 <h2 id="display-configuration">Display Configuration<a class="headerlink" href="#display-configuration" title="Permanent link">¶</a></h2>
@@ -3972,7 +4116,7 @@ to create and version schema metadata entries.</p>
 <ul>
 <li><code>name</code>: Display name for the credential</li>
 <li><code>description</code>: Brief description of the credential</li>
-<li><code>locale</code>: Language/locale (e.g., "en-US", "de-DE")</li>
+<li><code>locale</code>: Language/locale (BCP 47, e.g., <code>en-US</code>, <code>de-DE</code>)</li>
 <li><code>background_color</code>: Background color (hex format)</li>
 <li><code>text_color</code>: Text color (hex format)</li>
 <li><code>logo</code>: Issuer logo configuration</li>
@@ -3984,7 +4128,13 @@ to create and version schema metadata entries.</p>
 </div>
 <hr>
 <h2 id="signing-key-chain">Signing Key Chain<a class="headerlink" href="#signing-key-chain" title="Permanent link">¶</a></h2>
-<p>The signing key chain is used to create the digital signature for the credential. It contains both the private key and its associated certificate. The certificate is included in the <code>x5c</code> field of the issued credential to allow verifiers to validate the signature.</p>
+<p>The signing key chain is used to create the digital signature for the credential. It contains both the private key and its associated certificate.</p>
+<p>For SD-JWT credentials, whether <code>x5c</code> is included is controlled by <code>sdJwtTrustFormat</code>:</p>
+<ul>
+<li><code>x5c</code> (default): certificate chain is embedded in the SD-JWT header</li>
+<li><code>federation</code>: trust signaling uses issuer federation identity (<code>iss</code>) instead of embedding <code>x5c</code></li>
+</ul>
+<p>In both modes, the selected signing key chain is still used for signing.</p>
 <p>If no key chain is specified, the default key chain with <code>attestation</code> usage type will be used.</p>
 <h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">¶</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
@@ -4119,11 +4269,20 @@ the <code>lifeTime</code> configuration option (specified in seconds).</p>
 <a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">        </span><span class="p">]</span>
 <a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span><span class="p">},</span>
 <a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span><span class="nt">"lifeTime"</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span><span class="p">,</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span><span class="nt">"claims"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">        </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERIKA"</span><span class="p">,</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">        </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MUSTERMANN"</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="p">}</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span><span class="nt">"configVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">],</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERIKA"</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"family_name"</span><span class="p">],</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MUSTERMANN"</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="how-it-works_2">How It Works<a class="headerlink" href="#how-it-works_2" title="Permanent link">¶</a></h3>
 <p>When <code>lifeTime</code> is specified:</p>
@@ -4346,297 +4505,14 @@ the <code>lifeTime</code> configuration option (specified in seconds).</p>
 <hr>
 <h2 id="complete-configuration-example">Complete Configuration Example<a class="headerlink" href="#complete-configuration-example" title="Permanent link">¶</a></h2>
 <p>Here's a complete example of a credential configuration (PID - Personal Identity Document) that demonstrates many of the available features:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pid"</span><span class="p">,</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Personal ID"</span><span class="p">,</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">    </span><span class="nt">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">        </span><span class="nt">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pid"</span><span class="p">,</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">        </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dc+sd-jwt"</span><span class="p">,</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">        </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">            </span><span class="p">{</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PID"</span><span class="p">,</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">                </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PID Credential"</span><span class="p">,</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">                </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="p">,</span>
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">                </span><span class="nt">"background_color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#FFFFFF"</span><span class="p">,</span>
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">                </span><span class="nt">"text_color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#000000"</span><span class="p">,</span>
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="w">                </span><span class="nt">"background_image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="w">                    </span><span class="nt">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"identity-card.jpg"</span>
-<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="w">                </span><span class="p">},</span>
-<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="w">                </span><span class="nt">"logo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="w">                    </span><span class="nt">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"logo.jpg"</span>
-<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="w">                </span><span class="p">}</span>
-<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a><span class="w">            </span><span class="p">}</span>
-<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="w">        </span><span class="p">],</span>
-<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a><span class="w">        </span><span class="nt">"claimsMetadata"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a><span class="w">            </span><span class="p">{</span>
-<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a><span class="w">                </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">],</span>
-<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a><span class="w">                </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Given Name"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Vorname"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"de-DE"</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a><span class="w">                </span><span class="p">]</span>
-<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a><span class="w">            </span><span class="p">{</span>
-<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a><span class="w">                </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"family_name"</span><span class="p">],</span>
-<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a><span class="w">                </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Family Name"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-16-34" name="__codelineno-16-34" href="#__codelineno-16-34"></a><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nachname"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"de-DE"</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-16-35" name="__codelineno-16-35" href="#__codelineno-16-35"></a><span class="w">                </span><span class="p">]</span>
-<a id="__codelineno-16-36" name="__codelineno-16-36" href="#__codelineno-16-36"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-37" name="__codelineno-16-37" href="#__codelineno-16-37"></a><span class="w">            </span><span class="p">{</span>
-<a id="__codelineno-16-38" name="__codelineno-16-38" href="#__codelineno-16-38"></a><span class="w">                </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"birthdate"</span><span class="p">],</span>
-<a id="__codelineno-16-39" name="__codelineno-16-39" href="#__codelineno-16-39"></a><span class="w">                </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-40" name="__codelineno-16-40" href="#__codelineno-16-40"></a><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Date of Birth"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-16-41" name="__codelineno-16-41" href="#__codelineno-16-41"></a><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Geburtsdatum"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"de-DE"</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-16-42" name="__codelineno-16-42" href="#__codelineno-16-42"></a><span class="w">                </span><span class="p">]</span>
-<a id="__codelineno-16-43" name="__codelineno-16-43" href="#__codelineno-16-43"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-44" name="__codelineno-16-44" href="#__codelineno-16-44"></a><span class="w">            </span><span class="p">{</span>
-<a id="__codelineno-16-45" name="__codelineno-16-45" href="#__codelineno-16-45"></a><span class="w">                </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"issuing_country"</span><span class="p">],</span>
-<a id="__codelineno-16-46" name="__codelineno-16-46" href="#__codelineno-16-46"></a><span class="w">                </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-47" name="__codelineno-16-47" href="#__codelineno-16-47"></a><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issuing Country"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-16-48" name="__codelineno-16-48" href="#__codelineno-16-48"></a><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ausstellungsland"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"de-DE"</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-16-49" name="__codelineno-16-49" href="#__codelineno-16-49"></a><span class="w">                </span><span class="p">]</span>
-<a id="__codelineno-16-50" name="__codelineno-16-50" href="#__codelineno-16-50"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-51" name="__codelineno-16-51" href="#__codelineno-16-51"></a><span class="w">            </span><span class="p">{</span>
-<a id="__codelineno-16-52" name="__codelineno-16-52" href="#__codelineno-16-52"></a><span class="w">                </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"nationalities"</span><span class="p">],</span>
-<a id="__codelineno-16-53" name="__codelineno-16-53" href="#__codelineno-16-53"></a><span class="w">                </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-54" name="__codelineno-16-54" href="#__codelineno-16-54"></a><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nationalities"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-16-55" name="__codelineno-16-55" href="#__codelineno-16-55"></a><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Staatsangehörigkeiten"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"de-DE"</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-16-56" name="__codelineno-16-56" href="#__codelineno-16-56"></a><span class="w">                </span><span class="p">]</span>
-<a id="__codelineno-16-57" name="__codelineno-16-57" href="#__codelineno-16-57"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-58" name="__codelineno-16-58" href="#__codelineno-16-58"></a><span class="w">            </span><span class="p">{</span>
-<a id="__codelineno-16-59" name="__codelineno-16-59" href="#__codelineno-16-59"></a><span class="w">                </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"address"</span><span class="p">,</span><span class="w"> </span><span class="s2">"locality"</span><span class="p">],</span>
-<a id="__codelineno-16-60" name="__codelineno-16-60" href="#__codelineno-16-60"></a><span class="w">                </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-61" name="__codelineno-16-61" href="#__codelineno-16-61"></a><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"City"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-16-62" name="__codelineno-16-62" href="#__codelineno-16-62"></a><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stadt"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"de-DE"</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-16-63" name="__codelineno-16-63" href="#__codelineno-16-63"></a><span class="w">                </span><span class="p">]</span>
-<a id="__codelineno-16-64" name="__codelineno-16-64" href="#__codelineno-16-64"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-65" name="__codelineno-16-65" href="#__codelineno-16-65"></a><span class="w">            </span><span class="p">{</span>
-<a id="__codelineno-16-66" name="__codelineno-16-66" href="#__codelineno-16-66"></a><span class="w">                </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"address"</span><span class="p">,</span><span class="w"> </span><span class="s2">"postal_code"</span><span class="p">],</span>
-<a id="__codelineno-16-67" name="__codelineno-16-67" href="#__codelineno-16-67"></a><span class="w">                </span><span class="nt">"display"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-68" name="__codelineno-16-68" href="#__codelineno-16-68"></a><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Postal Code"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="w"> </span><span class="p">},</span>
-<a id="__codelineno-16-69" name="__codelineno-16-69" href="#__codelineno-16-69"></a><span class="w">                    </span><span class="p">{</span><span class="w"> </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Postleitzahl"</span><span class="p">,</span><span class="w"> </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"de-DE"</span><span class="w"> </span><span class="p">}</span>
-<a id="__codelineno-16-70" name="__codelineno-16-70" href="#__codelineno-16-70"></a><span class="w">                </span><span class="p">]</span>
-<a id="__codelineno-16-71" name="__codelineno-16-71" href="#__codelineno-16-71"></a><span class="w">            </span><span class="p">}</span>
-<a id="__codelineno-16-72" name="__codelineno-16-72" href="#__codelineno-16-72"></a><span class="w">        </span><span class="p">]</span>
-<a id="__codelineno-16-73" name="__codelineno-16-73" href="#__codelineno-16-73"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-16-74" name="__codelineno-16-74" href="#__codelineno-16-74"></a><span class="w">    </span><span class="nt">"claims"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-75" name="__codelineno-16-75" href="#__codelineno-16-75"></a><span class="w">        </span><span class="nt">"issuing_country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE"</span><span class="p">,</span>
-<a id="__codelineno-16-76" name="__codelineno-16-76" href="#__codelineno-16-76"></a><span class="w">        </span><span class="nt">"issuing_authority"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE"</span><span class="p">,</span>
-<a id="__codelineno-16-77" name="__codelineno-16-77" href="#__codelineno-16-77"></a><span class="w">        </span><span class="nt">"source_document_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"id_card"</span><span class="p">,</span>
-<a id="__codelineno-16-78" name="__codelineno-16-78" href="#__codelineno-16-78"></a><span class="w">        </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERIKA"</span><span class="p">,</span>
-<a id="__codelineno-16-79" name="__codelineno-16-79" href="#__codelineno-16-79"></a><span class="w">        </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MUSTERMANN"</span><span class="p">,</span>
-<a id="__codelineno-16-80" name="__codelineno-16-80" href="#__codelineno-16-80"></a><span class="w">        </span><span class="nt">"birthdate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1964-08-12"</span><span class="p">,</span>
-<a id="__codelineno-16-81" name="__codelineno-16-81" href="#__codelineno-16-81"></a><span class="w">        </span><span class="nt">"age_birth_year"</span><span class="p">:</span><span class="w"> </span><span class="mi">1964</span><span class="p">,</span>
-<a id="__codelineno-16-82" name="__codelineno-16-82" href="#__codelineno-16-82"></a><span class="w">        </span><span class="nt">"age_in_years"</span><span class="p">:</span><span class="w"> </span><span class="mi">61</span><span class="p">,</span>
-<a id="__codelineno-16-83" name="__codelineno-16-83" href="#__codelineno-16-83"></a><span class="w">        </span><span class="nt">"age_equal_or_over"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-84" name="__codelineno-16-84" href="#__codelineno-16-84"></a><span class="w">            </span><span class="nt">"12"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-16-85" name="__codelineno-16-85" href="#__codelineno-16-85"></a><span class="w">            </span><span class="nt">"14"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-16-86" name="__codelineno-16-86" href="#__codelineno-16-86"></a><span class="w">            </span><span class="nt">"16"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-16-87" name="__codelineno-16-87" href="#__codelineno-16-87"></a><span class="w">            </span><span class="nt">"18"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-16-88" name="__codelineno-16-88" href="#__codelineno-16-88"></a><span class="w">            </span><span class="nt">"21"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-16-89" name="__codelineno-16-89" href="#__codelineno-16-89"></a><span class="w">            </span><span class="nt">"65"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
-<a id="__codelineno-16-90" name="__codelineno-16-90" href="#__codelineno-16-90"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-16-91" name="__codelineno-16-91" href="#__codelineno-16-91"></a><span class="w">        </span><span class="nt">"place_of_birth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-92" name="__codelineno-16-92" href="#__codelineno-16-92"></a><span class="w">            </span><span class="nt">"locality"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BERLIN"</span>
-<a id="__codelineno-16-93" name="__codelineno-16-93" href="#__codelineno-16-93"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-16-94" name="__codelineno-16-94" href="#__codelineno-16-94"></a><span class="w">        </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-95" name="__codelineno-16-95" href="#__codelineno-16-95"></a><span class="w">            </span><span class="nt">"street_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HEIDESTRAẞE 17"</span><span class="p">,</span>
-<a id="__codelineno-16-96" name="__codelineno-16-96" href="#__codelineno-16-96"></a><span class="w">            </span><span class="nt">"locality"</span><span class="p">:</span><span class="w"> </span><span class="s2">"KÖLN"</span><span class="p">,</span>
-<a id="__codelineno-16-97" name="__codelineno-16-97" href="#__codelineno-16-97"></a><span class="w">            </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE"</span><span class="p">,</span>
-<a id="__codelineno-16-98" name="__codelineno-16-98" href="#__codelineno-16-98"></a><span class="w">            </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51147"</span>
-<a id="__codelineno-16-99" name="__codelineno-16-99" href="#__codelineno-16-99"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-16-100" name="__codelineno-16-100" href="#__codelineno-16-100"></a><span class="w">        </span><span class="nt">"nationalities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-101" name="__codelineno-16-101" href="#__codelineno-16-101"></a><span class="w">            </span><span class="s2">"DE"</span>
-<a id="__codelineno-16-102" name="__codelineno-16-102" href="#__codelineno-16-102"></a><span class="w">        </span><span class="p">]</span>
-<a id="__codelineno-16-103" name="__codelineno-16-103" href="#__codelineno-16-103"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-16-104" name="__codelineno-16-104" href="#__codelineno-16-104"></a><span class="w">    </span><span class="nt">"disclosureFrame"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-105" name="__codelineno-16-105" href="#__codelineno-16-105"></a><span class="w">        </span><span class="nt">"_sd"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-106" name="__codelineno-16-106" href="#__codelineno-16-106"></a><span class="w">            </span><span class="s2">"issuing_country"</span><span class="p">,</span>
-<a id="__codelineno-16-107" name="__codelineno-16-107" href="#__codelineno-16-107"></a><span class="w">            </span><span class="s2">"issuing_authority"</span><span class="p">,</span>
-<a id="__codelineno-16-108" name="__codelineno-16-108" href="#__codelineno-16-108"></a><span class="w">            </span><span class="s2">"source_document_type"</span><span class="p">,</span>
-<a id="__codelineno-16-109" name="__codelineno-16-109" href="#__codelineno-16-109"></a><span class="w">            </span><span class="s2">"given_name"</span><span class="p">,</span>
-<a id="__codelineno-16-110" name="__codelineno-16-110" href="#__codelineno-16-110"></a><span class="w">            </span><span class="s2">"family_name"</span><span class="p">,</span>
-<a id="__codelineno-16-111" name="__codelineno-16-111" href="#__codelineno-16-111"></a><span class="w">            </span><span class="s2">"birthdate"</span><span class="p">,</span>
-<a id="__codelineno-16-112" name="__codelineno-16-112" href="#__codelineno-16-112"></a><span class="w">            </span><span class="s2">"age_birth_year"</span><span class="p">,</span>
-<a id="__codelineno-16-113" name="__codelineno-16-113" href="#__codelineno-16-113"></a><span class="w">            </span><span class="s2">"age_in_years"</span><span class="p">,</span>
-<a id="__codelineno-16-114" name="__codelineno-16-114" href="#__codelineno-16-114"></a><span class="w">            </span><span class="s2">"age_equal_or_over"</span><span class="p">,</span>
-<a id="__codelineno-16-115" name="__codelineno-16-115" href="#__codelineno-16-115"></a><span class="w">            </span><span class="s2">"place_of_birth"</span><span class="p">,</span>
-<a id="__codelineno-16-116" name="__codelineno-16-116" href="#__codelineno-16-116"></a><span class="w">            </span><span class="s2">"address"</span><span class="p">,</span>
-<a id="__codelineno-16-117" name="__codelineno-16-117" href="#__codelineno-16-117"></a><span class="w">            </span><span class="s2">"nationalities"</span>
-<a id="__codelineno-16-118" name="__codelineno-16-118" href="#__codelineno-16-118"></a><span class="w">        </span><span class="p">],</span>
-<a id="__codelineno-16-119" name="__codelineno-16-119" href="#__codelineno-16-119"></a><span class="w">        </span><span class="nt">"age_equal_or_over"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-120" name="__codelineno-16-120" href="#__codelineno-16-120"></a><span class="w">            </span><span class="nt">"_sd"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-121" name="__codelineno-16-121" href="#__codelineno-16-121"></a><span class="w">                </span><span class="s2">"12"</span><span class="p">,</span>
-<a id="__codelineno-16-122" name="__codelineno-16-122" href="#__codelineno-16-122"></a><span class="w">                </span><span class="s2">"14"</span><span class="p">,</span>
-<a id="__codelineno-16-123" name="__codelineno-16-123" href="#__codelineno-16-123"></a><span class="w">                </span><span class="s2">"16"</span><span class="p">,</span>
-<a id="__codelineno-16-124" name="__codelineno-16-124" href="#__codelineno-16-124"></a><span class="w">                </span><span class="s2">"18"</span><span class="p">,</span>
-<a id="__codelineno-16-125" name="__codelineno-16-125" href="#__codelineno-16-125"></a><span class="w">                </span><span class="s2">"21"</span><span class="p">,</span>
-<a id="__codelineno-16-126" name="__codelineno-16-126" href="#__codelineno-16-126"></a><span class="w">                </span><span class="s2">"65"</span>
-<a id="__codelineno-16-127" name="__codelineno-16-127" href="#__codelineno-16-127"></a><span class="w">            </span><span class="p">]</span>
-<a id="__codelineno-16-128" name="__codelineno-16-128" href="#__codelineno-16-128"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-16-129" name="__codelineno-16-129" href="#__codelineno-16-129"></a><span class="w">        </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-130" name="__codelineno-16-130" href="#__codelineno-16-130"></a><span class="w">            </span><span class="nt">"_sd"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-131" name="__codelineno-16-131" href="#__codelineno-16-131"></a><span class="w">                </span><span class="s2">"street_address"</span><span class="p">,</span>
-<a id="__codelineno-16-132" name="__codelineno-16-132" href="#__codelineno-16-132"></a><span class="w">                </span><span class="s2">"locality"</span><span class="p">,</span>
-<a id="__codelineno-16-133" name="__codelineno-16-133" href="#__codelineno-16-133"></a><span class="w">                </span><span class="s2">"country"</span><span class="p">,</span>
-<a id="__codelineno-16-134" name="__codelineno-16-134" href="#__codelineno-16-134"></a><span class="w">                </span><span class="s2">"postal_code"</span>
-<a id="__codelineno-16-135" name="__codelineno-16-135" href="#__codelineno-16-135"></a><span class="w">            </span><span class="p">]</span>
-<a id="__codelineno-16-136" name="__codelineno-16-136" href="#__codelineno-16-136"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-16-137" name="__codelineno-16-137" href="#__codelineno-16-137"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-16-138" name="__codelineno-16-138" href="#__codelineno-16-138"></a><span class="w">    </span><span class="nt">"vct"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:eudi:pid:de:1"</span><span class="p">,</span>
-<a id="__codelineno-16-139" name="__codelineno-16-139" href="#__codelineno-16-139"></a><span class="w">    </span><span class="nt">"keyBinding"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-16-140" name="__codelineno-16-140" href="#__codelineno-16-140"></a><span class="w">    </span><span class="nt">"statusManagement"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-16-141" name="__codelineno-16-141" href="#__codelineno-16-141"></a><span class="w">    </span><span class="nt">"lifeTime"</span><span class="p">:</span><span class="w"> </span><span class="mi">604800</span><span class="p">,</span>
-<a id="__codelineno-16-142" name="__codelineno-16-142" href="#__codelineno-16-142"></a><span class="w">    </span><span class="nt">"schema"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-143" name="__codelineno-16-143" href="#__codelineno-16-143"></a><span class="w">        </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://json-schema.org/draft/2020-12/schema"</span><span class="p">,</span>
-<a id="__codelineno-16-144" name="__codelineno-16-144" href="#__codelineno-16-144"></a><span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
-<a id="__codelineno-16-145" name="__codelineno-16-145" href="#__codelineno-16-145"></a><span class="w">        </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-146" name="__codelineno-16-146" href="#__codelineno-16-146"></a><span class="w">            </span><span class="nt">"issuing_country"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-147" name="__codelineno-16-147" href="#__codelineno-16-147"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-16-148" name="__codelineno-16-148" href="#__codelineno-16-148"></a><span class="w">                </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issuing Country"</span>
-<a id="__codelineno-16-149" name="__codelineno-16-149" href="#__codelineno-16-149"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-150" name="__codelineno-16-150" href="#__codelineno-16-150"></a><span class="w">            </span><span class="nt">"issuing_authority"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-151" name="__codelineno-16-151" href="#__codelineno-16-151"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-16-152" name="__codelineno-16-152" href="#__codelineno-16-152"></a><span class="w">                </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issuing Authority"</span>
-<a id="__codelineno-16-153" name="__codelineno-16-153" href="#__codelineno-16-153"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-154" name="__codelineno-16-154" href="#__codelineno-16-154"></a><span class="w">            </span><span class="nt">"source_document_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-155" name="__codelineno-16-155" href="#__codelineno-16-155"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-16-156" name="__codelineno-16-156" href="#__codelineno-16-156"></a><span class="w">                </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Source Document Type"</span>
-<a id="__codelineno-16-157" name="__codelineno-16-157" href="#__codelineno-16-157"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-158" name="__codelineno-16-158" href="#__codelineno-16-158"></a><span class="w">            </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-159" name="__codelineno-16-159" href="#__codelineno-16-159"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-16-160" name="__codelineno-16-160" href="#__codelineno-16-160"></a><span class="w">                </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Given Name"</span>
-<a id="__codelineno-16-161" name="__codelineno-16-161" href="#__codelineno-16-161"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-162" name="__codelineno-16-162" href="#__codelineno-16-162"></a><span class="w">            </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-163" name="__codelineno-16-163" href="#__codelineno-16-163"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-16-164" name="__codelineno-16-164" href="#__codelineno-16-164"></a><span class="w">                </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Family Name"</span>
-<a id="__codelineno-16-165" name="__codelineno-16-165" href="#__codelineno-16-165"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-166" name="__codelineno-16-166" href="#__codelineno-16-166"></a><span class="w">            </span><span class="nt">"birthdate"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-167" name="__codelineno-16-167" href="#__codelineno-16-167"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-16-168" name="__codelineno-16-168" href="#__codelineno-16-168"></a><span class="w">                </span><span class="nt">"pattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"^\\d{4}-\\d{2}-\\d{2}$"</span><span class="p">,</span>
-<a id="__codelineno-16-169" name="__codelineno-16-169" href="#__codelineno-16-169"></a><span class="w">                </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Birthdate"</span>
-<a id="__codelineno-16-170" name="__codelineno-16-170" href="#__codelineno-16-170"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-171" name="__codelineno-16-171" href="#__codelineno-16-171"></a><span class="w">            </span><span class="nt">"age_birth_year"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-172" name="__codelineno-16-172" href="#__codelineno-16-172"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"integer"</span><span class="p">,</span>
-<a id="__codelineno-16-173" name="__codelineno-16-173" href="#__codelineno-16-173"></a><span class="w">                </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Birth Year"</span>
-<a id="__codelineno-16-174" name="__codelineno-16-174" href="#__codelineno-16-174"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-175" name="__codelineno-16-175" href="#__codelineno-16-175"></a><span class="w">            </span><span class="nt">"age_in_years"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-176" name="__codelineno-16-176" href="#__codelineno-16-176"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"integer"</span><span class="p">,</span>
-<a id="__codelineno-16-177" name="__codelineno-16-177" href="#__codelineno-16-177"></a><span class="w">                </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Age in Years"</span>
-<a id="__codelineno-16-178" name="__codelineno-16-178" href="#__codelineno-16-178"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-179" name="__codelineno-16-179" href="#__codelineno-16-179"></a><span class="w">            </span><span class="nt">"age_equal_or_over"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-180" name="__codelineno-16-180" href="#__codelineno-16-180"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
-<a id="__codelineno-16-181" name="__codelineno-16-181" href="#__codelineno-16-181"></a><span class="w">                </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Age Equal or Over"</span><span class="p">,</span>
-<a id="__codelineno-16-182" name="__codelineno-16-182" href="#__codelineno-16-182"></a><span class="w">                </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-183" name="__codelineno-16-183" href="#__codelineno-16-183"></a><span class="w">                    </span><span class="nt">"12"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-184" name="__codelineno-16-184" href="#__codelineno-16-184"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span>
-<a id="__codelineno-16-185" name="__codelineno-16-185" href="#__codelineno-16-185"></a><span class="w">                        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12 or Over"</span>
-<a id="__codelineno-16-186" name="__codelineno-16-186" href="#__codelineno-16-186"></a><span class="w">                    </span><span class="p">},</span>
-<a id="__codelineno-16-187" name="__codelineno-16-187" href="#__codelineno-16-187"></a><span class="w">                    </span><span class="nt">"14"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-188" name="__codelineno-16-188" href="#__codelineno-16-188"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span>
-<a id="__codelineno-16-189" name="__codelineno-16-189" href="#__codelineno-16-189"></a><span class="w">                        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"14 or Over"</span>
-<a id="__codelineno-16-190" name="__codelineno-16-190" href="#__codelineno-16-190"></a><span class="w">                    </span><span class="p">},</span>
-<a id="__codelineno-16-191" name="__codelineno-16-191" href="#__codelineno-16-191"></a><span class="w">                    </span><span class="nt">"16"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-192" name="__codelineno-16-192" href="#__codelineno-16-192"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span>
-<a id="__codelineno-16-193" name="__codelineno-16-193" href="#__codelineno-16-193"></a><span class="w">                        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"16 or Over"</span>
-<a id="__codelineno-16-194" name="__codelineno-16-194" href="#__codelineno-16-194"></a><span class="w">                    </span><span class="p">},</span>
-<a id="__codelineno-16-195" name="__codelineno-16-195" href="#__codelineno-16-195"></a><span class="w">                    </span><span class="nt">"18"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-196" name="__codelineno-16-196" href="#__codelineno-16-196"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span>
-<a id="__codelineno-16-197" name="__codelineno-16-197" href="#__codelineno-16-197"></a><span class="w">                        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"18 or Over"</span>
-<a id="__codelineno-16-198" name="__codelineno-16-198" href="#__codelineno-16-198"></a><span class="w">                    </span><span class="p">},</span>
-<a id="__codelineno-16-199" name="__codelineno-16-199" href="#__codelineno-16-199"></a><span class="w">                    </span><span class="nt">"21"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-200" name="__codelineno-16-200" href="#__codelineno-16-200"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span>
-<a id="__codelineno-16-201" name="__codelineno-16-201" href="#__codelineno-16-201"></a><span class="w">                        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"21 or Over"</span>
-<a id="__codelineno-16-202" name="__codelineno-16-202" href="#__codelineno-16-202"></a><span class="w">                    </span><span class="p">},</span>
-<a id="__codelineno-16-203" name="__codelineno-16-203" href="#__codelineno-16-203"></a><span class="w">                    </span><span class="nt">"65"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-204" name="__codelineno-16-204" href="#__codelineno-16-204"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span>
-<a id="__codelineno-16-205" name="__codelineno-16-205" href="#__codelineno-16-205"></a><span class="w">                        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"65 or Over"</span>
-<a id="__codelineno-16-206" name="__codelineno-16-206" href="#__codelineno-16-206"></a><span class="w">                    </span><span class="p">}</span>
-<a id="__codelineno-16-207" name="__codelineno-16-207" href="#__codelineno-16-207"></a><span class="w">                </span><span class="p">},</span>
-<a id="__codelineno-16-208" name="__codelineno-16-208" href="#__codelineno-16-208"></a><span class="w">                </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-209" name="__codelineno-16-209" href="#__codelineno-16-209"></a><span class="w">                    </span><span class="s2">"12"</span><span class="p">,</span>
-<a id="__codelineno-16-210" name="__codelineno-16-210" href="#__codelineno-16-210"></a><span class="w">                    </span><span class="s2">"14"</span><span class="p">,</span>
-<a id="__codelineno-16-211" name="__codelineno-16-211" href="#__codelineno-16-211"></a><span class="w">                    </span><span class="s2">"16"</span><span class="p">,</span>
-<a id="__codelineno-16-212" name="__codelineno-16-212" href="#__codelineno-16-212"></a><span class="w">                    </span><span class="s2">"18"</span><span class="p">,</span>
-<a id="__codelineno-16-213" name="__codelineno-16-213" href="#__codelineno-16-213"></a><span class="w">                    </span><span class="s2">"21"</span><span class="p">,</span>
-<a id="__codelineno-16-214" name="__codelineno-16-214" href="#__codelineno-16-214"></a><span class="w">                    </span><span class="s2">"65"</span>
-<a id="__codelineno-16-215" name="__codelineno-16-215" href="#__codelineno-16-215"></a><span class="w">                </span><span class="p">]</span>
-<a id="__codelineno-16-216" name="__codelineno-16-216" href="#__codelineno-16-216"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-217" name="__codelineno-16-217" href="#__codelineno-16-217"></a><span class="w">            </span><span class="nt">"place_of_birth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-218" name="__codelineno-16-218" href="#__codelineno-16-218"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
-<a id="__codelineno-16-219" name="__codelineno-16-219" href="#__codelineno-16-219"></a><span class="w">                </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Place of Birth"</span><span class="p">,</span>
-<a id="__codelineno-16-220" name="__codelineno-16-220" href="#__codelineno-16-220"></a><span class="w">                </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-221" name="__codelineno-16-221" href="#__codelineno-16-221"></a><span class="w">                    </span><span class="nt">"locality"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-222" name="__codelineno-16-222" href="#__codelineno-16-222"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-16-223" name="__codelineno-16-223" href="#__codelineno-16-223"></a><span class="w">                        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Locality"</span>
-<a id="__codelineno-16-224" name="__codelineno-16-224" href="#__codelineno-16-224"></a><span class="w">                    </span><span class="p">}</span>
-<a id="__codelineno-16-225" name="__codelineno-16-225" href="#__codelineno-16-225"></a><span class="w">                </span><span class="p">},</span>
-<a id="__codelineno-16-226" name="__codelineno-16-226" href="#__codelineno-16-226"></a><span class="w">                </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-227" name="__codelineno-16-227" href="#__codelineno-16-227"></a><span class="w">                    </span><span class="s2">"locality"</span>
-<a id="__codelineno-16-228" name="__codelineno-16-228" href="#__codelineno-16-228"></a><span class="w">                </span><span class="p">]</span>
-<a id="__codelineno-16-229" name="__codelineno-16-229" href="#__codelineno-16-229"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-230" name="__codelineno-16-230" href="#__codelineno-16-230"></a><span class="w">            </span><span class="nt">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-231" name="__codelineno-16-231" href="#__codelineno-16-231"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
-<a id="__codelineno-16-232" name="__codelineno-16-232" href="#__codelineno-16-232"></a><span class="w">                </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Address"</span><span class="p">,</span>
-<a id="__codelineno-16-233" name="__codelineno-16-233" href="#__codelineno-16-233"></a><span class="w">                </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-234" name="__codelineno-16-234" href="#__codelineno-16-234"></a><span class="w">                    </span><span class="nt">"street_address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-235" name="__codelineno-16-235" href="#__codelineno-16-235"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-16-236" name="__codelineno-16-236" href="#__codelineno-16-236"></a><span class="w">                        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Street Address"</span>
-<a id="__codelineno-16-237" name="__codelineno-16-237" href="#__codelineno-16-237"></a><span class="w">                    </span><span class="p">},</span>
-<a id="__codelineno-16-238" name="__codelineno-16-238" href="#__codelineno-16-238"></a><span class="w">                    </span><span class="nt">"locality"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-239" name="__codelineno-16-239" href="#__codelineno-16-239"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-16-240" name="__codelineno-16-240" href="#__codelineno-16-240"></a><span class="w">                        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Locality"</span>
-<a id="__codelineno-16-241" name="__codelineno-16-241" href="#__codelineno-16-241"></a><span class="w">                    </span><span class="p">},</span>
-<a id="__codelineno-16-242" name="__codelineno-16-242" href="#__codelineno-16-242"></a><span class="w">                    </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-243" name="__codelineno-16-243" href="#__codelineno-16-243"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-16-244" name="__codelineno-16-244" href="#__codelineno-16-244"></a><span class="w">                        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Country"</span>
-<a id="__codelineno-16-245" name="__codelineno-16-245" href="#__codelineno-16-245"></a><span class="w">                    </span><span class="p">},</span>
-<a id="__codelineno-16-246" name="__codelineno-16-246" href="#__codelineno-16-246"></a><span class="w">                    </span><span class="nt">"postal_code"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-247" name="__codelineno-16-247" href="#__codelineno-16-247"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-16-248" name="__codelineno-16-248" href="#__codelineno-16-248"></a><span class="w">                        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Postal Code"</span>
-<a id="__codelineno-16-249" name="__codelineno-16-249" href="#__codelineno-16-249"></a><span class="w">                    </span><span class="p">}</span>
-<a id="__codelineno-16-250" name="__codelineno-16-250" href="#__codelineno-16-250"></a><span class="w">                </span><span class="p">},</span>
-<a id="__codelineno-16-251" name="__codelineno-16-251" href="#__codelineno-16-251"></a><span class="w">                </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-252" name="__codelineno-16-252" href="#__codelineno-16-252"></a><span class="w">                    </span><span class="s2">"street_address"</span><span class="p">,</span>
-<a id="__codelineno-16-253" name="__codelineno-16-253" href="#__codelineno-16-253"></a><span class="w">                    </span><span class="s2">"locality"</span><span class="p">,</span>
-<a id="__codelineno-16-254" name="__codelineno-16-254" href="#__codelineno-16-254"></a><span class="w">                    </span><span class="s2">"country"</span><span class="p">,</span>
-<a id="__codelineno-16-255" name="__codelineno-16-255" href="#__codelineno-16-255"></a><span class="w">                    </span><span class="s2">"postal_code"</span>
-<a id="__codelineno-16-256" name="__codelineno-16-256" href="#__codelineno-16-256"></a><span class="w">                </span><span class="p">]</span>
-<a id="__codelineno-16-257" name="__codelineno-16-257" href="#__codelineno-16-257"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-16-258" name="__codelineno-16-258" href="#__codelineno-16-258"></a><span class="w">            </span><span class="nt">"nationalities"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-259" name="__codelineno-16-259" href="#__codelineno-16-259"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span>
-<a id="__codelineno-16-260" name="__codelineno-16-260" href="#__codelineno-16-260"></a><span class="w">                </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nationalities"</span><span class="p">,</span>
-<a id="__codelineno-16-261" name="__codelineno-16-261" href="#__codelineno-16-261"></a><span class="w">                </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-262" name="__codelineno-16-262" href="#__codelineno-16-262"></a><span class="w">                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-16-263" name="__codelineno-16-263" href="#__codelineno-16-263"></a><span class="w">                    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nationality"</span>
-<a id="__codelineno-16-264" name="__codelineno-16-264" href="#__codelineno-16-264"></a><span class="w">                </span><span class="p">}</span>
-<a id="__codelineno-16-265" name="__codelineno-16-265" href="#__codelineno-16-265"></a><span class="w">            </span><span class="p">}</span>
-<a id="__codelineno-16-266" name="__codelineno-16-266" href="#__codelineno-16-266"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-16-267" name="__codelineno-16-267" href="#__codelineno-16-267"></a><span class="w">        </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-268" name="__codelineno-16-268" href="#__codelineno-16-268"></a><span class="w">            </span><span class="s2">"issuing_country"</span><span class="p">,</span>
-<a id="__codelineno-16-269" name="__codelineno-16-269" href="#__codelineno-16-269"></a><span class="w">            </span><span class="s2">"issuing_authority"</span><span class="p">,</span>
-<a id="__codelineno-16-270" name="__codelineno-16-270" href="#__codelineno-16-270"></a><span class="w">            </span><span class="s2">"source_document_type"</span><span class="p">,</span>
-<a id="__codelineno-16-271" name="__codelineno-16-271" href="#__codelineno-16-271"></a><span class="w">            </span><span class="s2">"given_name"</span><span class="p">,</span>
-<a id="__codelineno-16-272" name="__codelineno-16-272" href="#__codelineno-16-272"></a><span class="w">            </span><span class="s2">"family_name"</span><span class="p">,</span>
-<a id="__codelineno-16-273" name="__codelineno-16-273" href="#__codelineno-16-273"></a><span class="w">            </span><span class="s2">"birthdate"</span><span class="p">,</span>
-<a id="__codelineno-16-274" name="__codelineno-16-274" href="#__codelineno-16-274"></a><span class="w">            </span><span class="s2">"age_birth_year"</span><span class="p">,</span>
-<a id="__codelineno-16-275" name="__codelineno-16-275" href="#__codelineno-16-275"></a><span class="w">            </span><span class="s2">"age_in_years"</span><span class="p">,</span>
-<a id="__codelineno-16-276" name="__codelineno-16-276" href="#__codelineno-16-276"></a><span class="w">            </span><span class="s2">"age_equal_or_over"</span><span class="p">,</span>
-<a id="__codelineno-16-277" name="__codelineno-16-277" href="#__codelineno-16-277"></a><span class="w">            </span><span class="s2">"place_of_birth"</span><span class="p">,</span>
-<a id="__codelineno-16-278" name="__codelineno-16-278" href="#__codelineno-16-278"></a><span class="w">            </span><span class="s2">"address"</span><span class="p">,</span>
-<a id="__codelineno-16-279" name="__codelineno-16-279" href="#__codelineno-16-279"></a><span class="w">            </span><span class="s2">"nationalities"</span>
-<a id="__codelineno-16-280" name="__codelineno-16-280" href="#__codelineno-16-280"></a><span class="w">        </span><span class="p">],</span>
-<a id="__codelineno-16-281" name="__codelineno-16-281" href="#__codelineno-16-281"></a><span class="w">        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PID Claims"</span><span class="p">,</span>
-<a id="__codelineno-16-282" name="__codelineno-16-282" href="#__codelineno-16-282"></a><span class="w">        </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Schema for PID credential claims, describing personal and identity information fields."</span>
-<a id="__codelineno-16-283" name="__codelineno-16-283" href="#__codelineno-16-283"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-16-284" name="__codelineno-16-284" href="#__codelineno-16-284"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>
 </code></pre></div>
 <p>This example includes:</p>
 <ul>
 <li><strong>Required fields</strong>: <code>id</code>, <code>config</code> with format and display information</li>
 <li><strong>Optional fields</strong>: <code>description</code>, <code>vct</code>, <code>keyChainId</code>, <code>lifeTime</code>, <code>statusManagement</code>, <code>keyBinding</code></li>
-<li><strong>Claims</strong>: Static claims that will be included in every issued credential</li>
-<li><strong>Selective disclosure</strong>: <code>disclosureFrame</code> defining which claims can be selectively disclosed</li>
+<li><strong>Fields</strong>: <code>configVersion: 2</code> and <code>fields[]</code> with typed claim definitions</li>
+<li><strong>Selective disclosure</strong>: Per-field <code>disclosable</code> flags for SD-JWT credentials</li>
 <li><strong>Display configuration</strong>: How the credential appears in wallets, including colors, logos, and images</li>
 </ul>
 <p>You can use it as a template or use the generated <a href="https://github.com/openwallet-foundation/eudiplo/blob/main/schemas/CredentialConfigCreate.schema.json">JSON Schema</a> to create your own credential configurations by modifying the fields according to your requirements.</p>
@@ -4675,7 +4551,7 @@ the <code>lifeTime</code> configuration option (specified in seconds).</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer">
         
           
-          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview">
+          <a href="../credential-offers/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Credential Offers">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
@@ -4685,7 +4561,7 @@ the <code>lifeTime</code> configuration option (specified in seconds).</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Overview
+                Credential Offers
               </div>
             </div>
           </a>

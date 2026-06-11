@@ -9,7 +9,7 @@
         <link rel="prev" href="../web-client/">
       
       
-        <link rel="next" href="credential-configuration/">
+        <link rel="next" href="credential-offers/">
       
       
         
@@ -719,6 +719,8 @@
       
         
       
+        
+      
     
     
     
@@ -771,6 +773,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="credential-offers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Credential Offers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -910,6 +940,8 @@
       
         
       
+        
+      
     
     
     
@@ -964,6 +996,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../presentation/presentation-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentation Requests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1383,6 +1443,8 @@
       
         
       
+        
+      
     
     
     
@@ -1437,6 +1499,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration/4.x-to-5.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.x to 5.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1720,6 +1810,8 @@
       
         
       
+        
+      
     
     
     
@@ -1838,6 +1930,34 @@
     
   
     Interactive Authorization (IAE)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/federation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenID Federation
   
 
     
@@ -2560,21 +2680,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#creating-credential-offers" class="md-nav__link">
+  <a href="#credential-offers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Creating Credential Offers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#single-use-offers-replay-prevention" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Single-Use Offers (Replay Prevention)
+        Credential Offers
       
     </span>
   </a>
@@ -2691,45 +2800,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#passing-claims" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Passing Claims
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Passing Claims">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#priority-order" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Priority Order
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#when-to-use-each-method" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When to Use Each Method
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -2839,7 +2909,7 @@
 
 
 <h1 id="configuring-credential-issuance-flows">Configuring Credential Issuance Flows<a class="headerlink" href="#configuring-credential-issuance-flows" title="Permanent link">¶</a></h1>
-<p>The issuance system uses a <strong>three-part configuration approach</strong>:</p>
+<p>Issuance configuration is split into <strong>three layers</strong>:</p>
 <ol>
 <li><strong>Credential Configurations</strong> - Define the structure, format, and metadata of
    individual credentials</li>
@@ -2850,7 +2920,7 @@
 </ol>
 <hr>
 <h2 id="api-endpoints">API Endpoints<a class="headerlink" href="#api-endpoints" title="Permanent link">¶</a></h2>
-<p>The system uses separate endpoints for each configuration layer:</p>
+<p>Each layer has its own API endpoints:</p>
 <h3 id="credential-configurations">Credential Configurations<a class="headerlink" href="#credential-configurations" title="Permanent link">¶</a></h3>
 <p>To manage individual credential configurations, use the
 <code>/issuer/credentials</code> endpoint. This endpoint handles the definition
@@ -2862,38 +2932,15 @@ of credential types, their formats, claims, and display properties.</p>
 <p>Based on your passed access token, endpoints will be scoped to the tenant ID of the
 token. You also need the <code>issuance:manage</code> role to access these endpoints.
 The configurations are internally stored in a database.</p>
-<h3 id="creating-credential-offers">Creating Credential Offers<a class="headerlink" href="#creating-credential-offers" title="Permanent link">¶</a></h3>
-<p>Via the <a href="../../api/openapi/">credential offer endpoint</a> you can create a credential offer that can be presented to the user.
-When creating an offer, you can:</p>
-<ol>
-<li><strong>Define the flow</strong> - Either go with the pre authorized flow or require user
-   authentication via the authorization code flow</li>
-<li><strong>Provide credentials</strong> - Use <code>credentialConfigurationIds</code> to specify which
-   credentials to issue from the issuance configuration</li>
-<li><strong>Optionally override claims</strong> - Use the <code>credentialClaims</code> parameter to provide
-   inline claims, webhook, or Attribute Provider reference for specific credentials</li>
-<li><strong>Optionally pass notification webhooks</strong> - Use the <code>notifyWebhook</code> parameter to
-   get notified about issuance status changes</li>
-</ol>
-<h3 id="single-use-offers-replay-prevention">Single-Use Offers (Replay Prevention)<a class="headerlink" href="#single-use-offers-replay-prevention" title="Permanent link">¶</a></h3>
-<p>All credential offers are <strong>single-use and non-replayable</strong>. Once a wallet completes the issuance flow with a credential offer:</p>
-<ul>
-<li>Token replay with the same authorization or pre-authorized code is rejected with an <code>invalid_grant</code> error</li>
-<li>The offer is marked as consumed at the credential endpoint and cannot be used again after successful credential processing</li>
-<li>The <code>consumedAt</code> timestamp records when the offer was first used</li>
-</ul>
-<p><strong>Important Considerations:</strong></p>
-<ul>
-<li><strong>Create a new offer for each issuance</strong>: If a user needs credentials again, create a fresh credential offer via the API</li>
-<li><strong>Offer expiration</strong>: Combine single-use enforcement with TTL-based session cleanup (configured per-tenant) to ensure expired offers don't accumulate</li>
-<li><strong>Refresh tokens</strong>: Refresh tokens remain valid and can be used to obtain new access tokens for additional operations on the issued credentials</li>
-</ul>
-<p>This design prevents credential offer replay attacks where an attacker could reuse an intercepted offer to obtain credentials fraudulently.</p>
+<h3 id="credential-offers">Credential Offers<a class="headerlink" href="#credential-offers" title="Permanent link">¶</a></h3>
+<p>Creating a credential offer is the operational step that starts issuance. The
+full request model, examples, replay behavior, and <code>credentialClaims</code> override
+format are documented in <a href="credential-offers/">Credential Offers</a>.</p>
 <hr>
 <h2 id="credential-issuance-flow">Credential Issuance Flow<a class="headerlink" href="#credential-issuance-flow" title="Permanent link">¶</a></h2>
-<p>This flow describes how a backend service starts an issuance flow of an
-attestation. EUDIPLO creates the OID4VCI request and handles the protocol flow
-with the wallet. It also shows the interactions with <a href="../../architecture/webhooks/">webhooks</a> when they are configured.</p>
+<p>This flow shows how a backend service starts issuance. EUDIPLO creates the
+OID4VCI request, runs the protocol with the wallet, and optionally calls
+<a href="../../architecture/webhooks/">webhooks</a>.</p>
 <pre class="mermaid"><code>sequenceDiagram
     autonumber
     actor Wallet as EUDI Wallet
@@ -2937,7 +2984,8 @@ with the wallet. It also shows the interactions with <a href="../../architecture
         EUDIPLO-&gt;&gt;Service: Notify status (accepted / denied)
         Service--&gt;&gt;EUDIPLO: 2xx ACK
     end</code></pre>
-<p>The response with the credential offer link will also provide the session ID. It is included in the requests from the optional webhooks to identify the specific issuance flow. You can also use the id to query the issuance status at the API.</p>
+<p>The offer response also contains the session ID. EUDIPLO includes this ID in
+optional webhook calls, and you can use it to query issuance status via the API.</p>
 <hr>
 <h2 id="supported-issuance-flows">Supported Issuance Flows<a class="headerlink" href="#supported-issuance-flows" title="Permanent link">¶</a></h2>
 <p>EUDIPLO supports three authentication patterns for OID4VCI credential issuance. Each pattern serves different use cases depending on how users are identified and authenticated.</p>
@@ -3238,6 +3286,7 @@ with the wallet. It also shows the interactions with <a href="../../architecture
 <h2 id="documentation-structure">Documentation Structure<a class="headerlink" href="#documentation-structure" title="Permanent link">¶</a></h2>
 <p>This issuance documentation is organized into the following sections:</p>
 <ul>
+<li><strong><a href="credential-offers/">Credential Offers</a></strong> - Create offers, pass inline or dynamic claims, and understand replay prevention behavior</li>
 <li><strong><a href="credential-configuration/">Credential Configuration</a></strong> - Learn how to
   define individual credential types, their structure, claims, and display
   properties</li>
@@ -3245,7 +3294,7 @@ with the wallet. It also shows the interactions with <a href="../../architecture
   dedicated, reusable registrar-backed resource</li>
 <li><strong><a href="issuance-configuration/">Issuance Configuration</a></strong> - Understand how to
   create issuance configurations that group multiple credentials and define
-  issuance parameters such as authorization and webhooks</li>
+  issuance parameters such as authorization, token behavior, and trust settings</li>
 <li><strong><a href="attribute-provider/">Attribute Providers</a></strong> - Configure reusable webhook
   endpoints for fetching claims dynamically during credential issuance</li>
 </ul>
@@ -3261,30 +3310,10 @@ with the wallet. It also shows the interactions with <a href="../../architecture
    <a href="schema-metadata/">Schema Metadata</a> guide</li>
 <li><strong>Create an issuance configuration</strong> - Define the issuance configuration using
    the <a href="issuance-configuration/">Issuance Configuration</a> guide</li>
-<li><strong>Issue credentials</strong> - Start the issuance flow by creating credential offers</li>
+<li><strong>Create a credential offer</strong> - Start the issuance flow using the
+   <a href="credential-offers/">Credential Offers</a> guide</li>
 </ol>
 <hr>
-<h2 id="passing-claims">Passing Claims<a class="headerlink" href="#passing-claims" title="Permanent link">¶</a></h2>
-<p>EUDIPLO provides multiple methods to pass claims (data) for credentials during issuance, with a clear priority system that determines which claims are used.</p>
-<h3 id="priority-order">Priority Order<a class="headerlink" href="#priority-order" title="Permanent link">¶</a></h3>
-<p>Claims are resolved in the following priority order (highest to lowest):</p>
-<ol>
-<li><strong>Offer-level claims</strong> - Inline claims, webhook, or Attribute Provider reference passed at offer time</li>
-<li><strong>Configuration-level Attribute Provider</strong> - The <code>attributeProviderId</code> on the credential configuration</li>
-<li><strong>Configuration-level static claims</strong> - Claims defined in the credential configuration</li>
-</ol>
-<div class="admonition warning">
-<p class="admonition-title">Claims are not merged</p>
-<p>Higher priority sources completely override lower priority sources - claims are not merged. If an offer-level webhook is provided, the configuration-level Attribute Provider will not be called.</p>
-</div>
-<p>For a detailed explanation of the claims priority system and how to configure each method, see the <a href="credential-configuration/#fetching-claims">Fetching Claims</a> section in the Credential Configuration documentation.</p>
-<h3 id="when-to-use-each-method">When to Use Each Method<a class="headerlink" href="#when-to-use-each-method" title="Permanent link">¶</a></h3>
-<ul>
-<li><strong>Configuration-level static claims</strong> - Default values for all credentials of this type, fixed metadata (e.g., issuing country, authority)</li>
-<li><strong>Configuration-level Attribute Provider</strong> - Dynamic claims based on authentication context, personalized credentials requiring real-time data</li>
-<li><strong>Offer-level inline claims</strong> - Claims known at offer creation time, overriding specific values for individual issuances</li>
-<li><strong>Offer-level webhook/Attribute Provider</strong> - Custom data source per offer, testing different webhook endpoints</li>
-</ul>
 
 
 
@@ -3337,13 +3366,13 @@ with the wallet. It also shows the interactions with <a href="../../architecture
         
         
           
-          <a href="credential-configuration/" class="md-footer__link md-footer__link--next" aria-label="Next: Credential Configuration">
+          <a href="credential-offers/" class="md-footer__link md-footer__link--next" aria-label="Next: Credential Offers">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Credential Configuration
+                Credential Offers
               </div>
             </div>
             <div class="md-footer__button md-icon">

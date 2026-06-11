@@ -584,32 +584,32 @@ import { TrustList } from &quot;./trust-list.entity&quot;;
 @Entity()
 export class TrustListVersion {
     @PrimaryGeneratedColumn()
-    id: string;
+    id!: string;
 
     @Column(&quot;varchar&quot;)
-    trustListId: string;
+    trustListId!: string;
 
     @ManyToOne(() &#x3D;&gt; TrustList, { onDelete: &quot;CASCADE&quot; })
     @JoinColumn([
         { name: &quot;trustListId&quot;, referencedColumnName: &quot;id&quot; },
         { name: &quot;tenantId&quot;, referencedColumnName: &quot;tenantId&quot; },
     ])
-    trustList: TrustList;
+    trustList!: TrustList;
 
     @Column(&quot;varchar&quot;)
-    tenantId: string;
+    tenantId!: string;
 
     /**
      * The sequence number at the time this version was created
      */
     @Column({ type: &quot;int&quot; })
-    sequenceNumber: number;
+    sequenceNumber!: number;
 
     /**
      * The full trust list JSON at this version
      */
     @Column({ type: &quot;json&quot; })
-    data: object;
+    data!: object;
 
     /**
      * The entity configuration at this version
@@ -621,10 +621,10 @@ export class TrustListVersion {
      * The signed JWT at this version
      */
     @Column({ type: &quot;text&quot; })
-    jwt: string;
+    jwt!: string;
 
     @CreateDateColumn()
-    createdAt: Date;
+    createdAt!: Date;
 }
 </code></pre>
     </div>

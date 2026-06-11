@@ -210,7 +210,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:46</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -242,7 +242,6 @@ import {
     IsBoolean,
     IsEnum,
     IsNumber,
-    IsObject,
     IsOptional,
     IsString,
     ValidateNested,
@@ -250,12 +249,11 @@ import {
 import { Column, Entity, JoinColumn, ManyToOne } from &quot;typeorm&quot;;
 import { TenantEntity } from &quot;../../../../auth/tenant/entitites/tenant.entity&quot;;
 import { KeyChainEntity } from &quot;../../../../crypto/key/entities/key-chain.entity&quot;;
-import { SchemaResponse } from &quot;../../../issuance/oid4vci/metadata/dto/schema-response.dto&quot;;
 import { VCT } from &quot;../../../issuance/oid4vci/metadata/dto/vct.dto&quot;;
 import { AttributeProviderEntity } from &quot;../../attribute-provider/entities/attribute-provider.entity&quot;;
 import { KeyAttestationsRequired } from &quot;../../issuance/dto/key-attestations-required.dto&quot;;
 import { WebhookEndpointEntity } from &quot;../../webhook-endpoint/entities/webhook-endpoint.entity&quot;;
-import { ClaimMetadata } from &quot;../dto/claim-metadata.dto&quot;;
+import { ClaimFieldDefinitionDto } from &quot;../dto/claim-field-definition.dto&quot;;
 import { SchemaMetaConfig } from &quot;../dto/schema-meta-config.dto&quot;;
 import {
     IaeAction,
@@ -301,7 +299,18 @@ export class Display {
 
 export enum CredentialFormat {
     MSO_MDOC &#x3D; &quot;mso_mdoc&quot;,
-    SD_JWT &#x3D; &quot;dc+sd-jwt&quot;,
+    SD_JWT_VC &#x3D; &quot;dc+sd-jwt&quot;,
+}
+
+/**
+ * Determines how SD-JWT credentials are signed and trust is established.
+ * - &quot;x5c&quot;: Include certificate chain in JWT header (certificate-based trust)
+ * - &quot;federation&quot;: Include issuer entity ID in &#x27;iss&#x27; claim (federation-based trust)
+ * - &quot;auto&quot;: Legacy mode kept for backward compatibility (treated like x5c)
+ */
+export enum SdJwtTrustFormat {
+    X5C &#x3D; &quot;x5c&quot;,
+    FEDERATION &#x3D; &quot;federation&quot;,
 }
 
 export class IssuerMetadataCredentialConfig {
@@ -321,47 +330,6 @@ export class IssuerMetadataCredentialConfig {
     @IsOptional()
     @IsString()
     docType?: string;
-
-    /**
-     * Namespace for mDOC credentials (e.g., &quot;org.iso.18013.5.1&quot;).
-     * Only applicable when format is &quot;mso_mdoc&quot;.
-     * Used when claims are provided as a flat object.
-     */
-    @IsOptional()
-    @IsString()
-    namespace?: string;
-
-    /**
-     * Claims organized by namespace for mDOC credentials.
-     * Allows specifying claims across multiple namespaces.
-     * Only applicable when format is &quot;mso_mdoc&quot;.
-     * Example:
-     * {
-     *   &quot;org.iso.18013.5.1&quot;: { &quot;given_name&quot;: &quot;John&quot;, &quot;family_name&quot;: &quot;Doe&quot; },
-     *   &quot;org.iso.18013.5.1.aamva&quot;: { &quot;DHS_compliance&quot;: &quot;F&quot; }
-     * }
-     */
-    @IsOptional()
-    @IsObject()
-    claimsByNamespace?: Record&lt;string, Record&lt;string, any&gt;&gt;;
-
-    /**
-     * Claims metadata for wallet rendering.
-     * Follows the OID4VCI credential_metadata.claims specification.
-     * Each claim includes a path (JSONPath-like array), optional mandatory flag,
-     * and display information with multi-language support.
-     *
-     * Example:
-     * [
-     *   { &quot;path&quot;: [&quot;given_name&quot;], &quot;mandatory&quot;: false, &quot;display&quot;: [{ &quot;name&quot;: &quot;Given Name&quot;, &quot;locale&quot;: &quot;en-US&quot; }] },
-     *   { &quot;path&quot;: [&quot;address&quot;, &quot;street_address&quot;], &quot;display&quot;: [{ &quot;name&quot;: &quot;Street Address&quot;, &quot;locale&quot;: &quot;en-US&quot; }] }
-     * ]
-     */
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; ClaimMetadata)
-    claimsMetadata?: ClaimMetadata[];
 
     /**
      * Key attestation requirements for JWT proofs for this credential.
@@ -412,10 +380,15 @@ export class CredentialConfig {
     @Type(() &#x3D;&gt; IssuerMetadataCredentialConfig)
     config!: IssuerMetadataCredentialConfig;
 
-    @Column(&quot;json&quot;, { nullable: true })
-    @IsOptional()
-    @IsObject()
-    claims?: Record&lt;string, any&gt; | null;
+    @Column(&quot;int&quot;, { default: 2 })
+    @IsNumber()
+    configVersion!: number;
+
+    @Column(&quot;json&quot;)
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() &#x3D;&gt; ClaimFieldDefinitionDto)
+    fields!: ClaimFieldDefinitionDto[];
 
     /**
      * Reference to the attribute provider used for fetching claims.
@@ -453,20 +426,14 @@ export class CredentialConfig {
     ])
     webhookEndpoint?: WebhookEndpointEntity;
 
-    // has to be optional since there may be credentials that are disclosed without a frame
-    @Column(&quot;json&quot;, { nullable: true })
     @IsOptional()
-    @IsObject()
-    disclosureFrame?: Record&lt;string, any&gt; | null;
-
-    @IsOptional()
-    @ApiProperty({
+    @ApiPropertyOptional({
         description:
             &quot;VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT&quot;,
-        nullable: true,
-        oneOf: [
+        anyOf: [
             { type: &quot;string&quot;, description: &quot;VCT URI string&quot; },
             { $ref: getSchemaPath(VCT) },
+            { type: &quot;null&quot; },
         ],
     })
     @Column(&quot;json&quot;, { nullable: true })
@@ -549,16 +516,20 @@ export class CredentialConfig {
     @Column(&quot;json&quot;, { nullable: true })
     iaeActions?: IaeAction[] | null;
 
+    /**
+     * For SD-JWT credentials: determines whether to include certificate chain (x5c)
+     * or use federation-based trust (iss claim).
+     * Default: &quot;x5c&quot; (federation must be explicitly selected)
+     */
+    @IsOptional()
+    @IsEnum(SdJwtTrustFormat)
+    @Column(&quot;varchar&quot;, { nullable: true, default: &quot;x5c&quot; })
+    sdJwtTrustFormat?: SdJwtTrustFormat | null;
+
     @IsOptional()
     @Column(&quot;int&quot;, { nullable: true })
     @IsNumber()
     lifeTime?: number;
-
-    @IsOptional()
-    @ValidateNested()
-    @Type(() &#x3D;&gt; SchemaResponse)
-    @Column(&quot;json&quot;, { nullable: true })
-    schema?: SchemaResponse | null;
 
     /**
      * TS11 schema metadata configuration for EUDI Catalogue of Attestations.

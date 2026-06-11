@@ -228,7 +228,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/all-exceptions.filter.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/all-exceptions.filter.ts:14</a></div>
                         </td>
                     </tr>
 
@@ -262,8 +262,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="15"
-                                    class="link-to-prism">src/all-exceptions.filter.ts:15</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="16"
+                                    class="link-to-prism">src/all-exceptions.filter.ts:16</a></div>
                         </td>
                     </tr>
 
@@ -340,6 +340,7 @@
     Logger,
 } from &quot;@nestjs/common&quot;;
 import { Request, Response } from &quot;express&quot;;
+import { EntityNotFoundError } from &quot;typeorm&quot;;
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -350,20 +351,28 @@ export class AllExceptionsFilter implements ExceptionFilter {
         const response &#x3D; ctx.getResponse&lt;Response&gt;();
         const request &#x3D; ctx.getRequest&lt;Request&gt;();
 
-        const status &#x3D;
-            exception instanceof HttpException
-                ? exception.getStatus()
-                : HttpStatus.INTERNAL_SERVER_ERROR;
+        let status: number;
+        if (exception instanceof HttpException) {
+            status &#x3D; exception.getStatus();
+        } else if (exception instanceof EntityNotFoundError) {
+            status &#x3D; HttpStatus.NOT_FOUND;
+        } else {
+            status &#x3D; HttpStatus.INTERNAL_SERVER_ERROR;
+        }
 
-        const message &#x3D;
-            exception instanceof HttpException
-                ? exception.getResponse()
-                : (exception as any)?.message || exception;
+        let message: unknown;
+        if (exception instanceof HttpException) {
+            message &#x3D; exception.getResponse();
+        } else if (exception instanceof Error) {
+            message &#x3D; exception.message;
+        } else {
+            message &#x3D; &quot;Internal Server Error&quot;;
+        }
 
         // Log the error with stack trace if available using NestJS Logger
         this.logger.error(
             &#x60;[${request.method}] ${request.url} ${status} - ${JSON.stringify(message)}&#x60;,
-            (exception as any)?.stack,
+            exception instanceof Error ? exception.stack : undefined,
         );
 
         response.status(status).json({

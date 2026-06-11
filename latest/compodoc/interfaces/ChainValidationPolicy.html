@@ -168,6 +168,13 @@
                             <ul class="index-list">
                                 <li>
                                             <span class="modifier">Optional</span>
+                                        <a href="#federationTrustSource" 
+>
+                                            federationTrustSource
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
                                         <a href="#pinnedCertMode" 
 >
                                             pinnedCertMode
@@ -205,6 +212,50 @@
 
             <section data-compodoc="block-properties">
                 <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="federationTrustSource"></a>
+                                        <span class="name "><b>federationTrustSource</b>
+                                            <a href="#federationTrustSource">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>federationTrustSource:         <code><a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self" >FederationTrustSource</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self" >FederationTrustSource</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>OpenID Federation trust source used for federation-based trust checks.</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <table class="table table-sm table-bordered">
                         <tbody>
                                 <tr>
@@ -389,12 +440,17 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &quot;@nestjs/common&quot;;
 import * as x509 from &quot;@peculiar/x509&quot;;
 import { PinoLogger } from &quot;nestjs-pino&quot;;
+import { FederationTrustService } from &quot;../../../shared/trust/federation-trust.service&quot;;
 import { StatusListVerifierService } from &quot;../../../shared/trust/status-list-verifier.service&quot;;
 import {
     BuiltTrustStore,
     TrustStoreService,
 } from &quot;../../../shared/trust/trust-store.service&quot;;
-import { TrustedEntity, TrustListSource } from &quot;../../../shared/trust/types&quot;;
+import {
+    FederationTrustSource,
+    TrustedEntity,
+    TrustListSource,
+} from &quot;../../../shared/trust/types&quot;;
 import {
     MatchedTrustedEntity,
     X509ValidationService,
@@ -412,6 +468,8 @@ export interface ChainValidationPolicy {
     serviceTypeFilter?: string;
     /** Whether to verify status list (revocation) */
     verifyStatusList?: boolean;
+    /** OpenID Federation trust source used for federation-based trust checks. */
+    federationTrustSource?: FederationTrustSource;
 }
 
 /**
@@ -429,16 +487,6 @@ export interface ChainValidationResult {
 }
 
 /**
- * Certificate chain information extracted from a credential.
- */
-export interface CertificateChainInfo {
-    /** The x5c chain from the credential (base64 encoded) */
-    x5c: string[];
-    /** Public key for signature verification */
-    publicKey?: JsonWebKey;
-}
-
-/**
  * Shared service for certificate chain validation.
  * Used by both mDOC and SD-JWT-VC verifiers to ensure consistent behavior.
  *
@@ -452,6 +500,7 @@ export interface CertificateChainInfo {
 export class CredentialChainValidationService {
     constructor(
         private readonly trustStore: TrustStoreService,
+        private readonly federationTrustService: FederationTrustService,
         private readonly x509v: X509ValidationService,
         private readonly statusListVerifier: StatusListVerifierService,
         private readonly logger: PinoLogger,
@@ -492,17 +541,22 @@ export class CredentialChainValidationService {
             return { verified: true, matchedEntity: null };
         }
 
-        // 2) Load trust store
-        const store &#x3D; await this.getTrustStoreIfConfigured(trustListSource);
-        if (!store) {
-            // No trust list configured - skip trust validation
-            this.logger.debug(
-                &quot;No trust list source configured, returning verified without trust validation&quot;,
-            );
-            return { verified: true, matchedEntity: null };
-        }
+        const federationTrustSource &#x3D; policy.federationTrustSource;
+        const useFederation &#x3D; this.federationTrustService.shouldUseFederation(
+            federationTrustSource,
+        );
+        const useLote &#x3D; this.federationTrustService.shouldUseLote(
+            federationTrustSource,
+        );
+        const federationMode &#x3D; this.federationTrustService.getMode(
+            federationTrustSource,
+        );
+        const enforceFederationPolicy &#x3D;
+            federationMode &#x3D;&#x3D;&#x3D; &quot;federation-only&quot; ||
+            (federationMode &#x3D;&#x3D;&#x3D; &quot;hybrid&quot; &amp;&amp;
+                federationTrustSource?.enforceSigningPolicy &#x3D;&#x3D;&#x3D; true);
 
-        // 3) Parse the presented certificate chain
+        // 2) Parse the presented certificate chain
         let presented: x509.X509Certificate[];
         try {
             presented &#x3D; this.x509v.parseX5c(x5c);
@@ -517,13 +571,70 @@ export class CredentialChainValidationService {
 
         const leaf &#x3D; presented[0];
 
-        // 4) Get all certificates from entities for path building
+        // 3) Run federation trust evaluation when enabled
+        let federationTrustResult:
+            | { trusted: boolean; reason: string }
+            | undefined;
+        if (useFederation) {
+            federationTrustResult &#x3D;
+                await this.federationTrustService.evaluateCertificateEntityTrust(
+                    x5c,
+                    federationTrustSource,
+                );
+
+            if (!federationTrustResult.trusted &amp;&amp; !useLote) {
+                return {
+                    verified: false,
+                    matchedEntity: null,
+                    error: &quot;federation_trust_failed&quot;,
+                    errorDetails: federationTrustResult.reason,
+                };
+            }
+        }
+
+        if (!useLote) {
+            if (federationTrustResult?.trusted) {
+                return { verified: true, matchedEntity: null };
+            }
+
+            return {
+                verified: false,
+                matchedEntity: null,
+                error: &quot;federation_trust_failed&quot;,
+                errorDetails:
+                    federationTrustResult?.reason ??
+                    &quot;federation trust evaluation failed&quot;,
+            };
+        }
+
+        // 4) Load trust store for LoTE-based validation
+        const store &#x3D; await this.getTrustStoreIfConfigured(trustListSource);
+        if (!store) {
+            if (enforceFederationPolicy) {
+                return {
+                    verified: Boolean(federationTrustResult?.trusted),
+                    matchedEntity: null,
+                    error: federationTrustResult?.trusted
+                        ? undefined
+                        : &quot;federation_trust_failed&quot;,
+                    errorDetails: federationTrustResult?.reason,
+                };
+            }
+
+            // No trust list configured - preserve existing behavior
+            this.logger.debug(
+                &quot;No trust list source configured, returning verified without LoTE trust validation&quot;,
+            );
+            return { verified: true, matchedEntity: null };
+        }
+
+        // 5) Get all certificates from entities for path building
         const allCerts &#x3D; store.entities.flatMap((e) &#x3D;&gt;
             e.services.map((s) &#x3D;&gt; ({ certValue: s.certValue })),
         );
         const anchors &#x3D; this.x509v.parseTrustAnchors(allCerts);
 
-        // 5) Build the certificate path
+        // 6) Build the certificate path
         let path: x509.X509Certificate[];
         try {
             path &#x3D; await this.x509v.buildPath(leaf, presented, anchors, []);
@@ -534,6 +645,14 @@ export class CredentialChainValidationService {
                 trustListSource,
                 e,
             );
+
+            if (enforceFederationPolicy &amp;&amp; federationTrustResult?.trusted) {
+                this.logger.warn(
+                    &#x60;LoTE chain failed but federation policy accepted chain: ${errorDetails}&#x60;,
+                );
+                return { verified: true, matchedEntity: null };
+            }
+
             return {
                 verified: false,
                 matchedEntity: null,
@@ -542,7 +661,7 @@ export class CredentialChainValidationService {
             };
         }
 
-        // 6) Check time validity
+        // 7) Check time validity
         const now &#x3D; new Date();
         for (const cert of path) {
             if (!this.x509v.isTimeValid(cert, now)) {
@@ -555,7 +674,7 @@ export class CredentialChainValidationService {
             }
         }
 
-        // 7) Match against TrustedEntities
+        // 8) Match against TrustedEntities
         const matchedEntity &#x3D; await this.x509v.pathMatchesTrustedEntities(
             path,
             store.entities,
@@ -570,11 +689,30 @@ export class CredentialChainValidationService {
                 trustListSource,
                 pinnedCertMode,
             );
+
+            if (enforceFederationPolicy &amp;&amp; federationTrustResult?.trusted) {
+                this.logger.warn(
+                    &#x60;No LoTE entity match but federation policy accepted chain: ${errorDetails}&#x60;,
+                );
+                return { verified: true, matchedEntity: null };
+            }
+
             return {
                 verified: false,
                 matchedEntity: null,
                 error: &quot;no_trusted_entity_match&quot;,
                 errorDetails,
+            };
+        }
+
+        if (enforceFederationPolicy &amp;&amp; !federationTrustResult?.trusted) {
+            return {
+                verified: false,
+                matchedEntity: null,
+                error: &quot;federation_trust_failed&quot;,
+                errorDetails:
+                    federationTrustResult?.reason ??
+                    &quot;federation trust evaluation failed&quot;,
             };
         }
 

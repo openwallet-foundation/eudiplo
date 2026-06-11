@@ -559,7 +559,7 @@ import { TrustList } from &quot;../entities/trust-list.entity&quot;;
  */
 export class TrustListEntityInfo {
     @IsString()
-    name: string;
+    name!: string;
 
     @IsString()
     @IsOptional()
@@ -593,39 +593,39 @@ export class TrustListEntityInfo {
 /**
  * Internal trust list entity - references certificates already in the system
  */
-export class InternalTrustListEntity {
+class InternalTrustListEntity {
     @ApiProperty({ enum: [&quot;internal&quot;] })
     @IsString()
-    type: &quot;internal&quot;;
+    type!: &quot;internal&quot;;
 
     @IsString()
-    issuerKeyChainId: string;
+    issuerKeyChainId!: string;
 
     @IsString()
-    revocationKeyChainId: string;
+    revocationKeyChainId!: string;
 
     @ValidateNested()
     @Type(() &#x3D;&gt; TrustListEntityInfo)
-    info: TrustListEntityInfo;
+    info!: TrustListEntityInfo;
 }
 
 /**
  * External trust list entity - uses PEM certificates directly
  */
-export class ExternalTrustListEntity {
+class ExternalTrustListEntity {
     @ApiProperty({ enum: [&quot;external&quot;] })
     @IsString()
-    type: &quot;external&quot;;
+    type!: &quot;external&quot;;
 
     @IsString()
-    issuerCertPem: string;
+    issuerCertPem!: string;
 
     @IsString()
-    revocationCertPem: string;
+    revocationCertPem!: string;
 
     @ValidateNested()
     @Type(() &#x3D;&gt; TrustListEntityInfo)
-    info: TrustListEntityInfo;
+    info!: TrustListEntityInfo;
 }
 
 export type TrustListEntity &#x3D; InternalTrustListEntity | ExternalTrustListEntity;
@@ -686,7 +686,7 @@ export class TrustListCreateDto extends OmitType(TrustList, [
         },
         keepDiscriminatorProperty: true,
     })
-    entities: TrustListEntity[];
+    entities!: TrustListEntity[];
 }
 </code></pre>
     </div>

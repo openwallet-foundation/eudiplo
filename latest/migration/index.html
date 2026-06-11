@@ -9,7 +9,7 @@
         <link rel="prev" href="../deployment/tls/">
       
       
-        <link rel="next" href="3.x-to-4.0/">
+        <link rel="next" href="4.x-to-5.0/">
       
       
         
@@ -711,6 +711,8 @@
       
         
       
+        
+      
     
     
     
@@ -765,6 +767,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/issuance/credential-offers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Credential Offers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -904,6 +934,8 @@
       
         
       
+        
+      
     
     
     
@@ -958,6 +990,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/presentation/presentation-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentation Requests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1376,6 +1436,8 @@
       
         
       
+        
+      
     
     
     
@@ -1431,6 +1493,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="4.x-to-5.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.x to 5.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1714,6 +1804,8 @@
       
         
       
+        
+      
     
     
     
@@ -1832,6 +1924,34 @@
     
   
     Interactive Authorization (IAE)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/federation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenID Federation
   
 
     
@@ -2668,6 +2788,11 @@
 <p class="admonition-title">Always upgrade sequentially</p>
 <p>If you are multiple major versions behind, upgrade one major version at a time. Do not skip major versions.</p>
 </div>
+<div class="admonition danger">
+<p class="admonition-title">Using the <code>main</code> branch image? Start with a fresh database</p>
+<p>The <code>main</code> branch image tracks active development and <strong>does not guarantee complete database migrations between snapshots</strong>. Migration files are only finalized when a version is released. If you are running <code>main</code> and pull a newer snapshot, schema changes may have been added without a corresponding migration, causing startup failures or data corruption.</p>
+<p><strong>The only safe approach for <code>main</code> is to start with a fresh database each time you update.</strong> If you need a stable, upgradeable deployment, use a tagged release image instead.</p>
+</div>
 <h2 id="version-history">Version History<a class="headerlink" href="#version-history" title="Permanent link">¶</a></h2>
 <table>
 <thead>
@@ -2694,9 +2819,14 @@
 <td>Introduced automatic database migrations. Bumped from v2 due to the migration system being flagged as a breaking change, though no user-facing API changes were made.</td>
 </tr>
 <tr>
-<td>4.0</td>
-<td><strong>Current stable</strong></td>
+<td>4.x</td>
+<td>Maintained</td>
 <td>Unified Key Chain model, Attribute Providers, <code>/api/</code> prefix, <a class="magiclink magiclink-github magiclink-mention" href="https://github.com/owf" title="GitHub User: owf">@owf</a> ecosystem packages.</td>
+</tr>
+<tr>
+<td>5.0</td>
+<td><strong>Current stable</strong></td>
+<td>Field-based credential configuration model (v2), improved UX for config creation.</td>
 </tr>
 </tbody>
 </table>
@@ -2719,6 +2849,11 @@
 <td>3.x</td>
 <td>4.0</td>
 <td><a href="3.x-to-4.0/">Migration Guide</a> — API prefix, Key Chains, Attribute Providers, and more</td>
+</tr>
+<tr>
+<td>4.x</td>
+<td>5.0</td>
+<td><a href="4.x-to-5.0/">Migration Guide</a> — Field-based credential configuration (v2)</td>
 </tr>
 </tbody>
 </table>
@@ -2803,13 +2938,13 @@
         
         
           
-          <a href="3.x-to-4.0/" class="md-footer__link md-footer__link--next" aria-label="Next: 3.x to 4.0">
+          <a href="4.x-to-5.0/" class="md-footer__link md-footer__link--next" aria-label="Next: 4.x to 5.0">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                3.x to 4.0
+                4.x to 5.0
               </div>
             </div>
             <div class="md-footer__button md-icon">

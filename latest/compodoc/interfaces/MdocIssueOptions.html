@@ -274,7 +274,7 @@
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>deviceKey:         <code><a href="../interfaces/Jwk.html" target="_self" >Jwk</a></code>
+                                        <code>deviceKey:     <code>Jwk</code>
 </code>
                                     </td>
                                 </tr>
@@ -282,7 +282,7 @@
 
                                     <tr>
                                         <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="../interfaces/Jwk.html" target="_self" >Jwk</a></code>
+                                            <i>Type : </i>    <code>Jwk</code>
 
                                         </td>
                                     </tr>
@@ -342,6 +342,7 @@ import { KeyChainService } from &quot;../../../../../crypto/key/key-chain.servic
 import { Session } from &quot;../../../../../session/entities/session.entity&quot;;
 import { mdocContext } from &quot;../../../../../verifier/presentations/mdoc-context&quot;;
 import { CredentialConfig } from &quot;../../entities/credential.entity&quot;;
+import { buildClaimsByNamespace } from &quot;../../utils&quot;;
 
 export interface MdocIssueOptions {
     credentialConfiguration: CredentialConfig;
@@ -378,26 +379,24 @@ export class MdocIssuerService {
             (credentialConfiguration.config as any).doctype ||
             &quot;org.iso.18013.5.1.mDL&quot;;
 
-        // Get the namespace from configuration or derive from docType
-        const namespace &#x3D;
-            credentialConfiguration.config.namespace ||
-            this.getDefaultNamespace(docType);
-
         const issuer &#x3D; new Issuer(docType, mdocContext);
 
-        // Add claims to namespaces
-        // Priority: claimsByNamespace &gt; flat claims with namespace
-        const claimsByNamespace &#x3D;
-            credentialConfiguration.config.claimsByNamespace;
+        const defaultNamespace &#x3D; this.getDefaultNamespace(docType);
+        const claimsByNamespace &#x3D; buildClaimsByNamespace(
+            credentialConfiguration.fields as any,
+        );
 
         if (claimsByNamespace &amp;&amp; Object.keys(claimsByNamespace).length &gt; 0) {
             // Multiple namespaces specified
             for (const [ns, nsClaims] of Object.entries(claimsByNamespace)) {
                 issuer.addIssuerNamespace(ns, nsClaims);
             }
+            if (claims &amp;&amp; Object.keys(claims).length &gt; 0) {
+                issuer.addIssuerNamespace(defaultNamespace, claims);
+            }
         } else {
             // Single namespace with flat claims
-            issuer.addIssuerNamespace(namespace, claims);
+            issuer.addIssuerNamespace(defaultNamespace, claims);
         }
 
         // Get signing certificate
@@ -415,7 +414,7 @@ export class MdocIssuerService {
         const privateKey &#x3D; await exportJWK(
             await crypto.subtle.importKey(
                 &quot;jwk&quot;,
-                keyChain.activeKey,
+                keyChain.activeJwk,
                 { name: &quot;ECDSA&quot;, namedCurve: &quot;P-256&quot; },
                 true,
                 [&quot;sign&quot;],

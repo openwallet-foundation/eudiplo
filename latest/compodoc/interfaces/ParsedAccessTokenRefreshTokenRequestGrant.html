@@ -284,7 +284,7 @@ import { TokenErrorException } from &quot;../exceptions&quot;;
 import { getHeadersFromRequest } from &quot;../util&quot;;
 import { AuthorizeQueries } from &quot;./dto/authorize-request.dto&quot;;
 
-export interface ParsedAccessTokenAuthorizationCodeRequestGrant {
+interface ParsedAccessTokenAuthorizationCodeRequestGrant {
     grantType: AuthorizationCodeGrantIdentifier;
     code: string;
 }
@@ -374,6 +374,84 @@ export class AuthorizeService {
         }
         // Default to invalid_request for malformed requests
         return &quot;invalid_request&quot;;
+    }
+
+    private extractTokenErrorDescription(error: unknown): string | undefined {
+        if (typeof error &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp; error.trim().length &gt; 0) {
+            return error;
+        }
+
+        if (!error || typeof error !&#x3D;&#x3D; &quot;object&quot;) {
+            return undefined;
+        }
+
+        const candidate &#x3D; error as {
+            error_description?: unknown;
+            message?: unknown;
+            cause?: { message?: unknown };
+        };
+
+        if (
+            typeof candidate.error_description &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+            candidate.error_description.trim().length &gt; 0
+        ) {
+            return candidate.error_description;
+        }
+
+        if (
+            typeof candidate.message &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+            candidate.message.trim().length &gt; 0
+        ) {
+            return candidate.message;
+        }
+
+        if (
+            typeof candidate.cause?.message &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+            candidate.cause.message.trim().length &gt; 0
+        ) {
+            return candidate.cause.message;
+        }
+
+        return undefined;
+    }
+
+    private describeMalformedTokenRequest(body: unknown): string {
+        if (!body || typeof body !&#x3D;&#x3D; &quot;object&quot;) {
+            return &quot;Malformed token request body&quot;;
+        }
+
+        const tokenRequest &#x3D; body as Record&lt;string, unknown&gt;;
+        const grantType &#x3D;
+            typeof tokenRequest.grant_type &#x3D;&#x3D;&#x3D; &quot;string&quot;
+                ? tokenRequest.grant_type
+                : undefined;
+
+        if (!grantType) {
+            return &quot;Missing required parameter: grant_type&quot;;
+        }
+
+        if (
+            grantType &#x3D;&#x3D;&#x3D; authorizationCodeGrantIdentifier &amp;&amp;
+            typeof tokenRequest.code !&#x3D;&#x3D; &quot;string&quot;
+        ) {
+            return &quot;Missing required parameter: code&quot;;
+        }
+
+        if (
+            grantType &#x3D;&#x3D;&#x3D; preAuthorizedCodeGrantIdentifier &amp;&amp;
+            typeof tokenRequest[&quot;pre-authorized_code&quot;] !&#x3D;&#x3D; &quot;string&quot;
+        ) {
+            return &quot;Missing required parameter: pre-authorized_code&quot;;
+        }
+
+        if (
+            grantType &#x3D;&#x3D;&#x3D; refreshTokenGrantIdentifier &amp;&amp;
+            typeof tokenRequest.refresh_token !&#x3D;&#x3D; &quot;string&quot;
+        ) {
+            return &quot;Missing required parameter: refresh_token&quot;;
+        }
+
+        return &#x60;Invalid token request for grant_type: ${grantType}&#x60;;
     }
 
     getAuthzIssuer(tenantId: string) {
@@ -566,15 +644,39 @@ export class AuthorizeService {
         }
 
         const request_uri &#x3D; &#x60;urn:${randomUUID()}&#x60;;
-        await this.sessionService.add(body.issuer_state!, {
-            request_uri,
-            auth_queries: body,
-        });
+
+        if (body.issuer_state) {
+            const updateResult &#x3D; await this.sessionService.add(
+                body.issuer_state,
+                {
+                    request_uri,
+                    auth_queries: body,
+                },
+            );
+
+            // Some PAR requests do not have a pre-existing issuer_state session.
+            // In that case we create a dedicated request_uri session for authorize.
+            if (!updateResult.affected) {
+                await this.sessionService.create({
+                    id: v4(),
+                    tenantId,
+                    request_uri,
+                    auth_queries: body,
+                });
+            }
+        } else {
+            await this.sessionService.create({
+                id: v4(),
+                tenantId,
+                request_uri,
+                auth_queries: body,
+            });
+        }
 
         return { expires_in: 500, request_uri };
     }
 
-    sendAuthorizationResponse(values: AuthorizeQueries, tenantId) {
+    sendAuthorizationResponse(values: AuthorizeQueries, tenantId: string) {
         if (values.request_uri) {
             return this.sessionService
                 .getBy({ request_uri: values.request_uri })
@@ -585,14 +687,27 @@ export class AuthorizeService {
                 })
                 .catch(async () &#x3D;&gt; {
                     //if not found, this means the flow is initiated by the wallet and not the issuer which is also fine.
+                    if (!values.redirect_uri) {
+                        throw new ConflictException(
+                            &quot;redirect_uri not found for request_uri authorization response&quot;,
+                        );
+                    }
+
                     const code &#x3D; v4();
+                    const iss &#x3D; this.getAuthzIssuer(tenantId);
                     await this.sessionService.create({
                         id: v4(),
                         tenantId,
                         authorization_code: code,
                         request_uri: values.request_uri,
                     });
-                    return &#x60;${values.redirect_uri}?code&#x3D;${code}&#x60;;
+
+                    const params &#x3D; new URLSearchParams({ code, iss });
+                    if (values.state) {
+                        params.set(&quot;state&quot;, values.state);
+                    }
+
+                    return &#x60;${values.redirect_uri}?${params.toString()}&#x60;;
                 });
         } else {
             throw new ConflictException(
@@ -633,7 +748,8 @@ export class AuthorizeService {
             // Malformed token request
             throw new TokenErrorException(
                 &quot;invalid_request&quot;,
-                err?.message ?? &quot;The token request is malformed&quot;,
+                this.extractTokenErrorDescription(err) ??
+                    this.describeMalformedTokenRequest(body),
             );
         }
 
@@ -770,7 +886,7 @@ export class AuthorizeService {
                     }
                     throw new TokenErrorException(
                         errorCode,
-                        err.error_description,
+                        this.extractTokenErrorDescription(err),
                     );
                 });
             dpopValue &#x3D; dpop;
@@ -808,7 +924,7 @@ export class AuthorizeService {
                     const errorCode &#x3D; this.mapToTokenErrorCode(err.error);
                     throw new TokenErrorException(
                         errorCode,
-                        err.error_description,
+                        this.extractTokenErrorDescription(err),
                     );
                 });
             dpopValue &#x3D; dpop;
@@ -838,7 +954,7 @@ export class AuthorizeService {
                     const errorCode &#x3D; this.mapToTokenErrorCode(err.error);
                     throw new TokenErrorException(
                         errorCode,
-                        err.error_description,
+                        this.extractTokenErrorDescription(err),
                     );
                 });
             // Note: dpopValue remains undefined for refresh_token grant
@@ -914,6 +1030,7 @@ export class AuthorizeService {
             }
 
             await this.sessionService.add(session.id, {
+                consumed: true, // Mark the session as consumed to prevent reuse
                 refresh_token: tokenResponse.refresh_token,
                 refresh_token_expires_at: refreshTokenExpiresAt,
             });

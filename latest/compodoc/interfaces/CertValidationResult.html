@@ -797,11 +797,7 @@ export class CertService {
             .update(Buffer.from(x509Cert.rawData))
             .digest();
         // Return as base64url (no padding)
-        return hash
-            .toString(&quot;base64&quot;)
-            .replace(/\+/g, &quot;-&quot;)
-            .replace(/\//g, &quot;_&quot;)
-            .replace(/&#x3D;+$/, &quot;&quot;);
+        return hash.toString(&quot;base64url&quot;);
     }
 }
 </code></pre>

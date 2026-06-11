@@ -719,6 +719,8 @@
       
         
       
+        
+      
     
     
     
@@ -771,6 +773,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../credential-offers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Credential Offers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1195,6 +1225,8 @@
       
         
       
+        
+      
     
     
     
@@ -1249,6 +1281,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../presentation/presentation-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Presentation Requests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1668,6 +1728,8 @@
       
         
       
+        
+      
     
     
     
@@ -1722,6 +1784,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../migration/4.x-to-5.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.x to 5.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -2005,6 +2095,8 @@
       
         
       
+        
+      
     
     
     
@@ -2123,6 +2215,34 @@
     
   
     Interactive Authorization (IAE)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/federation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenID Federation
   
 
     
@@ -3146,7 +3266,8 @@
 
 
 <h1 id="issuance-configuration">Issuance Configuration<a class="headerlink" href="#issuance-configuration" title="Permanent link">¶</a></h1>
-<p>Issuance configurations define the parameters and settings for the issuance of credentials. This includes details such as the supported credential types, issuance policies, and any specific requirements for the issuance process.</p>
+<p>Issuance configurations define runtime behavior for issuing credentials, such as
+authorization, token behavior, and trust-related requirements.</p>
 <hr>
 <h2 id="basic-structure">Basic Structure<a class="headerlink" href="#basic-structure" title="Permanent link">¶</a></h2>
 <p><strong>Example Issuance Configuration:</strong></p>
@@ -3172,13 +3293,19 @@
 <h2 id="configuration-fields">Configuration Fields<a class="headerlink" href="#configuration-fields" title="Permanent link">¶</a></h2>
 <ul>
 <li><code>authServers</code> (array of strings, optional): Authentication server URL for the issuance process.</li>
-<li><code>notifyWebhook</code> (object, optional): Webhook to send the result of the notification response. See <a href="../../../architecture/webhooks/#notification-webhook">Webhooks</a>.</li>
 <li><code>batchSize</code> (number, optional): Value to determine the amount of credentials that are issued in a batch. Default is 1.</li>
 <li><code>dPopRequired</code> (boolean, optional): Indicates whether DPoP is required for the issuance process. Default value is true.</li>
+<li><code>signingKeyId</code> (string, optional): Key ID used for signing access tokens. If omitted, the default signing key for the tenant is used.</li>
+<li><code>preferredAuthServer</code> (string, optional): Preferred authorization server shown first in issuer metadata (<code>authorization_servers</code>). Supports configured auth server URL, <code>built-in</code>, or <code>chained-as</code>.</li>
 <li><code>refreshTokenEnabled</code> (boolean, optional): Controls whether the token endpoint returns a refresh token in OID4VCI token responses. Default is <code>true</code>.</li>
 <li><code>refreshTokenExpiresInSeconds</code> (number, optional): Lifetime of issued refresh tokens in seconds. Default is <code>2592000</code> (30 days).</li>
+<li><code>txCodeMaxAttempts</code> (number, optional): Maximum failed <code>tx_code</code> attempts before invalidating pre-authorized code flow.</li>
 <li><code>walletAttestationRequired</code> (boolean, optional): Indicates whether wallet attestation is required for the token endpoint. Default value is false. See <a href="#wallet-attestation">Wallet Attestation</a> below.</li>
 <li><code>walletProviderTrustLists</code> (array of strings, optional): URLs of trust lists containing trusted wallet providers. Required when <code>walletAttestationRequired</code> is true.</li>
+<li><code>credentialRequestEncryption</code> (boolean, optional): Advertise support for encrypted credential requests (<code>credential_request_encryption</code>).</li>
+<li><code>credentialResponseEncryption</code> (boolean, optional): Advertise support for encrypted credential responses (<code>credential_response_encryption</code>).</li>
+<li><code>chainedAs</code> (object, optional): Chained Authorization Server configuration. See <a href="#chained-authorization-server">Chained Authorization Server</a>.</li>
+<li><code>federation</code> (object, optional): OpenID Federation trust configuration for auth-server/upstream trust evaluation. See <a href="../../../architecture/federation/">OpenID Federation</a>.</li>
 <li><code>display</code> (array of objects, required): The display information from the <a href="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html#name-credential-issuer-metadata:~:text=2%20or%20greater.-,display,-%3A%20OPTIONAL.%20A%20non">OID4VCI spec</a>. To host images or logos, you can use the <a href="../../../architecture/storage/">storage</a> system provided by EUDIPLO.</li>
 </ul>
 <hr>

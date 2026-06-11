@@ -204,8 +204,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="16"
-                                    class="link-to-prism">src/crypto/key/key.module.ts:16</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="21"
+                                    class="link-to-prism">src/crypto/key/key.module.ts:21</a></div>
                         </td>
                     </tr>
 
@@ -237,12 +237,17 @@ import { ConfigModule } from &quot;@nestjs/config&quot;;
 import { TypeOrmModule } from &quot;@nestjs/typeorm&quot;;
 import { TenantEntity } from &quot;../../auth/tenant/entitites/tenant.entity&quot;;
 import { CertService } from &quot;./cert/cert.service&quot;;
+import { CertificateBuilderService } from &quot;./cert/certificate-builder.service&quot;;
 import { CrlValidationService } from &quot;./cert/crl-validation.service&quot;;
 import { CryptoImplementatationModule } from &quot;./crypto-implementation/crypto-implementation.module&quot;;
 import { KeyChainEntity } from &quot;./entities/key-chain.entity&quot;;
 import { KeyChainController } from &quot;./key-chain.controller&quot;;
+import { KeyChainImportService } from &quot;./key-chain-import.service&quot;;
 import { KeyChainService } from &quot;./key-chain.service&quot;;
+import { KeyChainSigningService } from &quot;./key-chain-signing.service&quot;;
 import { KeyRotationService } from &quot;./key-rotation.service&quot;;
+import { KmsConfigService } from &quot;./kms/kms-config.service&quot;;
+import { KmsProviderRegistry } from &quot;./kms/kms-provider.registry&quot;;
 
 @Global()
 export class KeyModule {
@@ -257,6 +262,11 @@ export class KeyModule {
             ],
             controllers: [KeyChainController],
             providers: [
+                KmsConfigService,
+                KmsProviderRegistry,
+                CertificateBuilderService,
+                KeyChainSigningService,
+                KeyChainImportService,
                 KeyChainService,
                 KeyRotationService,
                 CertService,

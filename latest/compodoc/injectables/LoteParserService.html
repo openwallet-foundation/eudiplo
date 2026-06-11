@@ -207,7 +207,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>filterByServiceTypes(parsed: <a href="../miscellaneous/typealiases.html#ParsedLoTE" target="_self">ParsedLoTE</a>, accepted: <a href="../miscellaneous/enumerations.html#ServiceTypeIdentifier" target="_self">ServiceTypeIdentifier[]</a>)</code>
+<code>filterByServiceTypes(parsed: <a href="../miscellaneous/typealiases.html#ParsedLoTE" target="_self">ParsedLoTE</a>, accepted: <a href="../miscellaneous/typealiases.html#ServiceTypeIdentifier" target="_self">ServiceTypeIdentifier[]</a>)</code>
                 </td>
             </tr>
 
@@ -253,7 +253,7 @@ Keeps all services of matching entities (not just the matching services).</p>
                                         <tr>
                                                 <td>accepted</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/enumerations.html#ServiceTypeIdentifier" target="_self" >ServiceTypeIdentifier[]</a></code>
+                                                            <code><a href="../miscellaneous/typealiases.html#ServiceTypeIdentifier" target="_self" >ServiceTypeIdentifier[]</a></code>
                                             </td>
 
                                             <td>
@@ -289,7 +289,7 @@ Keeps all services of matching entities (not just the matching services).</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>parse(root: <a href="../interfaces/LoTE.html" target="_self">LoTE</a>)</code>
+<code>parse(root: LoTE)</code>
                 </td>
             </tr>
 
@@ -323,7 +323,7 @@ This allows pairing issuance and revocation certificates from the same entity.</
                                         <tr>
                                                 <td>root</td>
                                             <td>
-                                                            <code><a href="../interfaces/LoTE.html" target="_self" >LoTE</a></code>
+                                                        <code>LoTE</code>
                                             </td>
 
                                             <td>
@@ -399,7 +399,7 @@ import {
     TrustedEntityServiceCert,
 } from &quot;./types&quot;;
 
-export type LoteInfo &#x3D; {
+type LoteInfo &#x3D; {
     nextUpdate?: string;
     listIssueDateTime?: string;
     schemeTerritory?: string;
