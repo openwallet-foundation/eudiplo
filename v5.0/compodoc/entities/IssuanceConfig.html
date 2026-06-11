@@ -1,0 +1,1522 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content entity">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Entities</li>
+  <li class="breadcrumb-item" >IssuanceConfig</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/issuer/configuration/issuance/entities/issuance-config.entity.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Entity to manage issuance configs</p>
+
+            </p>
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#authServers" >authServers</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#batchSize" >batchSize</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#chainedAs" >chainedAs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#createdAt" >createdAt</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#credentialRequestEncryption" >credentialRequestEncryption</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#credentialResponseEncryption" >credentialResponseEncryption</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                <a href="#display" >display</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#dPopRequired" >dPopRequired</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#federation" >federation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#preferredAuthServer" >preferredAuthServer</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#refreshTokenEnabled" >refreshTokenEnabled</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#refreshTokenExpiresInSeconds" >refreshTokenExpiresInSeconds</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#signingKeyId" >signingKeyId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#tenant" >tenant</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                <a href="#tenantId" >tenantId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#txCodeMaxAttempts" >txCodeMaxAttempts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#updatedAt" >updatedAt</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#walletAttestationRequired" >walletAttestationRequired</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#walletProviderTrustLists" >walletProviderTrustLists</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="authServers"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>authServers</b></span>
+                        <a href="#authServers"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @IsArray()<br />@IsOptional()<br />@Column({type: &#x27;json&#x27;, nullable: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:62</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Authentication server URL for the issuance process.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="batchSize"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>batchSize</b></span>
+                        <a href="#batchSize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @IsNumber()<br />@IsOptional()<br />@Column(&#x27;int&#x27;, {default: 1})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:71</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Value to determine the amount of credentials that are issued in a batch.
+Default is 1.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="chainedAs"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>chainedAs</b></span>
+                        <a href="#chainedAs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/ChainedAsConfig.html" target="_self" >ChainedAsConfig | null</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiPropertyOptional({type: () &#x3D;&gt; ChainedAsConfig})<br />@ValidateNested()<br />@Type(undefined)<br />@IsOptional()<br />@Column({type: &#x27;json&#x27;, nullable: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="136" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:136</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Configuration for Chained Authorization Server mode.
+When enabled, EUDIPLO acts as an OAuth AS facade, delegating user authentication
+to an upstream OIDC provider while issuing its own tokens with issuer_state.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createdAt"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>createdAt</b></span>
+                        <a href="#createdAt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @CreateDateColumn()<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="239" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:239</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>The timestamp when the VP request was created.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="credentialRequestEncryption"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>credentialRequestEncryption</b></span>
+                        <a href="#credentialRequestEncryption"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiPropertyOptional({description: &#x27;Whether &#x60;credential_request_encryption&#x60; should be advertised in the credential issuer metadata.&#x27;, default: false})<br />@IsBoolean()<br />@IsOptional()<br />@Column(&#x27;boolean&#x27;, {default: false})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="200" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:200</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Whether to advertise <code>credential_request_encryption</code> in the credential issuer metadata.
+When enabled, the issuer publishes its encryption public key so wallets can
+send encrypted credential requests. Set <code>encryption_required</code> to enforce it.
+Default: false</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="credentialResponseEncryption"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>credentialResponseEncryption</b></span>
+                        <a href="#credentialResponseEncryption"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiPropertyOptional({description: &#x27;Whether &#x60;credential_response_encryption&#x60; should be advertised in the credential issuer metadata.&#x27;, default: false})<br />@IsBoolean()<br />@IsOptional()<br />@Column(&#x27;boolean&#x27;, {default: false})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="184" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:184</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Whether to advertise support for credential response encryption in the
+credential issuer metadata (<code>credential_response_encryption</code>). When
+enabled, wallets MAY request encrypted credential responses. Some
+wallets reject issuer metadata that advertises unsupported algorithms,
+so this defaults to false.
+Default: false</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="display"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                        <span ><b>display</b></span>
+                        <a href="#display"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>DisplayInfo[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ValidateNested({each: true})<br />@Type(undefined)<br />@Column(&#x27;json&#x27;, {nullable: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="152" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:152</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dPopRequired"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>dPopRequired</b></span>
+                        <a href="#dPopRequired"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @IsBoolean()<br />@IsOptional()<br />@Column(&#x27;boolean&#x27;, {default: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:79</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Indicates whether DPoP is required for the issuance process. Default value is true.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="federation"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>federation</b></span>
+                        <a href="#federation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/FederationConfig.html" target="_self" >FederationConfig | null</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiPropertyOptional({type: () &#x3D;&gt; FederationConfig})<br />@ValidateNested()<br />@Type(undefined)<br />@IsOptional()<br />@Column({type: &#x27;json&#x27;, nullable: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="147" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:147</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Optional OpenID Federation configuration used for trust evaluation.
+When omitted, trust checks rely on existing LoTE trust-list behavior.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="preferredAuthServer"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>preferredAuthServer</b></span>
+                        <a href="#preferredAuthServer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @IsOptional()<br />@IsString()<br />@Column({type: &#x27;varchar&#x27;, nullable: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="124" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:124</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>The URL of the preferred authorization server for wallet-initiated flows.
+When set, this AS is placed first in the <code>authorization_servers</code> array
+of the credential issuer metadata, signaling wallets to use it by default.
+Must match one of the configured auth servers, the chained AS URL, or &quot;built-in&quot;.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="refreshTokenEnabled"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>refreshTokenEnabled</b></span>
+                        <a href="#refreshTokenEnabled"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiPropertyOptional({description: &#x27;Whether refresh tokens should be issued for OID4VCI token responses.&#x27;, default: true})<br />@IsBoolean()<br />@IsOptional()<br />@Column(&#x27;boolean&#x27;, {default: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="166" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:166</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Whether to issue refresh tokens for access token requests.
+Default: true</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="refreshTokenExpiresInSeconds"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>refreshTokenExpiresInSeconds</b></span>
+                        <a href="#refreshTokenExpiresInSeconds"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiPropertyOptional({description: &#x27;Refresh token lifetime in seconds. Defaults to 2592000 (30 days).&#x27;, default: 2592000, nullable: true})<br />@IsNumber()<br />@IsOptional()<br />@Column(&#x27;int&#x27;, {default: 2592000, nullable: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="216" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:216</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Lifetime of issued refresh tokens in seconds.
+Default: 2592000 (30 days)
+Set to null for non-expiring refresh tokens (not recommended for security).</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="signingKeyId"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>signingKeyId</b></span>
+                        <a href="#signingKeyId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiPropertyOptional({description: &#x27;Key ID for signing access tokens. If unset, the default signing key is used.&#x27;})<br />@IsOptional()<br />@IsString()<br />@Column({type: &#x27;varchar&#x27;, nullable: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="113" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:113</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Optional key ID to use for signing access tokens.
+Must reference an existing key managed by the key service.
+If not set, the first available signing key for the tenant is used.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tenant"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>tenant</b></span>
+                        <a href="#tenant"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../entitys/TenantEntity.html" target="_self" >TenantEntity</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ManyToOne(undefined, {cascade: true, onDelete: &#x27;CASCADE&#x27;})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:54</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>The tenant that owns this object.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tenantId"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                        <span ><b>tenantId</b></span>
+                        <a href="#tenantId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiHideProperty()<br />@PrimaryColumn()<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:48</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Tenant ID for the issuance configuration.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="txCodeMaxAttempts"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>txCodeMaxAttempts</b></span>
+                        <a href="#txCodeMaxAttempts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiPropertyOptional({description: &#x27;Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.&#x27;, default: 5, nullable: true})<br />@IsNumber()<br />@IsOptional()<br />@Column(&#x27;int&#x27;, {nullable: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="233" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:233</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Maximum number of failed tx_code (transaction code) validation attempts
+before the pre-authorized code is invalidated. Protects against brute-force
+attacks on the OID4VCI pre-authorized code flow.
+Default: 5. Set to null to disable the limit (not recommended).</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updatedAt"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>updatedAt</b></span>
+                        <a href="#updatedAt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @UpdateDateColumn()<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="245" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:245</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>The timestamp when the VP request was last updated.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="walletAttestationRequired"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>walletAttestationRequired</b></span>
+                        <a href="#walletAttestationRequired"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @IsBoolean()<br />@IsOptional()<br />@Column(&#x27;boolean&#x27;, {default: false})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="89" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:89</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Indicates whether wallet attestation is required for the token endpoint.
+When enabled, wallets must provide OAuth-Client-Attestation headers.
+Default value is false.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="walletProviderTrustLists"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>walletProviderTrustLists</b></span>
+                        <a href="#walletProviderTrustLists"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @IsArray()<br />@IsOptional()<br />@Column({type: &#x27;json&#x27;, nullable: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="99" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:99</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>URLs of trust lists containing trusted wallet providers.
+The wallet attestation&#39;s X.509 certificate will be validated against these trust lists.
+If empty and walletAttestationRequired is true, all wallet providers are rejected.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+    ApiExtraModels,
+    ApiHideProperty,
+    ApiPropertyOptional,
+} from &quot;@nestjs/swagger&quot;;
+import { Type } from &quot;class-transformer&quot;;
+import {
+    IsArray,
+    IsBoolean,
+    IsNumber,
+    IsOptional,
+    IsString,
+    ValidateNested,
+} from &quot;class-validator&quot;;
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToOne,
+    PrimaryColumn,
+    UpdateDateColumn,
+} from &quot;typeorm&quot;;
+import { TenantEntity } from &quot;../../../../auth/tenant/entitites/tenant.entity&quot;;
+import {
+    AuthenticationMethodAuth,
+    AuthenticationMethodNone,
+    AuthenticationMethodPresentation,
+} from &quot;../dto/authentication-config.dto&quot;;
+import { ChainedAsConfig } from &quot;../dto/chained-as-config.dto&quot;;
+import { DisplayInfo } from &quot;../dto/display.dto&quot;;
+import { FederationConfig } from &quot;../dto/federation-config.dto&quot;;
+
+/**
+ * Entity to manage issuance configs
+ */
+@ApiExtraModels(
+    AuthenticationMethodNone,
+    AuthenticationMethodAuth,
+    AuthenticationMethodPresentation,
+)
+@Entity()
+export class IssuanceConfig {
+    /**
+     * Tenant ID for the issuance configuration.
+     */
+    @ApiHideProperty()
+    @PrimaryColumn()
+    tenantId!: string;
+
+    /**
+     * The tenant that owns this object.
+     */
+    @ManyToOne(() &#x3D;&gt; TenantEntity, { cascade: true, onDelete: &quot;CASCADE&quot; })
+    tenant!: TenantEntity;
+
+    /**
+     * Authentication server URL for the issuance process.
+     */
+    @IsArray()
+    @IsOptional()
+    @Column({ type: &quot;json&quot;, nullable: true })
+    authServers?: string[];
+
+    /**
+     * Value to determine the amount of credentials that are issued in a batch.
+     * Default is 1.
+     */
+    @IsNumber()
+    @IsOptional()
+    @Column(&quot;int&quot;, { default: 1 })
+    batchSize?: number;
+
+    /**
+     * Indicates whether DPoP is required for the issuance process. Default value is true.
+     */
+    @IsBoolean()
+    @IsOptional()
+    @Column(&quot;boolean&quot;, { default: true })
+    dPopRequired?: boolean;
+
+    /**
+     * Indicates whether wallet attestation is required for the token endpoint.
+     * When enabled, wallets must provide OAuth-Client-Attestation headers.
+     * Default value is false.
+     */
+    @IsBoolean()
+    @IsOptional()
+    @Column(&quot;boolean&quot;, { default: false })
+    walletAttestationRequired?: boolean;
+
+    /**
+     * URLs of trust lists containing trusted wallet providers.
+     * The wallet attestation&#x27;s X.509 certificate will be validated against these trust lists.
+     * If empty and walletAttestationRequired is true, all wallet providers are rejected.
+     */
+    @IsArray()
+    @IsOptional()
+    @Column({ type: &quot;json&quot;, nullable: true })
+    walletProviderTrustLists?: string[];
+
+    /**
+     * Optional key ID to use for signing access tokens.
+     * Must reference an existing key managed by the key service.
+     * If not set, the first available signing key for the tenant is used.
+     */
+    @ApiPropertyOptional({
+        description:
+            &quot;Key ID for signing access tokens. If unset, the default signing key is used.&quot;,
+    })
+    @IsOptional()
+    @IsString()
+    @Column({ type: &quot;varchar&quot;, nullable: true })
+    signingKeyId?: string;
+
+    /**
+     * The URL of the preferred authorization server for wallet-initiated flows.
+     * When set, this AS is placed first in the &#x60;authorization_servers&#x60; array
+     * of the credential issuer metadata, signaling wallets to use it by default.
+     * Must match one of the configured auth servers, the chained AS URL, or &quot;built-in&quot;.
+     */
+    @IsOptional()
+    @IsString()
+    @Column({ type: &quot;varchar&quot;, nullable: true })
+    preferredAuthServer?: string;
+
+    /**
+     * Configuration for Chained Authorization Server mode.
+     * When enabled, EUDIPLO acts as an OAuth AS facade, delegating user authentication
+     * to an upstream OIDC provider while issuing its own tokens with issuer_state.
+     */
+    @ApiPropertyOptional({ type: () &#x3D;&gt; ChainedAsConfig })
+    @ValidateNested()
+    @Type(() &#x3D;&gt; ChainedAsConfig)
+    @IsOptional()
+    @Column({ type: &quot;json&quot;, nullable: true })
+    chainedAs?: ChainedAsConfig | null;
+
+    /**
+     * Optional OpenID Federation configuration used for trust evaluation.
+     * When omitted, trust checks rely on existing LoTE trust-list behavior.
+     */
+    @ApiPropertyOptional({ type: () &#x3D;&gt; FederationConfig })
+    @ValidateNested()
+    @Type(() &#x3D;&gt; FederationConfig)
+    @IsOptional()
+    @Column({ type: &quot;json&quot;, nullable: true })
+    federation?: FederationConfig | null;
+
+    @ValidateNested({ each: true })
+    @Type(() &#x3D;&gt; DisplayInfo)
+    @Column(&quot;json&quot;, { nullable: true })
+    display!: DisplayInfo[];
+
+    /**
+     * Whether to issue refresh tokens for access token requests.
+     * Default: true
+     */
+    @ApiPropertyOptional({
+        description:
+            &quot;Whether refresh tokens should be issued for OID4VCI token responses.&quot;,
+        default: true,
+    })
+    @IsBoolean()
+    @IsOptional()
+    @Column(&quot;boolean&quot;, { default: true })
+    refreshTokenEnabled?: boolean;
+
+    /**
+     * Whether to advertise support for credential response encryption in the
+     * credential issuer metadata (&#x60;credential_response_encryption&#x60;). When
+     * enabled, wallets MAY request encrypted credential responses. Some
+     * wallets reject issuer metadata that advertises unsupported algorithms,
+     * so this defaults to false.
+     * Default: false
+     */
+    @ApiPropertyOptional({
+        description:
+            &quot;Whether &#x60;credential_response_encryption&#x60; should be advertised in the credential issuer metadata.&quot;,
+        default: false,
+    })
+    @IsBoolean()
+    @IsOptional()
+    @Column(&quot;boolean&quot;, { default: false })
+    credentialResponseEncryption?: boolean;
+
+    /**
+     * Whether to advertise &#x60;credential_request_encryption&#x60; in the credential issuer metadata.
+     * When enabled, the issuer publishes its encryption public key so wallets can
+     * send encrypted credential requests. Set &#x60;encryption_required&#x60; to enforce it.
+     * Default: false
+     */
+    @ApiPropertyOptional({
+        description:
+            &quot;Whether &#x60;credential_request_encryption&#x60; should be advertised in the credential issuer metadata.&quot;,
+        default: false,
+    })
+    @IsBoolean()
+    @IsOptional()
+    @Column(&quot;boolean&quot;, { default: false })
+    credentialRequestEncryption?: boolean;
+
+    /**
+     * Lifetime of issued refresh tokens in seconds.
+     * Default: 2592000 (30 days)
+     * Set to null for non-expiring refresh tokens (not recommended for security).
+     */
+    @ApiPropertyOptional({
+        description:
+            &quot;Refresh token lifetime in seconds. Defaults to 2592000 (30 days).&quot;,
+        default: 2592000,
+        nullable: true,
+    })
+    @IsNumber()
+    @IsOptional()
+    @Column(&quot;int&quot;, { default: 2592000, nullable: true })
+    refreshTokenExpiresInSeconds?: number;
+
+    /**
+     * Maximum number of failed tx_code (transaction code) validation attempts
+     * before the pre-authorized code is invalidated. Protects against brute-force
+     * attacks on the OID4VCI pre-authorized code flow.
+     * Default: 5. Set to null to disable the limit (not recommended).
+     */
+    @ApiPropertyOptional({
+        description:
+            &quot;Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.&quot;,
+        default: 5,
+        nullable: true,
+    })
+    @IsNumber()
+    @IsOptional()
+    @Column(&quot;int&quot;, { nullable: true })
+    txCodeMaxAttempts?: number;
+
+    /**
+     * The timestamp when the VP request was created.
+     */
+    @CreateDateColumn()
+    createdAt!: Date;
+
+    /**
+     * The timestamp when the VP request was last updated.
+     */
+    @UpdateDateColumn()
+    updatedAt!: Date;
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'entity';
+            var COMPODOC_CURRENT_PAGE_URL = 'IssuanceConfig.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

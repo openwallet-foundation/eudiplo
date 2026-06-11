@@ -1,0 +1,631 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >AuthService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/auth/auth.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Authentication Service</p>
+
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getOAuth2Token" >getOAuth2Token</a>
+                            </li>
+                            <li>
+                                <a href="#getOidcDiscovery" >getOidcDiscovery</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(jwtService: <a href="../injectables/JwtService.html" target="_self">JwtService</a>, clients: <a href="../injectables/InternalClientsProvider.html" target="_self">InternalClientsProvider</a>, configService: ConfigService)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/auth/auth.service.ts:14</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div class="io-description"><p>Constructor for AuthService</p>
+</div>
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>jwtService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/JwtService.html" target="_self" >JwtService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>clients</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/InternalClientsProvider.html" target="_self" >InternalClientsProvider</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>configService</td>
+                                                  
+                                                        <td>
+                                                                    <code>ConfigService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getOAuth2Token"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getOAuth2Token</b></span>
+                        <a href="#getOAuth2Token"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getOAuth2Token(body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, headers: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="34"
+                                    class="link-to-prism">src/auth/auth.service.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get OAuth2 token</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>headers</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/TokenResponse.html" target="_self" >Promise&lt;TokenResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getOidcDiscovery"></a>
+                    <span class="name">
+                        <span ><b>getOidcDiscovery</b></span>
+                        <a href="#getOidcDiscovery"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getOidcDiscovery()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="122"
+                                    class="link-to-prism">src/auth/auth.service.ts:122</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get OIDC Discovery configuration</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/OidcDiscoveryDto.html" target="_self" >OidcDiscoveryDto</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>OIDC Discovery configuration</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Inject, Injectable, UnauthorizedException } from &quot;@nestjs/common&quot;;
+import { ConfigService } from &quot;@nestjs/config&quot;;
+import { InternalClientsProvider } from &quot;./client/adapters/internal-clients.service&quot;;
+import { CLIENTS_PROVIDER } from &quot;./client/client.provider&quot;;
+import { OidcDiscoveryDto } from &quot;./dto/oidc-discovery.dto&quot;;
+import { TokenResponse } from &quot;./dto/token-response.dto&quot;;
+import { JwtService } from &quot;./jwt.service&quot;;
+import { InternalTokenPayload } from &quot;./token.decorator&quot;;
+
+/**
+ * Authentication Service
+ */
+@Injectable()
+export class AuthService {
+    /**
+     * Constructor for AuthService
+     * @param jwtService
+     * @param tenantService
+     * @param configService
+     */
+    constructor(
+        private readonly jwtService: JwtService,
+        @Inject(CLIENTS_PROVIDER)
+        private readonly clients: InternalClientsProvider,
+        private readonly configService: ConfigService,
+    ) {}
+
+    /**
+     * Get OAuth2 token
+     * @param body
+     * @param headers
+     * @returns
+     */
+    async getOAuth2Token(body: any, headers: any): Promise&lt;TokenResponse&gt; {
+        if (this.jwtService.isUsingExternalOIDC()) {
+            throw new UnauthorizedException(
+                &quot;OAuth2 token endpoint is not available when using external OIDC provider. Use your external OIDC provider for authentication.&quot;,
+            );
+        }
+
+        // Only support client credentials flow (default if not specified)
+        const grantType &#x3D; body.grant_type || &quot;client_credentials&quot;;
+        if (grantType !&#x3D;&#x3D; &quot;client_credentials&quot;) {
+            throw new UnauthorizedException(
+                &quot;Only client_credentials grant type is supported&quot;,
+            );
+        }
+
+        let clientId: string;
+        let clientSecret: string;
+
+        // Try to extract credentials from Authorization header (Basic auth)
+        const authHeader &#x3D; headers.authorization;
+        if (authHeader &amp;&amp; authHeader.startsWith(&quot;Basic &quot;)) {
+            try {
+                const base64Credentials &#x3D; authHeader.substring(6);
+                const credentials &#x3D; Buffer.from(
+                    base64Credentials,
+                    &quot;base64&quot;,
+                ).toString(&quot;ascii&quot;);
+                const [id, secret] &#x3D; credentials.split(&quot;:&quot;);
+                clientId &#x3D; decodeURI(id);
+                clientSecret &#x3D; decodeURI(secret);
+            } catch {
+                throw new UnauthorizedException(
+                    &quot;Invalid Authorization header format&quot;,
+                );
+            }
+        } else {
+            // Fall back to request body
+            clientId &#x3D; body.client_id;
+            clientSecret &#x3D; body.client_secret;
+        }
+
+        if (!clientId || !clientSecret) {
+            throw new UnauthorizedException(
+                &quot;Client credentials must be provided either in Authorization header (Basic auth) or request body&quot;,
+            );
+        }
+
+        const client &#x3D; await this.clients.validateClientCredentials(
+            clientId,
+            clientSecret,
+        );
+
+        if (!client) {
+            throw new UnauthorizedException(&quot;Invalid client credentials&quot;);
+        }
+
+        const payload: InternalTokenPayload &#x3D; {
+            roles: client.roles,
+            tenant_id: client.tenantId!,
+        };
+
+        //TODO: make expiresIn configurable?
+        const access_token &#x3D; await this.jwtService.generateToken(payload, {
+            expiresIn: &quot;24h&quot;,
+            audience: &quot;eudiplo-service&quot;,
+            //TODO: check if the clientId should be saved here or somewhere else like in client_id
+            subject: clientId,
+        });
+
+        const refresh_token &#x3D; await this.jwtService.generateToken(payload, {
+            expiresIn: &quot;30d&quot;,
+            audience: &quot;eudiplo-service&quot;,
+            subject: clientId,
+        });
+
+        return {
+            access_token,
+            refresh_token,
+            token_type: &quot;Bearer&quot;,
+            expires_in: 86400, // 24 hours in seconds
+            state: body.state,
+        };
+    }
+
+    /**
+     * Get OIDC Discovery configuration
+     * @returns OIDC Discovery configuration
+     */
+    getOidcDiscovery(): OidcDiscoveryDto {
+        const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
+        const oidc &#x3D; this.configService.get&lt;string&gt;(&quot;OIDC&quot;);
+
+        return {
+            issuer: oidc ?? publicUrl,
+            token_endpoint: &#x60;${publicUrl}/api/oauth2/token&#x60;,
+            jwks_uri: &#x60;${publicUrl}/.well-known/jwks.json&#x60;,
+            response_types_supported: [&quot;token&quot;],
+            grant_types_supported: [&quot;client_credentials&quot;],
+            ...(oidc &amp;&amp; {
+                ui_client_id:
+                    this.configService.get&lt;string&gt;(&quot;OIDC_UI_CLIENT_ID&quot;) ??
+                    &quot;eudiplo-ui&quot;,
+            }),
+            token_endpoint_auth_methods_supported: [
+                &quot;client_secret_basic&quot;,
+                &quot;client_secret_post&quot;,
+            ],
+            subject_types_supported: [&quot;public&quot;],
+            id_token_signing_alg_values_supported: [&quot;ES256&quot;],
+            scopes_supported: [&quot;openid&quot;],
+            claims_supported: [&quot;iss&quot;, &quot;sub&quot;, &quot;aud&quot;, &quot;exp&quot;, &quot;iat&quot;],
+            service_documentation:
+                &quot;https://openwallet-foundation.github.io/eudiplo/latest/&quot;,
+        };
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'AuthService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

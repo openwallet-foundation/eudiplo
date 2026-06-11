@@ -1,0 +1,779 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  ClientAttestation</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/shared/trust/wallet-attestation.service.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#clientAttestationJwt" 
+>
+                                            clientAttestationJwt
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#clientAttestationPopJwt" 
+>
+                                            clientAttestationPopJwt
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="clientAttestationJwt"></a>
+                                        <span class="name "><b>clientAttestationJwt</b>
+                                            <a href="#clientAttestationJwt">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>clientAttestationJwt:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="clientAttestationPopJwt"></a>
+                                        <span class="name "><b>clientAttestationPopJwt</b>
+                                            <a href="#clientAttestationPopJwt">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>clientAttestationPopJwt:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { X509Certificate } from &quot;node:crypto&quot;;
+import { Injectable, Logger, UnauthorizedException } from &quot;@nestjs/common&quot;;
+import { ConfigService } from &quot;@nestjs/config&quot;;
+import { Openid4vciIssuer } from &quot;@openid4vc/openid4vci&quot;;
+import * as x509 from &quot;@peculiar/x509&quot;;
+import { decodeProtectedHeader, JWK } from &quot;jose&quot;;
+import { Span } from &quot;nestjs-otel&quot;;
+import { CryptoService } from &quot;../../crypto/crypto.service&quot;;
+import { CryptoImplementationService } from &quot;../../crypto/key/crypto-implementation/crypto-implementation.service&quot;;
+import { StatusListVerifierService } from &quot;./status-list-verifier.service&quot;;
+import { BuiltTrustStore, TrustStoreService } from &quot;./trust-store.service&quot;;
+import { ServiceTypeIdentifiers, TrustListSource } from &quot;./types&quot;;
+import {
+    MatchedTrustedEntity,
+    X509ValidationService,
+} from &quot;./x509-validation.service&quot;;
+
+export interface ClientAttestation {
+    clientAttestationJwt: string;
+    clientAttestationPopJwt: string;
+}
+
+/**
+ * Service for verifying wallet attestations.
+ * Handles validation of client attestation JWTs, X.509 certificate chains,
+ * and status list verification for wallet providers.
+ */
+@Injectable()
+export class WalletAttestationService {
+    private readonly logger &#x3D; new Logger(WalletAttestationService.name);
+
+    constructor(
+        private readonly cryptoService: CryptoService,
+        private readonly cryptoImplementationService: CryptoImplementationService,
+        private readonly trustStoreService: TrustStoreService,
+        private readonly x509ValidationService: X509ValidationService,
+        private readonly statusListVerifierService: StatusListVerifierService,
+        private readonly configService: ConfigService,
+    ) {}
+
+    /**
+     * Get the OID4VCI issuer instance for a specific tenant.
+     * Used for wallet attestation verification.
+     * @param tenantId The ID of the tenant.
+     * @returns The OID4VCI issuer instance.
+     */
+    private getIssuer(tenantId: string, sessionId?: string): Openid4vciIssuer {
+        const callbacks &#x3D; this.cryptoService.getCallbackContext(
+            tenantId,
+            sessionId,
+        );
+        return new Openid4vciIssuer({
+            callbacks,
+        });
+    }
+
+    /**
+     * Verify wallet attestation if provided or required.
+     * Validates the attestation JWT signature, checks the X.509 certificate chain
+     * against configured trust lists, and verifies the status list if present.
+     * @param tenantId The tenant ID
+     * @param clientAttestation The client attestation from the request
+     * @param authorizationServer The authorization server URL
+     * @param walletAttestationRequired Whether wallet attestation is required
+     * @param walletProviderTrustLists URLs of trust lists containing trusted wallet providers
+     * @throws UnauthorizedException if attestation is required but not provided, or if provided but invalid
+     */
+    @Span(&quot;walletAttestation.verify&quot;)
+    async verifyWalletAttestation(
+        tenantId: string,
+        clientAttestation: ClientAttestation | undefined,
+        authorizationServer: string,
+        walletAttestationRequired: boolean,
+        walletProviderTrustLists: string[],
+    ): Promise&lt;void&gt; {
+        if (!clientAttestation) {
+            if (walletAttestationRequired) {
+                throw new UnauthorizedException(
+                    &quot;Wallet attestation is required but not provided&quot;,
+                );
+            }
+            return;
+        }
+
+        try {
+            // First verify the attestation JWT structure and PoP
+            await this.getIssuer(tenantId).verifyWalletAttestation({
+                authorizationServer,
+                clientAttestationJwt: clientAttestation.clientAttestationJwt,
+                clientAttestationPopJwt:
+                    clientAttestation.clientAttestationPopJwt,
+                allowedSkewInSeconds:
+                    this.configService.getOrThrow&lt;number&gt;(&quot;CRYPTO_TOLERANCE&quot;),
+            });
+
+            // Then validate the X.509 certificate against trust lists and get the matched entity
+            const { matchedEntity, trustStore } &#x3D;
+                await this.validateWalletProviderCertificate(
+                    clientAttestation.clientAttestationJwt,
+                    walletProviderTrustLists,
+                );
+
+            // Check the status list if present in the attestation JWT
+            // Pass the matched entity and trust store for signature verification
+            await this.validateWalletAttestationStatus(
+                clientAttestation.clientAttestationJwt,
+                matchedEntity,
+                trustStore,
+            );
+
+            this.logger.debug(&quot;Wallet attestation verified successfully&quot;);
+        } catch (err) {
+            if (err instanceof UnauthorizedException) {
+                throw err;
+            }
+            throw new UnauthorizedException(
+                &#x60;Wallet attestation verification failed: ${err instanceof Error ? err.message : &quot;Unknown error&quot;}&#x60;,
+                { cause: err instanceof Error ? err : undefined },
+            );
+        }
+    }
+
+    /**
+     * Validate the wallet provider&#x27;s X.509 certificate against configured trust lists.
+     * Returns the matched entity and trust store for use in status list verification.
+     * @param clientAttestationJwt The wallet attestation JWT
+     * @param trustListUrls URLs of trust lists to validate against
+     * @returns The matched entity and trust store (both null if no trust lists configured)
+     * @throws UnauthorizedException if certificate is not trusted
+     */
+    private async validateWalletProviderCertificate(
+        clientAttestationJwt: string,
+        trustListUrls: string[],
+    ): Promise&lt;{
+        matchedEntity: MatchedTrustedEntity | null;
+        trustStore: BuiltTrustStore | null;
+    }&gt; {
+        if (trustListUrls.length &#x3D;&#x3D;&#x3D; 0) {
+            // No trust lists configured - accept any valid attestation
+            this.logger.warn(
+                &quot;No wallet provider trust lists configured - accepting attestation without certificate validation&quot;,
+            );
+            return { matchedEntity: null, trustStore: null };
+        }
+
+        // Extract X.509 certificate chain from JWT header
+        const header &#x3D; decodeProtectedHeader(clientAttestationJwt);
+        const x5c &#x3D; header.x5c;
+
+        if (!x5c || x5c.length &#x3D;&#x3D;&#x3D; 0) {
+            throw new UnauthorizedException(
+                &quot;Wallet attestation JWT does not contain X.509 certificate chain (x5c header)&quot;,
+            );
+        }
+
+        // Build trust list source from configured URLs
+        const trustListSource: TrustListSource &#x3D; {
+            lotes: trustListUrls.map((url) &#x3D;&gt; ({ url })),
+            acceptedServiceTypes: [ServiceTypeIdentifiers.WalletProvider],
+        };
+
+        // Fetch and build the trust store
+        const trustStore &#x3D;
+            await this.trustStoreService.getTrustStore(trustListSource);
+
+        if (trustStore.entities.length &#x3D;&#x3D;&#x3D; 0) {
+            throw new UnauthorizedException(
+                &quot;No trusted wallet providers found in configured trust lists&quot;,
+            );
+        }
+
+        // Parse the certificate chain
+        const certChain &#x3D; this.x509ValidationService.parseX5c(x5c);
+        const leaf &#x3D; certChain[0];
+
+        // Build and validate the certificate path against trust anchors
+        const trustAnchors &#x3D; this.x509ValidationService.parseTrustAnchors(
+            trustStore.entities.flatMap((e) &#x3D;&gt; e.services),
+        );
+
+        try {
+            const path &#x3D; await this.x509ValidationService.buildPath(
+                leaf,
+                certChain,
+                trustAnchors,
+            );
+
+            // Check if the path matches any trusted entity (using WalletProvider service type)
+            const match &#x3D;
+                await this.x509ValidationService.pathMatchesTrustedEntities(
+                    path,
+                    trustStore.entities,
+                    &quot;leaf&quot;,
+                    ServiceTypeIdentifiers.WalletProvider,
+                );
+
+            if (!match) {
+                throw new UnauthorizedException(
+                    &quot;Wallet provider certificate is not trusted - no matching entity in trust list&quot;,
+                );
+            }
+
+            this.logger.debug(
+                &#x60;Wallet attestation validated against trusted entity: ${match.entity.entityId ?? &quot;unknown&quot;}&#x60;,
+            );
+
+            return { matchedEntity: match, trustStore };
+        } catch (err) {
+            if (err instanceof UnauthorizedException) {
+                throw err;
+            }
+            throw new UnauthorizedException(
+                &#x60;Certificate chain validation failed: ${err instanceof Error ? err.message : &quot;Unknown error&quot;}&#x60;,
+            );
+        }
+    }
+
+    /**
+     * Validate the status of a wallet attestation JWT if it contains a status claim.
+     * The status claim is optional per the spec, so if not present, validation passes.
+     * Also verifies that the status list JWT is signed by the revocation certificate
+     * from the same trusted entity that issued the wallet attestation.
+     * @param clientAttestationJwt The wallet attestation JWT
+     * @param matchedEntity The matched trusted entity from certificate validation
+     * @param trustStore The trust store used for validation
+     * @throws UnauthorizedException if the attestation has been revoked or suspended
+     */
+    private async validateWalletAttestationStatus(
+        clientAttestationJwt: string,
+        matchedEntity: MatchedTrustedEntity | null,
+        trustStore: BuiltTrustStore | null,
+    ): Promise&lt;void&gt; {
+        try {
+            // Get the status entry from the JWT
+            const statusEntry &#x3D;
+                this.statusListVerifierService.getStatusEntryFromJwt(
+                    clientAttestationJwt,
+                );
+
+            // No status claim in JWT - this is allowed per spec
+            if (!statusEntry) {
+                this.logger.debug(
+                    &quot;Wallet attestation does not contain status claim - skipping status check&quot;,
+                );
+                return;
+            }
+
+            // Fetch the status list JWT
+            const statusListJwt &#x3D;
+                await this.statusListVerifierService.getStatusListJwt(
+                    statusEntry.uri,
+                );
+
+            // Verify the status list JWT signature against the revocation cert
+            const signatureValid &#x3D; await this.verifyStatusListSignature(
+                statusListJwt,
+                matchedEntity,
+                trustStore,
+            );
+
+            if (!signatureValid) {
+                throw new UnauthorizedException(
+                    &quot;Status list JWT signature verification failed - not signed by trusted revocation certificate&quot;,
+                );
+            }
+
+            // Now check the actual status value
+            const statusResult &#x3D;
+                await this.statusListVerifierService.checkStatus(
+                    statusEntry.uri,
+                    statusEntry.idx,
+                );
+
+            // Check if the status indicates the attestation is valid
+            if (!statusResult.isValid) {
+                this.logger.warn(
+                    &#x60;Wallet attestation status check failed: ${statusResult.description}&#x60;,
+                );
+                throw new UnauthorizedException(
+                    &#x60;Wallet attestation is not valid: ${statusResult.description}&#x60;,
+                );
+            }
+
+            this.logger.debug(
+                &#x60;Wallet attestation status verified: ${statusResult.description}&#x60;,
+            );
+        } catch (err) {
+            if (err instanceof UnauthorizedException) {
+                throw err;
+            }
+            // Log the error but don&#x27;t fail - status checking is optional
+            // and network issues shouldn&#x27;t block valid attestations
+            this.logger.warn(
+                &#x60;Failed to check wallet attestation status: ${err instanceof Error ? err.message : &quot;Unknown error&quot;}&#x60;,
+            );
+        }
+    }
+
+    /**
+     * Verify the signature of a status list JWT against the revocation certificate
+     * from the matched trusted entity.
+     * @param statusListJwt The status list JWT to verify
+     * @param matchedEntity The matched trusted entity
+     * @param trustStore The trust store
+     * @returns true if the signature is valid and from the trusted revocation cert
+     */
+    private async verifyStatusListSignature(
+        statusListJwt: string,
+        matchedEntity: MatchedTrustedEntity | null,
+        trustStore: BuiltTrustStore | null,
+    ): Promise&lt;boolean&gt; {
+        try {
+            // Parse the status list JWT header
+            const header &#x3D; decodeProtectedHeader(statusListJwt);
+            const x5c &#x3D; header.x5c;
+
+            // Extract public key from x5c and verify signature
+            if (!x5c || x5c.length &#x3D;&#x3D;&#x3D; 0) {
+                // If no x5c in status list, we can&#x27;t verify against trust chain
+                // Accept if no trust validation is configured
+                if (!matchedEntity) {
+                    return true;
+                }
+                this.logger.warn(
+                    &quot;Status list JWT missing x5c header - cannot verify against trust chain&quot;,
+                );
+                return false;
+            }
+
+            // Verify the JWT signature
+            const cert &#x3D; new X509Certificate(Buffer.from(x5c[0], &quot;base64&quot;));
+            const publicKey &#x3D; cert.publicKey.export({ format: &quot;jwk&quot; }) as JWK;
+            const crypto &#x3D;
+                this.cryptoImplementationService.getCryptoFromJwk(publicKey);
+            const verifier &#x3D; await crypto.getVerifier(publicKey);
+
+            // Split JWT and verify
+            const [headerB64, payloadB64, signatureB64] &#x3D;
+                statusListJwt.split(&quot;.&quot;);
+            const data &#x3D; &#x60;${headerB64}.${payloadB64}&#x60;;
+
+            const sigOk &#x3D; await verifier(data, signatureB64)
+                .then(() &#x3D;&gt; true)
+                .catch((e) &#x3D;&gt; {
+                    this.logger.debug(
+                        &#x60;Status list JWT signature invalid: ${e?.message ?? e}&#x60;,
+                    );
+                    return false;
+                });
+
+            if (!sigOk) return false;
+
+            // If no entity was matched (no trust list configured), accept if signature is valid
+            if (!matchedEntity || !trustStore) {
+                return true;
+            }
+
+            // Check if the matched entity has a revocation certificate
+            if (!matchedEntity.revocationCert) {
+                this.logger.warn(
+                    &#x60;TrustedEntity ${matchedEntity.entity.entityId ?? &quot;unknown&quot;} &#x60; +
+                        &#x60;has no revocation certificate configured - accepting status list&#x60;,
+                );
+                return true;
+            }
+
+            // Build and verify the status list&#x27;s certificate chain
+            const presented &#x3D; this.x509ValidationService.parseX5c(x5c);
+            const leaf &#x3D; presented[0];
+
+            // Get all certs for path building
+            const allCerts &#x3D; trustStore.entities.flatMap((e) &#x3D;&gt;
+                e.services.map((s) &#x3D;&gt; ({ certValue: s.certValue })),
+            );
+            const anchors &#x3D;
+                this.x509ValidationService.parseTrustAnchors(allCerts);
+
+            let path: x509.X509Certificate[];
+            try {
+                path &#x3D; await this.x509ValidationService.buildPath(
+                    leaf,
+                    presented,
+                    anchors,
+                );
+            } catch (e: any) {
+                this.logger.debug(
+                    &#x60;Status list chain build failed: ${e?.message ?? e}&#x60;,
+                );
+                return false;
+            }
+
+            // Get thumbprints for comparison
+            const statusLeafThumb &#x3D; await this.getThumbprint(presented[0]);
+            const statusEndThumb &#x3D; await this.getThumbprint(path.at(-1)!);
+
+            // Check if the status list is signed by the revocation cert from the same entity
+            const revocationThumb &#x3D; matchedEntity.revocationThumbprint!;
+            const revocationIsCa &#x3D; this.x509ValidationService.isCaCert(
+                matchedEntity.revocationCert,
+            );
+
+            let statusMatchesRevocation &#x3D; false;
+
+            if (revocationIsCa) {
+                // Revocation cert is CA: path must terminate at this cert
+                statusMatchesRevocation &#x3D; revocationThumb &#x3D;&#x3D;&#x3D; statusEndThumb;
+            } else {
+                // Revocation cert is pinned (non-CA): leaf must match
+                statusMatchesRevocation &#x3D; revocationThumb &#x3D;&#x3D;&#x3D; statusLeafThumb;
+            }
+
+            if (!statusMatchesRevocation) {
+                this.logger.warn(
+                    &#x60;Status list is NOT signed by the revocation certificate from the same TrustedEntity. &#x60; +
+                        &#x60;Entity: ${matchedEntity.entity.entityId ?? &quot;unknown&quot;}, &#x60; +
+                        &#x60;Expected revocation cert: ${revocationThumb}, &#x60; +
+                        &#x60;Status list leaf cert: ${statusLeafThumb}, &#x60; +
+                        &#x60;Status list end cert: ${statusEndThumb}&#x60;,
+                );
+                return false;
+            }
+
+            this.logger.debug(
+                &#x60;Status list verified against revocation cert from entity: ${matchedEntity.entity.entityId ?? &quot;unknown&quot;}&#x60;,
+            );
+            return true;
+        } catch (e: any) {
+            this.logger.error(
+                &#x60;Error verifying status list signature: ${e?.message ?? e}&#x60;,
+            );
+            return false;
+        }
+    }
+
+    /**
+     * Calculate the SHA-256 thumbprint of an X.509 certificate.
+     */
+    private async getThumbprint(cert: x509.X509Certificate): Promise&lt;string&gt; {
+        const thumbBuffer &#x3D; await cert.getThumbprint(&quot;SHA-256&quot;);
+        return Buffer.from(thumbBuffer).toString(&quot;hex&quot;).toLowerCase();
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'ClientAttestation.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

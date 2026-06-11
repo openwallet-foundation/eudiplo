@@ -1,0 +1,1071 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content controller">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Controllers</li>
+  <li class="breadcrumb-item" >ChainedAsController</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/issuer/issuance/oid4vci/chained-as/chained-as.controller.ts</code>
+        </p>
+            <p class="comment">
+                <h3>Prefix</h3>
+            </p>
+            <p class="comment">
+                <code>issuers/:tenantId/chained-as</code>
+            </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Controller for Chained Authorization Server endpoints.</p>
+<p>Implements OAuth 2.0 AS endpoints where EUDIPLO acts as a facade,
+delegating user authentication to an upstream OIDC provider while
+issuing its own tokens containing issuer_state for session correlation.</p>
+<p>Flow:</p>
+<ol>
+<li>Wallet → PAR (receives request_uri)</li>
+<li>Wallet → Authorize (redirected to upstream OIDC)</li>
+<li>User authenticates at upstream OIDC</li>
+<li>Upstream → Callback (EUDIPLO exchanges code, redirects wallet with our code)</li>
+<li>Wallet → Token (receives EUDIPLO-issued access token with issuer_state)</li>
+</ol>
+
+            </p>
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#authorize" >authorize</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#callback" >callback</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#par" >par</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#token" >token</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="authorize"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>authorize</b></span>
+                        <a href="#authorize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>authorize(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, query: <a href="../classes/ChainedAsAuthorizeQueryDto.html" target="_self">ChainedAsAuthorizeQueryDto</a>, res: Response)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Public()<br />@Get(&#x27;authorize&#x27;)<br />@ApiOperation({summary: &#x27;Authorization endpoint&#x27;, description: &#x27;Validates the request_uri from PAR and redirects to the upstream OIDC provider for authentication.&#x27;})<br />@ApiParam({name: &#x27;tenantId&#x27;, description: &#x27;Tenant identifier&#x27;})<br />@ApiResponse({status: 302, description: &#x27;Redirect to upstream OIDC provider&#x27;})<br />@ApiResponse({status: 400, description: &#x27;Invalid request&#x27;, type: ChainedAsErrorResponseDto})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="137"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.controller.ts:137</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Authorization endpoint.
+Validates the request_uri and redirects to the upstream OIDC provider.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/ChainedAsAuthorizeQueryDto.html" target="_self" >ChainedAsAuthorizeQueryDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>res</td>
+                                            <td>
+                                                        <code>Response</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="callback"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>callback</b></span>
+                        <a href="#callback"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>callback(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, res: Response, code?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, state?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, error?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, errorDescription?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Public()<br />@Get(&#x27;callback&#x27;)<br />@ApiOperation({summary: &#x27;Upstream OIDC callback&#x27;, description: &#x27;Receives the authorization response from the upstream OIDC provider, exchanges the code, and redirects back to the wallet.&#x27;})<br />@ApiParam({name: &#x27;tenantId&#x27;, description: &#x27;Tenant identifier&#x27;})<br />@ApiResponse({status: 302, description: &#x27;Redirect to wallet with authorization code&#x27;})<br />@ApiResponse({status: 400, description: &#x27;Invalid callback&#x27;, type: ChainedAsErrorResponseDto})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="172"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.controller.ts:172</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Callback endpoint for upstream OIDC provider.
+Receives the authorization code from upstream and redirects the wallet.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>res</td>
+                                            <td>
+                                                        <code>Response</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>code</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>state</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>errorDescription</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="par"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>par</b></span>
+                        <a href="#par"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>par(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, dpopJwt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, clientAttestationJwt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, clientAttestationPopJwt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Public()<br />@Post(&#x27;par&#x27;)<br />@HttpCode(HttpStatus.CREATED)<br />@ApiConsumes(&#x27;application/x-www-form-urlencoded&#x27;)<br />@ApiOperation({summary: &#x27;Pushed Authorization Request&#x27;, description: &#x27;Submit authorization request parameters. Returns a request_uri for use at the authorization endpoint.&#x27;})<br />@ApiParam({name: &#x27;tenantId&#x27;, description: &#x27;Tenant identifier&#x27;})<br />@ApiHeader({name: &#x27;DPoP&#x27;, required: false, description: &#x27;DPoP proof JWT&#x27;})<br />@ApiHeader({name: &#x27;OAuth-Client-Attestation&#x27;, required: false, description: &#x27;Wallet attestation JWT&#x27;})<br />@ApiHeader({name: &#x27;OAuth-Client-Attestation-PoP&#x27;, required: false, description: &#x27;Wallet attestation proof-of-possession JWT&#x27;})<br />@ApiResponse({status: 201, description: &#x27;PAR request accepted&#x27;, type: ChainedAsParResponseDto})<br />@ApiResponse({status: 400, description: &#x27;Invalid request&#x27;, type: ChainedAsErrorResponseDto})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="90"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.controller.ts:90</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Pushed Authorization Request (PAR) endpoint.
+Wallets submit authorization parameters here before redirecting to authorize.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>dpopJwt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>clientAttestationJwt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>clientAttestationPopJwt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;ChainedAsParResponseDto&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="token"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>token</b></span>
+                        <a href="#token"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>token(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, body: <a href="../classes/ChainedAsTokenRequestDto.html" target="_self">ChainedAsTokenRequestDto</a>, dpopJwt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Public()<br />@Post(&#x27;token&#x27;)<br />@HttpCode(HttpStatus.OK)<br />@ApiOperation({summary: &#x27;Token endpoint&#x27;, description: &#x27;Exchanges the authorization code for an access token containing issuer_state.&#x27;})<br />@ApiParam({name: &#x27;tenantId&#x27;, description: &#x27;Tenant identifier&#x27;})<br />@ApiHeader({name: &#x27;DPoP&#x27;, required: false, description: &#x27;DPoP proof JWT&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Token issued successfully&#x27;, type: ChainedAsTokenResponseDto})<br />@ApiResponse({status: 400, description: &#x27;Invalid request&#x27;, type: ChainedAsErrorResponseDto})<br />@ApiResponse({status: 401, description: &#x27;Invalid authorization code&#x27;, type: ChainedAsErrorResponseDto})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="223"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.controller.ts:223</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Token endpoint.
+Exchanges the authorization code for an access token.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/ChainedAsTokenRequestDto.html" target="_self" >ChainedAsTokenRequestDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>dpopJwt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#Token" target="_self" >Promise&lt;ChainedAsTokenResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+    Body,
+    Controller,
+    Get,
+    Headers,
+    HttpCode,
+    HttpStatus,
+    Param,
+    Post,
+    Query,
+    Res,
+} from &quot;@nestjs/common&quot;;
+import {
+    ApiConsumes,
+    ApiHeader,
+    ApiOperation,
+    ApiParam,
+    ApiResponse,
+    ApiTags,
+} from &quot;@nestjs/swagger&quot;;
+import type { Response } from &quot;express&quot;;
+import { Public } from &quot;../../../../auth/public.decorator&quot;;
+import { ChainedAsService, extractDpopJkt } from &quot;./chained-as.service&quot;;
+import {
+    ChainedAsAuthorizeQueryDto,
+    ChainedAsErrorResponseDto,
+    ChainedAsParResponseDto,
+    ChainedAsTokenRequestDto,
+    ChainedAsTokenResponseDto,
+} from &quot;./dto/chained-as.dto&quot;;
+
+/**
+ * Controller for Chained Authorization Server endpoints.
+ *
+ * Implements OAuth 2.0 AS endpoints where EUDIPLO acts as a facade,
+ * delegating user authentication to an upstream OIDC provider while
+ * issuing its own tokens containing issuer_state for session correlation.
+ *
+ * Flow:
+ * 1. Wallet → PAR (receives request_uri)
+ * 2. Wallet → Authorize (redirected to upstream OIDC)
+ * 3. User authenticates at upstream OIDC
+ * 4. Upstream → Callback (EUDIPLO exchanges code, redirects wallet with our code)
+ * 5. Wallet → Token (receives EUDIPLO-issued access token with issuer_state)
+ */
+@ApiTags(&quot;Chained AS&quot;)
+@Controller(&quot;issuers/:tenantId/chained-as&quot;)
+export class ChainedAsController {
+    constructor(private readonly chainedAsService: ChainedAsService) {}
+
+    /**
+     * Pushed Authorization Request (PAR) endpoint.
+     * Wallets submit authorization parameters here before redirecting to authorize.
+     */
+    @Public()
+    @Post(&quot;par&quot;)
+    @HttpCode(HttpStatus.CREATED)
+    @ApiConsumes(&quot;application/x-www-form-urlencoded&quot;)
+    @ApiOperation({
+        summary: &quot;Pushed Authorization Request&quot;,
+        description:
+            &quot;Submit authorization request parameters. Returns a request_uri for use at the authorization endpoint.&quot;,
+    })
+    @ApiParam({ name: &quot;tenantId&quot;, description: &quot;Tenant identifier&quot; })
+    @ApiHeader({
+        name: &quot;DPoP&quot;,
+        required: false,
+        description: &quot;DPoP proof JWT&quot;,
+    })
+    @ApiHeader({
+        name: &quot;OAuth-Client-Attestation&quot;,
+        required: false,
+        description: &quot;Wallet attestation JWT&quot;,
+    })
+    @ApiHeader({
+        name: &quot;OAuth-Client-Attestation-PoP&quot;,
+        required: false,
+        description: &quot;Wallet attestation proof-of-possession JWT&quot;,
+    })
+    @ApiResponse({
+        status: 201,
+        description: &quot;PAR request accepted&quot;,
+        type: ChainedAsParResponseDto,
+    })
+    @ApiResponse({
+        status: 400,
+        description: &quot;Invalid request&quot;,
+        type: ChainedAsErrorResponseDto,
+    })
+    async par(
+        @Param(&quot;tenantId&quot;) tenantId: string,
+        @Body() body: any,
+        @Headers(&quot;dpop&quot;) dpopJwt?: string,
+        @Headers(&quot;oauth-client-attestation&quot;) clientAttestationJwt?: string,
+        @Headers(&quot;oauth-client-attestation-pop&quot;)
+        clientAttestationPopJwt?: string,
+    ): Promise&lt;ChainedAsParResponseDto&gt; {
+        console.log(body);
+        // DPoP JWK thumbprint extraction will be handled in service layer when DPoP is fully implemented
+        const dpopJkt &#x3D; dpopJwt ? extractDpopJkt(dpopJwt) : undefined;
+
+        // Build client attestation object if both headers are provided
+        const clientAttestation &#x3D;
+            clientAttestationJwt &amp;&amp; clientAttestationPopJwt
+                ? { clientAttestationJwt, clientAttestationPopJwt }
+                : undefined;
+
+        return this.chainedAsService.handlePar(
+            tenantId,
+            body,
+            dpopJkt,
+            clientAttestation,
+        );
+    }
+
+    /**
+     * Authorization endpoint.
+     * Validates the request_uri and redirects to the upstream OIDC provider.
+     */
+    @Public()
+    @Get(&quot;authorize&quot;)
+    @ApiOperation({
+        summary: &quot;Authorization endpoint&quot;,
+        description:
+            &quot;Validates the request_uri from PAR and redirects to the upstream OIDC provider for authentication.&quot;,
+    })
+    @ApiParam({ name: &quot;tenantId&quot;, description: &quot;Tenant identifier&quot; })
+    @ApiResponse({
+        status: 302,
+        description: &quot;Redirect to upstream OIDC provider&quot;,
+    })
+    @ApiResponse({
+        status: 400,
+        description: &quot;Invalid request&quot;,
+        type: ChainedAsErrorResponseDto,
+    })
+    async authorize(
+        @Param(&quot;tenantId&quot;) tenantId: string,
+        @Query() query: ChainedAsAuthorizeQueryDto,
+        @Res() res: Response,
+    ): Promise&lt;void&gt; {
+        const redirectUrl &#x3D; await this.chainedAsService.handleAuthorize(
+            tenantId,
+            query.client_id,
+            query.request_uri,
+        );
+        console.log(redirectUrl);
+        res.redirect(redirectUrl);
+    }
+
+    /**
+     * Callback endpoint for upstream OIDC provider.
+     * Receives the authorization code from upstream and redirects the wallet.
+     */
+    @Public()
+    @Get(&quot;callback&quot;)
+    @ApiOperation({
+        summary: &quot;Upstream OIDC callback&quot;,
+        description:
+            &quot;Receives the authorization response from the upstream OIDC provider, exchanges the code, and redirects back to the wallet.&quot;,
+    })
+    @ApiParam({ name: &quot;tenantId&quot;, description: &quot;Tenant identifier&quot; })
+    @ApiResponse({
+        status: 302,
+        description: &quot;Redirect to wallet with authorization code&quot;,
+    })
+    @ApiResponse({
+        status: 400,
+        description: &quot;Invalid callback&quot;,
+        type: ChainedAsErrorResponseDto,
+    })
+    async callback(
+        @Param(&quot;tenantId&quot;) tenantId: string,
+        @Res() res: Response,
+        @Query(&quot;code&quot;) code?: string,
+        @Query(&quot;state&quot;) state?: string,
+        @Query(&quot;error&quot;) error?: string,
+        @Query(&quot;error_description&quot;) errorDescription?: string,
+    ): Promise&lt;void&gt; {
+        const redirectUrl &#x3D; await this.chainedAsService.handleUpstreamCallback(
+            tenantId,
+            code || &quot;&quot;,
+            state || &quot;&quot;,
+            error,
+            errorDescription,
+        );
+        res.redirect(redirectUrl);
+    }
+
+    /**
+     * Token endpoint.
+     * Exchanges the authorization code for an access token.
+     */
+    @Public()
+    @Post(&quot;token&quot;)
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: &quot;Token endpoint&quot;,
+        description:
+            &quot;Exchanges the authorization code for an access token containing issuer_state.&quot;,
+    })
+    @ApiParam({ name: &quot;tenantId&quot;, description: &quot;Tenant identifier&quot; })
+    @ApiHeader({
+        name: &quot;DPoP&quot;,
+        required: false,
+        description: &quot;DPoP proof JWT&quot;,
+    })
+    @ApiResponse({
+        status: 200,
+        description: &quot;Token issued successfully&quot;,
+        type: ChainedAsTokenResponseDto,
+    })
+    @ApiResponse({
+        status: 400,
+        description: &quot;Invalid request&quot;,
+        type: ChainedAsErrorResponseDto,
+    })
+    @ApiResponse({
+        status: 401,
+        description: &quot;Invalid authorization code&quot;,
+        type: ChainedAsErrorResponseDto,
+    })
+    async token(
+        @Param(&quot;tenantId&quot;) tenantId: string,
+        @Body() body: ChainedAsTokenRequestDto,
+        @Headers(&quot;dpop&quot;) dpopJwt?: string,
+    ): Promise&lt;ChainedAsTokenResponseDto&gt; {
+        return this.chainedAsService.handleToken(tenantId, body, dpopJwt);
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'controller';
+            var COMPODOC_CURRENT_PAGE_URL = 'ChainedAsController.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,1111 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >X509ValidationService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/shared/trust/x509-validation.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#buildPath" >buildPath</a>
+                            </li>
+                            <li>
+                                <a href="#isCaCert" >isCaCert</a>
+                            </li>
+                            <li>
+                                <a href="#isTimeValid" >isTimeValid</a>
+                            </li>
+                            <li>
+                                <a href="#parseTrustAnchors" >parseTrustAnchors</a>
+                            </li>
+                            <li>
+                                <a href="#parseX5c" >parseX5c</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#pathMatchesTrustedEntities" >pathMatchesTrustedEntities</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildPath"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>buildPath</b></span>
+                        <a href="#buildPath"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildPath(leaf: x509.X509Certificate, presentedChain: x509.X509Certificate[], anchors: x509.X509Certificate[], extraIntermediates: x509.X509Certificate[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="86"
+                                    class="link-to-prism">src/shared/trust/x509-validation.service.ts:86</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Build a validated path from leaf using provided chain + anchors.
+Returns path leaf..anchor if successful.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>leaf</td>
+                                            <td>
+                                                        <code>x509.X509Certificate</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>presentedChain</td>
+                                            <td>
+                                                        <code>x509.X509Certificate[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>anchors</td>
+                                            <td>
+                                                        <code>x509.X509Certificate[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>extraIntermediates</td>
+                                            <td>
+                                                        <code>x509.X509Certificate[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>[]</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;x509.X509Certificate[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isCaCert"></a>
+                    <span class="name">
+                        <span ><b>isCaCert</b></span>
+                        <a href="#isCaCert"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isCaCert(cert: x509.X509Certificate)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="100"
+                                    class="link-to-prism">src/shared/trust/x509-validation.service.ts:100</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Determine whether anchor is a CA cert (basicConstraints CA=TRUE).</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cert</td>
+                                            <td>
+                                                        <code>x509.X509Certificate</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isTimeValid"></a>
+                    <span class="name">
+                        <span ><b>isTimeValid</b></span>
+                        <a href="#isTimeValid"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isTimeValid(cert: x509.X509Certificate, now: unknown)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="113"
+                                    class="link-to-prism">src/shared/trust/x509-validation.service.ts:113</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Basic time validity check (you may rely on chain builder already doing this,
+but keeping it explicit is sometimes useful).</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cert</td>
+                                            <td>
+                                                        <code>x509.X509Certificate</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>now</td>
+                                            <td>
+                                                        <code>unknown</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>new Date()</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseTrustAnchors"></a>
+                    <span class="name">
+                        <span ><b>parseTrustAnchors</b></span>
+                        <a href="#parseTrustAnchors"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>parseTrustAnchors(values: Array<literal type>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="56"
+                                    class="link-to-prism">src/shared/trust/x509-validation.service.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>values</td>
+                                            <td>
+                                                        <code>Array&lt;literal type&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>x509.X509Certificate[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseX5c"></a>
+                    <span class="name">
+                        <span ><b>parseX5c</b></span>
+                        <a href="#parseX5c"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>parseX5c(x5c: <a href="../miscellaneous/typealiases.html#X5cInput" target="_self">X5cInput</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="52"
+                                    class="link-to-prism">src/shared/trust/x509-validation.service.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>x5c</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#X5cInput" target="_self" >X5cInput</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>x509.X509Certificate[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pathMatchesTrustedEntities"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>pathMatchesTrustedEntities</b></span>
+                        <a href="#pathMatchesTrustedEntities"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>pathMatchesTrustedEntities(path: x509.X509Certificate[], entities: <a href="../miscellaneous/typealiases.html#TrustedEntity" target="_self">TrustedEntity[]</a>, pinnedMode: "leaf" | "pathEnd", serviceTypeFilter: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="134"
+                                    class="link-to-prism">src/shared/trust/x509-validation.service.ts:134</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Match a certificate chain against TrustedEntities.
+Returns the matched entity with its issuance and revocation certificates.</p>
+<p>Policy:</p>
+<ul>
+<li>Looks for certificates matching the specified service type in each entity</li>
+<li>If cert is CA: require path terminates in that anchor</li>
+<li>If cert is not CA: treat as pin<ul>
+<li><p>pinnedMode &quot;leaf&quot;: leaf equals pinned cert</p>
+</li>
+<li><p>pinnedMode &quot;pathEnd&quot;: path end equals pinned cert</p>
+<b>Example :</b><div><pre class="line-numbers"><code class="language-none">                 (e.g., &quot;/Issuance&quot; matches both PID/Issuance and EAA/Issuance).
+                 Otherwise uses exact matching (e.g., full WalletProvider URI).
+                 Defaults to &quot;/Issuance&quot; to match both PID and EAA issuance.</code></pre></div></li>
+</ul>
+</li>
+</ul>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>path</td>
+                                            <td>
+                                                        <code>x509.X509Certificate[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>entities</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#TrustedEntity" target="_self" >TrustedEntity[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>pinnedMode</td>
+                                            <td>
+                                                        <code>&quot;leaf&quot; | &quot;pathEnd&quot;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&quot;leaf&quot;</code>
+                                            </td>
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>serviceTypeFilter</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&quot;/Issuance&quot;</code>
+                                            </td>
+
+                                            <td>
+                                                    <p>The service type filter to match. If it starts with &quot;/&quot;, uses suffix matching
+(e.g., &quot;/Issuance&quot; matches both PID/Issuance and EAA/Issuance).
+Otherwise uses exact matching (e.g., full WalletProvider URI).
+Defaults to &quot;/Issuance&quot; to match both PID and EAA issuance.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;MatchedTrustedEntity | null&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The matched entity info, or null if no match</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(X509ValidationService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/shared/trust/x509-validation.service.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, Logger } from &quot;@nestjs/common&quot;;
+import * as x509 from &quot;@peculiar/x509&quot;;
+import { getRevocationCert, TrustedEntity } from &quot;./types&quot;;
+
+type X5cInput &#x3D; string[]; // base64 DER entries
+
+function arrayBufferToHex(buffer: ArrayBuffer): string {
+    return Array.from(new Uint8Array(buffer))
+        .map((b) &#x3D;&gt; b.toString(16).padStart(2, &quot;0&quot;))
+        .join(&quot;&quot;);
+}
+
+/**
+ * Parse a certificate from a Base64-encoded DER string (as used in LoTE trust lists).
+ * Converts to PEM format which is more reliably parsed by @peculiar/x509.
+ */
+function certFromBase64Der(val: string): x509.X509Certificate {
+    // Convert to PEM format - this is more reliably parsed
+    const pem &#x3D;
+        &quot;-----BEGIN CERTIFICATE-----\n&quot; +
+        val.match(/.{1,64}/g)!.join(&quot;\n&quot;) +
+        &quot;\n-----END CERTIFICATE-----&quot;;
+    return new x509.X509Certificate(pem);
+}
+
+/**
+ * Information about a matched TrustedEntity from certificate chain validation.
+ * Includes the matched issuance certificate and the associated revocation certificate
+ * from the same entity.
+ */
+export type MatchedTrustedEntity &#x3D; {
+    /** The TrustedEntity that was matched */
+    entity: TrustedEntity;
+    /** The matched issuance certificate from this entity */
+    issuanceCert: x509.X509Certificate;
+    /** Thumbprint of the issuance certificate */
+    issuanceThumbprint: string;
+    /** Whether the issuance certificate is a CA certificate */
+    issuanceIsCa: boolean;
+    /** The mode that matched (ca, leaf-pinned, pathEnd-pinned) */
+    matchMode: &quot;ca&quot; | &quot;leaf-pinned&quot; | &quot;pathEnd-pinned&quot;;
+    /** The revocation certificate from the same entity (if available) */
+    revocationCert?: x509.X509Certificate;
+    /** Thumbprint of the revocation certificate (if available) */
+    revocationThumbprint?: string;
+};
+
+@Injectable()
+export class X509ValidationService {
+    private readonly logger &#x3D; new Logger(X509ValidationService.name);
+
+    parseX5c(x5c: X5cInput): x509.X509Certificate[] {
+        return x5c.map((b64) &#x3D;&gt; new x509.X509Certificate(b64));
+    }
+
+    parseTrustAnchors(
+        values: Array&lt;{ certValue: string }&gt;,
+    ): x509.X509Certificate[] {
+        const certs: x509.X509Certificate[] &#x3D; [];
+        for (const { certValue } of values) {
+            try {
+                const cert &#x3D; certFromBase64Der(certValue);
+                this.logger.debug(
+                    &#x60;Parsed trust anchor: subject&#x3D;&quot;${cert.subject}&quot;, issuer&#x3D;&quot;${cert.issuer}&quot;&#x60;,
+                );
+                certs.push(cert);
+            } catch (e: any) {
+                // More detailed error logging
+                const cleanedVal &#x3D; certValue.replace(/[\s\r\n]/g, &quot;&quot;);
+                const der &#x3D; Buffer.from(cleanedVal, &quot;base64&quot;);
+                this.logger.warn(
+                    &#x60;Failed to parse trust anchor certificate: ${e?.message ?? e}. &#x60; +
+                        &#x60;certValue length: ${certValue.length}, cleaned length: ${cleanedVal.length}, &#x60; +
+                        &#x60;DER buffer size: ${der.length} bytes. &#x60; +
+                        &#x60;certValue starts with: ${cleanedVal.substring(0, 50)}...&#x60;,
+                );
+            }
+        }
+        return certs;
+    }
+
+    /**
+     * Build a validated path from leaf using provided chain + anchors.
+     * Returns path leaf..anchor if successful.
+     */
+    async buildPath(
+        leaf: x509.X509Certificate,
+        presentedChain: x509.X509Certificate[],
+        anchors: x509.X509Certificate[],
+        extraIntermediates: x509.X509Certificate[] &#x3D; [],
+    ): Promise&lt;x509.X509Certificate[]&gt; {
+        const pool &#x3D; [...presentedChain, ...extraIntermediates, ...anchors];
+        const builder &#x3D; new x509.X509ChainBuilder({ certificates: pool });
+        return await builder.build(leaf);
+    }
+
+    /**
+     * Determine whether anchor is a CA cert (basicConstraints CA&#x3D;TRUE).
+     */
+    isCaCert(cert: x509.X509Certificate): boolean {
+        // @peculiar/x509 provides basicConstraints extension parsing
+        const bc &#x3D; cert.getExtension(&quot;2.5.29.19&quot;); // BasicConstraints
+        // If missing, treat as not CA
+        if (!bc) return false;
+        // Peculiar returns parsed extension object with &quot;ca&quot; boolean for BasicConstraints
+        return Boolean((bc as any).ca);
+    }
+
+    /**
+     * Basic time validity check (you may rely on chain builder already doing this,
+     * but keeping it explicit is sometimes useful).
+     */
+    isTimeValid(cert: x509.X509Certificate, now &#x3D; new Date()): boolean {
+        return cert.notBefore &lt;&#x3D; now &amp;&amp; now &lt;&#x3D; cert.notAfter;
+    }
+
+    /**
+     * Match a certificate chain against TrustedEntities.
+     * Returns the matched entity with its issuance and revocation certificates.
+     *
+     * Policy:
+     * - Looks for certificates matching the specified service type in each entity
+     * - If cert is CA: require path terminates in that anchor
+     * - If cert is not CA: treat as pin
+     *   - pinnedMode &quot;leaf&quot;: leaf equals pinned cert
+     *   - pinnedMode &quot;pathEnd&quot;: path end equals pinned cert
+     *
+     * @param serviceTypeFilter The service type filter to match. If it starts with &quot;/&quot;, uses suffix matching
+     *                          (e.g., &quot;/Issuance&quot; matches both PID/Issuance and EAA/Issuance).
+     *                          Otherwise uses exact matching (e.g., full WalletProvider URI).
+     *                          Defaults to &quot;/Issuance&quot; to match both PID and EAA issuance.
+     * @returns The matched entity info, or null if no match
+     */
+    async pathMatchesTrustedEntities(
+        path: x509.X509Certificate[],
+        entities: TrustedEntity[],
+        pinnedMode: &quot;leaf&quot; | &quot;pathEnd&quot; &#x3D; &quot;leaf&quot;,
+        serviceTypeFilter: string &#x3D; &quot;/Issuance&quot;,
+    ): Promise&lt;MatchedTrustedEntity | null&gt; {
+        const leaf &#x3D; path[0];
+        const end &#x3D; path.at(-1)!;
+        const leafThumb &#x3D; arrayBufferToHex(await leaf.getThumbprint(&quot;SHA-256&quot;));
+        const endThumb &#x3D; arrayBufferToHex(await end.getThumbprint(&quot;SHA-256&quot;));
+
+        for (const entity of entities) {
+            // Find certificates matching the specified service type in this entity
+            // If filter starts with &quot;/&quot;, use suffix matching (e.g., &quot;/Issuance&quot; matches PID/Issuance and EAA/Issuance)
+            // Otherwise use exact matching (e.g., full WalletProvider URI)
+            const matchingServices &#x3D; entity.services.filter((s) &#x3D;&gt;
+                serviceTypeFilter.startsWith(&quot;/&quot;)
+                    ? s.serviceTypeIdentifier.endsWith(serviceTypeFilter)
+                    : s.serviceTypeIdentifier &#x3D;&#x3D;&#x3D; serviceTypeFilter,
+            );
+
+            for (const svc of matchingServices) {
+                const matchCert &#x3D; certFromBase64Der(svc.certValue);
+                const matchThumb &#x3D; arrayBufferToHex(
+                    await matchCert.getThumbprint(&quot;SHA-256&quot;),
+                );
+                const matchIsCa &#x3D; this.isCaCert(matchCert);
+
+                let matchMode: &quot;ca&quot; | &quot;leaf-pinned&quot; | &quot;pathEnd-pinned&quot; | null &#x3D;
+                    null;
+
+                if (matchIsCa) {
+                    // CA cert: path must terminate at this anchor
+                    if (matchThumb &#x3D;&#x3D;&#x3D; endThumb) {
+                        matchMode &#x3D; &quot;ca&quot;;
+                    }
+                } else if (pinnedMode &#x3D;&#x3D;&#x3D; &quot;leaf&quot; &amp;&amp; matchThumb &#x3D;&#x3D;&#x3D; leafThumb) {
+                    // Pinned cert (non-CA) - leaf mode
+                    matchMode &#x3D; &quot;leaf-pinned&quot;;
+                } else if (
+                    pinnedMode &#x3D;&#x3D;&#x3D; &quot;pathEnd&quot; &amp;&amp;
+                    matchThumb &#x3D;&#x3D;&#x3D; endThumb
+                ) {
+                    // Pinned cert (non-CA) - pathEnd mode
+                    matchMode &#x3D; &quot;pathEnd-pinned&quot;;
+                }
+
+                if (matchMode) {
+                    // Found a match! Now get the revocation cert from the same entity
+                    const revocationSvc &#x3D; getRevocationCert(entity);
+                    let revocationCert: x509.X509Certificate | undefined;
+                    let revocationThumbprint: string | undefined;
+
+                    if (revocationSvc) {
+                        revocationCert &#x3D; certFromBase64Der(
+                            revocationSvc.certValue,
+                        );
+                        revocationThumbprint &#x3D; arrayBufferToHex(
+                            await revocationCert.getThumbprint(&quot;SHA-256&quot;),
+                        );
+                    }
+
+                    return {
+                        entity,
+                        issuanceCert: matchCert,
+                        issuanceThumbprint: matchThumb,
+                        issuanceIsCa: matchIsCa,
+                        matchMode,
+                        revocationCert,
+                        revocationThumbprint,
+                    };
+                }
+            }
+        }
+
+        return null;
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'X509ValidationService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

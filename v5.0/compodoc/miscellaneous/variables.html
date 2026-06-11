@@ -1,0 +1,3209 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content miscellaneous-variables">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Miscellaneous</li>
+  <li class="breadcrumb-item">Variables</li>
+</ol>
+
+<section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <ul class="index-list">
+                        <li>
+                            <a href="#ACTION_TYPE_VALUES" title="src/audit-log/dto/audit-log-response.dto.ts" ><b>ACTION_TYPE_VALUES</b>&nbsp;&nbsp;&nbsp;(src/.../audit-log-response.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ALG_TO_WEBCRYPTO" title="src/crypto/key/kms/kms-crypto-provider.ts" ><b>ALG_TO_WEBCRYPTO</b>&nbsp;&nbsp;&nbsp;(src/.../kms-crypto-provider.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#allRoles" title="src/auth/roles/role.enum.ts" ><b>allRoles</b>&nbsp;&nbsp;&nbsp;(src/.../role.enum.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AppDataSource" title="src/database/data-source.ts" ><b>AppDataSource</b>&nbsp;&nbsp;&nbsp;(src/.../data-source.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ATTESTATION_LOS_VALUES" title="src/registrar/dto/schema-metadata.dto.ts" ><b>ATTESTATION_LOS_VALUES</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AUDIT_LOG_VALIDATION_SCHEMA" title="src/audit-log/audit-log-validation.schema.ts" ><b>AUDIT_LOG_VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../audit-log-validation.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AUTH_VALIDATION_SCHEMA" title="src/auth/auth-validation.schema.ts" ><b>AUTH_VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../auth-validation.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#BASE_VALIDATION_SCHEMA" title="src/shared/utils/config-printer/validation.schema.ts" ><b>BASE_VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../validation.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#BCRYPT_ROUNDS" title="src/auth/client/adapters/internal-clients.service.ts" ><b>BCRYPT_ROUNDS</b>&nbsp;&nbsp;&nbsp;(src/.../internal-clients.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#BINDING_TYPE_VALUES" title="src/registrar/dto/schema-metadata.dto.ts" ><b>BINDING_TYPE_VALUES</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CATEGORY_VALUES" title="src/registrar/dto/schema-metadata.dto.ts" ><b>CATEGORY_VALUES</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CLIENTS_PROVIDER" title="src/auth/client/client.provider.ts" ><b>CLIENTS_PROVIDER</b>&nbsp;&nbsp;&nbsp;(src/.../client.provider.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#commonOptions" title="src/database/data-source.ts" ><b>commonOptions</b>&nbsp;&nbsp;&nbsp;(src/.../data-source.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CONFIG_VALIDATION_SCHEMA" title="src/shared/utils/config-printer/config-validation.schema.ts" ><b>CONFIG_VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../config-validation.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ContentType" title="src/shared/utils/mediaType/media-type.decorator.ts" ><b>ContentType</b>&nbsp;&nbsp;&nbsp;(src/.../media-type.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#createLoggerOptions" title="src/shared/utils/logger/logger.factory.ts" ><b>createLoggerOptions</b>&nbsp;&nbsp;&nbsp;(src/.../logger.factory.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CRYPTO_VALIDATION_SCHEMA" title="src/crypto/key/crypto-implementation/crypto-validation.schema.ts" ><b>CRYPTO_VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../crypto-validation.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#dataSourceOptions" title="src/database/data-source.ts" ><b>dataSourceOptions</b>&nbsp;&nbsp;&nbsp;(src/.../data-source.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DB_VALIDATION_SCHEMA" title="src/database/database-validation.schema.ts" ><b>DB_VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../database-validation.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#dbType" title="src/database/data-source.ts" ><b>dbType</b>&nbsp;&nbsp;&nbsp;(src/.../data-source.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DEFAULT_LANG" title="src/issuer/trust-list/trustlist.service.ts" ><b>DEFAULT_LANG</b>&nbsp;&nbsp;&nbsp;(src/.../trustlist.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DEFAULT_PROVIDER_ID" title="src/crypto/key/kms/kms-config.service.ts" ><b>DEFAULT_PROVIDER_ID</b>&nbsp;&nbsp;&nbsp;(src/.../kms-config.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DEFAULT_PROVIDER_ID" title="src/crypto/key/kms/kms-provider.registry.ts" ><b>DEFAULT_PROVIDER_ID</b>&nbsp;&nbsp;&nbsp;(src/.../kms-provider.registry.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ECDSA_P256_SIGNATURE_ALG" title="src/crypto/key/cert/certificate-builder.service.ts" ><b>ECDSA_P256_SIGNATURE_ALG</b>&nbsp;&nbsp;&nbsp;(src/.../certificate-builder.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#EncryptedJsonTransformer" title="src/shared/utils/encryption/encrypted-column.transformer.ts" ><b>EncryptedJsonTransformer</b>&nbsp;&nbsp;&nbsp;(src/.../encrypted-column.transformer.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#EncryptedStringTransformer" title="src/shared/utils/encryption/encrypted-column.transformer.ts" ><b>EncryptedStringTransformer</b>&nbsp;&nbsp;&nbsp;(src/.../encrypted-column.transformer.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ENCRYPTION_KEY_PROVIDER" title="src/shared/utils/encryption/providers/encryption-key-provider.interface.ts" ><b>ENCRYPTION_KEY_PROVIDER</b>&nbsp;&nbsp;&nbsp;(src/.../encryption-key-provider.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ENCRYPTION_VALIDATION_SCHEMA" title="src/shared/utils/encryption/encryption-validation.schema.ts" ><b>ENCRYPTION_VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../encryption-validation.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#encryptionServiceInstance" title="src/shared/utils/encryption/encrypted-column.transformer.ts" ><b>encryptionServiceInstance</b>&nbsp;&nbsp;&nbsp;(src/.../encrypted-column.transformer.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FILE_STORAGE" title="src/storage/storage.types.ts" ><b>FILE_STORAGE</b>&nbsp;&nbsp;&nbsp;(src/.../storage.types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FORMAT_VALUES" title="src/registrar/dto/schema-metadata.dto.ts" ><b>FORMAT_VALUES</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#GLOBAL_PREFIX_EXCLUSIONS" title="src/main.helpers.ts" ><b>GLOBAL_PREFIX_EXCLUSIONS</b>&nbsp;&nbsp;&nbsp;(src/.../main.helpers.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#HTTP_AUTH_TYPES" title="src/crypto/key/dto/kms-config.dto.ts" ><b>HTTP_AUTH_TYPES</b>&nbsp;&nbsp;&nbsp;(src/.../kms-config.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#IS_PUBLIC_KEY" title="src/auth/public.decorator.ts" ><b>IS_PUBLIC_KEY</b>&nbsp;&nbsp;&nbsp;(src/.../public.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ISSUER_VALIDATION_SCHEMA" title="src/issuer/issuer-validation.schema.ts" ><b>ISSUER_VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../issuer-validation.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#JSON_SCHEMA_DRAFT_2020_12" title="src/issuer/configuration/credentials/utils/derive.ts" ><b>JSON_SCHEMA_DRAFT_2020_12</b>&nbsp;&nbsp;&nbsp;(src/.../derive.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#KMS_PROVIDER_TYPES" title="src/crypto/key/dto/kms-config.dto.ts" ><b>KMS_PROVIDER_TYPES</b>&nbsp;&nbsp;&nbsp;(src/.../kms-config.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#LOG_VALIDATION_SCHEMA" title="src/shared/utils/logger/log-validation.schema.ts" ><b>LOG_VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../log-validation.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#mdocContext" title="src/verifier/presentations/mdoc-context.ts" ><b>mdocContext</b>&nbsp;&nbsp;&nbsp;(src/.../mdoc-context.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#MIME_TYPES" title="src/storage/files.service.ts" ><b>MIME_TYPES</b>&nbsp;&nbsp;&nbsp;(src/.../files.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#MSO_MDOC_FORMAT" title="src/issuer/configuration/credentials/types/credential-config-types.ts" ><b>MSO_MDOC_FORMAT</b>&nbsp;&nbsp;&nbsp;(src/.../credential-config-types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#otelSDK" title="src/tracing.ts" ><b>otelSDK</b>&nbsp;&nbsp;&nbsp;(src/.../tracing.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#P256_OID_DER" title="src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts" ><b>P256_OID_DER</b>&nbsp;&nbsp;&nbsp;(src/.../pkcs11-kms.adapter.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#pkcs11ModulePromise" title="src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts" ><b>pkcs11ModulePromise</b>&nbsp;&nbsp;&nbsp;(src/.../pkcs11-kms.adapter.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Public" title="src/auth/public.decorator.ts" ><b>Public</b>&nbsp;&nbsp;&nbsp;(src/.../public.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Roles" title="src/auth/roles/roles.decorator.ts" ><b>Roles</b>&nbsp;&nbsp;&nbsp;(src/.../roles.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ROLES_KEY" title="src/auth/roles/roles.decorator.ts" ><b>ROLES_KEY</b>&nbsp;&nbsp;&nbsp;(src/.../roles.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SD_JWT_DC_FORMAT" title="src/issuer/configuration/credentials/types/credential-config-types.ts" ><b>SD_JWT_DC_FORMAT</b>&nbsp;&nbsp;&nbsp;(src/.../credential-config-types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ServiceTypeIdentifiers" title="src/shared/trust/types.ts" ><b>ServiceTypeIdentifiers</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SESSION_STATUS_CHANGED" title="src/session/session-events.service.ts" ><b>SESSION_STATUS_CHANGED</b>&nbsp;&nbsp;&nbsp;(src/.../session-events.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SESSION_VALIDATION_SCHEMA" title="src/session/session-validation.schema.ts" ><b>SESSION_VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../session-validation.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#STATUS_LIST_VALIDATION_SCHEMA" title="src/issuer/lifecycle/status/status-list-validation.schema.ts" ><b>STATUS_LIST_VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../status-list-validation.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#STORAGE_VALIDATION_SCHEMA" title="src/storage/storage-validation.schema.ts" ><b>STORAGE_VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../storage-validation.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TAG_VALUES" title="src/registrar/dto/schema-metadata.dto.ts" ><b>TAG_VALUES</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TENANT_RELATION_FIELDS" title="src/shared/utils/dto-omit-fields.ts" ><b>TENANT_RELATION_FIELDS</b>&nbsp;&nbsp;&nbsp;(src/.../dto-omit-fields.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#toBuffer" title="src/shared/utils/buffer.util.ts" ><b>toBuffer</b>&nbsp;&nbsp;&nbsp;(src/.../buffer.util.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Token" title="src/auth/token.decorator.ts" ><b>Token</b>&nbsp;&nbsp;&nbsp;(src/.../token.decorator.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#USERS_PROVIDER" title="src/auth/user/user.provider.ts" ><b>USERS_PROVIDER</b>&nbsp;&nbsp;&nbsp;(src/.../user.provider.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#VALIDATION_SCHEMA" title="src/shared/utils/config-printer/combined.schema.ts" ><b>VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../combined.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#VOCABULARY_STATUS_VALUES" title="src/registrar/dto/schema-metadata.dto.ts" ><b>VOCABULARY_STATUS_VALUES</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#webCrypto" title="src/verifier/presentations/mdoc-context.ts" ><b>webCrypto</b>&nbsp;&nbsp;&nbsp;(src/.../mdoc-context.ts)</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    <h3>src/audit-log/dto/audit-log-response.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ACTION_TYPE_VALUES"></a>
+                    <span class="name">
+                        <span ><b>ACTION_TYPE_VALUES</b></span>
+                        <a href="#ACTION_TYPE_VALUES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>AuditActionTypeLiteral[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    &quot;tenant_created&quot;,
+    &quot;tenant_updated&quot;,
+    &quot;tenant_deleted&quot;,
+    &quot;presentation_config_created&quot;,
+    &quot;presentation_config_updated&quot;,
+    &quot;presentation_config_deleted&quot;,
+    &quot;issuance_config_updated&quot;,
+    &quot;credential_config_created&quot;,
+    &quot;credential_config_updated&quot;,
+    &quot;credential_config_deleted&quot;,
+    &quot;status_list_config_updated&quot;,
+    &quot;status_list_config_reset&quot;,
+    &quot;webhook_endpoint_created&quot;,
+    &quot;webhook_endpoint_updated&quot;,
+    &quot;webhook_endpoint_deleted&quot;,
+    &quot;attribute_provider_created&quot;,
+    &quot;attribute_provider_updated&quot;,
+    &quot;attribute_provider_deleted&quot;,
+]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/crypto/key/kms/kms-crypto-provider.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ALG_TO_WEBCRYPTO"></a>
+                    <span class="name">
+                        <span ><b>ALG_TO_WEBCRYPTO</b></span>
+                        <a href="#ALG_TO_WEBCRYPTO"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#KmsSigningAlg" target="_self" >Record&lt;KmsSigningAlg, KeyAlgorithm&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    ES256: {
+        name: &quot;ECDSA&quot;,
+        // @ts-expect-error - WebCrypto KeyAlgorithm doesn&#x27;t include namedCurve in its type
+        namedCurve: &quot;P-256&quot;,
+    },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/auth/roles/role.enum.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="allRoles"></a>
+                    <span class="name">
+                        <span ><b>allRoles</b></span>
+                        <a href="#allRoles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    Role.Tenants,
+    Role.IssuanceOffer,
+    Role.Issuances,
+    Role.PresentationRequest,
+    Role.Presentations,
+    Role.Clients,
+    Role.Users,
+    Role.Registrar,
+]</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>List of all roles</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/database/data-source.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AppDataSource"></a>
+                    <span class="name">
+                        <span ><b>AppDataSource</b></span>
+                        <a href="#AppDataSource"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new DataSource(dataSourceOptions)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="commonOptions"></a>
+                    <span class="name">
+                        <span ><b>commonOptions</b></span>
+                        <a href="#commonOptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Partial&lt;DataSourceOptions&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    synchronize: false,
+    logging: process.env.DB_LOGGING &#x3D;&#x3D;&#x3D; &quot;true&quot;,
+    migrations: [join(__dirname, &quot;migrations&quot;, &quot;*.{ts,js}&quot;)],
+    migrationsTableName: &quot;typeorm_migrations&quot;,
+    // Entity patterns - TypeORM CLI needs explicit patterns
+    entities: [join(__dirname, &quot;..&quot;, &quot;**&quot;, &quot;*.entity.{ts,js}&quot;)],
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dataSourceOptions"></a>
+                    <span class="name">
+                        <span ><b>dataSourceOptions</b></span>
+                        <a href="#dataSourceOptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>DataSourceOptions</code>
+
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="dbType"></a>
+                    <span class="name">
+                        <span ><b>dbType</b></span>
+                        <a href="#dbType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>process.env.DB_TYPE as &quot;sqlite&quot; | &quot;postgres&quot; | undefined</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/registrar/dto/schema-metadata.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ATTESTATION_LOS_VALUES"></a>
+                    <span class="name">
+                        <span ><b>ATTESTATION_LOS_VALUES</b></span>
+                        <a href="#ATTESTATION_LOS_VALUES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    &quot;iso_18045_high&quot;,
+    &quot;iso_18045_moderate&quot;,
+    &quot;iso_18045_enhanced-basic&quot;,
+    &quot;iso_18045_basic&quot;,
+] as const</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="BINDING_TYPE_VALUES"></a>
+                    <span class="name">
+                        <span ><b>BINDING_TYPE_VALUES</b></span>
+                        <a href="#BINDING_TYPE_VALUES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[&quot;claim&quot;, &quot;key&quot;, &quot;biometric&quot;, &quot;none&quot;] as const</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CATEGORY_VALUES"></a>
+                    <span class="name">
+                        <span ><b>CATEGORY_VALUES</b></span>
+                        <a href="#CATEGORY_VALUES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    &quot;identity&quot;,
+    &quot;health&quot;,
+    &quot;finance&quot;,
+    &quot;education&quot;,
+    &quot;mobility&quot;,
+    &quot;employment&quot;,
+    &quot;other&quot;,
+] as const</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FORMAT_VALUES"></a>
+                    <span class="name">
+                        <span ><b>FORMAT_VALUES</b></span>
+                        <a href="#FORMAT_VALUES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[&quot;dc+sd-jwt&quot;, &quot;mso_mdoc&quot;] as const</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TAG_VALUES"></a>
+                    <span class="name">
+                        <span ><b>TAG_VALUES</b></span>
+                        <a href="#TAG_VALUES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    &quot;pid&quot;,
+    &quot;eudi&quot;,
+    &quot;kyc&quot;,
+    &quot;aml&quot;,
+    &quot;age-verification&quot;,
+    &quot;residency&quot;,
+    &quot;membership&quot;,
+    &quot;education&quot;,
+    &quot;employment&quot;,
+    &quot;mobility&quot;,
+] as const</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="VOCABULARY_STATUS_VALUES"></a>
+                    <span class="name">
+                        <span ><b>VOCABULARY_STATUS_VALUES</b></span>
+                        <a href="#VOCABULARY_STATUS_VALUES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[&quot;active&quot;, &quot;deprecated&quot;] as const</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/audit-log/audit-log-validation.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AUDIT_LOG_VALIDATION_SCHEMA"></a>
+                    <span class="name">
+                        <span ><b>AUDIT_LOG_VALIDATION_SCHEMA</b></span>
+                        <a href="#AUDIT_LOG_VALIDATION_SCHEMA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Joi.object({
+    AUDIT_LOG_RETENTION_DAYS: Joi.number()
+        .integer()
+        .min(0)
+        .default(0)
+        .description(
+            &quot;Delete tenant activity audit log entries older than N days. Set to 0 to disable time-based pruning.&quot;,
+        )
+        .meta({ group: &quot;log&quot;, order: 80 }),
+    AUDIT_LOG_MAX_ENTRIES_PER_TENANT: Joi.number()
+        .integer()
+        .min(0)
+        .default(0)
+        .description(
+            &quot;Keep only the newest N tenant activity audit log entries per tenant. Set to 0 to disable count-based pruning.&quot;,
+        )
+        .meta({ group: &quot;log&quot;, order: 90 }),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/auth/auth-validation.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AUTH_VALIDATION_SCHEMA"></a>
+                    <span class="name">
+                        <span ><b>AUTH_VALIDATION_SCHEMA</b></span>
+                        <a href="#AUTH_VALIDATION_SCHEMA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Joi.ObjectSchema</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Joi.object({
+    OIDC: Joi.string()
+        .description(&quot;Enable OIDC mode&quot;)
+        .meta({ group: &quot;auth&quot;, order: 10 }),
+
+    OIDC_INTERNAL_ISSUER_URL: Joi.string()
+        .uri()
+        .when(&quot;OIDC&quot;, {
+            is: Joi.exist(),
+            then: Joi.string().default((config) &#x3D;&gt; config.OIDC),
+            otherwise: Joi.optional(),
+        })
+        .description(&quot;Internal issuer URL in OIDC mode&quot;)
+        .meta({ group: &quot;auth&quot;, order: 20 }),
+
+    OIDC_CLIENT_ID: Joi.when(&quot;OIDC&quot;, {
+        is: Joi.exist(),
+        then: Joi.string().required(),
+        otherwise: Joi.optional(),
+    })
+        .description(&quot;Client ID for OIDC&quot;)
+        .meta({ group: &quot;auth&quot;, order: 25 }),
+
+    OIDC_CLIENT_SECRET: Joi.when(&quot;OIDC&quot;, {
+        is: Joi.exist(),
+        then: Joi.string().required(),
+        otherwise: Joi.optional(),
+    })
+        .description(&quot;Client secret for OIDC&quot;)
+        .meta({ group: &quot;auth&quot;, order: 26 }),
+
+    OIDC_SUB: Joi.when(&quot;OIDC&quot;, {
+        is: Joi.exist(),
+        then: Joi.string().default(&quot;tenant_id&quot;),
+        otherwise: Joi.optional(),
+    })
+        .description(&quot;Claim to use as subject&quot;)
+        .meta({ group: &quot;auth&quot;, order: 30 }),
+
+    OIDC_ALGORITHM: Joi.when(&quot;OIDC&quot;, {
+        is: Joi.exist(),
+        then: Joi.string().valid(&quot;RS256&quot;, &quot;PS256&quot;, &quot;ES256&quot;).default(&quot;RS256&quot;),
+        otherwise: Joi.optional(),
+    })
+        .description(&quot;Expected JWT alg&quot;)
+        .meta({ group: &quot;auth&quot;, order: 40 }),
+
+    MASTER_SECRET: Joi.when(&quot;OIDC&quot;, {
+        is: Joi.exist(),
+        then: Joi.string().optional(),
+        otherwise: Joi.string().min(32).required(),
+    })
+        .description(
+            &quot;Master secret for JWT signing and encryption key derivation - required, minimum 32 characters&quot;,
+        )
+        .meta({ group: &quot;auth&quot;, order: 50 }),
+
+    JWT_ISSUER: Joi.when(&quot;OIDC&quot;, {
+        is: Joi.exist(),
+        then: Joi.string().optional(),
+        otherwise: Joi.string().default(&quot;eudiplo-service&quot;),
+    })
+        .description(&quot;Local JWT issuer&quot;)
+        .meta({ group: &quot;auth&quot;, order: 60 }),
+
+    JWT_EXPIRES_IN: Joi.when(&quot;OIDC&quot;, {
+        is: Joi.exist(),
+        then: Joi.string().optional(),
+        otherwise: Joi.string().default(&quot;24h&quot;),
+    })
+        .description(&quot;Local JWT expiration&quot;)
+        .meta({ group: &quot;auth&quot;, order: 70 }),
+
+    AUTH_CLIENT_SECRET: Joi.when(&quot;OIDC&quot;, {
+        is: Joi.exist(),
+        then: Joi.string().optional(),
+        otherwise: Joi.string().required(),
+    })
+        .description(
+            &quot;Client secret (local auth). In OIDC mode, optional bootstrap secret used to create/update a Keycloak admin/root client when AUTH_CLIENT_ID is also set&quot;,
+        )
+        .meta({ group: &quot;auth&quot;, order: 80 }),
+
+    AUTH_CLIENT_ID: Joi.when(&quot;OIDC&quot;, {
+        is: Joi.exist(),
+        then: Joi.string().optional(),
+        otherwise: Joi.string().required(),
+    })
+        .description(
+            &quot;Client ID (local auth). In OIDC mode, optional bootstrap client ID used to create/update a Keycloak admin/root client when AUTH_CLIENT_SECRET is also set&quot;,
+        )
+        .meta({ group: &quot;auth&quot;, order: 90 }),
+
+    OIDC_UI_CLIENT_ID: Joi.when(&quot;OIDC&quot;, {
+        is: Joi.exist(),
+        then: Joi.string().default(&quot;eudiplo-ui&quot;),
+        otherwise: Joi.optional(),
+    })
+        .description(
+            &quot;Public client ID for the Angular UI in OIDC mode. Used to register a public Keycloak client for Authorization Code + PKCE login.&quot;,
+        )
+        .meta({ group: &quot;auth&quot;, order: 95 }),
+}).unknown(true)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/shared/utils/config-printer/validation.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="BASE_VALIDATION_SCHEMA"></a>
+                    <span class="name">
+                        <span ><b>BASE_VALIDATION_SCHEMA</b></span>
+                        <a href="#BASE_VALIDATION_SCHEMA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Joi.object({
+    FOLDER: Joi.string()
+        .default(&quot;../../tmp&quot;)
+        .description(&quot;Root working folder for temp files&quot;)
+        .meta({ group: &quot;general&quot;, order: 10 }),
+    GRAFANA_URL: Joi.string()
+        .uri({ scheme: [&quot;http&quot;, &quot;https&quot;] })
+        .optional()
+        .allow(&quot;&quot;)
+        .description(
+            &quot;Base URL of the Grafana instance for deep linking from the dashboard UI&quot;,
+        )
+        .meta({ group: &quot;observability&quot;, order: 10 }),
+    GRAFANA_DATASOURCE_TEMPO_UID: Joi.string()
+        .default(&quot;tempo&quot;)
+        .description(&quot;UID of the Tempo data source in Grafana&quot;)
+        .meta({ group: &quot;observability&quot;, order: 20 }),
+    GRAFANA_DATASOURCE_LOKI_UID: Joi.string()
+        .default(&quot;loki&quot;)
+        .description(&quot;UID of the Loki data source in Grafana&quot;)
+        .meta({ group: &quot;observability&quot;, order: 30 }),
+}).unknown(true)</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Validation schema for base configuration</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/auth/client/adapters/internal-clients.service.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="BCRYPT_ROUNDS"></a>
+                    <span class="name">
+                        <span ><b>BCRYPT_ROUNDS</b></span>
+                        <a href="#BCRYPT_ROUNDS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>10</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/auth/client/client.provider.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CLIENTS_PROVIDER"></a>
+                    <span class="name">
+                        <span ><b>CLIENTS_PROVIDER</b></span>
+                        <a href="#CLIENTS_PROVIDER"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;CLIENTS_PROVIDER&quot;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/shared/utils/config-printer/config-validation.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CONFIG_VALIDATION_SCHEMA"></a>
+                    <span class="name">
+                        <span ><b>CONFIG_VALIDATION_SCHEMA</b></span>
+                        <a href="#CONFIG_VALIDATION_SCHEMA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Joi.object({
+    CONFIG_IMPORT: Joi.boolean()
+        .default(false)
+        .description(&quot;Run one-off config import on startup&quot;)
+        .meta({ group: &quot;config&quot;, order: 10 }),
+
+    CONFIG_IMPORT_FORCE: Joi.boolean()
+        .default(false)
+        .description(&quot;Force overwrite on config import&quot;)
+        .meta({ group: &quot;config&quot;, order: 20 }),
+
+    CONFIG_FOLDER: Joi.string()
+        .default(resolve(__dirname + &quot;/../../../../../assets/config&quot;))
+        .description(&quot;Path to config import folder&quot;)
+        .meta({ group: &quot;config&quot;, order: 30 }),
+    CONFIG_VARIABLE_STRICT: Joi.alternatives()
+        .try(Joi.string().valid(&quot;abort&quot;, &quot;skip&quot;, &quot;ignore&quot;), Joi.boolean())
+        .default(&quot;skip&quot;)
+        .description(&quot;Strict mode for config import.&quot;)
+        .meta({ group: &quot;config&quot;, order: 40 }),
+})</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Validation schema for configuration</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/shared/utils/mediaType/media-type.decorator.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ContentType"></a>
+                    <span class="name">
+                        <span ><b>ContentType</b></span>
+                        <a href="#ContentType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>createParamDecorator(
+    (data: unknown, ctx: ExecutionContext) &#x3D;&gt; {
+        const request &#x3D; ctx.switchToHttp().getRequest();
+        return request.headers[&quot;accept&quot;] as string | undefined;
+    },
+)</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Decorator to extract the content type from the request headers.
+This decorator can be used to determine the media type of the request.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/shared/utils/logger/logger.factory.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createLoggerOptions"></a>
+                    <span class="name">
+                        <span ><b>createLoggerOptions</b></span>
+                        <a href="#createLoggerOptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(configService: ConfigService) &#x3D;&gt; {
+    // Disable pino-http&#x27;s autoLogging - we handle HTTP logging explicitly
+    const enableHttpLogger &#x3D; configService.get&lt;boolean&gt;(
+        &quot;LOG_ENABLE_HTTP_LOGGER&quot;,
+        false,
+    );
+
+    // Check if file logging is enabled
+    const logToFile &#x3D; configService.get&lt;boolean&gt;(&quot;LOG_TO_FILE&quot;);
+    const logFilePath &#x3D; configService.get&lt;string&gt;(&quot;LOG_FILE_PATH&quot;);
+
+    // Check if OTel is disabled
+    const otelDisabled &#x3D;
+        configService.get&lt;string&gt;(&quot;OTEL_SDK_DISABLED&quot;)?.toLowerCase() &#x3D;&#x3D;&#x3D;
+        &quot;true&quot;;
+    const logLevel &#x3D; configService.get(&quot;LOG_LEVEL&quot;, &quot;info&quot;);
+
+    // Build transport targets array
+    const targets: any[] &#x3D; [
+        // Console pretty logging (always enabled)
+        {
+            target: &quot;pino-pretty&quot;,
+            level: logLevel,
+            options: {
+                colorize: true,
+                singleLine: false,
+                translateTime: &quot;yyyy-mm-dd HH:MM:ss&quot;,
+                ignore: &quot;pid,hostname,req,res,responseTime,context&quot;,
+                messageFormat: &quot;{if context}[{context}] {end}{msg}&quot;,
+            },
+        },
+    ];
+
+    // Optional: File logging
+    if (logToFile &amp;&amp; logFilePath) {
+        targets.push({
+            target: &quot;pino/file&quot;,
+            level: logLevel,
+            options: {
+                destination: logFilePath,
+                mkdir: true,
+                sync: true, // Use synchronous writes to ensure message order
+            },
+        });
+    }
+
+    // Optional: OpenTelemetry transport (sends logs to OTel Collector → Loki)
+    // This is how pino logs get trace correlation and appear in Grafana/Loki
+    if (!otelDisabled) {
+        targets.push({
+            target: &quot;pino-opentelemetry-transport&quot;,
+            level: logLevel,
+            options: {
+                // Resource attributes must be explicitly passed to the transport
+                // (it doesn&#x27;t inherit from the OTel SDK automatically)
+                resourceAttributes: {
+                    &quot;service.name&quot;:
+                        configService.get(&quot;OTEL_SERVICE_NAME&quot;) ||
+                        &quot;eudiplo-backend&quot;,
+                    &quot;service.version&quot;:
+                        configService.get(&quot;VERSION&quot;) || &quot;unknown&quot;,
+                },
+            },
+        });
+    }
+
+    return {
+        pinoHttp: {
+            level: logLevel,
+            autoLogging: enableHttpLogger,
+            transport: {
+                targets,
+            },
+            formatters: {
+                log: (object: any) &#x3D;&gt; {
+                    object.hostname &#x3D; undefined;
+                    return object;
+                },
+            },
+            customProps: (req: any) &#x3D;&gt; ({
+                sessionId: req.params?.session,
+            }),
+            serializers: {
+                req: (req: any) &#x3D;&gt; ({
+                    method: req.method,
+                    url: req.url,
+                    headers: {
+                        &quot;user-agent&quot;: req.headers[&quot;user-agent&quot;],
+                        &quot;content-type&quot;: req.headers[&quot;content-type&quot;],
+                    },
+                    sessionId: req.params?.session,
+                    tenantId: req.params?.tenantId,
+                }),
+                res: (res: any) &#x3D;&gt; ({
+                    statusCode: res.statusCode,
+                }),
+            },
+        },
+        exclude: [{ path: &quot;/session/:sessionId&quot;, method: RequestMethod.ALL }],
+    };
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Factory function for configuring the logger module</p>
+<p>Logging targets:</p>
+<ul>
+<li>Console: pino-pretty for human-readable output</li>
+<li>File: JSON logs (optional, via LOG_TO_FILE)</li>
+<li>OpenTelemetry: pino-opentelemetry-transport sends logs to OTel Collector</li>
+</ul>
+<h2>Trace correlation:</h2>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/crypto/key/crypto-implementation/crypto-validation.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CRYPTO_VALIDATION_SCHEMA"></a>
+                    <span class="name">
+                        <span ><b>CRYPTO_VALIDATION_SCHEMA</b></span>
+                        <a href="#CRYPTO_VALIDATION_SCHEMA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Joi.object({
+    CRYPTO_ALG: Joi.string()
+        .valid(&quot;ES256&quot;)
+        .default(&quot;ES256&quot;)
+        .description(&quot;The signing algorithm to use&quot;)
+        .meta({ group: &quot;crypto&quot;, order: 10 }),
+    CRYPTO_TOLERANCE: Joi.number()
+        .default(5)
+        .description(&quot;Clock tolerance in seconds for JWT verification&quot;)
+        .meta({ group: &quot;crypto&quot;, order: 20 }),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/database/database-validation.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DB_VALIDATION_SCHEMA"></a>
+                    <span class="name">
+                        <span ><b>DB_VALIDATION_SCHEMA</b></span>
+                        <a href="#DB_VALIDATION_SCHEMA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Joi.object({
+    DB_TYPE: Joi.string()
+        .valid(&quot;sqlite&quot;, &quot;postgres&quot;)
+        .default(&quot;sqlite&quot;)
+        .description(&quot;Database type&quot;)
+        .meta({ group: &quot;database&quot;, order: 10 }),
+    DB_HOST: Joi.string()
+        .when(&quot;DB_TYPE&quot;, {
+            is: &quot;sqlite&quot;,
+            then: Joi.optional().allow(&quot;&quot;),
+            otherwise: Joi.required(),
+        })
+        .description(&quot;Database host&quot;)
+        .meta({ group: &quot;database&quot;, order: 15 }),
+    DB_PORT: Joi.number()
+        .when(&quot;DB_TYPE&quot;, {
+            is: &quot;sqlite&quot;,
+            then: Joi.optional().allow(&quot;&quot;),
+            otherwise: Joi.required(),
+        })
+        .description(&quot;Database port&quot;)
+        .meta({ group: &quot;database&quot;, order: 20 }),
+    DB_USERNAME: Joi.string()
+        .when(&quot;DB_TYPE&quot;, {
+            is: &quot;sqlite&quot;,
+            then: Joi.optional().allow(&quot;&quot;),
+            otherwise: Joi.required(),
+        })
+        .description(&quot;Database username&quot;)
+        .meta({ group: &quot;database&quot;, order: 30 }),
+    DB_PASSWORD: Joi.string()
+        .when(&quot;DB_TYPE&quot;, {
+            is: &quot;sqlite&quot;,
+            then: Joi.optional().allow(&quot;&quot;),
+            otherwise: Joi.required(),
+        })
+        .description(&quot;Database password&quot;)
+        .meta({ group: &quot;database&quot;, order: 40 }),
+    DB_DATABASE: Joi.string()
+        .when(&quot;DB_TYPE&quot;, {
+            is: &quot;sqlite&quot;,
+            then: Joi.optional().allow(&quot;&quot;),
+            otherwise: Joi.required(),
+        })
+        .description(&quot;Database name&quot;)
+        .meta({ group: &quot;database&quot;, order: 50 }),
+    DB_SSL: Joi.boolean()
+        .default(false)
+        .description(&quot;Enable SSL/TLS for PostgreSQL database connections&quot;)
+        .meta({ group: &quot;database&quot;, order: 55 }),
+    DB_SSL_REJECT_UNAUTHORIZED: Joi.boolean()
+        .default(true)
+        .description(
+            &quot;Reject PostgreSQL TLS certificates that cannot be validated against trusted CAs&quot;,
+        )
+        .meta({ group: &quot;database&quot;, order: 56 }),
+    DB_SSL_CA_PATH: Joi.string()
+        .optional()
+        .allow(&quot;&quot;)
+        .description(
+            &quot;Path to CA certificate file used to validate PostgreSQL TLS certificates&quot;,
+        )
+        .meta({ group: &quot;database&quot;, order: 57 }),
+    DB_SSL_CERT_PATH: Joi.string()
+        .optional()
+        .allow(&quot;&quot;)
+        .description(&quot;Path to client certificate file for PostgreSQL TLS&quot;)
+        .meta({ group: &quot;database&quot;, order: 58 }),
+    DB_SSL_KEY_PATH: Joi.string()
+        .optional()
+        .allow(&quot;&quot;)
+        .description(&quot;Path to client private key file for PostgreSQL TLS&quot;)
+        .meta({ group: &quot;database&quot;, order: 59 }),
+    DB_SSL_KEY_PASSPHRASE: Joi.string()
+        .optional()
+        .allow(&quot;&quot;)
+        .description(&quot;Passphrase for encrypted DB_SSL_KEY_PATH private key&quot;)
+        .meta({ group: &quot;database&quot;, order: 60 }),
+    DB_SYNCHRONIZE: Joi.boolean()
+        .default(true)
+        .description(
+            &quot;Enable TypeORM schema synchronization. Set to false in production after initial setup and rely on migrations instead.&quot;,
+        )
+        .meta({ group: &quot;database&quot;, order: 70 }),
+    DB_MIGRATIONS_RUN: Joi.boolean()
+        .default(true)
+        .description(&quot;Run pending database migrations automatically on startup&quot;)
+        .meta({ group: &quot;database&quot;, order: 80 }),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/issuer/trust-list/trustlist.service.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DEFAULT_LANG"></a>
+                    <span class="name">
+                        <span ><b>DEFAULT_LANG</b></span>
+                        <a href="#DEFAULT_LANG"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;en&quot;</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Default language for trust list entries</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/crypto/key/kms/kms-config.service.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DEFAULT_PROVIDER_ID"></a>
+                    <span class="name">
+                        <span ><b>DEFAULT_PROVIDER_ID</b></span>
+                        <a href="#DEFAULT_PROVIDER_ID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;db&quot;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/crypto/key/kms/kms-provider.registry.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DEFAULT_PROVIDER_ID"></a>
+                    <span class="name">
+                        <span ><b>DEFAULT_PROVIDER_ID</b></span>
+                        <a href="#DEFAULT_PROVIDER_ID"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;db&quot;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/crypto/key/cert/certificate-builder.service.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ECDSA_P256_SIGNATURE_ALG"></a>
+                    <span class="name">
+                        <span ><b>ECDSA_P256_SIGNATURE_ALG</b></span>
+                        <a href="#ECDSA_P256_SIGNATURE_ALG"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    name: &quot;ECDSA&quot;,
+    hash: &quot;SHA-256&quot; as const,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/shared/utils/encryption/encrypted-column.transformer.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="EncryptedJsonTransformer"></a>
+                    <span class="name">
+                        <span ><b>EncryptedJsonTransformer</b></span>
+                        <a href="#EncryptedJsonTransformer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>ValueTransformer</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    /**
+     * Transform value when writing to database.
+     * Encrypts the JSON value.
+     */
+    to(value: unknown): string | null {
+        if (value &#x3D;&#x3D;&#x3D; null || value &#x3D;&#x3D;&#x3D; undefined) {
+            return null;
+        }
+        return getEncryptionService().encryptJson(value);
+    },
+
+    /**
+     * Transform value when reading from database.
+     * Decrypts the encrypted value back to JSON.
+     */
+    from(value: string | null): unknown {
+        if (value &#x3D;&#x3D;&#x3D; null || value &#x3D;&#x3D;&#x3D; undefined) {
+            return null;
+        }
+
+        const service &#x3D; getEncryptionService();
+
+        // Handle migration: if value is not encrypted, return as-is (parsed JSON)
+        // This allows existing unencrypted data to be read during migration
+        if (!service.isEncrypted(value)) {
+            // Try to parse as JSON (for existing unencrypted data)
+            try {
+                return typeof value &#x3D;&#x3D;&#x3D; &quot;string&quot; ? JSON.parse(value) : value;
+            } catch {
+                return value;
+            }
+        }
+
+        return service.decryptJson(value);
+    },
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>TypeORM column transformer for encrypting JSON data at rest.
+Encrypts on write (to database) and decrypts on read (from database).</p>
+<p>Usage:</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="EncryptedStringTransformer"></a>
+                    <span class="name">
+                        <span ><b>EncryptedStringTransformer</b></span>
+                        <a href="#EncryptedStringTransformer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>ValueTransformer</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    /**
+     * Transform value when writing to database.
+     */
+    to(value: string | null): string | null {
+        if (value &#x3D;&#x3D;&#x3D; null || value &#x3D;&#x3D;&#x3D; undefined) {
+            return null;
+        }
+        return getEncryptionService().encrypt(value);
+    },
+
+    /**
+     * Transform value when reading from database.
+     */
+    from(value: string | null): string | null {
+        if (value &#x3D;&#x3D;&#x3D; null || value &#x3D;&#x3D;&#x3D; undefined) {
+            return null;
+        }
+
+        const service &#x3D; getEncryptionService();
+
+        // Handle migration: if value is not encrypted, return as-is
+        if (!service.isEncrypted(value)) {
+            return value;
+        }
+
+        return service.decrypt(value);
+    },
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>TypeORM column transformer for encrypting string data at rest.
+Use for non-JSON string values.</p>
+<p>Usage:</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="encryptionServiceInstance"></a>
+                    <span class="name">
+                        <span ><b>encryptionServiceInstance</b></span>
+                        <a href="#encryptionServiceInstance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EncryptionService | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>null</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Singleton holder for the encryption service instance.
+This is necessary because TypeORM transformers don&#39;t support dependency injection.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/shared/utils/encryption/providers/encryption-key-provider.interface.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ENCRYPTION_KEY_PROVIDER"></a>
+                    <span class="name">
+                        <span ><b>ENCRYPTION_KEY_PROVIDER</b></span>
+                        <a href="#ENCRYPTION_KEY_PROVIDER"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;ENCRYPTION_KEY_PROVIDER&quot;</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Injection token for the encryption key provider.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/shared/utils/encryption/encryption-validation.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ENCRYPTION_VALIDATION_SCHEMA"></a>
+                    <span class="name">
+                        <span ><b>ENCRYPTION_VALIDATION_SCHEMA</b></span>
+                        <a href="#ENCRYPTION_VALIDATION_SCHEMA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Joi.object({
+    ENCRYPTION_KEY_SOURCE: Joi.string()
+        .valid(&quot;env&quot;, &quot;vault&quot;, &quot;aws&quot;, &quot;azure&quot;)
+        .default(&quot;env&quot;)
+        .description(
+            &quot;Source for encryption key: env (dev), vault/aws/azure (prod - key only in RAM)&quot;,
+        )
+        .meta({ group: &quot;encryption&quot;, order: 10 }),
+
+    // Vault-related config (reuses VAULT_ADDR from key-validation.schema.ts)
+    VAULT_ENCRYPTION_KEY_PATH: Joi.string()
+        .when(&quot;ENCRYPTION_KEY_SOURCE&quot;, {
+            is: &quot;vault&quot;,
+            then: Joi.optional().default(&quot;secret/data/eudiplo/encryption-key&quot;),
+            otherwise: Joi.optional(),
+        })
+        .description(&quot;Path to encryption key in Vault KV secrets engine&quot;)
+        .meta({ group: &quot;encryption&quot;, order: 20 }),
+
+    // AWS Secrets Manager config
+    AWS_ENCRYPTION_SECRET_NAME: Joi.string()
+        .when(&quot;ENCRYPTION_KEY_SOURCE&quot;, {
+            is: &quot;aws&quot;,
+            then: Joi.required(),
+            otherwise: Joi.optional(),
+        })
+        .description(&quot;Name of the encryption key secret in AWS Secrets Manager&quot;)
+        .meta({ group: &quot;encryption&quot;, order: 30 }),
+    AWS_ENCRYPTION_SECRET_KEY: Joi.string()
+        .when(&quot;ENCRYPTION_KEY_SOURCE&quot;, {
+            is: &quot;aws&quot;,
+            then: Joi.optional().default(&quot;key&quot;),
+            otherwise: Joi.optional(),
+        })
+        .description(&quot;JSON key within the AWS secret (if secret is JSON)&quot;)
+        .meta({ group: &quot;encryption&quot;, order: 40 }),
+
+    // Azure Key Vault config
+    AZURE_KEYVAULT_URL: Joi.string()
+        .uri()
+        .when(&quot;ENCRYPTION_KEY_SOURCE&quot;, {
+            is: &quot;azure&quot;,
+            then: Joi.required(),
+            otherwise: Joi.optional(),
+        })
+        .description(
+            &quot;Azure Key Vault URL (e.g., https://myvault.vault.azure.net)&quot;,
+        )
+        .meta({ group: &quot;encryption&quot;, order: 50 }),
+    AZURE_ENCRYPTION_SECRET_NAME: Joi.string()
+        .when(&quot;ENCRYPTION_KEY_SOURCE&quot;, {
+            is: &quot;azure&quot;,
+            then: Joi.required(),
+            otherwise: Joi.optional(),
+        })
+        .description(&quot;Name of the encryption key secret in Azure Key Vault&quot;)
+        .meta({ group: &quot;encryption&quot;, order: 60 }),
+})</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Validation schema for encryption key source configuration.</p>
+<p>Configures where the encryption key for data at rest is fetched from:</p>
+<ul>
+<li>env (default): Derived from MASTER_SECRET (development only)</li>
+<li>vault: Fetched from HashiCorp Vault (production)</li>
+<li>aws: Fetched from AWS Secrets Manager (production)</li>
+<li>azure: Fetched from Azure Key Vault (production)</li>
+</ul>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/storage/storage.types.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FILE_STORAGE"></a>
+                    <span class="name">
+                        <span ><b>FILE_STORAGE</b></span>
+                        <a href="#FILE_STORAGE"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Symbol(&quot;FILE_STORAGE&quot;)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/main.helpers.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="GLOBAL_PREFIX_EXCLUSIONS"></a>
+                    <span class="name">
+                        <span ><b>GLOBAL_PREFIX_EXCLUSIONS</b></span>
+                        <a href="#GLOBAL_PREFIX_EXCLUSIONS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    // Infrastructure
+    { path: &quot;/&quot;, method: RequestMethod.GET },
+    { path: &quot;health&quot;, method: RequestMethod.ALL },
+    // Admin authentication
+    { path: &quot;api/oauth2/{*path}&quot;, method: RequestMethod.ALL },
+    // Discovery
+    { path: &quot;.well-known/{*path}&quot;, method: RequestMethod.ALL },
+    // OID4VCI Protocol
+    { path: &quot;issuers/:tenantId/vci/{*path}&quot;, method: RequestMethod.ALL },
+    { path: &quot;issuers/:tenantId/authorize&quot;, method: RequestMethod.ALL },
+    { path: &quot;issuers/:tenantId/authorize/{*path}&quot;, method: RequestMethod.ALL },
+    {
+        path: &quot;issuers/:tenantId/credentials-metadata/{*path}&quot;,
+        method: RequestMethod.ALL,
+    },
+    { path: &quot;issuers/:tenantId/chained-as/{*path}&quot;, method: RequestMethod.ALL },
+    // OID4VP Protocol
+    { path: &quot;presentations/:sessionId/oid4vp&quot;, method: RequestMethod.ALL },
+    {
+        path: &quot;presentations/:sessionId/oid4vp/{*path}&quot;,
+        method: RequestMethod.ALL,
+    },
+    // Public Status &amp; Trust Lists
+    {
+        path: &quot;issuers/:tenantId/status-management/{*path}&quot;,
+        method: RequestMethod.ALL,
+    },
+    { path: &quot;issuers/:tenantId/trust-list/{*path}&quot;, method: RequestMethod.ALL },
+    // Public Storage (credential images, logos)
+    { path: &quot;storage/:key&quot;, method: RequestMethod.GET },
+]</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Routes excluded from the automatic <code>/api</code> global prefix.
+Wallet-facing and infrastructure endpoints stay at the root path for protocol
+compliance and discoverability. The integrated OAuth2 token endpoint is
+already mounted under <code>/api</code> so firewalls can treat it as part of the admin
+surface without receiving a duplicate <code>/api/api</code> prefix.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/crypto/key/dto/kms-config.dto.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="HTTP_AUTH_TYPES"></a>
+                    <span class="name">
+                        <span ><b>HTTP_AUTH_TYPES</b></span>
+                        <a href="#HTTP_AUTH_TYPES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    &quot;none&quot;,
+    &quot;bearer&quot;,
+    &quot;oauth2-client-credentials&quot;,
+    &quot;mtls&quot;,
+] as const</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="KMS_PROVIDER_TYPES"></a>
+                    <span class="name">
+                        <span ><b>KMS_PROVIDER_TYPES</b></span>
+                        <a href="#KMS_PROVIDER_TYPES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+    &quot;db&quot;,
+    &quot;vault&quot;,
+    &quot;aws-kms&quot;,
+    &quot;pkcs11&quot;,
+    &quot;http&quot;,
+] as const</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Supported KMS adapter types.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/auth/public.decorator.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="IS_PUBLIC_KEY"></a>
+                    <span class="name">
+                        <span ><b>IS_PUBLIC_KEY</b></span>
+                        <a href="#IS_PUBLIC_KEY"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;isPublic&quot;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Public"></a>
+                    <span class="name">
+                        <span ><b>Public</b></span>
+                        <a href="#Public"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; SetMetadata(IS_PUBLIC_KEY, true)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/issuer/issuer-validation.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ISSUER_VALIDATION_SCHEMA"></a>
+                    <span class="name">
+                        <span ><b>ISSUER_VALIDATION_SCHEMA</b></span>
+                        <a href="#ISSUER_VALIDATION_SCHEMA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Joi.object({
+    PUBLIC_URL: Joi.string()
+        .default(&quot;http://localhost:3000&quot;)
+        .description(&quot;The public URL of the issuer&quot;)
+        .meta({ group: &quot;general&quot;, order: 10 }),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/issuer/configuration/credentials/utils/derive.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="JSON_SCHEMA_DRAFT_2020_12"></a>
+                    <span class="name">
+                        <span ><b>JSON_SCHEMA_DRAFT_2020_12</b></span>
+                        <a href="#JSON_SCHEMA_DRAFT_2020_12"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;https://json-schema.org/draft/2020-12/schema&quot;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/shared/utils/logger/log-validation.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LOG_VALIDATION_SCHEMA"></a>
+                    <span class="name">
+                        <span ><b>LOG_VALIDATION_SCHEMA</b></span>
+                        <a href="#LOG_VALIDATION_SCHEMA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Joi.object({
+    LOG_LEVEL: Joi.string()
+        .valid(&quot;trace&quot;, &quot;debug&quot;, &quot;info&quot;, &quot;warn&quot;, &quot;error&quot;, &quot;fatal&quot;)
+        .default(process.env.NODE_ENV &#x3D;&#x3D;&#x3D; &quot;production&quot; ? &quot;warn&quot; : &quot;debug&quot;)
+        .description(&quot;Application log level&quot;)
+        .meta({ group: &quot;log&quot;, order: 10 }),
+    LOG_ENABLE_HTTP_LOGGER: Joi.boolean()
+        .default(false)
+        .description(&quot;Enable HTTP request logging&quot;)
+        .meta({ group: &quot;log&quot;, order: 20 }),
+    LOG_ENABLE_SESSION_LOGGER: Joi.boolean()
+        .default(false)
+        .description(&quot;Enable session flow logging&quot;)
+        .meta({ group: &quot;log&quot;, order: 30 }),
+    LOG_SESSION_STORE: Joi.string()
+        .valid(&quot;off&quot;, &quot;errors&quot;, &quot;all&quot;, &quot;verbose&quot;)
+        .default(&quot;off&quot;)
+        .description(
+            &quot;Controls whether session log entries are persisted to the database. &quot; +
+                &quot;&#x27;off&#x27; disables storage, &#x27;errors&#x27; stores only warn/error entries, &quot; +
+                &quot;&#x27;all&#x27; stores everything, &#x27;verbose&#x27; stores everything including full request/response bodies and error stacks.&quot;,
+        )
+        .meta({ group: &quot;log&quot;, order: 35 }),
+    LOG_DEBUG_MODE: Joi.boolean()
+        .default(false)
+        .description(&quot;Enable verbose debug logs&quot;)
+        .meta({ group: &quot;log&quot;, order: 40 }),
+    LOG_FORMAT: Joi.string()
+        .valid(&quot;json&quot;, &quot;pretty&quot;)
+        .default(process.env.NODE_ENV &#x3D;&#x3D;&#x3D; &quot;production&quot; ? &quot;json&quot; : &quot;pretty&quot;)
+        .description(&quot;Log output format&quot;)
+        .meta({ group: &quot;log&quot;, order: 50 }),
+    LOG_TO_FILE: Joi.boolean()
+        .default(false)
+        .description(&quot;Enable logging to file in addition to console&quot;)
+        .meta({ group: &quot;log&quot;, order: 60 }),
+    LOG_FILE_PATH: Joi.string()
+        .default(&quot;./logs/session.log&quot;)
+        .description(&quot;File path for log output when LOG_TO_FILE is enabled&quot;)
+        .meta({ group: &quot;log&quot;, order: 70 }),
+})</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Validation schema for logging configuration</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/verifier/presentations/mdoc-context.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mdocContext"></a>
+                    <span class="name">
+                        <span ><b>mdocContext</b></span>
+                        <a href="#mdocContext"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>MdocContext</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    crypto: {
+        digest: async ({ digestAlgorithm, bytes }) &#x3D;&gt; {
+            const digest &#x3D; await webCrypto.subtle.digest(
+                digestAlgorithm,
+                toBuffer(bytes),
+            );
+            return new Uint8Array(digest);
+        },
+        random: (length: number) &#x3D;&gt; {
+            return webCrypto.getRandomValues(new Uint8Array(length));
+        },
+        calculateEphemeralMacKey: async (input) &#x3D;&gt; {
+            const { privateKey, publicKey, sessionTranscriptBytes, info } &#x3D;
+                input;
+            const ikm &#x3D; p256
+                .getSharedSecret(privateKey, publicKey, true)
+                .slice(1);
+            const salt &#x3D; new Uint8Array(
+                await webCrypto.subtle.digest(
+                    &quot;SHA-256&quot;,
+                    toBuffer(sessionTranscriptBytes),
+                ),
+            );
+            const infoAsBytes &#x3D; stringToBytes(info);
+            const digest &#x3D; &quot;sha256&quot;;
+            const result &#x3D; await hkdf(digest, ikm, salt, infoAsBytes, 32);
+
+            return CoseKey.create({
+                keyOps: [KeyOps.Sign, KeyOps.Verify],
+                keyType: KeyType.Oct,
+                k: result,
+                algorithm: MacAlgorithm.HS256,
+            });
+        },
+    },
+
+    cose: {
+        mac0: {
+            sign: (input) &#x3D;&gt; {
+                const { key, toBeAuthenticated } &#x3D; input;
+                return hmac(sha256, key.privateKey, toBeAuthenticated);
+            },
+            verify: (input) &#x3D;&gt; {
+                const { mac0, key } &#x3D; input;
+
+                if (!mac0.tag) {
+                    throw new Error(&quot;tag is required for mac0 verification&quot;);
+                }
+
+                const expectedTag &#x3D; hmac(
+                    sha256,
+                    key.privateKey,
+                    mac0.toBeAuthenticated,
+                );
+                return bytesEqual(mac0.tag, expectedTag);
+            },
+        },
+        sign1: {
+            sign: (input) &#x3D;&gt; {
+                const { key, toBeSigned } &#x3D; input;
+                return p256.sign(toBeSigned, key.privateKey, {
+                    format: &quot;compact&quot;,
+                });
+            },
+            verify: (input) &#x3D;&gt; {
+                const { sign1, key } &#x3D; input;
+                const { toBeSigned, signature } &#x3D; sign1;
+
+                if (!signature) {
+                    throw new Error(
+                        &quot;signature is required for sign1 verification&quot;,
+                    );
+                }
+
+                // lowS is needed after upgrade of @noble/curves to keep existing tests passing
+                const res &#x3D; p256.verify(signature, toBeSigned, key.publicKey, {
+                    lowS: false,
+                });
+                return res;
+            },
+        },
+    },
+
+    x509: {
+        getIssuerNameField: (input: {
+            certificate: Uint8Array;
+            field: string;
+        }) &#x3D;&gt; {
+            const certificate &#x3D; new X509Certificate(
+                toBuffer(input.certificate),
+            );
+            return certificate.issuerName.getField(input.field);
+        },
+        getPublicKey: async (input: {
+            certificate: Uint8Array;
+            alg: string;
+        }) &#x3D;&gt; {
+            const certificate &#x3D; new X509Certificate(
+                toBuffer(input.certificate),
+            );
+
+            const key &#x3D; await importX509(certificate.toString(), input.alg, {
+                extractable: true,
+            });
+
+            return CoseKey.fromJwk(
+                (await exportJWK(key)) as unknown as Record&lt;string, unknown&gt;,
+            );
+        },
+
+        // NOTE: Certificate chain validation is handled by CredentialChainValidationService
+        // in the verifier layer (MdocverifierService). This method is kept as a no-op to satisfy
+        // the MdocContext interface, but chain validation is disabled via disableCertificateChainValidation
+        // option when calling Verifier.verifyDeviceResponse().
+        verifyCertificateChain: async (_input: {
+            trustedCertificates: Array&lt;Uint8Array&gt;;
+            x5chain: Array&lt;Uint8Array&gt;;
+            now?: Date;
+        }) &#x3D;&gt; {
+            // No-op: chain validation is handled separately by CredentialChainValidationService
+        },
+        getCertificateData: async (input: { certificate: Uint8Array }) &#x3D;&gt; {
+            const certificate &#x3D; new X509Certificate(
+                toBuffer(input.certificate),
+            );
+            const thumbprint &#x3D; await certificate.getThumbprint();
+            const thumbprintHex &#x3D; hex.encode(new Uint8Array(thumbprint));
+            return {
+                issuerName: certificate.issuerName.toString(),
+                subjectName: certificate.subjectName.toString(),
+                pem: certificate.toString(),
+                serialNumber: certificate.serialNumber,
+                thumbprint: thumbprintHex,
+                notBefore: certificate.notBefore,
+                notAfter: certificate.notAfter,
+            };
+        },
+    },
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="webCrypto"></a>
+                    <span class="name">
+                        <span ><b>webCrypto</b></span>
+                        <a href="#webCrypto"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>globalThis.crypto</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/storage/files.service.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MIME_TYPES"></a>
+                    <span class="name">
+                        <span ><b>MIME_TYPES</b></span>
+                        <a href="#MIME_TYPES"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Record&lt;string, string&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    &quot;.png&quot;: &quot;image/png&quot;,
+    &quot;.jpg&quot;: &quot;image/jpeg&quot;,
+    &quot;.jpeg&quot;: &quot;image/jpeg&quot;,
+    &quot;.gif&quot;: &quot;image/gif&quot;,
+    &quot;.svg&quot;: &quot;image/svg+xml&quot;,
+    &quot;.webp&quot;: &quot;image/webp&quot;,
+    &quot;.ico&quot;: &quot;image/x-icon&quot;,
+    &quot;.bmp&quot;: &quot;image/bmp&quot;,
+}</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/issuer/configuration/credentials/types/credential-config-types.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MSO_MDOC_FORMAT"></a>
+                    <span class="name">
+                        <span ><b>MSO_MDOC_FORMAT</b></span>
+                        <a href="#MSO_MDOC_FORMAT"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>MsoMdocFormatIdentifier</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;mso_mdoc&quot;</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Format identifier constants for runtime checks</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SD_JWT_DC_FORMAT"></a>
+                    <span class="name">
+                        <span ><b>SD_JWT_DC_FORMAT</b></span>
+                        <a href="#SD_JWT_DC_FORMAT"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;dc+sd-jwt&quot; as const</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/tracing.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="otelSDK"></a>
+                    <span class="name">
+                        <span ><b>otelSDK</b></span>
+                        <a href="#otelSDK"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new NodeSDK({
+    resource: resourceFromAttributes({
+        [ATTR_SERVICE_NAME]: process.env.OTEL_SERVICE_NAME || &quot;eudiplo-backend&quot;,
+        [ATTR_SERVICE_VERSION]: process.env.VERSION || &quot;unknown&quot;,
+    }),
+    traceExporter: new OTLPTraceExporter(),
+    metricReader: new PeriodicExportingMetricReader({
+        exporter: new OTLPMetricExporter(),
+        exportIntervalMillis: 30_000,
+    }),
+    logRecordProcessors: [new BatchLogRecordProcessor(new OTLPLogExporter())],
+    instrumentations: [
+        getNodeAutoInstrumentations({
+            // fs instrumentation is very noisy and adds little value
+            &quot;@opentelemetry/instrumentation-fs&quot;: { enabled: false },
+            // Enable HTTP metrics (server request duration, etc.)
+            &quot;@opentelemetry/instrumentation-http&quot;: {
+                enabled: true,
+            },
+        }),
+    ],
+})</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>OpenTelemetry SDK bootstrap — must be started BEFORE NestJS initializes.</p>
+<p>All three signals (metrics, traces, logs) are exported via OTLP to an
+OpenTelemetry Collector. Configure the collector endpoint via:</p>
+<p>  OTEL_EXPORTER_OTLP_ENDPOINT  (default: <a href="http://localhost:4318">http://localhost:4318</a>)</p>
+<p>To disable OTel entirely (e.g. local dev without collector), set:</p>
+<p>  OTEL_SDK_DISABLED=true</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="P256_OID_DER"></a>
+                    <span class="name">
+                        <span ><b>P256_OID_DER</b></span>
+                        <a href="#P256_OID_DER"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Buffer.from([
+    0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07,
+])</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pkcs11ModulePromise"></a>
+                    <span class="name">
+                        <span ><b>pkcs11ModulePromise</b></span>
+                        <a href="#pkcs11ModulePromise"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Promise | undefined</code>
+
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/auth/roles/roles.decorator.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Roles"></a>
+                    <span class="name">
+                        <span ><b>Roles</b></span>
+                        <a href="#Roles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(...roles: Role[]) &#x3D;&gt; SetMetadata(ROLES_KEY, roles)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ROLES_KEY"></a>
+                    <span class="name">
+                        <span ><b>ROLES_KEY</b></span>
+                        <a href="#ROLES_KEY"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;roles&quot;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/shared/trust/types.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ServiceTypeIdentifiers"></a>
+                    <span class="name">
+                        <span ><b>ServiceTypeIdentifiers</b></span>
+                        <a href="#ServiceTypeIdentifiers"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    EaaIssuance: &quot;http://uri.etsi.org/19602/SvcType/EAA/Issuance&quot;,
+    EaaRevocation: &quot;http://uri.etsi.org/19602/SvcType/EAA/Revocation&quot;,
+    /** Wallet provider service type for wallet attestation validation */
+    WalletProvider: &quot;http://uri.etsi.org/19602/SvcType/WalletProvider&quot;,
+} as const</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Well-known service type identifiers from ETSI TS 119 602</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/session/session-events.service.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SESSION_STATUS_CHANGED"></a>
+                    <span class="name">
+                        <span ><b>SESSION_STATUS_CHANGED</b></span>
+                        <a href="#SESSION_STATUS_CHANGED"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;session.status.changed&quot;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/session/session-validation.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SESSION_VALIDATION_SCHEMA"></a>
+                    <span class="name">
+                        <span ><b>SESSION_VALIDATION_SCHEMA</b></span>
+                        <a href="#SESSION_VALIDATION_SCHEMA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Joi.object({
+    SESSION_TIDY_UP_INTERVAL: Joi.number()
+        .default(60 * 60)
+        .description(&quot;Interval in seconds to run session tidy up&quot;)
+        .meta({ group: &quot;session&quot;, order: 10 }),
+    SESSION_TTL: Joi.number()
+        .default(24 * 60 * 60)
+        .description(
+            &quot;Default time to live for sessions in seconds. Can be overridden per tenant.&quot;,
+        )
+        .meta({ group: &quot;session&quot;, order: 20 }),
+    SESSION_CLEANUP_MODE: Joi.string()
+        .valid(&quot;full&quot;, &quot;anonymize&quot;)
+        .default(&quot;full&quot;)
+        .description(
+            &quot;Default cleanup mode when sessions expire. &#x27;full&#x27; deletes the entire session, &#x27;anonymize&#x27; keeps metadata but removes personal data. Can be overridden per tenant.&quot;,
+        )
+        .meta({ group: &quot;session&quot;, order: 30 }),
+})</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Module for managing user sessions.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/issuer/lifecycle/status/status-list-validation.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="STATUS_LIST_VALIDATION_SCHEMA"></a>
+                    <span class="name">
+                        <span ><b>STATUS_LIST_VALIDATION_SCHEMA</b></span>
+                        <a href="#STATUS_LIST_VALIDATION_SCHEMA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Joi.object({
+    STATUS_CAPACITY: Joi.number()
+        .default(10000)
+        .description(
+            &quot;The default capacity of the status list. Can be overridden per tenant.&quot;,
+        )
+        .meta({ group: &quot;status&quot;, order: 10 }),
+    STATUS_BITS: Joi.number()
+        .valid(1, 2, 4, 8)
+        .default(1)
+        .description(
+            &quot;The default number of bits used per status entry. Can be overridden per tenant.&quot;,
+        )
+        .meta({ group: &quot;status&quot;, order: 20 }),
+    STATUS_TTL: Joi.number()
+        .min(60)
+        .default(3600)
+        .description(
+            &quot;The default TTL in seconds for status list JWTs. Verifiers can cache the JWT until expiration. Can be overridden per tenant.&quot;,
+        )
+        .meta({ group: &quot;status&quot;, order: 30 }),
+    STATUS_IMMEDIATE_UPDATE: Joi.boolean()
+        .default(false)
+        .description(
+            &quot;If true, regenerate status list JWT immediately on every status change. If false (default), use lazy regeneration when TTL expires. Can be overridden per tenant.&quot;,
+        )
+        .meta({ group: &quot;status&quot;, order: 40 }),
+    STATUS_ENABLE_AGGREGATION: Joi.boolean()
+        .default(true)
+        .description(
+            &quot;If true (default), include aggregation_uri in status list JWTs. This allows relying parties to pre-fetch all status lists for offline validation per RFC draft-ietf-oauth-status-list Section 9. Can be overridden per tenant.&quot;,
+        )
+        .meta({ group: &quot;status&quot;, order: 50 }),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/storage/storage-validation.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="STORAGE_VALIDATION_SCHEMA"></a>
+                    <span class="name">
+                        <span ><b>STORAGE_VALIDATION_SCHEMA</b></span>
+                        <a href="#STORAGE_VALIDATION_SCHEMA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>Joi.object({
+    STORAGE_DRIVER: Joi.string()
+        .valid(&quot;local&quot;, &quot;s3&quot;)
+        .default(&quot;local&quot;)
+        .description(&quot;The storage driver to use&quot;)
+        .meta({ group: &quot;storage&quot;, order: 10 }),
+    LOCAL_STORAGE_DIR: Joi.string()
+        .when(Joi.ref(&quot;STORAGE_DRIVER&quot;), {
+            is: &quot;local&quot;,
+            then: Joi.string().default((parent) &#x3D;&gt;
+                join(parent.FOLDER, &quot;uploads&quot;),
+            ),
+        })
+        .description(&quot;The directory to store files in when using local storage&quot;)
+        .meta({ group: &quot;storage&quot;, order: 20 }),
+    S3_REGION: Joi.string()
+        .when(Joi.ref(&quot;STORAGE_DRIVER&quot;), {
+            is: &quot;s3&quot;,
+            then: Joi.required(),
+        })
+        .description(&quot;The AWS region for the S3 bucket&quot;)
+        .meta({ group: &quot;storage&quot;, order: 30 }),
+    S3_BUCKET: Joi.string()
+        .when(Joi.ref(&quot;STORAGE_DRIVER&quot;), {
+            is: &quot;s3&quot;,
+            then: Joi.required(),
+        })
+        .description(&quot;The name of the S3 bucket&quot;)
+        .meta({ group: &quot;storage&quot;, order: 40 }),
+    S3_ACCESS_KEY_ID: Joi.string()
+        .when(Joi.ref(&quot;STORAGE_DRIVER&quot;), {
+            is: &quot;s3&quot;,
+            then: Joi.required(),
+        })
+        .description(&quot;The access key ID for the S3 bucket&quot;)
+        .meta({ group: &quot;storage&quot;, order: 50 }),
+    S3_SECRET_ACCESS_KEY: Joi.string()
+        .when(Joi.ref(&quot;STORAGE_DRIVER&quot;), {
+            is: &quot;s3&quot;,
+            then: Joi.required(),
+        })
+        .description(&quot;The secret access key for the S3 bucket&quot;)
+        .meta({ group: &quot;storage&quot;, order: 60 }),
+    S3_ENDPOINT: Joi.string()
+        .when(Joi.ref(&quot;STORAGE_DRIVER&quot;), {
+            is: &quot;s3&quot;,
+            then: Joi.optional(),
+        })
+        .description(
+            &quot;The endpoint URL for the S3 service (for S3-compatible services)&quot;,
+        )
+        .meta({ group: &quot;storage&quot;, order: 70 }),
+    S3_FORCE_PATH_STYLE: Joi.boolean()
+        .when(Joi.ref(&quot;STORAGE_DRIVER&quot;), {
+            is: &quot;s3&quot;,
+            then: Joi.boolean().default(false),
+        })
+        .description(&quot;Whether to force path-style URLs for S3&quot;)
+        .meta({ group: &quot;storage&quot;, order: 80 }),
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/shared/utils/dto-omit-fields.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TENANT_RELATION_FIELDS"></a>
+                    <span class="name">
+                        <span ><b>TENANT_RELATION_FIELDS</b></span>
+                        <a href="#TENANT_RELATION_FIELDS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[&quot;tenantId&quot;, &quot;tenant&quot;] as const</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/shared/utils/buffer.util.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toBuffer"></a>
+                    <span class="name">
+                        <span ><b>toBuffer</b></span>
+                        <a href="#toBuffer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(bytes: Uint8Array): Uint8Array&lt;ArrayBuffer&gt; &#x3D;&gt; {
+    return new Uint8Array(bytes) as unknown as Uint8Array&lt;ArrayBuffer&gt;;
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Helper to convert Uint8Array<ArrayBufferLike> to Uint8Array<ArrayBuffer>
+This is needed due to TypeScript version differences where newer TS versions
+use Uint8Array<ArrayBufferLike> which is not assignable to BufferSource.</p>
+<p>Used primarily for mDOC operations where the</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/auth/token.decorator.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Token"></a>
+                    <span class="name">
+                        <span ><b>Token</b></span>
+                        <a href="#Token"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>createParamDecorator(
+    (data: unknown, ctx: ExecutionContext) &#x3D;&gt; {
+        const request &#x3D; ctx.switchToHttp().getRequest();
+        return request.user as TokenPayload; // Access the token payload on the request object
+    },
+)</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Token decorator</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/auth/user/user.provider.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="USERS_PROVIDER"></a>
+                    <span class="name">
+                        <span ><b>USERS_PROVIDER</b></span>
+                        <a href="#USERS_PROVIDER"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;USERS_PROVIDER&quot;</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/shared/utils/config-printer/combined.schema.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="VALIDATION_SCHEMA"></a>
+                    <span class="name">
+                        <span ><b>VALIDATION_SCHEMA</b></span>
+                        <a href="#VALIDATION_SCHEMA"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>BASE_VALIDATION_SCHEMA.concat(
+    AUTH_VALIDATION_SCHEMA,
+)
+    .concat(DB_VALIDATION_SCHEMA)
+    .concat(CONFIG_VALIDATION_SCHEMA)
+    .concat(LOG_VALIDATION_SCHEMA)
+    .concat(CRYPTO_VALIDATION_SCHEMA)
+    .concat(ISSUER_VALIDATION_SCHEMA)
+    .concat(SESSION_VALIDATION_SCHEMA)
+    .concat(STORAGE_VALIDATION_SCHEMA)
+    .concat(STATUS_LIST_VALIDATION_SCHEMA)
+    .concat(AUDIT_LOG_VALIDATION_SCHEMA)
+    .concat(ENCRYPTION_VALIDATION_SCHEMA)</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Combined validation schema for the application configuration</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'miscellaneous-variables';
+            var COMPODOC_CURRENT_PAGE_URL = 'variables.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

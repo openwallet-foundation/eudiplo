@@ -1,0 +1,1181 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  ParsedAccessTokenPreAuthorizedCodeRequestGrant</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/issuer/issuance/oid4vci/authorize/authorize.service.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#grantType" 
+>
+                                            grantType
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#preAuthorizedCode" 
+>
+                                            preAuthorizedCode
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#txCode" 
+>
+                                            txCode
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="grantType"></a>
+                                        <span class="name "><b>grantType</b>
+                                            <a href="#grantType">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>grantType:     <code>PreAuthorizedCodeGrantIdentifier</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>PreAuthorizedCodeGrantIdentifier</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="preAuthorizedCode"></a>
+                                        <span class="name "><b>preAuthorizedCode</b>
+                                            <a href="#preAuthorizedCode">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>preAuthorizedCode:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="txCode"></a>
+                                        <span class="name "><b>txCode</b>
+                                            <a href="#txCode">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>txCode:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { randomUUID } from &quot;node:crypto&quot;;
+import { ConflictException, Injectable, Logger } from &quot;@nestjs/common&quot;;
+import { ConfigService } from &quot;@nestjs/config&quot;;
+import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
+import {
+    type AuthorizationCodeGrantIdentifier,
+    type AuthorizationServerMetadata,
+    authorizationCodeGrantIdentifier,
+    type HttpMethod,
+    Jwk,
+    Oauth2AuthorizationServer,
+    PkceCodeChallengeMethod,
+    PreAuthorizedCodeGrantIdentifier,
+    preAuthorizedCodeGrantIdentifier,
+    type RefreshTokenGrantIdentifier,
+    refreshTokenGrantIdentifier,
+} from &quot;@openid4vc/oauth2&quot;;
+import type { Request } from &quot;express&quot;;
+import { Repository } from &quot;typeorm&quot;;
+import { v4 } from &quot;uuid&quot;;
+import { CryptoService } from &quot;../../../../crypto/crypto.service&quot;;
+import { KeyChainService } from &quot;../../../../crypto/key/key-chain.service&quot;;
+import { SessionService } from &quot;../../../../session/session.service&quot;;
+import { WalletAttestationService } from &quot;../../../../shared/trust/wallet-attestation.service&quot;;
+import { IssuanceService } from &quot;../../../configuration/issuance/issuance.service&quot;;
+import { StatusListConfigService } from &quot;../../../lifecycle/status/status-list-config.service&quot;;
+import { NonceEntity } from &quot;../entities/nonces.entity&quot;;
+import { TokenErrorException } from &quot;../exceptions&quot;;
+import { getHeadersFromRequest } from &quot;../util&quot;;
+import { AuthorizeQueries } from &quot;./dto/authorize-request.dto&quot;;
+
+interface ParsedAccessTokenAuthorizationCodeRequestGrant {
+    grantType: AuthorizationCodeGrantIdentifier;
+    code: string;
+}
+
+interface ParsedAccessTokenPreAuthorizedCodeRequestGrant {
+    grantType: PreAuthorizedCodeGrantIdentifier;
+    preAuthorizedCode: string;
+    txCode?: string;
+}
+
+interface ParsedAccessTokenRefreshTokenRequestGrant {
+    grantType: RefreshTokenGrantIdentifier;
+    refreshToken: string;
+}
+
+@Injectable()
+export class AuthorizeService {
+    private readonly logger &#x3D; new Logger(AuthorizeService.name);
+
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly cryptoService: CryptoService,
+        private readonly sessionService: SessionService,
+        private readonly issuanceService: IssuanceService,
+        private readonly walletAttestationService: WalletAttestationService,
+        private readonly keyChainService: KeyChainService,
+        @InjectRepository(NonceEntity)
+        private readonly nonceRepository: Repository&lt;NonceEntity&gt;,
+        private readonly statusListConfigService: StatusListConfigService,
+    ) {}
+
+    getAuthorizationServer(
+        tenantId: string,
+        sessionId?: string,
+    ): Oauth2AuthorizationServer {
+        const callbacks &#x3D; this.cryptoService.getCallbackContext(
+            tenantId,
+            sessionId,
+        );
+        return new Oauth2AuthorizationServer({
+            callbacks,
+        });
+    }
+
+    /**
+     * Map error codes from the OAuth library to OAuth 2.0 Token Error codes.
+     * According to OID4VCI Section 6.3:
+     * - invalid_request: Transaction code provided but not expected, or expected but not provided
+     * - invalid_tx_code: Wrong transaction code in the Pre-Authorized Code Flow
+     * - invalid_grant: Wrong pre-authorized code, or expired code
+     * - invalid_client: Anonymous access with pre-authorized code but not supported
+     * @param errorCode The error code from the OAuth library
+     * @returns The appropriate OAuth 2.0 token error code
+     */
+    private mapToTokenErrorCode(
+        errorCode: string | undefined,
+    ):
+        | &quot;invalid_request&quot;
+        | &quot;invalid_client&quot;
+        | &quot;invalid_grant&quot;
+        | &quot;invalid_tx_code&quot; {
+        if (!errorCode) {
+            return &quot;invalid_request&quot;;
+        }
+        // The OAuth library may return these error codes directly
+        if (
+            errorCode &#x3D;&#x3D;&#x3D; &quot;invalid_grant&quot; ||
+            errorCode &#x3D;&#x3D;&#x3D; &quot;invalid_client&quot; ||
+            errorCode &#x3D;&#x3D;&#x3D; &quot;invalid_request&quot; ||
+            errorCode &#x3D;&#x3D;&#x3D; &quot;invalid_tx_code&quot;
+        ) {
+            return errorCode;
+        }
+        // Wrong tx_code has its own dedicated error code in OID4VCI 1.1 §6.3.
+        if (
+            errorCode.includes(&quot;tx_code&quot;) ||
+            errorCode.includes(&quot;transaction&quot;)
+        ) {
+            return &quot;invalid_tx_code&quot;;
+        }
+        // Wrong or expired pre-authorized code &#x3D; invalid_grant
+        if (
+            errorCode.includes(&quot;pre-authorized&quot;) ||
+            errorCode.includes(&quot;pre_authorized&quot;)
+        ) {
+            return &quot;invalid_grant&quot;;
+        }
+        // Default to invalid_request for malformed requests
+        return &quot;invalid_request&quot;;
+    }
+
+    private extractTokenErrorDescription(error: unknown): string | undefined {
+        if (typeof error &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp; error.trim().length &gt; 0) {
+            return error;
+        }
+
+        if (!error || typeof error !&#x3D;&#x3D; &quot;object&quot;) {
+            return undefined;
+        }
+
+        const candidate &#x3D; error as {
+            error_description?: unknown;
+            message?: unknown;
+            cause?: { message?: unknown };
+        };
+
+        if (
+            typeof candidate.error_description &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+            candidate.error_description.trim().length &gt; 0
+        ) {
+            return candidate.error_description;
+        }
+
+        if (
+            typeof candidate.message &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+            candidate.message.trim().length &gt; 0
+        ) {
+            return candidate.message;
+        }
+
+        if (
+            typeof candidate.cause?.message &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+            candidate.cause.message.trim().length &gt; 0
+        ) {
+            return candidate.cause.message;
+        }
+
+        return undefined;
+    }
+
+    private describeMalformedTokenRequest(body: unknown): string {
+        if (!body || typeof body !&#x3D;&#x3D; &quot;object&quot;) {
+            return &quot;Malformed token request body&quot;;
+        }
+
+        const tokenRequest &#x3D; body as Record&lt;string, unknown&gt;;
+        const grantType &#x3D;
+            typeof tokenRequest.grant_type &#x3D;&#x3D;&#x3D; &quot;string&quot;
+                ? tokenRequest.grant_type
+                : undefined;
+
+        if (!grantType) {
+            return &quot;Missing required parameter: grant_type&quot;;
+        }
+
+        if (
+            grantType &#x3D;&#x3D;&#x3D; authorizationCodeGrantIdentifier &amp;&amp;
+            typeof tokenRequest.code !&#x3D;&#x3D; &quot;string&quot;
+        ) {
+            return &quot;Missing required parameter: code&quot;;
+        }
+
+        if (
+            grantType &#x3D;&#x3D;&#x3D; preAuthorizedCodeGrantIdentifier &amp;&amp;
+            typeof tokenRequest[&quot;pre-authorized_code&quot;] !&#x3D;&#x3D; &quot;string&quot;
+        ) {
+            return &quot;Missing required parameter: pre-authorized_code&quot;;
+        }
+
+        if (
+            grantType &#x3D;&#x3D;&#x3D; refreshTokenGrantIdentifier &amp;&amp;
+            typeof tokenRequest.refresh_token !&#x3D;&#x3D; &quot;string&quot;
+        ) {
+            return &quot;Missing required parameter: refresh_token&quot;;
+        }
+
+        return &#x60;Invalid token request for grant_type: ${grantType}&#x60;;
+    }
+
+    getAuthzIssuer(tenantId: string) {
+        return &#x60;${this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;)}/issuers/${tenantId}&#x60;;
+    }
+
+    /**
+     * Build the RFC 9396 &#x60;authorization_details&#x60; array that must be bound to the
+     * issued access token, per OID4VCI Section 6 / 7. The list of authorized
+     * &#x60;credential_configuration_id&#x60; values is derived from the session:
+     *
+     *  - If the Wallet sent &#x60;authorization_details&#x60; in the Authorization /
+     *    PAR request (Authorization Code Flow), those values are used.
+     *  - Otherwise (Pre-Authorized Code Flow or issuer-initiated offer), the
+     *    &#x60;credential_configuration_ids&#x60; from the Credential Offer are used.
+     *
+     * Returns &#x60;undefined&#x60; when no credential bindings can be derived, in which
+     * case no &#x60;authorization_details&#x60; will be placed on the token.
+     */
+    private buildAuthorizationDetailsForToken(session: {
+        auth_queries?: AuthorizeQueries;
+        credentialPayload?: any;
+    }): Record&lt;string, unknown&gt;[] | undefined {
+        // 1. From authorization_details in the (pushed) authorization request.
+        const raw &#x3D; session.auth_queries?.authorization_details;
+        let requested: Record&lt;string, unknown&gt;[] | undefined;
+        if (typeof raw &#x3D;&#x3D;&#x3D; &quot;string&quot;) {
+            try {
+                const parsed &#x3D; JSON.parse(raw);
+                if (Array.isArray(parsed)) {
+                    requested &#x3D; parsed as Record&lt;string, unknown&gt;[];
+                }
+            } catch {
+                // ignore malformed JSON, fall through to offer-based defaulting
+            }
+        } else if (Array.isArray(raw)) {
+            requested &#x3D; raw;
+        }
+
+        if (requested &amp;&amp; requested.length &gt; 0) {
+            return requested
+                .filter(
+                    (ad) &#x3D;&gt;
+                        (ad.type as string | undefined) &#x3D;&#x3D;&#x3D; &quot;openid_credential&quot;,
+                )
+                .map((ad) &#x3D;&gt; ({
+                    type: &quot;openid_credential&quot;,
+                    credential_configuration_id: ad.credential_configuration_id,
+                    // Per OID4VCI Final Section 6.2, credential_identifiers MUST be
+                    // included when authorization_details are returned in the token
+                    // response so the Wallet can reference them in the credential request.
+                    credential_identifiers: [
+                        ad.credential_configuration_id as string,
+                    ],
+                }))
+                .filter(
+                    (ad) &#x3D;&gt;
+                        typeof ad.credential_configuration_id &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                        (ad.credential_configuration_id as string).length &gt; 0,
+                );
+        }
+
+        // 2. Fallback: credential_configuration_ids from the Credential Offer.
+        const offerIds: unknown &#x3D;
+            session.credentialPayload?.credentialConfigurationIds;
+        if (Array.isArray(offerIds) &amp;&amp; offerIds.length &gt; 0) {
+            return offerIds
+                .filter((id): id is string &#x3D;&gt; typeof id &#x3D;&#x3D;&#x3D; &quot;string&quot;)
+                .map((id) &#x3D;&gt; ({
+                    type: &quot;openid_credential&quot;,
+                    credential_configuration_id: id,
+                    // Per OID4VCI Final Section 6.2, credential_identifiers MUST be
+                    // included when authorization_details are returned in the token
+                    // response so the Wallet can reference them in the credential request.
+                    credential_identifiers: [id],
+                }));
+        }
+
+        return undefined;
+    }
+
+    async authzMetadata(
+        tenantId: string,
+    ): Promise&lt;AuthorizationServerMetadata&gt; {
+        //TODO: read from config
+        const useDpop &#x3D; true;
+
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const walletAttestationRequired &#x3D;
+            issuanceConfig.walletAttestationRequired ?? false;
+
+        const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
+        const authServer &#x3D; this.getAuthzIssuer(tenantId);
+
+        // Check if status list aggregation is enabled for this tenant
+        const statusListConfig &#x3D;
+            await this.statusListConfigService.getEffectiveConfig(tenantId);
+        const statusListAggregationEndpoint &#x3D; statusListConfig.enableAggregation
+            ? &#x60;${authServer}/status-management/status-list-aggregation&#x60;
+            : undefined;
+
+        const metadata: AuthorizationServerMetadata &#x3D; {
+            issuer: authServer,
+            token_endpoint: &#x60;${authServer}/authorize/token&#x60;,
+            authorization_endpoint: &#x60;${authServer}/authorize&#x60;,
+            interactive_authorization_endpoint: &#x60;${authServer}/authorize/interactive&#x60;,
+            jwks_uri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}&#x60;,
+            grant_types_supported: [
+                &quot;authorization_code&quot;,
+                &quot;urn:ietf:params:oauth:grant-type:pre-authorized_code&quot;,
+            ],
+            dpop_signing_alg_values_supported: useDpop ? [&quot;ES256&quot;] : undefined,
+            // TODO: verify this on the server
+            require_pushed_authorization_requests: true,
+            pushed_authorization_request_endpoint: &#x60;${authServer}/authorize/par&#x60;,
+            code_challenge_methods_supported: [PkceCodeChallengeMethod.S256],
+            authorization_details_types_supported: [&quot;openid_credential&quot;],
+            token_endpoint_auth_methods_supported: [&quot;none&quot;],
+            status_list_aggregation_endpoint: statusListAggregationEndpoint,
+        };
+
+        if (walletAttestationRequired) {
+            metadata.token_endpoint_auth_methods_supported &#x3D; [
+                &quot;attest_jwt_client_auth&quot;,
+            ];
+            metadata.challenge_endpoint &#x3D; &#x60;${authServer}/authorize/challenge&#x60;;
+            metadata.client_attestation_signing_alg_values_supported &#x3D; [
+                &quot;ES256&quot;,
+            ];
+            metadata.client_attestation_pop_signing_alg_values_supported &#x3D; [
+                &quot;ES256&quot;,
+            ];
+        }
+
+        return this.getAuthorizationServer(
+            tenantId,
+        ).createAuthorizationServerMetadata(
+            metadata as any,
+        ) as AuthorizationServerMetadata;
+    }
+
+    /**
+     * Client Attestation Challenge Endpoint.
+     * Generates and stores a nonce for use in the Client Attestation PoP JWT.
+     * @see OAuth2-ATCA07-8
+     */
+    async challengeRequest(
+        tenantId: string,
+    ): Promise&lt;{ attestation_challenge: string }&gt; {
+        const nonce &#x3D; v4();
+        await this.nonceRepository.save({
+            nonce,
+            tenantId,
+            expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
+        });
+        return { attestation_challenge: nonce };
+    }
+
+    /**
+     * Handle a Pushed Authorization Request (PAR).
+     * Validates client attestation if provided/required, creates a session,
+     * and returns a request_uri for the authorize endpoint.
+     */
+    async handlePar(
+        tenantId: string,
+        body: AuthorizeQueries,
+        clientAttestation?: {
+            clientAttestationJwt: string;
+            clientAttestationPopJwt: string;
+        },
+    ): Promise&lt;{ expires_in: number; request_uri: string }&gt; {
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const authorizationServerMetadata &#x3D; await this.authzMetadata(tenantId);
+
+        try {
+            await this.walletAttestationService.verifyWalletAttestation(
+                tenantId,
+                clientAttestation,
+                authorizationServerMetadata.issuer,
+                issuanceConfig.walletAttestationRequired ?? false,
+                issuanceConfig.walletProviderTrustLists ?? [],
+            );
+        } catch {
+            throw new TokenErrorException(
+                &quot;invalid_client&quot;,
+                &quot;Client attestation validation failed&quot;,
+            );
+        }
+
+        const request_uri &#x3D; &#x60;urn:${randomUUID()}&#x60;;
+
+        if (body.issuer_state) {
+            const updateResult &#x3D; await this.sessionService.add(
+                body.issuer_state,
+                {
+                    request_uri,
+                    auth_queries: body,
+                },
+            );
+
+            // Some PAR requests do not have a pre-existing issuer_state session.
+            // In that case we create a dedicated request_uri session for authorize.
+            if (!updateResult.affected) {
+                await this.sessionService.create({
+                    id: v4(),
+                    tenantId,
+                    request_uri,
+                    auth_queries: body,
+                });
+            }
+        } else {
+            await this.sessionService.create({
+                id: v4(),
+                tenantId,
+                request_uri,
+                auth_queries: body,
+            });
+        }
+
+        return { expires_in: 500, request_uri };
+    }
+
+    sendAuthorizationResponse(values: AuthorizeQueries, tenantId: string) {
+        if (values.request_uri) {
+            return this.sessionService
+                .getBy({ request_uri: values.request_uri })
+                .then(async (session) &#x3D;&gt; {
+                    const code &#x3D; await this.setAuthCode(session.id);
+                    const iss &#x3D; this.getAuthzIssuer(tenantId);
+                    return &#x60;${session.auth_queries!.redirect_uri}?code&#x3D;${code}&amp;state&#x3D;${session.auth_queries!.state}&amp;iss&#x3D;${iss}&#x60;;
+                })
+                .catch(async () &#x3D;&gt; {
+                    //if not found, this means the flow is initiated by the wallet and not the issuer which is also fine.
+                    if (!values.redirect_uri) {
+                        throw new ConflictException(
+                            &quot;redirect_uri not found for request_uri authorization response&quot;,
+                        );
+                    }
+
+                    const code &#x3D; v4();
+                    const iss &#x3D; this.getAuthzIssuer(tenantId);
+                    await this.sessionService.create({
+                        id: v4(),
+                        tenantId,
+                        authorization_code: code,
+                        request_uri: values.request_uri,
+                    });
+
+                    const params &#x3D; new URLSearchParams({ code, iss });
+                    if (values.state) {
+                        params.set(&quot;state&quot;, values.state);
+                    }
+
+                    return &#x60;${values.redirect_uri}?${params.toString()}&#x60;;
+                });
+        } else {
+            throw new ConflictException(
+                &quot;request_uri not found or not provided in the request&quot;,
+            );
+        }
+    }
+
+    /**
+     * Validate the token request.
+     * This endpoint is used to exchange the authorization code for an access token.
+     * Returns errors according to OID4VCI Section 6.3 Token Error Response.
+     * @param body
+     * @param req
+     * @returns
+     */
+    async validateTokenRequest(
+        body: any,
+        req: Request,
+        tenantId: string,
+    ): Promise&lt;any&gt; {
+        const url &#x3D; &#x60;${this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;)}${req.url}&#x60;;
+
+        // Parse the access token request - malformed requests return invalid_request
+        let parsedAccessTokenRequest;
+        try {
+            parsedAccessTokenRequest &#x3D; this.getAuthorizationServer(
+                tenantId,
+            ).parseAccessTokenRequest({
+                accessTokenRequest: body,
+                request: {
+                    method: req.method as HttpMethod,
+                    url,
+                    headers: getHeadersFromRequest(req),
+                },
+            });
+        } catch (err: any) {
+            // Malformed token request
+            throw new TokenErrorException(
+                &quot;invalid_request&quot;,
+                this.extractTokenErrorDescription(err) ??
+                    this.describeMalformedTokenRequest(body),
+            );
+        }
+
+        // Determine how to look up the session based on grant type
+        let session;
+        if (
+            parsedAccessTokenRequest.grant.grantType &#x3D;&#x3D;&#x3D;
+            refreshTokenGrantIdentifier
+        ) {
+            // For refresh_token grant, look up by refresh_token
+            session &#x3D; await this.sessionService
+                .getBy({
+                    refresh_token: parsedAccessTokenRequest.grant.refreshToken,
+                })
+                .catch(() &#x3D;&gt; {
+                    throw new TokenErrorException(
+                        &quot;invalid_grant&quot;,
+                        &quot;The provided refresh_token is invalid or expired&quot;,
+                    );
+                });
+        } else {
+            // For other grants (authorization_code, pre-authorized_code), look up by code
+            const authorization_code &#x3D;
+                parsedAccessTokenRequest.accessTokenRequest[
+                    &quot;pre-authorized_code&quot;
+                ] ?? parsedAccessTokenRequest.accessTokenRequest[&quot;code&quot;];
+            session &#x3D; await this.sessionService
+                .getBy({
+                    authorization_code,
+                })
+                .catch(() &#x3D;&gt; {
+                    throw new TokenErrorException(
+                        &quot;invalid_grant&quot;,
+                        &quot;The provided authorization code is invalid or expired&quot;,
+                    );
+                });
+        }
+
+        // Enforce single-use validation for sessions already consumed by
+        // credential processing. Refresh token grant remains exempt.
+        if (
+            parsedAccessTokenRequest.grant.grantType !&#x3D;&#x3D;
+                refreshTokenGrantIdentifier &amp;&amp;
+            session.consumed
+        ) {
+            throw new TokenErrorException(
+                &quot;invalid_grant&quot;,
+                &quot;The credential offer has already been used&quot;,
+            );
+        }
+
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        const authorizationServerMetadata &#x3D; await this.authzMetadata(tenantId);
+
+        // Verify wallet attestation if required or provided
+        await this.walletAttestationService.verifyWalletAttestation(
+            tenantId,
+            parsedAccessTokenRequest.clientAttestation,
+            authorizationServerMetadata.issuer,
+            issuanceConfig.walletAttestationRequired ?? false,
+            issuanceConfig.walletProviderTrustLists ?? [],
+        );
+
+        let dpopValue;
+
+        if (
+            parsedAccessTokenRequest.grant.grantType &#x3D;&#x3D;&#x3D;
+            preAuthorizedCodeGrantIdentifier
+        ) {
+            // Brute-force protection: reject if session is already locked out
+            if (session.credentialPayload?.tx_code) {
+                const maxAttempts &#x3D; issuanceConfig.txCodeMaxAttempts ?? 5;
+                if ((session.txCodeFailedAttempts ?? 0) &gt;&#x3D; maxAttempts) {
+                    this.logger.warn(
+                        &#x60;Session ${session.id} is locked after ${session.txCodeFailedAttempts} failed tx_code attempts&#x60;,
+                    );
+                    throw new TokenErrorException(
+                        &quot;invalid_grant&quot;,
+                        &quot;Too many failed tx_code attempts. The pre-authorized code has been invalidated.&quot;,
+                    );
+                }
+            }
+
+            const { dpop } &#x3D; await this.getAuthorizationServer(
+                tenantId,
+                session.id,
+            )
+                .verifyPreAuthorizedCodeAccessTokenRequest({
+                    grant: parsedAccessTokenRequest.grant as ParsedAccessTokenPreAuthorizedCodeRequestGrant,
+                    accessTokenRequest:
+                        parsedAccessTokenRequest.accessTokenRequest,
+                    request: {
+                        method: req.method as HttpMethod,
+                        url,
+                        headers: getHeadersFromRequest(req),
+                    },
+                    dpop: {
+                        required: issuanceConfig.dPopRequired,
+                        allowedSigningAlgs:
+                            authorizationServerMetadata.dpop_signing_alg_values_supported,
+                        jwt: parsedAccessTokenRequest.dpop?.jwt,
+                    },
+
+                    authorizationServerMetadata,
+
+                    expectedPreAuthorizedCode: session.authorization_code!,
+                    expectedTxCode: session.credentialPayload?.tx_code,
+                })
+                .catch(async (err) &#x3D;&gt; {
+                    // Map verification errors to OAuth 2.0 error codes
+                    const errorCode &#x3D; this.mapToTokenErrorCode(err.error);
+                    // On wrong tx_code, increment the failed attempt counter and check for lockout
+                    if (errorCode &#x3D;&#x3D;&#x3D; &quot;invalid_tx_code&quot;) {
+                        const maxAttempts &#x3D;
+                            issuanceConfig.txCodeMaxAttempts ?? 5;
+                        const failedAttempts &#x3D;
+                            await this.sessionService.incrementTxCodeFailedAttempts(
+                                session.id,
+                            );
+                        if (failedAttempts &gt;&#x3D; maxAttempts) {
+                            this.logger.warn(
+                                &#x60;Session ${session.id} locked after ${failedAttempts} failed tx_code attempts&#x60;,
+                            );
+                            throw new TokenErrorException(
+                                &quot;invalid_grant&quot;,
+                                &quot;Too many failed tx_code attempts. The pre-authorized code has been invalidated.&quot;,
+                            );
+                        }
+                        this.logger.warn(
+                            &#x60;Failed tx_code attempt ${failedAttempts}/${maxAttempts} for session ${session.id}&#x60;,
+                        );
+                    }
+                    throw new TokenErrorException(
+                        errorCode,
+                        this.extractTokenErrorDescription(err),
+                    );
+                });
+            dpopValue &#x3D; dpop;
+        }
+
+        if (
+            parsedAccessTokenRequest.grant.grantType &#x3D;&#x3D;&#x3D;
+            authorizationCodeGrantIdentifier
+        ) {
+            //TODO: handle response
+            const { dpop } &#x3D; await this.getAuthorizationServer(
+                tenantId,
+                session.id,
+            )
+                .verifyAuthorizationCodeAccessTokenRequest({
+                    grant: parsedAccessTokenRequest.grant as ParsedAccessTokenAuthorizationCodeRequestGrant,
+                    accessTokenRequest:
+                        parsedAccessTokenRequest.accessTokenRequest,
+                    expectedCode: session.authorization_code as string,
+                    request: {
+                        method: req.method as HttpMethod,
+                        url,
+                        headers: getHeadersFromRequest(req),
+                    },
+                    dpop: {
+                        required: issuanceConfig.dPopRequired,
+                        allowedSigningAlgs:
+                            authorizationServerMetadata.dpop_signing_alg_values_supported,
+                        jwt: parsedAccessTokenRequest.dpop?.jwt,
+                    },
+                    authorizationServerMetadata,
+                })
+                .catch((err) &#x3D;&gt; {
+                    // Map verification errors to OAuth 2.0 error codes
+                    const errorCode &#x3D; this.mapToTokenErrorCode(err.error);
+                    throw new TokenErrorException(
+                        errorCode,
+                        this.extractTokenErrorDescription(err),
+                    );
+                });
+            dpopValue &#x3D; dpop;
+        }
+
+        if (
+            parsedAccessTokenRequest.grant.grantType &#x3D;&#x3D;&#x3D;
+            refreshTokenGrantIdentifier
+        ) {
+            // For refresh_token grant, verify the token with the stored refresh_token
+            await this.getAuthorizationServer(tenantId, session.id)
+                .verifyRefreshTokenAccessTokenRequest({
+                    grant: parsedAccessTokenRequest.grant as ParsedAccessTokenRefreshTokenRequestGrant,
+                    accessTokenRequest:
+                        parsedAccessTokenRequest.accessTokenRequest,
+                    expectedRefreshToken: session.refresh_token!,
+                    request: {
+                        method: req.method as HttpMethod,
+                        url,
+                        headers: getHeadersFromRequest(req),
+                    },
+                    authorizationServerMetadata,
+                    refreshTokenExpiresAt: session.refresh_token_expires_at,
+                })
+                .catch((err) &#x3D;&gt; {
+                    // Map verification errors to OAuth 2.0 error codes
+                    const errorCode &#x3D; this.mapToTokenErrorCode(err.error);
+                    throw new TokenErrorException(
+                        errorCode,
+                        this.extractTokenErrorDescription(err),
+                    );
+                });
+            // Note: dpopValue remains undefined for refresh_token grant
+            // as DPoP is typically not required for refresh token requests
+        }
+
+        // Use pinned key from issuance config, or fall back to first available key
+        const signingKeyId &#x3D;
+            issuanceConfig.signingKeyId ||
+            (await this.keyChainService.getKid(tenantId));
+
+        const publicKey &#x3D; await this.keyChainService.getPublicKey(
+            &quot;jwk&quot;,
+            tenantId,
+            signingKeyId,
+        );
+
+        // Determine access token lifetime (use credential lifetime if available, otherwise 5 min default)
+        const accessTokenExpiresInSeconds &#x3D; 300;
+
+        // Bind the issued access token to the Credential(s) the Wallet is
+        // authorized to request, per OID4VCI Section 6. Both the JWT payload
+        // (for resource-server enforcement) and the token response body (for
+        // the Wallet) receive the same authorization_details.
+        const authorizationDetails &#x3D;
+            this.buildAuthorizationDetailsForToken(session);
+
+        const tokenResponse &#x3D; await this.getAuthorizationServer(
+            tenantId,
+            session.id,
+        )
+            .createAccessTokenResponse({
+                audience: &#x60;${this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;)}/issuers/${tenantId}&#x60;,
+                signer: {
+                    method: &quot;jwk&quot;,
+                    alg: &quot;ES256&quot;,
+                    publicJwk: publicKey as Jwk,
+                    kid: signingKeyId,
+                },
+                subject: session.id,
+                expiresInSeconds: accessTokenExpiresInSeconds,
+                authorizationServer: authorizationServerMetadata.issuer,
+                clientId: req.body.client_id,
+                dpop: dpopValue,
+                refreshToken: issuanceConfig.refreshTokenEnabled ? true : false,
+                additionalAccessTokenPayload: authorizationDetails
+                    ? { authorization_details: authorizationDetails }
+                    : undefined,
+                additionalAccessTokenResponsePayload: authorizationDetails
+                    ? { authorization_details: authorizationDetails }
+                    : undefined,
+            })
+            .catch((err) &#x3D;&gt; {
+                this.logger.error(&quot;Error creating access token response:&quot;, err);
+                // Internal errors during token response creation
+                throw new TokenErrorException(
+                    &quot;invalid_request&quot;,
+                    &quot;Failed to create access token response&quot;,
+                );
+            });
+
+        // Store the refresh_token in the session if it was generated
+        if (tokenResponse.refresh_token) {
+            // Calculate refresh token expiration based on configured lifetime
+            let refreshTokenExpiresAt: Date | undefined;
+            if (issuanceConfig.refreshTokenExpiresInSeconds) {
+                const now &#x3D; new Date();
+                refreshTokenExpiresAt &#x3D; new Date(
+                    now.getTime() +
+                        (issuanceConfig.refreshTokenExpiresInSeconds || 0) *
+                            1000,
+                );
+            }
+
+            await this.sessionService.add(session.id, {
+                consumed: true, // Mark the session as consumed to prevent reuse
+                refresh_token: tokenResponse.refresh_token,
+                refresh_token_expires_at: refreshTokenExpiresAt,
+            });
+        }
+
+        return tokenResponse;
+    }
+
+    /**
+     * Set the authorization code for a session based on the issuer_state and return the code.
+     * @param issuer_state
+     * @returns
+     */
+    async setAuthCode(issuer_state: string) {
+        const code &#x3D; randomUUID();
+        await this.sessionService.add(issuer_state, {
+            authorization_code: code,
+        });
+        return code;
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'ParsedAccessTokenPreAuthorizedCodeRequestGrant.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

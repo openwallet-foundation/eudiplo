@@ -1,0 +1,1615 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >TenantService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/auth/tenant/tenant.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#tenantTotal" >tenantTotal</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#createTenant" >createTenant</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#deleteTenant" >deleteTenant</a>
+                            </li>
+                            <li>
+                                <a href="#getAll" >getAll</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getChangedFields" >getChangedFields</a>
+                            </li>
+                            <li>
+                                <a href="#getTenant" >getTenant</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#onApplicationBootstrap" >onApplicationBootstrap</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#sanitizeTenantForLog" >sanitizeTenantForLog</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#setupTenant" >setupTenant</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#setUpTenant" >setUpTenant</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateTenant" >updateTenant</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(clients: <a href="../classes/ClientsProvider.html" target="_self">ClientsProvider</a>, configService: ConfigService, encryptionService: <a href="../injectables/EncryptionService.html" target="_self">EncryptionService</a>, registrarService: <a href="../injectables/RegistrarService.html" target="_self">RegistrarService</a>, tenantRepository: <a href="../entitys/TenantEntity.html" target="_self">Repository&lt;TenantEntity&gt;</a>, metricService: MetricService, filesService: <a href="../injectables/FilesService.html" target="_self">FilesService</a>, configImportOrchestrator: <a href="../injectables/ConfigImportOrchestratorService.html" target="_self">ConfigImportOrchestratorService</a>, tenantActionLogService: <a href="../injectables/AuditLogService.html" target="_self">AuditLogService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/auth/tenant/tenant.service.ts:35</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>clients</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/ClientsProvider.html" target="_self" >ClientsProvider</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>configService</td>
+                                                  
+                                                        <td>
+                                                                    <code>ConfigService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>encryptionService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/EncryptionService.html" target="_self" >EncryptionService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>registrarService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/RegistrarService.html" target="_self" >RegistrarService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>tenantRepository</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../entitys/TenantEntity.html" target="_self" >Repository&lt;TenantEntity&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>metricService</td>
+                                                  
+                                                        <td>
+                                                                    <code>MetricService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>filesService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/FilesService.html" target="_self" >FilesService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>configImportOrchestrator</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConfigImportOrchestratorService.html" target="_self" >ConfigImportOrchestratorService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>tenantActionLogService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AuditLogService.html" target="_self" >AuditLogService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createTenant"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>createTenant</b></span>
+                        <a href="#createTenant"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createTenant(data: ImportTenantDto | CreateTenantDto, actorToken?: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>, req?: Request)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="148"
+                                    class="link-to-prism">src/auth/tenant/tenant.service.ts:148</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Create a new tenant.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                        <code>ImportTenantDto | CreateTenantDto</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>actorToken</td>
+                                            <td>
+                                                            <code><a href="../interfaces/TokenPayload.html" target="_self" >TokenPayload</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                        <code>Request</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The created tenant with optional client credentials (if roles were specified)</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteTenant"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>deleteTenant</b></span>
+                        <a href="#deleteTenant"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteTenant(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, actorToken?: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>, req?: Request)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="254"
+                                    class="link-to-prism">src/auth/tenant/tenant.service.ts:254</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Deletes a tenant by ID</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The ID of the tenant to delete</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>actorToken</td>
+                                            <td>
+                                                            <code><a href="../interfaces/TokenPayload.html" target="_self" >TokenPayload</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                        <code>Request</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAll"></a>
+                    <span class="name">
+                        <span ><b>getAll</b></span>
+                        <a href="#getAll"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getAll()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="139"
+                                    class="link-to-prism">src/auth/tenant/tenant.service.ts:139</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get all tenants</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>A list of all tenants</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getChangedFields"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getChangedFields</b></span>
+                        <a href="#getChangedFields"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getChangedFields(before: <a href="../entitys/TenantEntity.html" target="_self">TenantEntity</a>, after: <a href="../entitys/TenantEntity.html" target="_self">TenantEntity</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="294"
+                                    class="link-to-prism">src/auth/tenant/tenant.service.ts:294</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>before</td>
+                                            <td>
+                                                            <code><a href="../entitys/TenantEntity.html" target="_self" >TenantEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>after</td>
+                                            <td>
+                                                            <code><a href="../entitys/TenantEntity.html" target="_self" >TenantEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getTenant"></a>
+                    <span class="name">
+                        <span ><b>getTenant</b></span>
+                        <a href="#getTenant"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getTenant(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="199"
+                                    class="link-to-prism">src/auth/tenant/tenant.service.ts:199</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get a tenant by ID</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The ID of the tenant to retrieve</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../entitys/TenantEntity.html" target="_self" >Promise&lt;TenantEntity&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The tenant entity</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onApplicationBootstrap"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>onApplicationBootstrap</b></span>
+                        <a href="#onApplicationBootstrap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onApplicationBootstrap()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="60"
+                                    class="link-to-prism">src/auth/tenant/tenant.service.ts:60</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sanitizeTenantForLog"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>sanitizeTenantForLog</b></span>
+                        <a href="#sanitizeTenantForLog"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>sanitizeTenantForLog(tenant: <a href="../entitys/TenantEntity.html" target="_self">TenantEntity</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="281"
+                                    class="link-to-prism">src/auth/tenant/tenant.service.ts:281</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenant</td>
+                                            <td>
+                                                            <code><a href="../entitys/TenantEntity.html" target="_self" >TenantEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Record&lt;string, unknown&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setupTenant"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>setupTenant</b></span>
+                        <a href="#setupTenant"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setupTenant(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="71"
+                                    class="link-to-prism">src/auth/tenant/tenant.service.ts:71</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Setup a single tenant from config.
+Creates the tenant from info.json if it doesn&#39;t exist.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>true if tenant is valid and ready for imports, false to skip this tenant</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setUpTenant"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>setUpTenant</b></span>
+                        <a href="#setUpTenant"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setUpTenant(tenant: <a href="../entitys/TenantEntity.html" target="_self">TenantEntity</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="210"
+                                    class="link-to-prism">src/auth/tenant/tenant.service.ts:210</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Sends an event to set up a tenant, allowing all other services to listen and react accordingly.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenant</td>
+                                            <td>
+                                                            <code><a href="../entitys/TenantEntity.html" target="_self" >TenantEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateTenant"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>updateTenant</b></span>
+                        <a href="#updateTenant"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateTenant(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, data: <a href="../entitys/TenantEntity.html" target="_self">Partial&lt;Omit&lt;TenantEntity, &quot;id&quot; | &quot;clients&quot; | &quot;status&quot;&gt;&gt;</a>, actorToken?: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>, req?: Request)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="225"
+                                    class="link-to-prism">src/auth/tenant/tenant.service.ts:225</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Update a tenant by ID</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The ID of the tenant to update</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                            <code><a href="../entitys/TenantEntity.html" target="_self" >Partial&lt;Omit&lt;TenantEntity, &quot;id&quot; | &quot;clients&quot; | &quot;status&quot;&gt;&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The updated tenant data</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>actorToken</td>
+                                            <td>
+                                                            <code><a href="../interfaces/TokenPayload.html" target="_self" >TokenPayload</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                        <code>Request</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../entitys/TenantEntity.html" target="_self" >Promise&lt;TenantEntity&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The updated tenant entity</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(TenantService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/auth/tenant/tenant.service.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tenantTotal"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>tenantTotal</b></span>
+                        <a href="#tenantTotal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>UpDownCounter</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/auth/tenant/tenant.service.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { existsSync, readFileSync } from &quot;node:fs&quot;;
+import {
+    Inject,
+    Injectable,
+    Logger,
+    OnApplicationBootstrap,
+} from &quot;@nestjs/common&quot;;
+import { ConfigService } from &quot;@nestjs/config&quot;;
+import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
+import type { UpDownCounter } from &quot;@opentelemetry/api&quot;;
+import { plainToClass } from &quot;class-transformer&quot;;
+import { validate } from &quot;class-validator&quot;;
+import { Request } from &quot;express&quot;;
+import { MetricService } from &quot;nestjs-otel&quot;;
+import { Repository } from &quot;typeorm&quot;;
+import { AuditLogService } from &quot;../../audit-log/audit-log.service&quot;;
+import { EncryptionService } from &quot;../../crypto/encryption/encryption.service&quot;;
+import { RegistrarService } from &quot;../../registrar/registrar.service&quot;;
+import {
+    extractRequestMeta,
+    getChangedFieldsForKeys,
+    resolveAuditActor,
+} from &quot;../../shared/utils/audit-log-context.util&quot;;
+import { ConfigImportOrchestratorService } from &quot;../../shared/utils/config-import/config-import-orchestrator.service&quot;;
+import { FilesService } from &quot;../../storage/files.service&quot;;
+import { CLIENTS_PROVIDER, ClientsProvider } from &quot;../client/client.provider&quot;;
+import { Role } from &quot;../roles/role.enum&quot;;
+import { TokenPayload } from &quot;../token.decorator&quot;;
+import { CreateTenantDto } from &quot;./dto/create-tenant.dto&quot;;
+import { ImportTenantDto } from &quot;./dto/import-tenant.dto&quot;;
+import { TenantEntity } from &quot;./entitites/tenant.entity&quot;;
+@Injectable()
+export class TenantService implements OnApplicationBootstrap {
+    private readonly logger &#x3D; new Logger(TenantService.name);
+    private readonly tenantTotal: UpDownCounter;
+
+    constructor(
+        @Inject(CLIENTS_PROVIDER) private readonly clients: ClientsProvider,
+        private readonly configService: ConfigService,
+        private readonly encryptionService: EncryptionService,
+        private readonly registrarService: RegistrarService,
+        @InjectRepository(TenantEntity)
+        private readonly tenantRepository: Repository&lt;TenantEntity&gt;,
+        metricService: MetricService,
+        private readonly filesService: FilesService,
+        private readonly configImportOrchestrator: ConfigImportOrchestratorService,
+        private readonly tenantActionLogService: AuditLogService,
+    ) {
+        this.tenantTotal &#x3D; metricService.getUpDownCounter(&quot;tenant_total&quot;, {
+            description: &quot;Total number of tenants&quot;,
+        });
+
+        // Register tenant setup - this runs first for each tenant before other imports
+        this.configImportOrchestrator.registerTenantSetup(
+            &quot;tenants&quot;,
+            (tenantId) &#x3D;&gt; this.setupTenant(tenantId),
+        );
+    }
+
+    async onApplicationBootstrap() {
+        // Initialize the tenant metrics
+        const count &#x3D; await this.tenantRepository.count();
+        this.tenantTotal.add(count);
+    }
+
+    /**
+     * Setup a single tenant from config.
+     * Creates the tenant from info.json if it doesn&#x27;t exist.
+     * @returns true if tenant is valid and ready for imports, false to skip this tenant
+     */
+    async setupTenant(tenantId: string): Promise&lt;boolean&gt; {
+        const configPath &#x3D; this.configService.getOrThrow(&quot;CONFIG_FOLDER&quot;);
+
+        // Check if tenant already exists
+        const existing &#x3D; await this.tenantRepository.findOneBy({
+            id: tenantId,
+            status: &quot;active&quot;,
+        });
+
+        if (existing) {
+            this.logger.debug(
+                &#x60;[${tenantId}] Tenant already exists, proceeding with imports&#x60;,
+            );
+            return true;
+        }
+
+        // Look for info.json
+        const file &#x3D; &#x60;${configPath}/${tenantId}/info.json&#x60;;
+        if (!existsSync(file)) {
+            // Skip folders without info.json - they might be for other purposes
+            this.logger.warn(
+                &#x60;[${tenantId}] Skipping tenant folder - no info.json found&#x60;,
+            );
+            return false;
+        }
+
+        try {
+            const configFile &#x3D; readFileSync(file, &quot;utf-8&quot;);
+            const payload &#x3D; JSON.parse(configFile);
+
+            // Validate the payload against ImportTenantDto (name, description only)
+            const tenantDto &#x3D; plainToClass(ImportTenantDto, payload);
+            const validationErrors &#x3D; await validate(tenantDto, {
+                whitelist: true,
+                forbidUnknownValues: false,
+                forbidNonWhitelisted: false,
+                stopAtFirstError: false,
+            });
+
+            if (validationErrors.length &gt; 0) {
+                this.logger.error(
+                    {
+                        errors: validationErrors.map((error) &#x3D;&gt; ({
+                            property: error.property,
+                            constraints: error.constraints,
+                            value: error.value,
+                        })),
+                    },
+                    &#x60;[${tenantId}] Validation failed for tenant config&#x60;,
+                );
+                return false;
+            }
+
+            // ID is always derived from folder name, not from config file
+            await this.createTenant({ ...tenantDto, id: tenantId });
+            return true;
+        } catch (error: any) {
+            this.logger.error(
+                &#x60;[${tenantId}] Failed to setup tenant: ${error.message}&#x60;,
+            );
+            return false;
+        }
+    }
+
+    /**
+     * Get all tenants
+     * @returns A list of all tenants
+     */
+    getAll() {
+        return this.tenantRepository.find();
+    }
+
+    /**
+     * Create a new tenant.
+     * @param data
+     * @returns The created tenant with optional client credentials (if roles were specified)
+     */
+    async createTenant(
+        data: ImportTenantDto | CreateTenantDto,
+        actorToken?: TokenPayload,
+        req?: Request,
+    ) {
+        const tenant &#x3D; await this.tenantRepository.save(data);
+        await this.setUpTenant(tenant);
+
+        let clientCredentials:
+            | { clientId: string; clientSecret: string }
+            | undefined;
+
+        if ((data as CreateTenantDto).roles) {
+            const client &#x3D; await this.clients.addClient(tenant.id, {
+                clientId: &#x60;${tenant.id}-admin&#x60;,
+                description: &#x60;auto generated admin client for tenant ${tenant.id}&#x60;,
+                roles: [
+                    Role.Clients,
+                    ...((data as CreateTenantDto).roles || []),
+                ],
+            });
+            // Return the client credentials for one-time display
+            clientCredentials &#x3D; {
+                clientId: client.clientId,
+                clientSecret: (client as any).clientSecret,
+            };
+        }
+
+        const result &#x3D; {
+            ...tenant,
+            client: clientCredentials,
+        };
+
+        if (actorToken) {
+            await this.tenantActionLogService.record({
+                tenantId: tenant.id,
+                actionType: &quot;tenant_created&quot;,
+                actor: resolveAuditActor(actorToken),
+                after: this.sanitizeTenantForLog(tenant),
+                requestMeta: extractRequestMeta(req),
+            });
+        }
+
+        return result;
+    }
+
+    /**
+     * Get a tenant by ID
+     * @param id The ID of the tenant to retrieve
+     * @returns The tenant entity
+     */
+    getTenant(id: string): Promise&lt;TenantEntity&gt; {
+        return this.tenantRepository.findOneOrFail({
+            where: { id },
+            relations: [&quot;clients&quot;],
+        });
+    }
+
+    /**
+     * Sends an event to set up a tenant, allowing all other services to listen and react accordingly.
+     * @param tenant
+     */
+    async setUpTenant(tenant: TenantEntity) {
+        await this.encryptionService.onTenantInit(tenant.id);
+        await this.registrarService.onTenantInit(tenant);
+        await this.tenantRepository.update(
+            { id: tenant.id },
+            { status: &quot;active&quot; },
+        );
+    }
+
+    /**
+     * Update a tenant by ID
+     * @param id The ID of the tenant to update
+     * @param data The updated tenant data
+     * @returns The updated tenant entity
+     */
+    async updateTenant(
+        id: string,
+        data: Partial&lt;Omit&lt;TenantEntity, &quot;id&quot; | &quot;clients&quot; | &quot;status&quot;&gt;&gt;,
+        actorToken?: TokenPayload,
+        req?: Request,
+    ): Promise&lt;TenantEntity&gt; {
+        const existing &#x3D; await this.getTenant(id);
+        await this.tenantRepository.update({ id }, data);
+        const updated &#x3D; await this.getTenant(id);
+
+        if (actorToken) {
+            await this.tenantActionLogService.record({
+                tenantId: id,
+                actionType: &quot;tenant_updated&quot;,
+                actor: resolveAuditActor(actorToken),
+                changedFields: this.getChangedFields(existing, updated),
+                before: this.sanitizeTenantForLog(existing),
+                after: this.sanitizeTenantForLog(updated),
+                requestMeta: extractRequestMeta(req),
+            });
+        }
+
+        return updated;
+    }
+
+    /**
+     * Deletes a tenant by ID
+     * @param tenantId The ID of the tenant to delete
+     */
+    async deleteTenant(
+        tenantId: string,
+        actorToken?: TokenPayload,
+        req?: Request,
+    ) {
+        const existingTenant &#x3D; await this.tenantRepository.findOne({
+            where: { id: tenantId },
+        });
+
+        //delete all files associated with the tenant
+        await this.filesService.deleteByTenant(tenantId);
+        //because of cascading, all related entities will be deleted.
+        await this.tenantRepository.delete({ id: tenantId });
+
+        if (actorToken) {
+            await this.tenantActionLogService.record({
+                tenantId,
+                actionType: &quot;tenant_deleted&quot;,
+                actor: resolveAuditActor(actorToken),
+                before: existingTenant
+                    ? this.sanitizeTenantForLog(existingTenant)
+                    : undefined,
+                requestMeta: extractRequestMeta(req),
+            });
+        }
+    }
+
+    private sanitizeTenantForLog(
+        tenant: TenantEntity,
+    ): Record&lt;string, unknown&gt; {
+        return {
+            id: tenant.id,
+            name: tenant.name,
+            description: tenant.description,
+            status: tenant.status,
+            sessionConfig: tenant.sessionConfig,
+            statusListConfig: tenant.statusListConfig,
+        };
+    }
+
+    private getChangedFields(
+        before: TenantEntity,
+        after: TenantEntity,
+    ): string[] {
+        return getChangedFieldsForKeys(before, after, [
+            &quot;name&quot;,
+            &quot;description&quot;,
+            &quot;sessionConfig&quot;,
+            &quot;statusListConfig&quot;,
+        ]);
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'TenantService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
