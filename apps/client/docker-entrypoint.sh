@@ -51,6 +51,9 @@ cat > /usr/share/nginx/html/env.js << EOF
 
   // Cache busting timestamp (changes every container start)
   window['env']['timestamp'] = '${TIMESTAMP}';
+
+  // Base href for the application (used for routing)
+  window['env']['baseHref'] = '${CLIENT_BASE_HREF}';
 })(this);
 EOF
 

@@ -21,6 +21,13 @@ import { OidcService } from './core/oidc.service';
 
 declare let monaco: any;
 
+const runtimeEnv = globalThis as { env?: { baseHref?: string } };
+const baseHref = runtimeEnv.env?.baseHref ?? '/';
+const monacoBaseUrl = new URL(
+  'assets/monaco/min/vs',
+  new URL(baseHref, document.location.origin)
+).toString();
+
 const transactionDataArraySchema = {
   uri: 'https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/TransactionDataArray.schema.json',
   fileMatch: ['a://b/TransactionDataArray*.schema.json'],
@@ -41,6 +48,8 @@ function onMonacoLoad() {
   });
 }
 
+console.log((window as any)['env']);
+
 export const appConfig: ApplicationConfig = {
   providers: [
     {
@@ -54,7 +63,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(FlexLayoutModule),
     provideHttpClient(withInterceptors([authInterceptor]), withFetch()),
     provideMonacoEditor({
-      baseUrl: window.location.origin + window.location.pathname + '/assets/monaco/min/vs',
+      baseUrl: monacoBaseUrl,
       onMonacoLoad,
       //monacoRequire: (window as any).monacoRequire,
       //requireConfig: { preferScriptTags: true }

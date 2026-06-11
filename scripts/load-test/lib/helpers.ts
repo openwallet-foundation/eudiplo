@@ -35,7 +35,7 @@ export function getAdminToken(
         { headers: { 'Content-Type': 'application/json' } },
     );
 
-    const ok = check(res, { 'admin token: status 200': (r) => r.status === 200 });
+    const ok = check(res, { 'admin token: status 201': (r) => r.status === 201 });
     if (!ok) {
         fail(`Failed to obtain admin token: ${res.status} ${res.body}`);
     }

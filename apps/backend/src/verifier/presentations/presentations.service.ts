@@ -1019,6 +1019,7 @@ export class PresentationsService {
                   client_id?: string;
                   response_uri?: string;
                   response_mode?: string;
+                  expected_origins?: string[];
               }
             | undefined;
         let requestObjectJwkThumbprint: Uint8Array | undefined;
@@ -1241,8 +1242,10 @@ export class PresentationsService {
                                     requiredClaimKeys,
                                     keyBindingNonce: session.vp_nonce!,
                                     keyBindingAudience:
-                                        requestObjectSessionData?.client_id ??
-                                        session.clientId,
+                                        this.resolveSdJwtKeyBindingAudience(
+                                            session,
+                                            requestObjectSessionData,
+                                        ),
                                     ...verifyOptions,
                                 });
                             this.logger.debug(
@@ -1280,6 +1283,70 @@ export class PresentationsService {
         );
 
         return results;
+    }
+
+    private resolveSdJwtKeyBindingAudience(
+        session: Session,
+        requestObjectSessionData:
+            | {
+                  client_id?: string;
+                  expected_origins?: string[];
+              }
+            | undefined,
+    ): string | undefined {
+        const defaultAudience =
+            requestObjectSessionData?.client_id ?? session.clientId;
+
+        if (!session.useDcApi) {
+            return defaultAudience;
+        }
+
+        const expectedOrigin = requestObjectSessionData?.expected_origins?.[0];
+        const normalizedOrigin = this.normalizeDcApiOrigin(expectedOrigin);
+        if (normalizedOrigin) {
+            return `origin:${normalizedOrigin}`;
+        }
+
+        this.logger.warn(
+            {
+                sessionId: session.id,
+                expectedOrigin,
+                defaultAudience,
+            },
+            "Missing or invalid expected_origin for DC API; falling back to client_id for SD-JWT key binding audience",
+        );
+        return defaultAudience;
+    }
+
+    private normalizeDcApiOrigin(
+        origin: string | undefined,
+    ): string | undefined {
+        if (!origin) {
+            return undefined;
+        }
+
+        const trimmed = origin.trim();
+        if (!trimmed) {
+            return undefined;
+        }
+
+        const withoutPrefix = trimmed.startsWith("origin:")
+            ? trimmed.slice("origin:".length)
+            : trimmed;
+        const withProtocol = /^https?:\/\//i.test(withoutPrefix)
+            ? withoutPrefix
+            : `http://${withoutPrefix}`;
+
+        try {
+            const parsed = new URL(withProtocol);
+            if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
+                return undefined;
+            }
+
+            return parsed.origin;
+        } catch {
+            return undefined;
+        }
     }
 
     /**

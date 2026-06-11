@@ -58,6 +58,14 @@ export class PresentationRequest {
     redirectUri?: string;
 
     /**
+     * Optional expected browser origin for DC API key-binding audience.
+     * Example: "http://localhost:8080"
+     */
+    @IsOptional()
+    @IsString()
+    expected_origin?: string;
+
+    /**
      * Optional transaction data to include in the OID4VP request.
      * If provided, this will override the transaction_data from the presentation configuration.
      */
@@ -67,3 +75,10 @@ export class PresentationRequest {
     @Type(() => TransactionData)
     transaction_data?: TransactionData[];
 }
+
+export type PresentationRequestOptions = Pick<
+    PresentationRequest,
+    "webhook" | "redirectUri" | "expected_origin" | "transaction_data"
+> & {
+    session?: string;
+};

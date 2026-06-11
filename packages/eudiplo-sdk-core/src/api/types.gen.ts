@@ -44,6 +44,7 @@ export type TokenResponse = {
     refresh_token?: string;
     token_type: string;
     expires_in: number;
+    state: string;
 };
 
 export type ImportTenantDto = {
@@ -3043,6 +3044,11 @@ export type PresentationRequest = {
      * You can use the `{sessionId}` placeholder in the URI, which will be replaced with the actual session ID.
      */
     redirectUri?: string;
+    /**
+     * Optional expected browser origin for DC API key-binding audience.
+     * Example: "http://localhost:8080"
+     */
+    expected_origin?: string;
     /**
      * Optional transaction data to include in the OID4VP request.
      * If provided, this will override the transaction_data from the presentation configuration.

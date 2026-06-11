@@ -59,6 +59,7 @@ export class VerifierOfferController {
                 value: {
                     response_type: ResponseType.DC_API,
                     requestId: "pid",
+                    expected_origin: "http://localhost:8080",
                 },
             },
         },
@@ -90,7 +91,7 @@ export class VerifierOfferController {
             },
             user.entity!.id,
             body.response_type === ResponseType.DC_API,
-            req.get("origin") || req.get("host") || "",
+            body.expected_origin ?? req.get("origin") ?? req.get("host") ?? "",
         );
         values.uri = `openid4vp://?${values.uri}`;
         values.crossDeviceUri = `openid4vp://?${values.crossDeviceUri}`;
