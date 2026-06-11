@@ -1,0 +1,1728 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >StatusListVerifierService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/shared/trust/status-list-verifier.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Service for verifying status list entries.
+Fetches and caches status list JWTs, and checks the status of entries.</p>
+<p>See <a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-status-list">https://datatracker.ietf.org/doc/html/draft-ietf-oauth-status-list</a></p>
+
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#cache" >cache</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#cachedJwts" >cachedJwts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#defaultCacheTtlMs" >defaultCacheTtlMs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#checkStatus" >checkStatus</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#checkStatusFromJwt" >checkStatusFromJwt</a>
+                            </li>
+                            <li>
+                                <a href="#clearCache" >clearCache</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#fetchStatusListJwt" >fetchStatusListJwt</a>
+                            </li>
+                            <li>
+                                <a href="#getCacheStats" >getCacheStats</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getStatusDescription" >getStatusDescription</a>
+                            </li>
+                            <li>
+                                <a href="#getStatusEntryFromJwt" >getStatusEntryFromJwt</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getStatusList" >getStatusList</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getStatusListJwt" >getStatusListJwt</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#isCacheExpired" >isCacheExpired</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#isJwtCacheExpired" >isJwtCacheExpired</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(httpService: HttpService)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:88</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>httpService</td>
+                                                  
+                                                        <td>
+                                                                    <code>HttpService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkStatus"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>checkStatus</b></span>
+                        <a href="#checkStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>checkStatus(statusListUri: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:133</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Check the status at a specific index in a status list.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>statusListUri</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The URI of the status list JWT</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The index in the status list to check</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/StatusCheckResult.html" target="_self" >Promise&lt;StatusCheckResult&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The status check result</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkStatusFromJwt"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>checkStatusFromJwt</b></span>
+                        <a href="#checkStatusFromJwt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>checkStatusFromJwt(jwt: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="115"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:115</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Check the status of a JWT that contains a status claim.
+This will fetch the status list (with caching) and check the status at the specified index.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>jwt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The JWT containing a status claim (e.g., wallet attestation JWT)</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/StatusCheckResult.html" target="_self" >Promise&lt;StatusCheckResult | undefined&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The status check result, or undefined if no status claim in JWT</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clearCache"></a>
+                    <span class="name">
+                        <span ><b>clearCache</b></span>
+                        <a href="#clearCache"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clearCache(uri?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="265"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:265</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Clear the cache for a specific URI or all URIs.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>uri</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Optional URI to clear. If not provided, clears all.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchStatusListJwt"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>fetchStatusListJwt</b></span>
+                        <a href="#fetchStatusListJwt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fetchStatusListJwt(uri: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, timeoutMs: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="188"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:188</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Fetch a status list JWT from a URI.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>uri</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    <p>The URI to fetch</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>timeoutMs</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>10000</code>
+                                            </td>
+
+                                            <td>
+                                                    <p>Timeout in milliseconds</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The raw JWT string</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCacheStats"></a>
+                    <span class="name">
+                        <span ><b>getCacheStats</b></span>
+                        <a href="#getCacheStats"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getCacheStats()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="278"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:278</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get cache statistics for monitoring.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>literal type</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusDescription"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getStatusDescription</b></span>
+                        <a href="#getStatusDescription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getStatusDescription(status: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="247"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:247</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get a human-readable description for a status value.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusEntryFromJwt"></a>
+                    <span class="name">
+                        <span ><b>getStatusEntryFromJwt</b></span>
+                        <a href="#getStatusEntryFromJwt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getStatusEntryFromJwt(jwt: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="99"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:99</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get the status entry from a JWT that contains a status claim.
+This extracts the status_list reference (uri and idx) from the JWT.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>jwt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The JWT containing a status claim</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>StatusListEntry | undefined</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The status list entry reference, or undefined if no status claim</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusList"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getStatusList</b></span>
+                        <a href="#getStatusList"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getStatusList(uri: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="153"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:153</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get a status list from cache or fetch it.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>uri</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The URI of the status list JWT</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;StatusList&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The parsed StatusList</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStatusListJwt"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getStatusListJwt</b></span>
+                        <a href="#getStatusListJwt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getStatusListJwt(uri: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="296"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:296</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get a status list JWT from cache or fetch it.
+This is useful when you need the raw JWT string (e.g., for SDK&#39;s statusListFetcher).
+The JWT is cached based on its TTL/exp claims.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>uri</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The URI of the status list JWT</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The raw JWT string</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isCacheExpired"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>isCacheExpired</b></span>
+                        <a href="#isCacheExpired"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isCacheExpired(cached: <a href="../interfaces/CachedStatusList.html" target="_self">CachedStatusList</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="226"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:226</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Check if a cache entry is expired.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cached</td>
+                                            <td>
+                                                            <code><a href="../interfaces/CachedStatusList.html" target="_self" >CachedStatusList</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isJwtCacheExpired"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>isJwtCacheExpired</b></span>
+                        <a href="#isJwtCacheExpired"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isJwtCacheExpired(cached: <a href="../interfaces/CachedJwt.html" target="_self">CachedJwt</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="326"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:326</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Check if a JWT cache entry is expired.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cached</td>
+                                            <td>
+                                                            <code><a href="../interfaces/CachedJwt.html" target="_self" >CachedJwt</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cache"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>cache</b></span>
+                        <a href="#cache"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Map&lt;string, CachedStatusList&gt;()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:79</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Cache of parsed status lists keyed by URI.
+Uses a simple in-memory cache with TTL support.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="cachedJwts"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>cachedJwts</b></span>
+                        <a href="#cachedJwts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Map&lt;string, CachedJwt&gt;()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="85" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:85</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Cache of raw status list JWTs keyed by URI.
+Used by statusListFetcher interface for SD-JWT SDK.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="defaultCacheTtlMs"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>defaultCacheTtlMs</b></span>
+                        <a href="#defaultCacheTtlMs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>5 * 60 * 1000</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:88</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Default cache TTL in milliseconds (5 minutes)</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(StatusListVerifierService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:73</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpService } from &quot;@nestjs/axios&quot;;
+import { Injectable, Logger } from &quot;@nestjs/common&quot;;
+import {
+    getListFromStatusListJWT,
+    getStatusListFromJWT,
+    StatusList,
+    StatusListEntry,
+} from &quot;@owf/token-status-list&quot;;
+import { decodeJwt } from &quot;jose&quot;;
+import { firstValueFrom } from &quot;rxjs&quot;;
+
+/**
+ * Status values as defined in the Token Status List spec.
+ * @see https://datatracker.ietf.org/doc/html/draft-ietf-oauth-status-list
+ */
+enum StatusValue {
+    /** The status is valid */
+    VALID &#x3D; 0x00,
+    /** The status is invalid/revoked */
+    INVALID &#x3D; 0x01,
+    /** The status is suspended */
+    SUSPENDED &#x3D; 0x02,
+}
+
+/**
+ * Cached status list with metadata.
+ */
+interface CachedStatusList {
+    /** The parsed status list */
+    statusList: StatusList;
+    /** When the cache entry was fetched */
+    fetchedAt: number;
+    /** TTL from the status list JWT payload (in seconds) */
+    ttl?: number;
+    /** Expiration time from the JWT (exp claim) */
+    exp?: number;
+}
+
+/**
+ * Cached raw JWT with metadata.
+ */
+interface CachedJwt {
+    /** The raw JWT string */
+    jwt: string;
+    /** When the cache entry was fetched */
+    fetchedAt: number;
+    /** TTL from the JWT payload (in seconds) */
+    ttl?: number;
+    /** Expiration time from the JWT (exp claim) */
+    exp?: number;
+}
+
+/**
+ * Result of a status check.
+ */
+export interface StatusCheckResult {
+    /** The raw status value */
+    status: number;
+    /** Whether the status indicates validity (status &#x3D;&#x3D;&#x3D; 0) */
+    isValid: boolean;
+    /** Human-readable status description */
+    description: string;
+}
+
+/**
+ * Service for verifying status list entries.
+ * Fetches and caches status list JWTs, and checks the status of entries.
+ *
+ * @see https://datatracker.ietf.org/doc/html/draft-ietf-oauth-status-list
+ */
+@Injectable()
+export class StatusListVerifierService {
+    private readonly logger &#x3D; new Logger(StatusListVerifierService.name);
+
+    /**
+     * Cache of parsed status lists keyed by URI.
+     * Uses a simple in-memory cache with TTL support.
+     */
+    private readonly cache &#x3D; new Map&lt;string, CachedStatusList&gt;();
+
+    /**
+     * Cache of raw status list JWTs keyed by URI.
+     * Used by statusListFetcher interface for SD-JWT SDK.
+     */
+    private readonly cachedJwts &#x3D; new Map&lt;string, CachedJwt&gt;();
+
+    /** Default cache TTL in milliseconds (5 minutes) */
+    private readonly defaultCacheTtlMs &#x3D; 5 * 60 * 1000;
+
+    constructor(private readonly httpService: HttpService) {}
+
+    /**
+     * Get the status entry from a JWT that contains a status claim.
+     * This extracts the status_list reference (uri and idx) from the JWT.
+     *
+     * @param jwt The JWT containing a status claim
+     * @returns The status list entry reference, or undefined if no status claim
+     */
+    getStatusEntryFromJwt(jwt: string): StatusListEntry | undefined {
+        try {
+            return getStatusListFromJWT(jwt);
+        } catch {
+            // No status claim in JWT
+            return undefined;
+        }
+    }
+
+    /**
+     * Check the status of a JWT that contains a status claim.
+     * This will fetch the status list (with caching) and check the status at the specified index.
+     *
+     * @param jwt The JWT containing a status claim (e.g., wallet attestation JWT)
+     * @returns The status check result, or undefined if no status claim in JWT
+     */
+    async checkStatusFromJwt(
+        jwt: string,
+    ): Promise&lt;StatusCheckResult | undefined&gt; {
+        const statusEntry &#x3D; this.getStatusEntryFromJwt(jwt);
+        if (!statusEntry) {
+            return undefined;
+        }
+
+        return this.checkStatus(statusEntry.uri, statusEntry.idx);
+    }
+
+    /**
+     * Check the status at a specific index in a status list.
+     *
+     * @param statusListUri The URI of the status list JWT
+     * @param index The index in the status list to check
+     * @returns The status check result
+     */
+    async checkStatus(
+        statusListUri: string,
+        index: number,
+    ): Promise&lt;StatusCheckResult&gt; {
+        const statusList &#x3D; await this.getStatusList(statusListUri);
+        const status &#x3D; statusList.getStatus(index);
+
+        return {
+            status,
+            isValid: status &#x3D;&#x3D;&#x3D; StatusValue.VALID,
+            description: this.getStatusDescription(status),
+        };
+    }
+
+    /**
+     * Get a status list from cache or fetch it.
+     *
+     * @param uri The URI of the status list JWT
+     * @returns The parsed StatusList
+     */
+    async getStatusList(uri: string): Promise&lt;StatusList&gt; {
+        // Check cache first
+        const cached &#x3D; this.cache.get(uri);
+        if (cached &amp;&amp; !this.isCacheExpired(cached)) {
+            this.logger.debug(&#x60;Using cached status list for ${uri}&#x60;);
+            return cached.statusList;
+        }
+
+        // Fetch and cache
+        this.logger.debug(&#x60;Fetching status list from ${uri}&#x60;);
+        const statusListJwt &#x3D; await this.fetchStatusListJwt(uri);
+        const statusList &#x3D; getListFromStatusListJWT(statusListJwt);
+
+        // Extract TTL and exp from the JWT payload
+        const payload &#x3D; decodeJwt(statusListJwt);
+        const ttl &#x3D; typeof payload.ttl &#x3D;&#x3D;&#x3D; &quot;number&quot; ? payload.ttl : undefined;
+        const exp &#x3D; typeof payload.exp &#x3D;&#x3D;&#x3D; &quot;number&quot; ? payload.exp : undefined;
+
+        this.cache.set(uri, {
+            statusList,
+            fetchedAt: Date.now(),
+            ttl,
+            exp,
+        });
+
+        return statusList;
+    }
+
+    /**
+     * Fetch a status list JWT from a URI.
+     *
+     * @param uri The URI to fetch
+     * @param timeoutMs Timeout in milliseconds
+     * @returns The raw JWT string
+     */
+    private async fetchStatusListJwt(
+        uri: string,
+        timeoutMs &#x3D; 10000,
+    ): Promise&lt;string&gt; {
+        const ctrl &#x3D; new AbortController();
+        const timeout &#x3D; setTimeout(() &#x3D;&gt; ctrl.abort(), timeoutMs);
+
+        try {
+            const response &#x3D; await firstValueFrom(
+                this.httpService.get(uri, {
+                    signal: ctrl.signal,
+                    responseType: &quot;text&quot;,
+                    headers: {
+                        Accept: &quot;application/statuslist+jwt, application/jwt&quot;,
+                    },
+                }),
+            );
+            return response.data;
+        } catch (error: any) {
+            if (
+                error?.name &#x3D;&#x3D;&#x3D; &quot;CanceledError&quot; ||
+                error?.code &#x3D;&#x3D;&#x3D; &quot;ERR_CANCELED&quot;
+            ) {
+                throw new Error(
+                    &#x60;Status list fetch timed out after ${timeoutMs}ms for URI: ${uri}&#x60;,
+                );
+            }
+            throw new Error(
+                &#x60;Failed to fetch status list from ${uri}: ${error?.message || error}&#x60;,
+            );
+        } finally {
+            clearTimeout(timeout);
+        }
+    }
+
+    /**
+     * Check if a cache entry is expired.
+     */
+    private isCacheExpired(cached: CachedStatusList): boolean {
+        const now &#x3D; Date.now();
+
+        // Check if JWT has expired (exp claim)
+        if (cached.exp &amp;&amp; now &gt;&#x3D; cached.exp * 1000) {
+            return true;
+        }
+
+        // Check TTL from JWT payload
+        if (cached.ttl) {
+            const expiresAt &#x3D; cached.fetchedAt + cached.ttl * 1000;
+            return now &gt;&#x3D; expiresAt;
+        }
+
+        // Fall back to default cache TTL
+        return now &gt;&#x3D; cached.fetchedAt + this.defaultCacheTtlMs;
+    }
+
+    /**
+     * Get a human-readable description for a status value.
+     */
+    private getStatusDescription(status: number): string {
+        switch (status) {
+            case StatusValue.VALID:
+                return &quot;Valid&quot;;
+            case StatusValue.INVALID:
+                return &quot;Invalid/Revoked&quot;;
+            case StatusValue.SUSPENDED:
+                return &quot;Suspended&quot;;
+            default:
+                return &#x60;Unknown status (${status})&#x60;;
+        }
+    }
+
+    /**
+     * Clear the cache for a specific URI or all URIs.
+     *
+     * @param uri Optional URI to clear. If not provided, clears all.
+     */
+    clearCache(uri?: string): void {
+        if (uri) {
+            this.cache.delete(uri);
+            this.cachedJwts.delete(uri);
+        } else {
+            this.cache.clear();
+            this.cachedJwts.clear();
+        }
+    }
+
+    /**
+     * Get cache statistics for monitoring.
+     */
+    getCacheStats(): { size: number; jwtCacheSize: number; uris: string[] } {
+        return {
+            size: this.cache.size,
+            jwtCacheSize: this.cachedJwts.size,
+            uris: Array.from(
+                new Set([...this.cache.keys(), ...this.cachedJwts.keys()]),
+            ),
+        };
+    }
+
+    /**
+     * Get a status list JWT from cache or fetch it.
+     * This is useful when you need the raw JWT string (e.g., for SDK&#x27;s statusListFetcher).
+     * The JWT is cached based on its TTL/exp claims.
+     *
+     * @param uri The URI of the status list JWT
+     * @returns The raw JWT string
+     */
+    async getStatusListJwt(uri: string): Promise&lt;string&gt; {
+        // Check if we have a valid cached entry
+        const cached &#x3D; this.cachedJwts.get(uri);
+        if (cached &amp;&amp; !this.isJwtCacheExpired(cached)) {
+            this.logger.debug(&#x60;Using cached status list JWT for ${uri}&#x60;);
+            return cached.jwt;
+        }
+
+        // Fetch and cache
+        this.logger.debug(&#x60;Fetching status list JWT from ${uri}&#x60;);
+        const jwt &#x3D; await this.fetchStatusListJwt(uri);
+
+        // Extract TTL and exp from the JWT payload
+        const payload &#x3D; decodeJwt(jwt);
+        const ttl &#x3D; typeof payload.ttl &#x3D;&#x3D;&#x3D; &quot;number&quot; ? payload.ttl : undefined;
+        const exp &#x3D; typeof payload.exp &#x3D;&#x3D;&#x3D; &quot;number&quot; ? payload.exp : undefined;
+
+        this.cachedJwts.set(uri, {
+            jwt,
+            fetchedAt: Date.now(),
+            ttl,
+            exp,
+        });
+
+        return jwt;
+    }
+
+    /**
+     * Check if a JWT cache entry is expired.
+     */
+    private isJwtCacheExpired(cached: CachedJwt): boolean {
+        const now &#x3D; Date.now();
+
+        // Check if JWT has expired (exp claim)
+        if (cached.exp &amp;&amp; now &gt;&#x3D; cached.exp * 1000) {
+            return true;
+        }
+
+        // Check TTL from JWT payload
+        if (cached.ttl) {
+            const expiresAt &#x3D; cached.fetchedAt + cached.ttl * 1000;
+            return now &gt;&#x3D; expiresAt;
+        }
+
+        // Fall back to default cache TTL
+        return now &gt;&#x3D; cached.fetchedAt + this.defaultCacheTtlMs;
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'StatusListVerifierService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

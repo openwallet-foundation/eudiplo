@@ -1,0 +1,786 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >ExtractAttributeProviderAndWebhookEndpoint1748000000000</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/database/migrations/1748000000000-ExtractAttributeProviderAndWebhookEndpoint.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Migration to extract embedded webhook JSON blobs from CredentialConfig
+into two new first-class entities: AttributeProvider and WebhookEndpoint.</p>
+<p>This migration:</p>
+<ol>
+<li>Creates the attribute_provider_entity table</li>
+<li>Creates the webhook_endpoint_entity table</li>
+<li>Adds attributeProviderId and webhookEndpointId columns to credential_config</li>
+<li>Migrates existing claimsWebhook data into attribute_provider_entity rows</li>
+<li>Drops the old claimsWebhook and notificationWebhook columns from credential_config</li>
+<li>Replaces notifyWebhook (json) on session with webhookEndpointId (varchar)</li>
+</ol>
+
+            </p>
+
+
+            <p class="comment">
+                <h3>Implements</h3>
+            </p>
+            <p class="comment">
+                        <code>MigrationInterface</code>
+            </p>
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#name" >name</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#down" >down</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#up" >up</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="name"></a>
+                    <span class="name">
+                        <span ><b>name</b></span>
+                        <a href="#name"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;ExtractAttributeProviderAndWebhookEndpoint1748000000000&quot;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/database/migrations/1748000000000-ExtractAttributeProviderAndWebhookEndpoint.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="down"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>down</b></span>
+                        <a href="#down"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>down(queryRunner: QueryRunner)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="224"
+                                    class="link-to-prism">src/database/migrations/1748000000000-ExtractAttributeProviderAndWebhookEndpoint.ts:224</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>queryRunner</td>
+                                            <td>
+                                                        <code>QueryRunner</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="up"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>up</b></span>
+                        <a href="#up"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>up(queryRunner: QueryRunner)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="20"
+                                    class="link-to-prism">src/database/migrations/1748000000000-ExtractAttributeProviderAndWebhookEndpoint.ts:20</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>queryRunner</td>
+                                            <td>
+                                                        <code>QueryRunner</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { MigrationInterface, QueryRunner, Table, TableColumn } from &quot;typeorm&quot;;
+
+/**
+ * Migration to extract embedded webhook JSON blobs from CredentialConfig
+ * into two new first-class entities: AttributeProvider and WebhookEndpoint.
+ *
+ * This migration:
+ * 1. Creates the attribute_provider_entity table
+ * 2. Creates the webhook_endpoint_entity table
+ * 3. Adds attributeProviderId and webhookEndpointId columns to credential_config
+ * 4. Migrates existing claimsWebhook data into attribute_provider_entity rows
+ * 5. Drops the old claimsWebhook and notificationWebhook columns from credential_config
+ * 6. Replaces notifyWebhook (json) on session with webhookEndpointId (varchar)
+ */
+export class ExtractAttributeProviderAndWebhookEndpoint1748000000000
+    implements MigrationInterface
+{
+    name &#x3D; &quot;ExtractAttributeProviderAndWebhookEndpoint1748000000000&quot;;
+
+    public async up(queryRunner: QueryRunner): Promise&lt;void&gt; {
+        const credentialConfigTable &#x3D;
+            await queryRunner.getTable(&quot;credential_config&quot;);
+        if (!credentialConfigTable) {
+            console.log(
+                &quot;[Migration] credential_config table not found — skipping (schema may not exist yet).&quot;,
+            );
+            return;
+        }
+
+        // 1. Create attribute_provider_entity table
+        const apTable &#x3D; await queryRunner.getTable(&quot;attribute_provider_entity&quot;);
+        if (!apTable) {
+            await queryRunner.createTable(
+                new Table({
+                    name: &quot;attribute_provider_entity&quot;,
+                    columns: [
+                        {
+                            name: &quot;id&quot;,
+                            type: &quot;varchar&quot;,
+                            isPrimary: true,
+                        },
+                        {
+                            name: &quot;tenantId&quot;,
+                            type: &quot;varchar&quot;,
+                            isPrimary: true,
+                        },
+                        {
+                            name: &quot;name&quot;,
+                            type: &quot;varchar&quot;,
+                        },
+                        {
+                            name: &quot;description&quot;,
+                            type: &quot;varchar&quot;,
+                            isNullable: true,
+                        },
+                        {
+                            name: &quot;url&quot;,
+                            type: &quot;varchar&quot;,
+                        },
+                        {
+                            name: &quot;auth&quot;,
+                            type: &quot;json&quot;,
+                        },
+                    ],
+                }),
+                true,
+            );
+        }
+
+        // 2. Create webhook_endpoint_entity table
+        const weTable &#x3D; await queryRunner.getTable(&quot;webhook_endpoint_entity&quot;);
+        if (!weTable) {
+            await queryRunner.createTable(
+                new Table({
+                    name: &quot;webhook_endpoint_entity&quot;,
+                    columns: [
+                        {
+                            name: &quot;id&quot;,
+                            type: &quot;varchar&quot;,
+                            isPrimary: true,
+                        },
+                        {
+                            name: &quot;tenantId&quot;,
+                            type: &quot;varchar&quot;,
+                            isPrimary: true,
+                        },
+                        {
+                            name: &quot;name&quot;,
+                            type: &quot;varchar&quot;,
+                        },
+                        {
+                            name: &quot;description&quot;,
+                            type: &quot;varchar&quot;,
+                            isNullable: true,
+                        },
+                        {
+                            name: &quot;url&quot;,
+                            type: &quot;varchar&quot;,
+                        },
+                        {
+                            name: &quot;auth&quot;,
+                            type: &quot;json&quot;,
+                        },
+                    ],
+                }),
+                true,
+            );
+        }
+
+        // 3. Add new FK columns to credential_config
+        const hasAttributeProviderId &#x3D; credentialConfigTable.columns.some(
+            (c) &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; &quot;attributeProviderId&quot;,
+        );
+        if (!hasAttributeProviderId) {
+            await queryRunner.addColumn(
+                &quot;credential_config&quot;,
+                new TableColumn({
+                    name: &quot;attributeProviderId&quot;,
+                    type: &quot;varchar&quot;,
+                    isNullable: true,
+                }),
+            );
+        }
+
+        const hasWebhookEndpointId &#x3D; credentialConfigTable.columns.some(
+            (c) &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; &quot;webhookEndpointId&quot;,
+        );
+        if (!hasWebhookEndpointId) {
+            await queryRunner.addColumn(
+                &quot;credential_config&quot;,
+                new TableColumn({
+                    name: &quot;webhookEndpointId&quot;,
+                    type: &quot;varchar&quot;,
+                    isNullable: true,
+                }),
+            );
+        }
+
+        // 4. Migrate existing claimsWebhook data
+        const hasClaimsWebhook &#x3D; credentialConfigTable.columns.some(
+            (c) &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; &quot;claimsWebhook&quot;,
+        );
+        if (hasClaimsWebhook) {
+            // Read existing rows with claimsWebhook data
+            const rows: Array&lt;{
+                id: string;
+                tenantId: string;
+                claimsWebhook: string | null;
+            }&gt; &#x3D; await queryRunner.query(
+                &#x60;SELECT &quot;id&quot;, &quot;tenantId&quot;, &quot;claimsWebhook&quot; FROM &quot;credential_config&quot; WHERE &quot;claimsWebhook&quot; IS NOT NULL&#x60;,
+            );
+
+            // Use driver-appropriate SQL placeholders (Postgres: $1,$2,... / SQLite: ?,?,...)
+            const isPostgres &#x3D;
+                queryRunner.connection.options.type &#x3D;&#x3D;&#x3D; &quot;postgres&quot;;
+            const param &#x3D; (n: number) &#x3D;&gt; (isPostgres ? &#x60;$${n}&#x60; : &quot;?&quot;);
+
+            for (const row of rows) {
+                const webhook &#x3D;
+                    typeof row.claimsWebhook &#x3D;&#x3D;&#x3D; &quot;string&quot;
+                        ? JSON.parse(row.claimsWebhook)
+                        : row.claimsWebhook;
+                if (!webhook?.url) continue;
+
+                const apId &#x3D; &#x60;ap-migrated-${row.id}&#x60;;
+                // Insert into attribute_provider_entity
+                await queryRunner.query(
+                    &#x60;INSERT INTO &quot;attribute_provider_entity&quot; (&quot;id&quot;, &quot;tenantId&quot;, &quot;name&quot;, &quot;url&quot;, &quot;auth&quot;) VALUES (${param(1)}, ${param(2)}, ${param(3)}, ${param(4)}, ${param(5)})&#x60;,
+                    [
+                        apId,
+                        row.tenantId,
+                        &#x60;Migrated from ${row.id}&#x60;,
+                        webhook.url,
+                        JSON.stringify(webhook.auth ?? { type: &quot;none&quot; }),
+                    ],
+                );
+                // Update credential_config to reference the new attribute provider
+                await queryRunner.query(
+                    &#x60;UPDATE &quot;credential_config&quot; SET &quot;attributeProviderId&quot; &#x3D; ${param(1)} WHERE &quot;id&quot; &#x3D; ${param(2)} AND &quot;tenantId&quot; &#x3D; ${param(3)}&#x60;,
+                    [apId, row.id, row.tenantId],
+                );
+            }
+
+            // 5. Drop old columns
+            await queryRunner.dropColumn(&quot;credential_config&quot;, &quot;claimsWebhook&quot;);
+        }
+
+        const hasNotificationWebhook &#x3D; credentialConfigTable.columns.some(
+            (c) &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; &quot;notificationWebhook&quot;,
+        );
+        if (hasNotificationWebhook) {
+            await queryRunner.dropColumn(
+                &quot;credential_config&quot;,
+                &quot;notificationWebhook&quot;,
+            );
+        }
+
+        // 6. Handle session table: replace notifyWebhook (json) with webhookEndpointId (varchar)
+        const sessionTable &#x3D; await queryRunner.getTable(&quot;session&quot;);
+        if (sessionTable) {
+            const hasNotifyWebhook &#x3D; sessionTable.columns.some(
+                (c) &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; &quot;notifyWebhook&quot;,
+            );
+            if (hasNotifyWebhook) {
+                await queryRunner.dropColumn(&quot;session&quot;, &quot;notifyWebhook&quot;);
+            }
+
+            const hasSessionWebhookEndpointId &#x3D; sessionTable.columns.some(
+                (c) &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; &quot;webhookEndpointId&quot;,
+            );
+            if (!hasSessionWebhookEndpointId) {
+                await queryRunner.addColumn(
+                    &quot;session&quot;,
+                    new TableColumn({
+                        name: &quot;webhookEndpointId&quot;,
+                        type: &quot;varchar&quot;,
+                        isNullable: true,
+                    }),
+                );
+            }
+        }
+    }
+
+    public async down(queryRunner: QueryRunner): Promise&lt;void&gt; {
+        // Restore session.notifyWebhook
+        const sessionTable &#x3D; await queryRunner.getTable(&quot;session&quot;);
+        if (sessionTable) {
+            const hasWebhookEndpointId &#x3D; sessionTable.columns.some(
+                (c) &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; &quot;webhookEndpointId&quot;,
+            );
+            if (hasWebhookEndpointId) {
+                await queryRunner.dropColumn(&quot;session&quot;, &quot;webhookEndpointId&quot;);
+            }
+            await queryRunner.addColumn(
+                &quot;session&quot;,
+                new TableColumn({
+                    name: &quot;notifyWebhook&quot;,
+                    type: &quot;json&quot;,
+                    isNullable: true,
+                }),
+            );
+        }
+
+        // Restore credential_config columns
+        const credentialConfigTable &#x3D;
+            await queryRunner.getTable(&quot;credential_config&quot;);
+        if (credentialConfigTable) {
+            await queryRunner.addColumn(
+                &quot;credential_config&quot;,
+                new TableColumn({
+                    name: &quot;claimsWebhook&quot;,
+                    type: &quot;json&quot;,
+                    isNullable: true,
+                }),
+            );
+            await queryRunner.addColumn(
+                &quot;credential_config&quot;,
+                new TableColumn({
+                    name: &quot;notificationWebhook&quot;,
+                    type: &quot;json&quot;,
+                    isNullable: true,
+                }),
+            );
+
+            const hasAttributeProviderId &#x3D; credentialConfigTable.columns.some(
+                (c) &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; &quot;attributeProviderId&quot;,
+            );
+            if (hasAttributeProviderId) {
+                await queryRunner.dropColumn(
+                    &quot;credential_config&quot;,
+                    &quot;attributeProviderId&quot;,
+                );
+            }
+            const hasWebhookEndpointId &#x3D; credentialConfigTable.columns.some(
+                (c) &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; &quot;webhookEndpointId&quot;,
+            );
+            if (hasWebhookEndpointId) {
+                await queryRunner.dropColumn(
+                    &quot;credential_config&quot;,
+                    &quot;webhookEndpointId&quot;,
+                );
+            }
+        }
+
+        // Drop new tables
+        await queryRunner.dropTable(&quot;webhook_endpoint_entity&quot;, true);
+        await queryRunner.dropTable(&quot;attribute_provider_entity&quot;, true);
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'ExtractAttributeProviderAndWebhookEndpoint1748000000000.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

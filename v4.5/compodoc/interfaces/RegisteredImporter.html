@@ -1,0 +1,588 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  RegisteredImporter</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/shared/utils/config-import/config-import-orchestrator.service.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#importForTenant" 
+>
+                                            importForTenant
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#name" 
+>
+                                            name
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#phase" 
+>
+                                            phase
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="importForTenant"></a>
+                                        <span class="name "><b>importForTenant</b>
+                                            <a href="#importForTenant">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>importForTenant:         <code><a href="../miscellaneous/typealiases.html#TenantImportFn" target="_self" >TenantImportFn</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#TenantImportFn" target="_self" >TenantImportFn</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="name"></a>
+                                        <span class="name "><b>name</b>
+                                            <a href="#name">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>name:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="phase"></a>
+                                        <span class="name "><b>phase</b>
+                                            <a href="#phase">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>phase:         <code><a href="../miscellaneous/enumerations.html#ImportPhase" target="_self" >ImportPhase</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#ImportPhase" target="_self" >ImportPhase</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { existsSync, readdirSync } from &quot;node:fs&quot;;
+import { Injectable, Logger, OnApplicationBootstrap } from &quot;@nestjs/common&quot;;
+import { ConfigService } from &quot;@nestjs/config&quot;;
+
+/**
+ * Import phase definitions with their order.
+ * Lower numbers run first.
+ */
+export enum ImportPhase {
+    /** Core infrastructure (keys, certificates) */
+    CORE &#x3D; 10,
+    /** Configuration (issuance, credential configs) */
+    CONFIGURATION &#x3D; 20,
+    /** References (presentation configs that may reference certs) */
+    REFERENCES &#x3D; 30,
+    /** Final phase (status lists, trust lists) */
+    FINAL &#x3D; 40,
+}
+
+/**
+ * Type for tenant-aware import functions.
+ * Each function receives the tenant ID and processes imports for that specific tenant.
+ */
+export type TenantImportFn &#x3D; (tenantId: string) &#x3D;&gt; Promise&lt;void&gt;;
+
+interface RegisteredImporter {
+    name: string;
+    phase: ImportPhase;
+    importForTenant: TenantImportFn;
+}
+
+interface TenantSetupFn {
+    name: string;
+    setup: (tenantId: string) &#x3D;&gt; Promise&lt;boolean&gt;;
+}
+
+/**
+ * Centralized orchestrator for configuration imports.
+ * Imports are processed tenant-by-tenant to provide better log clarity
+ * and isolation - if one tenant fails, others can still be imported.
+ *
+ * Flow:
+ * 1. Discover all tenant folders
+ * 2. For each tenant:
+ *    a. Setup tenant (create if needed)
+ *    b. Run all import phases in order (CORE → CONFIGURATION → REFERENCES → FINAL)
+ * 3. Continue with next tenant even if current tenant fails
+ *
+ * Services should register their import functions during construction.
+ * The orchestrator automatically runs imports during onApplicationBootstrap.
+ */
+@Injectable()
+export class ConfigImportOrchestratorService implements OnApplicationBootstrap {
+    private readonly importers: RegisteredImporter[] &#x3D; [];
+    private tenantSetup: TenantSetupFn | null &#x3D; null;
+    private hasRun &#x3D; false;
+    private runPromise: Promise&lt;void&gt; | null &#x3D; null;
+    private readonly logger &#x3D; new Logger(ConfigImportOrchestratorService.name);
+
+    constructor(private readonly configService: ConfigService) {}
+
+    /**
+     * Lifecycle hook - automatically triggers import orchestration.
+     */
+    async onApplicationBootstrap() {
+        await this.runImports();
+    }
+
+    /**
+     * Register a tenant setup function.
+     * This is called first for each tenant to ensure the tenant exists.
+     * @param name - Human-readable name for logging
+     * @param setupFn - Function that creates/verifies tenant, returns true if tenant is valid
+     */
+    registerTenantSetup(
+        name: string,
+        setupFn: (tenantId: string) &#x3D;&gt; Promise&lt;boolean&gt;,
+    ): void {
+        if (this.hasRun) {
+            this.logger.warn(
+                &#x60;Tenant setup &quot;${name}&quot; registered after orchestration already ran&#x60;,
+            );
+        }
+        this.tenantSetup &#x3D; { name, setup: setupFn };
+    }
+
+    /**
+     * Register an import function for orchestration.
+     * @param name - Human-readable name for logging
+     * @param phase - The import phase (determines order within tenant)
+     * @param importFn - The import function to call (receives tenantId)
+     */
+    register(name: string, phase: ImportPhase, importFn: TenantImportFn): void {
+        if (this.hasRun) {
+            this.logger.warn(
+                &#x60;Importer &quot;${name}&quot; registered after orchestration already ran&#x60;,
+            );
+        }
+        this.importers.push({ name, phase, importForTenant: importFn });
+    }
+
+    /**
+     * Execute all registered imports tenant-by-tenant.
+     * Safe to call multiple times - only runs once.
+     * Returns the same promise if called while running.
+     */
+    async runImports(): Promise&lt;void&gt; {
+        // If already running, return the existing promise
+        if (this.runPromise) {
+            return this.runPromise;
+        }
+
+        // If already completed, return immediately
+        if (this.hasRun) {
+            return;
+        }
+
+        // Start the import process
+        this.runPromise &#x3D; this.executeImports();
+        return this.runPromise;
+    }
+
+    /**
+     * Discover all tenant folders in the config directory.
+     */
+    private discoverTenants(): string[] {
+        const configPath &#x3D; this.configService.get&lt;string&gt;(&quot;CONFIG_FOLDER&quot;);
+        if (!configPath || !existsSync(configPath)) {
+            return [];
+        }
+
+        return readdirSync(configPath, { withFileTypes: true })
+            .filter((entry) &#x3D;&gt; entry.isDirectory())
+            .map((entry) &#x3D;&gt; entry.name);
+    }
+
+    private async executeImports(): Promise&lt;void&gt; {
+        if (!this.configService.get&lt;boolean&gt;(&quot;CONFIG_IMPORT&quot;)) {
+            this.hasRun &#x3D; true;
+            this.logger.log(&quot;Config import is disabled&quot;);
+            return;
+        }
+
+        // Sort importers by phase
+        const sortedImporters &#x3D; [...this.importers].sort(
+            (a, b) &#x3D;&gt; a.phase - b.phase,
+        );
+
+        // Discover tenants
+        const tenants &#x3D; this.discoverTenants();
+
+        this.logger.log(
+            &#x60;Starting config import for ${tenants.length} tenant(s)&#x60;,
+        );
+
+        const failedTenants: string[] &#x3D; [];
+
+        for (const tenantId of tenants) {
+            this.logger.debug(&#x60;[${tenantId}] Starting import&#x60;);
+
+            try {
+                // Step 1: Setup tenant (create if needed)
+                if (this.tenantSetup) {
+                    const isValid &#x3D; await this.tenantSetup.setup(tenantId);
+                    if (!isValid) {
+                        this.logger.warn(
+                            &#x60;[${tenantId}] Tenant setup returned invalid, skipping&#x60;,
+                        );
+                        continue;
+                    }
+                }
+
+                // Step 2: Run all import phases for this tenant
+                for (const importer of sortedImporters) {
+                    this.logger.debug(
+                        &#x60;[${tenantId}] Running ${importer.name} (phase ${importer.phase})&#x60;,
+                    );
+                    try {
+                        await importer.importForTenant(tenantId);
+                    } catch (error: any) {
+                        this.logger.error(
+                            { error: error.message },
+                            &#x60;[${tenantId}] Failed to import ${importer.name}: ${error.message}&#x60;,
+                        );
+                        // Continue with next importer for this tenant
+                    }
+                }
+
+                this.logger.log(&#x60;[${tenantId}] Import completed&#x60;);
+            } catch (error: any) {
+                this.logger.error(
+                    { error: error.message },
+                    &#x60;[${tenantId}] Failed to import tenant: ${error.message}&#x60;,
+                );
+                failedTenants.push(tenantId);
+                // Continue with next tenant
+            }
+        }
+
+        this.hasRun &#x3D; true;
+
+        if (failedTenants.length &gt; 0) {
+            this.logger.warn(
+                &#x60;Config import completed with ${failedTenants.length} failed tenant(s): ${failedTenants.join(&quot;, &quot;)}&#x60;,
+            );
+        } else {
+            this.logger.log(
+                &#x60;Config import completed for ${tenants.length} tenant(s)&#x60;,
+            );
+        }
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'RegisteredImporter.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

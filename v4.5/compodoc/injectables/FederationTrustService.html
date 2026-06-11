@@ -1,0 +1,1554 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >FederationTrustService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/shared/trust/federation-trust.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#trustCache" >trustCache</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#evaluateAuthorizationServerTrust" >evaluateAuthorizationServerTrust</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#evaluateCertificateEntityTrust" >evaluateCertificateEntityTrust</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#evaluateEntityTrust" >evaluateEntityTrust</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#fetchEntityConfiguration" >fetchEntityConfiguration</a>
+                            </li>
+                            <li>
+                                <a href="#getMode" >getMode</a>
+                            </li>
+                            <li>
+                                <a href="#isEnabled" >isEnabled</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#parseEntityConfigurationResponse" >parseEntityConfigurationResponse</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#setCache" >setCache</a>
+                            </li>
+                            <li>
+                                <a href="#shouldUseFederation" >shouldUseFederation</a>
+                            </li>
+                            <li>
+                                <a href="#shouldUseLote" >shouldUseLote</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#tryExtractEntityIdFromLeaf" >tryExtractEntityIdFromLeaf</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(httpService: HttpService)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/shared/trust/federation-trust.service.ts:27</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>httpService</td>
+                                                  
+                                                        <td>
+                                                                    <code>HttpService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="evaluateAuthorizationServerTrust"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>evaluateAuthorizationServerTrust</b></span>
+                        <a href="#evaluateAuthorizationServerTrust"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>evaluateAuthorizationServerTrust(issuerOrBaseUrl: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, source?: <a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self">FederationTrustSource</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="82"
+                                    class="link-to-prism">src/shared/trust/federation-trust.service.ts:82</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>issuerOrBaseUrl</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>source</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self" >FederationTrustSource</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#FederationTrustEvaluation" target="_self" >Promise&lt;FederationTrustEvaluation&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="evaluateCertificateEntityTrust"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>evaluateCertificateEntityTrust</b></span>
+                        <a href="#evaluateCertificateEntityTrust"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>evaluateCertificateEntityTrust(x5c: string[] | undefined, source?: <a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self">FederationTrustSource</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="49"
+                                    class="link-to-prism">src/shared/trust/federation-trust.service.ts:49</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>x5c</td>
+                                            <td>
+                                                        <code>string[] | undefined</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>source</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self" >FederationTrustSource</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#FederationTrustEvaluation" target="_self" >Promise&lt;FederationTrustEvaluation&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="evaluateEntityTrust"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>evaluateEntityTrust</b></span>
+                        <a href="#evaluateEntityTrust"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>evaluateEntityTrust(entityId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, source?: <a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self">FederationTrustSource</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="100"
+                                    class="link-to-prism">src/shared/trust/federation-trust.service.ts:100</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>entityId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>source</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self" >FederationTrustSource</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#FederationTrustEvaluation" target="_self" >Promise&lt;FederationTrustEvaluation&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchEntityConfiguration"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>fetchEntityConfiguration</b></span>
+                        <a href="#fetchEntityConfiguration"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fetchEntityConfiguration(entityId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="224"
+                                    class="link-to-prism">src/shared/trust/federation-trust.service.ts:224</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>entityId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#FederationEntityConfigurationPayload" target="_self" >Promise&lt;FederationEntityConfigurationPayload&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getMode"></a>
+                    <span class="name">
+                        <span ><b>getMode</b></span>
+                        <a href="#getMode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getMode(source?: <a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self">FederationTrustSource</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="31"
+                                    class="link-to-prism">src/shared/trust/federation-trust.service.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>source</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self" >FederationTrustSource</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#FederationTrustMode" target="_self" >FederationTrustMode</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isEnabled"></a>
+                    <span class="name">
+                        <span ><b>isEnabled</b></span>
+                        <a href="#isEnabled"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isEnabled(source?: <a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self">FederationTrustSource</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="35"
+                                    class="link-to-prism">src/shared/trust/federation-trust.service.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>source</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self" >FederationTrustSource</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseEntityConfigurationResponse"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>parseEntityConfigurationResponse</b></span>
+                        <a href="#parseEntityConfigurationResponse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>parseEntityConfigurationResponse(responseData: string | Record<string | unknown>, entityId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="241"
+                                    class="link-to-prism">src/shared/trust/federation-trust.service.ts:241</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>responseData</td>
+                                            <td>
+                                                        <code>string | Record&lt;string | unknown&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>entityId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#FederationEntityConfigurationPayload" target="_self" >FederationEntityConfigurationPayload</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setCache"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>setCache</b></span>
+                        <a href="#setCache"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setCache(cacheKey: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, source: <a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self">FederationTrustSource | undefined</a>, value: <a href="../miscellaneous/typealiases.html#FederationTrustEvaluation" target="_self">FederationTrustEvaluation</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="181"
+                                    class="link-to-prism">src/shared/trust/federation-trust.service.ts:181</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cacheKey</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>source</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self" >FederationTrustSource | undefined</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#FederationTrustEvaluation" target="_self" >FederationTrustEvaluation</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="shouldUseFederation"></a>
+                    <span class="name">
+                        <span ><b>shouldUseFederation</b></span>
+                        <a href="#shouldUseFederation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>shouldUseFederation(source?: <a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self">FederationTrustSource</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="44"
+                                    class="link-to-prism">src/shared/trust/federation-trust.service.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>source</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self" >FederationTrustSource</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="shouldUseLote"></a>
+                    <span class="name">
+                        <span ><b>shouldUseLote</b></span>
+                        <a href="#shouldUseLote"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>shouldUseLote(source?: <a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self">FederationTrustSource</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="39"
+                                    class="link-to-prism">src/shared/trust/federation-trust.service.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>source</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self" >FederationTrustSource</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tryExtractEntityIdFromLeaf"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>tryExtractEntityIdFromLeaf</b></span>
+                        <a href="#tryExtractEntityIdFromLeaf"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>tryExtractEntityIdFromLeaf(leafX5cBase64: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="193"
+                                    class="link-to-prism">src/shared/trust/federation-trust.service.ts:193</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>leafX5cBase64</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(FederationTrustService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/shared/trust/federation-trust.service.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="trustCache"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>trustCache</b></span>
+                        <a href="#trustCache"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Map&lt;string, CachedEvaluation&gt;()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/shared/trust/federation-trust.service.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { X509Certificate } from &quot;node:crypto&quot;;
+import { HttpService } from &quot;@nestjs/axios&quot;;
+import { Injectable, Logger } from &quot;@nestjs/common&quot;;
+import { decodeJwt } from &quot;jose&quot;;
+import { firstValueFrom } from &quot;rxjs&quot;;
+import { FederationTrustMode, FederationTrustSource } from &quot;./types&quot;;
+
+type FederationTrustEvaluation &#x3D; {
+    trusted: boolean;
+    reason: string;
+};
+
+type CachedEvaluation &#x3D; {
+    value: FederationTrustEvaluation;
+    expiresAt: number;
+};
+
+type FederationEntityConfigurationPayload &#x3D; {
+    sub?: string;
+    authority_hints?: string[];
+    metadata?: Record&lt;string, unknown&gt;;
+};
+
+@Injectable()
+export class FederationTrustService {
+    private readonly logger &#x3D; new Logger(FederationTrustService.name);
+    private readonly trustCache &#x3D; new Map&lt;string, CachedEvaluation&gt;();
+
+    constructor(private readonly httpService: HttpService) {}
+
+    getMode(source?: FederationTrustSource): FederationTrustMode {
+        return source?.mode ?? &quot;hybrid&quot;;
+    }
+
+    isEnabled(source?: FederationTrustSource): boolean {
+        return Boolean(source?.trustAnchors?.length);
+    }
+
+    shouldUseLote(source?: FederationTrustSource): boolean {
+        const mode &#x3D; this.getMode(source);
+        return mode &#x3D;&#x3D;&#x3D; &quot;lote-only&quot; || mode &#x3D;&#x3D;&#x3D; &quot;hybrid&quot;;
+    }
+
+    shouldUseFederation(source?: FederationTrustSource): boolean {
+        const mode &#x3D; this.getMode(source);
+        return mode &#x3D;&#x3D;&#x3D; &quot;federation-only&quot; || mode &#x3D;&#x3D;&#x3D; &quot;hybrid&quot;;
+    }
+
+    async evaluateCertificateEntityTrust(
+        x5c: string[] | undefined,
+        source?: FederationTrustSource,
+    ): Promise&lt;FederationTrustEvaluation&gt; {
+        if (!this.shouldUseFederation(source)) {
+            return { trusted: true, reason: &quot;federation disabled by mode&quot; };
+        }
+
+        if (!this.isEnabled(source)) {
+            return {
+                trusted: false,
+                reason: &quot;federation mode requires trust anchors, none configured&quot;,
+            };
+        }
+
+        if (!x5c?.length) {
+            return {
+                trusted: false,
+                reason: &quot;federation mode requires x5c for entity extraction&quot;,
+            };
+        }
+
+        const leafEntityId &#x3D; this.tryExtractEntityIdFromLeaf(x5c[0]);
+        if (!leafEntityId) {
+            return {
+                trusted: false,
+                reason: &quot;could not extract entity id from certificate SAN/CN&quot;,
+            };
+        }
+
+        return this.evaluateEntityTrust(leafEntityId, source);
+    }
+
+    async evaluateAuthorizationServerTrust(
+        issuerOrBaseUrl: string,
+        source?: FederationTrustSource,
+    ): Promise&lt;FederationTrustEvaluation&gt; {
+        if (!this.shouldUseFederation(source)) {
+            return { trusted: true, reason: &quot;federation disabled by mode&quot; };
+        }
+
+        if (!this.isEnabled(source)) {
+            return {
+                trusted: false,
+                reason: &quot;federation mode requires trust anchors, none configured&quot;,
+            };
+        }
+
+        return this.evaluateEntityTrust(issuerOrBaseUrl, source);
+    }
+
+    async evaluateEntityTrust(
+        entityId: string,
+        source?: FederationTrustSource,
+    ): Promise&lt;FederationTrustEvaluation&gt; {
+        if (!this.shouldUseFederation(source)) {
+            return { trusted: true, reason: &quot;federation disabled by mode&quot; };
+        }
+
+        if (!this.isEnabled(source)) {
+            return {
+                trusted: false,
+                reason: &quot;federation mode requires trust anchors, none configured&quot;,
+            };
+        }
+
+        const normalizedEntityId &#x3D; entityId.replace(/\/$/, &quot;&quot;);
+        const cacheKey &#x3D; &#x60;${normalizedEntityId}::${JSON.stringify(source?.trustAnchors ?? [])}&#x60;;
+        const cached &#x3D; this.trustCache.get(cacheKey);
+        if (cached &amp;&amp; cached.expiresAt &gt; Date.now()) {
+            return cached.value;
+        }
+
+        const anchorIds &#x3D; new Set(
+            (source?.trustAnchors ?? []).map((anchor) &#x3D;&gt;
+                anchor.entityId.replace(/\/$/, &quot;&quot;),
+            ),
+        );
+
+        if (anchorIds.has(normalizedEntityId)) {
+            const value &#x3D; {
+                trusted: true,
+                reason: &quot;entity is a configured federation trust anchor&quot;,
+            };
+            this.setCache(cacheKey, source, value);
+            return value;
+        }
+
+        const entityConfig &#x3D; await this.fetchEntityConfiguration(
+            normalizedEntityId,
+        ).catch((error: unknown) &#x3D;&gt; {
+            this.logger.warn(
+                &#x60;Failed to fetch federation entity configuration for ${normalizedEntityId}: ${String(error)}&#x60;,
+            );
+            return null;
+        });
+
+        if (!entityConfig) {
+            const value &#x3D; {
+                trusted: false,
+                reason: &quot;could not fetch federation entity configuration&quot;,
+            };
+            this.setCache(cacheKey, source, value);
+            return value;
+        }
+
+        const hints &#x3D; new Set(
+            (entityConfig.authority_hints ?? []).map((hint) &#x3D;&gt;
+                hint.replace(/\/$/, &quot;&quot;),
+            ),
+        );
+
+        const hintMatch &#x3D; [...anchorIds].some((anchor) &#x3D;&gt; hints.has(anchor));
+        const subjectMatches &#x3D;
+            !entityConfig.sub ||
+            entityConfig.sub.replace(/\/$/, &quot;&quot;) &#x3D;&#x3D;&#x3D; normalizedEntityId;
+
+        const trusted &#x3D; subjectMatches &amp;&amp; hintMatch;
+        const value &#x3D; trusted
+            ? {
+                  trusted: true,
+                  reason: &quot;entity authority_hints chain to configured trust anchor&quot;,
+              }
+            : {
+                  trusted: false,
+                  reason: &quot;entity did not chain to configured trust anchor&quot;,
+              };
+
+        this.setCache(cacheKey, source, value);
+        return value;
+    }
+
+    private setCache(
+        cacheKey: string,
+        source: FederationTrustSource | undefined,
+        value: FederationTrustEvaluation,
+    ) {
+        const ttlMs &#x3D; Math.max(5, source?.cacheTtlSeconds ?? 300) * 1000;
+        this.trustCache.set(cacheKey, {
+            value,
+            expiresAt: Date.now() + ttlMs,
+        });
+    }
+
+    private tryExtractEntityIdFromLeaf(leafX5cBase64: string): string | null {
+        try {
+            const cert &#x3D; new X509Certificate(
+                Buffer.from(leafX5cBase64, &quot;base64&quot;),
+            );
+
+            if (cert.subjectAltName) {
+                const uriMatch &#x3D; cert.subjectAltName
+                    .split(&quot;,&quot;)
+                    .map((part) &#x3D;&gt; part.trim())
+                    .find((part) &#x3D;&gt; part.startsWith(&quot;URI:&quot;));
+
+                if (uriMatch) {
+                    return uriMatch.slice(4);
+                }
+            }
+
+            const cnMatch &#x3D; cert.subject
+                .split(&quot;,&quot;)
+                .map((part) &#x3D;&gt; part.trim())
+                .find((part) &#x3D;&gt; part.startsWith(&quot;CN&#x3D;&quot;));
+
+            return cnMatch ? cnMatch.slice(3) : null;
+        } catch (error) {
+            this.logger.debug(
+                &#x60;Could not parse x5c leaf certificate: ${String(error)}&#x60;,
+            );
+            return null;
+        }
+    }
+
+    private async fetchEntityConfiguration(
+        entityId: string,
+    ): Promise&lt;FederationEntityConfigurationPayload&gt; {
+        const wellKnownUrl &#x3D; &#x60;${entityId.replace(/\/$/, &quot;&quot;)}/.well-known/openid-federation&#x60;;
+
+        const response &#x3D; await firstValueFrom(
+            this.httpService.get&lt;string | Record&lt;string, unknown&gt;&gt;(
+                wellKnownUrl,
+                {
+                    responseType: &quot;text&quot; as never,
+                },
+            ),
+        );
+
+        return this.parseEntityConfigurationResponse(response.data, entityId);
+    }
+
+    private parseEntityConfigurationResponse(
+        responseData: string | Record&lt;string, unknown&gt;,
+        entityId: string,
+    ): FederationEntityConfigurationPayload {
+        if (typeof responseData &#x3D;&#x3D;&#x3D; &quot;string&quot;) {
+            const trimmed &#x3D; responseData.trim();
+            if (trimmed.startsWith(&quot;{&quot;)) {
+                return JSON.parse(
+                    trimmed,
+                ) as FederationEntityConfigurationPayload;
+            }
+
+            if (trimmed.split(&quot;.&quot;).length &gt;&#x3D; 2) {
+                return decodeJwt(
+                    trimmed,
+                ) as FederationEntityConfigurationPayload;
+            }
+        }
+
+        if (responseData &amp;&amp; typeof responseData &#x3D;&#x3D;&#x3D; &quot;object&quot;) {
+            const maybeJwt &#x3D; (responseData as Record&lt;string, unknown&gt;)[
+                &quot;entity_configuration&quot;
+            ];
+            if (
+                typeof maybeJwt &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                maybeJwt.split(&quot;.&quot;).length &gt;&#x3D; 2
+            ) {
+                return decodeJwt(
+                    maybeJwt,
+                ) as FederationEntityConfigurationPayload;
+            }
+
+            return responseData as FederationEntityConfigurationPayload;
+        }
+
+        throw new Error(
+            &#x60;Unsupported federation entity configuration response for ${entityId}&#x60;,
+        );
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'FederationTrustService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

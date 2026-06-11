@@ -1,0 +1,688 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >TransactionData</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/verifier/presentations/entities/presentation-config.entity.ts</code>
+        </p>
+
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                <a href="#credential_ids" >credential_ids</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#type" >type</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="credential_ids"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                        <span ><b>credential_ids</b></span>
+                        <a href="#credential_ids"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>string[]</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @IsArray()<br />@IsString({each: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="133" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:133</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="type"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>type</b></span>
+                        <a href="#type"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @IsString()<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:130</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-indexables">
+    <h3 id="inputs">Indexable</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <code>[key: string]:        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="133" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:133</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+    ApiHideProperty,
+    ApiProperty,
+    ApiPropertyOptional,
+} from &quot;@nestjs/swagger&quot;;
+import { Type } from &quot;class-transformer&quot;;
+import {
+    IsArray,
+    IsBoolean,
+    IsEnum,
+    IsNotEmpty,
+    IsNumber,
+    IsObject,
+    IsOptional,
+    IsString,
+    Validate,
+    ValidateNested,
+} from &quot;class-validator&quot;;
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToOne,
+    UpdateDateColumn,
+} from &quot;typeorm&quot;;
+import { TenantEntity } from &quot;../../../auth/tenant/entitites/tenant.entity&quot;;
+import { WebhookConfig } from &quot;../../../shared/utils/webhook/webhook.dto&quot;;
+import { RegistrationCertificateRequest } from &quot;../dto/vp-request.dto&quot;;
+import { IsTransactionData } from &quot;../validators/transaction-data.validator&quot;;
+
+export enum TrustedAuthorityType {
+    ETSI_TL &#x3D; &quot;etsi_tl&quot;,
+    OPENID_FEDERATION &#x3D; &quot;openid_federation&quot;,
+}
+
+/**
+ * Attached attestations
+ */
+export class PresentationAttachment {
+    @IsString()
+    format!: string;
+
+    @IsNotEmpty()
+    data!: any;
+
+    @IsOptional()
+    @IsString({ each: true })
+    credential_ids?: string[];
+}
+// TODO: extend: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-trusted-authorities-query
+export class TrustedAuthorityQuery {
+    @IsString()
+    @IsEnum(TrustedAuthorityType)
+    type!: TrustedAuthorityType;
+
+    @IsArray()
+    @IsString({ each: true })
+    values!: string[];
+}
+
+//TODO: extend: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-credential-query
+export class CredentialQuery {
+    @IsString()
+    id!: string;
+
+    @IsString()
+    format!: string;
+
+    @IsOptional()
+    @IsBoolean()
+    multiple?: boolean;
+
+    @IsOptional()
+    @ValidateNested({ each: true })
+    @Type(() &#x3D;&gt; ClaimsQuery)
+    claims?: ClaimsQuery[];
+
+    @IsObject()
+    meta!: any;
+
+    @IsArray()
+    @IsOptional()
+    @ValidateNested({ each: true })
+    @Type(() &#x3D;&gt; TrustedAuthorityQuery)
+    trusted_authorities?: TrustedAuthorityQuery[];
+}
+
+export class ClaimsQuery {
+    @IsString()
+    @IsOptional()
+    id?: string;
+
+    @IsArray()
+    path!: string[];
+
+    @IsArray()
+    @IsOptional()
+    values?: string[];
+}
+
+//TODO: extend: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-credential-set-query
+export class CredentialSetQuery {
+    @ApiProperty({
+        type: &quot;array&quot;,
+        items: { type: &quot;array&quot;, items: { type: &quot;string&quot; } },
+    })
+    @IsArray()
+    options!: string[][];
+
+    @IsBoolean()
+    @IsOptional()
+    required?: boolean;
+}
+
+export class DCQL {
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() &#x3D;&gt; CredentialQuery)
+    credentials!: CredentialQuery[];
+
+    @IsArray()
+    @IsOptional()
+    @ValidateNested({ each: true })
+    @Type(() &#x3D;&gt; CredentialSetQuery)
+    credential_sets?: CredentialSetQuery[];
+}
+
+export class TransactionData {
+    @IsString()
+    type!: string;
+    @IsArray()
+    @IsString({ each: true })
+    credential_ids!: string[];
+    [key: string]: any;
+}
+
+/**
+ * Cached/materialized registration certificate state for a presentation config.
+ *
+ * Server-managed; recomputed when {@link PresentationConfig.registration_cert} or
+ * {@link PresentationConfig.dcql_query} change, or when the JWT expires.
+ */
+export interface RegistrationCertCache {
+    /** The issued/imported registration certificate JWT. */
+    jwt: string;
+    /** Canonical-JSON hash of the cert&#x27;s authorized &#x60;credentials&#x60; claim. */
+    fingerprint: string;
+    /** Canonical-JSON hash of the presentation&#x27;s &#x60;dcql_query.credentials&#x60; at cache time. */
+    dcqlFingerprint: string;
+    /** Canonical-JSON hash of the {@link PresentationConfig.registration_cert} spec at cache time. */
+    specFingerprint: string;
+    /** JWT &#x60;iat&#x60; (seconds since epoch). */
+    issuedAt?: number;
+    /** JWT &#x60;exp&#x60; (seconds since epoch). */
+    expiresAt?: number;
+    /** Origin of the cached JWT. */
+    source: &quot;imported&quot; | &quot;registrar&quot;;
+}
+
+/**
+ * Entity representing a configuration for a Verifiable Presentation (VP) request.
+ */
+@Entity()
+export class PresentationConfig {
+    /**
+     * Unique identifier for the VP request.
+     */
+    @Column(&quot;varchar&quot;, { primary: true })
+    @IsString()
+    id!: string;
+
+    /**
+     * The tenant ID for which the VP request is made.
+     */
+    @ApiHideProperty()
+    @Column(&quot;varchar&quot;, { primary: true })
+    tenantId!: string;
+
+    /**
+     * The tenant that owns this object.
+     */
+    @ManyToOne(() &#x3D;&gt; TenantEntity, { cascade: true, onDelete: &quot;CASCADE&quot; })
+    tenant!: TenantEntity;
+
+    /**
+     * Description of the presentation configuration.
+     */
+    @Column(&quot;varchar&quot;, { nullable: true })
+    @IsOptional()
+    @IsString()
+    description?: string | null;
+
+    /**
+     * Lifetime how long the presentation request is valid after creation, in seconds.
+     */
+    @IsNumber()
+    @IsOptional()
+    @Column(&quot;int&quot;, { default: 300 })
+    lifeTime?: number;
+
+    /**
+     * The DCQL query to be used for the VP request.
+     */
+    @Column(&quot;json&quot;)
+    @ValidateNested()
+    @Type(() &#x3D;&gt; DCQL)
+    dcql_query!: DCQL;
+
+    /**
+     *
+     */
+    @Column(&quot;json&quot;, { nullable: true })
+    @IsOptional()
+    @IsArray()
+    @IsTransactionData()
+    @Type(() &#x3D;&gt; TransactionData)
+    transaction_data?: TransactionData[];
+
+    /**
+     * The registration certificate request containing the necessary details.
+     */
+    @IsOptional()
+    @ValidateNested()
+    @Type(() &#x3D;&gt; RegistrationCertificateRequest)
+    @Column(&quot;json&quot;, { nullable: true })
+    registration_cert?: RegistrationCertificateRequest | null;
+
+    /**
+     * Cached/materialized registration certificate derived from {@link registration_cert}.
+     *
+     * This is a server-managed field (not user-editable). It stores the JWT that
+     * was actually issued (or imported) together with fingerprints used to detect
+     * configuration drift. The cache is invalidated automatically when either the
+     * &#x60;registrationCert&#x60; spec or the &#x60;dcql_query&#x60; of this presentation config
+     * changes, ensuring no stale/over-broad authorizations leak into VP requests.
+     *
+     * @example
+     * {
+     *   &quot;jwt&quot;: &quot;eyJ...&quot;,
+     *   &quot;fingerprint&quot;: &quot;&lt;canonical hash of authorized credentials[]&gt;&quot;,
+     *   &quot;dcqlFingerprint&quot;: &quot;&lt;canonical hash of dcql_query.credentials&gt;&quot;,
+     *   &quot;issuedAt&quot;: 1714050000,
+     *   &quot;expiresAt&quot;: 1714650000,
+     *   &quot;source&quot;: &quot;registrar&quot;
+     * }
+     */
+    @ApiPropertyOptional({
+        description:
+            &quot;Server-managed cache of the materialized registration certificate. Read-only; values supplied by clients are ignored.&quot;,
+        readOnly: true,
+        type: &quot;object&quot;,
+        additionalProperties: true,
+        nullable: true,
+    })
+    @IsOptional()
+    @IsObject()
+    @Column(&quot;json&quot;, { nullable: true })
+    registrationCertCache?: RegistrationCertCache | null;
+
+    /**
+     * Optional webhook URL to receive the response.
+     */
+    @Column(&quot;json&quot;, { nullable: true })
+    @IsOptional()
+    @Validate(WebhookConfig)
+    @Type(() &#x3D;&gt; WebhookConfig)
+    webhook?: WebhookConfig | null;
+
+    /**
+     * The timestamp when the VP request was created.
+     */
+    @CreateDateColumn()
+    createdAt!: Date;
+
+    /**
+     * The timestamp when the VP request was last updated.
+     */
+    @UpdateDateColumn()
+    updatedAt!: Date;
+
+    /**
+     * Attestation that should be attached
+     */
+    @IsOptional()
+    @IsArray()
+    @ValidateNested()
+    @Type(() &#x3D;&gt; PresentationAttachment)
+    @Column(&quot;json&quot;, { nullable: true })
+    attached?: PresentationAttachment[] | null;
+
+    /**
+     * Redirect URI to which the user-agent should be redirected after the presentation is completed.
+     * You can use the &#x60;{sessionId}&#x60; placeholder in the URI, which will be replaced with the actual session ID.
+     * @example &quot;https://example.com/callback?session&#x3D;{sessionId}&quot;
+     */
+    @IsOptional()
+    @IsString()
+    @Column(&quot;varchar&quot;, { nullable: true })
+    redirectUri?: string | null;
+
+    /**
+     * Optional ID of the access certificate to use for signing the presentation request.
+     * If not provided, the default access certificate for the tenant will be used.
+     *
+     * Note: This is intentionally NOT a TypeORM relationship because CertEntity uses
+     * a composite primary key (id + tenantId), and SQLite cannot create foreign keys
+     * that reference only part of a composite primary key. The relationship is handled
+     * at the application level in the service layer.
+     */
+    @IsOptional()
+    @IsString()
+    @Column(&quot;varchar&quot;, { nullable: true })
+    accessKeyChainId?: string | null;
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'TransactionData.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,755 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >DeprecateSchemaMetadataDto</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/registrar/dto/schema-metadata.dto.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Request body for <code>PATCH /registrar/schema-metadata/:id/versions/:version/deprecation</code>.</p>
+
+            </p>
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#deprecated" >deprecated</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#message" >message</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#supersededByVersion" >supersededByVersion</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deprecated"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>deprecated</b></span>
+                        <a href="#deprecated"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiProperty({description: &#x27;Whether to mark this version as deprecated&#x27;})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="327" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:327</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="message"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>message</b></span>
+                        <a href="#message"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiPropertyOptional({description: &#x27;Deprecation message shown to consumers&#x27;})<br />@IsOptional()<br />@IsString()<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="334" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:334</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="supersededByVersion"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>supersededByVersion</b></span>
+                        <a href="#supersededByVersion"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiPropertyOptional({description: &#x27;The version that supersedes this one&#x27;})<br />@IsOptional()<br />@IsString()<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="341" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:341</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
+import { Type } from &quot;class-transformer&quot;;
+import {
+    IsArray,
+    IsEnum,
+    IsOptional,
+    IsString,
+    ValidateNested,
+} from &quot;class-validator&quot;;
+
+const ATTESTATION_LOS_VALUES &#x3D; [
+    &quot;iso_18045_high&quot;,
+    &quot;iso_18045_moderate&quot;,
+    &quot;iso_18045_enhanced-basic&quot;,
+    &quot;iso_18045_basic&quot;,
+] as const;
+export type AttestationLoS &#x3D; (typeof ATTESTATION_LOS_VALUES)[number];
+
+const BINDING_TYPE_VALUES &#x3D; [&quot;claim&quot;, &quot;key&quot;, &quot;biometric&quot;, &quot;none&quot;] as const;
+export type BindingType &#x3D; (typeof BINDING_TYPE_VALUES)[number];
+
+const FORMAT_VALUES &#x3D; [&quot;dc+sd-jwt&quot;, &quot;mso_mdoc&quot;] as const;
+export type CredentialFormatId &#x3D; (typeof FORMAT_VALUES)[number];
+
+const CATEGORY_VALUES &#x3D; [
+    &quot;identity&quot;,
+    &quot;health&quot;,
+    &quot;finance&quot;,
+    &quot;education&quot;,
+    &quot;mobility&quot;,
+    &quot;employment&quot;,
+    &quot;other&quot;,
+] as const;
+export type SchemaMetadataCategory &#x3D; (typeof CATEGORY_VALUES)[number];
+
+const TAG_VALUES &#x3D; [
+    &quot;pid&quot;,
+    &quot;eudi&quot;,
+    &quot;kyc&quot;,
+    &quot;aml&quot;,
+    &quot;age-verification&quot;,
+    &quot;residency&quot;,
+    &quot;membership&quot;,
+    &quot;education&quot;,
+    &quot;employment&quot;,
+    &quot;mobility&quot;,
+] as const;
+export type SchemaMetadataTag &#x3D; (typeof TAG_VALUES)[number];
+
+const VOCABULARY_STATUS_VALUES &#x3D; [&quot;active&quot;, &quot;deprecated&quot;] as const;
+export type VocabularyStatus &#x3D; (typeof VOCABULARY_STATUS_VALUES)[number];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Request bodies
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Request body for &#x60;PATCH /registrar/schema-metadata/:id&#x60;.
+ */
+export class UpdateSchemaMetadataDto {
+    @ApiPropertyOptional({
+        description: &quot;Domain category for filtering&quot;,
+        enum: CATEGORY_VALUES,
+    })
+    @IsOptional()
+    @IsEnum(CATEGORY_VALUES)
+    category?: SchemaMetadataCategory;
+
+    @ApiPropertyOptional({
+        description: &quot;Predefined tags for filtering and search&quot;,
+        type: [String],
+        enum: TAG_VALUES,
+    })
+    @IsOptional()
+    @IsArray()
+    @IsEnum(TAG_VALUES, { each: true })
+    tags?: SchemaMetadataTag[];
+}
+
+export class VocabularyEntryDto {
+    @ApiProperty({
+        description:
+            &quot;Stable machine-readable value to submit in schema metadata category/tags fields.&quot;,
+    })
+    code!: string;
+
+    @ApiProperty({
+        description: &quot;Display label for UI rendering.&quot;,
+    })
+    label!: string;
+
+    @ApiProperty({
+        description: &quot;Vocabulary lifecycle status.&quot;,
+        enum: VOCABULARY_STATUS_VALUES,
+    })
+    status!: VocabularyStatus;
+
+    @ApiPropertyOptional({
+        description: &quot;Replacement code when status is deprecated.&quot;,
+    })
+    replacedBy?: string;
+}
+
+export class SchemaMetadataVocabulariesDto {
+    @ApiProperty({
+        description: &quot;Vocabulary publication version for cache invalidation.&quot;,
+    })
+    version!: string;
+
+    @ApiProperty({
+        description:
+            &quot;Allowed category values that can be used when updating schema metadata category.&quot;,
+        type: [VocabularyEntryDto],
+    })
+    @ValidateNested({ each: true })
+    @Type(() &#x3D;&gt; VocabularyEntryDto)
+    categories!: VocabularyEntryDto[];
+
+    @ApiProperty({
+        description:
+            &quot;Allowed tag values that can be used when updating schema metadata tags.&quot;,
+        type: [VocabularyEntryDto],
+    })
+    @ValidateNested({ each: true })
+    @Type(() &#x3D;&gt; VocabularyEntryDto)
+    tags!: VocabularyEntryDto[];
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Response DTOs
+// ─────────────────────────────────────────────────────────────────────────────
+
+export class MetadataSchemaDto {
+    @ApiProperty({ description: &quot;Unique identifier for this schema entry&quot; })
+    id!: string;
+
+    @ApiProperty({
+        description: &quot;The credential format identifier&quot;,
+        enum: FORMAT_VALUES,
+    })
+    formatIdentifier!: CredentialFormatId;
+
+    @ApiPropertyOptional({ description: &quot;URI to the schema definition&quot; })
+    uri?: string;
+
+    @ApiPropertyOptional({
+        description: &quot;Inline schema content (JSON Schema)&quot;,
+        type: &quot;object&quot;,
+        additionalProperties: true,
+    })
+    schemaContent?: Record&lt;string, unknown&gt;;
+
+    @ApiPropertyOptional({
+        description: &quot;Subresource Integrity hash for the schema&quot;,
+    })
+    integrity?: string;
+}
+
+export class TrustAuthorityDto {
+    @ApiProperty({
+        description: &quot;Unique identifier for this trust authority entry&quot;,
+    })
+    id!: string;
+
+    @ApiProperty({
+        description: &quot;Type of trust framework&quot;,
+        enum: [&quot;etsi_tl&quot;],
+    })
+    frameworkType!: &quot;etsi_tl&quot;;
+
+    @ApiProperty({
+        description: &quot;URI or identifier for the trust list / authority&quot;,
+    })
+    value!: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Verification method for the trust list signature (e.g., JWK)&quot;,
+        type: &quot;object&quot;,
+        additionalProperties: true,
+    })
+    verificationMethod?: Record&lt;string, unknown&gt;;
+}
+
+export class AccessCertificateRefDto {
+    @ApiProperty()
+    id!: string;
+
+    @ApiProperty()
+    relyingPartyId!: string;
+
+    @ApiProperty()
+    certificate!: string;
+
+    @ApiProperty()
+    revoked!: string;
+
+    @ApiProperty()
+    createdAt!: string;
+}
+
+/**
+ * Schema metadata record as returned by &#x60;GET/POST /registrar/schema-metadata&#x60; and friends.
+ *
+ * The shape mirrors the registrar-API response 1:1 so that the service can pass
+ * upstream payloads through unchanged.
+ */
+export class SchemaMetadataResponseDto {
+    @ApiProperty({
+        description:
+            &quot;The unique, server-assigned identifier (UUID) for the schema metadata&quot;,
+    })
+    id!: string;
+
+    @ApiProperty({ description: &quot;Version of this schema metadata (SemVer)&quot; })
+    version!: string;
+
+    @ApiPropertyOptional({
+        description: &quot;URI of the human-readable Rulebook document&quot;,
+    })
+    rulebookURI?: string;
+
+    @ApiPropertyOptional({
+        description: &quot;Subresource Integrity hash for the rulebook URI&quot;,
+    })
+    rulebookIntegrity?: string;
+
+    @ApiProperty({
+        description: &quot;Level of security (LoS) of this attestation&quot;,
+        enum: ATTESTATION_LOS_VALUES,
+    })
+    attestationLoS!: AttestationLoS;
+
+    @ApiProperty({
+        description: &quot;Required binding type between attestation and holder&quot;,
+        enum: BINDING_TYPE_VALUES,
+    })
+    bindingType!: BindingType;
+
+    @ApiProperty({
+        description:
+            &quot;Credential formats in which this attestation is available&quot;,
+        enum: FORMAT_VALUES,
+        isArray: true,
+    })
+    supportedFormats!: CredentialFormatId[];
+
+    @ApiProperty({
+        description: &quot;Format-specific schema URIs for this schema metadata&quot;,
+        type: [MetadataSchemaDto],
+    })
+    @ValidateNested({ each: true })
+    @Type(() &#x3D;&gt; MetadataSchemaDto)
+    schemaURIs!: MetadataSchemaDto[];
+
+    @ApiProperty({
+        description:
+            &quot;Trust frameworks / trust anchors applicable to this schema metadata&quot;,
+        type: [TrustAuthorityDto],
+    })
+    @ValidateNested({ each: true })
+    @Type(() &#x3D;&gt; TrustAuthorityDto)
+    trustedAuthorities!: TrustAuthorityDto[];
+
+    @ApiPropertyOptional({
+        description: &quot;Domain category for filtering&quot;,
+        enum: CATEGORY_VALUES,
+    })
+    category?: SchemaMetadataCategory;
+
+    @ApiPropertyOptional({
+        description: &quot;Free-form tags for filtering and search&quot;,
+        type: [String],
+    })
+    tags?: string[];
+
+    @ApiProperty({ description: &quot;The original signed JWT&quot; })
+    signedJwt!: string;
+
+    @ApiProperty({ description: &quot;Issuer from the JWT (&#x60;iss&#x60; claim)&quot; })
+    issuer!: string;
+
+    @ApiProperty({
+        description:
+            &quot;Serial number of the access certificate that signed this schema metadata&quot;,
+    })
+    signerCertificateSerial!: string;
+
+    @ApiPropertyOptional({
+        description: &quot;The access certificate used to sign this schema metadata&quot;,
+        type: AccessCertificateRefDto,
+    })
+    @ValidateNested()
+    @Type(() &#x3D;&gt; AccessCertificateRefDto)
+    signerCertificate?: AccessCertificateRefDto;
+
+    @ApiProperty({
+        description: &quot;Timestamp when the JWT was issued (from the &#x60;iat&#x60; claim)&quot;,
+    })
+    issuedAt!: string;
+
+    @ApiProperty({ description: &quot;Server creation timestamp&quot; })
+    createdAt!: string;
+
+    @ApiProperty({ description: &quot;Last update timestamp&quot; })
+    updatedAt!: string;
+
+    @ApiPropertyOptional({ description: &quot;Whether this version is deprecated&quot; })
+    deprecated?: boolean;
+
+    @ApiPropertyOptional({
+        description: &quot;Deprecation message shown to consumers&quot;,
+    })
+    deprecationMessage?: string;
+
+    @ApiPropertyOptional({
+        description: &quot;The version that supersedes this one&quot;,
+    })
+    supersededByVersion?: string;
+}
+
+/**
+ * Request body for &#x60;PATCH /registrar/schema-metadata/:id/versions/:version/deprecation&#x60;.
+ */
+export class DeprecateSchemaMetadataDto {
+    @ApiProperty({ description: &quot;Whether to mark this version as deprecated&quot; })
+    deprecated!: boolean;
+
+    @ApiPropertyOptional({
+        description: &quot;Deprecation message shown to consumers&quot;,
+    })
+    @IsOptional()
+    @IsString()
+    message?: string;
+
+    @ApiPropertyOptional({
+        description: &quot;The version that supersedes this one&quot;,
+    })
+    @IsOptional()
+    @IsString()
+    supersededByVersion?: string;
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'DeprecateSchemaMetadataDto.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

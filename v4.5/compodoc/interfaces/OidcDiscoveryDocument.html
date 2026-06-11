@@ -1,0 +1,1562 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  OidcDiscoveryDocument</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Upstream OIDC discovery document structure.</p>
+
+            </p>
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#authorization_endpoint" 
+>
+                                            authorization_endpoint
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#issuer" 
+>
+                                            issuer
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#jwks_uri" 
+>
+                                            jwks_uri
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#response_types_supported" 
+>
+                                            response_types_supported
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#scopes_supported" 
+>
+                                            scopes_supported
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#token_endpoint" 
+>
+                                            token_endpoint
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#token_endpoint_auth_methods_supported" 
+>
+                                            token_endpoint_auth_methods_supported
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#userinfo_endpoint" 
+>
+                                            userinfo_endpoint
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="authorization_endpoint"></a>
+                                        <span class="name "><b>authorization_endpoint</b>
+                                            <a href="#authorization_endpoint">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>authorization_endpoint:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="issuer"></a>
+                                        <span class="name "><b>issuer</b>
+                                            <a href="#issuer">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>issuer:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="jwks_uri"></a>
+                                        <span class="name "><b>jwks_uri</b>
+                                            <a href="#jwks_uri">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>jwks_uri:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="response_types_supported"></a>
+                                        <span class="name "><b>response_types_supported</b>
+                                            <a href="#response_types_supported">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>response_types_supported:     <code>string[]</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>string[]</code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="scopes_supported"></a>
+                                        <span class="name "><b>scopes_supported</b>
+                                            <a href="#scopes_supported">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>scopes_supported:     <code>string[]</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>string[]</code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="token_endpoint"></a>
+                                        <span class="name "><b>token_endpoint</b>
+                                            <a href="#token_endpoint">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>token_endpoint:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="token_endpoint_auth_methods_supported"></a>
+                                        <span class="name "><b>token_endpoint_auth_methods_supported</b>
+                                            <a href="#token_endpoint_auth_methods_supported">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>token_endpoint_auth_methods_supported:     <code>string[]</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>string[]</code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="userinfo_endpoint"></a>
+                                        <span class="name "><b>userinfo_endpoint</b>
+                                            <a href="#userinfo_endpoint">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>userinfo_endpoint:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createHash, randomBytes, randomUUID } from &quot;node:crypto&quot;;
+import { HttpService } from &quot;@nestjs/axios&quot;;
+import {
+    BadRequestException,
+    Injectable,
+    Logger,
+    NotFoundException,
+    UnauthorizedException,
+} from &quot;@nestjs/common&quot;;
+import { ConfigService } from &quot;@nestjs/config&quot;;
+import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
+import { decodeJwt, decodeProtectedHeader } from &quot;jose&quot;;
+import { TraceService } from &quot;nestjs-otel&quot;;
+import { firstValueFrom } from &quot;rxjs&quot;;
+import { LessThan, Repository } from &quot;typeorm&quot;;
+import { v4 } from &quot;uuid&quot;;
+import { KeyChainService } from &quot;../../../../crypto/key/key-chain.service&quot;;
+import { SessionService } from &quot;../../../../session/session.service&quot;;
+import { FederationTrustService } from &quot;../../../../shared/trust/federation-trust.service&quot;;
+import { FederationTrustSource } from &quot;../../../../shared/trust/types&quot;;
+import { WalletAttestationService } from &quot;../../../../shared/trust/wallet-attestation.service&quot;;
+import { AuthorizationIdentity } from &quot;../../../configuration/credentials/dto/authorization-identity&quot;;
+import type { ChainedAsConfig } from &quot;../../../configuration/issuance/dto/chained-as-config.dto&quot;;
+import { IssuanceService } from &quot;../../../configuration/issuance/issuance.service&quot;;
+import {
+    ChainedAsParRequestDto,
+    ChainedAsParResponseDto,
+    ChainedAsTokenRequestDto,
+    ChainedAsTokenResponseDto,
+} from &quot;./dto/chained-as.dto&quot;;
+import {
+    ChainedAsSessionEntity,
+    ChainedAsSessionStatus,
+} from &quot;./entities/chained-as-session.entity&quot;;
+
+/**
+ * Extract DPoP JWK thumbprint from DPoP JWT.
+ * Returns undefined if parsing fails or DPoP is not provided.
+ */
+export function extractDpopJkt(dpopJwt?: string): string | undefined {
+    if (!dpopJwt) {
+        return undefined;
+    }
+    try {
+        const header &#x3D; decodeProtectedHeader(dpopJwt);
+        if (header.jwk) {
+            // Calculate JWK thumbprint (simplified - in production use jose&#x27;s calculateJwkThumbprint)
+            const thumbprintInput &#x3D; JSON.stringify({
+                crv: header.jwk.crv,
+                kty: header.jwk.kty,
+                x: header.jwk.x,
+                y: header.jwk.y,
+            });
+            return createHash(&quot;sha256&quot;)
+                .update(thumbprintInput)
+                .digest(&quot;base64url&quot;);
+        }
+    } catch {
+        // Invalid DPoP JWT
+    }
+    return undefined;
+}
+
+/**
+ * Upstream OIDC discovery document structure.
+ */
+interface OidcDiscoveryDocument {
+    issuer: string;
+    authorization_endpoint: string;
+    token_endpoint: string;
+    userinfo_endpoint?: string;
+    jwks_uri: string;
+    scopes_supported?: string[];
+    response_types_supported?: string[];
+    token_endpoint_auth_methods_supported?: string[];
+}
+
+/**
+ * Service implementing Chained Authorization Server functionality.
+ *
+ * In Chained AS mode, EUDIPLO acts as an OAuth Authorization Server facade:
+ * - Receives OAuth requests from wallets
+ * - Delegates user authentication to an upstream OIDC provider
+ * - Issues its own access tokens containing issuer_state
+ *
+ * This enables session correlation without requiring modifications to
+ * the upstream OIDC provider (e.g., Keycloak).
+ */
+@Injectable()
+export class ChainedAsService {
+    private readonly logger &#x3D; new Logger(ChainedAsService.name);
+
+    /** Cache for upstream OIDC discovery documents */
+    private readonly discoveryCache &#x3D; new Map&lt;
+        string,
+        { doc: OidcDiscoveryDocument; expiresAt: number }
+    &gt;();
+
+    /** Request URI prefix for PAR responses */
+    private readonly REQUEST_URI_PREFIX &#x3D; &quot;urn:ietf:params:oauth:request_uri:&quot;;
+
+    /** Default session lifetime in seconds */
+    private readonly SESSION_LIFETIME_SECONDS &#x3D; 600;
+
+    /** Default authorization code lifetime in seconds */
+    private readonly AUTH_CODE_LIFETIME_SECONDS &#x3D; 300;
+
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly httpService: HttpService,
+        private readonly keyChainService: KeyChainService,
+        private readonly sessionService: SessionService,
+        private readonly issuanceService: IssuanceService,
+        private readonly federationTrustService: FederationTrustService,
+        private readonly walletAttestationService: WalletAttestationService,
+        private readonly traceService: TraceService,
+        @InjectRepository(ChainedAsSessionEntity)
+        private readonly sessionRepository: Repository&lt;ChainedAsSessionEntity&gt;,
+    ) {}
+
+    /**
+     * Get the base URL for this tenant&#x27;s Chained AS.
+     */
+    private getChainedAsBaseUrl(tenantId: string): string {
+        const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
+        return &#x60;${publicUrl}/issuers/${tenantId}/chained-as&#x60;;
+    }
+
+    /**
+     * Get the Chained AS configuration for a tenant.
+     * @throws NotFoundException if chained AS is not configured or not enabled
+     */
+    async getChainedAsConfig(tenantId: string): Promise&lt;ChainedAsConfig&gt; {
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        if (!issuanceConfig.chainedAs?.enabled) {
+            throw new NotFoundException(
+                &quot;Chained Authorization Server is not enabled for this tenant&quot;,
+            );
+        }
+
+        return issuanceConfig.chainedAs;
+    }
+
+    /**
+     * Fetch the OIDC discovery document from an upstream provider.
+     * Results are cached for 5 minutes.
+     */
+    async getUpstreamDiscovery(
+        tenantId: string,
+        issuer: string,
+    ): Promise&lt;OidcDiscoveryDocument&gt; {
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const federationTrustSource &#x3D;
+            issuanceConfig.federation &amp;&amp;
+            issuanceConfig.federation.trustAnchors?.length
+                ? ({
+                      mode: issuanceConfig.federation.mode,
+                      entityId: issuanceConfig.federation.entityId,
+                      trustAnchors: issuanceConfig.federation.trustAnchors,
+                      cacheTtlSeconds:
+                          issuanceConfig.federation.cacheTtlSeconds,
+                      enforceSigningPolicy:
+                          issuanceConfig.federation.enforceSigningPolicy,
+                  } as FederationTrustSource)
+                : undefined;
+
+        await this.assertFederationTrustForUpstreamIssuer(
+            issuer,
+            federationTrustSource,
+        );
+
+        const cached &#x3D; this.discoveryCache.get(issuer);
+        if (cached &amp;&amp; cached.expiresAt &gt; Date.now()) {
+            return cached.doc;
+        }
+
+        const wellKnownUrl &#x3D; &#x60;${issuer.replace(/\/$/, &quot;&quot;)}/.well-known/openid-configuration&#x60;;
+
+        try {
+            const response &#x3D; await firstValueFrom(
+                this.httpService.get&lt;OidcDiscoveryDocument&gt;(wellKnownUrl),
+            );
+
+            const doc &#x3D; response.data;
+            // Cache for 5 minutes
+            this.discoveryCache.set(issuer, {
+                doc,
+                expiresAt: Date.now() + 5 * 60 * 1000,
+            });
+
+            return doc;
+        } catch (error) {
+            this.logger.error(
+                &#x60;Failed to fetch OIDC discovery from ${wellKnownUrl}&#x60;,
+                error,
+            );
+            throw new BadRequestException(
+                &quot;Failed to fetch upstream OIDC configuration&quot;,
+            );
+        }
+    }
+
+    private async assertFederationTrustForUpstreamIssuer(
+        upstreamIssuer: string,
+        federationTrustSource?: FederationTrustSource,
+    ): Promise&lt;void&gt; {
+        if (!federationTrustSource) {
+            return;
+        }
+
+        const mode &#x3D; this.federationTrustService.getMode(federationTrustSource);
+        if (mode &#x3D;&#x3D;&#x3D; &quot;lote-only&quot;) {
+            return;
+        }
+
+        const trustEvaluation &#x3D;
+            await this.federationTrustService.evaluateAuthorizationServerTrust(
+                upstreamIssuer,
+                federationTrustSource,
+            );
+
+        if (!trustEvaluation.trusted) {
+            throw new BadRequestException(
+                &#x60;Upstream issuer is not trusted by OpenID Federation policy: ${trustEvaluation.reason}&#x60;,
+            );
+        }
+    }
+
+    /**
+     * Handle a Pushed Authorization Request (PAR).
+     * Creates a session and returns a request_uri for the authorize endpoint.
+     */
+    async handlePar(
+        tenantId: string,
+        request: ChainedAsParRequestDto,
+        dpopJkt?: string,
+        clientAttestation?: {
+            clientAttestationJwt: string;
+            clientAttestationPopJwt: string;
+        },
+    ): Promise&lt;ChainedAsParResponseDto&gt; {
+        // Validate configuration
+        const config &#x3D; await this.getChainedAsConfig(tenantId);
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        // Validate response_type
+        if (request.response_type !&#x3D;&#x3D; &quot;code&quot;) {
+            throw new BadRequestException(
+                &#x27;Invalid response_type, must be &quot;code&quot;&#x27;,
+            );
+        }
+
+        // Validate PKCE if required
+        if (config.requireDPoP &amp;&amp; !dpopJkt) {
+            throw new BadRequestException(&quot;DPoP is required&quot;);
+        }
+
+        // Verify wallet attestation if provided or required
+        const chainedAsUrl &#x3D; this.getChainedAsBaseUrl(tenantId);
+        await this.walletAttestationService.verifyWalletAttestation(
+            tenantId,
+            clientAttestation,
+            chainedAsUrl,
+            issuanceConfig.walletAttestationRequired ?? false,
+            issuanceConfig.walletProviderTrustLists ?? [],
+        );
+
+        // Find the session for the issuer_state (if provided)
+        let issuerState &#x3D; request.issuer_state;
+        if (issuerState) {
+            // Verify the issuer_state exists in our session store
+            try {
+                await this.sessionService.get(issuerState);
+            } catch {
+                throw new BadRequestException(&quot;Invalid issuer_state&quot;);
+            }
+        } else {
+            // Generate a new issuer_state if not provided
+            issuerState &#x3D; v4();
+        }
+
+        // Create the session
+        const sessionId &#x3D; v4();
+        const expiresAt &#x3D; new Date(
+            Date.now() + this.SESSION_LIFETIME_SECONDS * 1000,
+        );
+
+        const session &#x3D; this.sessionRepository.create({
+            id: sessionId,
+            tenantId,
+            status: ChainedAsSessionStatus.PENDING_AUTHORIZE,
+            issuerState,
+            clientId: request.client_id,
+            redirectUri: request.redirect_uri,
+            codeChallenge: request.code_challenge,
+            codeChallengeMethod: request.code_challenge_method,
+            walletState: request.state,
+            scope: request.scope,
+            authorizationDetails: request.authorization_details,
+            dpopJkt,
+            expiresAt,
+        });
+
+        await this.sessionRepository.save(session);
+
+        // Add session context to span for trace correlation
+        this.traceService.getSpan()?.setAttributes({
+            &quot;session.id&quot;: issuerState,
+            &quot;chained_as.session.id&quot;: sessionId,
+            &quot;session.tenantId&quot;: tenantId,
+            &quot;chained_as.endpoint&quot;: &quot;par&quot;,
+        });
+
+        this.logger.debug(
+            &#x60;Created Chained AS PAR session ${sessionId} for tenant ${tenantId}&#x60;,
+        );
+
+        return {
+            request_uri: &#x60;${this.REQUEST_URI_PREFIX}${sessionId}&#x60;,
+            expires_in: this.SESSION_LIFETIME_SECONDS,
+        };
+    }
+
+    /**
+     * Handle the authorize endpoint.
+     * Validates the request_uri and redirects to the upstream OIDC provider.
+     */
+    async handleAuthorize(
+        tenantId: string,
+        clientId: string,
+        requestUri: string,
+    ): Promise&lt;string&gt; {
+        // Validate configuration
+        const config &#x3D; await this.getChainedAsConfig(tenantId);
+
+        if (!config.upstream) {
+            throw new BadRequestException(
+                &quot;Upstream OIDC provider not configured&quot;,
+            );
+        }
+
+        // Extract session ID from request_uri
+        if (!requestUri.startsWith(this.REQUEST_URI_PREFIX)) {
+            throw new BadRequestException(&quot;Invalid request_uri format&quot;);
+        }
+        const sessionId &#x3D; requestUri.slice(this.REQUEST_URI_PREFIX.length);
+
+        // Find the session
+        const session &#x3D; await this.sessionRepository.findOne({
+            where: {
+                id: sessionId,
+                tenantId,
+                status: ChainedAsSessionStatus.PENDING_AUTHORIZE,
+            },
+        });
+
+        if (!session) {
+            throw new BadRequestException(&quot;Invalid or expired request_uri&quot;);
+        }
+
+        // Add session context to span for trace correlation
+        this.traceService.getSpan()?.setAttributes({
+            &quot;session.id&quot;: session.issuerState,
+            &quot;chained_as.session.id&quot;: sessionId,
+            &quot;session.tenantId&quot;: tenantId,
+            &quot;chained_as.endpoint&quot;: &quot;authorize&quot;,
+        });
+
+        // Verify client_id matches
+        if (session.clientId !&#x3D;&#x3D; clientId) {
+            throw new BadRequestException(&quot;Client ID mismatch&quot;);
+        }
+
+        // Check expiration
+        if (session.expiresAt &lt; new Date()) {
+            session.status &#x3D; ChainedAsSessionStatus.EXPIRED;
+            await this.sessionRepository.save(session);
+            throw new BadRequestException(&quot;Session expired&quot;);
+        }
+
+        // Fetch upstream discovery
+        const discovery &#x3D; await this.getUpstreamDiscovery(
+            tenantId,
+            config.upstream.issuer,
+        );
+
+        // Generate state, nonce, and PKCE for upstream request
+        const upstreamState &#x3D; randomUUID();
+        const upstreamNonce &#x3D; randomUUID();
+        const upstreamCodeVerifier &#x3D; randomBytes(32).toString(&quot;base64url&quot;);
+        const upstreamCodeChallenge &#x3D; createHash(&quot;sha256&quot;)
+            .update(upstreamCodeVerifier)
+            .digest(&quot;base64url&quot;);
+
+        // Update session with upstream parameters
+        session.status &#x3D; ChainedAsSessionStatus.PENDING_UPSTREAM_CALLBACK;
+        session.upstreamState &#x3D; upstreamState;
+        session.upstreamNonce &#x3D; upstreamNonce;
+        session.upstreamCodeVerifier &#x3D; upstreamCodeVerifier;
+        await this.sessionRepository.save(session);
+
+        // Build upstream authorization URL
+        const callbackUrl &#x3D; &#x60;${this.getChainedAsBaseUrl(tenantId)}/callback&#x60;;
+        const upstreamScopes &#x3D; config.upstream.scopes || [&quot;openid&quot;];
+
+        const authUrl &#x3D; new URL(discovery.authorization_endpoint);
+        authUrl.searchParams.set(&quot;response_type&quot;, &quot;code&quot;);
+        authUrl.searchParams.set(&quot;client_id&quot;, config.upstream.clientId);
+        authUrl.searchParams.set(&quot;redirect_uri&quot;, callbackUrl);
+        authUrl.searchParams.set(&quot;scope&quot;, upstreamScopes.join(&quot; &quot;));
+        authUrl.searchParams.set(&quot;state&quot;, upstreamState);
+        authUrl.searchParams.set(&quot;nonce&quot;, upstreamNonce);
+        authUrl.searchParams.set(&quot;code_challenge&quot;, upstreamCodeChallenge);
+        authUrl.searchParams.set(&quot;code_challenge_method&quot;, &quot;S256&quot;);
+
+        this.logger.debug(
+            &#x60;Redirecting to upstream OIDC: ${authUrl.origin}${authUrl.pathname}&#x60;,
+        );
+
+        return authUrl.toString();
+    }
+
+    /**
+     * Build error redirect URL for wallet.
+     */
+    private buildErrorRedirect(
+        redirectUri: string,
+        error: string,
+        errorDescription?: string,
+        walletState?: string,
+    ): string {
+        const redirectUrl &#x3D; new URL(redirectUri);
+        redirectUrl.searchParams.set(&quot;error&quot;, error);
+        if (errorDescription) {
+            redirectUrl.searchParams.set(&quot;error_description&quot;, errorDescription);
+        }
+        if (walletState) {
+            redirectUrl.searchParams.set(&quot;state&quot;, walletState);
+        }
+        return redirectUrl.toString();
+    }
+
+    /**
+     * Handle upstream OIDC error in callback.
+     */
+    private async handleUpstreamError(
+        tenantId: string,
+        state: string,
+        error: string,
+        errorDescription?: string,
+    ): Promise&lt;string&gt; {
+        this.logger.warn(&#x60;Upstream OIDC error: ${error} - ${errorDescription}&#x60;);
+        const session &#x3D; await this.sessionRepository.findOne({
+            where: { tenantId, upstreamState: state },
+        });
+        if (session) {
+            session.status &#x3D; ChainedAsSessionStatus.EXPIRED;
+            await this.sessionRepository.save(session);
+            return this.buildErrorRedirect(
+                session.redirectUri,
+                error,
+                errorDescription,
+                session.walletState,
+            );
+        }
+        throw new BadRequestException(&quot;Invalid callback state&quot;);
+    }
+
+    /**
+     * Exchange authorization code with upstream OIDC provider.
+     */
+    private async exchangeUpstreamCode(
+        session: ChainedAsSessionEntity,
+        code: string,
+        config: ChainedAsConfig,
+        discovery: OidcDiscoveryDocument,
+        callbackUrl: string,
+    ): Promise&lt;void&gt; {
+        const tokenResponse &#x3D; await firstValueFrom(
+            this.httpService.post(
+                discovery.token_endpoint,
+                new URLSearchParams({
+                    grant_type: &quot;authorization_code&quot;,
+                    code,
+                    redirect_uri: callbackUrl,
+                    client_id: config.upstream!.clientId,
+                    client_secret: config.upstream!.clientSecret || &quot;&quot;,
+                    code_verifier: session.upstreamCodeVerifier || &quot;&quot;,
+                }).toString(),
+                {
+                    headers: {
+                        &quot;Content-Type&quot;: &quot;application/x-www-form-urlencoded&quot;,
+                    },
+                },
+            ),
+        );
+
+        const tokens &#x3D; tokenResponse.data as {
+            access_token: string;
+            id_token?: string;
+        };
+
+        if (tokens.id_token) {
+            session.upstreamIdTokenClaims &#x3D; decodeJwt(
+                tokens.id_token,
+            ) as Record&lt;string, unknown&gt;;
+        }
+
+        try {
+            session.upstreamAccessTokenClaims &#x3D; decodeJwt(
+                tokens.access_token,
+            ) as Record&lt;string, unknown&gt;;
+        } catch {
+            session.upstreamAccessTokenClaims &#x3D; {};
+        }
+    }
+
+    /**
+     * Handle the callback from the upstream OIDC provider.
+     * Exchanges the code for tokens and redirects back to the wallet.
+     */
+    async handleUpstreamCallback(
+        tenantId: string,
+        code: string,
+        state: string,
+        error?: string,
+        errorDescription?: string,
+    ): Promise&lt;string&gt; {
+        if (error) {
+            return this.handleUpstreamError(
+                tenantId,
+                state,
+                error,
+                errorDescription,
+            );
+        }
+
+        const session &#x3D; await this.sessionRepository.findOne({
+            where: {
+                tenantId,
+                upstreamState: state,
+                status: ChainedAsSessionStatus.PENDING_UPSTREAM_CALLBACK,
+            },
+        });
+
+        if (!session) {
+            throw new BadRequestException(&quot;Invalid or expired callback state&quot;);
+        }
+
+        // Add session context to span for trace correlation
+        this.traceService.getSpan()?.setAttributes({
+            &quot;session.id&quot;: session.issuerState,
+            &quot;chained_as.session.id&quot;: session.id,
+            &quot;session.tenantId&quot;: tenantId,
+            &quot;chained_as.endpoint&quot;: &quot;callback&quot;,
+        });
+
+        const config &#x3D; await this.getChainedAsConfig(tenantId);
+        if (!config.upstream) {
+            throw new BadRequestException(
+                &quot;Upstream OIDC provider not configured&quot;,
+            );
+        }
+        const discovery &#x3D; await this.getUpstreamDiscovery(
+            tenantId,
+            config.upstream.issuer,
+        );
+        const callbackUrl &#x3D; &#x60;${this.getChainedAsBaseUrl(tenantId)}/callback&#x60;;
+
+        try {
+            await this.exchangeUpstreamCode(
+                session,
+                code,
+                config,
+                discovery,
+                callbackUrl,
+            );
+        } catch (err) {
+            console.log(err);
+            this.logger.error(&quot;Failed to exchange code at upstream&quot;, err);
+            session.status &#x3D; ChainedAsSessionStatus.EXPIRED;
+            await this.sessionRepository.save(session);
+            return this.buildErrorRedirect(
+                session.redirectUri,
+                &quot;server_error&quot;,
+                &quot;Failed to exchange code with upstream provider&quot;,
+                session.walletState,
+            );
+        }
+
+        // Generate our authorization code for the wallet
+        const authorizationCode &#x3D; randomBytes(32).toString(&quot;base64url&quot;);
+        session.status &#x3D; ChainedAsSessionStatus.AUTHORIZED;
+        session.authorizationCode &#x3D; authorizationCode;
+        session.authorizationCodeExpiresAt &#x3D; new Date(
+            Date.now() + this.AUTH_CODE_LIFETIME_SECONDS * 1000,
+        );
+        await this.sessionRepository.save(session);
+
+        this.logger.debug(
+            &#x60;Upstream auth completed for session ${session.id}, redirecting to wallet&#x60;,
+        );
+
+        const redirectUrl &#x3D; new URL(session.redirectUri);
+        redirectUrl.searchParams.set(&quot;code&quot;, authorizationCode);
+        if (session.walletState) {
+            redirectUrl.searchParams.set(&quot;state&quot;, session.walletState);
+        }
+        return redirectUrl.toString();
+    }
+
+    /**
+     * Verify PKCE code verifier against stored code challenge.
+     */
+    private verifyPkce(
+        session: ChainedAsSessionEntity,
+        codeVerifier?: string,
+    ): void {
+        if (session.codeChallenge &amp;&amp; codeVerifier) {
+            const expectedChallenge &#x3D;
+                session.codeChallengeMethod &#x3D;&#x3D;&#x3D; &quot;S256&quot;
+                    ? createHash(&quot;sha256&quot;)
+                          .update(codeVerifier)
+                          .digest(&quot;base64url&quot;)
+                    : codeVerifier;
+            if (expectedChallenge !&#x3D;&#x3D; session.codeChallenge) {
+                throw new UnauthorizedException(&quot;Invalid code_verifier&quot;);
+            }
+        } else if (session.codeChallenge &amp;&amp; !codeVerifier) {
+            throw new BadRequestException(&quot;code_verifier is required&quot;);
+        }
+    }
+
+    /**
+     * Build access token payload.
+     */
+    private buildTokenPayload(
+        tenantId: string,
+        session: ChainedAsSessionEntity,
+        tokenLifetime: number,
+        jti: string,
+        dpopJkt?: string,
+    ): Record&lt;string, unknown&gt; {
+        const now &#x3D; Math.floor(Date.now() / 1000);
+        const payload: Record&lt;string, unknown&gt; &#x3D; {
+            iss: this.getChainedAsBaseUrl(tenantId),
+            sub: session.clientId,
+            aud: &#x60;${this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;)}/issuers/${tenantId}&#x60;,
+            iat: now,
+            exp: now + tokenLifetime,
+            jti,
+            issuer_state: session.issuerState,
+            client_id: session.clientId,
+        };
+        if (dpopJkt) {
+            payload.cnf &#x3D; { jkt: dpopJkt };
+        }
+        if (session.upstreamIdTokenClaims) {
+            payload.upstream_sub &#x3D; session.upstreamIdTokenClaims.sub;
+            payload.upstream_iss &#x3D; session.upstreamIdTokenClaims.iss;
+        }
+        // Bind the access token to the Credential(s) the Wallet is
+        // authorized to request, per OID4VCI Section 6. The resource server
+        // enforces this when handling the Credential Request.
+        if (
+            Array.isArray(session.authorizationDetails) &amp;&amp;
+            session.authorizationDetails.length &gt; 0
+        ) {
+            payload.authorization_details &#x3D; session.authorizationDetails;
+        }
+        return payload;
+    }
+
+    /**
+     * Handle the token endpoint.
+     * Exchanges the authorization code for an access token.
+     */
+    async handleToken(
+        tenantId: string,
+        request: ChainedAsTokenRequestDto,
+        dpopJwt?: string,
+    ): Promise&lt;ChainedAsTokenResponseDto&gt; {
+        if (
+            request.grant_type !&#x3D;&#x3D; &quot;authorization_code&quot; &amp;&amp;
+            request.grant_type !&#x3D;&#x3D; &quot;refresh_token&quot;
+        ) {
+            throw new BadRequestException(
+                &#x27;Invalid grant_type, must be &quot;authorization_code&quot; or &quot;refresh_token&quot;&#x27;,
+            );
+        }
+
+        let session: ChainedAsSessionEntity | null;
+
+        if (request.grant_type &#x3D;&#x3D;&#x3D; &quot;refresh_token&quot;) {
+            if (!request.refresh_token) {
+                throw new BadRequestException(
+                    &quot;refresh_token is required for refresh_token grant&quot;,
+                );
+            }
+            session &#x3D; await this.sessionRepository.findOne({
+                where: {
+                    tenantId,
+                    refreshToken: request.refresh_token,
+                },
+            });
+            if (!session) {
+                throw new UnauthorizedException(
+                    &quot;Invalid or expired refresh_token&quot;,
+                );
+            }
+            if (
+                session.refreshTokenExpiresAt &amp;&amp;
+                session.refreshTokenExpiresAt &lt; new Date()
+            ) {
+                throw new UnauthorizedException(&quot;refresh_token has expired&quot;);
+            }
+        } else {
+            if (!request.code) {
+                throw new BadRequestException(
+                    &quot;code is required for authorization_code grant&quot;,
+                );
+            }
+            session &#x3D; await this.sessionRepository.findOne({
+                where: {
+                    tenantId,
+                    authorizationCode: request.code,
+                    status: ChainedAsSessionStatus.AUTHORIZED,
+                },
+            });
+            if (!session) {
+                throw new UnauthorizedException(&quot;Invalid authorization code&quot;);
+            }
+        }
+
+        // Add session context to span for trace correlation
+        this.traceService.getSpan()?.setAttributes({
+            &quot;session.id&quot;: session.issuerState,
+            &quot;chained_as.session.id&quot;: session.id,
+            &quot;session.tenantId&quot;: tenantId,
+            &quot;chained_as.endpoint&quot;: &quot;token&quot;,
+        });
+
+        if (
+            request.grant_type &#x3D;&#x3D;&#x3D; &quot;authorization_code&quot; &amp;&amp;
+            session.authorizationCodeExpiresAt &amp;&amp;
+            session.authorizationCodeExpiresAt &lt; new Date()
+        ) {
+            session.status &#x3D; ChainedAsSessionStatus.EXPIRED;
+            await this.sessionRepository.save(session);
+            throw new UnauthorizedException(&quot;Authorization code expired&quot;);
+        }
+
+        if (request.grant_type &#x3D;&#x3D;&#x3D; &quot;authorization_code&quot;) {
+            this.verifyPkce(session, request.code_verifier);
+        }
+
+        if (
+            request.redirect_uri &amp;&amp;
+            request.redirect_uri !&#x3D;&#x3D; session.redirectUri
+        ) {
+            throw new BadRequestException(&quot;redirect_uri mismatch&quot;);
+        }
+
+        const config &#x3D; await this.getChainedAsConfig(tenantId);
+        let tokenType &#x3D; &quot;Bearer&quot;;
+        let dpopJkt: string | undefined;
+
+        if (dpopJwt) {
+            // DPoP validation: extract JWK thumbprint from DPoP proof
+            tokenType &#x3D; &quot;DPoP&quot;;
+            dpopJkt &#x3D; session.dpopJkt;
+        } else if (config.requireDPoP) {
+            throw new BadRequestException(&quot;DPoP proof is required&quot;);
+        }
+
+        const tokenLifetime &#x3D; config.token?.lifetimeSeconds || 3600;
+        const jti &#x3D; v4();
+        const tokenPayload &#x3D; this.buildTokenPayload(
+            tenantId,
+            session,
+            tokenLifetime,
+            jti,
+            dpopJkt,
+        );
+
+        // Get the key ID to use - either from config or resolve from key service
+        const signingKeyId &#x3D;
+            config.token?.signingKeyId ||
+            (await this.keyChainService.getKid(tenantId));
+
+        const publicKey &#x3D; await this.keyChainService.getPublicKey(
+            &quot;jwk&quot;,
+            tenantId,
+            signingKeyId,
+        );
+
+        // Use the resolved signing key ID as the kid in the JWT header
+        const kid &#x3D; (publicKey as { kid?: string }).kid || signingKeyId;
+
+        const accessToken &#x3D; await this.keyChainService.signJWT(
+            tokenPayload as any,
+            { alg: &quot;ES256&quot;, kid, typ: &quot;at+jwt&quot; },
+            tenantId,
+            signingKeyId,
+        );
+
+        session.status &#x3D; ChainedAsSessionStatus.TOKEN_ISSUED;
+        session.accessTokenJti &#x3D; jti;
+
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        let refreshToken: string | undefined;
+        if (issuanceConfig.refreshTokenEnabled) {
+            refreshToken &#x3D; randomBytes(32).toString(&quot;base64url&quot;);
+            let refreshTokenExpiresAt: Date | undefined;
+            if (issuanceConfig.refreshTokenExpiresInSeconds) {
+                refreshTokenExpiresAt &#x3D; new Date(
+                    Date.now() +
+                        issuanceConfig.refreshTokenExpiresInSeconds * 1000,
+                );
+            }
+            session.refreshToken &#x3D; refreshToken;
+            session.refreshTokenExpiresAt &#x3D; refreshTokenExpiresAt;
+        }
+
+        await this.sessionRepository.save(session);
+
+        return {
+            access_token: accessToken,
+            token_type: tokenType,
+            expires_in: tokenLifetime,
+            scope: session.scope,
+            // Only include authorization_details if it&#x27;s a non-empty array
+            ...(Array.isArray(session.authorizationDetails) &amp;&amp;
+                session.authorizationDetails.length &gt; 0 &amp;&amp; {
+                    authorization_details: session.authorizationDetails,
+                }),
+            ...(refreshToken &amp;&amp; { refresh_token: refreshToken }),
+        };
+    }
+
+    /**
+     * Get the JWKS for token verification.
+     */
+    async getJwks(
+        tenantId: string,
+    ): Promise&lt;{ keys: Record&lt;string, unknown&gt;[] }&gt; {
+        const config &#x3D; await this.getChainedAsConfig(tenantId);
+
+        // Get the key ID to use - either from config or resolve from key service
+        const signingKeyId &#x3D;
+            config.token?.signingKeyId ||
+            (await this.keyChainService.getKid(tenantId));
+
+        const publicKey &#x3D; await this.keyChainService.getPublicKey(
+            &quot;jwk&quot;,
+            tenantId,
+            signingKeyId,
+        );
+
+        // Ensure the key has a kid set for proper JWT verification matching
+        const keyWithKid &#x3D; {
+            ...publicKey,
+            kid: (publicKey as { kid?: string }).kid || signingKeyId,
+        };
+
+        return {
+            keys: [keyWithKid as Record&lt;string, unknown&gt;],
+        };
+    }
+
+    /**
+     * Get authorization server metadata for the Chained AS.
+     */
+    async getMetadata(tenantId: string): Promise&lt;Record&lt;string, unknown&gt;&gt; {
+        const baseUrl &#x3D; this.getChainedAsBaseUrl(tenantId);
+        const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
+
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const walletAttestationRequired &#x3D;
+            issuanceConfig.walletAttestationRequired ?? false;
+
+        const metadata: Record&lt;string, unknown&gt; &#x3D; {
+            issuer: baseUrl,
+            authorization_endpoint: &#x60;${baseUrl}/authorize&#x60;,
+            token_endpoint: &#x60;${baseUrl}/token&#x60;,
+            pushed_authorization_request_endpoint: &#x60;${baseUrl}/par&#x60;,
+            jwks_uri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/chained-as&#x60;,
+            response_types_supported: [&quot;code&quot;],
+            grant_types_supported: [&quot;authorization_code&quot;, &quot;refresh_token&quot;],
+            code_challenge_methods_supported: [&quot;S256&quot;],
+            dpop_signing_alg_values_supported: [&quot;ES256&quot;, &quot;ES384&quot;, &quot;ES512&quot;],
+        };
+
+        if (walletAttestationRequired) {
+            metadata.token_endpoint_auth_methods_supported &#x3D; [
+                &quot;attest_jwt_client_auth&quot;,
+            ];
+            metadata.client_attestation_signing_alg_values_supported &#x3D; [
+                &quot;ES256&quot;,
+            ];
+            metadata.client_attestation_pop_signing_alg_values_supported &#x3D; [
+                &quot;ES256&quot;,
+            ];
+        }
+
+        return metadata;
+    }
+
+    /**
+     * Clean up expired sessions.
+     */
+    async cleanupExpiredSessions(): Promise&lt;number&gt; {
+        const result &#x3D; await this.sessionRepository.delete({
+            expiresAt: LessThan(new Date()),
+        });
+        return result.affected || 0;
+    }
+
+    /**
+     * Get upstream identity claims by issuer state.
+     * Used to retrieve the upstream OIDC provider&#x27;s claims for webhook calls.
+     *
+     * @param issuerState The issuer_state from the credential offer session
+     * @returns Upstream identity with issuer, subject, and all token claims, or undefined if not found
+     */
+    async getUpstreamIdentityByIssuerState(
+        issuerState: string,
+    ): Promise&lt;AuthorizationIdentity | undefined&gt; {
+        const chainedSession &#x3D; await this.sessionRepository.findOne({
+            where: { issuerState },
+        });
+
+        if (
+            !chainedSession?.upstreamIdTokenClaims &amp;&amp;
+            !chainedSession?.upstreamAccessTokenClaims
+        ) {
+            return undefined;
+        }
+
+        // Combine ID token and access token claims, preferring ID token for identity
+        const idClaims &#x3D; chainedSession.upstreamIdTokenClaims ?? {};
+        const accessClaims &#x3D; chainedSession.upstreamAccessTokenClaims ?? {};
+
+        return {
+            iss: (idClaims.iss as string) ?? (accessClaims.iss as string) ?? &quot;&quot;,
+            sub: (idClaims.sub as string) ?? (accessClaims.sub as string) ?? &quot;&quot;,
+            token_claims: {
+                ...accessClaims,
+                ...idClaims, // ID token claims take precedence
+            },
+        };
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'OidcDiscoveryDocument.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,939 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >MigrateKeysToKeyChain1747000000000</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/database/migrations/1747000000000-MigrateKeysToKeyChain.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Migration: Migrate legacy key_entity + cert_entity data to key_chain table.</p>
+<p>This is a BREAKING CHANGE migration for the major release.</p>
+<p>The migration:</p>
+<ol>
+<li>Copies key data from key_entity to key_chain</li>
+<li>Joins the active certificate from cert_entity</li>
+<li>Drops the legacy tables (key_entity, cert_entity, key_usage_entity, cert_usage_entity)</li>
+</ol>
+<p>Note: Keys with a signingCaKeyId (CA-signed) will have the CA embedded as rootKey/rootCertificate
+if the CA key exists. Otherwise, they become standalone self-signed keys.</p>
+
+            </p>
+
+
+            <p class="comment">
+                <h3>Implements</h3>
+            </p>
+            <p class="comment">
+                        <code>MigrationInterface</code>
+            </p>
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#name" >name</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#down" >down</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getPlaceholder" >getPlaceholder</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#tableExists" >tableExists</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#up" >up</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="name"></a>
+                    <span class="name">
+                        <span ><b>name</b></span>
+                        <a href="#name"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;MigrateKeysToKeyChain1747000000000&quot;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/database/migrations/1747000000000-MigrateKeysToKeyChain.ts:17</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="down"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>down</b></span>
+                        <a href="#down"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>down(queryRunner: QueryRunner)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="262"
+                                    class="link-to-prism">src/database/migrations/1747000000000-MigrateKeysToKeyChain.ts:262</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>queryRunner</td>
+                                            <td>
+                                                        <code>QueryRunner</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getPlaceholder"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getPlaceholder</b></span>
+                        <a href="#getPlaceholder"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getPlaceholder(dbType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="31"
+                                    class="link-to-prism">src/database/migrations/1747000000000-MigrateKeysToKeyChain.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Returns parameterized placeholder for the given database type.
+PostgreSQL uses $1, $2, ... while SQLite uses ?, ?, ...</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>dbType</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tableExists"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>tableExists</b></span>
+                        <a href="#tableExists"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>tableExists(queryRunner: QueryRunner, tableName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="19"
+                                    class="link-to-prism">src/database/migrations/1747000000000-MigrateKeysToKeyChain.ts:19</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>queryRunner</td>
+                                            <td>
+                                                        <code>QueryRunner</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tableName</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="up"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>up</b></span>
+                        <a href="#up"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>up(queryRunner: QueryRunner)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="35"
+                                    class="link-to-prism">src/database/migrations/1747000000000-MigrateKeysToKeyChain.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>queryRunner</td>
+                                            <td>
+                                                        <code>QueryRunner</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { MigrationInterface, QueryRunner } from &quot;typeorm&quot;;
+
+/**
+ * Migration: Migrate legacy key_entity + cert_entity data to key_chain table.
+ *
+ * This is a BREAKING CHANGE migration for the major release.
+ *
+ * The migration:
+ * 1. Copies key data from key_entity to key_chain
+ * 2. Joins the active certificate from cert_entity
+ * 3. Drops the legacy tables (key_entity, cert_entity, key_usage_entity, cert_usage_entity)
+ *
+ * Note: Keys with a signingCaKeyId (CA-signed) will have the CA embedded as rootKey/rootCertificate
+ * if the CA key exists. Otherwise, they become standalone self-signed keys.
+ */
+export class MigrateKeysToKeyChain1747000000000 implements MigrationInterface {
+    name &#x3D; &quot;MigrateKeysToKeyChain1747000000000&quot;;
+
+    private async tableExists(
+        queryRunner: QueryRunner,
+        tableName: string,
+    ): Promise&lt;boolean&gt; {
+        const table &#x3D; await queryRunner.getTable(tableName);
+        return !!table;
+    }
+
+    /**
+     * Returns parameterized placeholder for the given database type.
+     * PostgreSQL uses $1, $2, ... while SQLite uses ?, ?, ...
+     */
+    private getPlaceholder(dbType: string, index: number): string {
+        return dbType &#x3D;&#x3D;&#x3D; &quot;postgres&quot; ? &#x60;$${index}&#x60; : &quot;?&quot;;
+    }
+
+    async up(queryRunner: QueryRunner): Promise&lt;void&gt; {
+        const dbType &#x3D; queryRunner.connection.options.type;
+
+        // Check if key_entity table exists (might be a fresh install)
+        const keyEntityExists &#x3D; await this.tableExists(
+            queryRunner,
+            &quot;key_entity&quot;,
+        );
+
+        if (!keyEntityExists) {
+            console.log(
+                &quot;[Migration] MigrateKeysToKeyChain: key_entity table not found — skipping (fresh install).&quot;,
+            );
+            return;
+        }
+
+        // Check if key_chain table exists (should be created by entity sync)
+        const keyChainExists &#x3D; await this.tableExists(queryRunner, &quot;key_chain&quot;);
+        if (!keyChainExists) {
+            console.log(
+                &quot;[Migration] MigrateKeysToKeyChain: key_chain table not found — entity sync should create it.&quot;,
+            );
+            // The entity should create the table, but if running migration standalone, we&#x27;d need to create it.
+            // For now, we assume TypeORM sync has run or will run.
+            return;
+        }
+
+        // Fetch all keys that have a usageType (signing keys, not standalone CA keys)
+        const keys &#x3D; await queryRunner.query(&#x60;
+            SELECT 
+                k.&quot;id&quot;,
+                k.&quot;tenantId&quot;,
+                k.&quot;description&quot;,
+                k.&quot;usageType&quot;,
+                k.&quot;usage&quot;,
+                k.&quot;kmsProvider&quot;,
+                k.&quot;externalKeyId&quot;,
+                k.&quot;signingCaKeyId&quot;,
+                k.&quot;rotationEnabled&quot;,
+                k.&quot;rotationIntervalDays&quot;,
+                k.&quot;certValidityDays&quot;,
+                k.&quot;lastRotatedAt&quot;,
+                k.&quot;createdAt&quot;,
+                k.&quot;updatedAt&quot;,
+                k.&quot;key&quot;
+            FROM &quot;key_entity&quot; k
+            WHERE k.&quot;usageType&quot; IS NOT NULL
+        &#x60;);
+
+        console.log(
+            &#x60;[Migration] MigrateKeysToKeyChain: Found ${keys.length} keys to migrate.&#x60;,
+        );
+
+        for (const key of keys) {
+            // Find the active certificate for this key
+            const certs &#x3D; await queryRunner.query(
+                &#x60;
+                SELECT c.&quot;id&quot;, c.&quot;crt&quot;, c.&quot;description&quot;, c.&quot;signingCaKeyId&quot;
+                FROM &quot;cert_entity&quot; c
+                WHERE c.&quot;keyId&quot; &#x3D; ${this.getPlaceholder(dbType, 1)} AND c.&quot;tenantId&quot; &#x3D; ${this.getPlaceholder(dbType, 2)}
+                ORDER BY c.&quot;createdAt&quot; DESC
+                LIMIT 1
+            &#x60;,
+                [key.id, key.tenantId],
+            );
+
+            const cert &#x3D; certs[0];
+            if (!cert) {
+                console.log(
+                    &#x60;[Migration] Warning: No certificate found for key ${key.id}, skipping.&#x60;,
+                );
+                continue;
+            }
+
+            // Parse the certificate chain (stored as JSON array of PEM strings)
+            let activeCertificate: string;
+            try {
+                const certChain &#x3D; JSON.parse(cert.crt);
+                activeCertificate &#x3D; Array.isArray(certChain)
+                    ? certChain[0]
+                    : certChain;
+            } catch {
+                activeCertificate &#x3D; cert.crt;
+            }
+
+            // Check if this key has a CA that signs it
+            let rootKey: string | null &#x3D; null;
+            let rootCertificate: string | null &#x3D; null;
+
+            if (key.signingCaKeyId) {
+                // Fetch the CA key
+                const caKeys &#x3D; await queryRunner.query(
+                    &#x60;
+                    SELECT k.&quot;key&quot;, k.&quot;id&quot;
+                    FROM &quot;key_entity&quot; k
+                    WHERE k.&quot;id&quot; &#x3D; ${this.getPlaceholder(dbType, 1)} AND k.&quot;tenantId&quot; &#x3D; ${this.getPlaceholder(dbType, 2)}
+                &#x60;,
+                    [key.signingCaKeyId, key.tenantId],
+                );
+
+                if (caKeys.length &gt; 0) {
+                    rootKey &#x3D; caKeys[0].key;
+
+                    // Fetch the CA certificate
+                    const caCerts &#x3D; await queryRunner.query(
+                        &#x60;
+                        SELECT c.&quot;crt&quot;
+                        FROM &quot;cert_entity&quot; c
+                        WHERE c.&quot;keyId&quot; &#x3D; ${this.getPlaceholder(dbType, 1)} AND c.&quot;tenantId&quot; &#x3D; ${this.getPlaceholder(dbType, 2)}
+                        ORDER BY c.&quot;createdAt&quot; DESC
+                        LIMIT 1
+                    &#x60;,
+                        [key.signingCaKeyId, key.tenantId],
+                    );
+
+                    if (caCerts.length &gt; 0) {
+                        try {
+                            const caCertChain &#x3D; JSON.parse(caCerts[0].crt);
+                            rootCertificate &#x3D; Array.isArray(caCertChain)
+                                ? caCertChain[0]
+                                : caCertChain;
+                        } catch {
+                            rootCertificate &#x3D; caCerts[0].crt;
+                        }
+                    }
+                }
+            }
+
+            // Check if key_chain entry already exists
+            const existingKeyChain &#x3D; await queryRunner.query(
+                &#x60;SELECT &quot;id&quot; FROM &quot;key_chain&quot; WHERE &quot;id&quot; &#x3D; ${this.getPlaceholder(dbType, 1)} AND &quot;tenantId&quot; &#x3D; ${this.getPlaceholder(dbType, 2)}&#x60;,
+                [key.id, key.tenantId],
+            );
+
+            if (existingKeyChain.length &gt; 0) {
+                console.log(
+                    &#x60;[Migration] Key chain ${key.id} already exists, skipping.&#x60;,
+                );
+                continue;
+            }
+
+            // Insert into key_chain
+            const placeholders &#x3D; Array.from({ length: 20 }, (_, i) &#x3D;&gt;
+                this.getPlaceholder(dbType, i + 1),
+            ).join(&quot;, &quot;);
+
+            await queryRunner.query(
+                &#x60;
+                INSERT INTO &quot;key_chain&quot; (
+                    &quot;id&quot;,
+                    &quot;tenantId&quot;,
+                    &quot;description&quot;,
+                    &quot;usageType&quot;,
+                    &quot;usage&quot;,
+                    &quot;kmsProvider&quot;,
+                    &quot;externalKeyId&quot;,
+                    &quot;rootKey&quot;,
+                    &quot;rootCertificate&quot;,
+                    &quot;activeKey&quot;,
+                    &quot;activeCertificate&quot;,
+                    &quot;rotationEnabled&quot;,
+                    &quot;rotationIntervalDays&quot;,
+                    &quot;certValidityDays&quot;,
+                    &quot;lastRotatedAt&quot;,
+                    &quot;previousKey&quot;,
+                    &quot;previousCertificate&quot;,
+                    &quot;previousKeyExpiry&quot;,
+                    &quot;createdAt&quot;,
+                    &quot;updatedAt&quot;
+                ) VALUES (${placeholders})
+            &#x60;,
+                [
+                    key.id,
+                    key.tenantId,
+                    key.description,
+                    key.usageType,
+                    key.usage || &quot;sign&quot;,
+                    key.kmsProvider || &quot;db&quot;,
+                    key.externalKeyId,
+                    rootKey,
+                    rootCertificate,
+                    key.key,
+                    activeCertificate,
+                    key.rotationEnabled ? 1 : 0,
+                    key.rotationIntervalDays,
+                    key.certValidityDays,
+                    key.lastRotatedAt,
+                    null, // previousKey
+                    null, // previousCertificate
+                    null, // previousKeyExpiry
+                    key.createdAt,
+                    key.updatedAt,
+                ],
+            );
+
+            console.log(
+                &#x60;[Migration] Migrated key ${key.id} (${key.usageType}) to key_chain.&#x60;,
+            );
+        }
+
+        // Drop legacy tables
+        console.log(&quot;[Migration] Dropping legacy tables...&quot;);
+
+        // Drop foreign key dependent tables first
+        if (await this.tableExists(queryRunner, &quot;cert_usage_entity&quot;)) {
+            await queryRunner.query(&#x60;DROP TABLE &quot;cert_usage_entity&quot;&#x60;);
+            console.log(&quot;[Migration] Dropped cert_usage_entity table.&quot;);
+        }
+
+        if (await this.tableExists(queryRunner, &quot;key_usage_entity&quot;)) {
+            await queryRunner.query(&#x60;DROP TABLE &quot;key_usage_entity&quot;&#x60;);
+            console.log(&quot;[Migration] Dropped key_usage_entity table.&quot;);
+        }
+
+        if (await this.tableExists(queryRunner, &quot;cert_entity&quot;)) {
+            await queryRunner.query(&#x60;DROP TABLE &quot;cert_entity&quot;&#x60;);
+            console.log(&quot;[Migration] Dropped cert_entity table.&quot;);
+        }
+
+        if (await this.tableExists(queryRunner, &quot;key_entity&quot;)) {
+            await queryRunner.query(&#x60;DROP TABLE &quot;key_entity&quot;&#x60;);
+            console.log(&quot;[Migration] Dropped key_entity table.&quot;);
+        }
+
+        console.log(&quot;[Migration] MigrateKeysToKeyChain complete.&quot;);
+    }
+
+    async down(queryRunner: QueryRunner): Promise&lt;void&gt; {
+        // This is a one-way migration for a major release.
+        // Rolling back would require recreating the legacy tables and reverse-migrating data.
+        console.log(
+            &quot;[Migration] MigrateKeysToKeyChain down: This migration cannot be reversed automatically.&quot;,
+        );
+        console.log(
+            &quot;[Migration] To rollback, restore from a backup taken before the migration.&quot;,
+        );
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'MigrateKeysToKeyChain1747000000000.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,957 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  MdocErrorDetails</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Error details extracted from an mDOC document for debugging.</p>
+
+            </p>
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#docType" 
+>
+                                            docType
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#issuerCertInfo" 
+>
+                                            issuerCertInfo
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#issuerThumbprint" 
+>
+                                            issuerThumbprint
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#issuerValidity" 
+>
+                                            issuerValidity
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#trustedCertsSummary" 
+>
+                                            trustedCertsSummary
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="docType"></a>
+                                        <span class="name "><b>docType</b>
+                                            <a href="#docType">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>docType:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="issuerCertInfo"></a>
+                                        <span class="name "><b>issuerCertInfo</b>
+                                            <a href="#issuerCertInfo">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>issuerCertInfo:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="issuerThumbprint"></a>
+                                        <span class="name "><b>issuerThumbprint</b>
+                                            <a href="#issuerThumbprint">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>issuerThumbprint:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="issuerValidity"></a>
+                                        <span class="name "><b>issuerValidity</b>
+                                            <a href="#issuerValidity">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>issuerValidity:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="trustedCertsSummary"></a>
+                                        <span class="name "><b>trustedCertsSummary</b>
+                                            <a href="#trustedCertsSummary">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>trustedCertsSummary:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &quot;@nestjs/common&quot;;
+import {
+    base64,
+    DeviceRequest,
+    DeviceResponse,
+    DocRequest,
+    hex,
+    ItemsRequest,
+    SessionTranscript,
+    Verifier,
+} from &quot;@owf/mdoc&quot;;
+import * as x509 from &quot;@peculiar/x509&quot;;
+import { Span } from &quot;nestjs-otel&quot;;
+import { PinoLogger } from &quot;nestjs-pino&quot;;
+import { VerifierOptions } from &quot;../../../../shared/trust/types&quot;;
+import { mdocContext } from &quot;../../mdoc-context&quot;;
+import {
+    ChainValidationResult,
+    CredentialChainValidationService,
+} from &quot;../credential-chain-validation.service&quot;;
+
+export type MdocSessionData &#x3D; {
+    protocol: &quot;openid4vp&quot;;
+    nonce: string;
+    responseMode: string;
+    clientId: string;
+    responseUri: string;
+    /** SHA-256 JWK thumbprint (raw bytes) of the verifier&#x27;s JAR signing key. */
+    jwkThumbprint?: Uint8Array;
+};
+
+export type RequestedMdocClaimPath &#x3D; string[];
+
+export type MdocVerificationResult &#x3D; {
+    verified: boolean;
+    claims: Record&lt;string, unknown&gt;;
+    payload: string;
+    docType?: string;
+    failureType?:
+        | &quot;signature_invalid&quot;
+        | &quot;no_trust_chain_to_root&quot;
+        | &quot;trust_chain_not_trusted&quot;
+        | &quot;x5c_missing&quot;
+        | &quot;verification_error&quot;;
+    failureReason?: string;
+};
+
+/**
+ * Error details extracted from an mDOC document for debugging.
+ */
+interface MdocErrorDetails {
+    docType: string;
+    issuerCertInfo: string;
+    issuerThumbprint: string;
+    issuerValidity: string;
+    trustedCertsSummary: string;
+}
+
+@Injectable()
+export class MdocverifierService {
+    constructor(
+        private readonly chainValidation: CredentialChainValidationService,
+        private readonly logger: PinoLogger,
+    ) {
+        this.logger.setContext(MdocverifierService.name);
+    }
+
+    /**
+     * Verifies an mDOC credential.
+     * @param vp The base64url encoded device response
+     * @param sessionData Session data for transcript generation
+     * @param options Verification options including trust list
+     * @returns Verification result with claims
+     */
+    @Span(&quot;mdoc.verify&quot;)
+    async verify(
+        vp: string,
+        sessionData: MdocSessionData,
+        options: VerifierOptions,
+        requestedClaimPaths?: RequestedMdocClaimPath[],
+    ): Promise&lt;MdocVerificationResult&gt; {
+        try {
+            // 1) Decode the device response
+            const uint8Array &#x3D; Buffer.from(vp, &quot;base64url&quot;);
+            const deviceResponse &#x3D; DeviceResponse.decode(uint8Array);
+            const mdocDocument &#x3D; deviceResponse.documents?.[0];
+
+            if (!mdocDocument) {
+                throw new Error(&quot;mDOC document not found in device response&quot;);
+            }
+
+            // 2) Extract claims from the issuer signed data
+            const issuerSigned &#x3D; mdocDocument.issuerSigned;
+            const docType &#x3D; mdocDocument.docType;
+
+            // Collect claims from all available namespaces.
+            // getPrettyClaims() requires an exact namespace string, so we iterate
+            // the namespaces present in the credential rather than guessing from docType.
+            const namespacesMap &#x3D;
+                issuerSigned.issuerNamespaces?.issuerNamespaces ??
+                new Map&lt;string, unknown&gt;();
+            const claimsByNamespace: Record&lt;
+                string,
+                Record&lt;string, unknown&gt;
+            &gt; &#x3D; {};
+            const claims: Record&lt;string, unknown&gt; &#x3D; {};
+            for (const [ns] of namespacesMap.entries()) {
+                const nsClaims &#x3D; issuerSigned.getPrettyClaims(ns);
+                if (nsClaims) {
+                    claimsByNamespace[ns] &#x3D; nsClaims;
+                    Object.assign(claims, nsClaims);
+                }
+            }
+
+            // 3) Build the session transcript for verification
+            const sessionTranscript &#x3D; await SessionTranscript.forOid4Vp(
+                sessionData,
+                mdocContext,
+            );
+
+            // 4) Build a device request (currently requesting all claims that were received)
+            const deviceRequest &#x3D; this.buildDeviceRequest(
+                docType,
+                requestedClaimPaths,
+                claimsByNamespace,
+            );
+
+            // 5) Verify the device response (signature, device binding, etc.)
+            // Certificate chain validation is disabled here - we do it separately via CredentialChainValidationService
+            await Verifier.verifyDeviceResponse(
+                {
+                    deviceRequest,
+                    deviceResponse,
+                    sessionTranscript,
+                    trustedCertificates: [],
+                    disableCertificateChainValidation: true,
+                },
+                mdocContext,
+            );
+
+            // 6) Validate certificate chain using shared CredentialChainValidationService
+            // This ensures consistent trust validation with SD-JWT-VC and other formats
+            const chainResult &#x3D; await this.validateIssuerCertificateChain(
+                mdocDocument,
+                options,
+            );
+
+            if (!chainResult.verified) {
+                if (chainResult.errorDetails) {
+                    this.logger.warn(
+                        &#x60;Certificate chain validation failed: ${chainResult.errorDetails}&#x60;,
+                    );
+                }
+
+                const failureType &#x3D; this.mapChainErrorToFailureType(
+                    chainResult.error,
+                );
+                const failureReason &#x3D;
+                    chainResult.errorDetails ||
+                    chainResult.error ||
+                    &quot;Certificate chain validation failed&quot;;
+
+                return {
+                    verified: false,
+                    claims,
+                    payload: vp,
+                    docType,
+                    failureType,
+                    failureReason,
+                };
+            }
+
+            this.logger.debug(
+                &#x60;MDL device response verified successfully for docType: ${docType}&#x60;,
+            );
+
+            return {
+                verified: true,
+                claims,
+                payload: vp,
+                docType,
+            };
+        } catch (error: any) {
+            console.log(error);
+            return this.handleVerificationError(vp, error, options);
+        }
+    }
+
+    /**
+     * Validates the issuer certificate chain from the mDOC&#x27;s IssuerAuth.
+     * Extracts x5chain from the COSE Sign1 structure and validates it using
+     * the shared CredentialChainValidationService.
+     */
+    private async validateIssuerCertificateChain(
+        mdocDocument: any,
+        options: VerifierOptions,
+    ): Promise&lt;ChainValidationResult&gt; {
+        // Extract x5chain from IssuerAuth (COSE Sign1 unprotected headers)
+        const issuerAuth &#x3D; mdocDocument?.issuerSigned?.issuerAuth;
+        const x5chain: Uint8Array[] | undefined &#x3D; issuerAuth?.x5chain;
+
+        if (!x5chain || x5chain.length &#x3D;&#x3D;&#x3D; 0) {
+            // No x5c in the credential
+            if (options.policy?.requireX5c) {
+                return {
+                    verified: false,
+                    matchedEntity: null,
+                    error: &quot;x5c_required&quot;,
+                    errorDetails:
+                        &quot;Policy requires x5c but none was found in IssuerAuth&quot;,
+                };
+            }
+            // If x5c not required, skip trust validation
+            return { verified: true, matchedEntity: null };
+        }
+
+        // Convert Uint8Array[] to base64 string[] for CredentialChainValidationService
+        const x5cBase64 &#x3D; x5chain.map((cert) &#x3D;&gt; base64.encode(cert));
+
+        return this.chainValidation.validateChain(
+            x5cBase64,
+            options.trustListSource,
+            {
+                requireX5c: options.policy?.requireX5c,
+                pinnedCertMode: options.policy?.pinnedCertMode ?? &quot;leaf&quot;,
+                serviceTypeFilter: &quot;/Issuance&quot;,
+                federationTrustSource: options.federationTrustSource,
+            },
+        );
+    }
+
+    /**
+     * Handle verification errors with detailed logging.
+     */
+    private async handleVerificationError(
+        vp: string,
+        error: any,
+        options: VerifierOptions,
+    ): Promise&lt;MdocVerificationResult&gt; {
+        const configuredTrustLists &#x3D;
+            options.trustListSource?.lotes?.map((l) &#x3D;&gt; l.url).join(&quot;, &quot;) ||
+            &quot;none configured&quot;;
+
+        const details &#x3D; await this.extractErrorDetails(vp, options);
+
+        const errorDetails &#x3D; [
+            &#x60;Error: ${error?.message ?? error}&#x60;,
+            &#x60;DocType: ${details.docType}&#x60;,
+            &#x60;Issuer cert: ${details.issuerCertInfo}&#x60;,
+            &#x60;Issuer thumbprint: ${details.issuerThumbprint}&#x60;,
+            &#x60;Issuer validity: ${details.issuerValidity}&#x60;,
+            &#x60;Configured trust lists: ${configuredTrustLists}&#x60;,
+            &#x60;Trusted certs: ${details.trustedCertsSummary}&#x60;,
+        ].join(&quot; | &quot;);
+
+        this.logger.error(&#x60;mDOC verification failed: ${errorDetails}&#x60;);
+
+        let failureType &#x3D; this.classifyVerificationError(error);
+        let failureReason &#x3D; error?.message ?? String(error);
+
+        // In some failing cases the mDOC library throws a signature-related error first,
+        // even though the underlying trust chain is also not valid for the configured trust list.
+        // Probe chain validation here to return a more actionable trust-specific reason.
+        if (failureType &#x3D;&#x3D;&#x3D; &quot;signature_invalid&quot;) {
+            try {
+                const uint8Array &#x3D; Buffer.from(vp, &quot;base64url&quot;);
+                const deviceResponse &#x3D; DeviceResponse.decode(uint8Array);
+                const mdocDocument &#x3D; deviceResponse.documents?.[0];
+
+                if (mdocDocument) {
+                    const chainResult &#x3D;
+                        await this.validateIssuerCertificateChain(
+                            mdocDocument,
+                            options,
+                        );
+
+                    if (!chainResult.verified) {
+                        failureType &#x3D; this.mapChainErrorToFailureType(
+                            chainResult.error,
+                        );
+                        failureReason &#x3D;
+                            chainResult.errorDetails ||
+                            chainResult.error ||
+                            failureReason;
+
+                        this.logger.warn(
+                            &#x60;mDOC verification encountered signature error but trust chain check also failed: ${failureReason}&#x60;,
+                        );
+                    }
+                }
+            } catch (chainProbeError: any) {
+                this.logger.debug(
+                    &#x60;Could not probe chain failure after signature error: ${chainProbeError?.message ?? chainProbeError}&#x60;,
+                );
+            }
+        }
+
+        return {
+            verified: false,
+            claims: {},
+            payload: vp,
+            docType:
+                details.docType &#x3D;&#x3D;&#x3D; &quot;unknown&quot; ? undefined : details.docType,
+            failureType,
+            failureReason,
+        };
+    }
+
+    private mapChainErrorToFailureType(
+        errorCode?: string,
+    ): MdocVerificationResult[&quot;failureType&quot;] {
+        switch (errorCode) {
+            case &quot;x5c_required&quot;:
+                return &quot;x5c_missing&quot;;
+            case &quot;chain_build_failed&quot;:
+                return &quot;no_trust_chain_to_root&quot;;
+            case &quot;no_trusted_entity_match&quot;:
+                return &quot;trust_chain_not_trusted&quot;;
+            default:
+                return &quot;verification_error&quot;;
+        }
+    }
+
+    private classifyVerificationError(
+        error: any,
+    ): MdocVerificationResult[&quot;failureType&quot;] {
+        const message &#x3D; String(error?.message ?? error).toLowerCase();
+
+        if (message.includes(&quot;signature&quot;)) {
+            return &quot;signature_invalid&quot;;
+        }
+
+        return &quot;verification_error&quot;;
+    }
+
+    /**
+     * Extract error details from the mDOC document for debugging.
+     */
+    private async extractErrorDetails(
+        vp: string,
+        options: VerifierOptions,
+    ): Promise&lt;MdocErrorDetails&gt; {
+        const details: MdocErrorDetails &#x3D; {
+            docType: &quot;unknown&quot;,
+            issuerCertInfo: &quot;unknown&quot;,
+            issuerThumbprint: &quot;unknown&quot;,
+            issuerValidity: &quot;unknown&quot;,
+            trustedCertsSummary: &quot;unknown&quot;,
+        };
+
+        try {
+            const uint8Array &#x3D; Buffer.from(vp, &quot;base64url&quot;);
+            const deviceResponse &#x3D; DeviceResponse.decode(uint8Array);
+            const mdocDoc &#x3D; deviceResponse.documents?.[0];
+
+            if (mdocDoc?.docType) {
+                details.docType &#x3D; mdocDoc.docType;
+            }
+
+            // Extract issuer certificate info from the MSO
+            await this.extractIssuerCertInfo(mdocDoc, details);
+
+            // Summarize trusted certificates
+            details.trustedCertsSummary &#x3D; await this.summarizeTrustedCerts(
+                options.trustListSource,
+            );
+        } catch (parseError: any) {
+            this.logger.debug(
+                &#x60;Could not extract additional debug info: ${parseError?.message ?? parseError}&#x60;,
+            );
+        }
+
+        return details;
+    }
+
+    /**
+     * Extract issuer certificate information from the mDOC document.
+     */
+    private async extractIssuerCertInfo(
+        mdocDoc: any,
+        details: MdocErrorDetails,
+    ): Promise&lt;void&gt; {
+        const issuerAuth &#x3D; mdocDoc?.issuerSigned?.issuerAuth;
+        if (!issuerAuth) return;
+
+        const x5chain &#x3D; issuerAuth?.x5chain;
+        if (!x5chain?.length) return;
+
+        try {
+            const leafCertBytes &#x3D; x5chain[0];
+            const leafCert &#x3D; new x509.X509Certificate(leafCertBytes);
+            const thumbprint &#x3D; await leafCert.getThumbprint(&quot;SHA-256&quot;);
+
+            details.issuerThumbprint &#x3D; hex.encode(new Uint8Array(thumbprint));
+            details.issuerValidity &#x3D; &#x60;${leafCert.notBefore.toISOString()} - ${leafCert.notAfter.toISOString()}&#x60;;
+            details.issuerCertInfo &#x3D; &#x60;subject&#x3D;&quot;${leafCert.subject}&quot;, issuer&#x3D;&quot;${leafCert.issuer}&quot;&#x60;;
+        } catch {
+            // Ignore certificate parsing errors
+        }
+    }
+
+    /**
+     * Summarize trusted certificates for error logging.
+     */
+    private async summarizeTrustedCerts(
+        trustListSource: VerifierOptions[&quot;trustListSource&quot;],
+    ): Promise&lt;string&gt; {
+        const trustedCerts &#x3D;
+            await this.chainValidation.getTrustedCertificateBuffers(
+                trustListSource,
+            );
+
+        if (trustedCerts.length &#x3D;&#x3D;&#x3D; 0) {
+            return &quot;none loaded&quot;;
+        }
+
+        const certSummaries: string[] &#x3D; [];
+        for (const certBuf of trustedCerts.slice(0, 5)) {
+            try {
+                const cert &#x3D; new x509.X509Certificate(new Uint8Array(certBuf));
+                const thumb &#x3D; hex.encode(
+                    new Uint8Array(await cert.getThumbprint(&quot;SHA-256&quot;)),
+                );
+                certSummaries.push(
+                    &#x60;${cert.subject} (${thumb.substring(0, 16)}...)&#x60;,
+                );
+            } catch {
+                // Skip invalid certs
+            }
+        }
+
+        let summary &#x3D;
+            certSummaries.length &gt; 0 ? certSummaries.join(&quot;; &quot;) : &quot;none valid&quot;;
+        if (trustedCerts.length &gt; 5) {
+            summary +&#x3D; &#x60; ...and ${trustedCerts.length - 5} more&#x60;;
+        }
+
+        return summary;
+    }
+
+    /**
+     * Build a device request based on the docType and received claims.
+     * This creates a request that matches what was received for verification.
+     */
+    private buildDeviceRequest(
+        docType: string,
+        requestedClaimPaths: RequestedMdocClaimPath[] | undefined,
+        claimsByNamespace: Record&lt;string, Record&lt;string, unknown&gt;&gt;,
+    ): DeviceRequest {
+        // Prefer original DCQL claim paths because deviceAuth is bound to the
+        // request semantics, not just the disclosed claims returned by the wallet.
+        const namespaces: Record&lt;string, Record&lt;string, boolean&gt;&gt; &#x3D; {};
+
+        if (requestedClaimPaths &amp;&amp; requestedClaimPaths.length &gt; 0) {
+            for (const path of requestedClaimPaths) {
+                if (path.length &#x3D;&#x3D;&#x3D; 0) {
+                    continue;
+                }
+
+                const namespace &#x3D; path.length &gt; 1 ? path[0] : docType;
+                const claimName &#x3D;
+                    path.length &gt; 1 ? path.slice(1).join(&quot;.&quot;) : path[0];
+
+                if (!namespaces[namespace]) {
+                    namespaces[namespace] &#x3D; {};
+                }
+                namespaces[namespace][claimName] &#x3D; true;
+            }
+        }
+
+        if (Object.keys(namespaces).length &#x3D;&#x3D;&#x3D; 0) {
+            // Fallback: build namespace map from disclosed claims.
+            // This is less strict than using original DCQL but keeps compatibility
+            // for flows where no explicit mDOC claims were requested.
+            for (const [ns, nsClaims] of Object.entries(claimsByNamespace)) {
+                if (Object.keys(nsClaims).length &gt; 0) {
+                    namespaces[ns] &#x3D; {};
+                    for (const claimKey of Object.keys(nsClaims)) {
+                        namespaces[ns][claimKey] &#x3D; true;
+                    }
+                }
+            }
+        }
+
+        return DeviceRequest.create({
+            docRequests: [
+                DocRequest.create({
+                    itemsRequest: ItemsRequest.create({
+                        docType,
+                        namespaces,
+                    }),
+                }),
+            ],
+        });
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'MdocErrorDetails.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
