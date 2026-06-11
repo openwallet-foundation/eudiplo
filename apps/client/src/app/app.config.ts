@@ -25,7 +25,7 @@ const runtimeEnv = globalThis as { env?: { baseHref?: string } };
 const baseHref = runtimeEnv.env?.baseHref ?? '/';
 const monacoBaseUrl = new URL(
   'assets/monaco/min/vs',
-  new URL(baseHref, document.location.origin),
+  new URL(baseHref, document.location.origin)
 ).toString();
 
 const transactionDataArraySchema = {
