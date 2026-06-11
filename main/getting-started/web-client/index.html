@@ -694,6 +694,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#hosting-from-a-subpath" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hosting from a Subpath
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2815,6 +2826,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#hosting-from-a-subpath" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hosting from a Subpath
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2950,10 +2972,15 @@
 <p>After completing the <a href="../quick-start/#step-1-choose-your-setup">Full Setup</a>:</p>
 <ol>
 <li><strong>Open your browser</strong> and go to: <a href="http://localhost:4200">http://localhost:4200</a></li>
-<li><strong>Login</strong> using the default credentials:</li>
+<li><strong>Login</strong> using the default credentials:<ul>
 <li><strong>Username:</strong> <code>root</code></li>
 <li><strong>Password:</strong> <code>root</code></li>
+</ul>
+</li>
 </ol>
+<h3 id="hosting-from-a-subpath">Hosting from a Subpath<a class="headerlink" href="#hosting-from-a-subpath" title="Permanent link">¶</a></h3>
+<p>If the client is served from a path such as <code>https://example.com/client/</code>, set <code>CLIENT_BASE_HREF=/client/</code> when starting the client. This updates the HTML base href and keeps routing and asset loading correct for the subpath.</p>
+<p>If you are using a reverse proxy, it must also forward <code>/client/</code> to the client container. See <a href="../../deployment/tls/#serving-the-client-from-a-subpath">Serving the Client from a Subpath</a> for a full example.</p>
 <blockquote>
 <p><strong>Important:</strong> Change the default credentials before using EUDIPLO in production. See <a href="../../api/authentication/">Authentication</a> for details.</p>
 </blockquote>
