@@ -33,6 +33,7 @@ EUDIPLO:
 | --------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
 | EU Reference Implementation | [EC](https://github.com/eu-digital-identity-wallet/eudi-app-android-wallet-ui) | [Android](https://github.com/eu-digital-identity-wallet/eudi-app-android-wallet-ui/releases)                                                          | [Details](#reference-implementation) |
 | Paradym Wallet              | [Animo](https://animo.id)                                                      | [Android](https://play.google.com/store/apps/details?id=id.paradym.wallet) / [iOS](https://apps.apple.com/nl/app/paradym-wallet/id6449846111?l=en-GB) | [Details](#paradym-wallet)           |
+| Multipaz                    | [Multipaz](https://multipaz.com)                                               | [Android](https://apps.multipaz.org/)                                                                                                                 | [Details](#multipaz)                 |
 
 ### Feature Support Details
 
@@ -55,10 +56,11 @@ EUDIPLO:
 
 #### Feature Matrix
 
-| Wallet                   | Auth | Pre | IAE | DPoP | Att | DC API | SD-JWT |
-| ------------------------ | ---- | --- | --- | ---- | --- | ------ | ------ |
-| Reference Implementation | ✅   | ✅  | n/a | ✅   | ✅  | n/a    | ✅     |
-| Paradym Wallet           | ✅   | ✅  | n/a | ✅   | n/a | ✅     | ✅     |
+| Wallet                   | Auth | Pre | IAE | DPoP | Att | DC API | SD-JWT | Mdocs |
+| ------------------------ | ---- | --- | --- | ---- | --- | ------ | ------ | ----- |
+| Reference Implementation | ✅   | ✅  | n/a | ✅   | ✅  | n/a    | ✅     | ✅    |
+| Paradym Wallet           | ✅   | ✅  | n/a | ✅   | n/a | ✅     | ✅     | ✅    |
+| Multipaz                 | ✅   | ✅  | n/a | ✅   | n/a | ✅     | ✅     | ✅    |
 
 #### Individual Wallet Details
 
@@ -81,6 +83,13 @@ EUDIPLO:
 !!! note "Help us expand this list!"
 
     If you have successfully tested EUDIPLO with a wallet not listed here, please [reach out to us](https://github.com/openwallet-foundation/eudiplo/issues/new?template=wallet-compatibility.md) so we can add it to this list.
+
+##### Multipaz
+
+- **Version tested**: 2026.W24.0-impl-verification-links-17-git-6cfc8e8
+- **Last verified**: June 17, 2026
+- **Notes**:
+    - Using the logo for the card of a credential
 
 ---
 
