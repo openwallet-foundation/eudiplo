@@ -45,24 +45,11 @@ export class ClaimFieldDefinitionDto {
 
     @ApiProperty({
         description: "Claim value type",
-        enum: [
-            "string",
-            "number",
-            "integer",
-            "boolean",
-            "object",
-            "array",            
-        ],
+        enum: ["string", "number", "integer", "boolean", "object", "array"],
     })
     @IsString()
     @IsIn(["string", "number", "integer", "boolean", "object", "array"])
-    type!:
-        | "string"
-        | "number"
-        | "integer"
-        | "boolean"
-        | "object"
-        | "array";
+    type!: "string" | "number" | "integer" | "boolean" | "object" | "array";
 
     @ApiPropertyOptional({
         description: "Default value",

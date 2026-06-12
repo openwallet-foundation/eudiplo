@@ -46,7 +46,7 @@ describe("Issuance - Claims Metadata", () => {
                     },
                 ],
             },
-            vct: "urn:test:claims-metadata:1",            
+            vct: "urn:test:claims-metadata:1",
             fields: [
                 {
                     path: ["given_name"],
@@ -165,7 +165,7 @@ describe("Issuance - Claims Metadata", () => {
                         locale: "en-US",
                     },
                 ],
-            },            
+            },
             fields: [
                 {
                     path: ["given_name"],
