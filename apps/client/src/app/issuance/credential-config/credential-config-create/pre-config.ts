@@ -15,10 +15,8 @@ export const configs: PredefinedConfig[] = [
     config: {
       id: 'pid',
       description: 'Personal ID',
-      configVersion: 2,
       config: {
         format: 'dc+sd-jwt',
-        scope: 'pid',
         display: [
           {
             name: 'PID',
@@ -27,57 +25,104 @@ export const configs: PredefinedConfig[] = [
             background_color: '#FFFFFF',
             text_color: '#000000',
           },
+          {
+            name: 'PID',
+            description: 'PID Nachweis',
+            locale: 'de-DE',
+            background_color: '#FFFFFF',
+            text_color: '#000000',
+          },
         ],
       },
       fields: [
         {
-          path: ['issuing_country'],
+          path: ['address', 'country'],
           type: 'string',
           defaultValue: 'DE',
           mandatory: true,
           disclosable: true,
-          display: [{ locale: 'en-US', name: 'Issuing Country' }],
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Country',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Land',
+            },
+          ],
         },
         {
-          path: ['issuing_authority'],
+          path: ['address', 'locality'],
           type: 'string',
-          defaultValue: 'DE',
+          defaultValue: 'KÖLN',
           mandatory: true,
           disclosable: true,
-          display: [{ locale: 'en-US', name: 'Issuing Authority' }],
+          display: [
+            {
+              locale: 'en-US',
+              name: 'City',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Ort',
+            },
+          ],
         },
         {
-          path: ['given_name'],
+          path: ['address', 'postal_code'],
           type: 'string',
-          defaultValue: 'ERIKA',
+          defaultValue: '51147',
           mandatory: true,
           disclosable: true,
-          display: [{ locale: 'en-US', name: 'Given Name' }],
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Postal Code',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Postleitzahl',
+            },
+          ],
         },
         {
-          path: ['family_name'],
+          path: ['address', 'street_address'],
           type: 'string',
-          defaultValue: 'MUSTERMANN',
+          defaultValue: 'HEIDESTRAẞE 17',
           mandatory: true,
           disclosable: true,
-          display: [{ locale: 'en-US', name: 'Family Name' }],
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Street Address',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Strasse und Hausnummer',
+            },
+          ],
         },
         {
-          path: ['birth_family_name'],
-          type: 'string',
-          defaultValue: 'GABLER',
-          mandatory: true,
+          path: ['address'],
+          type: 'object',
+          defaultValue: {
+            street_address: 'HEIDESTRAẞE 17',
+            locality: 'KÖLN',
+            country: 'DE',
+            postal_code: '51147',
+          },
           disclosable: true,
-          display: [{ locale: 'en-US', name: 'Birth Family Name' }],
-        },
-        {
-          path: ['birthdate'],
-          type: 'date',
-          defaultValue: '1964-08-12',
-          mandatory: true,
-          disclosable: true,
-          constraints: { pattern: '^\\d{4}-\\d{2}-\\d{2}$' },
-          display: [{ locale: 'en-US', name: 'Birthdate' }],
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Address',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Adresse',
+            },
+          ],
         },
         {
           path: ['age_birth_year'],
@@ -85,15 +130,118 @@ export const configs: PredefinedConfig[] = [
           defaultValue: 1964,
           mandatory: true,
           disclosable: true,
-          display: [{ locale: 'en-US', name: 'Birth Year' }],
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Birth Year',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Geburtsjahr',
+            },
+          ],
         },
         {
-          path: ['age_in_years'],
-          type: 'integer',
-          defaultValue: 59,
+          path: ['age_equal_or_over', '12'],
+          type: 'boolean',
+          defaultValue: true,
           mandatory: true,
-          disclosable: true,
-          display: [{ locale: 'en-US', name: 'Age in Years' }],
+          disclosable: false,
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Age 12 or Over',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Alter 12 oder aelter',
+            },
+          ],
+        },
+        {
+          path: ['age_equal_or_over', '14'],
+          type: 'boolean',
+          defaultValue: true,
+          mandatory: true,
+          disclosable: false,
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Age 14 or Over',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Alter 14 oder aelter',
+            },
+          ],
+        },
+        {
+          path: ['age_equal_or_over', '16'],
+          type: 'boolean',
+          defaultValue: true,
+          mandatory: true,
+          disclosable: false,
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Age 16 or Over',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Alter 16 oder aelter',
+            },
+          ],
+        },
+        {
+          path: ['age_equal_or_over', '18'],
+          type: 'boolean',
+          defaultValue: true,
+          mandatory: true,
+          disclosable: false,
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Age 18 or Over',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Alter 18 oder aelter',
+            },
+          ],
+        },
+        {
+          path: ['age_equal_or_over', '21'],
+          type: 'boolean',
+          defaultValue: true,
+          mandatory: true,
+          disclosable: false,
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Age 21 or Over',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Alter 21 oder aelter',
+            },
+          ],
+        },
+        {
+          path: ['age_equal_or_over', '65'],
+          type: 'boolean',
+          defaultValue: false,
+          mandatory: true,
+          disclosable: false,
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Age 65 or Over',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Alter 65 oder aelter',
+            },
+          ],
         },
         {
           path: ['age_equal_or_over'],
@@ -106,71 +254,138 @@ export const configs: PredefinedConfig[] = [
             '21': true,
             '65': false,
           },
+          disclosable: true,
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Age Assertions',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Altersangaben',
+            },
+          ],
+        },
+        {
+          path: ['age_in_years'],
+          type: 'integer',
+          defaultValue: 61,
           mandatory: true,
           disclosable: true,
-          display: [{ locale: 'en-US', name: 'Age Equal or Over' }],
-        },
-        { path: ['age_equal_or_over', '12'], type: 'boolean', defaultValue: true, mandatory: true },
-        { path: ['age_equal_or_over', '14'], type: 'boolean', defaultValue: true, mandatory: true },
-        { path: ['age_equal_or_over', '16'], type: 'boolean', defaultValue: true, mandatory: true },
-        { path: ['age_equal_or_over', '18'], type: 'boolean', defaultValue: true, mandatory: true },
-        { path: ['age_equal_or_over', '21'], type: 'boolean', defaultValue: true, mandatory: true },
-        {
-          path: ['age_equal_or_over', '65'],
-          type: 'boolean',
-          defaultValue: false,
-          mandatory: true,
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Age in Years',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Alter in Jahren',
+            },
+          ],
         },
         {
-          path: ['place_of_birth'],
-          type: 'object',
-          defaultValue: { locality: 'BERLIN' },
-          mandatory: true,
-          disclosable: true,
-          display: [{ locale: 'en-US', name: 'Place of Birth' }],
-        },
-        {
-          path: ['place_of_birth', 'locality'],
+          path: ['birthdate'],
           type: 'string',
-          defaultValue: 'BERLIN',
+          defaultValue: '1964-08-12',
           mandatory: true,
-          display: [{ locale: 'en-US', name: 'Locality' }],
-        },
-        {
-          path: ['address'],
-          type: 'object',
-          defaultValue: {
-            locality: 'KÖLN',
-            postal_code: '51147',
-            street_address: 'HEIDESTRAẞE 17',
+          disclosable: true,
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Birth Date',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Geburtsdatum',
+            },
+          ],
+          constraints: {
+            pattern: '^\\d{4}-\\d{2}-\\d{2}$',
           },
-          mandatory: true,
-          disclosable: true,
-          display: [{ locale: 'en-US', name: 'Address' }],
         },
         {
-          path: ['address', 'locality'],
+          path: ['family_name'],
           type: 'string',
-          defaultValue: 'KÖLN',
+          defaultValue: 'MUSTERMANN',
           mandatory: true,
           disclosable: true,
-          display: [{ locale: 'en-US', name: 'Locality' }],
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Family Name',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Nachname',
+            },
+          ],
         },
         {
-          path: ['address', 'postal_code'],
+          path: ['given_name'],
           type: 'string',
-          defaultValue: '51147',
+          defaultValue: 'ERIKA',
           mandatory: true,
           disclosable: true,
-          display: [{ locale: 'en-US', name: 'Postal Code' }],
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Given Name',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Vorname',
+            },
+          ],
         },
         {
-          path: ['address', 'street_address'],
+          path: ['issuing_authority'],
           type: 'string',
-          defaultValue: 'HEIDESTRAẞE 17',
+          defaultValue: 'DE',
           mandatory: true,
           disclosable: true,
-          display: [{ locale: 'en-US', name: 'Street Address' }],
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Issuing Authority',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Ausstellende Behoerde',
+            },
+          ],
+        },
+        {
+          path: ['issuing_country'],
+          type: 'string',
+          defaultValue: 'DE',
+          mandatory: true,
+          disclosable: true,
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Issuing Country',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Ausstellungsland',
+            },
+          ],
+        },
+        {
+          path: ['nationalities', 0],
+          type: 'string',
+          defaultValue: 'DE',
+          disclosable: false,
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Nationality',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Staatsangehoerigkeit',
+            },
+          ],
         },
         {
           path: ['nationalities'],
@@ -178,16 +393,63 @@ export const configs: PredefinedConfig[] = [
           defaultValue: ['DE'],
           mandatory: true,
           disclosable: true,
-          display: [{ locale: 'en-US', name: 'Nationalities' }],
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Nationalities',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Staatsangehoerigkeiten',
+            },
+          ],
+          constraints: {
+            items: {
+              type: 'string',
+              title: 'Nationality',
+            },
+          },
+        },
+        {
+          path: ['place_of_birth', 'locality'],
+          type: 'string',
+          defaultValue: 'BERLIN',
+          mandatory: true,
+          disclosable: false,
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Place of Birth (City)',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Geburtsort (Stadt)',
+            },
+          ],
+        },
+        {
+          path: ['place_of_birth'],
+          type: 'object',
+          defaultValue: {
+            locality: 'BERLIN',
+          },
+          disclosable: true,
+          display: [
+            {
+              locale: 'en-US',
+              name: 'Place of Birth',
+            },
+            {
+              locale: 'de-DE',
+              name: 'Geburtsort',
+            },
+          ],
         },
       ],
-      vct: {
-        name: 'PID',
-        description: 'PID credential',
-      },
+      vct: 'urn:eudi:pid:de:1',
       keyBinding: true,
-      keyChainId: '139af178-3ca0-48f4-a2e4-7b1209f30374',
       statusManagement: true,
+      sdJwtTrustFormat: 'x5c',
       lifeTime: 604800,
     },
   },

@@ -51,20 +51,18 @@ export class ClaimFieldDefinitionDto {
             "integer",
             "boolean",
             "object",
-            "array",
-            "date",
+            "array",            
         ],
     })
     @IsString()
-    @IsIn(["string", "number", "integer", "boolean", "object", "array", "date"])
+    @IsIn(["string", "number", "integer", "boolean", "object", "array"])
     type!:
         | "string"
         | "number"
         | "integer"
         | "boolean"
         | "object"
-        | "array"
-        | "date";
+        | "array";
 
     @ApiPropertyOptional({
         description: "Default value",

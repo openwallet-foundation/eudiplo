@@ -6,8 +6,7 @@ export type FieldType =
   | "integer"
   | "boolean"
   | "object"
-  | "array"
-  | "date";
+  | "array";
 
 export type ClaimPathElement = string | number | null;
 

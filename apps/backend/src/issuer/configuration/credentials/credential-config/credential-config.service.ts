@@ -361,8 +361,7 @@ export class CredentialConfigService {
     ): Record<string, unknown> {
         return {
             id: config.id,
-            format: config.config?.format,
-            configVersion: config.configVersion,
+            format: config.config?.format,            
             config: config.config,
             fields: config.fields,
             vct: config.vct,

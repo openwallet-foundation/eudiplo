@@ -81,7 +81,6 @@ You can define defaults directly in each field using `defaultValue`:
 
 ```json
 {
-    "configVersion": 2,
     "fields": [
         {
             "path": ["given_name"],
@@ -171,7 +170,6 @@ In v2, selective disclosure for [SD-JWT](https://www.rfc-editor.org/rfc/rfc9901.
 
 ```json
 {
-    "configVersion": 2,
     "fields": [
         {
             "path": ["given_name"],
@@ -218,7 +216,6 @@ For issuing mobile documents following the ISO 18013-5 standard (such as Mobile 
             }
         ]
     },
-    "configVersion": 2,
     "fields": [
         {
             "path": ["given_name"],
@@ -259,7 +256,6 @@ For credentials that require claims from multiple namespaces, set `namespace` pe
 
 ```json
 {
-    "configVersion": 2,
     "config": {
         "format": "mso_mdoc",
         "docType": "org.iso.18013.5.1.mDL",
@@ -474,7 +470,6 @@ the `lifeTime` configuration option (specified in seconds).
         ]
     },
     "lifeTime": 3600,
-    "configVersion": 2,
     "fields": [
         {
             "path": ["given_name"],
@@ -664,7 +659,7 @@ This example includes:
 
 - **Required fields**: `id`, `config` with format and display information
 - **Optional fields**: `description`, `vct`, `keyChainId`, `lifeTime`, `statusManagement`, `keyBinding`
-- **Fields**: `configVersion: 2` and `fields[]` with typed claim definitions
+- **Fields**: `fields[]` with typed claim definitions
 - **Selective disclosure**: Per-field `disclosable` flags for SD-JWT credentials
 - **Display configuration**: How the credential appears in wallets, including colors, logos, and images
 

@@ -236,14 +236,8 @@ export function buildJsonSchema(fields: ClaimFieldDefinition[]): JsonSchema {
 
         const leafSchema: JsonSchema = {
             ...field.constraints,
-            type: field.type === "date" ? "string" : field.type,
+            type: field.type,
         };
-
-        if (field.type === "date") {
-            if (!leafSchema.format) {
-                leafSchema.format = "date";
-            }
-        }
 
         const title = getDisplayTitle(field.display);
         if (title) {
