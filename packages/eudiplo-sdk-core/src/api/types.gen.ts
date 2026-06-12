@@ -1353,7 +1353,7 @@ export type ClaimFieldDefinitionDto = {
     /**
      * Claim value type
      */
-    type: 'string' | 'number' | 'integer' | 'boolean' | 'object' | 'array' | 'date';
+    type: 'string' | 'number' | 'integer' | 'boolean' | 'object' | 'array';
     /**
      * Default value
      */
@@ -1506,7 +1506,6 @@ export type CredentialConfig = {
      */
     tenant: TenantEntity;
     config: IssuerMetadataCredentialConfig;
-    configVersion: number;
     fields: Array<ClaimFieldDefinitionDto>;
     /**
      * Reference to the attribute provider used for fetching claims.
@@ -1564,7 +1563,6 @@ export type CredentialConfigCreate = {
     id: string;
     description?: string;
     config: IssuerMetadataCredentialConfig;
-    configVersion: number;
     fields: Array<ClaimFieldDefinitionDto>;
     /**
      * Reference to the attribute provider used for fetching claims.
@@ -1619,7 +1617,6 @@ export type CredentialConfigUpdate = {
     id?: string;
     description?: string;
     config?: IssuerMetadataCredentialConfig;
-    configVersion?: number;
     fields?: Array<ClaimFieldDefinitionDto>;
     /**
      * Reference to the attribute provider used for fetching claims.

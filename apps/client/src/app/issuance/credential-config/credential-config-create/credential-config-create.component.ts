@@ -148,7 +148,6 @@ export class CredentialConfigCreateComponent implements OnInit {
     'boolean',
     'object',
     'array',
-    'date',
   ];
 
   // VCT mode: 'string' for simple URI, 'object' for metadata object
@@ -182,8 +181,6 @@ export class CredentialConfigCreateComponent implements OnInit {
       // mDOC specific fields
       docType: new FormControl(''),
       namespace: new FormControl(''),
-      // Common fields
-      configVersion: new FormControl(2),
       fields: new FormArray([]),
       displayConfigs: new FormArray([this.createDisplayConfigGroup()]),
       embeddedDisclosurePolicy: new FormControl(''),
@@ -513,8 +510,6 @@ export class CredentialConfigCreateComponent implements OnInit {
       // mDOC specific
       docType: normalizedConfig.config?.docType || '',
       namespace: (normalizedConfig.config as any)?.namespace || '',
-      // Common
-      configVersion: normalizedConfig.configVersion || 2,
       displayConfigs: normalizedConfig.config?.display || [],
       embeddedDisclosurePolicy: this.stringifyField(normalizedConfig.embeddedDisclosurePolicy),
       // Key attestation requirements
@@ -882,7 +877,6 @@ export class CredentialConfigCreateComponent implements OnInit {
       }),
     };
 
-    formValue.configVersion = 2;
     formValue.fields = this.buildFieldsPayload(formValue.fields || [], isMdoc, formValue.namespace);
 
     // Convert empty strings to null to clear optional fields (for PATCH semantics)

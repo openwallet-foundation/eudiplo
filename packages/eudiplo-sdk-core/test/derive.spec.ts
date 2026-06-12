@@ -87,7 +87,7 @@ describe("config derive helpers", () => {
       {
         path: ["birth_date"],
         namespace: "eu.europa.ec.eudi.pid.1",
-        type: "date",
+        type: "string",
         defaultValue: "1964-08-12",
       },
     ];

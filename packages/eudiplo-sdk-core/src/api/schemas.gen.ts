@@ -2752,8 +2752,7 @@ export const ClaimFieldDefinitionDtoSchema = {
                 'integer',
                 'boolean',
                 'object',
-                'array',
-                'date'
+                'array'
             ],
             type: 'string',
             description: 'Claim value type'
@@ -3058,9 +3057,6 @@ export const CredentialConfigSchema = {
         config: {
             $ref: '#/components/schemas/IssuerMetadataCredentialConfig'
         },
-        configVersion: {
-            type: 'number'
-        },
         fields: {
             type: 'array',
             items: {
@@ -3113,7 +3109,6 @@ export const CredentialConfigSchema = {
         'id',
         'tenant',
         'config',
-        'configVersion',
         'fields'
     ]
 } as const;
@@ -3195,9 +3190,6 @@ export const CredentialConfigCreateSchema = {
         config: {
             $ref: '#/components/schemas/IssuerMetadataCredentialConfig'
         },
-        configVersion: {
-            type: 'number'
-        },
         fields: {
             type: 'array',
             items: {
@@ -3240,7 +3232,6 @@ export const CredentialConfigCreateSchema = {
     required: [
         'id',
         'config',
-        'configVersion',
         'fields'
     ]
 } as const;
@@ -3321,9 +3312,6 @@ export const CredentialConfigUpdateSchema = {
         },
         config: {
             $ref: '#/components/schemas/IssuerMetadataCredentialConfig'
-        },
-        configVersion: {
-            type: 'number'
         },
         fields: {
             type: 'array',

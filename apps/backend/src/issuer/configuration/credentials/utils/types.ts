@@ -4,8 +4,7 @@ type FieldType =
     | "integer"
     | "boolean"
     | "object"
-    | "array"
-    | "date";
+    | "array";
 
 type ClaimPathElement = string | number | null;
 

@@ -149,10 +149,6 @@ export class CredentialConfig {
     @Type(() => IssuerMetadataCredentialConfig)
     config!: IssuerMetadataCredentialConfig;
 
-    @Column("int", { default: 2 })
-    @IsNumber()
-    configVersion!: number;
-
     @Column("json")
     @IsArray()
     @ValidateNested({ each: true })

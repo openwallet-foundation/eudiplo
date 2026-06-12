@@ -215,11 +215,9 @@ export function buildClaimsMetadata(fields: ClaimFieldDefinition[]): ClaimMetada
 function buildLeafSchema(field: ClaimFieldDefinition): JsonSchema {
   const schema: JsonSchema = {
     ...field.constraints,
-    type: field.type === "date" ? "string" : field.type,
+    type: field.type
   };
-  if (field.type === "date" && !schema.format) {
-    schema.format = "date";
-  }
+  
   const title = getDisplayTitle(field.display);
   if (title) {
     schema.title = title;

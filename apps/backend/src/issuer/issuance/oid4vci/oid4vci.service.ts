@@ -420,6 +420,7 @@ export class Oid4vciService {
                             return this.credentialsService.validateClaimsForCredential(
                                 credentialConfigId,
                                 claimSource.claims,
+                                tenantId,
                             );
                         }
                         return Promise.resolve();

@@ -29,6 +29,10 @@
       "description": "Optional redirect URI to which the user-agent should be redirected after the presentation is completed.\nYou can use the `{sessionId}` placeholder in the URI, which will be replaced with the actual session ID.",
       "example": "https://example.com/callback?session={sessionId}"
     },
+    "expected_origin": {
+      "type": "string",
+      "description": "Optional expected browser origin for DC API key-binding audience.\nExample: \"http://localhost:8080\""
+    },
     "transaction_data": {
       "description": "Optional transaction data to include in the OID4VP request.\nIf provided, this will override the transaction_data from the presentation configuration.",
       "type": "array",

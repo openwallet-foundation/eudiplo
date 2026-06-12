@@ -266,6 +266,7 @@ export class CredentialsService {
     validateClaimsForCredential(
         credentialConfigurationId: string,
         claims: Record<string, unknown>,
+        tenantId: string,
     ) {
         // AJV instance with draft 2020-12 meta-schema support.
         // removeAdditional:"all" ensures only schema-declared properties remain on the claims object.
@@ -277,8 +278,9 @@ export class CredentialsService {
         });
         //fetch the credential configuration
         return this.credentialConfigRepo
-            .findOneByOrFail({ id: credentialConfigurationId })
+            .findOneByOrFail({ id: credentialConfigurationId, tenantId })
             .then((credentialConfiguration) => {
+                console.log(credentialConfiguration.fields);
                 //if a schema is defined, validate the claims against it
                 const schema = buildJsonSchema(
                     credentialConfiguration.fields as any,
