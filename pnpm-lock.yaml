@@ -8,10 +8,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@owf/eudi-attestation-schema':
-        specifier: link:/Users/mirko/Projects/identity-common-ts/packages/eudi-attestation-schema
-        version: link:../identity-common-ts/packages/eudi-attestation-schema
     devDependencies:
       '@apidevtools/json-schema-ref-parser':
         specifier: ^15.3.5
@@ -179,8 +175,8 @@ importers:
         specifier: ^1.40.0
         version: 1.41.1
       '@owf/eudi-attestation-schema':
-        specifier: link:/Users/mirko/Projects/identity-common-ts/packages/eudi-attestation-schema
-        version: 0.2.0
+        specifier: 0.3.1-alpha-20260613182022
+        version: 0.3.1-alpha-20260613182022
       '@owf/eudi-lote':
         specifier: ^0.2.0
         version: 0.2.0
@@ -4013,8 +4009,11 @@ packages:
   '@owf/crypto@0.2.0':
     resolution: {integrity: sha512-pOaaJP900Ki/5zla+H4bresdDkMjmpY0vxSmHraJx3m19V00qZMXsGRJfClGlzwszfXJTciFN0dN2Qb8y1Q6OA==}
 
-  '@owf/eudi-attestation-schema@0.2.0':
-    resolution: {integrity: sha512-8d3c2pTu4MAful4iaOkoXhBR11QqC7gZKeXjlmoTWWCMBLBhnVV71stVg0UGf7f11olN/WKctYxMNabHOd1W+A==}
+  '@owf/crypto@0.3.1-alpha-20260613182022':
+    resolution: {integrity: sha512-7W5OWWlma4YPloDvUpzAKEBKryeU/efBk34QdxZ7692UyBehMrVvb/o61jfHEjX+AbOUTYBVT/+2CoMPeTRh7Q==}
+
+  '@owf/eudi-attestation-schema@0.3.1-alpha-20260613182022':
+    resolution: {integrity: sha512-0ywUF5vKPY6eaV/mIWxrZAYMY1S4vuaX99y9PZS7id2vjPml6WCuB7TGtY5zUC30mitGgnOEmGLRiQxMIK7vRw==}
 
   '@owf/eudi-lote@0.2.0':
     resolution: {integrity: sha512-+tkZolyDuHGVIjjRIPfIQmBqQ1lGcMCLO8tBLlrncXjaYliQtPQ5rfTDxWkwSycXzD2C4iyOcI1x7HupS3tCVQ==}
@@ -4024,6 +4023,9 @@ packages:
 
   '@owf/identity-common@0.3.0-alpha-20260508181749':
     resolution: {integrity: sha512-ZrgivSEuI7ngTmN4Izz6CP+uMCGQXv1ucSwBbyp+g4T51EjRYtvGmM/tFc29VnRA2r9x+AH+R+ilzoy5GFGV0g==}
+
+  '@owf/identity-common@0.3.1-alpha-20260613182022':
+    resolution: {integrity: sha512-Ge9OGUTPo5pcUla3nJBvbbVGOQ7sTmy+DnXHWfsUb9fa4nqzpO7EgOaTl89gsdygnTHELIIgHvp3ri4UaAQLFw==}
 
   '@owf/mdoc@0.6.0':
     resolution: {integrity: sha512-vJL62hzjcSweBjDD9eRUH1RIMSzZUtHKjVFMMo50oHPLO9ZVZbQABFe9IFoa5AgXkwfv27HjnFv/eRbkOrlsUA==}
@@ -15219,10 +15221,15 @@ snapshots:
       '@noble/hashes': 2.2.0
       '@owf/identity-common': 0.2.0
 
-  '@owf/eudi-attestation-schema@0.2.0':
+  '@owf/crypto@0.3.1-alpha-20260613182022':
     dependencies:
-      '@owf/crypto': 0.2.0
-      '@owf/identity-common': 0.2.0
+      '@noble/hashes': 2.2.0
+      '@owf/identity-common': 0.3.1-alpha-20260613182022
+
+  '@owf/eudi-attestation-schema@0.3.1-alpha-20260613182022':
+    dependencies:
+      '@owf/crypto': 0.3.1-alpha-20260613182022
+      '@owf/identity-common': 0.3.1-alpha-20260613182022
       zod: 4.4.3
 
   '@owf/eudi-lote@0.2.0':
@@ -15234,6 +15241,8 @@ snapshots:
   '@owf/identity-common@0.2.0': {}
 
   '@owf/identity-common@0.3.0-alpha-20260508181749': {}
+
+  '@owf/identity-common@0.3.1-alpha-20260613182022': {}
 
   '@owf/mdoc@0.6.0':
     dependencies:
