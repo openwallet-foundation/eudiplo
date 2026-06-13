@@ -66,7 +66,7 @@ export class SchemaMetadataListComponent implements OnInit {
   async loadItems(): Promise<void> {
     this.loading = true;
     try {
-      this.items = await this.schemaMetadataService.list();
+      this.items = await this.schemaMetadataService.listMine();
       this.groupedItems = this.groupById(this.items);
     } catch (error) {
       console.error('Failed to load schema metadata:', error);

@@ -3916,6 +3916,19 @@ export type SchemaMetadataControllerFindAllResponses = {
 
 export type SchemaMetadataControllerFindAllResponse = SchemaMetadataControllerFindAllResponses[keyof SchemaMetadataControllerFindAllResponses];
 
+export type SchemaMetadataControllerGetMineData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/schema-metadata/mine';
+};
+
+export type SchemaMetadataControllerGetMineResponses = {
+    200: Array<SchemaMetadataResponseDto>;
+};
+
+export type SchemaMetadataControllerGetMineResponse = SchemaMetadataControllerGetMineResponses[keyof SchemaMetadataControllerGetMineResponses];
+
 export type SchemaMetadataControllerFindOneData = {
     body?: never;
     path: {

@@ -76,8 +76,9 @@ export class SchemaUriEntry {
         type: "object",
         additionalProperties: true,
     })
+    @IsOptional()
     @IsObject()
-    meta!: SchemaURIMeta;
+    meta?: SchemaURIMeta;
 }
 
 /**
@@ -121,12 +122,20 @@ export class TrustAuthorityEntry {
         description:
             "Optional verification material for external trusted authorities (for example a JWK). " +
             "For internal trust-list URLs, EUDIPLO resolves verification material from the database.",
-        type: "object",
-        additionalProperties: true,
+        oneOf: [
+            {
+                type: "object",
+                additionalProperties: true,
+            },
+            {
+                type: "string",
+                description:
+                    "JSON string representing an object. Parsed server-side for form submissions.",
+            },
+        ],
     })
     @IsOptional()
-    @IsObject()
-    verificationMethod?: Record<string, unknown>;
+    verificationMethod?: Record<string, unknown> | string;
 }
 
 /**

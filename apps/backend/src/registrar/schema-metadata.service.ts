@@ -29,6 +29,7 @@ import {
     schemaMetadataControllerUpdateMetadata,
     schemaMetadataControllerUploadAsset,
     type UploadAssetResponseDto,
+    schemaMetadataControllerFindAllByRelyingParty,
 } from "./generated";
 import { RegistrarAuthService } from "./registrar-auth.service";
 
@@ -147,6 +148,26 @@ export class SchemaMetadataService {
         }
 
         return res.data!;
+    }
+
+    async getMine(tenantId: string): Promise<SchemaMetadata[]> {
+        const client = await this.authService.getClient(tenantId);
+        const rpId = await this.authService.getRelyingPartyId(tenantId);
+        const res = await schemaMetadataControllerFindAllByRelyingParty({
+            client,
+            path: {
+                rpId,
+            },
+        });
+
+        if (res.error) {
+            this.throwUpstreamError(
+                tenantId,
+                "list own schema metadata",
+                res.error,
+            );
+        }
+        return res.data ?? [];
     }
 
     async findAll(

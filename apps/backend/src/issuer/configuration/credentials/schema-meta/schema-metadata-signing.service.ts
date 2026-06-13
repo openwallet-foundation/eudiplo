@@ -9,6 +9,10 @@ import {
 import { buildJsonSchema } from "../utils";
 import { SchemaMetaAdapterService } from "./schema-meta-adapter.service";
 
+type TrustedAuthorityInput = NonNullable<
+    SignSchemaMetaConfigDto["config"]["trustedAuthorities"]
+>[number];
+
 @Injectable()
 export class SchemaMetadataSigningService {
     constructor(
@@ -17,6 +21,25 @@ export class SchemaMetadataSigningService {
         private readonly registrarService: RegistrarService,
     ) {}
 
+    private extractConfiguredVct(credentialConfig: {
+        vct?: unknown;
+    }): string | undefined {
+        if (typeof credentialConfig.vct === "string") {
+            return credentialConfig.vct;
+        }
+
+        if (
+            credentialConfig.vct &&
+            typeof credentialConfig.vct === "object" &&
+            "vct" in credentialConfig.vct &&
+            typeof (credentialConfig.vct as { vct?: unknown }).vct === "string"
+        ) {
+            return (credentialConfig.vct as { vct: string }).vct;
+        }
+
+        return undefined;
+    }
+
     private deriveSchemaUriMetadata(
         credentialConfig: Awaited<
             ReturnType<CredentialConfigService["getById"]>
@@ -24,16 +47,7 @@ export class SchemaMetadataSigningService {
         format: string,
     ): SchemaURIMeta {
         if (format === "dc+sd-jwt") {
-            const configuredVct =
-                typeof credentialConfig.vct === "string"
-                    ? credentialConfig.vct
-                    : credentialConfig.vct &&
-                        typeof credentialConfig.vct === "object" &&
-                        "vct" in credentialConfig.vct &&
-                        typeof (credentialConfig.vct as { vct?: unknown })
-                            .vct === "string"
-                      ? (credentialConfig.vct as { vct: string }).vct
-                      : undefined;
+            const configuredVct = this.extractConfiguredVct(credentialConfig);
 
             if (!configuredVct) {
                 throw new BadRequestException(
@@ -62,6 +76,75 @@ export class SchemaMetadataSigningService {
         throw new BadRequestException(
             `schemaURIs metadata is required: unsupported format '${format}'. Provide schemaURIs[].metadata explicitly.`,
         );
+    }
+
+    private parseVerificationMethod(
+        verificationMethod: string | Record<string, unknown> | undefined,
+        index: number,
+    ): Record<string, unknown> | undefined {
+        if (verificationMethod === undefined) {
+            return undefined;
+        }
+
+        if (typeof verificationMethod === "string") {
+            const trimmed = verificationMethod.trim();
+            if (trimmed.length === 0) {
+                return undefined;
+            }
+
+            try {
+                const parsed = JSON.parse(trimmed);
+                if (
+                    !parsed ||
+                    Array.isArray(parsed) ||
+                    typeof parsed !== "object"
+                ) {
+                    throw new Error("verificationMethod must be a JSON object");
+                }
+
+                return parsed as Record<string, unknown>;
+            } catch (error) {
+                throw new BadRequestException(
+                    `trustedAuthorities[${index}].verificationMethod must be valid JSON object: ${
+                        error instanceof Error ? error.message : "invalid JSON"
+                    }`,
+                );
+            }
+        }
+
+        if (Array.isArray(verificationMethod)) {
+            throw new BadRequestException(
+                `trustedAuthorities[${index}].verificationMethod must be an object`,
+            );
+        }
+
+        return verificationMethod;
+    }
+
+    private normalizeTrustedAuthority(
+        entry: TrustedAuthorityInput,
+        index: number,
+    ) {
+        if (entry.trustListId) {
+            return {
+                trustListId: entry.trustListId,
+                ...(entry.isLoTE === undefined ? {} : { isLoTE: entry.isLoTE }),
+            };
+        }
+
+        const verificationMethod = this.parseVerificationMethod(
+            entry.verificationMethod,
+            index,
+        );
+
+        return {
+            ...(entry.frameworkType
+                ? { frameworkType: entry.frameworkType }
+                : {}),
+            ...(entry.value ? { value: entry.value } : {}),
+            ...(entry.isLoTE === undefined ? {} : { isLoTE: entry.isLoTE }),
+            ...(verificationMethod ? { verificationMethod } : {}),
+        };
     }
 
     private async uploadSchemaAssetFromCredentialConfig(
@@ -142,6 +225,12 @@ export class SchemaMetadataSigningService {
                           );
                       }
 
+                      if (!entry.meta) {
+                          throw new BadRequestException(
+                              "schemaURIs metadata is required for manual schema URI entries.",
+                          );
+                      }
+
                       const uploadedSchema =
                           await this.registrarService.uploadSchemaMetadataAssetFromUrl(
                               tenantId,
@@ -160,6 +249,29 @@ export class SchemaMetadataSigningService {
             ...config,
             rulebookURI: uploadedRulebook.url,
             schemaURIs: uploadedSchemaURIs,
+        };
+    }
+
+    private normalizeConfigFromFormInput(
+        config: SignSchemaMetaConfigDto["config"],
+    ): SignSchemaMetaConfigDto["config"] {
+        const normalizedSchemaUris = (config.schemaURIs ?? []).map((entry) => ({
+            ...(entry.credentialConfigId
+                ? { credentialConfigId: entry.credentialConfigId }
+                : {}),
+            ...(entry.format ? { format: entry.format } : {}),
+            ...(entry.uri ? { uri: entry.uri } : {}),
+            ...(entry.meta ? { meta: entry.meta } : {}),
+        }));
+
+        const normalizedTrustedAuthorities = (
+            config.trustedAuthorities ?? []
+        ).map((entry, index) => this.normalizeTrustedAuthority(entry, index));
+
+        return {
+            ...config,
+            schemaURIs: normalizedSchemaUris,
+            trustedAuthorities: normalizedTrustedAuthorities,
         };
     }
 
@@ -205,10 +317,12 @@ export class SchemaMetadataSigningService {
         tenantId: string,
         body: SignSchemaMetaConfigDto,
     ) {
+        const normalizedConfig = this.normalizeConfigFromFormInput(body.config);
+
         const { config: derivedConfig, alreadyHosted } =
             await this.ensureSchemaUrisFromCredentialConfig(
                 tenantId,
-                body.config,
+                normalizedConfig,
                 body.credentialConfigId,
             );
 
@@ -241,7 +355,7 @@ export class SchemaMetadataSigningService {
                 body.credentialConfigId,
             );
             const schemaMetaForLink = {
-                ...(existing.schemaMeta ?? {}),
+                ...existing.schemaMeta,
                 ...configToSign,
                 id: reservedId,
             };
@@ -261,7 +375,9 @@ export class SchemaMetadataSigningService {
         tenantId: string,
         body: SignVersionSchemaMetaConfigDto,
     ) {
-        if (!body.config.id) {
+        const normalizedConfig = this.normalizeConfigFromFormInput(body.config);
+
+        if (!normalizedConfig.id) {
             throw new BadRequestException(
                 "config.id is required when publishing a new version of an existing schema metadata entry",
             );
@@ -269,7 +385,7 @@ export class SchemaMetadataSigningService {
 
         const configToSign = await this.uploadSchemaMetaAssetsToRegistrar(
             tenantId,
-            body.config,
+            normalizedConfig,
         );
 
         const signed =

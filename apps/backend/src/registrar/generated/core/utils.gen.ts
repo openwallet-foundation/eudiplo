@@ -2,143 +2,145 @@
 
 import type { BodySerializer, QuerySerializer } from "./bodySerializer.gen";
 import {
-    type ArraySeparatorStyle,
-    serializeArrayParam,
-    serializeObjectParam,
-    serializePrimitiveParam,
+  type ArraySeparatorStyle,
+  serializeArrayParam,
+  serializeObjectParam,
+  serializePrimitiveParam,
 } from "./pathSerializer.gen";
 
 export interface PathSerializer {
-    path: Record<string, unknown>;
-    url: string;
+  path: Record<string, unknown>;
+  url: string;
 }
 
-const PATH_PARAM_RE = /\{[^{}]+\}/g;
+export const PATH_PARAM_RE: RegExp = /\{[^{}]+\}/g;
 
-const defaultPathSerializer = ({ path, url: _url }: PathSerializer) => {
-    let url = _url;
-    const matches = _url.match(PATH_PARAM_RE);
-    if (matches) {
-        for (const match of matches) {
-            let explode = false;
-            let name = match.substring(1, match.length - 1);
-            let style: ArraySeparatorStyle = "simple";
+export const defaultPathSerializer = ({
+  path,
+  url: _url,
+}: PathSerializer): string => {
+  let url = _url;
+  const matches = _url.match(PATH_PARAM_RE);
+  if (matches) {
+    for (const match of matches) {
+      let explode = false;
+      let name = match.substring(1, match.length - 1);
+      let style: ArraySeparatorStyle = "simple";
 
-            if (name.endsWith("*")) {
-                explode = true;
-                name = name.substring(0, name.length - 1);
-            }
+      if (name.endsWith("*")) {
+        explode = true;
+        name = name.substring(0, name.length - 1);
+      }
 
-            if (name.startsWith(".")) {
-                name = name.substring(1);
-                style = "label";
-            } else if (name.startsWith(";")) {
-                name = name.substring(1);
-                style = "matrix";
-            }
+      if (name.startsWith(".")) {
+        name = name.substring(1);
+        style = "label";
+      } else if (name.startsWith(";")) {
+        name = name.substring(1);
+        style = "matrix";
+      }
 
-            const value = path[name];
+      const value = path[name];
 
-            if (value === undefined || value === null) {
-                continue;
-            }
+      if (value === undefined || value === null) {
+        continue;
+      }
 
-            if (Array.isArray(value)) {
-                url = url.replace(
-                    match,
-                    serializeArrayParam({ explode, name, style, value }),
-                );
-                continue;
-            }
+      if (Array.isArray(value)) {
+        url = url.replace(
+          match,
+          serializeArrayParam({ explode, name, style, value }),
+        );
+        continue;
+      }
 
-            if (typeof value === "object") {
-                url = url.replace(
-                    match,
-                    serializeObjectParam({
-                        explode,
-                        name,
-                        style,
-                        value: value as Record<string, unknown>,
-                        valueOnly: true,
-                    }),
-                );
-                continue;
-            }
+      if (typeof value === "object") {
+        url = url.replace(
+          match,
+          serializeObjectParam({
+            explode,
+            name,
+            style,
+            value: value as Record<string, unknown>,
+            valueOnly: true,
+          }),
+        );
+        continue;
+      }
 
-            if (style === "matrix") {
-                url = url.replace(
-                    match,
-                    `;${serializePrimitiveParam({
-                        name,
-                        value: value as string,
-                    })}`,
-                );
-                continue;
-            }
+      if (style === "matrix") {
+        url = url.replace(
+          match,
+          `;${serializePrimitiveParam({
+            name,
+            value: value as string,
+          })}`,
+        );
+        continue;
+      }
 
-            const replaceValue = encodeURIComponent(
-                style === "label" ? `.${value as string}` : (value as string),
-            );
-            url = url.replace(match, replaceValue);
-        }
+      const replaceValue = encodeURIComponent(
+        style === "label" ? `.${value as string}` : (value as string),
+      );
+      url = url.replace(match, replaceValue);
     }
-    return url;
+  }
+  return url;
 };
 
 export const getUrl = ({
-    baseUrl,
-    path,
-    query,
-    querySerializer,
-    url: _url,
+  baseUrl,
+  path,
+  query,
+  querySerializer,
+  url: _url,
 }: {
-    baseUrl?: string;
-    path?: Record<string, unknown>;
-    query?: Record<string, unknown>;
-    querySerializer: QuerySerializer;
-    url: string;
-}) => {
-    const pathUrl = _url.startsWith("/") ? _url : `/${_url}`;
-    let url = (baseUrl ?? "") + pathUrl;
-    if (path) {
-        url = defaultPathSerializer({ path, url });
-    }
-    let search = query ? querySerializer(query) : "";
-    if (search.startsWith("?")) {
-        search = search.substring(1);
-    }
-    if (search) {
-        url += `?${search}`;
-    }
-    return url;
+  baseUrl?: string;
+  path?: Record<string, unknown>;
+  query?: Record<string, unknown>;
+  querySerializer: QuerySerializer;
+  url: string;
+}): string => {
+  const pathUrl = _url.startsWith("/") ? _url : `/${_url}`;
+  let url = (baseUrl ?? "") + pathUrl;
+  if (path) {
+    url = defaultPathSerializer({ path, url });
+  }
+  let search = query ? querySerializer(query) : "";
+  if (search.startsWith("?")) {
+    search = search.substring(1);
+  }
+  if (search) {
+    url += `?${search}`;
+  }
+  return url;
 };
 
 export function getValidRequestBody(options: {
-    body?: unknown;
-    bodySerializer?: BodySerializer | null;
-    serializedBody?: unknown;
-}) {
-    const hasBody = options.body !== undefined;
-    const isSerializedBody = hasBody && options.bodySerializer;
+  body?: unknown;
+  bodySerializer?: BodySerializer | null;
+  serializedBody?: unknown;
+}): unknown {
+  const hasBody = options.body !== undefined;
+  const isSerializedBody = hasBody && options.bodySerializer;
 
-    if (isSerializedBody) {
-        if ("serializedBody" in options) {
-            const hasSerializedBody =
-                options.serializedBody !== undefined &&
-                options.serializedBody !== "";
+  if (isSerializedBody) {
+    if ("serializedBody" in options) {
+      const hasSerializedBody =
+        options.serializedBody !== undefined && options.serializedBody !== "";
 
-            return hasSerializedBody ? options.serializedBody : null;
-        }
-
-        // not all clients implement a serializedBody property (i.e., client-axios)
-        return options.body !== "" ? options.body : null;
+      return hasSerializedBody ? options.serializedBody : null;
     }
 
-    // plain/text body
-    if (hasBody) {
-        return options.body;
-    }
+    // not all clients implement a serializedBody property (i.e., client-axios)
+    return options.body !== "" ? options.body : null;
+  }
 
-    // no body was provided
-    return undefined;
+  // plain/text body
+  if (hasBody) {
+    return options.body;
+  }
+
+  // no body was provided
+  return undefined;
 }

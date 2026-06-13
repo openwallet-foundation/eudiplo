@@ -143,6 +143,15 @@ export class SchemaMetadataController {
         });
     }
 
+    @Get("mine")
+    @ApiOperation({ summary: "List schema metadata controlled by the user" })
+    @ApiResponse({ status: 200, type: [SchemaMetadataResponseDto] })
+    getMine(
+        @Token() token: TokenPayload,
+    ): Promise<SchemaMetadataResponseDto[]> {
+        return this.schemaMetadataService.getMine(token.entity!.id);
+    }
+
     @Get(":id")
     @ApiOperation({ summary: "Get schema metadata by ID" })
     @ApiResponse({ status: 200, type: SchemaMetadataResponseDto })

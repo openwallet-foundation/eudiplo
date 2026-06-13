@@ -3,6 +3,7 @@ import {
   schemaMetadataControllerDeprecateVersion,
   schemaMetadataControllerExport,
   schemaMetadataControllerFindAll,
+  schemaMetadataControllerGetMine,
   schemaMetadataControllerFindOne,
   schemaMetadataControllerGetJwt,
   schemaMetadataControllerGetLatest,
@@ -42,6 +43,12 @@ export class SchemaMetadataService {
         ...(params?.version ? { version: params.version } : {}),
       },
     });
+
+    return response.data ?? [];
+  }
+
+  async listMine(): Promise<SchemaMetadata[]> {
+    const response = await schemaMetadataControllerGetMine();
 
     return response.data ?? [];
   }

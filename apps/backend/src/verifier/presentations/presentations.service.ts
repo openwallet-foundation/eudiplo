@@ -825,8 +825,7 @@ export class PresentationsService {
         }
 
         const signedJwt =
-            typeof (response as { signedJwt?: unknown }).signedJwt ===
-            "string"
+            typeof (response as { signedJwt?: unknown }).signedJwt === "string"
                 ? (response as { signedJwt: string }).signedJwt
                 : undefined;
 
@@ -861,9 +860,8 @@ export class PresentationsService {
                       verifier,
                       selectedFormats: allFormats as AttestationFormat[],
                       resolve: async (uri: string) => ({
-                          content: await this.fetchCredentialIssuerMetadata(
-                              uri,
-                          ),
+                          content:
+                              await this.fetchCredentialIssuerMetadata(uri),
                       }),
                       includeTrustedAuthorities: true,
                   })
@@ -944,8 +942,8 @@ export class PresentationsService {
                 supportedFormats: allFormats,
                 schemaURIs: payload.schemaURIs.map(
                     (entry: { formatIdentifier?: string; uri: string }) => ({
-                    formatIdentifier: entry.formatIdentifier,
-                    uri: entry.uri,
+                        formatIdentifier: entry.formatIdentifier,
+                        uri: entry.uri,
                     }),
                 ),
                 trustedAuthorities:

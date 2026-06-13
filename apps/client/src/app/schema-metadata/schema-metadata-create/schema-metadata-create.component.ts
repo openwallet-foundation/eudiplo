@@ -234,43 +234,6 @@ export class SchemaMetadataCreateComponent implements OnInit {
     }
   }
 
-  private deriveSchemaUriMetadata(config: CredentialConfig): Record<string, unknown> {
-    const format = config.config?.format;
-    if (format === 'dc+sd-jwt') {
-      const vct =
-        typeof config.vct === 'string'
-          ? config.vct
-          : config.vct &&
-              typeof config.vct === 'object' &&
-              'vct' in config.vct &&
-              typeof (config.vct as { vct?: unknown }).vct === 'string'
-            ? (config.vct as { vct: string }).vct
-            : undefined;
-
-      if (!vct) {
-        throw new Error(
-          `Credential config ${config.id}: missing vct required for schemaURIs metadata`
-        );
-      }
-      return { vct };
-    }
-
-    if (format === 'mso_mdoc') {
-      const docType =
-        config.config?.docType ||
-        ((config.config as { doctype?: string } | undefined)?.doctype ?? undefined);
-
-      if (!docType) {
-        throw new Error(
-          `Credential config ${config.id}: missing docType required for schemaURIs metadata`
-        );
-      }
-      return { doctype_value: docType };
-    }
-
-    return {};
-  }
-
   syncTrustedAuthoritiesFromSelection(): void {
     const selectedIds = this.importTrustListIds.value ?? [];
 
@@ -321,50 +284,11 @@ export class SchemaMetadataCreateComponent implements OnInit {
   }
 
   /**
-   * Build the SchemaMetaConfig payload from the form. The attestation `id`
-   * and all integrity hashes are intentionally omitted — they are produced
-   * by the backend during signing (id from the registrar, integrity hashes
-   * computed from the live URIs).
+   * Build a thin form payload. Backend resolves and validates schema metadata
+   * internals (schema URI metadata, trust authority parsing, integrity assets).
    */
-  private buildConfig(): Record<string, unknown> {
+  private buildConfigFromForm(): Record<string, unknown> {
     const raw = this.composeForm.getRawValue();
-
-    // Trust list references use trustListId; manual entries use frameworkType + value.
-    const trustedAuthorities = (raw.trustedAuthorities as Record<string, unknown>[]).map(
-      (e: Record<string, unknown>, index: number) => {
-        if (e['trustListId']) {
-          return {
-            trustListId: e['trustListId'],
-            isLoTE: e['isLoTE'],
-          };
-        }
-
-        const verificationMethodRaw = e['verificationMethod'];
-        let verificationMethod: Record<string, unknown> | undefined;
-
-        if (typeof verificationMethodRaw === 'string' && verificationMethodRaw.trim().length > 0) {
-          try {
-            const parsed = JSON.parse(verificationMethodRaw);
-            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-              verificationMethod = parsed as Record<string, unknown>;
-            } else {
-              throw new Error('verificationMethod must be a JSON object');
-            }
-          } catch (error) {
-            throw new Error(
-              `Trusted authority #${index + 1}: verification method must be valid JSON object (${error instanceof Error ? error.message : 'invalid JSON'})`
-            );
-          }
-        }
-
-        return {
-          frameworkType: e['frameworkType'],
-          value: e['value'],
-          ...(e['isLoTE'] !== undefined ? { isLoTE: e['isLoTE'] } : {}),
-          ...(verificationMethod ? { verificationMethod } : {}),
-        };
-      }
-    );
 
     return {
       version: raw.version!,
@@ -373,30 +297,23 @@ export class SchemaMetadataCreateComponent implements OnInit {
       bindingType: raw.bindingType,
       ...(raw.category ? { category: raw.category } : {}),
       ...(Array.isArray(raw.tags) && raw.tags.length > 0 ? { tags: raw.tags } : {}),
-      // Send credential config references so backend can resolve/upload schema sources reliably.
+      // Send credential config references so backend can resolve schema URI metadata.
       schemaURIs: (raw.schemaURIs as Record<string, unknown>[]).map((e) => {
-        if (typeof e['credentialConfigId'] === 'string' && e['credentialConfigId']) {
-          const cfg = this.credentialConfigs.find((c) => c.id === e['credentialConfigId']);
-          if (!cfg) {
-            throw new Error(
-              `Credential config ${String(e['credentialConfigId'])} not found for schemaURIs metadata`
-            );
-          }
-
-          return {
-            credentialConfigId: e['credentialConfigId'],
-            metadata: this.deriveSchemaUriMetadata(cfg),
-          };
-        }
-
-        const format = typeof e['format'] === 'string' ? e['format'] : undefined;
-        throw new Error(
-          `Schema URI metadata is required. Unable to derive metadata for manual schema entry${
-            format ? ` (format: ${format})` : ''
-          }.`
-        );
+        return {
+          credentialConfigId: e['credentialConfigId'],
+          format: e['format'],
+          uri: e['uri'],
+        };
       }),
-      trustedAuthorities,
+      trustedAuthorities: (raw.trustedAuthorities as Record<string, unknown>[]).map(
+        (e: Record<string, unknown>) => ({
+          trustListId: e['trustListId'],
+          frameworkType: e['frameworkType'],
+          value: e['value'],
+          isLoTE: e['isLoTE'],
+          verificationMethod: e['verificationMethod'],
+        })
+      ),
     };
   }
 
@@ -412,7 +329,7 @@ export class SchemaMetadataCreateComponent implements OnInit {
       // it to the registrar in a single call — we just receive the resulting
       // metadata entry.
       const created = await this.schemaMetadataService.signSchemaMetaConfig(
-        this.buildConfig() as never,
+        this.buildConfigFromForm(),
         undefined,
         this.credentialConfigId
       );

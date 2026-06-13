@@ -293,24 +293,29 @@ export class SchemaMetaAdapterService {
             "rulebookURI",
         );
         const rawSchemaUris = config.schemaURIs ?? [];
-        for (const entry of rawSchemaUris) {
-            if (!entry.format || !entry.uri || !entry.meta) {
-                throw new BadRequestException(
-                    "Each schemaURIs entry must include format, uri, and meta after preprocessing.",
-                );
-            }
-        }
 
         const schemaURIsWithIntegrity = await Promise.all(
-            rawSchemaUris.map(async (entry) => ({
-                format: entry.format as string,
-                uri: entry.uri as string,
-                metadata: entry.meta,
-                integrity: await this.computeSri(
-                    entry.uri as string,
-                    `schemaURIs[${entry.format as string}]`,
-                ),
-            })),
+            rawSchemaUris.map(async (entry) => {
+                const format = entry.format;
+                const uri = entry.uri;
+                const metadata = entry.meta;
+
+                if (!format || !uri || !metadata) {
+                    throw new BadRequestException(
+                        "Each schemaURIs entry must include format, uri, and meta after preprocessing.",
+                    );
+                }
+
+                return {
+                    format,
+                    uri,
+                    metadata,
+                    integrity: await this.computeSri(
+                        uri,
+                        `schemaURIs[${format}]`,
+                    ),
+                };
+            }),
         );
         const trustedAuthorities = await this.buildTrustedAuthorities(
             tenantId,

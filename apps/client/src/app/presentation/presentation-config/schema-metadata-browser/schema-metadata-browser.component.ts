@@ -182,7 +182,8 @@ export class SchemaMetadataBrowserComponent implements OnInit {
 
     const selected = new Set(this.getSelectedFormats());
     const allCredentials =
-      (this.resolved.schema.dcqlQuery as { credentials?: Record<string, unknown>[] }).credentials ?? [];
+      (this.resolved.schema.dcqlQuery as { credentials?: Record<string, unknown>[] }).credentials ??
+      [];
 
     return {
       credentials: allCredentials.filter((credential) => {
@@ -198,10 +199,8 @@ export class SchemaMetadataBrowserComponent implements OnInit {
 
   insert(): void {
     if (!this.resolved || !this.hasSelections()) return;
-    const importResult: SchemaMetadataImportResult = this.schemaMetadataService.generateImportResult(
-      this.resolved,
-      this.getSelectedFormats()
-    );
+    const importResult: SchemaMetadataImportResult =
+      this.schemaMetadataService.generateImportResult(this.resolved, this.getSelectedFormats());
     this.dialogRef.close(importResult);
   }
 }
