@@ -9,7 +9,7 @@
   <mat-tab-group animationDuration="0" (selectedIndexChange)="$event === 1 && loadCatalog()">
     <!-- ── Tab 1: Enter URL manually ─────────────────────────────── -->
     <mat-tab label="Enter URL">
-      <div fxLayout="column" fxLayoutGap="16px" style="padding-top: 16px">
+      <div fxLayout="column" fxLayoutGap="16px" class="tab-pane-padding">
         <div fxLayout="column" fxLayoutGap="8px">
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Schema Metadata URL</mat-label>
@@ -97,7 +97,7 @@
 
     <!-- ── Tab 2: Browse catalog ──────────────────────────────────── -->
     <mat-tab label="Browse Catalog">
-      <div fxLayout="column" fxLayoutGap="16px" style="padding-top: 16px">
+      <div fxLayout="column" fxLayoutGap="16px" class="tab-pane-padding">
         @if (catalogLoading) {
           <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
             <mat-spinner diameter="24"></mat-spinner>
@@ -136,7 +136,7 @@
           <mat-list>
             @for (entry of filteredCatalogEntries; track entry.id + entry.version) {
               <mat-list-item class="catalog-list-item">
-                <div fxLayout="column" fxLayoutGap="4px" style="width: 100%">
+                <div fxLayout="column" fxLayoutGap="4px" class="full-width">
                   <div fxLayout="row" fxLayoutAlign="space-between center">
                     <strong>{{ entry.name || entry.id }}</strong>
                     <button
@@ -161,12 +161,12 @@
                   @if (entry.description) {
                     <div class="catalog-description">{{ entry.description }}</div>
                   }
-                  <div fxLayout="row" fxLayoutGap="4px" style="flex-wrap: wrap; margin-top: 4px">
+                  <div fxLayout="row" fxLayoutGap="4px" class="chip-row">
                     @for (format of entry.supportedFormats; track format) {
-                      <mat-chip style="font-size: 11px">{{ format }}</mat-chip>
+                      <mat-chip class="chip-small">{{ format }}</mat-chip>
                     }
                     @for (tag of entry.tags ?? []; track tag) {
-                      <mat-chip style="font-size: 11px" color="accent">{{ tag }}</mat-chip>
+                      <mat-chip class="chip-small" color="accent">{{ tag }}</mat-chip>
                     }
                   </div>
                 </div>

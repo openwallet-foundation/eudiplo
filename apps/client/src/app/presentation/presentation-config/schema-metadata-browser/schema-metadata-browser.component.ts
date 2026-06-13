@@ -161,12 +161,35 @@ export class SchemaMetadataBrowserComponent implements OnInit {
       .map(([format]) => format);
   }
 
+  getResolvedReferences(): {
+    format: string;
+    uri: string;
+    integrity?: string;
+    meta?: Record<string, unknown>;
+    parsedSchema?: Record<string, unknown>;
+  }[] {
+    return this.resolved?.schema.resolvedReferences ?? [];
+  }
+
+  hasResolvedReferences(): boolean {
+    return this.getResolvedReferences().length > 0;
+  }
+
   getGeneratedDcql(): object {
-    if (!this.resolved) {
+    if (!this.resolved?.schema.dcqlQuery) {
       return { credentials: [] };
     }
 
-    return this.schemaMetadataService.generateDcqlQuery(this.resolved, this.getSelectedFormats());
+    const selected = new Set(this.getSelectedFormats());
+    const allCredentials =
+      (this.resolved.schema.dcqlQuery as { credentials?: Record<string, unknown>[] }).credentials ?? [];
+
+    return {
+      credentials: allCredentials.filter((credential) => {
+        const format = credential['format'];
+        return typeof format === 'string' && selected.has(format);
+      }),
+    };
   }
 
   close(): void {
@@ -175,8 +198,10 @@ export class SchemaMetadataBrowserComponent implements OnInit {
 
   insert(): void {
     if (!this.resolved || !this.hasSelections()) return;
-    const importResult: SchemaMetadataImportResult =
-      this.schemaMetadataService.generateImportResult(this.resolved, this.getSelectedFormats());
+    const importResult: SchemaMetadataImportResult = this.schemaMetadataService.generateImportResult(
+      this.resolved,
+      this.getSelectedFormats()
+    );
     this.dialogRef.close(importResult);
   }
 }

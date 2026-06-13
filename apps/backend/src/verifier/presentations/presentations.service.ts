@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { X509Certificate, createHash, createVerify } from "node:crypto";
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
 import {
@@ -10,7 +10,9 @@ import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { plainToClass } from "class-transformer";
 import { Request } from "express";
-import { base64url, decodeJwt } from "jose";
+import * as eudiAttestationSchema from "@owf/eudi-attestation-schema";
+import { type AttestationFormat } from "@owf/eudi-attestation-schema";
+import { base64url, decodeJwt, decodeProtectedHeader } from "jose";
 import { Span, TraceService } from "nestjs-otel";
 import { PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
@@ -65,6 +67,95 @@ type ResolvedSchemaMetadataPayload = {
         value?: string;
         isLoTE?: boolean;
     }>;
+    resolvedReferences: Array<{
+        format: string;
+        uri: string;
+        integrity?: string;
+        meta?: Record<string, unknown>;
+        parsedSchema?: Record<string, unknown>;
+    }>;
+    dcqlQuery: BuildDcqlFromSchemaMetaResult;
+};
+
+type BuildDcqlFromSchemaMetaResult = {
+    credentials: Array<Record<string, unknown>>;
+};
+
+type SchemaMetadataVerifier = (
+    data: string,
+    signature: string,
+) => Promise<boolean>;
+
+type SchemaMetaSdkCompat = {
+    verifyResolveAndBuildDcql?: (options: {
+        jws: string;
+        verifier: SchemaMetadataVerifier;
+        selectedFormats: AttestationFormat[];
+        resolve: (uri: string) => Promise<{ content: string | object }>;
+        verifyIntegrity?: boolean;
+        includeTrustedAuthorities?: boolean;
+    }) => Promise<{
+        verified: {
+            payload: {
+                id?: string;
+                version?: string;
+                schemaURIs: Array<{ formatIdentifier?: string; uri: string }>;
+                trustedAuthorities?: Array<{
+                    frameworkType?: string;
+                    value?: string;
+                    isLOTE?: boolean;
+                }>;
+            };
+        };
+        resolvedReferences: Array<{
+            format: string;
+            uri: string;
+            integrity?: string;
+            meta?: unknown;
+            parsedSchema?: Record<string, unknown>;
+        }>;
+        dcql: BuildDcqlFromSchemaMetaResult;
+    }>;
+    verifySchemaMeta?: (options: {
+        jws: string;
+        verifier: SchemaMetadataVerifier;
+    }) => Promise<{
+        payload: {
+            id?: string;
+            version?: string;
+            schemaURIs: Array<{ formatIdentifier?: string; uri: string }>;
+            trustedAuthorities?: Array<{
+                frameworkType?: string;
+                value?: string;
+                isLOTE?: boolean;
+            }>;
+        };
+    }>;
+    resolveSchemaReferences?: (options: {
+        schemaMeta: unknown;
+        selectedFormats: AttestationFormat[];
+        resolve: (uri: string) => Promise<{ content: string | object }>;
+    }) => Promise<
+        Array<{
+            format: string;
+            uri: string;
+            integrity?: string;
+            meta?: unknown;
+            parsedSchema?: Record<string, unknown>;
+        }>
+    >;
+    buildDcqlFromSchemaMeta?: (options: {
+        schemaMeta: unknown;
+        selectedFormats: AttestationFormat[];
+        resolvedReferences?: Array<{
+            format: string;
+            uri: string;
+            integrity?: string;
+            meta?: unknown;
+            parsedSchema?: Record<string, unknown>;
+        }>;
+        includeTrustedAuthorities?: boolean;
+    }) => BuildDcqlFromSchemaMetaResult;
 };
 
 /**
@@ -648,6 +739,78 @@ export class PresentationsService {
         return this.registrarService.findAllSchemaMetadata(tenantId, {});
     }
 
+    private deriveSchemaMetadataFormatsFromJwt(signedJwt: string): string[] {
+        let payload: Record<string, unknown>;
+
+        try {
+            payload = decodeJwt(signedJwt) as Record<string, unknown>;
+        } catch {
+            throw new BadRequestException(
+                "signedJwt in schema metadata response is not a valid JWT",
+            );
+        }
+
+        const supportedFormats = Array.isArray(payload.supportedFormats)
+            ? payload.supportedFormats.filter(
+                  (format): format is string => typeof format === "string",
+              )
+            : [];
+
+        const schemaURIs = Array.isArray(payload.schemaURIs)
+            ? (payload.schemaURIs as Array<{
+                  formatIdentifier?: string;
+                  format?: string;
+              }>)
+            : [];
+
+        const schemaUriFormats = schemaURIs
+            .map((entry) => entry.formatIdentifier ?? entry.format)
+            .filter((format): format is string => typeof format === "string");
+
+        return Array.from(new Set([...supportedFormats, ...schemaUriFormats]));
+    }
+
+    private async buildSchemaMetadataVerifier(
+        signedJwt: string,
+    ): Promise<SchemaMetadataVerifier> {
+        const header = decodeProtectedHeader(signedJwt);
+        const x5c = Array.isArray(header.x5c)
+            ? header.x5c.filter(
+                  (cert): cert is string => typeof cert === "string",
+              )
+            : [];
+
+        if (x5c.length === 0) {
+            throw new BadRequestException(
+                "Schema metadata JWT does not contain x5c certificate chain in header",
+            );
+        }
+
+        const leafCert = new X509Certificate(Buffer.from(x5c[0], "base64"));
+        const key = leafCert.publicKey;
+        const alg = typeof header.alg === "string" ? header.alg : "ES256";
+
+        return async (data: string, signature: string) => {
+            try {
+                const verifier = createVerify("SHA256");
+                verifier.update(data);
+                verifier.end();
+
+                const signatureBytes = Buffer.from(base64url.decode(signature));
+                if (alg.startsWith("ES")) {
+                    return verifier.verify(
+                        { key, dsaEncoding: "ieee-p1363" },
+                        signatureBytes,
+                    );
+                }
+
+                return verifier.verify(key, signatureBytes);
+            } catch {
+                return false;
+            }
+        };
+    }
+
     async resolveSchemaMetadata(schemaMetadataUrl: string): Promise<{
         signedJwt: string;
         schema: ResolvedSchemaMetadataPayload;
@@ -662,7 +825,8 @@ export class PresentationsService {
         }
 
         const signedJwt =
-            typeof (response as { signedJwt?: unknown }).signedJwt === "string"
+            typeof (response as { signedJwt?: unknown }).signedJwt ===
+            "string"
                 ? (response as { signedJwt: string }).signedJwt
                 : undefined;
 
@@ -672,51 +836,14 @@ export class PresentationsService {
             );
         }
 
-        let payload: Record<string, unknown>;
-        try {
-            payload = decodeJwt(signedJwt) as Record<string, unknown>;
-        } catch {
-            throw new BadRequestException(
-                "signedJwt in schema metadata response is not a valid JWT",
-            );
-        }
+        const allFormats = this.deriveSchemaMetadataFormatsFromJwt(signedJwt);
 
-        const id = typeof payload.id === "string" ? payload.id : undefined;
-        if (!id) {
-            throw new BadRequestException(
-                "Schema metadata JWT payload is missing a valid id",
-            );
-        }
-
-        const supportedFormats = Array.isArray(payload.supportedFormats)
-            ? payload.supportedFormats.filter(
-                  (format): format is string => typeof format === "string",
-              )
-            : [];
-
-        const schemaURIs = Array.isArray(payload.schemaURIs)
-            ? (payload.schemaURIs as Array<{
-                  formatIdentifier?: string;
-                  format?: string;
-                  uri?: string;
-              }>)
-            : [];
-
-        const trustedAuthorities = Array.isArray(payload.trustedAuthorities)
-            ? (payload.trustedAuthorities as Array<{
-                  frameworkType?: string;
-                  value?: string;
-                  isLoTE?: boolean;
-              }>)
-            : [];
-
-        const schemaUriFormats = schemaURIs
-            .map((entry) => entry.formatIdentifier ?? entry.format)
-            .filter((format): format is string => typeof format === "string");
-
-        const allFormats = Array.from(
-            new Set([...supportedFormats, ...schemaUriFormats]),
-        );
+        const responseMetadata = response as {
+            name?: unknown;
+            description?: unknown;
+            category?: unknown;
+            tags?: unknown;
+        };
 
         if (allFormats.length === 0) {
             throw new BadRequestException(
@@ -724,32 +851,134 @@ export class PresentationsService {
             );
         }
 
+        const verifier = await this.buildSchemaMetadataVerifier(signedJwt);
+        const schemaMetaSdk =
+            eudiAttestationSchema as unknown as SchemaMetaSdkCompat;
+        const resolved =
+            typeof schemaMetaSdk.verifyResolveAndBuildDcql === "function"
+                ? await schemaMetaSdk.verifyResolveAndBuildDcql({
+                      jws: signedJwt,
+                      verifier,
+                      selectedFormats: allFormats as AttestationFormat[],
+                      resolve: async (uri: string) => ({
+                          content: await this.fetchCredentialIssuerMetadata(
+                              uri,
+                          ),
+                      }),
+                      includeTrustedAuthorities: true,
+                  })
+                : await (async () => {
+                      if (
+                          typeof schemaMetaSdk.verifySchemaMeta !==
+                              "function" ||
+                          typeof schemaMetaSdk.resolveSchemaReferences !==
+                              "function" ||
+                          typeof schemaMetaSdk.buildDcqlFromSchemaMeta !==
+                              "function"
+                      ) {
+                          throw new BadRequestException(
+                              "Installed @owf/eudi-attestation-schema version does not support schema metadata resolution APIs",
+                          );
+                      }
+
+                      const verified = await schemaMetaSdk.verifySchemaMeta({
+                          jws: signedJwt,
+                          verifier,
+                      });
+                      const resolvedReferences =
+                          await schemaMetaSdk.resolveSchemaReferences({
+                              schemaMeta: verified.payload,
+                              selectedFormats:
+                                  allFormats as AttestationFormat[],
+                              resolve: async (uri: string) => ({
+                                  content:
+                                      await this.fetchCredentialIssuerMetadata(
+                                          uri,
+                                      ),
+                              }),
+                          });
+                      const dcql = schemaMetaSdk.buildDcqlFromSchemaMeta({
+                          schemaMeta: verified.payload,
+                          selectedFormats: allFormats as AttestationFormat[],
+                          resolvedReferences,
+                          includeTrustedAuthorities: true,
+                      });
+
+                      return {
+                          verified,
+                          resolvedReferences,
+                          dcql,
+                      };
+                  })();
+
+        const payload = resolved.verified.payload;
+        const id = typeof payload.id === "string" ? payload.id : undefined;
+        if (!id) {
+            throw new BadRequestException(
+                "Schema metadata JWT payload is missing a valid id",
+            );
+        }
+
         return {
             signedJwt,
             schema: {
                 id,
-                version:
-                    typeof payload.version === "string"
-                        ? payload.version
-                        : undefined,
+                version: payload.version,
                 name:
-                    typeof payload.name === "string" ? payload.name : undefined,
+                    typeof responseMetadata.name === "string"
+                        ? responseMetadata.name
+                        : undefined,
                 description:
-                    typeof payload.description === "string"
-                        ? payload.description
+                    typeof responseMetadata.description === "string"
+                        ? responseMetadata.description
                         : undefined,
                 category:
-                    typeof payload.category === "string"
-                        ? payload.category
+                    typeof responseMetadata.category === "string"
+                        ? responseMetadata.category
                         : undefined,
-                tags: Array.isArray(payload.tags)
-                    ? payload.tags.filter(
+                tags: Array.isArray(responseMetadata.tags)
+                    ? responseMetadata.tags.filter(
                           (tag): tag is string => typeof tag === "string",
                       )
                     : undefined,
                 supportedFormats: allFormats,
-                schemaURIs,
-                trustedAuthorities,
+                schemaURIs: payload.schemaURIs.map(
+                    (entry: { formatIdentifier?: string; uri: string }) => ({
+                    formatIdentifier: entry.formatIdentifier,
+                    uri: entry.uri,
+                    }),
+                ),
+                trustedAuthorities:
+                    payload.trustedAuthorities?.map(
+                        (authority: {
+                            frameworkType?: string;
+                            value?: string;
+                            isLOTE?: boolean;
+                        }) => ({
+                            frameworkType: authority.frameworkType,
+                            value: authority.value,
+                            isLoTE: authority.isLOTE,
+                        }),
+                    ) ?? [],
+                resolvedReferences: resolved.resolvedReferences.map(
+                    (ref: {
+                        format: string;
+                        uri: string;
+                        integrity?: string;
+                        meta?: unknown;
+                        parsedSchema?: Record<string, unknown>;
+                    }) => ({
+                        format: ref.format,
+                        uri: ref.uri,
+                        integrity: ref.integrity,
+                        meta:
+                            ref.meta && typeof ref.meta === "object"
+                                ? (ref.meta as Record<string, unknown>)
+                                : undefined,
+                        parsedSchema: ref.parsedSchema,
+                    }),
+                ),
+                dcqlQuery: resolved.dcql,
             },
         };
     }

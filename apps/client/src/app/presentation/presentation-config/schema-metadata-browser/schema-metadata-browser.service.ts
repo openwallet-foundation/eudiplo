@@ -23,6 +23,14 @@ export interface ResolvedSchemaMetadata {
       value?: string;
       isLoTE?: boolean;
     }[];
+    resolvedReferences?: {
+      format: string;
+      uri: string;
+      integrity?: string;
+      meta?: Record<string, unknown>;
+      parsedSchema?: Record<string, unknown>;
+    }[];
+    dcqlQuery?: object;
   };
 }
 
@@ -61,11 +69,7 @@ export class SchemaMetadataBrowserService {
     }
 
     const endpoint = `${baseUrl}/api/verifier/config/schema-metadata/resolve`;
-    return firstValueFrom(
-      this.http.post<ResolvedSchemaMetadata>(endpoint, {
-        schemaMetadataUrl,
-      })
-    );
+    return firstValueFrom(this.http.post<ResolvedSchemaMetadata>(endpoint, { schemaMetadataUrl }));
   }
 
   async fetchCatalog(): Promise<CatalogEntry[]> {
@@ -95,37 +99,20 @@ export class SchemaMetadataBrowserService {
     };
   }
 
-  generateDcqlQuery(resolved: ResolvedSchemaMetadata, selectedFormats: string[]): object {
-    const baseId = this.deriveSchemaKey(resolved.schema.id);
-    const trustedAuthorities = this.toDcqlTrustedAuthorities(resolved);
-    const credentials = selectedFormats.map((format, index) => {
-      const formatKey = this.sanitizeId(format).slice(0, 20) || 'cred';
-      const credential: Record<string, unknown> = {
-        id: `${baseId}_${formatKey}_${index + 1}`,
-        format,
-      };
-
-      if (format === 'dc+sd-jwt') {
-        credential['meta'] = {
-          vct_values: [resolved.schema.id],
-        };
-      }
-
-      if (trustedAuthorities.length > 0) {
-        credential['trusted_authorities'] = trustedAuthorities;
-      }
-
-      return credential;
-    });
-
-    return { credentials };
-  }
-
   generateImportResult(
     resolved: ResolvedSchemaMetadata,
     selectedFormats: string[]
   ): SchemaMetadataImportResult {
-    const dcqlQuery = this.generateDcqlQuery(resolved, selectedFormats);
+    const allCredentials =
+      (resolved.schema.dcqlQuery as { credentials?: Record<string, unknown>[] } | undefined)
+        ?.credentials ?? [];
+    const selected = new Set(selectedFormats);
+    const credentials = allCredentials.filter((credential) => {
+      const format = credential['format'];
+      return typeof format === 'string' && selected.has(format);
+    });
+
+    const dcqlQuery = { credentials };
     const suggestedPresentationId = this.derivePresentationId(resolved);
     const suggestedDescription = this.deriveDescription(resolved);
 
@@ -134,31 +121,6 @@ export class SchemaMetadataBrowserService {
       suggestedPresentationId,
       suggestedDescription,
     };
-  }
-
-  private toDcqlTrustedAuthorities(
-    resolved: ResolvedSchemaMetadata
-  ): { type: 'aki' | 'etsi_tl'; values: string[] }[] {
-    const valuesByType = new Map<'aki' | 'etsi_tl', Set<string>>();
-
-    for (const authority of resolved.schema.trustedAuthorities ?? []) {
-      const frameworkType = authority.frameworkType;
-      const value = authority.value;
-
-      if ((frameworkType !== 'aki' && frameworkType !== 'etsi_tl') || !value) {
-        continue;
-      }
-
-      if (!valuesByType.has(frameworkType)) {
-        valuesByType.set(frameworkType, new Set<string>());
-      }
-      valuesByType.get(frameworkType)!.add(value);
-    }
-
-    return Array.from(valuesByType.entries()).map(([type, values]) => ({
-      type,
-      values: Array.from(values),
-    }));
   }
 
   private sanitizeId(value: string): string {
@@ -172,13 +134,8 @@ export class SchemaMetadataBrowserService {
     );
   }
 
-  private deriveSchemaKey(schemaId: string): string {
-    const tail = schemaId.split('/').filter(Boolean).pop() || schemaId;
-    return this.sanitizeId(tail).slice(0, 30) || 'schema';
-  }
-
   private derivePresentationId(resolved: ResolvedSchemaMetadata): string {
-    const source = resolved.schema.name || this.deriveSchemaKey(resolved.schema.id);
+    const source = resolved.schema.name || resolved.schema.id;
     const version = resolved.schema.version
       ? `_v${resolved.schema.version.replace(/[^0-9a-zA-Z]+/g, '_')}`
       : '';
