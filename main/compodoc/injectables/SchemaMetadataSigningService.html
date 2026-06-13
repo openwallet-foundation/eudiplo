@@ -164,6 +164,22 @@
                                 <a href="#ensureSchemaUrisFromCredentialConfig" >ensureSchemaUrisFromCredentialConfig</a>
                             </li>
                             <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#extractConfiguredVct" >extractConfiguredVct</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#normalizeConfigFromFormInput" >normalizeConfigFromFormInput</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#normalizeTrustedAuthority" >normalizeTrustedAuthority</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#parseVerificationMethod" >parseVerificationMethod</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Async</span>
                                 <a href="#signSchemaMetaConfig" >signSchemaMetaConfig</a>
                             </li>
@@ -204,7 +220,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:17</a></div>
                             </td>
                         </tr>
 
@@ -293,8 +309,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="20"
-                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:20</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="43"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:43</a></div>
                         </td>
                     </tr>
 
@@ -375,8 +391,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="166"
-                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:166</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="278"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:278</a></div>
                         </td>
                     </tr>
 
@@ -450,6 +466,306 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="extractConfiguredVct"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>extractConfiguredVct</b></span>
+                        <a href="#extractConfiguredVct"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>extractConfiguredVct(credentialConfig: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="24"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>credentialConfig</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | undefined</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="normalizeConfigFromFormInput"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>normalizeConfigFromFormInput</b></span>
+                        <a href="#normalizeConfigFromFormInput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>normalizeConfigFromFormInput(config: <a href="../classes/SignSchemaMetaConfigDto.html" target="_self">SignSchemaMetaConfigDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="255"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:255</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>config</td>
+                                            <td>
+                                                            <code><a href="../classes/SignSchemaMetaConfigDto.html" target="_self" >SignSchemaMetaConfigDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="normalizeTrustedAuthority"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>normalizeTrustedAuthority</b></span>
+                        <a href="#normalizeTrustedAuthority"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>normalizeTrustedAuthority(entry: <a href="../miscellaneous/typealiases.html#TrustedAuthorityInput" target="_self">TrustedAuthorityInput</a>, index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="124"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:124</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>entry</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#TrustedAuthorityInput" target="_self" >TrustedAuthorityInput</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>{ isLoTE?: any; trustListId: any; } | { verificationMethod?: any; isLoTE?: any; value?: any; frameworkType?: any; }</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseVerificationMethod"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>parseVerificationMethod</b></span>
+                        <a href="#parseVerificationMethod"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>parseVerificationMethod(verificationMethod: string | Record<string | unknown> | undefined, index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="81"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:81</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>verificationMethod</td>
+                                            <td>
+                                                        <code>string | Record&lt;string | unknown&gt; | undefined</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Record | undefined</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="signSchemaMetaConfig"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -468,8 +784,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="204"
-                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:204</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="316"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:316</a></div>
                         </td>
                     </tr>
 
@@ -549,8 +865,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="260"
-                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:260</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="374"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:374</a></div>
                         </td>
                     </tr>
 
@@ -631,8 +947,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="67"
-                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:67</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="150"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:150</a></div>
                         </td>
                     </tr>
 
@@ -725,8 +1041,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="114"
-                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:114</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="197"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:197</a></div>
                         </td>
                     </tr>
 
@@ -813,6 +1129,10 @@ import {
 import { buildJsonSchema } from &quot;../utils&quot;;
 import { SchemaMetaAdapterService } from &quot;./schema-meta-adapter.service&quot;;
 
+type TrustedAuthorityInput &#x3D; NonNullable&lt;
+    SignSchemaMetaConfigDto[&quot;config&quot;][&quot;trustedAuthorities&quot;]
+&gt;[number];
+
 @Injectable()
 export class SchemaMetadataSigningService {
     constructor(
@@ -821,6 +1141,25 @@ export class SchemaMetadataSigningService {
         private readonly registrarService: RegistrarService,
     ) {}
 
+    private extractConfiguredVct(credentialConfig: {
+        vct?: unknown;
+    }): string | undefined {
+        if (typeof credentialConfig.vct &#x3D;&#x3D;&#x3D; &quot;string&quot;) {
+            return credentialConfig.vct;
+        }
+
+        if (
+            credentialConfig.vct &amp;&amp;
+            typeof credentialConfig.vct &#x3D;&#x3D;&#x3D; &quot;object&quot; &amp;&amp;
+            &quot;vct&quot; in credentialConfig.vct &amp;&amp;
+            typeof (credentialConfig.vct as { vct?: unknown }).vct &#x3D;&#x3D;&#x3D; &quot;string&quot;
+        ) {
+            return (credentialConfig.vct as { vct: string }).vct;
+        }
+
+        return undefined;
+    }
+
     private deriveSchemaUriMetadata(
         credentialConfig: Awaited&lt;
             ReturnType&lt;CredentialConfigService[&quot;getById&quot;]&gt;
@@ -828,16 +1167,7 @@ export class SchemaMetadataSigningService {
         format: string,
     ): SchemaURIMeta {
         if (format &#x3D;&#x3D;&#x3D; &quot;dc+sd-jwt&quot;) {
-            const configuredVct &#x3D;
-                typeof credentialConfig.vct &#x3D;&#x3D;&#x3D; &quot;string&quot;
-                    ? credentialConfig.vct
-                    : credentialConfig.vct &amp;&amp;
-                        typeof credentialConfig.vct &#x3D;&#x3D;&#x3D; &quot;object&quot; &amp;&amp;
-                        &quot;vct&quot; in credentialConfig.vct &amp;&amp;
-                        typeof (credentialConfig.vct as { vct?: unknown })
-                            .vct &#x3D;&#x3D;&#x3D; &quot;string&quot;
-                      ? (credentialConfig.vct as { vct: string }).vct
-                      : undefined;
+            const configuredVct &#x3D; this.extractConfiguredVct(credentialConfig);
 
             if (!configuredVct) {
                 throw new BadRequestException(
@@ -866,6 +1196,75 @@ export class SchemaMetadataSigningService {
         throw new BadRequestException(
             &#x60;schemaURIs metadata is required: unsupported format &#x27;${format}&#x27;. Provide schemaURIs[].metadata explicitly.&#x60;,
         );
+    }
+
+    private parseVerificationMethod(
+        verificationMethod: string | Record&lt;string, unknown&gt; | undefined,
+        index: number,
+    ): Record&lt;string, unknown&gt; | undefined {
+        if (verificationMethod &#x3D;&#x3D;&#x3D; undefined) {
+            return undefined;
+        }
+
+        if (typeof verificationMethod &#x3D;&#x3D;&#x3D; &quot;string&quot;) {
+            const trimmed &#x3D; verificationMethod.trim();
+            if (trimmed.length &#x3D;&#x3D;&#x3D; 0) {
+                return undefined;
+            }
+
+            try {
+                const parsed &#x3D; JSON.parse(trimmed);
+                if (
+                    !parsed ||
+                    Array.isArray(parsed) ||
+                    typeof parsed !&#x3D;&#x3D; &quot;object&quot;
+                ) {
+                    throw new Error(&quot;verificationMethod must be a JSON object&quot;);
+                }
+
+                return parsed as Record&lt;string, unknown&gt;;
+            } catch (error) {
+                throw new BadRequestException(
+                    &#x60;trustedAuthorities[${index}].verificationMethod must be valid JSON object: ${
+                        error instanceof Error ? error.message : &quot;invalid JSON&quot;
+                    }&#x60;,
+                );
+            }
+        }
+
+        if (Array.isArray(verificationMethod)) {
+            throw new BadRequestException(
+                &#x60;trustedAuthorities[${index}].verificationMethod must be an object&#x60;,
+            );
+        }
+
+        return verificationMethod;
+    }
+
+    private normalizeTrustedAuthority(
+        entry: TrustedAuthorityInput,
+        index: number,
+    ) {
+        if (entry.trustListId) {
+            return {
+                trustListId: entry.trustListId,
+                ...(entry.isLoTE &#x3D;&#x3D;&#x3D; undefined ? {} : { isLoTE: entry.isLoTE }),
+            };
+        }
+
+        const verificationMethod &#x3D; this.parseVerificationMethod(
+            entry.verificationMethod,
+            index,
+        );
+
+        return {
+            ...(entry.frameworkType
+                ? { frameworkType: entry.frameworkType }
+                : {}),
+            ...(entry.value ? { value: entry.value } : {}),
+            ...(entry.isLoTE &#x3D;&#x3D;&#x3D; undefined ? {} : { isLoTE: entry.isLoTE }),
+            ...(verificationMethod ? { verificationMethod } : {}),
+        };
     }
 
     private async uploadSchemaAssetFromCredentialConfig(
@@ -946,6 +1345,12 @@ export class SchemaMetadataSigningService {
                           );
                       }
 
+                      if (!entry.meta) {
+                          throw new BadRequestException(
+                              &quot;schemaURIs metadata is required for manual schema URI entries.&quot;,
+                          );
+                      }
+
                       const uploadedSchema &#x3D;
                           await this.registrarService.uploadSchemaMetadataAssetFromUrl(
                               tenantId,
@@ -964,6 +1369,29 @@ export class SchemaMetadataSigningService {
             ...config,
             rulebookURI: uploadedRulebook.url,
             schemaURIs: uploadedSchemaURIs,
+        };
+    }
+
+    private normalizeConfigFromFormInput(
+        config: SignSchemaMetaConfigDto[&quot;config&quot;],
+    ): SignSchemaMetaConfigDto[&quot;config&quot;] {
+        const normalizedSchemaUris &#x3D; (config.schemaURIs ?? []).map((entry) &#x3D;&gt; ({
+            ...(entry.credentialConfigId
+                ? { credentialConfigId: entry.credentialConfigId }
+                : {}),
+            ...(entry.format ? { format: entry.format } : {}),
+            ...(entry.uri ? { uri: entry.uri } : {}),
+            ...(entry.meta ? { meta: entry.meta } : {}),
+        }));
+
+        const normalizedTrustedAuthorities &#x3D; (
+            config.trustedAuthorities ?? []
+        ).map((entry, index) &#x3D;&gt; this.normalizeTrustedAuthority(entry, index));
+
+        return {
+            ...config,
+            schemaURIs: normalizedSchemaUris,
+            trustedAuthorities: normalizedTrustedAuthorities,
         };
     }
 
@@ -1009,10 +1437,12 @@ export class SchemaMetadataSigningService {
         tenantId: string,
         body: SignSchemaMetaConfigDto,
     ) {
+        const normalizedConfig &#x3D; this.normalizeConfigFromFormInput(body.config);
+
         const { config: derivedConfig, alreadyHosted } &#x3D;
             await this.ensureSchemaUrisFromCredentialConfig(
                 tenantId,
-                body.config,
+                normalizedConfig,
                 body.credentialConfigId,
             );
 
@@ -1045,7 +1475,7 @@ export class SchemaMetadataSigningService {
                 body.credentialConfigId,
             );
             const schemaMetaForLink &#x3D; {
-                ...(existing.schemaMeta ?? {}),
+                ...existing.schemaMeta,
                 ...configToSign,
                 id: reservedId,
             };
@@ -1065,7 +1495,9 @@ export class SchemaMetadataSigningService {
         tenantId: string,
         body: SignVersionSchemaMetaConfigDto,
     ) {
-        if (!body.config.id) {
+        const normalizedConfig &#x3D; this.normalizeConfigFromFormInput(body.config);
+
+        if (!normalizedConfig.id) {
             throw new BadRequestException(
                 &quot;config.id is required when publishing a new version of an existing schema metadata entry&quot;,
             );
@@ -1073,7 +1505,7 @@ export class SchemaMetadataSigningService {
 
         const configToSign &#x3D; await this.uploadSchemaMetaAssetsToRegistrar(
             tenantId,
-            body.config,
+            normalizedConfig,
         );
 
         const signed &#x3D;

@@ -182,6 +182,8 @@
                             <li>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
                                 <a href="#meta" >meta</a>
                             </li>
                             <li>
@@ -296,6 +298,8 @@
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
                         <span ><b>meta</b></span>
                         <a href="#meta"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -312,13 +316,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Schema-format specific metadata (for example { vct: &#x27;urn:example:vct&#x27; } for dc+sd-jwt).&#x27;, type: &#x27;object&#x27;, additionalProperties: true})<br />@IsObject()<br />
+                            @ApiProperty({description: &#x27;Schema-format specific metadata (for example { vct: &#x27;urn:example:vct&#x27; } for dc+sd-jwt).&#x27;, type: &#x27;object&#x27;, additionalProperties: true})<br />@IsOptional()<br />@IsObject()<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:80</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:81</a></div>
                         </td>
                     </tr>
 
@@ -454,8 +458,9 @@ export class SchemaUriEntry {
         type: &quot;object&quot;,
         additionalProperties: true,
     })
+    @IsOptional()
     @IsObject()
-    meta!: SchemaURIMeta;
+    meta?: SchemaURIMeta;
 }
 
 /**
@@ -499,12 +504,20 @@ export class TrustAuthorityEntry {
         description:
             &quot;Optional verification material for external trusted authorities (for example a JWK). &quot; +
             &quot;For internal trust-list URLs, EUDIPLO resolves verification material from the database.&quot;,
-        type: &quot;object&quot;,
-        additionalProperties: true,
+        oneOf: [
+            {
+                type: &quot;object&quot;,
+                additionalProperties: true,
+            },
+            {
+                type: &quot;string&quot;,
+                description:
+                    &quot;JSON string representing an object. Parsed server-side for form submissions.&quot;,
+            },
+        ],
     })
     @IsOptional()
-    @IsObject()
-    verificationMethod?: Record&lt;string, unknown&gt;;
+    verificationMethod?: Record&lt;string, unknown&gt; | string;
 }
 
 /**
