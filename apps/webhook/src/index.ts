@@ -1,17 +1,20 @@
 import {
-    ClaimsWebhookRequest,
-    hasCredentials,
-    hasIdentity,
-    NotificationWebhookRequest,
-    validateClaimsWebhookRequest,
-    validateNotificationWebhookRequest,
+        ClaimsWebhookRequest,
+        hasCredentials,
+        hasIdentity,
+        NotificationWebhookRequest,
+        validateClaimsWebhookRequest,
+        validateNotificationWebhookRequest,
 } from "./schemas";
 import {
-    ClaimsWebhookResponse,
-    createClaimsResponse,
-    createDeferredResponse,
-    createNotificationSuccess,
+        ClaimsWebhookResponse,
+        createClaimsResponse,
+        createDeferredResponse,
+        createNotificationSuccess,
 } from "./types";
+function jsonResponse(data: unknown, status = 200): Response {
+        return Response.json(data, { status });
+}
 
 /**
  * Validates API key authentication.

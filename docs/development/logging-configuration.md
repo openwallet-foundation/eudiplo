@@ -26,18 +26,6 @@ LOG_LEVEL=error
 
 ## Logging Destinations
 
-### Console Logging
-
-Console logging is always enabled with formatting determined by the `LOG_FORMAT` configuration:
-
-```bash
-# Pretty formatting for human readability (default in development)
-LOG_FORMAT=pretty
-
-# JSON formatting for machine parsing (default in production)
-LOG_FORMAT=json
-```
-
 ### File Logging
 
 The application supports logging to both console and file simultaneously, which is useful for debugging, auditing, and persisting logs for later analysis.
@@ -238,7 +226,6 @@ Add these to your `.env` file:
 ```bash
 # Basic logging
 LOG_LEVEL=info
-LOG_FORMAT=pretty
 
 # Logging destinations
 LOG_TO_FILE=false
