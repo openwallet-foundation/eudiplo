@@ -1,0 +1,1847 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >CrlValidationService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/crypto/key/cert/crl-validation.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Service for validating certificates against Certificate Revocation Lists (CRL).</p>
+<p>This service:</p>
+<ul>
+<li>Extracts CRL Distribution Points from certificates</li>
+<li>Fetches and caches CRL data</li>
+<li>Checks if certificates are revoked</li>
+</ul>
+
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#certValidationCache" >certValidationCache</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#certValidationCacheTtlMs" >certValidationCacheTtlMs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#crlCache" >crlCache</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#defaultCacheTtlMs" >defaultCacheTtlMs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#fetchTimeoutMs" >fetchTimeoutMs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#arrayBufferToHex" >arrayBufferToHex</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#checkAgainstCrl" >checkAgainstCrl</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#checkCertificateRevocation" >checkCertificateRevocation</a>
+                            </li>
+                            <li>
+                                <a href="#clearCache" >clearCache</a>
+                            </li>
+                            <li>
+                                <a href="#extractCrlDistributionPoints" >extractCrlDistributionPoints</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#extractUrlsFromParsedCdp" >extractUrlsFromParsedCdp</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#extractUrlsFromRawCdp" >extractUrlsFromRawCdp</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#fetchCrl" >fetchCrl</a>
+                            </li>
+                            <li>
+                                <a href="#getCacheStats" >getCacheStats</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#isCacheValid" >isCacheValid</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#parseReasonCode" >parseReasonCode</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(httpService: HttpService)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:66</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>httpService</td>
+                                                  
+                                                        <td>
+                                                                    <code>HttpService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="arrayBufferToHex"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>arrayBufferToHex</b></span>
+                        <a href="#arrayBufferToHex"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>arrayBufferToHex(buffer: ArrayBuffer)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="377"
+                                    class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:377</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Convert ArrayBuffer to hex string.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>buffer</td>
+                                            <td>
+                                                        <code>ArrayBuffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkAgainstCrl"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>checkAgainstCrl</b></span>
+                        <a href="#checkAgainstCrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>checkAgainstCrl(cert: x509.X509Certificate, crlUrl: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="248"
+                                    class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:248</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Check a certificate against a specific CRL URL.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cert</td>
+                                            <td>
+                                                        <code>x509.X509Certificate</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>crlUrl</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/CrlValidationResult.html" target="_self" >Promise&lt;CrlValidationResult&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkCertificateRevocation"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>checkCertificateRevocation</b></span>
+                        <a href="#checkCertificateRevocation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>checkCertificateRevocation(certPem: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:76</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Check if a certificate is revoked according to its CRL.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>certPem</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>PEM-encoded certificate to check</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/CrlValidationResult.html" target="_self" >Promise&lt;CrlValidationResult&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>CRL validation result</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clearCache"></a>
+                    <span class="name">
+                        <span ><b>clearCache</b></span>
+                        <a href="#clearCache"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clearCache()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="417"
+                                    class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:417</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Clear the CRL cache.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="extractCrlDistributionPoints"></a>
+                    <span class="name">
+                        <span ><b>extractCrlDistributionPoints</b></span>
+                        <a href="#extractCrlDistributionPoints"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>extractCrlDistributionPoints(cert: x509.X509Certificate)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="151"
+                                    class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:151</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Extract CRL Distribution Point URLs from a certificate.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cert</td>
+                                            <td>
+                                                        <code>x509.X509Certificate</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>The X.509 certificate</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Array of CRL URLs</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="extractUrlsFromParsedCdp"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>extractUrlsFromParsedCdp</b></span>
+                        <a href="#extractUrlsFromParsedCdp"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>extractUrlsFromParsedCdp(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, urls: string[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="187"
+                                    class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:187</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Extract URLs from parsed CDP extension data.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>urls</td>
+                                            <td>
+                                                        <code>string[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="extractUrlsFromRawCdp"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>extractUrlsFromRawCdp</b></span>
+                        <a href="#extractUrlsFromRawCdp"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>extractUrlsFromRawCdp(rawData: ArrayBuffer, urls: string[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="223"
+                                    class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:223</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Extract URLs from raw ASN.1 CDP extension data.
+This is a fallback when the library doesn&#39;t parse it for us.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>rawData</td>
+                                            <td>
+                                                        <code>ArrayBuffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>urls</td>
+                                            <td>
+                                                        <code>string[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchCrl"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>fetchCrl</b></span>
+                        <a href="#fetchCrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fetchCrl(url: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="301"
+                                    class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:301</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Fetch and parse a CRL from a URL, with caching.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>url</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;CertificateList&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCacheStats"></a>
+                    <span class="name">
+                        <span ><b>getCacheStats</b></span>
+                        <a href="#getCacheStats"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getCacheStats()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="425"
+                                    class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:425</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get cache statistics.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>literal type</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isCacheValid"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>isCacheValid</b></span>
+                        <a href="#isCacheValid"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isCacheValid(cached: <a href="../interfaces/CachedCrl.html" target="_self">CachedCrl</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="362"
+                                    class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:362</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Check if a cached CRL is still valid.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cached</td>
+                                            <td>
+                                                            <code><a href="../interfaces/CachedCrl.html" target="_self" >CachedCrl</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseReasonCode"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>parseReasonCode</b></span>
+                        <a href="#parseReasonCode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>parseReasonCode(buffer: ArrayBuffer)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="386"
+                                    class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:386</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Parse CRL reason code.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>buffer</td>
+                                            <td>
+                                                        <code>ArrayBuffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="certValidationCache"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>certValidationCache</b></span>
+                        <a href="#certValidationCache"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Map&lt;
+        string,
+        { result: CrlValidationResult; timestamp: number }
+    &gt;()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:54</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Short-lived cache for certificate validation results.
+Prevents repeated validation of the same certificate within a request.
+Key is the certificate fingerprint, value is the result and timestamp.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="certValidationCacheTtlMs"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>certValidationCacheTtlMs</b></span>
+                        <a href="#certValidationCacheTtlMs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>30 * 1000</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:60</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Cache TTL for certificate validation results (30 seconds)</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="crlCache"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>crlCache</b></span>
+                        <a href="#crlCache"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Map&lt;string, CachedCrl&gt;()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="defaultCacheTtlMs"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>defaultCacheTtlMs</b></span>
+                        <a href="#defaultCacheTtlMs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>60 * 60 * 1000</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:63</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Default cache TTL in milliseconds (1 hour)</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchTimeoutMs"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>fetchTimeoutMs</b></span>
+                        <a href="#fetchTimeoutMs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>10000</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:66</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Timeout for CRL fetch in milliseconds</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(CrlValidationService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/crypto/key/cert/crl-validation.service.ts:46</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpService } from &quot;@nestjs/axios&quot;;
+import { Injectable, Logger } from &quot;@nestjs/common&quot;;
+import { AsnParser } from &quot;@peculiar/asn1-schema&quot;;
+import { CertificateList } from &quot;@peculiar/asn1-x509&quot;;
+import * as x509 from &quot;@peculiar/x509&quot;;
+import { firstValueFrom } from &quot;rxjs&quot;;
+
+/**
+ * Cached CRL with metadata.
+ */
+interface CachedCrl {
+    /** The parsed CRL */
+    crl: CertificateList;
+    /** When the cache entry was fetched */
+    fetchedAt: number;
+    /** Next update time from the CRL (if available) */
+    nextUpdate?: Date;
+}
+
+/**
+ * Result of a CRL validation check.
+ */
+export interface CrlValidationResult {
+    /** Whether the certificate is valid (not revoked) */
+    isValid: boolean;
+    /** If revoked, the revocation date */
+    revokedAt?: Date;
+    /** If revoked, the reason code */
+    reason?: string;
+    /** Error message if validation failed */
+    error?: string;
+    /** Whether CRL was fetched from cache */
+    fromCache?: boolean;
+}
+
+/**
+ * Service for validating certificates against Certificate Revocation Lists (CRL).
+ *
+ * This service:
+ * - Extracts CRL Distribution Points from certificates
+ * - Fetches and caches CRL data
+ * - Checks if certificates are revoked
+ */
+@Injectable()
+export class CrlValidationService {
+    private readonly logger &#x3D; new Logger(CrlValidationService.name);
+    private readonly crlCache &#x3D; new Map&lt;string, CachedCrl&gt;();
+
+    /**
+     * Short-lived cache for certificate validation results.
+     * Prevents repeated validation of the same certificate within a request.
+     * Key is the certificate fingerprint, value is the result and timestamp.
+     */
+    private readonly certValidationCache &#x3D; new Map&lt;
+        string,
+        { result: CrlValidationResult; timestamp: number }
+    &gt;();
+
+    /** Cache TTL for certificate validation results (30 seconds) */
+    private readonly certValidationCacheTtlMs &#x3D; 30 * 1000;
+
+    /** Default cache TTL in milliseconds (1 hour) */
+    private readonly defaultCacheTtlMs &#x3D; 60 * 60 * 1000;
+
+    /** Timeout for CRL fetch in milliseconds */
+    private readonly fetchTimeoutMs &#x3D; 10000;
+
+    constructor(private readonly httpService: HttpService) {}
+
+    /**
+     * Check if a certificate is revoked according to its CRL.
+     *
+     * @param certPem - PEM-encoded certificate to check
+     * @returns CRL validation result
+     */
+    async checkCertificateRevocation(
+        certPem: string,
+    ): Promise&lt;CrlValidationResult&gt; {
+        try {
+            const cert &#x3D; new x509.X509Certificate(certPem);
+
+            // Check certificate validation cache first (avoids repeated validation within short window)
+            const certFingerprint &#x3D; await cert.getThumbprint(&quot;SHA-256&quot;);
+            const cacheKey &#x3D; Buffer.from(certFingerprint).toString(&quot;hex&quot;);
+            const cached &#x3D; this.certValidationCache.get(cacheKey);
+            if (
+                cached &amp;&amp;
+                Date.now() - cached.timestamp &lt; this.certValidationCacheTtlMs
+            ) {
+                return { ...cached.result, fromCache: true };
+            }
+
+            const crlUrls &#x3D; this.extractCrlDistributionPoints(cert);
+
+            if (crlUrls.length &#x3D;&#x3D;&#x3D; 0) {
+                this.logger.debug(
+                    &#x60;No CRL Distribution Points found in certificate ${cert.subject}&#x60;,
+                );
+                return {
+                    isValid: true,
+                    error: &quot;No CRL Distribution Points in certificate&quot;,
+                };
+            }
+
+            // Try each CRL URL until we get a successful check
+            for (const url of crlUrls) {
+                try {
+                    const result &#x3D; await this.checkAgainstCrl(cert, url);
+                    // Cache the result
+                    this.certValidationCache.set(cacheKey, {
+                        result,
+                        timestamp: Date.now(),
+                    });
+                    return result;
+                } catch (error: any) {
+                    this.logger.warn(
+                        &#x60;Failed to check CRL at ${url}: ${error.message}&#x60;,
+                    );
+                    continue;
+                }
+            }
+
+            // All CRL URLs failed
+            const failResult: CrlValidationResult &#x3D; {
+                isValid: false,
+                error: &#x60;Failed to validate against any CRL: ${crlUrls.join(&quot;, &quot;)}&#x60;,
+            };
+            this.certValidationCache.set(cacheKey, {
+                result: failResult,
+                timestamp: Date.now(),
+            });
+            return failResult;
+        } catch (error: any) {
+            this.logger.error(
+                &#x60;CRL validation error: ${error.message}&#x60;,
+                error.stack,
+            );
+            return {
+                isValid: false,
+                error: &#x60;CRL validation failed: ${error.message}&#x60;,
+            };
+        }
+    }
+
+    /**
+     * Extract CRL Distribution Point URLs from a certificate.
+     *
+     * @param cert - The X.509 certificate
+     * @returns Array of CRL URLs
+     */
+    extractCrlDistributionPoints(cert: x509.X509Certificate): string[] {
+        const urls: string[] &#x3D; [];
+
+        // CRL Distribution Points OID: 2.5.29.31
+        const cdpExtension &#x3D; cert.getExtension(&quot;2.5.29.31&quot;);
+        if (!cdpExtension) {
+            return urls;
+        }
+
+        try {
+            // The extension value is ASN.1 encoded
+            // CRLDistributionPoints ::&#x3D; SEQUENCE SIZE (1..MAX) OF DistributionPoint
+            // We need to parse the raw value to extract URLs
+            const extValue &#x3D; (cdpExtension as any).value;
+
+            if (extValue &amp;&amp; typeof extValue &#x3D;&#x3D;&#x3D; &quot;object&quot;) {
+                // @peculiar/x509 may provide parsed data
+                this.extractUrlsFromParsedCdp(extValue, urls);
+            }
+
+            // If we couldn&#x27;t extract from parsed data, try raw ASN.1
+            if (urls.length &#x3D;&#x3D;&#x3D; 0 &amp;&amp; cdpExtension.rawData) {
+                this.extractUrlsFromRawCdp(cdpExtension.rawData, urls);
+            }
+        } catch (error: any) {
+            this.logger.warn(
+                &#x60;Failed to parse CRL Distribution Points: ${error.message}&#x60;,
+            );
+        }
+
+        return urls;
+    }
+
+    /**
+     * Extract URLs from parsed CDP extension data.
+     */
+    private extractUrlsFromParsedCdp(value: any, urls: string[]): void {
+        if (Array.isArray(value)) {
+            for (const item of value) {
+                this.extractUrlsFromParsedCdp(item, urls);
+            }
+        } else if (typeof value &#x3D;&#x3D;&#x3D; &quot;object&quot; &amp;&amp; value !&#x3D;&#x3D; null) {
+            // Look for fullName or uniformResourceIdentifier
+            if (value.type &#x3D;&#x3D;&#x3D; &quot;url&quot; &amp;&amp; typeof value.value &#x3D;&#x3D;&#x3D; &quot;string&quot;) {
+                urls.push(value.value);
+            } else if (
+                value.uniformResourceIdentifier &amp;&amp;
+                typeof value.uniformResourceIdentifier &#x3D;&#x3D;&#x3D; &quot;string&quot;
+            ) {
+                urls.push(value.uniformResourceIdentifier);
+            } else if (value.fullName) {
+                this.extractUrlsFromParsedCdp(value.fullName, urls);
+            } else if (value.distributionPoint) {
+                this.extractUrlsFromParsedCdp(value.distributionPoint, urls);
+            } else {
+                // Recursively check all properties
+                for (const key of Object.keys(value)) {
+                    this.extractUrlsFromParsedCdp(value[key], urls);
+                }
+            }
+        } else if (
+            typeof value &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+            (value.startsWith(&quot;http://&quot;) || value.startsWith(&quot;https://&quot;))
+        ) {
+            urls.push(value);
+        }
+    }
+
+    /**
+     * Extract URLs from raw ASN.1 CDP extension data.
+     * This is a fallback when the library doesn&#x27;t parse it for us.
+     */
+    private extractUrlsFromRawCdp(rawData: ArrayBuffer, urls: string[]): void {
+        const bytes &#x3D; new Uint8Array(rawData);
+        const str &#x3D; new TextDecoder(&quot;utf-8&quot;, { fatal: false }).decode(bytes);
+
+        // Simple regex to find HTTP URLs in the raw data
+        // Match only printable ASCII characters (space 0x20 to tilde 0x7E)
+        const urlRegex &#x3D; /https?:\/\/[\u0020-\u007E]+/g;
+        const matches &#x3D; str.match(urlRegex);
+        if (matches) {
+            for (const match of matches) {
+                // Clean up any trailing non-printable characters
+                const cleanUrl &#x3D; match.replace(/[^\u0020-\u007E]/g, &quot;&quot;);
+                if (
+                    cleanUrl.startsWith(&quot;http://&quot;) ||
+                    cleanUrl.startsWith(&quot;https://&quot;)
+                ) {
+                    urls.push(cleanUrl);
+                }
+            }
+        }
+    }
+
+    /**
+     * Check a certificate against a specific CRL URL.
+     */
+    private async checkAgainstCrl(
+        cert: x509.X509Certificate,
+        crlUrl: string,
+    ): Promise&lt;CrlValidationResult&gt; {
+        const crl &#x3D; await this.fetchCrl(crlUrl);
+        const serialNumber &#x3D; cert.serialNumber;
+
+        // Check if the certificate is in the revoked certificates list
+        const revokedCerts &#x3D; crl.tbsCertList.revokedCertificates;
+
+        if (!revokedCerts || revokedCerts.length &#x3D;&#x3D;&#x3D; 0) {
+            return { isValid: true, fromCache: this.crlCache.has(crlUrl) };
+        }
+
+        for (const revoked of revokedCerts) {
+            // Convert serial numbers to comparable format
+            // userCertificate is an ArrayBuffer in @peculiar/asn1-x509
+            const revokedSerial &#x3D; this.arrayBufferToHex(
+                revoked.userCertificate as unknown as ArrayBuffer,
+            );
+            const certSerial &#x3D; serialNumber.toLowerCase().replaceAll(&quot;:&quot;, &quot;&quot;);
+
+            if (revokedSerial &#x3D;&#x3D;&#x3D; certSerial) {
+                const revokedAt &#x3D; revoked.revocationDate.getTime();
+                let reason: string | undefined;
+
+                // Try to extract revocation reason from extensions
+                if (revoked.crlEntryExtensions) {
+                    for (const ext of revoked.crlEntryExtensions) {
+                        // Reason Code OID: 2.5.29.21
+                        if (ext.extnID &#x3D;&#x3D;&#x3D; &quot;2.5.29.21&quot;) {
+                            reason &#x3D; this.parseReasonCode(
+                                ext.extnValue as unknown as ArrayBuffer,
+                            );
+                        }
+                    }
+                }
+
+                return {
+                    isValid: false,
+                    revokedAt: new Date(revokedAt),
+                    reason,
+                    fromCache: this.crlCache.has(crlUrl),
+                };
+            }
+        }
+
+        return { isValid: true, fromCache: this.crlCache.has(crlUrl) };
+    }
+
+    /**
+     * Fetch and parse a CRL from a URL, with caching.
+     */
+    private async fetchCrl(url: string): Promise&lt;CertificateList&gt; {
+        // Check cache first
+        const cached &#x3D; this.crlCache.get(url);
+        if (cached &amp;&amp; this.isCacheValid(cached)) {
+            this.logger.debug(&#x60;Using cached CRL for ${url}&#x60;);
+            return cached.crl;
+        }
+
+        this.logger.debug(&#x60;Fetching CRL from ${url}&#x60;);
+
+        const ctrl &#x3D; new AbortController();
+        const timeout &#x3D; setTimeout(() &#x3D;&gt; ctrl.abort(), this.fetchTimeoutMs);
+
+        try {
+            const response &#x3D; await firstValueFrom(
+                this.httpService.get(url, {
+                    signal: ctrl.signal,
+                    responseType: &quot;arraybuffer&quot;,
+                    headers: {
+                        Accept: &quot;application/pkix-crl, application/x-pkcs7-crl&quot;,
+                    },
+                }),
+            );
+
+            const crlData &#x3D; response.data as ArrayBuffer;
+            const crl &#x3D; AsnParser.parse(crlData, CertificateList);
+
+            // Extract nextUpdate for cache TTL
+            let nextUpdate: Date | undefined;
+            if (crl.tbsCertList.nextUpdate) {
+                nextUpdate &#x3D; crl.tbsCertList.nextUpdate.getTime();
+            }
+
+            // Cache the CRL
+            this.crlCache.set(url, {
+                crl,
+                fetchedAt: Date.now(),
+                nextUpdate: nextUpdate ? new Date(nextUpdate) : undefined,
+            });
+
+            return crl;
+        } catch (error: any) {
+            if (
+                error?.name &#x3D;&#x3D;&#x3D; &quot;CanceledError&quot; ||
+                error?.code &#x3D;&#x3D;&#x3D; &quot;ERR_CANCELED&quot;
+            ) {
+                throw new Error(
+                    &#x60;CRL fetch timed out after ${this.fetchTimeoutMs}ms for URL: ${url}&#x60;,
+                );
+            }
+            throw new Error(
+                &#x60;Failed to fetch CRL from ${url}: ${error?.message || error}&#x60;,
+            );
+        } finally {
+            clearTimeout(timeout);
+        }
+    }
+
+    /**
+     * Check if a cached CRL is still valid.
+     */
+    private isCacheValid(cached: CachedCrl): boolean {
+        const now &#x3D; Date.now();
+
+        // If CRL has nextUpdate, use that as the expiry
+        if (cached.nextUpdate) {
+            return now &lt; cached.nextUpdate.getTime();
+        }
+
+        // Otherwise use default TTL
+        return now - cached.fetchedAt &lt; this.defaultCacheTtlMs;
+    }
+
+    /**
+     * Convert ArrayBuffer to hex string.
+     */
+    private arrayBufferToHex(buffer: ArrayBuffer): string {
+        return Array.from(new Uint8Array(buffer))
+            .map((b) &#x3D;&gt; b.toString(16).padStart(2, &quot;0&quot;))
+            .join(&quot;&quot;);
+    }
+
+    /**
+     * Parse CRL reason code.
+     */
+    private parseReasonCode(buffer: ArrayBuffer): string {
+        const reasons &#x3D; [
+            &quot;unspecified&quot;,
+            &quot;keyCompromise&quot;,
+            &quot;cACompromise&quot;,
+            &quot;affiliationChanged&quot;,
+            &quot;superseded&quot;,
+            &quot;cessationOfOperation&quot;,
+            &quot;certificateHold&quot;,
+            &quot;unused&quot;,
+            &quot;removeFromCRL&quot;,
+            &quot;privilegeWithdrawn&quot;,
+            &quot;aACompromise&quot;,
+        ];
+
+        try {
+            const bytes &#x3D; new Uint8Array(buffer);
+            // Reason code is an ENUMERATED value, typically 3 bytes: 0x0a 0x01 &lt;value&gt;
+            if (bytes.length &gt;&#x3D; 3 &amp;&amp; bytes[0] &#x3D;&#x3D;&#x3D; 0x0a &amp;&amp; bytes[1] &#x3D;&#x3D;&#x3D; 0x01) {
+                const code &#x3D; bytes[2];
+                return reasons[code] || &#x60;unknown(${code})&#x60;;
+            }
+        } catch {
+            // Ignore parsing errors
+        }
+        return &quot;unknown&quot;;
+    }
+
+    /**
+     * Clear the CRL cache.
+     */
+    clearCache(): void {
+        this.crlCache.clear();
+        this.logger.debug(&quot;CRL cache cleared&quot;);
+    }
+
+    /**
+     * Get cache statistics.
+     */
+    getCacheStats(): { size: number; urls: string[] } {
+        return {
+            size: this.crlCache.size,
+            urls: Array.from(this.crlCache.keys()),
+        };
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'CrlValidationService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

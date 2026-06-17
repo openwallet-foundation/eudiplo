@@ -1,0 +1,2024 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content miscellaneous-typealiases">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Miscellaneous</li>
+  <li class="breadcrumb-item">Type aliases</li>
+</ol>
+
+<section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <ul class="index-list">
+                        <li>
+                            <a href="#AttestationLoS" title="src/registrar/dto/schema-metadata.dto.ts" ><b>AttestationLoS</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AuditActionType" title="src/audit-log/entities/audit-log.entity.ts" ><b>AuditActionType</b>&nbsp;&nbsp;&nbsp;(src/.../audit-log.entity.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AuditActionTypeLiteral" title="src/audit-log/dto/audit-log-response.dto.ts" ><b>AuditActionTypeLiteral</b>&nbsp;&nbsp;&nbsp;(src/.../audit-log-response.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#AuditActorType" title="src/audit-log/entities/audit-log.entity.ts" ><b>AuditActorType</b>&nbsp;&nbsp;&nbsp;(src/.../audit-log.entity.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#BindingType" title="src/registrar/dto/schema-metadata.dto.ts" ><b>BindingType</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#BuildDcqlFromSchemaMetaResult" title="src/verifier/presentations/presentations.service.ts" ><b>BuildDcqlFromSchemaMetaResult</b>&nbsp;&nbsp;&nbsp;(src/.../presentations.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#BuiltTrustStore" title="src/shared/trust/trust-store.service.ts" ><b>BuiltTrustStore</b>&nbsp;&nbsp;&nbsp;(src/.../trust-store.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CachedEvaluation" title="src/shared/trust/federation-trust.service.ts" ><b>CachedEvaluation</b>&nbsp;&nbsp;&nbsp;(src/.../federation-trust.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ClaimPathElement" title="src/issuer/configuration/credentials/types/credential-config-types.ts" ><b>ClaimPathElement</b>&nbsp;&nbsp;&nbsp;(src/.../credential-config-types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ClaimPathElement" title="src/issuer/configuration/credentials/utils/types.ts" ><b>ClaimPathElement</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ClaimsSource" title="src/issuer/issuance/oid4vci/dto/offer-request.dto.ts" ><b>ClaimsSource</b>&nbsp;&nbsp;&nbsp;(src/.../offer-request.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CoseAlgorithm" title="src/crypto/key/crypto-implementation/crypto-implementation.service.ts" ><b>CoseAlgorithm</b>&nbsp;&nbsp;&nbsp;(src/.../crypto-implementation.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CredentialFormatId" title="src/registrar/dto/schema-metadata.dto.ts" ><b>CredentialFormatId</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CredentialRequestErrorCode" title="src/issuer/issuance/oid4vci/exceptions/credential-request.exception.ts" ><b>CredentialRequestErrorCode</b>&nbsp;&nbsp;&nbsp;(src/.../credential-request.exception.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CredentialType" title="src/verifier/presentations/presentations.service.ts" ><b>CredentialType</b>&nbsp;&nbsp;&nbsp;(src/.../presentations.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#CryptoType" title="src/crypto/key/crypto-implementation/crypto-implementation.service.ts" ><b>CryptoType</b>&nbsp;&nbsp;&nbsp;(src/.../crypto-implementation.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DeferredCredentialErrorCode" title="src/issuer/issuance/oid4vci/exceptions/deferred-credential.exception.ts" ><b>DeferredCredentialErrorCode</b>&nbsp;&nbsp;&nbsp;(src/.../deferred-credential.exception.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Driver" title="src/storage/storage.module.ts" ><b>Driver</b>&nbsp;&nbsp;&nbsp;(src/.../storage.module.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#EncryptionKeySource" title="src/shared/utils/encryption/providers/encryption-key-provider.interface.ts" ><b>EncryptionKeySource</b>&nbsp;&nbsp;&nbsp;(src/.../encryption-key-provider.interface.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FederationEntityConfigurationPayload" title="src/shared/trust/federation-trust.service.ts" ><b>FederationEntityConfigurationPayload</b>&nbsp;&nbsp;&nbsp;(src/.../federation-trust.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FederationTrustAnchorRef" title="src/shared/trust/types.ts" ><b>FederationTrustAnchorRef</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FederationTrustEvaluation" title="src/shared/trust/federation-trust.service.ts" ><b>FederationTrustEvaluation</b>&nbsp;&nbsp;&nbsp;(src/.../federation-trust.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FederationTrustMode" title="src/shared/trust/types.ts" ><b>FederationTrustMode</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FederationTrustSource" title="src/shared/trust/types.ts" ><b>FederationTrustSource</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#FieldType" title="src/issuer/configuration/credentials/utils/types.ts" ><b>FieldType</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#HttpAuthType" title="src/crypto/key/dto/kms-config.dto.ts" ><b>HttpAuthType</b>&nbsp;&nbsp;&nbsp;(src/.../kms-config.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#HttpKmsAuth" title="src/crypto/key/kms/adapters/http-kms.adapter.ts" ><b>HttpKmsAuth</b>&nbsp;&nbsp;&nbsp;(src/.../http-kms.adapter.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#HttpKmsAuthConfigDto" title="src/crypto/key/dto/kms-config.dto.ts" ><b>HttpKmsAuthConfigDto</b>&nbsp;&nbsp;&nbsp;(src/.../kms-config.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#IaeAction" title="src/issuer/configuration/credentials/entities/iae-action.dto.ts" ><b>IaeAction</b>&nbsp;&nbsp;&nbsp;(src/.../iae-action.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#InteractiveAuthorizationResponse" title="src/issuer/issuance/oid4vci/authorize/dto/interactive-authorization.dto.ts" ><b>InteractiveAuthorizationResponse</b>&nbsp;&nbsp;&nbsp;(src/.../interactive-authorization.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#JoseAlgorithm" title="src/crypto/key/crypto-implementation/crypto-implementation.service.ts" ><b>JoseAlgorithm</b>&nbsp;&nbsp;&nbsp;(src/.../crypto-implementation.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#KeyPair" title="src/crypto/key/crypto-implementation/crypto-implementation.ts" ><b>KeyPair</b>&nbsp;&nbsp;&nbsp;(src/.../crypto-implementation.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#KmsProviderConfigDto" title="src/crypto/key/dto/kms-config.dto.ts" ><b>KmsProviderConfigDto</b>&nbsp;&nbsp;&nbsp;(src/.../kms-config.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#KmsProviderType" title="src/crypto/key/dto/kms-config.dto.ts" ><b>KmsProviderType</b>&nbsp;&nbsp;&nbsp;(src/.../kms-config.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#KmsSigningAlg" title="src/crypto/key/kms/kms-adapter.ts" ><b>KmsSigningAlg</b>&nbsp;&nbsp;&nbsp;(src/.../kms-adapter.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#LoteInfo" title="src/shared/trust/lote-parser.service.ts" ><b>LoteInfo</b>&nbsp;&nbsp;&nbsp;(src/.../lote-parser.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#MatchedTrustedEntity" title="src/shared/trust/x509-validation.service.ts" ><b>MatchedTrustedEntity</b>&nbsp;&nbsp;&nbsp;(src/.../x509-validation.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#MdocSessionData" title="src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts" ><b>MdocSessionData</b>&nbsp;&nbsp;&nbsp;(src/.../mdocverifier.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#MdocVerificationResult" title="src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts" ><b>MdocVerificationResult</b>&nbsp;&nbsp;&nbsp;(src/.../mdocverifier.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#MsoMdocCredentialConfig" title="src/issuer/configuration/credentials/types/credential-config-types.ts" ><b>MsoMdocCredentialConfig</b>&nbsp;&nbsp;&nbsp;(src/.../credential-config-types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Notification" title="src/session/entities/session.entity.ts" ><b>Notification</b>&nbsp;&nbsp;&nbsp;(src/.../session.entity.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#OAuth2TokenPayload" title="src/issuer/issuance/oid4vci/oid4vci.service.ts" ><b>OAuth2TokenPayload</b>&nbsp;&nbsp;&nbsp;(src/.../oid4vci.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ParsedLoTE" title="src/shared/trust/lote-parser.service.ts" ><b>ParsedLoTE</b>&nbsp;&nbsp;&nbsp;(src/.../lote-parser.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PresentationRequestOptions" title="src/verifier/oid4vp/dto/presentation-request.dto.ts" ><b>PresentationRequestOptions</b>&nbsp;&nbsp;&nbsp;(src/.../presentation-request.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PutOptions" title="src/storage/storage.types.ts" ><b>PutOptions</b>&nbsp;&nbsp;&nbsp;(src/.../storage.types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#RequestedMdocClaimPath" title="src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts" ><b>RequestedMdocClaimPath</b>&nbsp;&nbsp;&nbsp;(src/.../mdocverifier.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ResolvedSchemaMetadataPayload" title="src/verifier/presentations/presentations.service.ts" ><b>ResolvedSchemaMetadataPayload</b>&nbsp;&nbsp;&nbsp;(src/.../presentations.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#RulebookTrustListRef" title="src/shared/trust/types.ts" ><b>RulebookTrustListRef</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SchemaMetadataCategory" title="src/registrar/dto/schema-metadata.dto.ts" ><b>SchemaMetadataCategory</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SchemaMetadataFilters" title="src/registrar/schema-metadata.service.ts" ><b>SchemaMetadataFilters</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SchemaMetadataTag" title="src/registrar/dto/schema-metadata.dto.ts" ><b>SchemaMetadataTag</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SchemaMetadataVerifier" title="src/verifier/presentations/presentations.service.ts" ><b>SchemaMetadataVerifier</b>&nbsp;&nbsp;&nbsp;(src/.../presentations.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SchemaMetaSdkCompat" title="src/verifier/presentations/presentations.service.ts" ><b>SchemaMetaSdkCompat</b>&nbsp;&nbsp;&nbsp;(src/.../presentations.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SdJwtDcCredentialConfig" title="src/issuer/configuration/credentials/types/credential-config-types.ts" ><b>SdJwtDcCredentialConfig</b>&nbsp;&nbsp;&nbsp;(src/.../credential-config-types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SdJwtDcFormatIdentifier" title="src/issuer/configuration/credentials/types/credential-config-types.ts" ><b>SdJwtDcFormatIdentifier</b>&nbsp;&nbsp;&nbsp;(src/.../credential-config-types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Segment" title="src/issuer/configuration/credentials/utils/derive.ts" ><b>Segment</b>&nbsp;&nbsp;&nbsp;(src/.../derive.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ServiceTypeIdentifier" title="src/shared/trust/types.ts" ><b>ServiceTypeIdentifier</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SessionLogLevel" title="src/session/entities/session-log-entry.entity.ts" ><b>SessionLogLevel</b>&nbsp;&nbsp;&nbsp;(src/.../session-log-entry.entity.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SessionSortBy" title="src/session/dto/session-query.dto.ts" ><b>SessionSortBy</b>&nbsp;&nbsp;&nbsp;(src/.../session-query.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SessionSortOrder" title="src/session/dto/session-query.dto.ts" ><b>SessionSortOrder</b>&nbsp;&nbsp;&nbsp;(src/.../session-query.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SessionStoreMode" title="src/shared/utils/logger/session-log-store.service.ts" ><b>SessionStoreMode</b>&nbsp;&nbsp;&nbsp;(src/.../session-log-store.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SessionType" title="src/session/dto/session-query.dto.ts" ><b>SessionType</b>&nbsp;&nbsp;&nbsp;(src/.../session-query.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Signer" title="src/crypto/key/crypto-implementation/crypto-implementation.ts" ><b>Signer</b>&nbsp;&nbsp;&nbsp;(src/.../crypto-implementation.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#StoredObject" title="src/storage/storage.types.ts" ><b>StoredObject</b>&nbsp;&nbsp;&nbsp;(src/.../storage.types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TenantImportFn" title="src/shared/utils/config-import/config-import-orchestrator.service.ts" ><b>TenantImportFn</b>&nbsp;&nbsp;&nbsp;(src/.../config-import-orchestrator.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TenantImportOptions" title="src/shared/utils/config-import/import-options.ts" ><b>TenantImportOptions</b>&nbsp;&nbsp;&nbsp;(src/.../import-options.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TenantStatus" title="src/auth/tenant/entitites/tenant.entity.ts" ><b>TenantStatus</b>&nbsp;&nbsp;&nbsp;(src/.../tenant.entity.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TokenErrorCode" title="src/issuer/issuance/oid4vci/exceptions/token-error.exception.ts" ><b>TokenErrorCode</b>&nbsp;&nbsp;&nbsp;(src/.../token-error.exception.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TrustedAuthorityInput" title="src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts" ><b>TrustedAuthorityInput</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata-signing.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TrustedEntity" title="src/shared/trust/types.ts" ><b>TrustedEntity</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TrustedEntityServiceCert" title="src/shared/trust/types.ts" ><b>TrustedEntityServiceCert</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TrustListEntity" title="src/issuer/trust-list/dto/trust-list-create.dto.ts" ><b>TrustListEntity</b>&nbsp;&nbsp;&nbsp;(src/.../trust-list-create.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TrustListSource" title="src/shared/trust/types.ts" ><b>TrustListSource</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#TypedCredentialConfig" title="src/issuer/configuration/credentials/types/credential-config-types.ts" ><b>TypedCredentialConfig</b>&nbsp;&nbsp;&nbsp;(src/.../credential-config-types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UploadAssetType" title="src/registrar/schema-metadata.service.ts" ><b>UploadAssetType</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.service.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Verifier" title="src/crypto/key/crypto-implementation/crypto-implementation.ts" ><b>Verifier</b>&nbsp;&nbsp;&nbsp;(src/.../crypto-implementation.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#VerifierOptions" title="src/shared/trust/types.ts" ><b>VerifierOptions</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#VerifyPolicy" title="src/shared/trust/types.ts" ><b>VerifyPolicy</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#VocabularyStatus" title="src/registrar/dto/schema-metadata.dto.ts" ><b>VocabularyStatus</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#X5cInput" title="src/shared/trust/x509-validation.service.ts" ><b>X5cInput</b>&nbsp;&nbsp;&nbsp;(src/.../x509-validation.service.ts)</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    <h3>src/registrar/dto/schema-metadata.dto.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AttestationLoS"></a>
+                    <span class="name "><b>AttestationLoS</b><a href="#AttestationLoS"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="BindingType"></a>
+                    <span class="name "><b>BindingType</b><a href="#BindingType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CredentialFormatId"></a>
+                    <span class="name "><b>CredentialFormatId</b><a href="#CredentialFormatId"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SchemaMetadataCategory"></a>
+                    <span class="name "><b>SchemaMetadataCategory</b><a href="#SchemaMetadataCategory"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SchemaMetadataTag"></a>
+                    <span class="name "><b>SchemaMetadataTag</b><a href="#SchemaMetadataTag"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="VocabularyStatus"></a>
+                    <span class="name "><b>VocabularyStatus</b><a href="#VocabularyStatus"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/audit-log/entities/audit-log.entity.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AuditActionType"></a>
+                    <span class="name "><b>AuditActionType</b><a href="#AuditActionType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;tenant_created&quot; | &quot;tenant_updated&quot; | &quot;tenant_deleted&quot; | &quot;presentation_config_created&quot; | &quot;presentation_config_updated&quot; | &quot;presentation_config_deleted&quot; | &quot;issuance_config_updated&quot; | &quot;credential_config_created&quot; | &quot;credential_config_updated&quot; | &quot;credential_config_deleted&quot; | &quot;status_list_config_updated&quot; | &quot;status_list_config_reset&quot; | &quot;webhook_endpoint_created&quot; | &quot;webhook_endpoint_updated&quot; | &quot;webhook_endpoint_deleted&quot; | &quot;attribute_provider_created&quot; | &quot;attribute_provider_updated&quot; | &quot;attribute_provider_deleted&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AuditActorType"></a>
+                    <span class="name "><b>AuditActorType</b><a href="#AuditActorType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;user&quot; | &quot;client&quot; | &quot;system&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/audit-log/dto/audit-log-response.dto.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AuditActionTypeLiteral"></a>
+                    <span class="name "><b>AuditActionTypeLiteral</b><a href="#AuditActionTypeLiteral"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;tenant_created&quot; | &quot;tenant_updated&quot; | &quot;tenant_deleted&quot; | &quot;presentation_config_created&quot; | &quot;presentation_config_updated&quot; | &quot;presentation_config_deleted&quot; | &quot;issuance_config_updated&quot; | &quot;credential_config_created&quot; | &quot;credential_config_updated&quot; | &quot;credential_config_deleted&quot; | &quot;status_list_config_updated&quot; | &quot;status_list_config_reset&quot; | &quot;webhook_endpoint_created&quot; | &quot;webhook_endpoint_updated&quot; | &quot;webhook_endpoint_deleted&quot; | &quot;attribute_provider_created&quot; | &quot;attribute_provider_updated&quot; | &quot;attribute_provider_deleted&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/verifier/presentations/presentations.service.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="BuildDcqlFromSchemaMetaResult"></a>
+                    <span class="name "><b>BuildDcqlFromSchemaMetaResult</b><a href="#BuildDcqlFromSchemaMetaResult"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CredentialType"></a>
+                    <span class="name "><b>CredentialType</b><a href="#CredentialType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;dc+sd-jwt&quot; | &quot;mso_mdoc&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ResolvedSchemaMetadataPayload"></a>
+                    <span class="name "><b>ResolvedSchemaMetadataPayload</b><a href="#ResolvedSchemaMetadataPayload"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SchemaMetadataVerifier"></a>
+                    <span class="name "><b>SchemaMetadataVerifier</b><a href="#SchemaMetadataVerifier"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SchemaMetaSdkCompat"></a>
+                    <span class="name "><b>SchemaMetaSdkCompat</b><a href="#SchemaMetaSdkCompat"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/shared/trust/trust-store.service.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="BuiltTrustStore"></a>
+                    <span class="name "><b>BuiltTrustStore</b><a href="#BuiltTrustStore"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Built trust store with TrustedEntities preserving service groupings.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/shared/trust/federation-trust.service.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CachedEvaluation"></a>
+                    <span class="name "><b>CachedEvaluation</b><a href="#CachedEvaluation"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FederationEntityConfigurationPayload"></a>
+                    <span class="name "><b>FederationEntityConfigurationPayload</b><a href="#FederationEntityConfigurationPayload"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FederationTrustEvaluation"></a>
+                    <span class="name "><b>FederationTrustEvaluation</b><a href="#FederationTrustEvaluation"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/issuer/configuration/credentials/types/credential-config-types.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ClaimPathElement"></a>
+                    <span class="name "><b>ClaimPathElement</b><a href="#ClaimPathElement"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Claim path element - string (object key), number (array index), or null (any element)</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>string | number | null</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MsoMdocCredentialConfig"></a>
+                    <span class="name "><b>MsoMdocCredentialConfig</b><a href="#MsoMdocCredentialConfig"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Extract mso_mdoc specific configuration from the SDK union type</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="../classes/CredentialConfig.html" target="_self" >Extract&lt;CredentialConfigurationSupportedWithFormats | literal type&gt;</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SdJwtDcCredentialConfig"></a>
+                    <span class="name "><b>SdJwtDcCredentialConfig</b><a href="#SdJwtDcCredentialConfig"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Extract dc+sd-jwt specific configuration from the SDK union type</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="../classes/CredentialConfig.html" target="_self" >Extract&lt;CredentialConfigurationSupportedWithFormats | literal type&gt;</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SdJwtDcFormatIdentifier"></a>
+                    <span class="name "><b>SdJwtDcFormatIdentifier</b><a href="#SdJwtDcFormatIdentifier"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TypedCredentialConfig"></a>
+                    <span class="name "><b>TypedCredentialConfig</b><a href="#TypedCredentialConfig"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Union of the credential configs we actively support</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="../classes/CredentialConfig.html" target="_self" >SdJwtDcCredentialConfig | MsoMdocCredentialConfig</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/issuer/configuration/credentials/utils/types.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ClaimPathElement"></a>
+                    <span class="name "><b>ClaimPathElement</b><a href="#ClaimPathElement"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>string | number | null</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FieldType"></a>
+                    <span class="name "><b>FieldType</b><a href="#FieldType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;string&quot; | &quot;number&quot; | &quot;integer&quot; | &quot;boolean&quot; | &quot;object&quot; | &quot;array&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/issuer/issuance/oid4vci/dto/offer-request.dto.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ClaimsSource"></a>
+                    <span class="name "><b>ClaimsSource</b><a href="#ClaimsSource"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Union type for all claims source types.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="../miscellaneous/typealiases.html#ClaimsSource" target="_self" >InlineClaimsSource | AttributeProviderClaimsSource | WebhookClaimsSource</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/crypto/key/crypto-implementation/crypto-implementation.service.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CoseAlgorithm"></a>
+                    <span class="name "><b>CoseAlgorithm</b><a href="#CoseAlgorithm"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>COSE algorithm identifiers used for mDOC (ISO 18013-5)
+Uses RFC 9864 fully-specified algorithm identifiers</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CryptoType"></a>
+                    <span class="name "><b>CryptoType</b><a href="#CryptoType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="JoseAlgorithm"></a>
+                    <span class="name "><b>JoseAlgorithm</b><a href="#JoseAlgorithm"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>JOSE algorithm names used for SD-JWT VC</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;ES256&quot; | &quot;ES384&quot; | &quot;ES512&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/issuer/issuance/oid4vci/exceptions/credential-request.exception.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CredentialRequestErrorCode"></a>
+                    <span class="name "><b>CredentialRequestErrorCode</b><a href="#CredentialRequestErrorCode"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>OID4VCI Credential Request Error Codes as defined in:
+<a href="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html#name-credential-request-errors">https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html#name-credential-request-errors</a></p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;invalid_credential_request&quot; | &quot;unknown_credential_configuration&quot; | &quot;unknown_credential_identifier&quot; | &quot;invalid_proof&quot; | &quot;invalid_nonce&quot; | &quot;invalid_encryption_parameters&quot; | &quot;credential_request_denied&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/issuer/issuance/oid4vci/exceptions/deferred-credential.exception.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DeferredCredentialErrorCode"></a>
+                    <span class="name "><b>DeferredCredentialErrorCode</b><a href="#DeferredCredentialErrorCode"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>OID4VCI Deferred Credential Error Codes as defined in:
+<a href="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html#name-deferred-credential-error-r">https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html#name-deferred-credential-error-r</a></p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;issuance_pending&quot; | &quot;invalid_transaction_id&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/storage/storage.module.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Driver"></a>
+                    <span class="name "><b>Driver</b><a href="#Driver"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;local&quot; | &quot;s3&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/shared/utils/encryption/providers/encryption-key-provider.interface.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="EncryptionKeySource"></a>
+                    <span class="name "><b>EncryptionKeySource</b><a href="#EncryptionKeySource"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Configuration for encryption key source.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;env&quot; | &quot;vault&quot; | &quot;aws&quot; | &quot;azure&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/shared/trust/types.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FederationTrustAnchorRef"></a>
+                    <span class="name "><b>FederationTrustAnchorRef</b><a href="#FederationTrustAnchorRef"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FederationTrustMode"></a>
+                    <span class="name "><b>FederationTrustMode</b><a href="#FederationTrustMode"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;federation-only&quot; | &quot;lote-only&quot; | &quot;hybrid&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="FederationTrustSource"></a>
+                    <span class="name "><b>FederationTrustSource</b><a href="#FederationTrustSource"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RulebookTrustListRef"></a>
+                    <span class="name "><b>RulebookTrustListRef</b><a href="#RulebookTrustListRef"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ServiceTypeIdentifier"></a>
+                    <span class="name "><b>ServiceTypeIdentifier</b><a href="#ServiceTypeIdentifier"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TrustedEntity"></a>
+                    <span class="name "><b>TrustedEntity</b><a href="#TrustedEntity"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>A TrustedEntity from a LoTE, containing its services grouped together.
+This preserves the relationship between issuance and revocation certificates
+from the same entity.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TrustedEntityServiceCert"></a>
+                    <span class="name "><b>TrustedEntityServiceCert</b><a href="#TrustedEntityServiceCert"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>A service certificate from a TrustedEntity in a LoTE.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TrustListSource"></a>
+                    <span class="name "><b>TrustListSource</b><a href="#TrustListSource"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="VerifierOptions"></a>
+                    <span class="name "><b>VerifierOptions</b><a href="#VerifierOptions"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="VerifyPolicy"></a>
+                    <span class="name "><b>VerifyPolicy</b><a href="#VerifyPolicy"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/crypto/key/dto/kms-config.dto.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="HttpAuthType"></a>
+                    <span class="name "><b>HttpAuthType</b><a href="#HttpAuthType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="HttpKmsAuthConfigDto"></a>
+                    <span class="name "><b>HttpKmsAuthConfigDto</b><a href="#HttpKmsAuthConfigDto"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>HttpAuthNoneConfigDto | HttpAuthBearerConfigDto | HttpAuthOauth2ConfigDto | HttpAuthMtlsConfigDto</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="KmsProviderConfigDto"></a>
+                    <span class="name "><b>KmsProviderConfigDto</b><a href="#KmsProviderConfigDto"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Union type for all provider configurations.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>DbKmsConfigDto | VaultKmsConfigDto | AwsKmsConfigDto | Pkcs11KmsConfigDto | HttpKmsConfigDto</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="KmsProviderType"></a>
+                    <span class="name "><b>KmsProviderType</b><a href="#KmsProviderType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/crypto/key/kms/adapters/http-kms.adapter.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="HttpKmsAuth"></a>
+                    <span class="name "><b>HttpKmsAuth</b><a href="#HttpKmsAuth"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Authentication configuration for the remote KMS microservice.</p>
+<table class="table table-bordered compodoc-table">
+<thead>
+<tr>
+<th>type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>none</code></td>
+<td>No auth — suitable for trusted private networks</td>
+</tr>
+<tr>
+<td><code>bearer</code></td>
+<td>Static <code>Authorization: Bearer &lt;token&gt;</code> header</td>
+</tr>
+<tr>
+<td><code>oauth2-client-credentials</code></td>
+<td>Short-lived tokens fetched and cached from a token server</td>
+</tr>
+<tr>
+<td><code>mtls</code></td>
+<td>Mutual TLS — client cert presented on every connection</td>
+</tr>
+</tbody>
+</table>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type | literal type | literal type | literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/issuer/configuration/credentials/entities/iae-action.dto.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="IaeAction"></a>
+                    <span class="name "><b>IaeAction</b><a href="#IaeAction"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Union type for all IAE actions.
+This is a discriminated union based on the <code>type</code> field.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="../miscellaneous/typealiases.html#IaeAction" target="_self" >IaeActionOpenid4vpPresentation | IaeActionRedirectToWeb</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/issuer/issuance/oid4vci/authorize/dto/interactive-authorization.dto.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="InteractiveAuthorizationResponse"></a>
+                    <span class="name "><b>InteractiveAuthorizationResponse</b><a href="#InteractiveAuthorizationResponse"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Union type for all possible interactive authorization responses.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>InteractiveAuthorizationCodeResponseDto | InteractiveAuthorizationOpenid4vpResponseDto | InteractiveAuthorizationRedirectToWebResponseDto | InteractiveAuthorizationErrorResponseDto</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/crypto/key/crypto-implementation/crypto-implementation.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="KeyPair"></a>
+                    <span class="name "><b>KeyPair</b><a href="#KeyPair"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Signer"></a>
+                    <span class="name "><b>Signer</b><a href="#Signer"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Verifier"></a>
+                    <span class="name "><b>Verifier</b><a href="#Verifier"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/crypto/key/kms/kms-adapter.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="KmsSigningAlg"></a>
+                    <span class="name "><b>KmsSigningAlg</b><a href="#KmsSigningAlg"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Supported signing algorithms. New algorithms can be added here once
+adapters declare support for them via <a href="KmsAdapterCapabilities.supportedAlgs">KmsAdapterCapabilities.supportedAlgs</a>.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/shared/trust/lote-parser.service.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LoteInfo"></a>
+                    <span class="name "><b>LoteInfo</b><a href="#LoteInfo"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ParsedLoTE"></a>
+                    <span class="name "><b>ParsedLoTE</b><a href="#ParsedLoTE"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Parsed LoTE preserving TrustedEntity groupings.
+This is important for pairing issuance and revocation certificates from the same entity.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/shared/trust/x509-validation.service.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MatchedTrustedEntity"></a>
+                    <span class="name "><b>MatchedTrustedEntity</b><a href="#MatchedTrustedEntity"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Information about a matched TrustedEntity from certificate chain validation.
+Includes the matched issuance certificate and the associated revocation certificate
+from the same entity.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="X5cInput"></a>
+                    <span class="name "><b>X5cInput</b><a href="#X5cInput"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>string[]</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MdocSessionData"></a>
+                    <span class="name "><b>MdocSessionData</b><a href="#MdocSessionData"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MdocVerificationResult"></a>
+                    <span class="name "><b>MdocVerificationResult</b><a href="#MdocVerificationResult"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="RequestedMdocClaimPath"></a>
+                    <span class="name "><b>RequestedMdocClaimPath</b><a href="#RequestedMdocClaimPath"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>string[]</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/session/entities/session.entity.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Notification"></a>
+                    <span class="name "><b>Notification</b><a href="#Notification"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Represents a session entity for managing user sessions in the application.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/issuer/issuance/oid4vci/oid4vci.service.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="OAuth2TokenPayload"></a>
+                    <span class="name "><b>OAuth2TokenPayload</b><a href="#OAuth2TokenPayload"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Type alias for the OAuth2 access token payload returned by resource server verification.
+This is distinct from the internal TokenPayload used for authenticated API requests.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/verifier/oid4vp/dto/presentation-request.dto.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PresentationRequestOptions"></a>
+                    <span class="name "><b>PresentationRequestOptions</b><a href="#PresentationRequestOptions"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/storage/storage.types.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="PutOptions"></a>
+                    <span class="name "><b>PutOptions</b><a href="#PutOptions"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="StoredObject"></a>
+                    <span class="name "><b>StoredObject</b><a href="#StoredObject"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/registrar/schema-metadata.service.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SchemaMetadataFilters"></a>
+                    <span class="name "><b>SchemaMetadataFilters</b><a href="#SchemaMetadataFilters"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="UploadAssetType"></a>
+                    <span class="name "><b>UploadAssetType</b><a href="#UploadAssetType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;trustlists&quot; | &quot;rulebooks&quot; | &quot;schemas&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/issuer/configuration/credentials/utils/derive.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Segment"></a>
+                    <span class="name "><b>Segment</b><a href="#Segment"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>string | number | null</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/session/entities/session-log-entry.entity.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SessionLogLevel"></a>
+                    <span class="name "><b>SessionLogLevel</b><a href="#SessionLogLevel"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;info&quot; | &quot;warn&quot; | &quot;error&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/session/dto/session-query.dto.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SessionSortBy"></a>
+                    <span class="name "><b>SessionSortBy</b><a href="#SessionSortBy"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;id&quot; | &quot;status&quot; | &quot;createdAt&quot; | &quot;requestId&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SessionSortOrder"></a>
+                    <span class="name "><b>SessionSortOrder</b><a href="#SessionSortOrder"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;asc&quot; | &quot;desc&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SessionType"></a>
+                    <span class="name "><b>SessionType</b><a href="#SessionType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;issuance&quot; | &quot;presentation&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/shared/utils/logger/session-log-store.service.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SessionStoreMode"></a>
+                    <span class="name "><b>SessionStoreMode</b><a href="#SessionStoreMode"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;off&quot; | &quot;errors&quot; | &quot;all&quot; | &quot;verbose&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/shared/utils/config-import/config-import-orchestrator.service.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TenantImportFn"></a>
+                    <span class="name "><b>TenantImportFn</b><a href="#TenantImportFn"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Type for tenant-aware import functions.
+Each function receives the tenant ID and processes imports for that specific tenant.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/shared/utils/config-import/import-options.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TenantImportOptions"></a>
+                    <span class="name "><b>TenantImportOptions</b><a href="#TenantImportOptions"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Import options for tenant-specific imports (without tenantId parameter in callbacks).
+Used with importConfigsForTenant where tenantId is passed separately.</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="../interfaces/ImportOptions.html" target="_self" >ImportOptions&lt;T&gt;</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/auth/tenant/entitites/tenant.entity.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TenantStatus"></a>
+                    <span class="name "><b>TenantStatus</b><a href="#TenantStatus"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>unknown</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/issuer/issuance/oid4vci/exceptions/token-error.exception.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TokenErrorCode"></a>
+                    <span class="name "><b>TokenErrorCode</b><a href="#TokenErrorCode"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>OAuth 2.0 Token Error Codes as defined in:</p>
+<ul>
+<li>RFC 6749 Section 5.2 (<a href="https://www.rfc-editor.org/rfc/rfc6749#section-5.2">https://www.rfc-editor.org/rfc/rfc6749#section-5.2</a>)</li>
+<li>OID4VCI Section 6.3 (<a href="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html#name-token-error-response">https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html#name-token-error-response</a>)</li>
+</ul>
+<p>OID4VCI specific clarifications:</p>
+<ul>
+<li><code>invalid_request</code>:<ul>
+<li>The Authorization Server does not expect a Transaction Code in the Pre-Authorized Code Flow but the Client provides one.</li>
+<li>The Authorization Server expects a Transaction Code in the Pre-Authorized Code Flow but the Client does not provide one.</li>
+</ul>
+</li>
+<li><code>invalid_grant</code>:<ul>
+<li>The End-User provides the wrong Pre-Authorized Code or the Pre-Authorized Code has expired.</li>
+</ul>
+</li>
+<li><code>invalid_tx_code</code>:<ul>
+<li>The Authorization Server expects a Transaction Code in the Pre-Authorized Code Flow but the Client provides the wrong Transaction Code.</li>
+</ul>
+</li>
+<li><code>invalid_client</code>:<ul>
+<li>The Client tried to send a Token Request with a Pre-Authorized Code without a Client ID but the Authorization Server does not support anonymous access.</li>
+</ul>
+</li>
+</ul>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;invalid_request&quot; | &quot;invalid_client&quot; | &quot;invalid_grant&quot; | &quot;unauthorized_client&quot; | &quot;unsupported_grant_type&quot; | &quot;invalid_scope&quot; | &quot;invalid_tx_code&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TrustedAuthorityInput"></a>
+                    <span class="name "><b>TrustedAuthorityInput</b><a href="#TrustedAuthorityInput"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>NonNullable</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/issuer/trust-list/dto/trust-list-create.dto.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TrustListEntity"></a>
+                    <span class="name "><b>TrustListEntity</b><a href="#TrustListEntity"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="../entitys/TrustList.html" target="_self" >InternalTrustListEntity | ExternalTrustListEntity</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'miscellaneous-typealiases';
+            var COMPODOC_CURRENT_PAGE_URL = 'typealiases.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

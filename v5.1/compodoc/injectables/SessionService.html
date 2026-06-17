@@ -1,0 +1,1800 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >SessionService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/session/session.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#sessionsGauge" >sessionsGauge</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#add" >add</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#create" >create</a>
+                            </li>
+                            <li>
+                                <a href="#delete" >delete</a>
+                            </li>
+                            <li>
+                                <a href="#findByWalletNonce" >findByWalletNonce</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findOrCreateByExternalIdentity" >findOrCreateByExternalIdentity</a>
+                            </li>
+                            <li>
+                                <a href="#get" >get</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getAll" >getAll</a>
+                            </li>
+                            <li>
+                                <a href="#getBy" >getBy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#incrementTxCodeFailedAttempts" >incrementTxCodeFailedAttempts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#onApplicationBootstrap" >onApplicationBootstrap</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#setState" >setState</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#tidyUpSessions" >tidyUpSessions</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(sessionRepository: <a href="../entitys/Session.html" target="_self">Repository&lt;Session&gt;</a>, tenantRepository: <a href="../entitys/TenantEntity.html" target="_self">Repository&lt;TenantEntity&gt;</a>, configService: ConfigService, schedulerRegistry: SchedulerRegistry, eventEmitter: EventEmitter2, metricService: MetricService)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/session/session.service.ts:30</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>sessionRepository</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../entitys/Session.html" target="_self" >Repository&lt;Session&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>tenantRepository</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../entitys/TenantEntity.html" target="_self" >Repository&lt;TenantEntity&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>configService</td>
+                                                  
+                                                        <td>
+                                                                    <code>ConfigService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>schedulerRegistry</td>
+                                                  
+                                                        <td>
+                                                                    <code>SchedulerRegistry</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>eventEmitter</td>
+                                                  
+                                                        <td>
+                                                                    <code>EventEmitter2</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>metricService</td>
+                                                  
+                                                        <td>
+                                                                    <code>MetricService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="add"></a>
+                    <span class="name">
+                        <span ><b>add</b></span>
+                        <a href="#add"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>add(issuer_state: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, values: <a href="../entitys/Session.html" target="_self">QueryDeepPartialEntity&lt;Session&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="163"
+                                    class="link-to-prism">src/session/session.service.ts:163</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Update an existing session.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>issuer_state</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>values</td>
+                                            <td>
+                                                            <code><a href="../entitys/Session.html" target="_self" >QueryDeepPartialEntity&lt;Session&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="create"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>create</b></span>
+                        <a href="#create"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>create(session: <a href="../entitys/Session.html" target="_self">DeepPartial&lt;Session&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="107"
+                                    class="link-to-prism">src/session/session.service.ts:107</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Create a new session.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                            <code><a href="../entitys/Session.html" target="_self" >DeepPartial&lt;Session&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="delete"></a>
+                    <span class="name">
+                        <span ><b>delete</b></span>
+                        <a href="#delete"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>delete(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, sub: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="347"
+                                    class="link-to-prism">src/session/session.service.ts:347</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Deletes a session by its ID and tenant ID.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>sub</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;any&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findByWalletNonce"></a>
+                    <span class="name">
+                        <span ><b>findByWalletNonce</b></span>
+                        <a href="#findByWalletNonce"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>findByWalletNonce(nonce: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="226"
+                                    class="link-to-prism">src/session/session.service.ts:226</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Find a session by its walletNonce (used in wallet-facing URLs).
+Returns null if no session matches.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>nonce</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findOrCreateByExternalIdentity"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>findOrCreateByExternalIdentity</b></span>
+                        <a href="#findOrCreateByExternalIdentity"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findOrCreateByExternalIdentity(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, externalIssuer: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, externalSubject: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="359"
+                                    class="link-to-prism">src/session/session.service.ts:359</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Find or create a session by external authorization server identity.
+Used for wallet-initiated flows where the wallet presents a token from an external AS (e.g., Keycloak).</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The tenant ID</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>externalIssuer</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The issuer (iss) from the external AS token</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>externalSubject</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The subject (sub) from the external AS token</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../entitys/Session.html" target="_self" >Promise&lt;Session&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The existing or newly created session</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="get"></a>
+                    <span class="name">
+                        <span ><b>get</b></span>
+                        <a href="#get"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>get(state: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="218"
+                                    class="link-to-prism">src/session/session.service.ts:218</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get a session by its state.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>state</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAll"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getAll</b></span>
+                        <a href="#getAll"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAll(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, query: <a href="../classes/SessionQueryDto.html" target="_self">SessionQueryDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="173"
+                                    class="link-to-prism">src/session/session.service.ts:173</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get sessions with pagination and optional filtering.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/SessionQueryDto.html" target="_self" >SessionQueryDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>Pagination and filter parameters</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/PaginatedSessionResponseDto.html" target="_self" >Promise&lt;PaginatedSessionResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Paginated session list</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getBy"></a>
+                    <span class="name">
+                        <span ><b>getBy</b></span>
+                        <a href="#getBy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getBy(where: <a href="../entitys/Session.html" target="_self">FindOptionsWhere&lt;Session&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="235"
+                                    class="link-to-prism">src/session/session.service.ts:235</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get a session by a specific condition.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>where</td>
+                                            <td>
+                                                            <code><a href="../entitys/Session.html" target="_self" >FindOptionsWhere&lt;Session&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="incrementTxCodeFailedAttempts"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>incrementTxCodeFailedAttempts</b></span>
+                        <a href="#incrementTxCodeFailedAttempts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>incrementTxCodeFailedAttempts(sessionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="246"
+                                    class="link-to-prism">src/session/session.service.ts:246</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Atomically increments the failed tx_code attempt counter for a session.
+Returns the updated attempt count.
+Used for brute-force protection in the OID4VCI pre-authorized code flow.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>sessionId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The session ID</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;number&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The updated txCodeFailedAttempts count</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onApplicationBootstrap"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>onApplicationBootstrap</b></span>
+                        <a href="#onApplicationBootstrap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onApplicationBootstrap()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="52"
+                                    class="link-to-prism">src/session/session.service.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Register the tidy up cron job on application bootstrap.
+This will run every hour by default, but can be configured via the <code>SESSION_TIDY_UP_INTERVAL</code> config variable.</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setState"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>setState</b></span>
+                        <a href="#setState"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setState(session: <a href="../entitys/Session.html" target="_self">Session</a>, status: <a href="../miscellaneous/enumerations.html#SessionStatus" target="_self">SessionStatus</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">src/session/session.service.ts:128</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Marks the session as successful or failed.
+Emits a session status change event for SSE subscribers.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                            <code><a href="../entitys/Session.html" target="_self" >Session</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>status</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#SessionStatus" target="_self" >SessionStatus</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tidyUpSessions"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>tidyUpSessions</b></span>
+                        <a href="#tidyUpSessions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>tidyUpSessions()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="264"
+                                    class="link-to-prism">src/session/session.service.ts:264</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Tidy up sessions based on per-tenant configuration.
+Each tenant can configure their own TTL and cleanup mode.</p>
+<ul>
+<li>&#39;full&#39; mode: Deletes the entire session record</li>
+<li>&#39;anonymize&#39; mode: Keeps session metadata but removes personal data</li>
+</ul>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(SessionService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/session/session.service.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sessionsGauge"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>sessionsGauge</b></span>
+                        <a href="#sessionsGauge"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>UpDownCounter</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/session/session.service.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, Logger, OnApplicationBootstrap } from &quot;@nestjs/common&quot;;
+import { ConfigService } from &quot;@nestjs/config&quot;;
+import { EventEmitter2 } from &quot;@nestjs/event-emitter&quot;;
+import { SchedulerRegistry } from &quot;@nestjs/schedule&quot;;
+import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
+import type { UpDownCounter } from &quot;@opentelemetry/api&quot;;
+import { MetricService } from &quot;nestjs-otel&quot;;
+import {
+    DeepPartial,
+    FindOptionsWhere,
+    IsNull,
+    LessThan,
+    Not,
+    Repository,
+} from &quot;typeorm&quot;;
+import { QueryDeepPartialEntity } from &quot;typeorm/query-builder/QueryPartialEntity.js&quot;;
+import { SessionCleanupMode } from &quot;../auth/tenant/entitites/session-storage-config&quot;;
+import { TenantEntity } from &quot;../auth/tenant/entitites/tenant.entity&quot;;
+import { SessionQueryDto } from &quot;./dto/session-query.dto&quot;;
+import { PaginatedSessionResponseDto } from &quot;./dto/paginated-session-response.dto&quot;;
+import { Session, SessionStatus } from &quot;./entities/session.entity&quot;;
+import {
+    SESSION_STATUS_CHANGED,
+    SessionStatusChangedEvent,
+} from &quot;./session-events.service&quot;;
+
+@Injectable()
+export class SessionService implements OnApplicationBootstrap {
+    private readonly logger &#x3D; new Logger(SessionService.name);
+    private readonly sessionsGauge: UpDownCounter;
+
+    constructor(
+        @InjectRepository(Session)
+        private readonly sessionRepository: Repository&lt;Session&gt;,
+        @InjectRepository(TenantEntity)
+        private readonly tenantRepository: Repository&lt;TenantEntity&gt;,
+        private readonly configService: ConfigService,
+        private readonly schedulerRegistry: SchedulerRegistry,
+        private readonly eventEmitter: EventEmitter2,
+        metricService: MetricService,
+    ) {
+        this.sessionsGauge &#x3D; metricService.getUpDownCounter(&quot;sessions&quot;, {
+            description: &quot;Total number of sessions by status&quot;,
+        });
+    }
+
+    /**
+     * Register the tidy up cron job on application bootstrap.
+     * This will run every hour by default, but can be configured via the &#x60;SESSION_TIDY_UP_INTERVAL&#x60; config variable.
+     * @returns
+     */
+    async onApplicationBootstrap() {
+        const callback &#x3D; () &#x3D;&gt; {
+            void this.tidyUpSessions();
+        };
+        const intervalTime &#x3D;
+            this.configService.getOrThrow&lt;number&gt;(&quot;SESSION_TIDY_UP_INTERVAL&quot;) *
+            1000;
+        const interval &#x3D; setInterval(callback, intervalTime);
+        this.schedulerRegistry.addInterval(&quot;tidyUpSessions&quot;, interval);
+
+        // Initialize session metrics for all tenants
+        const tenants &#x3D; await this.tenantRepository.find();
+        const states: SessionStatus[] &#x3D; [
+            SessionStatus.Active,
+            SessionStatus.Fetched,
+            SessionStatus.Completed,
+            SessionStatus.Expired,
+            SessionStatus.Failed,
+        ];
+
+        for (const tenant of tenants) {
+            for (const state of states) {
+                const issuanceCounter &#x3D; await this.sessionRepository.countBy({
+                    tenantId: tenant.id,
+                    status: state,
+                    requestId: IsNull(), // issuance sessions don&#x27;t have requestId
+                });
+                this.sessionsGauge.add(issuanceCounter, {
+                    tenant_id: tenant.id,
+                    session_type: &quot;issuance&quot;,
+                    status: state,
+                });
+
+                const verificationCounter &#x3D;
+                    await this.sessionRepository.countBy({
+                        tenantId: tenant.id,
+                        status: state,
+                        requestId: Not(IsNull()), // verification sessions have requestId
+                    });
+                this.sessionsGauge.add(verificationCounter, {
+                    tenant_id: tenant.id,
+                    session_type: &quot;verification&quot;,
+                    status: state,
+                });
+            }
+        }
+
+        return this.tidyUpSessions();
+    }
+
+    /**
+     * Create a new session.
+     * @param session
+     * @returns
+     */
+    async create(session: DeepPartial&lt;Session&gt;) {
+        const createdSession &#x3D; await this.sessionRepository.save(session);
+
+        // Count total sessions created
+        this.sessionsGauge.add(1, {
+            tenant_id: createdSession.tenantId,
+            session_type: createdSession.requestId
+                ? &quot;verification&quot;
+                : &quot;issuance&quot;,
+            status: &quot;active&quot;,
+        });
+
+        return createdSession;
+    }
+
+    /**
+     * Marks the session as successful or failed.
+     * Emits a session status change event for SSE subscribers.
+     * @param session
+     * @param status
+     */
+    async setState(session: Session, status: SessionStatus) {
+        const sessionType &#x3D; session.requestId ? &quot;verification&quot; : &quot;issuance&quot;;
+
+        await this.sessionRepository.update({ id: session.id }, { status });
+
+        // Emit status change event for SSE subscribers
+        const event: SessionStatusChangedEvent &#x3D; {
+            sessionId: session.id,
+            status,
+            updatedAt: new Date(),
+            session: { ...session, status },
+        };
+        this.eventEmitter.emit(SESSION_STATUS_CHANGED, event);
+
+        // Count completed sessions (success or failure)
+        this.sessionsGauge.add(1, {
+            tenant_id: session.tenantId,
+            session_type: sessionType,
+            status,
+        });
+
+        // Decrease active sessions count
+        this.sessionsGauge.add(-1, {
+            tenant_id: session.tenantId,
+            session_type: sessionType,
+            status: &quot;active&quot;,
+        });
+    }
+
+    /**
+     * Update an existing session.
+     * @param issuer_state
+     * @param values
+     * @returns
+     */
+    add(issuer_state: string, values: QueryDeepPartialEntity&lt;Session&gt;) {
+        return this.sessionRepository.update({ id: issuer_state }, values);
+    }
+
+    /**
+     * Get sessions with pagination and optional filtering.
+     * @param tenantId
+     * @param query - Pagination and filter parameters
+     * @returns Paginated session list
+     */
+    async getAll(
+        tenantId: string,
+        query: SessionQueryDto,
+    ): Promise&lt;PaginatedSessionResponseDto&gt; {
+        const { page, pageSize, status, type, sortBy, sortOrder } &#x3D; query;
+
+        const where: FindOptionsWhere&lt;Session&gt; &#x3D; { tenantId };
+
+        if (status) {
+            where.status &#x3D; status;
+        }
+
+        if (type &#x3D;&#x3D;&#x3D; &quot;issuance&quot;) {
+            where.requestId &#x3D; IsNull();
+        } else if (type &#x3D;&#x3D;&#x3D; &quot;presentation&quot;) {
+            where.requestId &#x3D; Not(IsNull());
+        }
+
+        const orderColumn &#x3D; sortBy ?? &quot;updatedAt&quot;;
+        const orderDirection &#x3D;
+            (sortOrder?.toUpperCase() as &quot;ASC&quot; | &quot;DESC&quot;) ?? &quot;DESC&quot;;
+
+        const [items, total] &#x3D; await this.sessionRepository.findAndCount({
+            select: [&quot;id&quot;, &quot;status&quot;, &quot;createdAt&quot;, &quot;requestId&quot;],
+            where,
+            order: { [orderColumn]: orderDirection },
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+            loadEagerRelations: false,
+        });
+
+        return {
+            items,
+            total,
+            page,
+            pageSize,
+            totalPages: Math.ceil(total / pageSize),
+        };
+    }
+
+    /**
+     * Get a session by its state.
+     * @param state
+     * @returns
+     */
+    get(state: string) {
+        return this.sessionRepository.findOneByOrFail({ id: state });
+    }
+
+    /**
+     * Find a session by its walletNonce (used in wallet-facing URLs).
+     * Returns null if no session matches.
+     */
+    findByWalletNonce(nonce: string) {
+        return this.sessionRepository.findOneBy({ walletNonce: nonce });
+    }
+
+    /**
+     * Get a session by a specific condition.
+     * @param where
+     * @returns
+     */
+    getBy(where: FindOptionsWhere&lt;Session&gt;) {
+        return this.sessionRepository.findOneByOrFail(where);
+    }
+
+    /**
+     * Atomically increments the failed tx_code attempt counter for a session.
+     * Returns the updated attempt count.
+     * Used for brute-force protection in the OID4VCI pre-authorized code flow.
+     * @param sessionId The session ID
+     * @returns The updated txCodeFailedAttempts count
+     */
+    async incrementTxCodeFailedAttempts(sessionId: string): Promise&lt;number&gt; {
+        await this.sessionRepository.increment(
+            { id: sessionId },
+            &quot;txCodeFailedAttempts&quot;,
+            1,
+        );
+        const session &#x3D; await this.sessionRepository.findOneByOrFail({
+            id: sessionId,
+        });
+        return session.txCodeFailedAttempts ?? 0;
+    }
+
+    /**
+     * Tidy up sessions based on per-tenant configuration.
+     * Each tenant can configure their own TTL and cleanup mode.
+     * - &#x27;full&#x27; mode: Deletes the entire session record
+     * - &#x27;anonymize&#x27; mode: Keeps session metadata but removes personal data
+     */
+    async tidyUpSessions() {
+        const defaultTtlSeconds &#x3D;
+            this.configService.getOrThrow&lt;number&gt;(&quot;SESSION_TTL&quot;);
+        const defaultCleanupMode &#x3D; this.configService.getOrThrow&lt;string&gt;(
+            &quot;SESSION_CLEANUP_MODE&quot;,
+        );
+
+        // Get all tenants to check for custom session configs
+        const tenants &#x3D; await this.tenantRepository.find();
+
+        // Process each tenant with their specific config
+        for (const tenant of tenants) {
+            const ttlSeconds &#x3D;
+                tenant.sessionConfig?.ttlSeconds ?? defaultTtlSeconds;
+            const cutoffDate &#x3D; new Date(Date.now() - ttlSeconds * 1000);
+            const cleanupMode &#x3D;
+                tenant.sessionConfig?.cleanupMode ?? defaultCleanupMode;
+
+            if (cleanupMode &#x3D;&#x3D;&#x3D; SessionCleanupMode.Anonymize) {
+                // Anonymize: Keep session metadata (including original status) but remove personal data
+                // We use a raw query to only target sessions that still have personal data
+                const result &#x3D; await this.sessionRepository
+                    .createQueryBuilder()
+                    .update()
+                    .set({
+                        // Clear personal data fields
+                        credentials: undefined,
+                        credentialPayload: undefined,
+                        auth_queries: undefined,
+                        offer: undefined,
+                        requestObject: undefined,
+                    })
+                    .where(&quot;tenantId &#x3D; :tenantId&quot;, { tenantId: tenant.id })
+                    .andWhere(&quot;createdAt &lt; :cutoffDate&quot;, { cutoffDate })
+                    // Only anonymize sessions that still have personal data
+                    .andWhere(
+                        &quot;(credentials IS NOT NULL OR credentialPayload IS NOT NULL OR auth_queries IS NOT NULL OR offer IS NOT NULL OR requestObject IS NOT NULL)&quot;,
+                    )
+                    .execute();
+                if (result.affected &amp;&amp; result.affected &gt; 0) {
+                    this.logger.log(
+                        &#x60;Anonymized ${result.affected} sessions for tenant ${tenant.id}&#x60;,
+                    );
+                }
+            } else {
+                // Full delete (default behavior)
+                const result &#x3D; await this.sessionRepository.delete({
+                    tenantId: tenant.id,
+                    createdAt: LessThan(cutoffDate),
+                });
+                if (result.affected &amp;&amp; result.affected &gt; 0) {
+                    this.logger.log(
+                        &#x60;Deleted ${result.affected} sessions for tenant ${tenant.id}&#x60;,
+                    );
+                }
+            }
+        }
+
+        // Also clean up sessions for tenants that no longer exist (orphaned sessions)
+        const tenantIds &#x3D; tenants.map((t) &#x3D;&gt; t.id);
+        if (tenantIds.length &gt; 0) {
+            const orphanedResult &#x3D; await this.sessionRepository
+                .createQueryBuilder()
+                .delete()
+                .where(&quot;tenantId NOT IN (:...tenantIds)&quot;, { tenantIds })
+                .andWhere(&quot;createdAt &lt; :cutoff&quot;, {
+                    cutoff: new Date(Date.now() - defaultTtlSeconds * 1000),
+                })
+                .execute();
+            if (orphanedResult.affected &amp;&amp; orphanedResult.affected &gt; 0) {
+                this.logger.log(
+                    &#x60;Deleted ${orphanedResult.affected} orphaned sessions&#x60;,
+                );
+            }
+        }
+    }
+
+    /**
+     * Deletes a session by its ID and tenant ID.
+     * @param id
+     * @param sub
+     * @returns
+     */
+    delete(id: string, sub: string): Promise&lt;any&gt; {
+        return this.sessionRepository.delete({ id, tenantId: sub });
+    }
+
+    /**
+     * Find or create a session by external authorization server identity.
+     * Used for wallet-initiated flows where the wallet presents a token from an external AS (e.g., Keycloak).
+     * @param tenantId The tenant ID
+     * @param externalIssuer The issuer (iss) from the external AS token
+     * @param externalSubject The subject (sub) from the external AS token
+     * @returns The existing or newly created session
+     */
+    async findOrCreateByExternalIdentity(
+        tenantId: string,
+        externalIssuer: string,
+        externalSubject: string,
+    ): Promise&lt;Session&gt; {
+        // Try to find existing session by external identity
+        const existingSession &#x3D; await this.sessionRepository.findOne({
+            where: {
+                tenantId,
+                externalIssuer,
+                externalSubject,
+                status: SessionStatus.Active,
+            },
+        });
+
+        if (existingSession) {
+            return existingSession;
+        }
+
+        // Create new session for external identity
+        const { v4: uuidv4 } &#x3D; await import(&quot;uuid&quot;);
+        const newSession &#x3D; await this.create({
+            id: uuidv4(),
+            tenantId,
+            externalIssuer,
+            externalSubject,
+            status: SessionStatus.Active,
+            notifications: [],
+        });
+
+        this.logger.log(
+            &#x60;Created session for external identity: iss&#x3D;${externalIssuer}, sub&#x3D;${externalSubject}&#x60;,
+        );
+
+        return newSession;
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'SessionService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

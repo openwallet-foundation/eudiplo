@@ -1,0 +1,1525 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  Pkcs11Constants</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#CKA_CLASS" 
+>
+                                            CKA_CLASS
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKA_EC_PARAMS" 
+>
+                                            CKA_EC_PARAMS
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKA_EC_POINT" 
+>
+                                            CKA_EC_POINT
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKA_EXTRACTABLE" 
+>
+                                            CKA_EXTRACTABLE
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKA_ID" 
+>
+                                            CKA_ID
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKA_KEY_TYPE" 
+>
+                                            CKA_KEY_TYPE
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKA_LABEL" 
+>
+                                            CKA_LABEL
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKA_PRIVATE" 
+>
+                                            CKA_PRIVATE
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKA_SENSITIVE" 
+>
+                                            CKA_SENSITIVE
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKA_SIGN" 
+>
+                                            CKA_SIGN
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKA_TOKEN" 
+>
+                                            CKA_TOKEN
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKA_VERIFY" 
+>
+                                            CKA_VERIFY
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKF_RW_SESSION" 
+>
+                                            CKF_RW_SESSION
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKF_SERIAL_SESSION" 
+>
+                                            CKF_SERIAL_SESSION
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKK_EC" 
+>
+                                            CKK_EC
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKM_EC_KEY_PAIR_GEN" 
+>
+                                            CKM_EC_KEY_PAIR_GEN
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKM_ECDSA" 
+>
+                                            CKM_ECDSA
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKO_PRIVATE_KEY" 
+>
+                                            CKO_PRIVATE_KEY
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKO_PUBLIC_KEY" 
+>
+                                            CKO_PUBLIC_KEY
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#CKU_USER" 
+>
+                                            CKU_USER
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKA_CLASS"></a>
+                                        <span class="name "><b>CKA_CLASS</b>
+                                            <a href="#CKA_CLASS">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKA_CLASS:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKA_EC_PARAMS"></a>
+                                        <span class="name "><b>CKA_EC_PARAMS</b>
+                                            <a href="#CKA_EC_PARAMS">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKA_EC_PARAMS:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKA_EC_POINT"></a>
+                                        <span class="name "><b>CKA_EC_POINT</b>
+                                            <a href="#CKA_EC_POINT">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKA_EC_POINT:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKA_EXTRACTABLE"></a>
+                                        <span class="name "><b>CKA_EXTRACTABLE</b>
+                                            <a href="#CKA_EXTRACTABLE">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKA_EXTRACTABLE:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKA_ID"></a>
+                                        <span class="name "><b>CKA_ID</b>
+                                            <a href="#CKA_ID">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKA_ID:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKA_KEY_TYPE"></a>
+                                        <span class="name "><b>CKA_KEY_TYPE</b>
+                                            <a href="#CKA_KEY_TYPE">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKA_KEY_TYPE:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKA_LABEL"></a>
+                                        <span class="name "><b>CKA_LABEL</b>
+                                            <a href="#CKA_LABEL">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKA_LABEL:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKA_PRIVATE"></a>
+                                        <span class="name "><b>CKA_PRIVATE</b>
+                                            <a href="#CKA_PRIVATE">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKA_PRIVATE:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKA_SENSITIVE"></a>
+                                        <span class="name "><b>CKA_SENSITIVE</b>
+                                            <a href="#CKA_SENSITIVE">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKA_SENSITIVE:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKA_SIGN"></a>
+                                        <span class="name "><b>CKA_SIGN</b>
+                                            <a href="#CKA_SIGN">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKA_SIGN:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKA_TOKEN"></a>
+                                        <span class="name "><b>CKA_TOKEN</b>
+                                            <a href="#CKA_TOKEN">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKA_TOKEN:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKA_VERIFY"></a>
+                                        <span class="name "><b>CKA_VERIFY</b>
+                                            <a href="#CKA_VERIFY">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKA_VERIFY:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKF_RW_SESSION"></a>
+                                        <span class="name "><b>CKF_RW_SESSION</b>
+                                            <a href="#CKF_RW_SESSION">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKF_RW_SESSION:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKF_SERIAL_SESSION"></a>
+                                        <span class="name "><b>CKF_SERIAL_SESSION</b>
+                                            <a href="#CKF_SERIAL_SESSION">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKF_SERIAL_SESSION:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKK_EC"></a>
+                                        <span class="name "><b>CKK_EC</b>
+                                            <a href="#CKK_EC">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKK_EC:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKM_EC_KEY_PAIR_GEN"></a>
+                                        <span class="name "><b>CKM_EC_KEY_PAIR_GEN</b>
+                                            <a href="#CKM_EC_KEY_PAIR_GEN">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKM_EC_KEY_PAIR_GEN:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKM_ECDSA"></a>
+                                        <span class="name "><b>CKM_ECDSA</b>
+                                            <a href="#CKM_ECDSA">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKM_ECDSA:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKO_PRIVATE_KEY"></a>
+                                        <span class="name "><b>CKO_PRIVATE_KEY</b>
+                                            <a href="#CKO_PRIVATE_KEY">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKO_PRIVATE_KEY:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKO_PUBLIC_KEY"></a>
+                                        <span class="name "><b>CKO_PUBLIC_KEY</b>
+                                            <a href="#CKO_PUBLIC_KEY">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKO_PUBLIC_KEY:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="CKU_USER"></a>
+                                        <span class="name "><b>CKU_USER</b>
+                                            <a href="#CKU_USER">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>CKU_USER:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createHash } from &quot;node:crypto&quot;;
+import { Logger, NotImplementedException } from &quot;@nestjs/common&quot;;
+import { exportJWK, type JWK } from &quot;jose&quot;;
+import type { KmsProviderType } from &quot;../../dto/kms-config.dto&quot;;
+import type {
+    KmsAdapter,
+    KmsAdapterCapabilities,
+    KmsHealthResult,
+    KmsKeyMaterial,
+    KmsKeyRef,
+    KmsSigningAlg,
+} from &quot;../kms-adapter&quot;;
+import { PublicJwkCache } from &quot;../public-jwk-cache&quot;;
+
+export interface Pkcs11AdapterConfig {
+    providerId: string;
+    /** Absolute path to the PKCS#11 module library (.so/.dll/.dylib). */
+    library: string;
+    /**
+     * Slot selection. Either the numeric slot id, or a token label that
+     * will be resolved against the slot list at initialisation time.
+     */
+    slot: number | string;
+    /** User PIN. */
+    pin: string;
+    /**
+     * Optional read-only mode. Defaults to false (RW session). Set to
+     * true if the adapter only needs to sign with existing keys.
+     */
+    readOnly?: boolean;
+}
+
+// DER encoding of the P-256 named-curve OID (1.2.840.10045.3.1.7).
+const P256_OID_DER &#x3D; Buffer.from([
+    0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07,
+]);
+
+// Minimal subset of the pkcs11js surface we touch. Avoids a hard
+// compile-time dependency on the optional native module.
+interface Pkcs11Module {
+    PKCS11: new () &#x3D;&gt; Pkcs11Instance;
+    [constant: string]: unknown;
+}
+
+interface Pkcs11Instance {
+    load(path: string): void;
+    C_Initialize(): void;
+    C_Finalize(): void;
+    C_GetSlotList(tokenPresent: boolean): Buffer[];
+    C_GetTokenInfo(slot: Buffer): { label: string };
+    C_OpenSession(slot: Buffer, flags: number): Buffer;
+    C_CloseSession(session: Buffer): void;
+    C_Login(session: Buffer, userType: number, pin: string): void;
+    C_Logout(session: Buffer): void;
+    C_GenerateKeyPair(
+        session: Buffer,
+        mechanism: { mechanism: number },
+        publicTemplate: Pkcs11Attribute[],
+        privateTemplate: Pkcs11Attribute[],
+    ): { publicKey: Buffer; privateKey: Buffer };
+    C_FindObjectsInit(session: Buffer, template: Pkcs11Attribute[]): void;
+    C_FindObjects(session: Buffer): Buffer | null;
+    C_FindObjectsFinal(session: Buffer): void;
+    C_GetAttributeValue(
+        session: Buffer,
+        object: Buffer,
+        template: Pkcs11Attribute[],
+    ): Pkcs11Attribute[];
+    C_SignInit(
+        session: Buffer,
+        mechanism: { mechanism: number },
+        key: Buffer,
+    ): void;
+    C_Sign(session: Buffer, data: Buffer, output: Buffer): Buffer;
+    C_DestroyObject(session: Buffer, object: Buffer): void;
+}
+
+interface Pkcs11Attribute {
+    type: number;
+    value: unknown;
+}
+
+interface Pkcs11Constants {
+    CKF_RW_SESSION: number;
+    CKF_SERIAL_SESSION: number;
+    CKU_USER: number;
+    CKA_CLASS: number;
+    CKA_KEY_TYPE: number;
+    CKA_LABEL: number;
+    CKA_ID: number;
+    CKA_TOKEN: number;
+    CKA_PRIVATE: number;
+    CKA_SIGN: number;
+    CKA_VERIFY: number;
+    CKA_SENSITIVE: number;
+    CKA_EXTRACTABLE: number;
+    CKA_EC_PARAMS: number;
+    CKA_EC_POINT: number;
+    CKO_PUBLIC_KEY: number;
+    CKO_PRIVATE_KEY: number;
+    CKK_EC: number;
+    CKM_EC_KEY_PAIR_GEN: number;
+    CKM_ECDSA: number;
+}
+
+/**
+ * PKCS#11 KMS adapter.
+ *
+ * Generates ECDSA P-256 keys directly inside the HSM/token via the
+ * PKCS#11 interface and routes all signing through &#x60;C_Sign&#x60;. Private
+ * key material is created with &#x60;CKA_SENSITIVE&#x3D;true&#x60; and
+ * &#x60;CKA_EXTRACTABLE&#x3D;false&#x60; so it never leaves the device.
+ *
+ * Keys are addressed by their PKCS#11 &#x60;CKA_LABEL&#x60;, which we set to the
+ * caller-supplied &#x60;kid&#x60;. The label doubles as the &#x60;externalKeyId&#x60; on
+ * the resulting {@link KmsKeyRef}.
+ *
+ * The native module &#x60;pkcs11js&#x60; is loaded lazily on first use so
+ * deployments that don&#x27;t configure a PKCS#11 provider don&#x27;t need the
+ * library installed or the platform toolchain to build it.
+ */
+export class Pkcs11KmsAdapter implements KmsAdapter {
+    private readonly logger &#x3D; new Logger(Pkcs11KmsAdapter.name);
+
+    readonly providerId: string;
+    readonly type: KmsProviderType &#x3D; &quot;pkcs11&quot;;
+    readonly capabilities: KmsAdapterCapabilities &#x3D; {
+        canCreate: true,
+        canImport: false,
+        canDelete: true,
+        supportedAlgs: [&quot;ES256&quot;],
+        defaultAlg: &quot;ES256&quot;,
+    };
+
+    private readonly config: Pkcs11AdapterConfig;
+    private readonly jwkCache &#x3D; new PublicJwkCache();
+
+    private pkcs11?: Pkcs11Instance;
+    private constants?: Pkcs11Constants;
+    private session?: Buffer;
+    private initPromise?: Promise&lt;void&gt;;
+
+    constructor(config: Pkcs11AdapterConfig) {
+        this.providerId &#x3D; config.providerId;
+        this.config &#x3D; config;
+    }
+
+    async generateKey(opts: {
+        kid: string;
+        alg?: KmsSigningAlg;
+    }): Promise&lt;KmsKeyMaterial&gt; {
+        const alg &#x3D; opts.alg ?? this.capabilities.defaultAlg;
+        this.assertSupported(alg);
+        const { p11, c, session } &#x3D; await this.ensureSession();
+
+        const idBuf &#x3D; Buffer.from(opts.kid, &quot;utf8&quot;);
+        const publicTemplate: Pkcs11Attribute[] &#x3D; [
+            { type: c.CKA_CLASS, value: c.CKO_PUBLIC_KEY },
+            { type: c.CKA_KEY_TYPE, value: c.CKK_EC },
+            { type: c.CKA_LABEL, value: opts.kid },
+            { type: c.CKA_ID, value: idBuf },
+            { type: c.CKA_TOKEN, value: true },
+            { type: c.CKA_VERIFY, value: true },
+            { type: c.CKA_EC_PARAMS, value: P256_OID_DER },
+        ];
+        const privateTemplate: Pkcs11Attribute[] &#x3D; [
+            { type: c.CKA_CLASS, value: c.CKO_PRIVATE_KEY },
+            { type: c.CKA_KEY_TYPE, value: c.CKK_EC },
+            { type: c.CKA_LABEL, value: opts.kid },
+            { type: c.CKA_ID, value: idBuf },
+            { type: c.CKA_TOKEN, value: true },
+            { type: c.CKA_PRIVATE, value: true },
+            { type: c.CKA_SIGN, value: true },
+            { type: c.CKA_SENSITIVE, value: true },
+            { type: c.CKA_EXTRACTABLE, value: false },
+        ];
+
+        const keys &#x3D; p11.C_GenerateKeyPair(
+            session,
+            { mechanism: c.CKM_EC_KEY_PAIR_GEN },
+            publicTemplate,
+            privateTemplate,
+        );
+
+        const publicJwk &#x3D; await this.readPublicJwk(
+            opts.kid,
+            alg,
+            keys.publicKey,
+        );
+        this.jwkCache.set(opts.kid, publicJwk);
+        return { ref: { externalKeyId: opts.kid, publicJwk, alg } };
+    }
+
+    importKey(_opts: {
+        kid: string;
+        privateJwk: JWK;
+        alg?: KmsSigningAlg;
+    }): Promise&lt;KmsKeyMaterial&gt; {
+        throw new NotImplementedException(
+            &#x60;Pkcs11KmsAdapter[${this.providerId}]: importKey is not supported — generate keys inside the HSM&#x60;,
+        );
+    }
+
+    async sign(
+        ref: KmsKeyRef,
+        data: Uint8Array,
+        alg?: KmsSigningAlg,
+    ): Promise&lt;Uint8Array&gt; {
+        if (!ref.externalKeyId) {
+            throw new Error(
+                &#x60;Pkcs11KmsAdapter[${this.providerId}]: missing externalKeyId&#x60;,
+            );
+        }
+        const signAlg &#x3D; alg ?? ref.alg;
+        this.assertSupported(signAlg);
+
+        const { p11, c, session } &#x3D; await this.ensureSession();
+        const handle &#x3D; this.findObject(
+            p11,
+            c,
+            session,
+            c.CKO_PRIVATE_KEY,
+            ref.externalKeyId,
+        );
+        if (!handle) {
+            throw new Error(
+                &#x60;Pkcs11KmsAdapter[${this.providerId}]: private key &#x27;${ref.externalKeyId}&#x27; not found&#x60;,
+            );
+        }
+
+        const digest &#x3D; createHash(&quot;sha256&quot;).update(data).digest();
+        p11.C_SignInit(session, { mechanism: c.CKM_ECDSA }, handle);
+        // ECDSA P-256 signature is exactly 64 bytes (r||s).
+        const sig &#x3D; p11.C_Sign(session, digest, Buffer.alloc(64));
+        return new Uint8Array(sig);
+    }
+
+    async deleteKey(ref: KmsKeyRef): Promise&lt;void&gt; {
+        if (!ref.externalKeyId) return;
+        this.jwkCache.invalidate(ref.externalKeyId);
+        const { p11, c, session } &#x3D; await this.ensureSession();
+        for (const klass of [c.CKO_PRIVATE_KEY, c.CKO_PUBLIC_KEY]) {
+            const handle &#x3D; this.findObject(
+                p11,
+                c,
+                session,
+                klass,
+                ref.externalKeyId,
+            );
+            if (handle) {
+                try {
+                    p11.C_DestroyObject(session, handle);
+                } catch (err) {
+                    this.logger.warn(
+                        &#x60;Failed to destroy PKCS#11 object ${ref.externalKeyId}: ${String(err)}&#x60;,
+                    );
+                }
+            }
+        }
+    }
+
+    async health(): Promise&lt;KmsHealthResult&gt; {
+        const start &#x3D; Date.now();
+        try {
+            await this.ensureSession();
+            return { ok: true, latencyMs: Date.now() - start };
+        } catch (err) {
+            return {
+                ok: false,
+                latencyMs: Date.now() - start,
+                error: String(err),
+            };
+        }
+    }
+
+    private async ensureSession(): Promise&lt;{
+        p11: Pkcs11Instance;
+        c: Pkcs11Constants;
+        session: Buffer;
+    }&gt; {
+        this.initPromise ??&#x3D; this.initialise();
+        await this.initPromise;
+        if (!this.pkcs11 || !this.constants || !this.session) {
+            throw new Error(
+                &#x60;Pkcs11KmsAdapter[${this.providerId}]: not initialised&#x60;,
+            );
+        }
+        return {
+            p11: this.pkcs11,
+            c: this.constants,
+            session: this.session,
+        };
+    }
+
+    private async initialise(): Promise&lt;void&gt; {
+        const mod &#x3D; await loadPkcs11();
+        const c &#x3D; toConstants(mod);
+        const p11 &#x3D; new mod.PKCS11();
+        p11.load(this.config.library);
+        p11.C_Initialize();
+
+        const slots &#x3D; p11.C_GetSlotList(true);
+        const slot &#x3D; this.selectSlot(p11, slots);
+
+        const flags &#x3D;
+            c.CKF_SERIAL_SESSION |
+            (this.config.readOnly ? 0 : c.CKF_RW_SESSION);
+        const session &#x3D; p11.C_OpenSession(slot, flags);
+        p11.C_Login(session, c.CKU_USER, this.config.pin);
+
+        this.pkcs11 &#x3D; p11;
+        this.constants &#x3D; c;
+        this.session &#x3D; session;
+        this.logger.log(
+            &#x60;Pkcs11KmsAdapter[${this.providerId}] initialised on ${this.config.library}&#x60;,
+        );
+    }
+
+    private selectSlot(p11: Pkcs11Instance, slots: Buffer[]): Buffer {
+        if (slots.length &#x3D;&#x3D;&#x3D; 0) {
+            throw new Error(
+                &#x60;Pkcs11KmsAdapter[${this.providerId}]: no slots with a token present&#x60;,
+            );
+        }
+        if (typeof this.config.slot &#x3D;&#x3D;&#x3D; &quot;number&quot;) {
+            const index &#x3D; this.config.slot;
+            const slot &#x3D; slots[index];
+            if (!slot) {
+                throw new Error(
+                    &#x60;Pkcs11KmsAdapter[${this.providerId}]: slot index ${index} out of range (0..${slots.length - 1})&#x60;,
+                );
+            }
+            return slot;
+        }
+        const wantedLabel &#x3D; this.config.slot.trim();
+        for (const slot of slots) {
+            const info &#x3D; p11.C_GetTokenInfo(slot);
+            if (info.label.trim() &#x3D;&#x3D;&#x3D; wantedLabel) return slot;
+        }
+        throw new Error(
+            &#x60;Pkcs11KmsAdapter[${this.providerId}]: no slot with token label &#x27;${wantedLabel}&#x27;&#x60;,
+        );
+    }
+
+    private findObject(
+        p11: Pkcs11Instance,
+        c: Pkcs11Constants,
+        session: Buffer,
+        keyClass: number,
+        label: string,
+    ): Buffer | null {
+        p11.C_FindObjectsInit(session, [
+            { type: c.CKA_CLASS, value: keyClass },
+            { type: c.CKA_LABEL, value: label },
+        ]);
+        try {
+            return p11.C_FindObjects(session);
+        } finally {
+            p11.C_FindObjectsFinal(session);
+        }
+    }
+
+    private async readPublicJwk(
+        kid: string,
+        alg: KmsSigningAlg,
+        handle: Buffer,
+    ): Promise&lt;JWK&gt; {
+        const { p11, c, session } &#x3D; await this.ensureSession();
+        const attrs &#x3D; p11.C_GetAttributeValue(session, handle, [
+            { type: c.CKA_EC_POINT, value: null },
+        ]);
+        const raw &#x3D; attrs[0]?.value;
+        if (!Buffer.isBuffer(raw)) {
+            throw new TypeError(
+                &#x60;Pkcs11KmsAdapter[${this.providerId}]: CKA_EC_POINT returned non-buffer value&#x60;,
+            );
+        }
+        const ecPoint &#x3D; unwrapEcPoint(raw);
+        if (ecPoint.length !&#x3D;&#x3D; 65 || ecPoint[0] !&#x3D;&#x3D; 0x04) {
+            throw new Error(
+                &#x60;Pkcs11KmsAdapter[${this.providerId}]: unexpected EC point encoding (length ${ecPoint.length})&#x60;,
+            );
+        }
+        const x &#x3D; ecPoint.subarray(1, 33);
+        const y &#x3D; ecPoint.subarray(33, 65);
+
+        const spki &#x3D; buildP256Spki(x, y);
+        const cryptoKey &#x3D; await globalThis.crypto.subtle.importKey(
+            &quot;spki&quot;,
+            new Uint8Array(spki),
+            { name: &quot;ECDSA&quot;, namedCurve: &quot;P-256&quot; },
+            true,
+            [&quot;verify&quot;],
+        );
+        const jwk &#x3D; await exportJWK(cryptoKey);
+        jwk.kid &#x3D; kid;
+        jwk.alg &#x3D; alg;
+        return jwk;
+    }
+
+    private assertSupported(alg: KmsSigningAlg): void {
+        if (!this.capabilities.supportedAlgs.includes(alg)) {
+            throw new Error(
+                &#x60;Pkcs11KmsAdapter[${this.providerId}]: unsupported alg &#x27;${alg}&#x27;&#x60;,
+            );
+        }
+    }
+}
+
+/**
+ * CKA_EC_POINT is specified as a DER-encoded OCTET STRING wrapping the
+ * raw ECPoint. Some HSM vendors return the unwrapped ECPoint directly,
+ * so we accept both.
+ */
+function unwrapEcPoint(raw: Buffer): Buffer {
+    if (raw.length &gt;&#x3D; 2 &amp;&amp; raw[0] &#x3D;&#x3D;&#x3D; 0x04 &amp;&amp; raw[1] &#x3D;&#x3D;&#x3D; raw.length - 2) {
+        return raw.subarray(2);
+    }
+    // Long-form DER length (rare for P-256 — 65 bytes fits short form).
+    if (raw.length &gt;&#x3D; 3 &amp;&amp; raw[0] &#x3D;&#x3D;&#x3D; 0x04 &amp;&amp; raw[1] &#x3D;&#x3D;&#x3D; 0x81) {
+        return raw.subarray(3);
+    }
+    return raw;
+}
+
+/**
+ * Build a P-256 SubjectPublicKeyInfo around the raw uncompressed EC
+ * point so we can hand it to WebCrypto&#x27;s SPKI importer.
+ *
+ * Layout (DER): SEQUENCE { AlgorithmIdentifier, BIT STRING { 04 || x || y } }
+ * where AlgorithmIdentifier &#x3D; SEQUENCE { id-ecPublicKey, prime256v1 OID }.
+ */
+function buildP256Spki(x: Buffer, y: Buffer): Buffer {
+    const prefix &#x3D; Buffer.from([
+        0x30,
+        0x59, // SEQUENCE, 89 bytes
+        0x30,
+        0x13, // SEQUENCE, 19 bytes (AlgorithmIdentifier)
+        0x06,
+        0x07,
+        0x2a,
+        0x86,
+        0x48,
+        0xce,
+        0x3d,
+        0x02,
+        0x01, // id-ecPublicKey
+        0x06,
+        0x08,
+        0x2a,
+        0x86,
+        0x48,
+        0xce,
+        0x3d,
+        0x03,
+        0x01,
+        0x07, // prime256v1
+        0x03,
+        0x42,
+        0x00,
+        0x04, // BIT STRING, 66 bytes, 0 unused, uncompressed
+    ]);
+    return Buffer.concat([prefix, x, y]);
+}
+
+function toConstants(mod: Pkcs11Module): Pkcs11Constants {
+    return mod as unknown as Pkcs11Constants;
+}
+
+let pkcs11ModulePromise: Promise&lt;Pkcs11Module&gt; | undefined;
+
+async function loadPkcs11(): Promise&lt;Pkcs11Module&gt; {
+    pkcs11ModulePromise ??&#x3D; (async () &#x3D;&gt; {
+        try {
+            const mod &#x3D; (await import(&quot;pkcs11js&quot;)) as unknown as
+                | Pkcs11Module
+                | { default: Pkcs11Module };
+            return &quot;PKCS11&quot; in mod ? mod : mod.default;
+        } catch (err) {
+            throw new Error(
+                &#x60;pkcs11js is not installed. Install it with &#x27;pnpm add pkcs11js&#x27; in apps/backend before configuring a pkcs11 KMS provider. Original error: ${String(err)}&#x60;,
+            );
+        }
+    })();
+    return pkcs11ModulePromise;
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'Pkcs11Constants.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

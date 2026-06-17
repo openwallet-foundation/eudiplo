@@ -1,0 +1,842 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >MdocIssuerService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Service for issuing mDOC credentials following ISO 18013-5.</p>
+
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#assertSigningKeyMatchesLeafCertificate" >assertSigningKeyMatchesLeafCertificate</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getDefaultNamespace" >getDefaultNamespace</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#issue" >issue</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(certService: <a href="../injectables/CertService.html" target="_self">CertService</a>, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:26</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>certService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/CertService.html" target="_self" >CertService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>keyChainService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/KeyChainService.html" target="_self" >KeyChainService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="assertSigningKeyMatchesLeafCertificate"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>assertSigningKeyMatchesLeafCertificate</b></span>
+                        <a href="#assertSigningKeyMatchesLeafCertificate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>assertSigningKeyMatchesLeafCertificate(privateJwk: Jwk, leafCertificatePem?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="153"
+                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:153</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>privateJwk</td>
+                                            <td>
+                                                        <code>Jwk</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>leafCertificatePem</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDefaultNamespace"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getDefaultNamespace</b></span>
+                        <a href="#getDefaultNamespace"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getDefaultNamespace(docType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="199"
+                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:199</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get the default namespace for a given docType.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>docType</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="issue"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>issue</b></span>
+                        <a href="#issue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>issue(options: <a href="../interfaces/MdocIssueOptions.html" target="_self">MdocIssueOptions</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="38"
+                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Issues an mDOC credential.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../interfaces/MdocIssueOptions.html" target="_self" >MdocIssueOptions</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <ul>
+<li>The issuance options</li>
+</ul>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The issued mDOC credential as base64url encoded string for OID4VCI</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(MdocIssuerService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, Logger } from &quot;@nestjs/common&quot;;
+import type { Jwk } from &quot;@openid4vc/oauth2&quot;;
+import { CoseKey, DeviceKey, Issuer, SignatureAlgorithm } from &quot;@owf/mdoc&quot;;
+import { X509Certificate } from &quot;@peculiar/x509&quot;;
+import { exportJWK, importX509 } from &quot;jose&quot;;
+import { CertService } from &quot;../../../../../crypto/key/cert/cert.service&quot;;
+import { KeyUsageType } from &quot;../../../../../crypto/key/entities/key-chain.entity&quot;;
+import { KeyChainService } from &quot;../../../../../crypto/key/key-chain.service&quot;;
+import { Session } from &quot;../../../../../session/entities/session.entity&quot;;
+import { mdocContext } from &quot;../../../../../verifier/presentations/mdoc-context&quot;;
+import { CredentialConfig } from &quot;../../entities/credential.entity&quot;;
+import { buildClaimsByNamespace } from &quot;../../utils&quot;;
+
+export interface MdocIssueOptions {
+    credentialConfiguration: CredentialConfig;
+    deviceKey: Jwk;
+    session: Session;
+    claims: Record&lt;string, any&gt;;
+}
+
+/**
+ * Service for issuing mDOC credentials following ISO 18013-5.
+ */
+@Injectable()
+export class MdocIssuerService {
+    private readonly logger &#x3D; new Logger(MdocIssuerService.name);
+
+    constructor(
+        private readonly certService: CertService,
+        private readonly keyChainService: KeyChainService,
+    ) {}
+
+    /**
+     * Issues an mDOC credential.
+     * @param options - The issuance options
+     * @returns The issued mDOC credential as base64url encoded string for OID4VCI
+     */
+    async issue(options: MdocIssueOptions): Promise&lt;string&gt; {
+        const { credentialConfiguration, deviceKey, session, claims } &#x3D; options;
+
+        // Get the docType from the credential configuration
+        // Support both docType (camelCase) and doctype (lowercase per OID4VCI spec)
+        // Default to mDL if not specified
+        const docType &#x3D;
+            credentialConfiguration.config.docType ||
+            (credentialConfiguration.config as any).doctype ||
+            &quot;org.iso.18013.5.1.mDL&quot;;
+
+        const issuer &#x3D; new Issuer(docType, mdocContext);
+
+        const defaultNamespace &#x3D; this.getDefaultNamespace(docType);
+        const claimsByNamespace &#x3D; buildClaimsByNamespace(
+            credentialConfiguration.fields as any,
+        );
+
+        if (claimsByNamespace &amp;&amp; Object.keys(claimsByNamespace).length &gt; 0) {
+            // Multiple namespaces specified
+            for (const [ns, nsClaims] of Object.entries(claimsByNamespace)) {
+                issuer.addIssuerNamespace(ns, nsClaims);
+            }
+            if (claims &amp;&amp; Object.keys(claims).length &gt; 0) {
+                issuer.addIssuerNamespace(defaultNamespace, claims);
+            }
+        } else {
+            // Single namespace with flat claims
+            issuer.addIssuerNamespace(defaultNamespace, claims);
+        }
+
+        // Get signing certificate
+        const certificate &#x3D; await this.certService.find({
+            tenantId: session.tenantId,
+            type: KeyUsageType.Attestation,
+            keyId: credentialConfiguration.keyChainId,
+        });
+
+        // Get the private key for signing via KeyChainEntity
+        const keyChain &#x3D; await this.keyChainService.getEntity(
+            session.tenantId,
+            certificate.keyId,
+        );
+        const privateKey &#x3D; await exportJWK(
+            await crypto.subtle.importKey(
+                &quot;jwk&quot;,
+                keyChain.activeJwk,
+                { name: &quot;ECDSA&quot;, namedCurve: &quot;P-256&quot; },
+                true,
+                [&quot;sign&quot;],
+            ),
+        );
+
+        // Convert all certificates in the chain to Uint8Array
+        // certificate.crt is an array: [leaf, intermediate..., root]
+        const certificateChain &#x3D; certificate.crt.map((certPem) &#x3D;&gt; {
+            const x509Cert &#x3D; new X509Certificate(certPem);
+            return new Uint8Array(x509Cert.rawData);
+        });
+
+        // Diagnostic: log the leaf cert that will be embedded in the mDOC.
+        try {
+            const leaf &#x3D; new X509Certificate(certificate.crt[0]);
+            const thumb &#x3D; Buffer.from(
+                await crypto.subtle.digest(&quot;SHA-256&quot;, leaf.rawData),
+            )
+                .toString(&quot;hex&quot;)
+                .toUpperCase()
+                .replace(/(.{2})/g, &quot;$1:&quot;)
+                .slice(0, -1);
+            this.logger.log(
+                &#x60;mDOC issuance: tenant&#x3D;${session.tenantId} keyChainId&#x3D;${certificate.keyId} leaf.subject&#x3D;&quot;${leaf.subject}&quot; thumbprint&#x3D;${thumb}&#x60;,
+            );
+        } catch {
+            // ignore diagnostic failures
+        }
+
+        // Ensure the private key used for signing matches the embedded leaf certificate.
+        await this.assertSigningKeyMatchesLeafCertificate(
+            privateKey as Jwk,
+            certificate.crt[0],
+        );
+
+        // Set validity dates
+        const signed &#x3D; new Date();
+        const validFrom &#x3D; new Date(signed);
+        const validUntil &#x3D; new Date(signed);
+
+        // Use lifeTime from config or default to 1 year
+        if (credentialConfiguration.lifeTime) {
+            validUntil.setSeconds(
+                validUntil.getSeconds() + credentialConfiguration.lifeTime,
+            );
+        } else {
+            validUntil.setFullYear(validUntil.getFullYear() + 1);
+        }
+
+        // Sign the mDOC
+        const issuerSigned &#x3D; await issuer.sign({
+            signingKey: CoseKey.fromJwk(privateKey as Jwk),
+            certificates: certificateChain,
+            algorithm: SignatureAlgorithm.ES256,
+            digestAlgorithm: &quot;SHA-256&quot;,
+            deviceKeyInfo: { deviceKey: DeviceKey.fromJwk(deviceKey) },
+            validityInfo: { signed, validFrom, validUntil },
+        });
+
+        this.logger.debug(
+            &#x60;Issued mDOC credential for docType: ${docType}, tenant: ${session.tenantId}&#x60;,
+        );
+
+        // Return the encoded credential for OID4VCI
+        return issuerSigned.encodedForOid4Vci;
+    }
+
+    private async assertSigningKeyMatchesLeafCertificate(
+        privateJwk: Jwk,
+        leafCertificatePem?: string,
+    ): Promise&lt;void&gt; {
+        if (!leafCertificatePem) {
+            throw new Error(
+                &quot;mDOC issuance failed: no leaf certificate configured on the selected attestation key chain&quot;,
+            );
+        }
+
+        const certPublicKey &#x3D; await importX509(leafCertificatePem, &quot;ES256&quot;, {
+            extractable: true,
+        });
+        const certPublicJwk &#x3D; (await exportJWK(certPublicKey)) as Jwk;
+
+        const privateJwkPublicPart &#x3D; {
+            kty: privateJwk.kty,
+            crv: privateJwk.crv,
+            x: privateJwk.x,
+            y: privateJwk.y,
+        };
+        const certJwkPublicPart &#x3D; {
+            kty: certPublicJwk.kty,
+            crv: certPublicJwk.crv,
+            x: certPublicJwk.x,
+            y: certPublicJwk.y,
+        };
+
+        if (
+            privateJwkPublicPart.kty !&#x3D;&#x3D; certJwkPublicPart.kty ||
+            privateJwkPublicPart.crv !&#x3D;&#x3D; certJwkPublicPart.crv ||
+            privateJwkPublicPart.x !&#x3D;&#x3D; certJwkPublicPart.x ||
+            privateJwkPublicPart.y !&#x3D;&#x3D; certJwkPublicPart.y
+        ) {
+            this.logger.error(
+                &quot;mDOC issuance key mismatch: active signing key does not match leaf certificate public key&quot;,
+            );
+            throw new Error(
+                &quot;mDOC issuance failed: signing key does not match the embedded attestation certificate. Regenerate or re-import the certificate for this key chain.&quot;,
+            );
+        }
+    }
+
+    /**
+     * Get the default namespace for a given docType.
+     */
+    private getDefaultNamespace(docType: string): string {
+        // For mDL, the namespace is typically &quot;org.iso.18013.5.1&quot;
+        if (docType &#x3D;&#x3D;&#x3D; &quot;org.iso.18013.5.1.mDL&quot;) {
+            return &quot;org.iso.18013.5.1&quot;;
+        }
+        // For other docTypes, use the docType as namespace
+        return docType;
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'MdocIssuerService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

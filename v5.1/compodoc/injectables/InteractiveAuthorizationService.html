@@ -1,0 +1,3676 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >InteractiveAuthorizationService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Service for handling Interactive Authorization Endpoint (IAE) operations.</p>
+<p>The IAE enables a presentation flow during credential issuance, allowing
+the issuer to request verifiable presentations from the wallet before
+issuing credentials.</p>
+<p>Supports two interaction types:</p>
+<ul>
+<li>openid4vp_presentation: Requests a verifiable presentation via OpenID4VP</li>
+<li>redirect_to_web: Redirects to a web-based authorization flow</li>
+</ul>
+
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#advanceOrComplete" >advanceOrComplete</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#completeWebAuthorization" >completeWebAuthorization</a>
+                            </li>
+                            <li>
+                                <a href="#createErrorResponse" >createErrorResponse</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#createOpenid4vpInteractionResponse" >createOpenid4vpInteractionResponse</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#createOpenid4vpInteractionResponseForConfig" >createOpenid4vpInteractionResponseForConfig</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#createRedirectToWebResponse" >createRedirectToWebResponse</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#createRedirectToWebResponseForUrl" >createRedirectToWebResponseForUrl</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#executeIaeAction" >executeIaeAction</a>
+                            </li>
+                            <li>
+                                <a href="#getAuthorizationServerMetadata" >getAuthorizationServerMetadata</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleCodeVerifier" >handleCodeVerifier</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleFollowUpRequest" >handleFollowUpRequest</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleInitialRequest" >handleInitialRequest</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleOpenid4vpResponse" >handleOpenid4vpResponse</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleRequest" >handleRequest</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#issueAuthorizationCode" >issueAuthorizationCode</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#parseAuthorizationDetails" >parseAuthorizationDetails</a>
+                            </li>
+                            <li>
+                                <a href="#parseRequest" >parseRequest</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#parseSessionContext" >parseSessionContext</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#processCodeVerifierFollow" >processCodeVerifierFollow</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#processOpenid4vpFollow" >processOpenid4vpFollow</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#validateAuthSession" >validateAuthSession</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#verifyPkce" >verifyPkce</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(configService: ConfigService, cryptoService: <a href="../injectables/CryptoService.html" target="_self">CryptoService</a>, sessionService: <a href="../injectables/SessionService.html" target="_self">SessionService</a>, issuanceService: <a href="../injectables/IssuanceService.html" target="_self">IssuanceService</a>, credentialsService: <a href="../injectables/CredentialsService.html" target="_self">CredentialsService</a>, oid4vpService: <a href="../injectables/Oid4vpService.html" target="_self">Oid4vpService</a>, presentationsService: <a href="../injectables/PresentationsService.html" target="_self">PresentationsService</a>, authSessionRepository: Repository<InteractiveAuthSessionEntity>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:90</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>configService</td>
+                                                  
+                                                        <td>
+                                                                    <code>ConfigService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>cryptoService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/CryptoService.html" target="_self" >CryptoService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>sessionService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SessionService.html" target="_self" >SessionService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>issuanceService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/IssuanceService.html" target="_self" >IssuanceService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>credentialsService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/CredentialsService.html" target="_self" >CredentialsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>oid4vpService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/Oid4vpService.html" target="_self" >Oid4vpService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>presentationsService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/PresentationsService.html" target="_self" >PresentationsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>authSessionRepository</td>
+                                                  
+                                                        <td>
+                                                                    <code>Repository&lt;InteractiveAuthSessionEntity&gt;</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="advanceOrComplete"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>advanceOrComplete</b></span>
+                        <a href="#advanceOrComplete"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>advanceOrComplete(authSession: <a href="../entitys/InteractiveAuthSessionEntity.html" target="_self">InteractiveAuthSessionEntity</a>, context: ReturnType<unknown>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="584"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:584</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Advance to next IAE action or complete the flow.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="../entitys/InteractiveAuthSessionEntity.html" target="_self" >InteractiveAuthSessionEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>context</td>
+                                            <td>
+                                                        <code>ReturnType&lt;unknown&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>origin</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/AuthorizationResponse.html" target="_self" >Promise&lt;InteractiveAuthorizationResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="completeWebAuthorization"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>completeWebAuthorization</b></span>
+                        <a href="#completeWebAuthorization"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>completeWebAuthorization(authSession: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="929"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:929</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Mark a web authorization as completed.
+Called when user completes web-based authorization.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createErrorResponse"></a>
+                    <span class="name">
+                        <span ><b>createErrorResponse</b></span>
+                        <a href="#createErrorResponse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>createErrorResponse(error: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, errorDescription?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="943"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:943</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Create an error response.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>errorDescription</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#InteractiveAuthorizationResponse" target="_self" >InteractiveAuthorizationResponse</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createOpenid4vpInteractionResponse"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>createOpenid4vpInteractionResponse</b></span>
+                        <a href="#createOpenid4vpInteractionResponse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createOpenid4vpInteractionResponse(authSession: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationDetails?: any[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="715"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:715</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Create an OpenID4VP interaction response.
+Generates a presentation request for the wallet.</p>
+<p>The presentation configuration is determined by:</p>
+<ol>
+<li>Looking up the credential_configuration_id from authorization_details</li>
+<li>Using the first iaeAction of type openid4vp_presentation from that credential config</li>
+<li>Falling back to the first available presentation configuration</li>
+</ol>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>origin</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationDetails</td>
+                                            <td>
+                                                        <code>any[]</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/AuthorizationResponse.html" target="_self" >Promise&lt;InteractiveAuthorizationResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createOpenid4vpInteractionResponseForConfig"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>createOpenid4vpInteractionResponseForConfig</b></span>
+                        <a href="#createOpenid4vpInteractionResponseForConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createOpenid4vpInteractionResponseForConfig(authSession: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, presentationConfigId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, label?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="785"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:785</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Create an OpenID4VP interaction response for a specific presentation config.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>origin</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>presentationConfigId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>label</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/AuthorizationResponse.html" target="_self" >Promise&lt;InteractiveAuthorizationResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createRedirectToWebResponse"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>createRedirectToWebResponse</b></span>
+                        <a href="#createRedirectToWebResponse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createRedirectToWebResponse(authSession: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="833"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:833</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Create a redirect_to_web interaction response.
+Generates a PAR request URI for web-based authorization.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#InteractiveAuthorizationResponse" target="_self" >InteractiveAuthorizationResponse</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createRedirectToWebResponseForUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>createRedirectToWebResponseForUrl</b></span>
+                        <a href="#createRedirectToWebResponseForUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createRedirectToWebResponseForUrl(authSession: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, url?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, description?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="843"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:843</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Create a redirect_to_web interaction response for a specific URL.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>url</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>description</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#InteractiveAuthorizationResponse" target="_self" >InteractiveAuthorizationResponse</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="executeIaeAction"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>executeIaeAction</b></span>
+                        <a href="#executeIaeAction"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>executeIaeAction(authSession: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, action: <a href="../miscellaneous/typealiases.html#IaeAction" target="_self">IaeAction</a>, supportedTypes: <a href="../miscellaneous/enumerations.html#InteractionType" target="_self">InteractionType[]</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="376"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:376</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Execute a specific IAE action.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>origin</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>action</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#IaeAction" target="_self" >IaeAction</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>supportedTypes</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#InteractionType" target="_self" >InteractionType[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/AuthorizationResponse.html" target="_self" >Promise&lt;InteractiveAuthorizationResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAuthorizationServerMetadata"></a>
+                    <span class="name">
+                        <span ><b>getAuthorizationServerMetadata</b></span>
+                        <a href="#getAuthorizationServerMetadata"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getAuthorizationServerMetadata(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="109"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:109</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get the authorization server metadata for interactive authorization.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The tenant ID</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>AuthorizationServerMetadata</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The authorization server metadata</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleCodeVerifier"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>handleCodeVerifier</b></span>
+                        <a href="#handleCodeVerifier"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleCodeVerifier(codeVerifier: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authSession: <a href="../entitys/InteractiveAuthSessionEntity.html" target="_self">InteractiveAuthSessionEntity</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="668"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:668</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Handle PKCE code_verifier for redirect_to_web flow.
+Validates the code_verifier and returns success or error.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>codeVerifier</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="../entitys/InteractiveAuthSessionEntity.html" target="_self" >InteractiveAuthSessionEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/AuthorizationResponse.html" target="_self" >Promise&lt;literal type | InteractiveAuthorizationResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleFollowUpRequest"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>handleFollowUpRequest</b></span>
+                        <a href="#handleFollowUpRequest"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleFollowUpRequest(request: <a href="../interfaces/InteractiveAuthFollowUpRequest.html" target="_self">InteractiveAuthFollowUpRequest</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="433"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:433</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Handle a follow-up interactive authorization request.
+Validates the submitted interaction response and either:</p>
+<ul>
+<li>Advances to the next IAE action, or</li>
+<li>Issues an authorization code if all steps are complete.</li>
+</ul>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>request</td>
+                                            <td>
+                                                            <code><a href="../interfaces/InteractiveAuthFollowUpRequest.html" target="_self" >InteractiveAuthFollowUpRequest</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>origin</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/AuthorizationResponse.html" target="_self" >Promise&lt;InteractiveAuthorizationResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleInitialRequest"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>handleInitialRequest</b></span>
+                        <a href="#handleInitialRequest"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleInitialRequest(request: <a href="../interfaces/InteractiveAuthInitialRequest.html" target="_self">InteractiveAuthInitialRequest</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, dpop?: literal type, clientAttestation?: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="270"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:270</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Handle an initial interactive authorization request.
+Creates an auth session and returns the appropriate interaction response.</p>
+<p>If the credential config has iaeActions defined, those are used.
+Otherwise, falls back to the default behavior based on wallet-supported types.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>request</td>
+                                            <td>
+                                                            <code><a href="../interfaces/InteractiveAuthInitialRequest.html" target="_self" >InteractiveAuthInitialRequest</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>origin</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>dpop</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>clientAttestation</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/AuthorizationResponse.html" target="_self" >Promise&lt;InteractiveAuthorizationResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleOpenid4vpResponse"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>handleOpenid4vpResponse</b></span>
+                        <a href="#handleOpenid4vpResponse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleOpenid4vpResponse(openid4vpResponse: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authSession: <a href="../entitys/InteractiveAuthSessionEntity.html" target="_self">InteractiveAuthSessionEntity</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="626"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:626</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Handle OpenID4VP response from wallet.
+Validates and stores the VP data, returns success or error.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>openid4vpResponse</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="../entitys/InteractiveAuthSessionEntity.html" target="_self" >InteractiveAuthSessionEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/AuthorizationResponse.html" target="_self" >Promise&lt;literal type | InteractiveAuthorizationResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleRequest"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>handleRequest</b></span>
+                        <a href="#handleRequest"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleRequest(body: <a href="../classes/InteractiveAuthorizationRequestDto.html" target="_self">InteractiveAuthorizationRequestDto</a>, req: Request, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="220"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:220</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Handle an interactive authorization request.
+Routes to the appropriate handler based on request type.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/InteractiveAuthorizationRequestDto.html" target="_self" >InteractiveAuthorizationRequestDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The request body</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                        <code>Request</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The Express request</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The tenant ID</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>origin</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The request origin</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/AuthorizationResponse.html" target="_self" >Promise&lt;InteractiveAuthorizationResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The interactive authorization response</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="issueAuthorizationCode"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>issueAuthorizationCode</b></span>
+                        <a href="#issueAuthorizationCode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>issueAuthorizationCode(authSession: <a href="../entitys/InteractiveAuthSessionEntity.html" target="_self">InteractiveAuthSessionEntity</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="874"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:874</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Issue an authorization code after successful interaction.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="../entitys/InteractiveAuthSessionEntity.html" target="_self" >InteractiveAuthSessionEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/AuthorizationResponse.html" target="_self" >Promise&lt;InteractiveAuthorizationResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseAuthorizationDetails"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>parseAuthorizationDetails</b></span>
+                        <a href="#parseAuthorizationDetails"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>parseAuthorizationDetails(authDetails: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="198"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:198</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Parse authorization_details which can be a string or array.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authDetails</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>[] | undefined</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseRequest"></a>
+                    <span class="name">
+                        <span ><b>parseRequest</b></span>
+                        <a href="#parseRequest"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>parseRequest(body: <a href="../classes/InteractiveAuthorizationRequestDto.html" target="_self">InteractiveAuthorizationRequestDto</a>, req: Request, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="130"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:130</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Parse an interactive authorization request.
+Determines if the request is an initial or follow-up request.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/InteractiveAuthorizationRequestDto.html" target="_self" >InteractiveAuthorizationRequestDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The request body</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                        <code>Request</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The Express request</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The tenant ID</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/ParsedInteractiveAuthorizationRequest.html" target="_self" >ParsedInteractiveAuthorizationRequest</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Parsed request with type indication</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseSessionContext"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>parseSessionContext</b></span>
+                        <a href="#parseSessionContext"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>parseSessionContext(authSession: <a href="../entitys/InteractiveAuthSessionEntity.html" target="_self">InteractiveAuthSessionEntity</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="515"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:515</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Parse session context data.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="../entitys/InteractiveAuthSessionEntity.html" target="_self" >InteractiveAuthSessionEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>literal type</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="processCodeVerifierFollow"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>processCodeVerifierFollow</b></span>
+                        <a href="#processCodeVerifierFollow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>processCodeVerifierFollow(codeVerifier: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authSession: <a href="../entitys/InteractiveAuthSessionEntity.html" target="_self">InteractiveAuthSessionEntity</a>, context: ReturnType<unknown>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="562"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:562</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Process code_verifier follow-up response.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>codeVerifier</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="../entitys/InteractiveAuthSessionEntity.html" target="_self" >InteractiveAuthSessionEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>context</td>
+                                            <td>
+                                                        <code>ReturnType&lt;unknown&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>origin</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/AuthorizationResponse.html" target="_self" >Promise&lt;InteractiveAuthorizationResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="processOpenid4vpFollow"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>processOpenid4vpFollow</b></span>
+                        <a href="#processOpenid4vpFollow"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>processOpenid4vpFollow(openid4vpResponse: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authSession: <a href="../entitys/InteractiveAuthSessionEntity.html" target="_self">InteractiveAuthSessionEntity</a>, context: ReturnType<unknown>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="536"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:536</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Process OpenID4VP follow-up response.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>openid4vpResponse</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="../entitys/InteractiveAuthSessionEntity.html" target="_self" >InteractiveAuthSessionEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>context</td>
+                                            <td>
+                                                        <code>ReturnType&lt;unknown&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>origin</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/AuthorizationResponse.html" target="_self" >Promise&lt;InteractiveAuthorizationResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateAuthSession"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>validateAuthSession</b></span>
+                        <a href="#validateAuthSession"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validateAuthSession(authSession: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="484"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:484</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validate and retrieve an auth session.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/AuthorizationResponse.html" target="_self" >Promise&lt;InteractiveAuthSessionEntity | InteractiveAuthorizationResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="verifyPkce"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>verifyPkce</b></span>
+                        <a href="#verifyPkce"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>verifyPkce(codeVerifier: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, codeChallenge: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, method?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="908"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:908</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Verify PKCE code_verifier against code_challenge.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>codeVerifier</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>codeChallenge</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>method</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(InteractiveAuthorizationService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:90</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { randomUUID } from &quot;node:crypto&quot;;
+import { BadRequestException, Injectable, Logger } from &quot;@nestjs/common&quot;;
+import { ConfigService } from &quot;@nestjs/config&quot;;
+import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
+import {
+    type AuthorizationServerMetadata,
+    Jwk,
+    Oauth2ErrorCodes,
+} from &quot;@openid4vc/oauth2&quot;;
+import type { Request } from &quot;express&quot;;
+import { Repository } from &quot;typeorm&quot;;
+import { v4 } from &quot;uuid&quot;;
+import { CryptoService } from &quot;../../../../crypto/crypto.service&quot;;
+import { SessionService } from &quot;../../../../session/session.service&quot;;
+import { Oid4vpService } from &quot;../../../../verifier/oid4vp/oid4vp.service&quot;;
+import { PresentationsService } from &quot;../../../../verifier/presentations/presentations.service&quot;;
+import { CredentialsService } from &quot;../../../configuration/credentials/credentials.service&quot;;
+import {
+    type IaeAction,
+    type IaeActionOpenid4vpPresentation,
+    IaeActionType,
+} from &quot;../../../configuration/credentials/entities/iae-action.dto&quot;;
+import { IssuanceService } from &quot;../../../configuration/issuance/issuance.service&quot;;
+import {
+    InteractiveAuthSessionEntity,
+    InteractiveAuthSessionStatus,
+} from &quot;../entities/interactive-auth-session.entity&quot;;
+import {
+    InteractionType,
+    InteractiveAuthorizationRequestDto,
+    InteractiveAuthorizationRequestType,
+    type InteractiveAuthorizationResponse,
+    type Openid4vpRequestDto,
+} from &quot;./dto/interactive-authorization.dto&quot;;
+
+/**
+ * Initial interactive authorization request from wallet.
+ */
+interface InteractiveAuthInitialRequest {
+    response_type: string;
+    client_id: string;
+    interaction_types_supported: string;
+    redirect_uri?: string;
+    scope?: string;
+    code_challenge?: string;
+    code_challenge_method?: string;
+    authorization_details?: any[];
+    state?: string;
+    issuer_state?: string;
+}
+
+/**
+ * Follow-up interactive authorization request from wallet.
+ */
+interface InteractiveAuthFollowUpRequest {
+    auth_session: string;
+    openid4vp_response?: string;
+    code_verifier?: string;
+}
+
+/**
+ * Parsed result from interactive authorization request.
+ */
+interface ParsedInteractiveAuthorizationRequest {
+    type: InteractiveAuthorizationRequestType;
+    request: InteractiveAuthInitialRequest | InteractiveAuthFollowUpRequest;
+    dpop?: {
+        jwk: Jwk;
+        jwt: string;
+    };
+    clientAttestation?: {
+        clientAttestationJwt: string;
+        clientAttestationPopJwt: string;
+    };
+}
+
+/**
+ * Service for handling Interactive Authorization Endpoint (IAE) operations.
+ *
+ * The IAE enables a presentation flow during credential issuance, allowing
+ * the issuer to request verifiable presentations from the wallet before
+ * issuing credentials.
+ *
+ * Supports two interaction types:
+ * - openid4vp_presentation: Requests a verifiable presentation via OpenID4VP
+ * - redirect_to_web: Redirects to a web-based authorization flow
+ */
+@Injectable()
+export class InteractiveAuthorizationService {
+    private readonly logger &#x3D; new Logger(InteractiveAuthorizationService.name);
+
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly cryptoService: CryptoService,
+        private readonly sessionService: SessionService,
+        private readonly issuanceService: IssuanceService,
+        private readonly credentialsService: CredentialsService,
+        private readonly oid4vpService: Oid4vpService,
+        private readonly presentationsService: PresentationsService,
+        @InjectRepository(InteractiveAuthSessionEntity)
+        private readonly authSessionRepository: Repository&lt;InteractiveAuthSessionEntity&gt;,
+    ) {}
+
+    /**
+     * Get the authorization server metadata for interactive authorization.
+     * @param tenantId The tenant ID
+     * @returns The authorization server metadata
+     */
+    getAuthorizationServerMetadata(
+        tenantId: string,
+    ): AuthorizationServerMetadata {
+        const authServer &#x3D; &#x60;${this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;)}/issuers/${tenantId}&#x60;;
+        return {
+            issuer: authServer,
+            authorization_endpoint: &#x60;${authServer}/authorize&#x60;,
+            token_endpoint: &#x60;${authServer}/authorize/token&#x60;,
+            interactive_authorization_endpoint: &#x60;${authServer}/authorize/interactive&#x60;,
+        };
+    }
+
+    /**
+     * Parse an interactive authorization request.
+     * Determines if the request is an initial or follow-up request.
+     *
+     * @param body The request body
+     * @param req The Express request
+     * @param tenantId The tenant ID
+     * @returns Parsed request with type indication
+     */
+    parseRequest(
+        body: InteractiveAuthorizationRequestDto,
+        req: Request,
+        tenantId: string,
+    ): ParsedInteractiveAuthorizationRequest {
+        // Check for client attestation headers
+        const clientAttestationJwt &#x3D; req.headers[&quot;oauth-client-attestation&quot;] as
+            | string
+            | undefined;
+        const clientAttestationPopJwt &#x3D; req.headers[
+            &quot;oauth-client-attestation-pop&quot;
+        ] as string | undefined;
+        const clientAttestation &#x3D;
+            clientAttestationJwt &amp;&amp; clientAttestationPopJwt
+                ? { clientAttestationJwt, clientAttestationPopJwt }
+                : undefined;
+
+        // Check for DPoP header
+        const dpopHeader &#x3D; req.headers[&quot;dpop&quot;] as string | undefined;
+        // DPoP parsing would require JWT decoding - simplified for now
+        const dpop &#x3D; dpopHeader
+            ? { jwt: dpopHeader, jwk: {} as Jwk }
+            : undefined;
+
+        // Determine request type based on presence of auth_session vs interaction_types_supported
+        if (body.auth_session) {
+            // This is a follow-up request
+            return {
+                type: InteractiveAuthorizationRequestType.FOLLOW_UP,
+                request: {
+                    auth_session: body.auth_session,
+                    openid4vp_response: body.openid4vp_response,
+                    code_verifier: body.code_verifier,
+                },
+            };
+        }
+
+        if (!body.interaction_types_supported) {
+            throw new BadRequestException(
+                &quot;Missing required parameter: interaction_types_supported&quot;,
+            );
+        }
+
+        // This is an initial request
+        return {
+            type: InteractiveAuthorizationRequestType.INITIAL,
+            request: {
+                response_type: body.response_type || &quot;code&quot;,
+                client_id: body.client_id || &quot;&quot;,
+                interaction_types_supported: body.interaction_types_supported,
+                redirect_uri: body.redirect_uri,
+                scope: body.scope,
+                code_challenge: body.code_challenge,
+                code_challenge_method: body.code_challenge_method,
+                authorization_details: this.parseAuthorizationDetails(
+                    body.authorization_details,
+                ),
+                state: body.state,
+                issuer_state: body.issuer_state,
+            },
+            dpop,
+            clientAttestation,
+        };
+    }
+
+    /**
+     * Parse authorization_details which can be a string or array.
+     */
+    private parseAuthorizationDetails(authDetails: any): any[] | undefined {
+        if (!authDetails) return undefined;
+        if (typeof authDetails &#x3D;&#x3D;&#x3D; &quot;string&quot;) {
+            try {
+                return JSON.parse(authDetails);
+            } catch {
+                return undefined;
+            }
+        }
+        return authDetails;
+    }
+
+    /**
+     * Handle an interactive authorization request.
+     * Routes to the appropriate handler based on request type.
+     *
+     * @param body The request body
+     * @param req The Express request
+     * @param tenantId The tenant ID
+     * @param origin The request origin
+     * @returns The interactive authorization response
+     */
+    async handleRequest(
+        body: InteractiveAuthorizationRequestDto,
+        req: Request,
+        tenantId: string,
+        origin: string,
+    ): Promise&lt;InteractiveAuthorizationResponse&gt; {
+        try {
+            const parsed &#x3D; this.parseRequest(body, req, tenantId);
+
+            if (parsed.type &#x3D;&#x3D;&#x3D; InteractiveAuthorizationRequestType.INITIAL) {
+                return await this.handleInitialRequest(
+                    parsed.request as InteractiveAuthInitialRequest,
+                    tenantId,
+                    origin,
+                    parsed.dpop,
+                    parsed.clientAttestation,
+                );
+            } else {
+                return await this.handleFollowUpRequest(
+                    parsed.request as InteractiveAuthFollowUpRequest,
+                    tenantId,
+                    origin,
+                );
+            }
+        } catch (error) {
+            this.logger.error(
+                &quot;Error handling interactive authorization request:&quot;,
+                error,
+            );
+            if (error instanceof BadRequestException) {
+                return {
+                    error: Oauth2ErrorCodes.InvalidRequest,
+                    error_description: error.message,
+                };
+            }
+            return {
+                error: Oauth2ErrorCodes.ServerError,
+                error_description:
+                    error instanceof Error ? error.message : &quot;Unknown error&quot;,
+            };
+        }
+    }
+
+    /**
+     * Handle an initial interactive authorization request.
+     * Creates an auth session and returns the appropriate interaction response.
+     *
+     * If the credential config has iaeActions defined, those are used.
+     * Otherwise, falls back to the default behavior based on wallet-supported types.
+     */
+    private async handleInitialRequest(
+        request: InteractiveAuthInitialRequest,
+        tenantId: string,
+        origin: string,
+        dpop?: { jwk: Jwk; jwt: string },
+        clientAttestation?: {
+            clientAttestationJwt: string;
+            clientAttestationPopJwt: string;
+        },
+    ): Promise&lt;InteractiveAuthorizationResponse&gt; {
+        // Validate required fields
+        if (!request.client_id) {
+            return {
+                error: Oauth2ErrorCodes.InvalidRequest,
+                error_description: &quot;Missing required parameter: client_id&quot;,
+            };
+        }
+
+        // Parse supported interaction types
+        const supportedTypes &#x3D; request.interaction_types_supported
+            .split(&quot;,&quot;)
+            .map((t) &#x3D;&gt; t.trim()) as InteractionType[];
+
+        // Load IAE actions from credential config if available
+        let iaeActions: IaeAction[] | undefined;
+        if (request.authorization_details?.length) {
+            const credentialConfigId &#x3D;
+                request.authorization_details[0]?.credential_configuration_id;
+            if (credentialConfigId) {
+                const credentialConfig &#x3D;
+                    await this.credentialsService.getCredentialConfig(
+                        credentialConfigId,
+                        tenantId,
+                    );
+                if (credentialConfig?.iaeActions?.length) {
+                    iaeActions &#x3D; credentialConfig.iaeActions;
+                    this.logger.debug(
+                        &#x60;Loaded ${iaeActions.length} IAE actions for credential ${credentialConfigId}&#x60;,
+                    );
+                }
+            }
+        }
+
+        // Create auth session
+        const authSession &#x3D; v4();
+        const expiresAt &#x3D; new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+        // Store the auth session
+        await this.authSessionRepository.save({
+            authSession,
+            tenantId,
+            clientId: request.client_id,
+            redirectUri: request.redirect_uri,
+            scope: request.scope,
+            codeChallenge: request.code_challenge,
+            codeChallengeMethod: request.code_challenge_method,
+            issuerState: request.issuer_state,
+            state: request.state,
+            authorizationDetails: request.authorization_details
+                ? JSON.stringify(request.authorization_details)
+                : undefined,
+            interactionTypesSupported: request.interaction_types_supported,
+            dpopJwk: dpop?.jwk ? JSON.stringify(dpop.jwk) : undefined,
+            iaeActions: iaeActions ? JSON.stringify(iaeActions) : undefined,
+            currentStepIndex: 0,
+            completedStepsData: JSON.stringify([]),
+            expiresAt,
+            status: InteractiveAuthSessionStatus.Pending,
+        });
+
+        // If IAE actions are defined, execute the first one
+        if (iaeActions?.length) {
+            return this.executeIaeAction(
+                authSession,
+                tenantId,
+                origin,
+                iaeActions[0],
+                supportedTypes,
+            );
+        }
+
+        // Fallback: Check if we should use OpenID4VP presentation (legacy behavior)
+        if (supportedTypes.includes(InteractionType.OPENID4VP_PRESENTATION)) {
+            return await this.createOpenid4vpInteractionResponse(
+                authSession,
+                tenantId,
+                origin,
+                request.authorization_details,
+            );
+        }
+
+        // Check if we should use redirect_to_web
+        if (supportedTypes.includes(InteractionType.REDIRECT_TO_WEB)) {
+            return this.createRedirectToWebResponse(authSession, tenantId);
+        }
+
+        // No supported interaction type found
+        return {
+            error: Oauth2ErrorCodes.InvalidRequest,
+            error_description: &quot;No supported interaction type available&quot;,
+        };
+    }
+
+    /**
+     * Execute a specific IAE action.
+     */
+    private async executeIaeAction(
+        authSession: string,
+        tenantId: string,
+        origin: string,
+        action: IaeAction,
+        supportedTypes: InteractionType[],
+    ): Promise&lt;InteractiveAuthorizationResponse&gt; {
+        switch (action.type) {
+            case IaeActionType.OPENID4VP_PRESENTATION: {
+                if (
+                    !supportedTypes.includes(
+                        InteractionType.OPENID4VP_PRESENTATION,
+                    )
+                ) {
+                    return {
+                        error: Oauth2ErrorCodes.InvalidRequest,
+                        error_description:
+                            &quot;Wallet does not support openid4vp_presentation interaction type&quot;,
+                    };
+                }
+                return this.createOpenid4vpInteractionResponseForConfig(
+                    authSession,
+                    tenantId,
+                    origin,
+                    action.presentationConfigId,
+                    action.label,
+                );
+            }
+            case IaeActionType.REDIRECT_TO_WEB: {
+                if (!supportedTypes.includes(InteractionType.REDIRECT_TO_WEB)) {
+                    return {
+                        error: Oauth2ErrorCodes.InvalidRequest,
+                        error_description:
+                            &quot;Wallet does not support redirect_to_web interaction type&quot;,
+                    };
+                }
+                return this.createRedirectToWebResponseForUrl(
+                    authSession,
+                    tenantId,
+                    action.url,
+                    action.description,
+                );
+            }
+            default:
+                return {
+                    error: Oauth2ErrorCodes.InvalidRequest,
+                    error_description: &#x60;Unknown IAE action type: ${(action as any).type}&#x60;,
+                };
+        }
+    }
+
+    /**
+     * Handle a follow-up interactive authorization request.
+     * Validates the submitted interaction response and either:
+     * - Advances to the next IAE action, or
+     * - Issues an authorization code if all steps are complete.
+     */
+    private async handleFollowUpRequest(
+        request: InteractiveAuthFollowUpRequest,
+        tenantId: string,
+        origin: string,
+    ): Promise&lt;InteractiveAuthorizationResponse&gt; {
+        // Retrieve and validate the auth session
+        const validationResult &#x3D; await this.validateAuthSession(
+            request.auth_session,
+            tenantId,
+        );
+        // Check if it&#x27;s an error response (has &#x27;error&#x27; property) vs entity (has &#x27;id&#x27; property)
+        if (&quot;error&quot; in validationResult) {
+            return validationResult;
+        }
+        const authSessionEntity &#x3D;
+            validationResult as InteractiveAuthSessionEntity;
+
+        // Parse session context
+        const sessionContext &#x3D; this.parseSessionContext(authSessionEntity);
+
+        // Handle OpenID4VP response
+        if (request.openid4vp_response) {
+            return this.processOpenid4vpFollow(
+                request.openid4vp_response,
+                authSessionEntity,
+                sessionContext,
+                tenantId,
+                origin,
+            );
+        }
+
+        // Handle code_verifier for redirect_to_web flow
+        if (request.code_verifier) {
+            return this.processCodeVerifierFollow(
+                request.code_verifier,
+                authSessionEntity,
+                sessionContext,
+                tenantId,
+                origin,
+            );
+        }
+
+        return {
+            error: Oauth2ErrorCodes.InvalidRequest,
+            error_description: &quot;Missing openid4vp_response or code_verifier&quot;,
+        };
+    }
+
+    /**
+     * Validate and retrieve an auth session.
+     */
+    private async validateAuthSession(
+        authSession: string,
+        tenantId: string,
+    ): Promise&lt;
+        InteractiveAuthSessionEntity | InteractiveAuthorizationResponse
+    &gt; {
+        const authSessionEntity &#x3D; await this.authSessionRepository.findOne({
+            where: { authSession, tenantId },
+        });
+
+        if (!authSessionEntity) {
+            return {
+                error: Oauth2ErrorCodes.InvalidRequest,
+                error_description: &quot;Invalid or expired auth_session&quot;,
+            };
+        }
+
+        if (authSessionEntity.expiresAt &lt; new Date()) {
+            await this.authSessionRepository.remove(authSessionEntity);
+            return {
+                error: Oauth2ErrorCodes.InvalidRequest,
+                error_description: &quot;Auth session has expired&quot;,
+            };
+        }
+
+        return authSessionEntity;
+    }
+
+    /**
+     * Parse session context data.
+     */
+    private parseSessionContext(authSession: InteractiveAuthSessionEntity): {
+        iaeActions: IaeAction[] | undefined;
+        completedStepsData: any[];
+        supportedTypes: InteractionType[];
+    } {
+        return {
+            iaeActions: authSession.iaeActions
+                ? JSON.parse(authSession.iaeActions)
+                : undefined,
+            completedStepsData: authSession.completedStepsData
+                ? JSON.parse(authSession.completedStepsData)
+                : [],
+            supportedTypes: authSession.interactionTypesSupported
+                .split(&quot;,&quot;)
+                .map((t) &#x3D;&gt; t.trim()) as InteractionType[],
+        };
+    }
+
+    /**
+     * Process OpenID4VP follow-up response.
+     */
+    private async processOpenid4vpFollow(
+        openid4vpResponse: string,
+        authSession: InteractiveAuthSessionEntity,
+        context: ReturnType&lt;typeof this.parseSessionContext&gt;,
+        tenantId: string,
+        origin: string,
+    ): Promise&lt;InteractiveAuthorizationResponse&gt; {
+        const result &#x3D; await this.handleOpenid4vpResponse(
+            openid4vpResponse,
+            authSession,
+        );
+        if (!(&quot;success&quot; in result)) return result;
+
+        context.completedStepsData.push({
+            stepIndex: authSession.currentStepIndex,
+            type: IaeActionType.OPENID4VP_PRESENTATION,
+            data: openid4vpResponse,
+            completedAt: new Date().toISOString(),
+        });
+
+        return this.advanceOrComplete(authSession, context, tenantId, origin);
+    }
+
+    /**
+     * Process code_verifier follow-up response.
+     */
+    private async processCodeVerifierFollow(
+        codeVerifier: string,
+        authSession: InteractiveAuthSessionEntity,
+        context: ReturnType&lt;typeof this.parseSessionContext&gt;,
+        tenantId: string,
+        origin: string,
+    ): Promise&lt;InteractiveAuthorizationResponse&gt; {
+        const result &#x3D; await this.handleCodeVerifier(codeVerifier, authSession);
+        if (!(&quot;success&quot; in result)) return result;
+
+        context.completedStepsData.push({
+            stepIndex: authSession.currentStepIndex,
+            type: IaeActionType.REDIRECT_TO_WEB,
+            completedAt: new Date().toISOString(),
+        });
+
+        return this.advanceOrComplete(authSession, context, tenantId, origin);
+    }
+
+    /**
+     * Advance to next IAE action or complete the flow.
+     */
+    private async advanceOrComplete(
+        authSession: InteractiveAuthSessionEntity,
+        context: ReturnType&lt;typeof this.parseSessionContext&gt;,
+        tenantId: string,
+        origin: string,
+    ): Promise&lt;InteractiveAuthorizationResponse&gt; {
+        const { iaeActions, completedStepsData, supportedTypes } &#x3D; context;
+
+        // Check if there are more actions
+        if (
+            iaeActions &amp;&amp;
+            authSession.currentStepIndex &lt; iaeActions.length - 1
+        ) {
+            const nextStepIndex &#x3D; authSession.currentStepIndex + 1;
+            await this.authSessionRepository.update(authSession.id, {
+                currentStepIndex: nextStepIndex,
+                completedStepsData: JSON.stringify(completedStepsData),
+                status: InteractiveAuthSessionStatus.Pending,
+            });
+
+            return this.executeIaeAction(
+                authSession.authSession,
+                tenantId,
+                origin,
+                iaeActions[nextStepIndex],
+                supportedTypes,
+            );
+        }
+
+        // All steps complete
+        await this.authSessionRepository.update(authSession.id, {
+            completedStepsData: JSON.stringify(completedStepsData),
+            status: InteractiveAuthSessionStatus.AllStepsCompleted,
+        });
+
+        return this.issueAuthorizationCode(authSession);
+    }
+
+    /**
+     * Handle OpenID4VP response from wallet.
+     * Validates and stores the VP data, returns success or error.
+     */
+    private async handleOpenid4vpResponse(
+        openid4vpResponse: string,
+        authSession: InteractiveAuthSessionEntity,
+    ): Promise&lt;{ success: true } | InteractiveAuthorizationResponse&gt; {
+        try {
+            const vpResponse &#x3D; JSON.parse(openid4vpResponse);
+
+            // Update session status
+            await this.authSessionRepository.update(authSession.id, {
+                status: &quot;presentation_received&quot;,
+                presentationData: openid4vpResponse,
+            });
+
+            // If there&#x27;s an issuer_state, also update the main session
+            if (authSession.issuerState) {
+                try {
+                    await this.sessionService.add(authSession.issuerState, {
+                        credentials: vpResponse,
+                    });
+                } catch (error) {
+                    this.logger.warn(
+                        &quot;Could not update main session with presentation data:&quot;,
+                        error,
+                    );
+                }
+            }
+
+            // Return success indicator (auth code will be issued by advanceOrComplete)
+            return { success: true };
+        } catch (error) {
+            this.logger.error(&quot;Failed to process OpenID4VP response:&quot;, error);
+            return {
+                error: Oauth2ErrorCodes.InvalidRequest,
+                error_description: &quot;Invalid openid4vp_response format&quot;,
+            };
+        }
+    }
+
+    /**
+     * Handle PKCE code_verifier for redirect_to_web flow.
+     * Validates the code_verifier and returns success or error.
+     */
+    private async handleCodeVerifier(
+        codeVerifier: string,
+        authSession: InteractiveAuthSessionEntity,
+    ): Promise&lt;{ success: true } | InteractiveAuthorizationResponse&gt; {
+        // Verify PKCE
+        if (!authSession.codeChallenge) {
+            return {
+                error: Oauth2ErrorCodes.InvalidRequest,
+                error_description:
+                    &quot;No code_challenge was provided in initial request&quot;,
+            };
+        }
+
+        const verifierValid &#x3D; await this.verifyPkce(
+            codeVerifier,
+            authSession.codeChallenge,
+            authSession.codeChallengeMethod,
+        );
+
+        if (!verifierValid) {
+            return {
+                error: Oauth2ErrorCodes.InvalidGrant,
+                error_description: &quot;Invalid code_verifier&quot;,
+            };
+        }
+
+        // Check if web authorization was completed
+        if (authSession.status !&#x3D;&#x3D; &quot;web_auth_completed&quot;) {
+            return {
+                error: Oauth2ErrorCodes.AccessDenied,
+                error_description: &quot;Web authorization not completed&quot;,
+            };
+        }
+
+        // Return success indicator (auth code will be issued by advanceOrComplete)
+        return { success: true };
+    }
+
+    /**
+     * Create an OpenID4VP interaction response.
+     * Generates a presentation request for the wallet.
+     *
+     * The presentation configuration is determined by:
+     * 1. Looking up the credential_configuration_id from authorization_details
+     * 2. Using the first iaeAction of type openid4vp_presentation from that credential config
+     * 3. Falling back to the first available presentation configuration
+     */
+    private async createOpenid4vpInteractionResponse(
+        authSession: string,
+        tenantId: string,
+        origin: string,
+        authorizationDetails?: any[],
+    ): Promise&lt;InteractiveAuthorizationResponse&gt; {
+        try {
+            // Determine which presentation configuration to use
+            let configId: string | undefined;
+
+            // Try to get required presentation from credential configuration&#x27;s IAE actions
+            if (authorizationDetails?.length) {
+                const credentialConfigId &#x3D;
+                    authorizationDetails[0]?.credential_configuration_id;
+                if (credentialConfigId) {
+                    const credentialConfig &#x3D;
+                        await this.credentialsService.getCredentialConfig(
+                            credentialConfigId,
+                            tenantId,
+                        );
+                    // Look for first openid4vp_presentation action in iaeActions
+                    const presentationAction &#x3D;
+                        credentialConfig?.iaeActions?.find(
+                            (a): a is IaeActionOpenid4vpPresentation &#x3D;&gt;
+                                a.type &#x3D;&#x3D;&#x3D; IaeActionType.OPENID4VP_PRESENTATION,
+                        );
+                    if (presentationAction) {
+                        configId &#x3D; presentationAction.presentationConfigId;
+                        this.logger.debug(
+                            &#x60;Using presentation config ${configId} from IAE actions for credential ${credentialConfigId}&#x60;,
+                        );
+                    }
+                }
+            }
+
+            // Fall back to first available presentation configuration
+            if (!configId) {
+                const configs &#x3D;
+                    await this.presentationsService.getPresentationConfigs(
+                        tenantId,
+                    );
+                configId &#x3D; configs[0]?.id;
+            }
+
+            if (!configId) {
+                return {
+                    error: Oauth2ErrorCodes.ServerError,
+                    error_description:
+                        &quot;No presentation configuration available&quot;,
+                };
+            }
+
+            return this.createOpenid4vpInteractionResponseForConfig(
+                authSession,
+                tenantId,
+                origin,
+                configId,
+            );
+        } catch (error) {
+            this.logger.error(&quot;Failed to create OpenID4VP interaction:&quot;, error);
+            return {
+                error: Oauth2ErrorCodes.ServerError,
+                error_description: &#x60;Failed to create presentation request: ${error instanceof Error ? error.message : &quot;Unknown error&quot;}&#x60;,
+            };
+        }
+    }
+
+    /**
+     * Create an OpenID4VP interaction response for a specific presentation config.
+     */
+    private async createOpenid4vpInteractionResponseForConfig(
+        authSession: string,
+        tenantId: string,
+        origin: string,
+        presentationConfigId: string,
+        label?: string,
+    ): Promise&lt;InteractiveAuthorizationResponse&gt; {
+        try {
+            // Create the presentation request
+            const presentationResult &#x3D; await this.oid4vpService.createRequest(
+                presentationConfigId,
+                { session: authSession },
+                tenantId,
+                false, // useDcApi
+                origin,
+            );
+
+            // Store the session for later use
+            await this.sessionService.create({
+                id: authSession,
+                tenantId,
+                requestId: presentationConfigId,
+            });
+
+            // Create the OpenID4VP request object
+            const openid4vpRequest: Openid4vpRequestDto &#x3D; {
+                request: presentationResult.uri,
+            };
+
+            return {
+                status: &quot;require_interaction&quot;,
+                type: &quot;openid4vp_presentation&quot;,
+                auth_session: authSession,
+                openid4vp_request: openid4vpRequest,
+            };
+        } catch (error) {
+            this.logger.error(&quot;Failed to create OpenID4VP interaction:&quot;, error);
+            return {
+                error: Oauth2ErrorCodes.ServerError,
+                error_description: &#x60;Failed to create presentation request: ${error instanceof Error ? error.message : &quot;Unknown error&quot;}&#x60;,
+            };
+        }
+    }
+
+    /**
+     * Create a redirect_to_web interaction response.
+     * Generates a PAR request URI for web-based authorization.
+     */
+    private createRedirectToWebResponse(
+        authSession: string,
+        tenantId: string,
+    ): InteractiveAuthorizationResponse {
+        return this.createRedirectToWebResponseForUrl(authSession, tenantId);
+    }
+
+    /**
+     * Create a redirect_to_web interaction response for a specific URL.
+     */
+    private createRedirectToWebResponseForUrl(
+        authSession: string,
+        tenantId: string,
+        url?: string,
+        description?: string,
+    ): InteractiveAuthorizationResponse {
+        // Create a request_uri for PAR-based web authorization
+        const requestUri &#x3D; &#x60;urn:ietf:params:oauth:request_uri:${randomUUID()}&#x60;;
+        const expiresIn &#x3D; 600; // 10 minutes
+
+        // Store PAR data in the auth session (async)
+        this.authSessionRepository.update(
+            { authSession, tenantId },
+            {
+                requestUri,
+                parExpiresAt: new Date(Date.now() + expiresIn * 1000),
+            },
+        );
+
+        return {
+            status: &quot;require_interaction&quot;,
+            type: &quot;redirect_to_web&quot;,
+            auth_session: authSession,
+            request_uri: requestUri,
+            expires_in: expiresIn,
+        };
+    }
+
+    /**
+     * Issue an authorization code after successful interaction.
+     */
+    private async issueAuthorizationCode(
+        authSession: InteractiveAuthSessionEntity,
+    ): Promise&lt;InteractiveAuthorizationResponse&gt; {
+        const authorizationCode &#x3D; randomUUID();
+
+        // Update the session with the authorization code
+        await this.authSessionRepository.update(authSession.id, {
+            authorizationCode,
+            status: &quot;code_issued&quot;,
+        });
+
+        // If there&#x27;s an issuer_state, also update the main session
+        if (authSession.issuerState) {
+            try {
+                await this.sessionService.add(authSession.issuerState, {
+                    authorization_code: authorizationCode,
+                });
+            } catch (error) {
+                this.logger.warn(
+                    &quot;Could not update main session with authorization code:&quot;,
+                    error,
+                );
+            }
+        }
+
+        return {
+            status: &quot;ok&quot;,
+            code: authorizationCode,
+        };
+    }
+
+    /**
+     * Verify PKCE code_verifier against code_challenge.
+     */
+    private async verifyPkce(
+        codeVerifier: string,
+        codeChallenge: string,
+        method?: string,
+    ): Promise&lt;boolean&gt; {
+        if (method &#x3D;&#x3D;&#x3D; &quot;S256&quot; || !method) {
+            const { createHash } &#x3D; await import(&quot;node:crypto&quot;);
+            const hash &#x3D; createHash(&quot;sha256&quot;)
+                .update(codeVerifier)
+                .digest(&quot;base64url&quot;);
+            return hash &#x3D;&#x3D;&#x3D; codeChallenge;
+        } else if (method &#x3D;&#x3D;&#x3D; &quot;plain&quot;) {
+            return codeVerifier &#x3D;&#x3D;&#x3D; codeChallenge;
+        }
+        return false;
+    }
+
+    /**
+     * Mark a web authorization as completed.
+     * Called when user completes web-based authorization.
+     */
+    async completeWebAuthorization(
+        authSession: string,
+        tenantId: string,
+    ): Promise&lt;boolean&gt; {
+        const result &#x3D; await this.authSessionRepository.update(
+            { authSession, tenantId },
+            { status: &quot;web_auth_completed&quot; },
+        );
+        return (result.affected ?? 0) &gt; 0;
+    }
+
+    /**
+     * Create an error response.
+     */
+    createErrorResponse(
+        error: string,
+        errorDescription?: string,
+    ): InteractiveAuthorizationResponse {
+        return {
+            error,
+            error_description: errorDescription,
+        };
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'InteractiveAuthorizationService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

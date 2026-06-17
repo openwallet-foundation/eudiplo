@@ -1,0 +1,1608 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >SchemaMetadataSigningService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#deriveSchemaUriMetadata" >deriveSchemaUriMetadata</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#ensureSchemaUrisFromCredentialConfig" >ensureSchemaUrisFromCredentialConfig</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#extractConfiguredVct" >extractConfiguredVct</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#normalizeConfigFromFormInput" >normalizeConfigFromFormInput</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#normalizeTrustedAuthority" >normalizeTrustedAuthority</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#parseVerificationMethod" >parseVerificationMethod</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#signSchemaMetaConfig" >signSchemaMetaConfig</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#signVersionSchemaMetaConfig" >signVersionSchemaMetaConfig</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#uploadSchemaAssetFromCredentialConfig" >uploadSchemaAssetFromCredentialConfig</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#uploadSchemaMetaAssetsToRegistrar" >uploadSchemaMetaAssetsToRegistrar</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(credentialsService: <a href="../injectables/CredentialConfigService.html" target="_self">CredentialConfigService</a>, schemaMetaAdapterService: <a href="../injectables/SchemaMetaAdapterService.html" target="_self">SchemaMetaAdapterService</a>, registrarService: <a href="../injectables/RegistrarService.html" target="_self">RegistrarService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:17</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>credentialsService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/CredentialConfigService.html" target="_self" >CredentialConfigService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>schemaMetaAdapterService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SchemaMetaAdapterService.html" target="_self" >SchemaMetaAdapterService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>registrarService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/RegistrarService.html" target="_self" >RegistrarService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deriveSchemaUriMetadata"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>deriveSchemaUriMetadata</b></span>
+                        <a href="#deriveSchemaUriMetadata"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deriveSchemaUriMetadata(credentialConfig: Awaited<ReturnType<unknown>>, format: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="43"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>credentialConfig</td>
+                                            <td>
+                                                        <code>Awaited&lt;ReturnType&lt;unknown&gt;&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>format</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>SchemaURIMeta</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ensureSchemaUrisFromCredentialConfig"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>ensureSchemaUrisFromCredentialConfig</b></span>
+                        <a href="#ensureSchemaUrisFromCredentialConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ensureSchemaUrisFromCredentialConfig(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, config: <a href="../classes/SignSchemaMetaConfigDto.html" target="_self">SignSchemaMetaConfigDto</a>, credentialConfigId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="278"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:278</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>config</td>
+                                            <td>
+                                                            <code><a href="../classes/SignSchemaMetaConfigDto.html" target="_self" >SignSchemaMetaConfigDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>credentialConfigId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="extractConfiguredVct"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>extractConfiguredVct</b></span>
+                        <a href="#extractConfiguredVct"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>extractConfiguredVct(credentialConfig: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="24"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>credentialConfig</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | undefined</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="normalizeConfigFromFormInput"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>normalizeConfigFromFormInput</b></span>
+                        <a href="#normalizeConfigFromFormInput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>normalizeConfigFromFormInput(config: <a href="../classes/SignSchemaMetaConfigDto.html" target="_self">SignSchemaMetaConfigDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="255"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:255</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>config</td>
+                                            <td>
+                                                            <code><a href="../classes/SignSchemaMetaConfigDto.html" target="_self" >SignSchemaMetaConfigDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="normalizeTrustedAuthority"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>normalizeTrustedAuthority</b></span>
+                        <a href="#normalizeTrustedAuthority"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>normalizeTrustedAuthority(entry: <a href="../miscellaneous/typealiases.html#TrustedAuthorityInput" target="_self">TrustedAuthorityInput</a>, index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="124"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:124</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>entry</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#TrustedAuthorityInput" target="_self" >TrustedAuthorityInput</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>{ isLoTE?: any; trustListId: any; } | { verificationMethod?: any; isLoTE?: any; value?: any; frameworkType?: any; }</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseVerificationMethod"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>parseVerificationMethod</b></span>
+                        <a href="#parseVerificationMethod"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>parseVerificationMethod(verificationMethod: string | Record<string | unknown> | undefined, index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="81"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:81</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>verificationMethod</td>
+                                            <td>
+                                                        <code>string | Record&lt;string | unknown&gt; | undefined</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Record | undefined</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="signSchemaMetaConfig"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>signSchemaMetaConfig</b></span>
+                        <a href="#signSchemaMetaConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>signSchemaMetaConfig(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, body: <a href="../classes/SignSchemaMetaConfigDto.html" target="_self">SignSchemaMetaConfigDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="316"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:316</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/SignSchemaMetaConfigDto.html" target="_self" >SignSchemaMetaConfigDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="signVersionSchemaMetaConfig"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>signVersionSchemaMetaConfig</b></span>
+                        <a href="#signVersionSchemaMetaConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>signVersionSchemaMetaConfig(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, body: <a href="../classes/SignVersionSchemaMetaConfigDto.html" target="_self">SignVersionSchemaMetaConfigDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="374"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:374</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/SignVersionSchemaMetaConfigDto.html" target="_self" >SignVersionSchemaMetaConfigDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadSchemaAssetFromCredentialConfig"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>uploadSchemaAssetFromCredentialConfig</b></span>
+                        <a href="#uploadSchemaAssetFromCredentialConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>uploadSchemaAssetFromCredentialConfig(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, credentialConfigId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, fallbackFormat?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="150"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:150</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>credentialConfigId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>fallbackFormat</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadSchemaMetaAssetsToRegistrar"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>uploadSchemaMetaAssetsToRegistrar</b></span>
+                        <a href="#uploadSchemaMetaAssetsToRegistrar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>uploadSchemaMetaAssetsToRegistrar(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, config: <a href="../classes/SignSchemaMetaConfigDto.html" target="_self">SignSchemaMetaConfigDto</a>, options?: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="197"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-metadata-signing.service.ts:197</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>config</td>
+                                            <td>
+                                                            <code><a href="../classes/SignSchemaMetaConfigDto.html" target="_self" >SignSchemaMetaConfigDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;unknown&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { BadRequestException, Injectable } from &quot;@nestjs/common&quot;;
+import { SchemaURIMeta } from &quot;@owf/eudi-attestation-schema&quot;;
+import { RegistrarService } from &quot;../../../../registrar/registrar.service&quot;;
+import { CredentialConfigService } from &quot;../credential-config/credential-config.service&quot;;
+import {
+    SignSchemaMetaConfigDto,
+    SignVersionSchemaMetaConfigDto,
+} from &quot;../dto/schema-meta-config.dto&quot;;
+import { buildJsonSchema } from &quot;../utils&quot;;
+import { SchemaMetaAdapterService } from &quot;./schema-meta-adapter.service&quot;;
+
+type TrustedAuthorityInput &#x3D; NonNullable&lt;
+    SignSchemaMetaConfigDto[&quot;config&quot;][&quot;trustedAuthorities&quot;]
+&gt;[number];
+
+@Injectable()
+export class SchemaMetadataSigningService {
+    constructor(
+        private readonly credentialsService: CredentialConfigService,
+        private readonly schemaMetaAdapterService: SchemaMetaAdapterService,
+        private readonly registrarService: RegistrarService,
+    ) {}
+
+    private extractConfiguredVct(credentialConfig: {
+        vct?: unknown;
+    }): string | undefined {
+        if (typeof credentialConfig.vct &#x3D;&#x3D;&#x3D; &quot;string&quot;) {
+            return credentialConfig.vct;
+        }
+
+        if (
+            credentialConfig.vct &amp;&amp;
+            typeof credentialConfig.vct &#x3D;&#x3D;&#x3D; &quot;object&quot; &amp;&amp;
+            &quot;vct&quot; in credentialConfig.vct &amp;&amp;
+            typeof (credentialConfig.vct as { vct?: unknown }).vct &#x3D;&#x3D;&#x3D; &quot;string&quot;
+        ) {
+            return (credentialConfig.vct as { vct: string }).vct;
+        }
+
+        return undefined;
+    }
+
+    private deriveSchemaUriMetadata(
+        credentialConfig: Awaited&lt;
+            ReturnType&lt;CredentialConfigService[&quot;getById&quot;]&gt;
+        &gt;,
+        format: string,
+    ): SchemaURIMeta {
+        if (format &#x3D;&#x3D;&#x3D; &quot;dc+sd-jwt&quot;) {
+            const configuredVct &#x3D; this.extractConfiguredVct(credentialConfig);
+
+            if (!configuredVct) {
+                throw new BadRequestException(
+                    &quot;schemaURIs metadata is required: unable to derive vct for dc+sd-jwt from credential config.&quot;,
+                );
+            }
+
+            return { vct: configuredVct };
+        }
+
+        if (format &#x3D;&#x3D;&#x3D; &quot;mso_mdoc&quot;) {
+            const docType &#x3D;
+                credentialConfig.config?.docType ??
+                (credentialConfig.config as { doctype?: string } | undefined)
+                    ?.doctype;
+
+            if (!docType) {
+                throw new BadRequestException(
+                    &quot;schemaURIs metadata is required: unable to derive docType for mso_mdoc from credential config.&quot;,
+                );
+            }
+
+            return { doctype_value: docType };
+        }
+
+        throw new BadRequestException(
+            &#x60;schemaURIs metadata is required: unsupported format &#x27;${format}&#x27;. Provide schemaURIs[].metadata explicitly.&#x60;,
+        );
+    }
+
+    private parseVerificationMethod(
+        verificationMethod: string | Record&lt;string, unknown&gt; | undefined,
+        index: number,
+    ): Record&lt;string, unknown&gt; | undefined {
+        if (verificationMethod &#x3D;&#x3D;&#x3D; undefined) {
+            return undefined;
+        }
+
+        if (typeof verificationMethod &#x3D;&#x3D;&#x3D; &quot;string&quot;) {
+            const trimmed &#x3D; verificationMethod.trim();
+            if (trimmed.length &#x3D;&#x3D;&#x3D; 0) {
+                return undefined;
+            }
+
+            try {
+                const parsed &#x3D; JSON.parse(trimmed);
+                if (
+                    !parsed ||
+                    Array.isArray(parsed) ||
+                    typeof parsed !&#x3D;&#x3D; &quot;object&quot;
+                ) {
+                    throw new Error(&quot;verificationMethod must be a JSON object&quot;);
+                }
+
+                return parsed as Record&lt;string, unknown&gt;;
+            } catch (error) {
+                throw new BadRequestException(
+                    &#x60;trustedAuthorities[${index}].verificationMethod must be valid JSON object: ${
+                        error instanceof Error ? error.message : &quot;invalid JSON&quot;
+                    }&#x60;,
+                );
+            }
+        }
+
+        if (Array.isArray(verificationMethod)) {
+            throw new BadRequestException(
+                &#x60;trustedAuthorities[${index}].verificationMethod must be an object&#x60;,
+            );
+        }
+
+        return verificationMethod;
+    }
+
+    private normalizeTrustedAuthority(
+        entry: TrustedAuthorityInput,
+        index: number,
+    ) {
+        if (entry.trustListId) {
+            return {
+                trustListId: entry.trustListId,
+                ...(entry.isLoTE &#x3D;&#x3D;&#x3D; undefined ? {} : { isLoTE: entry.isLoTE }),
+            };
+        }
+
+        const verificationMethod &#x3D; this.parseVerificationMethod(
+            entry.verificationMethod,
+            index,
+        );
+
+        return {
+            ...(entry.frameworkType
+                ? { frameworkType: entry.frameworkType }
+                : {}),
+            ...(entry.value ? { value: entry.value } : {}),
+            ...(entry.isLoTE &#x3D;&#x3D;&#x3D; undefined ? {} : { isLoTE: entry.isLoTE }),
+            ...(verificationMethod ? { verificationMethod } : {}),
+        };
+    }
+
+    private async uploadSchemaAssetFromCredentialConfig(
+        tenantId: string,
+        credentialConfigId: string,
+        fallbackFormat?: string,
+    ): Promise&lt;{
+        format: string;
+        uri: string;
+        meta: SchemaURIMeta;
+    }&gt; {
+        const existing &#x3D; await this.credentialsService.getById(
+            tenantId,
+            credentialConfigId,
+        );
+        const format &#x3D; existing.config?.format ?? fallbackFormat ?? &quot;dc+sd-jwt&quot;;
+
+        const schema &#x3D; buildJsonSchema(existing.fields as any);
+        if (!schema || Object.keys(schema.properties ?? {}).length &#x3D;&#x3D;&#x3D; 0) {
+            throw new BadRequestException(
+                &#x60;Credential config ${credentialConfigId} has no inline schema to upload. Provide schemaURIs explicitly or set the credential schema first.&#x60;,
+            );
+        }
+
+        const fileName &#x3D; &#x60;schema-${credentialConfigId}-${format}.json&#x60;;
+        const schemaContent &#x3D; JSON.stringify(schema, null, 2);
+        const schemaAsset &#x3D;
+            typeof File &#x3D;&#x3D;&#x3D; &quot;function&quot;
+                ? new File([schemaContent], fileName, {
+                      type: &quot;application/schema+json&quot;,
+                  })
+                : new Blob([schemaContent], {
+                      type: &quot;application/schema+json&quot;,
+                  });
+
+        const uploadedSchema &#x3D;
+            await this.registrarService.uploadSchemaMetadataAsset(
+                tenantId,
+                &quot;schemas&quot;,
+                schemaAsset,
+            );
+
+        return {
+            format,
+            uri: uploadedSchema.url,
+            meta: this.deriveSchemaUriMetadata(existing, format),
+        };
+    }
+
+    private async uploadSchemaMetaAssetsToRegistrar(
+        tenantId: string,
+        config: SignSchemaMetaConfigDto[&quot;config&quot;],
+        options?: { schemaUrisAlreadyHosted?: boolean },
+    ): Promise&lt;SignSchemaMetaConfigDto[&quot;config&quot;]&gt; {
+        const uploadedRulebook &#x3D;
+            await this.registrarService.uploadSchemaMetadataAssetFromUrl(
+                tenantId,
+                &quot;rulebooks&quot;,
+                config.rulebookURI,
+                &#x60;rulebook-${config.version}.md&#x60;,
+            );
+
+        const uploadedSchemaURIs &#x3D; options?.schemaUrisAlreadyHosted
+            ? (config.schemaURIs ?? [])
+            : await Promise.all(
+                  (config.schemaURIs ?? []).map(async (entry) &#x3D;&gt; {
+                      if (entry.credentialConfigId) {
+                          return this.uploadSchemaAssetFromCredentialConfig(
+                              tenantId,
+                              entry.credentialConfigId,
+                              entry.format,
+                          );
+                      }
+
+                      if (!entry.uri) {
+                          throw new BadRequestException(
+                              &quot;schemaURIs entry requires either credentialConfigId or uri&quot;,
+                          );
+                      }
+
+                      if (!entry.meta) {
+                          throw new BadRequestException(
+                              &quot;schemaURIs metadata is required for manual schema URI entries.&quot;,
+                          );
+                      }
+
+                      const uploadedSchema &#x3D;
+                          await this.registrarService.uploadSchemaMetadataAssetFromUrl(
+                              tenantId,
+                              &quot;schemas&quot;,
+                              entry.uri,
+                              &#x60;schema-${entry.format}.json&#x60;,
+                          );
+                      return {
+                          ...entry,
+                          uri: uploadedSchema.url,
+                      };
+                  }),
+              );
+
+        return {
+            ...config,
+            rulebookURI: uploadedRulebook.url,
+            schemaURIs: uploadedSchemaURIs,
+        };
+    }
+
+    private normalizeConfigFromFormInput(
+        config: SignSchemaMetaConfigDto[&quot;config&quot;],
+    ): SignSchemaMetaConfigDto[&quot;config&quot;] {
+        const normalizedSchemaUris &#x3D; (config.schemaURIs ?? []).map((entry) &#x3D;&gt; ({
+            ...(entry.credentialConfigId
+                ? { credentialConfigId: entry.credentialConfigId }
+                : {}),
+            ...(entry.format ? { format: entry.format } : {}),
+            ...(entry.uri ? { uri: entry.uri } : {}),
+            ...(entry.meta ? { meta: entry.meta } : {}),
+        }));
+
+        const normalizedTrustedAuthorities &#x3D; (
+            config.trustedAuthorities ?? []
+        ).map((entry, index) &#x3D;&gt; this.normalizeTrustedAuthority(entry, index));
+
+        return {
+            ...config,
+            schemaURIs: normalizedSchemaUris,
+            trustedAuthorities: normalizedTrustedAuthorities,
+        };
+    }
+
+    private async ensureSchemaUrisFromCredentialConfig(
+        tenantId: string,
+        config: SignSchemaMetaConfigDto[&quot;config&quot;],
+        credentialConfigId?: string,
+    ): Promise&lt;{
+        config: SignSchemaMetaConfigDto[&quot;config&quot;];
+        alreadyHosted: boolean;
+    }&gt; {
+        if (config.schemaURIs?.length || !credentialConfigId) {
+            return { config, alreadyHosted: false };
+        }
+
+        const existing &#x3D; await this.credentialsService.getById(
+            tenantId,
+            credentialConfigId,
+        );
+        const format &#x3D; existing.config?.format ?? &quot;dc+sd-jwt&quot;;
+        const uploadedSchema &#x3D; await this.uploadSchemaAssetFromCredentialConfig(
+            tenantId,
+            credentialConfigId,
+            format,
+        );
+
+        return {
+            config: {
+                ...config,
+                schemaURIs: [
+                    {
+                        format: uploadedSchema.format,
+                        uri: uploadedSchema.uri,
+                        meta: uploadedSchema.meta,
+                    },
+                ],
+            },
+            alreadyHosted: true,
+        };
+    }
+
+    async signSchemaMetaConfig(
+        tenantId: string,
+        body: SignSchemaMetaConfigDto,
+    ) {
+        const normalizedConfig &#x3D; this.normalizeConfigFromFormInput(body.config);
+
+        const { config: derivedConfig, alreadyHosted } &#x3D;
+            await this.ensureSchemaUrisFromCredentialConfig(
+                tenantId,
+                normalizedConfig,
+                body.credentialConfigId,
+            );
+
+        let configToSign &#x3D; derivedConfig;
+
+        configToSign &#x3D; await this.uploadSchemaMetaAssetsToRegistrar(
+            tenantId,
+            configToSign,
+            { schemaUrisAlreadyHosted: alreadyHosted },
+        );
+
+        const { reservedId } &#x3D;
+            await this.registrarService.reserveSchemaId(tenantId);
+
+        const signed &#x3D;
+            await this.schemaMetaAdapterService.signRawSchemaMetaConfig(
+                tenantId,
+                { ...configToSign, id: reservedId },
+                body.keyChainId,
+            );
+
+        const result &#x3D; await this.registrarService.submitSchemaMetadata(
+            tenantId,
+            signed.jws,
+        );
+
+        if (body.credentialConfigId) {
+            const existing &#x3D; await this.credentialsService.getById(
+                tenantId,
+                body.credentialConfigId,
+            );
+            const schemaMetaForLink &#x3D; {
+                ...existing.schemaMeta,
+                ...configToSign,
+                id: reservedId,
+            };
+            await this.credentialsService.update(
+                tenantId,
+                body.credentialConfigId,
+                {
+                    schemaMeta: schemaMetaForLink as any,
+                },
+            );
+        }
+
+        return result;
+    }
+
+    async signVersionSchemaMetaConfig(
+        tenantId: string,
+        body: SignVersionSchemaMetaConfigDto,
+    ) {
+        const normalizedConfig &#x3D; this.normalizeConfigFromFormInput(body.config);
+
+        if (!normalizedConfig.id) {
+            throw new BadRequestException(
+                &quot;config.id is required when publishing a new version of an existing schema metadata entry&quot;,
+            );
+        }
+
+        const configToSign &#x3D; await this.uploadSchemaMetaAssetsToRegistrar(
+            tenantId,
+            normalizedConfig,
+        );
+
+        const signed &#x3D;
+            await this.schemaMetaAdapterService.signRawSchemaMetaConfig(
+                tenantId,
+                configToSign,
+                body.keyChainId,
+            );
+
+        return this.registrarService.submitSchemaMetadata(tenantId, signed.jws);
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'SchemaMetadataSigningService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

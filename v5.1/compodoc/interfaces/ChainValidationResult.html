@@ -1,0 +1,1001 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  ChainValidationResult</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/verifier/presentations/credential/credential-chain-validation.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Result of certificate chain validation.</p>
+
+            </p>
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#error" 
+>
+                                            error
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#errorDetails" 
+>
+                                            errorDetails
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#matchedEntity" 
+>
+                                            matchedEntity
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#verified" 
+>
+                                            verified
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="error"></a>
+                                        <span class="name "><b>error</b>
+                                            <a href="#error">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>error:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Error message if validation failed</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="errorDetails"></a>
+                                        <span class="name "><b>errorDetails</b>
+                                            <a href="#errorDetails">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>errorDetails:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Detailed error information for debugging</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="matchedEntity"></a>
+                                        <span class="name "><b>matchedEntity</b>
+                                            <a href="#matchedEntity">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>matchedEntity:     <code>MatchedTrustedEntity | null</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>MatchedTrustedEntity | null</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>The matched trusted entity (if any)</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="verified"></a>
+                                        <span class="name "><b>verified</b>
+                                            <a href="#verified">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>verified:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Whether the chain is valid</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &quot;@nestjs/common&quot;;
+import * as x509 from &quot;@peculiar/x509&quot;;
+import { PinoLogger } from &quot;nestjs-pino&quot;;
+import { FederationTrustService } from &quot;../../../shared/trust/federation-trust.service&quot;;
+import { StatusListVerifierService } from &quot;../../../shared/trust/status-list-verifier.service&quot;;
+import {
+    BuiltTrustStore,
+    TrustStoreService,
+} from &quot;../../../shared/trust/trust-store.service&quot;;
+import {
+    FederationTrustSource,
+    TrustedEntity,
+    TrustListSource,
+} from &quot;../../../shared/trust/types&quot;;
+import {
+    MatchedTrustedEntity,
+    X509ValidationService,
+} from &quot;../../../shared/trust/x509-validation.service&quot;;
+
+/**
+ * Policy options for certificate chain validation.
+ */
+export interface ChainValidationPolicy {
+    /** Whether to require x5c header in the credential */
+    requireX5c?: boolean;
+    /** How to match pinned certificates: &quot;leaf&quot; or &quot;pathEnd&quot; */
+    pinnedCertMode?: &quot;leaf&quot; | &quot;pathEnd&quot;;
+    /** Service type filter for matching issuance certificates (default: &quot;/Issuance&quot;) */
+    serviceTypeFilter?: string;
+    /** Whether to verify status list (revocation) */
+    verifyStatusList?: boolean;
+    /** OpenID Federation trust source used for federation-based trust checks. */
+    federationTrustSource?: FederationTrustSource;
+}
+
+/**
+ * Result of certificate chain validation.
+ */
+export interface ChainValidationResult {
+    /** Whether the chain is valid */
+    verified: boolean;
+    /** The matched trusted entity (if any) */
+    matchedEntity: MatchedTrustedEntity | null;
+    /** Error message if validation failed */
+    error?: string;
+    /** Detailed error information for debugging */
+    errorDetails?: string;
+}
+
+/**
+ * Shared service for certificate chain validation.
+ * Used by both mDOC and SD-JWT-VC verifiers to ensure consistent behavior.
+ *
+ * Responsibilities:
+ * - X.509 certificate chain building and validation
+ * - Trust anchor matching against LoTE trust lists
+ * - Status list (revocation) verification
+ * - Detailed error reporting
+ */
+@Injectable()
+export class CredentialChainValidationService {
+    constructor(
+        private readonly trustStore: TrustStoreService,
+        private readonly federationTrustService: FederationTrustService,
+        private readonly x509v: X509ValidationService,
+        private readonly statusListVerifier: StatusListVerifierService,
+        private readonly logger: PinoLogger,
+    ) {
+        this.logger.setContext(CredentialChainValidationService.name);
+    }
+
+    /**
+     * Validate a certificate chain against the trust store.
+     *
+     * @param x5c The x5c chain from the credential (base64 DER encoded)
+     * @param trustListSource The trust list source configuration
+     * @param policy Validation policy options
+     * @returns Validation result with matched entity information
+     */
+    async validateChain(
+        x5c: string[],
+        trustListSource: TrustListSource | undefined,
+        policy: ChainValidationPolicy &#x3D; {},
+    ): Promise&lt;ChainValidationResult&gt; {
+        const {
+            requireX5c &#x3D; false,
+            pinnedCertMode &#x3D; &quot;leaf&quot;,
+            serviceTypeFilter &#x3D; &quot;/Issuance&quot;,
+        } &#x3D; policy;
+
+        // 1) Check x5c requirement
+        if (!x5c || x5c.length &#x3D;&#x3D;&#x3D; 0) {
+            if (requireX5c) {
+                return {
+                    verified: false,
+                    matchedEntity: null,
+                    error: &quot;x5c_required&quot;,
+                    errorDetails: &quot;Policy requires x5c but none was provided&quot;,
+                };
+            }
+            // No x5c and not required - skip trust validation
+            return { verified: true, matchedEntity: null };
+        }
+
+        const federationTrustSource &#x3D; policy.federationTrustSource;
+        const useFederation &#x3D; this.federationTrustService.shouldUseFederation(
+            federationTrustSource,
+        );
+        const useLote &#x3D; this.federationTrustService.shouldUseLote(
+            federationTrustSource,
+        );
+        const federationMode &#x3D; this.federationTrustService.getMode(
+            federationTrustSource,
+        );
+        const enforceFederationPolicy &#x3D;
+            federationMode &#x3D;&#x3D;&#x3D; &quot;federation-only&quot; ||
+            (federationMode &#x3D;&#x3D;&#x3D; &quot;hybrid&quot; &amp;&amp;
+                federationTrustSource?.enforceSigningPolicy &#x3D;&#x3D;&#x3D; true);
+
+        // 2) Parse the presented certificate chain
+        let presented: x509.X509Certificate[];
+        try {
+            presented &#x3D; this.x509v.parseX5c(x5c);
+        } catch (e: any) {
+            return {
+                verified: false,
+                matchedEntity: null,
+                error: &quot;invalid_x5c&quot;,
+                errorDetails: &#x60;Failed to parse x5c chain: ${e?.message ?? e}&#x60;,
+            };
+        }
+
+        const leaf &#x3D; presented[0];
+
+        // 3) Run federation trust evaluation when enabled
+        let federationTrustResult:
+            | { trusted: boolean; reason: string }
+            | undefined;
+        if (useFederation) {
+            federationTrustResult &#x3D;
+                await this.federationTrustService.evaluateCertificateEntityTrust(
+                    x5c,
+                    federationTrustSource,
+                );
+
+            if (!federationTrustResult.trusted &amp;&amp; !useLote) {
+                return {
+                    verified: false,
+                    matchedEntity: null,
+                    error: &quot;federation_trust_failed&quot;,
+                    errorDetails: federationTrustResult.reason,
+                };
+            }
+        }
+
+        if (!useLote) {
+            if (federationTrustResult?.trusted) {
+                return { verified: true, matchedEntity: null };
+            }
+
+            return {
+                verified: false,
+                matchedEntity: null,
+                error: &quot;federation_trust_failed&quot;,
+                errorDetails:
+                    federationTrustResult?.reason ??
+                    &quot;federation trust evaluation failed&quot;,
+            };
+        }
+
+        // 4) Load trust store for LoTE-based validation
+        const store &#x3D; await this.getTrustStoreIfConfigured(trustListSource);
+        if (!store) {
+            if (enforceFederationPolicy) {
+                return {
+                    verified: Boolean(federationTrustResult?.trusted),
+                    matchedEntity: null,
+                    error: federationTrustResult?.trusted
+                        ? undefined
+                        : &quot;federation_trust_failed&quot;,
+                    errorDetails: federationTrustResult?.reason,
+                };
+            }
+
+            // No trust list configured - preserve existing behavior
+            this.logger.debug(
+                &quot;No trust list source configured, returning verified without LoTE trust validation&quot;,
+            );
+            return { verified: true, matchedEntity: null };
+        }
+
+        // 5) Get all certificates from entities for path building
+        const allCerts &#x3D; store.entities.flatMap((e) &#x3D;&gt;
+            e.services.map((s) &#x3D;&gt; ({ certValue: s.certValue })),
+        );
+        const anchors &#x3D; this.x509v.parseTrustAnchors(allCerts);
+
+        // 6) Build the certificate path
+        let path: x509.X509Certificate[];
+        try {
+            path &#x3D; await this.x509v.buildPath(leaf, presented, anchors, []);
+        } catch (e: any) {
+            const errorDetails &#x3D; await this.buildChainErrorDetails(
+                presented,
+                store,
+                trustListSource,
+                e,
+            );
+
+            if (enforceFederationPolicy &amp;&amp; federationTrustResult?.trusted) {
+                this.logger.warn(
+                    &#x60;LoTE chain failed but federation policy accepted chain: ${errorDetails}&#x60;,
+                );
+                return { verified: true, matchedEntity: null };
+            }
+
+            return {
+                verified: false,
+                matchedEntity: null,
+                error: &quot;chain_build_failed&quot;,
+                errorDetails,
+            };
+        }
+
+        // 7) Check time validity
+        const now &#x3D; new Date();
+        for (const cert of path) {
+            if (!this.x509v.isTimeValid(cert, now)) {
+                return {
+                    verified: false,
+                    matchedEntity: null,
+                    error: &quot;certificate_expired&quot;,
+                    errorDetails: &#x60;Certificate expired or not yet valid: subject&#x3D;&quot;${cert.subject}&quot;, notBefore&#x3D;${cert.notBefore.toISOString()}, notAfter&#x3D;${cert.notAfter.toISOString()}&#x60;,
+                };
+            }
+        }
+
+        // 8) Match against TrustedEntities
+        const matchedEntity &#x3D; await this.x509v.pathMatchesTrustedEntities(
+            path,
+            store.entities,
+            pinnedCertMode,
+            serviceTypeFilter,
+        );
+
+        if (!matchedEntity) {
+            const errorDetails &#x3D; await this.buildNoMatchErrorDetails(
+                path,
+                store,
+                trustListSource,
+                pinnedCertMode,
+            );
+
+            if (enforceFederationPolicy &amp;&amp; federationTrustResult?.trusted) {
+                this.logger.warn(
+                    &#x60;No LoTE entity match but federation policy accepted chain: ${errorDetails}&#x60;,
+                );
+                return { verified: true, matchedEntity: null };
+            }
+
+            return {
+                verified: false,
+                matchedEntity: null,
+                error: &quot;no_trusted_entity_match&quot;,
+                errorDetails,
+            };
+        }
+
+        if (enforceFederationPolicy &amp;&amp; !federationTrustResult?.trusted) {
+            return {
+                verified: false,
+                matchedEntity: null,
+                error: &quot;federation_trust_failed&quot;,
+                errorDetails:
+                    federationTrustResult?.reason ??
+                    &quot;federation trust evaluation failed&quot;,
+            };
+        }
+
+        this.logger.debug(
+            &#x60;Certificate chain validated successfully. Matched entity: ${matchedEntity.entity.entityId ?? &quot;unknown&quot;}, mode: ${matchedEntity.matchMode}&#x60;,
+        );
+
+        return { verified: true, matchedEntity };
+    }
+
+    /**
+     * Verify a status list JWT signature against the matched entity&#x27;s revocation certificate.
+     *
+     * @param statusListJwt The status list JWT
+     * @param matchedEntity The matched trusted entity (may be null)
+     * @param trustListSource Trust list source for chain building
+     * @param policy Validation policy
+     * @returns true if status list is valid
+     */
+    async verifyStatusListSignature(
+        x5c: string[] | undefined,
+        matchedEntity: MatchedTrustedEntity | null,
+        trustListSource: TrustListSource | undefined,
+        policy: ChainValidationPolicy &#x3D; {},
+    ): Promise&lt;boolean&gt; {
+        // If no entity was matched (no x5c in original credential), accept
+        if (!matchedEntity) {
+            return true;
+        }
+
+        // Check if the matched entity has a revocation certificate
+        if (!matchedEntity.revocationCert) {
+            this.logger.warn(
+                &#x60;TrustedEntity ${matchedEntity.entity.entityId ?? &quot;unknown&quot;} has no revocation certificate configured&#x60;,
+            );
+            // Accept if entity doesn&#x27;t define a revocation cert
+            return true;
+        }
+
+        // Status list must have x5c
+        if (!x5c?.length) {
+            this.logger.warn(
+                &quot;Status list JWT missing x5c, but credential had x5c trust chain&quot;,
+            );
+            return false;
+        }
+
+        // Validate status list&#x27;s certificate chain
+        const result &#x3D; await this.validateChain(x5c, trustListSource, {
+            ...policy,
+            serviceTypeFilter: &quot;/Revocation&quot;,
+        });
+
+        if (!result.verified) {
+            this.logger.warn(
+                &#x60;Status list chain validation failed: ${result.errorDetails}&#x60;,
+            );
+            return false;
+        }
+
+        // Verify status list is signed by the revocation cert from the same entity
+        if (result.matchedEntity) {
+            const statusEntityId &#x3D; result.matchedEntity.entity.entityId;
+            const credentialEntityId &#x3D; matchedEntity.entity.entityId;
+
+            if (statusEntityId !&#x3D;&#x3D; credentialEntityId) {
+                this.logger.warn(
+                    &#x60;Status list signed by different entity. Status: ${statusEntityId}, Credential: ${credentialEntityId}&#x60;,
+                );
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Fetch a status list JWT with caching.
+     * Delegates to StatusListVerifierService.
+     */
+    async fetchStatusListJwt(uri: string): Promise&lt;string&gt; {
+        return this.statusListVerifier.getStatusListJwt(uri);
+    }
+
+    /**
+     * Get trusted certificate buffers for mDOC verification.
+     * Returns certificates as Uint8Array[] for the mdoc library.
+     */
+    async getTrustedCertificateBuffers(
+        trustListSource?: TrustListSource,
+    ): Promise&lt;Uint8Array[]&gt; {
+        const store &#x3D; await this.getTrustStoreIfConfigured(trustListSource);
+        if (!store) {
+            return [];
+        }
+
+        const trustedCertificates: Uint8Array[] &#x3D; [];
+
+        for (const entity of store.entities) {
+            const issuanceServices &#x3D; entity.services.filter((s) &#x3D;&gt;
+                s.serviceTypeIdentifier.endsWith(&quot;/Issuance&quot;),
+            );
+
+            for (const svc of issuanceServices) {
+                try {
+                    const cert &#x3D; new x509.X509Certificate(svc.certValue as any);
+                    trustedCertificates.push(new Uint8Array(cert.rawData));
+                } catch (e: any) {
+                    this.logger.warn(
+                        &#x60;Failed to parse certificate from entity ${entity.entityId}: ${e?.message ?? e}&#x60;,
+                    );
+                }
+            }
+        }
+
+        this.logger.debug(
+            &#x60;Loaded ${trustedCertificates.length} trusted certificate(s) for verification&#x60;,
+        );
+
+        return trustedCertificates;
+    }
+
+    /**
+     * Get the trust store if configured.
+     */
+    private async getTrustStoreIfConfigured(
+        trustListSource?: TrustListSource,
+    ): Promise&lt;BuiltTrustStore | null&gt; {
+        if (!trustListSource?.lotes?.length) {
+            return null;
+        }
+
+        try {
+            const store &#x3D; await this.trustStore.getTrustStore(trustListSource);
+
+            if (store.nextUpdate) {
+                const nu &#x3D; new Date(store.nextUpdate);
+                if (!Number.isNaN(nu.getTime()) &amp;&amp; nu.getTime() &lt; Date.now()) {
+                    this.logger.warn(
+                        &#x60;Trust list NextUpdate is in the past: ${store.nextUpdate}&#x60;,
+                    );
+                    return null;
+                }
+            }
+
+            return store;
+        } catch (error: any) {
+            this.logger.error(
+                &#x60;Failed to load trust store: ${error?.message ?? error}&#x60;,
+            );
+            return null;
+        }
+    }
+
+    /**
+     * Build detailed error information when chain building fails.
+     */
+    private async buildChainErrorDetails(
+        presented: x509.X509Certificate[],
+        store: BuiltTrustStore,
+        trustListSource: TrustListSource | undefined,
+        error: any,
+    ): Promise&lt;string&gt; {
+        const leaf &#x3D; presented[0];
+        const leafThumb &#x3D; await this.getThumbprint(leaf);
+
+        const configuredTrustLists &#x3D;
+            trustListSource?.lotes?.map((l) &#x3D;&gt; l.url).join(&quot;, &quot;) ||
+            &quot;none configured&quot;;
+
+        const trustedCertsSummary &#x3D; await this.summarizeTrustedCerts(
+            store.entities,
+        );
+
+        return [
+            &#x60;Error: ${error?.message ?? error}&#x60;,
+            &#x60;Presented leaf: subject&#x3D;&quot;${leaf.subject}&quot;, issuer&#x3D;&quot;${leaf.issuer}&quot;, thumbprint&#x3D;${leafThumb}&#x60;,
+            &#x60;Presented chain length: ${presented.length}&#x60;,
+            &#x60;Configured trust lists: ${configuredTrustLists}&#x60;,
+            &#x60;Trusted entities (${store.entities.length}): ${trustedCertsSummary}&#x60;,
+        ].join(&quot; | &quot;);
+    }
+
+    /**
+     * Build detailed error information when no trusted entity matches.
+     */
+    private async buildNoMatchErrorDetails(
+        path: x509.X509Certificate[],
+        store: BuiltTrustStore,
+        trustListSource: TrustListSource | undefined,
+        pinnedMode: string,
+    ): Promise&lt;string&gt; {
+        const leaf &#x3D; path[0];
+        const end &#x3D; path.at(-1)!;
+        const leafThumb &#x3D; await this.getThumbprint(leaf);
+        const endThumb &#x3D; await this.getThumbprint(end);
+
+        const configuredTrustLists &#x3D;
+            trustListSource?.lotes?.map((l) &#x3D;&gt; l.url).join(&quot;, &quot;) ||
+            &quot;none configured&quot;;
+
+        const trustedCertsSummary &#x3D; await this.summarizeTrustedCerts(
+            store.entities,
+        );
+
+        // Collect thumbprints of allowed certificates
+        const allowedThumbprints: string[] &#x3D; [];
+        for (const entity of store.entities) {
+            for (const svc of entity.services) {
+                if (svc.serviceTypeIdentifier.endsWith(&quot;/Issuance&quot;)) {
+                    try {
+                        const cert &#x3D; new x509.X509Certificate(
+                            svc.certValue as any,
+                        );
+                        const thumb &#x3D; await this.getThumbprint(cert);
+                        allowedThumbprints.push(
+                            &#x60;${cert.subject} (${thumb.substring(0, 16)}...)&#x60;,
+                        );
+                    } catch {
+                        // Skip invalid certs
+                    }
+                }
+            }
+        }
+
+        return [
+            &#x60;Presented leaf: subject&#x3D;&quot;${leaf.subject}&quot;, issuer&#x3D;&quot;${leaf.issuer}&quot;, thumbprint&#x3D;${leafThumb}&#x60;,
+            &#x60;Presented path end: subject&#x3D;&quot;${end.subject}&quot;, thumbprint&#x3D;${endThumb}&#x60;,
+            &#x60;Pinned mode: ${pinnedMode}&#x60;,
+            &#x60;Path length: ${path.length}&#x60;,
+            &#x60;Configured trust lists: ${configuredTrustLists}&#x60;,
+            &#x60;Loaded entities (${store.entities.length}): ${trustedCertsSummary}&#x60;,
+            &#x60;Allowed cert thumbprints: ${allowedThumbprints.length &gt; 0 ? allowedThumbprints.join(&quot;; &quot;) : &quot;none&quot;}&#x60;,
+        ].join(&quot; | &quot;);
+    }
+
+    /**
+     * Summarize trusted entities for error logging.
+     */
+    private async summarizeTrustedCerts(
+        entities: TrustedEntity[],
+    ): Promise&lt;string&gt; {
+        const summaries: string[] &#x3D; [];
+        for (const entity of entities.slice(0, 5)) {
+            const issuanceSvcs &#x3D; entity.services.filter((s) &#x3D;&gt;
+                s.serviceTypeIdentifier.endsWith(&quot;/Issuance&quot;),
+            );
+            summaries.push(
+                &#x60;${entity.entityId ?? &quot;unknown&quot;} (${issuanceSvcs.length} issuance cert(s))&#x60;,
+            );
+        }
+        if (entities.length &gt; 5) {
+            summaries.push(&#x60;...and ${entities.length - 5} more&#x60;);
+        }
+        return summaries.length &gt; 0 ? summaries.join(&quot;; &quot;) : &quot;none&quot;;
+    }
+
+    /**
+     * Get hex thumbprint of a certificate.
+     */
+    private async getThumbprint(cert: x509.X509Certificate): Promise&lt;string&gt; {
+        const buffer &#x3D; await cert.getThumbprint(&quot;SHA-256&quot;);
+        return Array.from(new Uint8Array(buffer))
+            .map((b) &#x3D;&gt; b.toString(16).padStart(2, &quot;0&quot;))
+            .join(&quot;&quot;);
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'ChainValidationResult.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

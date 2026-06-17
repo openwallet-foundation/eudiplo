@@ -1,0 +1,867 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  FindCertOptions</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/crypto/key/cert/cert.service.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#certId" 
+                                                class="deprecated-name"
+                                            >
+                                            certId
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#fallbackType" 
+>
+                                            fallbackType
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#keyId" 
+>
+                                            keyId
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
+                                        <a href="#skipValidation" 
+>
+                                            skipValidation
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#tenantId" 
+>
+                                            tenantId
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#type" 
+>
+                                            type
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="certId"></a>
+                                        <span class="name deprecated-name"><b>certId</b>
+                                            <a href="#certId">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4 deprecated">
+                                        Use `keyId` instead.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>certId:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Optional key chain ID to find a specific key chain.</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="fallbackType"></a>
+                                        <span class="name "><b>fallbackType</b>
+                                            <a href="#fallbackType">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>fallbackType:         <code><a href="../miscellaneous/enumerations.html#KeyUsageType" target="_self" >KeyUsageType</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#KeyUsageType" target="_self" >KeyUsageType</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Optional fallback usage type. If no key chain is found for the
+primary <code>type</code>, a second lookup using this type is attempted.</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="keyId"></a>
+                                        <span class="name "><b>keyId</b>
+                                            <a href="#keyId">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>keyId:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Optional key chain ID to find a specific key chain.</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="skipValidation"></a>
+                                        <span class="name "><b>skipValidation</b>
+                                            <a href="#skipValidation">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>skipValidation:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Skip certificate validation (expiry and CRL check).
+Default: false</p>
+</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="tenantId"></a>
+                                        <span class="name "><b>tenantId</b>
+                                            <a href="#tenantId">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>tenantId:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="type"></a>
+                                        <span class="name "><b>type</b>
+                                            <a href="#type">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>type:         <code><a href="../miscellaneous/enumerations.html#KeyUsageType" target="_self" >KeyUsageType</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#KeyUsageType" target="_self" >KeyUsageType</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createHash } from &quot;node:crypto&quot;;
+import { Injectable, Logger, NotFoundException } from &quot;@nestjs/common&quot;;
+import { ConfigService } from &quot;@nestjs/config&quot;;
+import * as x509 from &quot;@peculiar/x509&quot;;
+import { KeyChainEntity, KeyUsageType } from &quot;../entities/key-chain.entity&quot;;
+import { KeyChainService } from &quot;../key-chain.service&quot;;
+import { CrlValidationService } from &quot;./crl-validation.service&quot;;
+
+export interface FindCertOptions {
+    tenantId: string;
+    type: KeyUsageType;
+    /**
+     * Optional key chain ID to find a specific key chain.
+     * @deprecated Use &#x60;keyId&#x60; instead.
+     */
+    certId?: string;
+    /**
+     * Optional key chain ID to find a specific key chain.
+     */
+    keyId?: string;
+    /**
+     * Optional fallback usage type. If no key chain is found for the
+     * primary &#x60;type&#x60;, a second lookup using this type is attempted.
+     */
+    fallbackType?: KeyUsageType;
+    /**
+     * Skip certificate validation (expiry and CRL check).
+     * Default: false
+     */
+    skipValidation?: boolean;
+}
+
+/**
+ * Result of certificate validation.
+ */
+export interface CertValidationResult {
+    /** Whether the certificate passed all validations */
+    isValid: boolean;
+    /** Error message if validation failed */
+    error?: string;
+    /** Whether the certificate is expired */
+    isExpired?: boolean;
+    /** Whether the certificate is revoked */
+    isRevoked?: boolean;
+    /** Certificate expiry date */
+    expiresAt?: Date;
+    /** Certificate validity start date */
+    validFrom?: Date;
+}
+
+/**
+ * Virtual certificate entity for backward compatibility.
+ * Maps KeyChainEntity data to the old CertEntity interface.
+ */
+export interface CertificateInfo {
+    id: string;
+    tenantId: string;
+    crt: string[];
+    description?: string;
+    keyId: string;
+    keyChain: KeyChainEntity;
+}
+
+/**
+ * Service for managing certificates.
+ *
+ * In the new unified model, certificates are stored directly in KeyChainEntity
+ * (activeCertificate, rootCertificate, previousCertificate).
+ * This service provides a compatibility layer for existing consumers.
+ */
+@Injectable()
+export class CertService {
+    private readonly logger &#x3D; new Logger(CertService.name);
+
+    constructor(
+        private readonly keyChainService: KeyChainService,
+        private readonly configService: ConfigService,
+        private readonly crlValidationService?: CrlValidationService,
+    ) {}
+
+    /**
+     * Find a certificate by type (usage type).
+     * Returns the certificate from the matching key chain.
+     */
+    async find(options: FindCertOptions): Promise&lt;CertificateInfo&gt; {
+        const { tenantId, type, skipValidation, fallbackType } &#x3D; options;
+        // Support both certId (deprecated) and keyId
+        const keyId &#x3D; options.keyId || options.certId;
+
+        const keyChain &#x3D; await this.keyChainService.findByUsageType(
+            tenantId,
+            type,
+            keyId,
+            fallbackType,
+        );
+
+        // Parse the certificate PEM to extract chain
+        const certChain &#x3D; this.parseCertificateChain(
+            keyChain.activeCertificate,
+        );
+
+        const certInfo: CertificateInfo &#x3D; {
+            id: keyChain.id,
+            tenantId,
+            crt: certChain,
+            description: keyChain.description,
+            keyId: keyChain.id,
+            keyChain,
+        };
+
+        if (!skipValidation) {
+            const validation &#x3D; await this.validateCertificate(certInfo);
+            if (!validation.isValid) {
+                throw new NotFoundException(
+                    &#x60;Certificate validation failed: ${validation.error}&#x60;,
+                );
+            }
+        }
+
+        return certInfo;
+    }
+
+    /**
+     * Find or create a certificate for a key chain.
+     * In the new model, certificates are always created with the key chain,
+     * so this just returns the existing one.
+     */
+    async findOrCreate(options: FindCertOptions): Promise&lt;CertificateInfo&gt; {
+        return this.find(options);
+    }
+
+    /**
+     * Get a certificate by ID (key chain ID).
+     */
+    async getCertificateById(
+        tenantId: string,
+        certId: string,
+    ): Promise&lt;CertificateInfo&gt; {
+        const keyChain &#x3D; await this.keyChainService.getEntity(tenantId, certId);
+        const certChain &#x3D; this.parseCertificateChain(
+            keyChain.activeCertificate,
+        );
+
+        return {
+            id: keyChain.id,
+            tenantId,
+            crt: certChain,
+            description: keyChain.description,
+            keyId: keyChain.id,
+            keyChain,
+        };
+    }
+
+    /**
+     * Get the certificate chain as an array of base64-encoded DER certificates.
+     * Used for the x5c header in JWTs.
+     */
+    getCertChain(cert: CertificateInfo): string[] {
+        return cert.crt.map((pem) &#x3D;&gt; {
+            try {
+                const x509Cert &#x3D; new x509.X509Certificate(pem);
+                // Convert raw DER bytes to base64 (not base64url)
+                return Buffer.from(x509Cert.rawData).toString(&quot;base64&quot;);
+            } catch {
+                // If parsing fails, try to extract base64 from PEM directly
+                const base64 &#x3D; pem
+                    .replace(&quot;-----BEGIN CERTIFICATE-----&quot;, &quot;&quot;)
+                    .replace(&quot;-----END CERTIFICATE-----&quot;, &quot;&quot;)
+                    .replace(/\s/g, &quot;&quot;);
+                return base64;
+            }
+        });
+    }
+
+    /**
+     * Get only the leaf (signing) certificate as a base64-encoded DER certificate array.
+     * Used for x5c headers where only the signing certificate should be included (e.g., status lists).
+     */
+    getLeafCertBase64(cert: CertificateInfo): string[] {
+        const leafPem &#x3D; cert.crt[0];
+        try {
+            const x509Cert &#x3D; new x509.X509Certificate(leafPem);
+            return [Buffer.from(x509Cert.rawData).toString(&quot;base64&quot;)];
+        } catch {
+            const base64 &#x3D; leafPem
+                .replace(&quot;-----BEGIN CERTIFICATE-----&quot;, &quot;&quot;)
+                .replace(&quot;-----END CERTIFICATE-----&quot;, &quot;&quot;)
+                .replace(/\s/g, &quot;&quot;);
+            return [base64];
+        }
+    }
+
+    /**
+     * Validate a certificate for expiry and revocation.
+     */
+    async validateCertificate(
+        cert: CertificateInfo,
+    ): Promise&lt;CertValidationResult&gt; {
+        try {
+            const leafPem &#x3D; cert.crt[0];
+            const x509Cert &#x3D; new x509.X509Certificate(leafPem);
+            const now &#x3D; new Date();
+
+            // Check expiry
+            if (x509Cert.notAfter &lt; now) {
+                return {
+                    isValid: false,
+                    isExpired: true,
+                    error: &#x60;Certificate expired on ${x509Cert.notAfter.toISOString()}&#x60;,
+                    expiresAt: x509Cert.notAfter,
+                    validFrom: x509Cert.notBefore,
+                };
+            }
+
+            // Check CRL revocation if service is available
+            if (this.crlValidationService) {
+                const crlResult &#x3D;
+                    await this.crlValidationService.checkCertificateRevocation(
+                        leafPem,
+                    );
+                if (!crlResult.isValid &amp;&amp; crlResult.revokedAt) {
+                    return {
+                        isValid: false,
+                        isRevoked: true,
+                        error:
+                            crlResult.reason || &quot;Certificate has been revoked&quot;,
+                        expiresAt: x509Cert.notAfter,
+                        validFrom: x509Cert.notBefore,
+                    };
+                }
+            }
+
+            return {
+                isValid: true,
+                expiresAt: x509Cert.notAfter,
+                validFrom: x509Cert.notBefore,
+            };
+        } catch (error: any) {
+            return {
+                isValid: false,
+                error: &#x60;Failed to validate certificate: ${error.message}&#x60;,
+            };
+        }
+    }
+
+    /**
+     * Get the hostname from the PUBLIC_URL config.
+     */
+    private getHostname(): string {
+        return new URL(this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;))
+            .hostname;
+    }
+
+    /**
+     * Add an external certificate to an existing key chain.
+     * Used for storing certificates obtained from external sources (e.g., registrar).
+     */
+    async addCertificate(
+        tenantId: string,
+        options: {
+            crt: string[];
+            keyId: string;
+            description?: string;
+        },
+    ): Promise&lt;string&gt; {
+        const { crt, keyId, description } &#x3D; options;
+
+        // Get the existing key chain
+        const keyChain &#x3D; await this.keyChainService.getEntity(tenantId, keyId);
+
+        // Update the key chain with the new certificate
+        await this.keyChainService.update(tenantId, keyId, {
+            activeCertificate: crt.join(&quot;\n&quot;),
+            description: description || keyChain.description,
+        });
+
+        this.logger.log(
+            &#x60;[${tenantId}] Added certificate to key chain ${keyId}&#x60;,
+        );
+
+        return keyId;
+    }
+
+    /**
+     * Parse a PEM certificate chain into an array of PEM strings.
+     */
+    private parseCertificateChain(pemChain: string): string[] {
+        const certs: string[] &#x3D; [];
+        const certRegex &#x3D;
+            /-----BEGIN CERTIFICATE-----[\s\S]*?-----END CERTIFICATE-----/g;
+        let match;
+
+        while ((match &#x3D; certRegex.exec(pemChain)) !&#x3D;&#x3D; null) {
+            certs.push(match[0]);
+        }
+
+        // If no certificates found, treat the whole string as one cert
+        if (certs.length &#x3D;&#x3D;&#x3D; 0 &amp;&amp; pemChain.includes(&quot;CERTIFICATE&quot;)) {
+            certs.push(pemChain);
+        }
+
+        return certs;
+    }
+
+    /**
+     * Compute the SHA-256 hash of the leaf certificate (for x509_hash client_id).
+     * Returns the hash as a base64url-encoded string.
+     */
+    getCertHash(cert: CertificateInfo): string {
+        const leafPem &#x3D; cert.crt[0];
+        const x509Cert &#x3D; new x509.X509Certificate(leafPem);
+        const hash &#x3D; createHash(&quot;sha256&quot;)
+            .update(Buffer.from(x509Cert.rawData))
+            .digest();
+        // Return as base64url (no padding)
+        return hash.toString(&quot;base64url&quot;);
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'FindCertOptions.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

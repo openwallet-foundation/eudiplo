@@ -1,0 +1,753 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content controller">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Controllers</li>
+  <li class="breadcrumb-item" >InteractiveAuthorizationController</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/issuer/issuance/oid4vci/authorize/interactive-authorization.controller.ts</code>
+        </p>
+            <p class="comment">
+                <h3>Prefix</h3>
+            </p>
+            <p class="comment">
+                <code>issuers/:tenantId/authorize/interactive</code>
+            </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Controller for the Interactive Authorization Endpoint (IAE).</p>
+<p>The IAE enables an interactive authorization flow during credential issuance,
+allowing the issuer to request verifiable presentations from the wallet
+before issuing credentials.</p>
+<p>This implements the OID4VCI 1.1 Interactive Authorization Endpoint specification.</p>
+<p>See <a href="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_1.html">https://openid.net/specs/openid-4-verifiable-credential-issuance-1_1.html</a></p>
+
+            </p>
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#completeWebAuth" >completeWebAuth</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#interactiveAuthorization" >interactiveAuthorization</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="completeWebAuth"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>completeWebAuth</b></span>
+                        <a href="#completeWebAuth"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>completeWebAuth(authSession: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Post(&#x27;complete-web-auth/:authSession&#x27;)<br />@HttpCode(HttpStatus.OK)<br />@ApiOperation({summary: &#x27;Complete web authorization&#x27;, description: &#x27;Mark a web authorization session as completed after user interaction&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Web authorization marked as completed&#x27;})<br />@ApiResponse({status: 404, description: &#x27;Auth session not found&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="150"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.controller.ts:150</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Complete web authorization.</p>
+<p>Called after the user completes web-based authorization to mark
+the session as ready for code exchange.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authSession</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The auth session identifier</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The tenant identifier</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Success indicator</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="interactiveAuthorization"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>interactiveAuthorization</b></span>
+                        <a href="#interactiveAuthorization"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>interactiveAuthorization(body: <a href="../classes/InteractiveAuthorizationRequestDto.html" target="_self">InteractiveAuthorizationRequestDto</a>, req: Request, res: Response, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Post()<br />@HttpCode(HttpStatus.OK)<br />@ApiOperation({summary: &#x27;Interactive Authorization Endpoint&#x27;, description: 
+Handles interactive authorization requests during credential issuance.
+
+**Initial Request:**
+- Contains &#x60;interaction_types_supported&#x60; (e.g., &quot;openid4vp_presentation,redirect_to_web&quot;)
+- Response will indicate required interaction (OpenID4VP presentation or web redirect)
+
+**Follow-up Request:**
+- Contains &#x60;auth_session&#x60; from previous response
+- Contains &#x60;openid4vp_response&#x60; (for presentation flow) or &#x60;code_verifier&#x60; (for web flow)
+- Response will contain authorization code on success
+        })<br />@ApiBody({description: &#x27;Interactive authorization request&#x27;, type: InteractiveAuthorizationRequestDto})<br />@ApiResponse({status: 200, description: &#x27;Authorization code response (successful completion)&#x27;, type: InteractiveAuthorizationCodeResponseDto})<br />@ApiResponse({status: 200, description: &#x27;OpenID4VP interaction required&#x27;, type: InteractiveAuthorizationOpenid4vpResponseDto})<br />@ApiResponse({status: 200, description: &#x27;Web redirect interaction required&#x27;, type: InteractiveAuthorizationRedirectToWebResponseDto})<br />@ApiResponse({status: 400, description: &#x27;Error response&#x27;, type: InteractiveAuthorizationErrorResponseDto})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="100"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.controller.ts:100</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Interactive Authorization Endpoint.</p>
+<p>Handles both initial and follow-up interactive authorization requests.</p>
+<p>Initial requests include <code>interaction_types_supported</code> to indicate which
+interaction methods the wallet supports (e.g., openid4vp_presentation, redirect_to_web).</p>
+<p>Follow-up requests include <code>auth_session</code> and either <code>openid4vp_response</code> or <code>code_verifier</code>
+depending on the interaction type used.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/InteractiveAuthorizationRequestDto.html" target="_self" >InteractiveAuthorizationRequestDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The interactive authorization request body</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>req</td>
+                                            <td>
+                                                        <code>Request</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The Express request</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>res</td>
+                                            <td>
+                                                        <code>Response</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The Express response</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The tenant identifier</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>origin</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The request origin header</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Interactive authorization response (interaction request or authorization code)</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+    Body,
+    Controller,
+    Headers,
+    HttpCode,
+    HttpStatus,
+    Param,
+    Post,
+    Req,
+    Res,
+} from &quot;@nestjs/common&quot;;
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from &quot;@nestjs/swagger&quot;;
+import type { Request, Response } from &quot;express&quot;;
+import {
+    InteractiveAuthorizationCodeResponseDto,
+    InteractiveAuthorizationErrorResponseDto,
+    InteractiveAuthorizationOpenid4vpResponseDto,
+    InteractiveAuthorizationRedirectToWebResponseDto,
+    InteractiveAuthorizationRequestDto,
+} from &quot;./dto/interactive-authorization.dto&quot;;
+import { InteractiveAuthorizationService } from &quot;./interactive-authorization.service&quot;;
+
+/**
+ * Controller for the Interactive Authorization Endpoint (IAE).
+ *
+ * The IAE enables an interactive authorization flow during credential issuance,
+ * allowing the issuer to request verifiable presentations from the wallet
+ * before issuing credentials.
+ *
+ * This implements the OID4VCI 1.1 Interactive Authorization Endpoint specification.
+ *
+ * @see https://openid.net/specs/openid-4-verifiable-credential-issuance-1_1.html
+ */
+@ApiTags(&quot;OID4VCI&quot;, &quot;Interactive Authorization&quot;)
+@Controller(&quot;issuers/:tenantId/authorize/interactive&quot;)
+export class InteractiveAuthorizationController {
+    constructor(
+        private readonly interactiveAuthorizationService: InteractiveAuthorizationService,
+    ) {}
+
+    /**
+     * Interactive Authorization Endpoint.
+     *
+     * Handles both initial and follow-up interactive authorization requests.
+     *
+     * Initial requests include &#x60;interaction_types_supported&#x60; to indicate which
+     * interaction methods the wallet supports (e.g., openid4vp_presentation, redirect_to_web).
+     *
+     * Follow-up requests include &#x60;auth_session&#x60; and either &#x60;openid4vp_response&#x60; or &#x60;code_verifier&#x60;
+     * depending on the interaction type used.
+     *
+     * @param body The interactive authorization request body
+     * @param req The Express request
+     * @param res The Express response
+     * @param tenantId The tenant identifier
+     * @param origin The request origin header
+     * @returns Interactive authorization response (interaction request or authorization code)
+     */
+    @Post()
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: &quot;Interactive Authorization Endpoint&quot;,
+        description: &#x60;
+Handles interactive authorization requests during credential issuance.
+
+**Initial Request:**
+- Contains \&#x60;interaction_types_supported\&#x60; (e.g., &quot;openid4vp_presentation,redirect_to_web&quot;)
+- Response will indicate required interaction (OpenID4VP presentation or web redirect)
+
+**Follow-up Request:**
+- Contains \&#x60;auth_session\&#x60; from previous response
+- Contains \&#x60;openid4vp_response\&#x60; (for presentation flow) or \&#x60;code_verifier\&#x60; (for web flow)
+- Response will contain authorization code on success
+        &#x60;,
+    })
+    @ApiBody({
+        description: &quot;Interactive authorization request&quot;,
+        type: InteractiveAuthorizationRequestDto,
+    })
+    @ApiResponse({
+        status: 200,
+        description: &quot;Authorization code response (successful completion)&quot;,
+        type: InteractiveAuthorizationCodeResponseDto,
+    })
+    @ApiResponse({
+        status: 200,
+        description: &quot;OpenID4VP interaction required&quot;,
+        type: InteractiveAuthorizationOpenid4vpResponseDto,
+    })
+    @ApiResponse({
+        status: 200,
+        description: &quot;Web redirect interaction required&quot;,
+        type: InteractiveAuthorizationRedirectToWebResponseDto,
+    })
+    @ApiResponse({
+        status: 400,
+        description: &quot;Error response&quot;,
+        type: InteractiveAuthorizationErrorResponseDto,
+    })
+    async interactiveAuthorization(
+        @Body() body: InteractiveAuthorizationRequestDto,
+        @Req() req: Request,
+        @Res({ passthrough: true }) res: Response,
+        @Param(&quot;tenantId&quot;) tenantId: string,
+        @Headers(&quot;origin&quot;) origin?: string,
+    ) {
+        const requestOrigin &#x3D; origin || req.headers.referer || &quot;&quot;;
+
+        const response &#x3D;
+            await this.interactiveAuthorizationService.handleRequest(
+                body,
+                req,
+                tenantId,
+                requestOrigin,
+            );
+
+        // If the response contains an error, set the status to 400
+        if (&quot;error&quot; in response) {
+            res.status(HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
+    }
+
+    /**
+     * Complete web authorization.
+     *
+     * Called after the user completes web-based authorization to mark
+     * the session as ready for code exchange.
+     *
+     * @param authSession The auth session identifier
+     * @param tenantId The tenant identifier
+     * @returns Success indicator
+     */
+    @Post(&quot;complete-web-auth/:authSession&quot;)
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({
+        summary: &quot;Complete web authorization&quot;,
+        description:
+            &quot;Mark a web authorization session as completed after user interaction&quot;,
+    })
+    @ApiResponse({
+        status: 200,
+        description: &quot;Web authorization marked as completed&quot;,
+    })
+    @ApiResponse({
+        status: 404,
+        description: &quot;Auth session not found&quot;,
+    })
+    async completeWebAuth(
+        @Param(&quot;authSession&quot;) authSession: string,
+        @Param(&quot;tenantId&quot;) tenantId: string,
+    ) {
+        const success &#x3D;
+            await this.interactiveAuthorizationService.completeWebAuthorization(
+                authSession,
+                tenantId,
+            );
+
+        if (!success) {
+            return {
+                error: &quot;not_found&quot;,
+                error_description:
+                    &quot;Auth session not found or already completed&quot;,
+            };
+        }
+
+        return { success: true };
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'controller';
+            var COMPODOC_CURRENT_PAGE_URL = 'InteractiveAuthorizationController.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

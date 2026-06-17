@@ -1,0 +1,2096 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  Pkcs11Instance</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Methods</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#C_CloseSession" 
+>
+                                        C_CloseSession
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_DestroyObject" 
+>
+                                        C_DestroyObject
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_Finalize" 
+>
+                                        C_Finalize
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_FindObjects" 
+>
+                                        C_FindObjects
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_FindObjectsFinal" 
+>
+                                        C_FindObjectsFinal
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_FindObjectsInit" 
+>
+                                        C_FindObjectsInit
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_GenerateKeyPair" 
+>
+                                        C_GenerateKeyPair
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_GetAttributeValue" 
+>
+                                        C_GetAttributeValue
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_GetSlotList" 
+>
+                                        C_GetSlotList
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_GetTokenInfo" 
+>
+                                        C_GetTokenInfo
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_Initialize" 
+>
+                                        C_Initialize
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_Login" 
+>
+                                        C_Login
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_Logout" 
+>
+                                        C_Logout
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_OpenSession" 
+>
+                                        C_OpenSession
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_Sign" 
+>
+                                        C_Sign
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#C_SignInit" 
+>
+                                        C_SignInit
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#load" 
+>
+                                        load
+                                    </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_CloseSession"></a>
+                    <span class="name">
+                        <span ><b>C_CloseSession</b></span>
+                        <a href="#C_CloseSession"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_CloseSession(session: Buffer)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="52"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_DestroyObject"></a>
+                    <span class="name">
+                        <span ><b>C_DestroyObject</b></span>
+                        <a href="#C_DestroyObject"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_DestroyObject(session: Buffer, object: Buffer)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="75"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:75</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>object</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_Finalize"></a>
+                    <span class="name">
+                        <span ><b>C_Finalize</b></span>
+                        <a href="#C_Finalize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_Finalize()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="48"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_FindObjects"></a>
+                    <span class="name">
+                        <span ><b>C_FindObjects</b></span>
+                        <a href="#C_FindObjects"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_FindObjects(session: Buffer)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="62"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Buffer | null</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_FindObjectsFinal"></a>
+                    <span class="name">
+                        <span ><b>C_FindObjectsFinal</b></span>
+                        <a href="#C_FindObjectsFinal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_FindObjectsFinal(session: Buffer)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="63"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:63</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_FindObjectsInit"></a>
+                    <span class="name">
+                        <span ><b>C_FindObjectsInit</b></span>
+                        <a href="#C_FindObjectsInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_FindObjectsInit(session: Buffer, template: <a href="../interfaces/Pkcs11Attribute.html" target="_self">Pkcs11Attribute[]</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:61</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>template</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Pkcs11Attribute.html" target="_self" >Pkcs11Attribute[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_GenerateKeyPair"></a>
+                    <span class="name">
+                        <span ><b>C_GenerateKeyPair</b></span>
+                        <a href="#C_GenerateKeyPair"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_GenerateKeyPair(session: Buffer, mechanism: literal type, publicTemplate: <a href="../interfaces/Pkcs11Attribute.html" target="_self">Pkcs11Attribute[]</a>, privateTemplate: <a href="../interfaces/Pkcs11Attribute.html" target="_self">Pkcs11Attribute[]</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:55</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>mechanism</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>publicTemplate</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Pkcs11Attribute.html" target="_self" >Pkcs11Attribute[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>privateTemplate</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Pkcs11Attribute.html" target="_self" >Pkcs11Attribute[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>literal type</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_GetAttributeValue"></a>
+                    <span class="name">
+                        <span ><b>C_GetAttributeValue</b></span>
+                        <a href="#C_GetAttributeValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_GetAttributeValue(session: Buffer, object: Buffer, template: <a href="../interfaces/Pkcs11Attribute.html" target="_self">Pkcs11Attribute[]</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="64"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:64</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>object</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>template</td>
+                                            <td>
+                                                            <code><a href="../interfaces/Pkcs11Attribute.html" target="_self" >Pkcs11Attribute[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/Pkcs11Attribute.html" target="_self" >Pkcs11Attribute[]</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_GetSlotList"></a>
+                    <span class="name">
+                        <span ><b>C_GetSlotList</b></span>
+                        <a href="#C_GetSlotList"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_GetSlotList(tokenPresent: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="49"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:49</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tokenPresent</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Buffer[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_GetTokenInfo"></a>
+                    <span class="name">
+                        <span ><b>C_GetTokenInfo</b></span>
+                        <a href="#C_GetTokenInfo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_GetTokenInfo(slot: Buffer)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="50"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>slot</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>literal type</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_Initialize"></a>
+                    <span class="name">
+                        <span ><b>C_Initialize</b></span>
+                        <a href="#C_Initialize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_Initialize()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="47"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_Login"></a>
+                    <span class="name">
+                        <span ><b>C_Login</b></span>
+                        <a href="#C_Login"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_Login(session: Buffer, userType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, pin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="53"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>userType</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>pin</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_Logout"></a>
+                    <span class="name">
+                        <span ><b>C_Logout</b></span>
+                        <a href="#C_Logout"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_Logout(session: Buffer)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="54"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_OpenSession"></a>
+                    <span class="name">
+                        <span ><b>C_OpenSession</b></span>
+                        <a href="#C_OpenSession"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_OpenSession(slot: Buffer, flags: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="51"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>slot</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>flags</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Buffer</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_Sign"></a>
+                    <span class="name">
+                        <span ><b>C_Sign</b></span>
+                        <a href="#C_Sign"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_Sign(session: Buffer, data: Buffer, output: Buffer)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="74"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:74</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>output</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Buffer</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="C_SignInit"></a>
+                    <span class="name">
+                        <span ><b>C_SignInit</b></span>
+                        <a href="#C_SignInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>C_SignInit(session: Buffer, mechanism: literal type, key: Buffer)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="69"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:69</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>mechanism</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="load"></a>
+                    <span class="name">
+                        <span ><b>load</b></span>
+                        <a href="#load"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>load(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="46"
+                                    class="link-to-prism">src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts:46</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>path</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createHash } from &quot;node:crypto&quot;;
+import { Logger, NotImplementedException } from &quot;@nestjs/common&quot;;
+import { exportJWK, type JWK } from &quot;jose&quot;;
+import type { KmsProviderType } from &quot;../../dto/kms-config.dto&quot;;
+import type {
+    KmsAdapter,
+    KmsAdapterCapabilities,
+    KmsHealthResult,
+    KmsKeyMaterial,
+    KmsKeyRef,
+    KmsSigningAlg,
+} from &quot;../kms-adapter&quot;;
+import { PublicJwkCache } from &quot;../public-jwk-cache&quot;;
+
+export interface Pkcs11AdapterConfig {
+    providerId: string;
+    /** Absolute path to the PKCS#11 module library (.so/.dll/.dylib). */
+    library: string;
+    /**
+     * Slot selection. Either the numeric slot id, or a token label that
+     * will be resolved against the slot list at initialisation time.
+     */
+    slot: number | string;
+    /** User PIN. */
+    pin: string;
+    /**
+     * Optional read-only mode. Defaults to false (RW session). Set to
+     * true if the adapter only needs to sign with existing keys.
+     */
+    readOnly?: boolean;
+}
+
+// DER encoding of the P-256 named-curve OID (1.2.840.10045.3.1.7).
+const P256_OID_DER &#x3D; Buffer.from([
+    0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07,
+]);
+
+// Minimal subset of the pkcs11js surface we touch. Avoids a hard
+// compile-time dependency on the optional native module.
+interface Pkcs11Module {
+    PKCS11: new () &#x3D;&gt; Pkcs11Instance;
+    [constant: string]: unknown;
+}
+
+interface Pkcs11Instance {
+    load(path: string): void;
+    C_Initialize(): void;
+    C_Finalize(): void;
+    C_GetSlotList(tokenPresent: boolean): Buffer[];
+    C_GetTokenInfo(slot: Buffer): { label: string };
+    C_OpenSession(slot: Buffer, flags: number): Buffer;
+    C_CloseSession(session: Buffer): void;
+    C_Login(session: Buffer, userType: number, pin: string): void;
+    C_Logout(session: Buffer): void;
+    C_GenerateKeyPair(
+        session: Buffer,
+        mechanism: { mechanism: number },
+        publicTemplate: Pkcs11Attribute[],
+        privateTemplate: Pkcs11Attribute[],
+    ): { publicKey: Buffer; privateKey: Buffer };
+    C_FindObjectsInit(session: Buffer, template: Pkcs11Attribute[]): void;
+    C_FindObjects(session: Buffer): Buffer | null;
+    C_FindObjectsFinal(session: Buffer): void;
+    C_GetAttributeValue(
+        session: Buffer,
+        object: Buffer,
+        template: Pkcs11Attribute[],
+    ): Pkcs11Attribute[];
+    C_SignInit(
+        session: Buffer,
+        mechanism: { mechanism: number },
+        key: Buffer,
+    ): void;
+    C_Sign(session: Buffer, data: Buffer, output: Buffer): Buffer;
+    C_DestroyObject(session: Buffer, object: Buffer): void;
+}
+
+interface Pkcs11Attribute {
+    type: number;
+    value: unknown;
+}
+
+interface Pkcs11Constants {
+    CKF_RW_SESSION: number;
+    CKF_SERIAL_SESSION: number;
+    CKU_USER: number;
+    CKA_CLASS: number;
+    CKA_KEY_TYPE: number;
+    CKA_LABEL: number;
+    CKA_ID: number;
+    CKA_TOKEN: number;
+    CKA_PRIVATE: number;
+    CKA_SIGN: number;
+    CKA_VERIFY: number;
+    CKA_SENSITIVE: number;
+    CKA_EXTRACTABLE: number;
+    CKA_EC_PARAMS: number;
+    CKA_EC_POINT: number;
+    CKO_PUBLIC_KEY: number;
+    CKO_PRIVATE_KEY: number;
+    CKK_EC: number;
+    CKM_EC_KEY_PAIR_GEN: number;
+    CKM_ECDSA: number;
+}
+
+/**
+ * PKCS#11 KMS adapter.
+ *
+ * Generates ECDSA P-256 keys directly inside the HSM/token via the
+ * PKCS#11 interface and routes all signing through &#x60;C_Sign&#x60;. Private
+ * key material is created with &#x60;CKA_SENSITIVE&#x3D;true&#x60; and
+ * &#x60;CKA_EXTRACTABLE&#x3D;false&#x60; so it never leaves the device.
+ *
+ * Keys are addressed by their PKCS#11 &#x60;CKA_LABEL&#x60;, which we set to the
+ * caller-supplied &#x60;kid&#x60;. The label doubles as the &#x60;externalKeyId&#x60; on
+ * the resulting {@link KmsKeyRef}.
+ *
+ * The native module &#x60;pkcs11js&#x60; is loaded lazily on first use so
+ * deployments that don&#x27;t configure a PKCS#11 provider don&#x27;t need the
+ * library installed or the platform toolchain to build it.
+ */
+export class Pkcs11KmsAdapter implements KmsAdapter {
+    private readonly logger &#x3D; new Logger(Pkcs11KmsAdapter.name);
+
+    readonly providerId: string;
+    readonly type: KmsProviderType &#x3D; &quot;pkcs11&quot;;
+    readonly capabilities: KmsAdapterCapabilities &#x3D; {
+        canCreate: true,
+        canImport: false,
+        canDelete: true,
+        supportedAlgs: [&quot;ES256&quot;],
+        defaultAlg: &quot;ES256&quot;,
+    };
+
+    private readonly config: Pkcs11AdapterConfig;
+    private readonly jwkCache &#x3D; new PublicJwkCache();
+
+    private pkcs11?: Pkcs11Instance;
+    private constants?: Pkcs11Constants;
+    private session?: Buffer;
+    private initPromise?: Promise&lt;void&gt;;
+
+    constructor(config: Pkcs11AdapterConfig) {
+        this.providerId &#x3D; config.providerId;
+        this.config &#x3D; config;
+    }
+
+    async generateKey(opts: {
+        kid: string;
+        alg?: KmsSigningAlg;
+    }): Promise&lt;KmsKeyMaterial&gt; {
+        const alg &#x3D; opts.alg ?? this.capabilities.defaultAlg;
+        this.assertSupported(alg);
+        const { p11, c, session } &#x3D; await this.ensureSession();
+
+        const idBuf &#x3D; Buffer.from(opts.kid, &quot;utf8&quot;);
+        const publicTemplate: Pkcs11Attribute[] &#x3D; [
+            { type: c.CKA_CLASS, value: c.CKO_PUBLIC_KEY },
+            { type: c.CKA_KEY_TYPE, value: c.CKK_EC },
+            { type: c.CKA_LABEL, value: opts.kid },
+            { type: c.CKA_ID, value: idBuf },
+            { type: c.CKA_TOKEN, value: true },
+            { type: c.CKA_VERIFY, value: true },
+            { type: c.CKA_EC_PARAMS, value: P256_OID_DER },
+        ];
+        const privateTemplate: Pkcs11Attribute[] &#x3D; [
+            { type: c.CKA_CLASS, value: c.CKO_PRIVATE_KEY },
+            { type: c.CKA_KEY_TYPE, value: c.CKK_EC },
+            { type: c.CKA_LABEL, value: opts.kid },
+            { type: c.CKA_ID, value: idBuf },
+            { type: c.CKA_TOKEN, value: true },
+            { type: c.CKA_PRIVATE, value: true },
+            { type: c.CKA_SIGN, value: true },
+            { type: c.CKA_SENSITIVE, value: true },
+            { type: c.CKA_EXTRACTABLE, value: false },
+        ];
+
+        const keys &#x3D; p11.C_GenerateKeyPair(
+            session,
+            { mechanism: c.CKM_EC_KEY_PAIR_GEN },
+            publicTemplate,
+            privateTemplate,
+        );
+
+        const publicJwk &#x3D; await this.readPublicJwk(
+            opts.kid,
+            alg,
+            keys.publicKey,
+        );
+        this.jwkCache.set(opts.kid, publicJwk);
+        return { ref: { externalKeyId: opts.kid, publicJwk, alg } };
+    }
+
+    importKey(_opts: {
+        kid: string;
+        privateJwk: JWK;
+        alg?: KmsSigningAlg;
+    }): Promise&lt;KmsKeyMaterial&gt; {
+        throw new NotImplementedException(
+            &#x60;Pkcs11KmsAdapter[${this.providerId}]: importKey is not supported — generate keys inside the HSM&#x60;,
+        );
+    }
+
+    async sign(
+        ref: KmsKeyRef,
+        data: Uint8Array,
+        alg?: KmsSigningAlg,
+    ): Promise&lt;Uint8Array&gt; {
+        if (!ref.externalKeyId) {
+            throw new Error(
+                &#x60;Pkcs11KmsAdapter[${this.providerId}]: missing externalKeyId&#x60;,
+            );
+        }
+        const signAlg &#x3D; alg ?? ref.alg;
+        this.assertSupported(signAlg);
+
+        const { p11, c, session } &#x3D; await this.ensureSession();
+        const handle &#x3D; this.findObject(
+            p11,
+            c,
+            session,
+            c.CKO_PRIVATE_KEY,
+            ref.externalKeyId,
+        );
+        if (!handle) {
+            throw new Error(
+                &#x60;Pkcs11KmsAdapter[${this.providerId}]: private key &#x27;${ref.externalKeyId}&#x27; not found&#x60;,
+            );
+        }
+
+        const digest &#x3D; createHash(&quot;sha256&quot;).update(data).digest();
+        p11.C_SignInit(session, { mechanism: c.CKM_ECDSA }, handle);
+        // ECDSA P-256 signature is exactly 64 bytes (r||s).
+        const sig &#x3D; p11.C_Sign(session, digest, Buffer.alloc(64));
+        return new Uint8Array(sig);
+    }
+
+    async deleteKey(ref: KmsKeyRef): Promise&lt;void&gt; {
+        if (!ref.externalKeyId) return;
+        this.jwkCache.invalidate(ref.externalKeyId);
+        const { p11, c, session } &#x3D; await this.ensureSession();
+        for (const klass of [c.CKO_PRIVATE_KEY, c.CKO_PUBLIC_KEY]) {
+            const handle &#x3D; this.findObject(
+                p11,
+                c,
+                session,
+                klass,
+                ref.externalKeyId,
+            );
+            if (handle) {
+                try {
+                    p11.C_DestroyObject(session, handle);
+                } catch (err) {
+                    this.logger.warn(
+                        &#x60;Failed to destroy PKCS#11 object ${ref.externalKeyId}: ${String(err)}&#x60;,
+                    );
+                }
+            }
+        }
+    }
+
+    async health(): Promise&lt;KmsHealthResult&gt; {
+        const start &#x3D; Date.now();
+        try {
+            await this.ensureSession();
+            return { ok: true, latencyMs: Date.now() - start };
+        } catch (err) {
+            return {
+                ok: false,
+                latencyMs: Date.now() - start,
+                error: String(err),
+            };
+        }
+    }
+
+    private async ensureSession(): Promise&lt;{
+        p11: Pkcs11Instance;
+        c: Pkcs11Constants;
+        session: Buffer;
+    }&gt; {
+        this.initPromise ??&#x3D; this.initialise();
+        await this.initPromise;
+        if (!this.pkcs11 || !this.constants || !this.session) {
+            throw new Error(
+                &#x60;Pkcs11KmsAdapter[${this.providerId}]: not initialised&#x60;,
+            );
+        }
+        return {
+            p11: this.pkcs11,
+            c: this.constants,
+            session: this.session,
+        };
+    }
+
+    private async initialise(): Promise&lt;void&gt; {
+        const mod &#x3D; await loadPkcs11();
+        const c &#x3D; toConstants(mod);
+        const p11 &#x3D; new mod.PKCS11();
+        p11.load(this.config.library);
+        p11.C_Initialize();
+
+        const slots &#x3D; p11.C_GetSlotList(true);
+        const slot &#x3D; this.selectSlot(p11, slots);
+
+        const flags &#x3D;
+            c.CKF_SERIAL_SESSION |
+            (this.config.readOnly ? 0 : c.CKF_RW_SESSION);
+        const session &#x3D; p11.C_OpenSession(slot, flags);
+        p11.C_Login(session, c.CKU_USER, this.config.pin);
+
+        this.pkcs11 &#x3D; p11;
+        this.constants &#x3D; c;
+        this.session &#x3D; session;
+        this.logger.log(
+            &#x60;Pkcs11KmsAdapter[${this.providerId}] initialised on ${this.config.library}&#x60;,
+        );
+    }
+
+    private selectSlot(p11: Pkcs11Instance, slots: Buffer[]): Buffer {
+        if (slots.length &#x3D;&#x3D;&#x3D; 0) {
+            throw new Error(
+                &#x60;Pkcs11KmsAdapter[${this.providerId}]: no slots with a token present&#x60;,
+            );
+        }
+        if (typeof this.config.slot &#x3D;&#x3D;&#x3D; &quot;number&quot;) {
+            const index &#x3D; this.config.slot;
+            const slot &#x3D; slots[index];
+            if (!slot) {
+                throw new Error(
+                    &#x60;Pkcs11KmsAdapter[${this.providerId}]: slot index ${index} out of range (0..${slots.length - 1})&#x60;,
+                );
+            }
+            return slot;
+        }
+        const wantedLabel &#x3D; this.config.slot.trim();
+        for (const slot of slots) {
+            const info &#x3D; p11.C_GetTokenInfo(slot);
+            if (info.label.trim() &#x3D;&#x3D;&#x3D; wantedLabel) return slot;
+        }
+        throw new Error(
+            &#x60;Pkcs11KmsAdapter[${this.providerId}]: no slot with token label &#x27;${wantedLabel}&#x27;&#x60;,
+        );
+    }
+
+    private findObject(
+        p11: Pkcs11Instance,
+        c: Pkcs11Constants,
+        session: Buffer,
+        keyClass: number,
+        label: string,
+    ): Buffer | null {
+        p11.C_FindObjectsInit(session, [
+            { type: c.CKA_CLASS, value: keyClass },
+            { type: c.CKA_LABEL, value: label },
+        ]);
+        try {
+            return p11.C_FindObjects(session);
+        } finally {
+            p11.C_FindObjectsFinal(session);
+        }
+    }
+
+    private async readPublicJwk(
+        kid: string,
+        alg: KmsSigningAlg,
+        handle: Buffer,
+    ): Promise&lt;JWK&gt; {
+        const { p11, c, session } &#x3D; await this.ensureSession();
+        const attrs &#x3D; p11.C_GetAttributeValue(session, handle, [
+            { type: c.CKA_EC_POINT, value: null },
+        ]);
+        const raw &#x3D; attrs[0]?.value;
+        if (!Buffer.isBuffer(raw)) {
+            throw new TypeError(
+                &#x60;Pkcs11KmsAdapter[${this.providerId}]: CKA_EC_POINT returned non-buffer value&#x60;,
+            );
+        }
+        const ecPoint &#x3D; unwrapEcPoint(raw);
+        if (ecPoint.length !&#x3D;&#x3D; 65 || ecPoint[0] !&#x3D;&#x3D; 0x04) {
+            throw new Error(
+                &#x60;Pkcs11KmsAdapter[${this.providerId}]: unexpected EC point encoding (length ${ecPoint.length})&#x60;,
+            );
+        }
+        const x &#x3D; ecPoint.subarray(1, 33);
+        const y &#x3D; ecPoint.subarray(33, 65);
+
+        const spki &#x3D; buildP256Spki(x, y);
+        const cryptoKey &#x3D; await globalThis.crypto.subtle.importKey(
+            &quot;spki&quot;,
+            new Uint8Array(spki),
+            { name: &quot;ECDSA&quot;, namedCurve: &quot;P-256&quot; },
+            true,
+            [&quot;verify&quot;],
+        );
+        const jwk &#x3D; await exportJWK(cryptoKey);
+        jwk.kid &#x3D; kid;
+        jwk.alg &#x3D; alg;
+        return jwk;
+    }
+
+    private assertSupported(alg: KmsSigningAlg): void {
+        if (!this.capabilities.supportedAlgs.includes(alg)) {
+            throw new Error(
+                &#x60;Pkcs11KmsAdapter[${this.providerId}]: unsupported alg &#x27;${alg}&#x27;&#x60;,
+            );
+        }
+    }
+}
+
+/**
+ * CKA_EC_POINT is specified as a DER-encoded OCTET STRING wrapping the
+ * raw ECPoint. Some HSM vendors return the unwrapped ECPoint directly,
+ * so we accept both.
+ */
+function unwrapEcPoint(raw: Buffer): Buffer {
+    if (raw.length &gt;&#x3D; 2 &amp;&amp; raw[0] &#x3D;&#x3D;&#x3D; 0x04 &amp;&amp; raw[1] &#x3D;&#x3D;&#x3D; raw.length - 2) {
+        return raw.subarray(2);
+    }
+    // Long-form DER length (rare for P-256 — 65 bytes fits short form).
+    if (raw.length &gt;&#x3D; 3 &amp;&amp; raw[0] &#x3D;&#x3D;&#x3D; 0x04 &amp;&amp; raw[1] &#x3D;&#x3D;&#x3D; 0x81) {
+        return raw.subarray(3);
+    }
+    return raw;
+}
+
+/**
+ * Build a P-256 SubjectPublicKeyInfo around the raw uncompressed EC
+ * point so we can hand it to WebCrypto&#x27;s SPKI importer.
+ *
+ * Layout (DER): SEQUENCE { AlgorithmIdentifier, BIT STRING { 04 || x || y } }
+ * where AlgorithmIdentifier &#x3D; SEQUENCE { id-ecPublicKey, prime256v1 OID }.
+ */
+function buildP256Spki(x: Buffer, y: Buffer): Buffer {
+    const prefix &#x3D; Buffer.from([
+        0x30,
+        0x59, // SEQUENCE, 89 bytes
+        0x30,
+        0x13, // SEQUENCE, 19 bytes (AlgorithmIdentifier)
+        0x06,
+        0x07,
+        0x2a,
+        0x86,
+        0x48,
+        0xce,
+        0x3d,
+        0x02,
+        0x01, // id-ecPublicKey
+        0x06,
+        0x08,
+        0x2a,
+        0x86,
+        0x48,
+        0xce,
+        0x3d,
+        0x03,
+        0x01,
+        0x07, // prime256v1
+        0x03,
+        0x42,
+        0x00,
+        0x04, // BIT STRING, 66 bytes, 0 unused, uncompressed
+    ]);
+    return Buffer.concat([prefix, x, y]);
+}
+
+function toConstants(mod: Pkcs11Module): Pkcs11Constants {
+    return mod as unknown as Pkcs11Constants;
+}
+
+let pkcs11ModulePromise: Promise&lt;Pkcs11Module&gt; | undefined;
+
+async function loadPkcs11(): Promise&lt;Pkcs11Module&gt; {
+    pkcs11ModulePromise ??&#x3D; (async () &#x3D;&gt; {
+        try {
+            const mod &#x3D; (await import(&quot;pkcs11js&quot;)) as unknown as
+                | Pkcs11Module
+                | { default: Pkcs11Module };
+            return &quot;PKCS11&quot; in mod ? mod : mod.default;
+        } catch (err) {
+            throw new Error(
+                &#x60;pkcs11js is not installed. Install it with &#x27;pnpm add pkcs11js&#x27; in apps/backend before configuring a pkcs11 KMS provider. Original error: ${String(err)}&#x60;,
+            );
+        }
+    })();
+    return pkcs11ModulePromise;
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'Pkcs11Instance.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
