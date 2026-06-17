@@ -25,7 +25,7 @@ export const LOG_VALIDATION_SCHEMA = Joi.object({
                 "'off' disables storage, 'errors' stores only warn/error entries, " +
                 "'all' stores everything, 'verbose' stores everything including full request/response bodies and error stacks.",
         )
-        .meta({ group: "log", order: 35 }),        
+        .meta({ group: "log", order: 35 }),
     LOG_TO_FILE: Joi.boolean()
         .default(false)
         .description("Enable logging to file in addition to console")
