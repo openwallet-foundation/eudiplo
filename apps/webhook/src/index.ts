@@ -12,9 +12,6 @@ import {
         createDeferredResponse,
         createNotificationSuccess,
 } from "./types";
-function jsonResponse(data: unknown, status = 200): Response {
-        return Response.json(data, { status });
-}
 
 /**
  * Validates API key authentication.
