@@ -2184,15 +2184,6 @@ surface without receiving a duplicate <code>/api/api</code> prefix.</p>
                 &quot;&#x27;all&#x27; stores everything, &#x27;verbose&#x27; stores everything including full request/response bodies and error stacks.&quot;,
         )
         .meta({ group: &quot;log&quot;, order: 35 }),
-    LOG_DEBUG_MODE: Joi.boolean()
-        .default(false)
-        .description(&quot;Enable verbose debug logs&quot;)
-        .meta({ group: &quot;log&quot;, order: 40 }),
-    LOG_FORMAT: Joi.string()
-        .valid(&quot;json&quot;, &quot;pretty&quot;)
-        .default(process.env.NODE_ENV &#x3D;&#x3D;&#x3D; &quot;production&quot; ? &quot;json&quot; : &quot;pretty&quot;)
-        .description(&quot;Log output format&quot;)
-        .meta({ group: &quot;log&quot;, order: 50 }),
     LOG_TO_FILE: Joi.boolean()
         .default(false)
         .description(&quot;Enable logging to file in addition to console&quot;)

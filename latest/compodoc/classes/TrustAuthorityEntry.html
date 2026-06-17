@@ -196,7 +196,6 @@
                             <li>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#verificationMethod" >verificationMethod</a>
                             </li>
@@ -251,7 +250,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="102" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:102</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="103" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:103</a></div>
                         </td>
                     </tr>
 
@@ -290,7 +289,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="118" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:118</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="119" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:119</a></div>
                         </td>
                     </tr>
 
@@ -329,7 +328,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="94" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:94</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="95" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:95</a></div>
                         </td>
                     </tr>
 
@@ -368,7 +367,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="110" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:110</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="111" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:111</a></div>
                         </td>
                     </tr>
 
@@ -383,7 +382,6 @@
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>verificationMethod</b></span>
                         <a href="#verificationMethod"><span class="icon ion-ios-link"></span></a>
@@ -392,7 +390,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>    <code>Record&lt;string | unknown&gt;</code>
+                        <i>Type : </i>    <code>Record&lt;string | unknown&gt; | string</code>
 
                     </td>
                 </tr>
@@ -401,13 +399,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: undefined, type: &#x27;object&#x27;, additionalProperties: true})<br />@IsOptional()<br />@IsObject()<br />
+                            @ApiPropertyOptional({description: undefined, oneOf: undefined})<br />@IsOptional()<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="129" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:129</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="138" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:138</a></div>
                         </td>
                     </tr>
 
@@ -504,8 +502,9 @@ export class SchemaUriEntry {
         type: &quot;object&quot;,
         additionalProperties: true,
     })
+    @IsOptional()
     @IsObject()
-    meta!: SchemaURIMeta;
+    meta?: SchemaURIMeta;
 }
 
 /**
@@ -549,12 +548,20 @@ export class TrustAuthorityEntry {
         description:
             &quot;Optional verification material for external trusted authorities (for example a JWK). &quot; +
             &quot;For internal trust-list URLs, EUDIPLO resolves verification material from the database.&quot;,
-        type: &quot;object&quot;,
-        additionalProperties: true,
+        oneOf: [
+            {
+                type: &quot;object&quot;,
+                additionalProperties: true,
+            },
+            {
+                type: &quot;string&quot;,
+                description:
+                    &quot;JSON string representing an object. Parsed server-side for form submissions.&quot;,
+            },
+        ],
     })
     @IsOptional()
-    @IsObject()
-    verificationMethod?: Record&lt;string, unknown&gt;;
+    verificationMethod?: Record&lt;string, unknown&gt; | string;
 }
 
 /**

@@ -2640,17 +2640,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#console-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Console Logging
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#file-logging" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2926,17 +2915,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#console-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Console Logging
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#file-logging" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3179,16 +3157,6 @@
 <td>Controls whether session log entries are persisted to the database. 'off' disables storage, 'errors' stores only warn/error entries, 'all' stores everything, 'verbose' stores everything including full request/response bodies and error stacks.  (default: <code>off</code>)</td>
 </tr>
 <tr>
-<td><code>LOG_DEBUG_MODE</code></td>
-<td><code>boolean</code></td>
-<td>Enable verbose debug logs  (default: <code>false</code>)</td>
-</tr>
-<tr>
-<td><code>LOG_FORMAT</code></td>
-<td><code>string</code></td>
-<td>Log output format  (default: <code>pretty</code>)</td>
-</tr>
-<tr>
 <td><code>LOG_TO_FILE</code></td>
 <td><code>boolean</code></td>
 <td>Enable logging to file in addition to console  (default: <code>false</code>)</td>
@@ -3225,14 +3193,6 @@
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">LOG_LEVEL</span><span class="o">=</span>error
 </code></pre></div>
 <h2 id="logging-destinations">Logging Destinations<a class="headerlink" href="#logging-destinations" title="Permanent link">¶</a></h2>
-<h3 id="console-logging">Console Logging<a class="headerlink" href="#console-logging" title="Permanent link">¶</a></h3>
-<p>Console logging is always enabled with formatting determined by the <code>LOG_FORMAT</code> configuration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Pretty formatting for human readability (default in development)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">LOG_FORMAT</span><span class="o">=</span>pretty
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># JSON formatting for machine parsing (default in production)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">LOG_FORMAT</span><span class="o">=</span>json
-</code></pre></div>
 <h3 id="file-logging">File Logging<a class="headerlink" href="#file-logging" title="Permanent link">¶</a></h3>
 <p>The application supports logging to both console and file simultaneously, which is useful for debugging, auditing, and persisting logs for later analysis.</p>
 <p>File logging is controlled via environment variables:</p>
@@ -3267,8 +3227,8 @@
 <p>The file logging is configured with <code>sync: true</code> to ensure that log messages are written in the exact order they are generated. This is especially important for session logging where the sequence of events matters.</p>
 <h4 id="usage-example">Usage Example<a class="headerlink" href="#usage-example" title="Permanent link">¶</a></h4>
 <p>To enable file logging, add the following to your <code>.env</code> file or environment variables:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">LOG_TO_FILE</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">LOG_FILE_PATH</span><span class="o">=</span>./logs/sessions.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">LOG_TO_FILE</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">LOG_FILE_PATH</span><span class="o">=</span>./logs/sessions.log
 </code></pre></div>
 <h4 id="log-file-format">Log File Format<a class="headerlink" href="#log-file-format" title="Permanent link">¶</a></h4>
 <p>The log files are written in JSON format for easy parsing and analysis by external tools. Each log entry is a complete JSON object on a new line.</p>
@@ -3277,17 +3237,17 @@
 <h2 id="session-log-persistence">Session Log Persistence<a class="headerlink" href="#session-log-persistence" title="Permanent link">¶</a></h2>
 <p>In addition to Pino console/file logging, session flow events can be persisted
 to the database so they are available per-session via the API and the Web Client.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Disable persistence (default)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">LOG_SESSION_STORE</span><span class="o">=</span>off
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Store only warn/error entries</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">LOG_SESSION_STORE</span><span class="o">=</span>errors
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Store all session log entries</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nv">LOG_SESSION_STORE</span><span class="o">=</span>all
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Store all entries with full request/response bodies and error stacks</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nv">LOG_SESSION_STORE</span><span class="o">=</span>verbose
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Disable persistence (default)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">LOG_SESSION_STORE</span><span class="o">=</span>off
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Store only warn/error entries</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">LOG_SESSION_STORE</span><span class="o">=</span>errors
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Store all session log entries</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">LOG_SESSION_STORE</span><span class="o">=</span>all
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Store all entries with full request/response bodies and error stacks</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nv">LOG_SESSION_STORE</span><span class="o">=</span>verbose
 </code></pre></div>
 <p>When enabled, log entries are written to the <code>session_log_entry</code> table and can
 be retrieved via <code>GET /api/session/{id}/logs</code>. The Web Client shows them in the
@@ -3341,11 +3301,11 @@ issuance/presentation flow evidence:</p>
 <h2 id="disabling-specific-logger-services">Disabling Specific Logger Services<a class="headerlink" href="#disabling-specific-logger-services" title="Permanent link">¶</a></h2>
 <h3 id="http-requestresponse-logging">HTTP Request/Response Logging<a class="headerlink" href="#http-requestresponse-logging" title="Permanent link">¶</a></h3>
 <p>To disable automatic HTTP request and response logging from Pino (useful during development when you want to reduce log noise):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Disable HTTP request/response logging</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">LOG_ENABLE_HTTP_LOGGER</span><span class="o">=</span><span class="nb">false</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Enable HTTP request/response logging</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">LOG_ENABLE_HTTP_LOGGER</span><span class="o">=</span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Disable HTTP request/response logging</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">LOG_ENABLE_HTTP_LOGGER</span><span class="o">=</span><span class="nb">false</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Enable HTTP request/response logging</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">LOG_ENABLE_HTTP_LOGGER</span><span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 <p><strong>Note:</strong> This controls the built-in HTTP logging from the Pino HTTP logger. Session-specific logging is controlled separately.</p>
 <h3 id="tenant-activity-audit-logs">Tenant Activity Audit Logs<a class="headerlink" href="#tenant-activity-audit-logs" title="Permanent link">¶</a></h3>
@@ -3354,11 +3314,11 @@ issuance/presentation flow evidence:</p>
 session flow logs (<code>session_log_entry</code>) and are used for configuration/admin
 change history (tenant/config create/update/delete events).</p>
 <p>Retention is managed by <code>AuditLogService</code> with a daily cleanup job (03:00):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Time-based retention (days). 0 disables time-based pruning.</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">AUDIT_LOG_RETENTION_DAYS</span><span class="o">=</span><span class="m">90</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Count-based retention per tenant. 0 disables count-based pruning.</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">AUDIT_LOG_MAX_ENTRIES_PER_TENANT</span><span class="o">=</span><span class="m">5000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Time-based retention (days). 0 disables time-based pruning.</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">AUDIT_LOG_RETENTION_DAYS</span><span class="o">=</span><span class="m">90</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Count-based retention per tenant. 0 disables count-based pruning.</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">AUDIT_LOG_MAX_ENTRIES_PER_TENANT</span><span class="o">=</span><span class="m">5000</span>
 </code></pre></div>
 <p>How pruning works:</p>
 <ol>
@@ -3373,65 +3333,64 @@ change history (tenant/config create/update/delete events).</p>
 </ol>
 <h2 id="development-scenarios">Development Scenarios<a class="headerlink" href="#development-scenarios" title="Permanent link">¶</a></h2>
 <h3 id="debugging-authentication-issues">Debugging Authentication Issues<a class="headerlink" href="#debugging-authentication-issues" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">LOG_LEVEL</span><span class="o">=</span>debug
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">LOG_ENABLE_SESSION_LOGGER</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">LOG_ENABLE_HTTP_LOGGER</span><span class="o">=</span><span class="nb">false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">LOG_LEVEL</span><span class="o">=</span>debug
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">LOG_ENABLE_SESSION_LOGGER</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">LOG_ENABLE_HTTP_LOGGER</span><span class="o">=</span><span class="nb">false</span>
 </code></pre></div>
 <p>This will show detailed debug logs but hide HTTP request noise.</p>
 <h3 id="monitoring-session-flows">Monitoring Session Flows<a class="headerlink" href="#monitoring-session-flows" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">LOG_LEVEL</span><span class="o">=</span>info
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">LOG_ENABLE_SESSION_LOGGER</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">LOG_ENABLE_HTTP_LOGGER</span><span class="o">=</span><span class="nb">false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">LOG_LEVEL</span><span class="o">=</span>info
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">LOG_ENABLE_SESSION_LOGGER</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">LOG_ENABLE_HTTP_LOGGER</span><span class="o">=</span><span class="nb">false</span>
 </code></pre></div>
 <p>This will show all session flow events for monitoring credential issuance and verification, but without HTTP request logs.</p>
 <h3 id="full-development-logging">Full Development Logging<a class="headerlink" href="#full-development-logging" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">LOG_LEVEL</span><span class="o">=</span>debug
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">LOG_ENABLE_SESSION_LOGGER</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">LOG_ENABLE_HTTP_LOGGER</span><span class="o">=</span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">LOG_LEVEL</span><span class="o">=</span>debug
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">LOG_ENABLE_SESSION_LOGGER</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">LOG_ENABLE_HTTP_LOGGER</span><span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 <p>This will show everything including HTTP requests, responses, and session flows.</p>
 <h3 id="production-monitoring">Production Monitoring<a class="headerlink" href="#production-monitoring" title="Permanent link">¶</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">LOG_LEVEL</span><span class="o">=</span>warn
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">LOG_ENABLE_SESSION_LOGGER</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nv">LOG_ENABLE_HTTP_LOGGER</span><span class="o">=</span><span class="nb">false</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nv">LOG_TO_FILE</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nv">LOG_FILE_PATH</span><span class="o">=</span>/var/log/eudiplo/session.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">LOG_LEVEL</span><span class="o">=</span>warn
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">LOG_ENABLE_SESSION_LOGGER</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">LOG_ENABLE_HTTP_LOGGER</span><span class="o">=</span><span class="nb">false</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nv">LOG_TO_FILE</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nv">LOG_FILE_PATH</span><span class="o">=</span>/var/log/eudiplo/session.log
 </code></pre></div>
 <p>This will only show warnings, errors, and important session events without HTTP noise, and write all logs to a file for later analysis.</p>
 <h2 id="session-log-structure">Session Log Structure<a class="headerlink" href="#session-log-structure" title="Permanent link">¶</a></h2>
 <p>Session flow logs are persisted to the database when <code>LOG_SESSION_STORE</code> is
 enabled. Debug/observability logs are exported to Loki via OpenTelemetry and
 include trace correlation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="nt">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-07-20T10:30:45.123Z"</span><span class="p">,</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="nt">"context"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SessionLoggerService"</span><span class="p">,</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session_123"</span><span class="p">,</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span><span class="nt">"tenantId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tenant_456"</span><span class="p">,</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="nt">"flowType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OID4VCI"</span><span class="p">,</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="nt">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"flow_start"</span><span class="p">,</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span><span class="nt">"stage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"initialization"</span><span class="p">,</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span><span class="nt">"msg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[OID4VCI] Flow started for session session_123 in tenant tenant_456"</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="nt">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-07-20T10:30:45.123Z"</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nt">"context"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SessionLoggerService"</span><span class="p">,</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session_123"</span><span class="p">,</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nt">"tenantId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tenant_456"</span><span class="p">,</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="nt">"flowType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"OID4VCI"</span><span class="p">,</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="nt">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"flow_start"</span><span class="p">,</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="nt">"stage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"initialization"</span><span class="p">,</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="nt">"msg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"[OID4VCI] Flow started for session session_123 in tenant tenant_456"</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="environment-configuration">Environment Configuration<a class="headerlink" href="#environment-configuration" title="Permanent link">¶</a></h2>
 <p>Add these to your <code>.env</code> file:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Basic logging</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">LOG_LEVEL</span><span class="o">=</span>info
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nv">LOG_FORMAT</span><span class="o">=</span>pretty
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Logging destinations</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nv">LOG_TO_FILE</span><span class="o">=</span><span class="nb">false</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="nv">LOG_FILE_PATH</span><span class="o">=</span>./logs/session.log
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># HTTP request/response logging control</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="nv">LOG_ENABLE_HTTP_LOGGER</span><span class="o">=</span><span class="nb">false</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Session logger control</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="nv">LOG_ENABLE_SESSION_LOGGER</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># Persist session logs to the database (off | errors | all)</span>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="nv">LOG_SESSION_STORE</span><span class="o">=</span>off
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Basic logging</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">LOG_LEVEL</span><span class="o">=</span>info
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Logging destinations</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nv">LOG_TO_FILE</span><span class="o">=</span><span class="nb">false</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nv">LOG_FILE_PATH</span><span class="o">=</span>./logs/session.log
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># HTTP request/response logging control</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nv">LOG_ENABLE_HTTP_LOGGER</span><span class="o">=</span><span class="nb">false</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Session logger control</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="nv">LOG_ENABLE_SESSION_LOGGER</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Persist session logs to the database (off | errors | all)</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="nv">LOG_SESSION_STORE</span><span class="o">=</span>off
 </code></pre></div>
 <h2 id="runtime-control">Runtime Control<a class="headerlink" href="#runtime-control" title="Permanent link">¶</a></h2>
 <p>You can control logging at runtime by restarting the service with different environment variables, or by implementing log level changes via API endpoints if needed.</p>

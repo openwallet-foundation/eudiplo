@@ -192,8 +192,17 @@
                                 <a href="#buildCredentialIssuerMetadataUrl" >buildCredentialIssuerMetadataUrl</a>
                             </li>
                             <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#buildSchemaMetadataVerifier" >buildSchemaMetadataVerifier</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Async</span>
                                 <a href="#deletePresentationConfig" >deletePresentationConfig</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#deriveSchemaMetadataFormatsFromJwt" >deriveSchemaMetadataFormatsFromJwt</a>
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
@@ -317,7 +326,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/verifier/presentations/presentations.service.ts:77</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="168" class="link-to-prism">src/verifier/presentations/presentations.service.ts:168</a></div>
                             </td>
                         </tr>
 
@@ -518,8 +527,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="824"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:824</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1051"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1051</a></div>
                         </td>
                     </tr>
 
@@ -587,8 +596,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="925"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:925</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1152"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1152</a></div>
                         </td>
                     </tr>
 
@@ -642,6 +651,76 @@ OID4VCI credential issuer metadata endpoint.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="buildSchemaMetadataVerifier"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>buildSchemaMetadataVerifier</b></span>
+                        <a href="#buildSchemaMetadataVerifier"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildSchemaMetadataVerifier(signedJwt: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="773"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:773</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>signedJwt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;SchemaMetadataVerifier&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="deletePresentationConfig"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -660,8 +739,8 @@ OID4VCI credential issuer metadata endpoint.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="557"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:557</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="648"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:648</a></div>
                         </td>
                     </tr>
 
@@ -767,6 +846,75 @@ OID4VCI credential issuer metadata endpoint.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="deriveSchemaMetadataFormatsFromJwt"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>deriveSchemaMetadataFormatsFromJwt</b></span>
+                        <a href="#deriveSchemaMetadataFormatsFromJwt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deriveSchemaMetadataFormatsFromJwt(signedJwt: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="742"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:742</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>signedJwt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="fetchCredentialIssuerMetadata"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -786,8 +934,8 @@ OID4VCI credential issuer metadata endpoint.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="757"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:757</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="984"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:984</a></div>
                         </td>
                     </tr>
 
@@ -855,8 +1003,8 @@ OID4VCI credential issuer metadata endpoint.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="337"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:337</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="428"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:428</a></div>
                         </td>
                     </tr>
 
@@ -953,8 +1101,8 @@ the registrar is not enabled for this tenant.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="603"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:603</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="694"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:694</a></div>
                         </td>
                     </tr>
 
@@ -1048,8 +1196,8 @@ the registrar is not enabled for this tenant.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="152"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:152</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="243"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:243</a></div>
                         </td>
                     </tr>
 
@@ -1127,8 +1275,8 @@ the registrar is not enabled for this tenant.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1437"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1437</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1664"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1664</a></div>
                         </td>
                     </tr>
 
@@ -1224,8 +1372,8 @@ For mDOC: the first path element is the namespace, so we return the claim name (
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1358"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1358</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1585"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1585</a></div>
                         </td>
                     </tr>
 
@@ -1308,8 +1456,8 @@ For mDOC: the first path element is the namespace, so we return the claim name (
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="111"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:111</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="202"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:202</a></div>
                         </td>
                     </tr>
 
@@ -1379,8 +1527,8 @@ For mDOC: the first path element is the namespace, so we return the claim name (
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="880"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:880</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1107"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1107</a></div>
                         </td>
                     </tr>
 
@@ -1448,8 +1596,8 @@ For mDOC: the first path element is the namespace, so we return the claim name (
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="642"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:642</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="733"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:733</a></div>
                         </td>
                     </tr>
 
@@ -1520,8 +1668,8 @@ Returns an empty array when the registrar is not enabled for the tenant.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1321"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1321</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1548"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1548</a></div>
                         </td>
                     </tr>
 
@@ -1597,8 +1745,8 @@ Returns an empty array when the registrar is not enabled for the tenant.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="982"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:982</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1209"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1209</a></div>
                         </td>
                     </tr>
 
@@ -1693,8 +1841,8 @@ Returns an empty array when the registrar is not enabled for the tenant.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="427"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:427</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="518"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:518</a></div>
                         </td>
                     </tr>
 
@@ -1789,8 +1937,8 @@ cleared and the save proceeds; the runtime path will retry.</li>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="523"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:523</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="614"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:614</a></div>
                         </td>
                     </tr>
 
@@ -1870,8 +2018,8 @@ cleared and the save proceeds; the runtime path will retry.</li>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="272"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:272</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="363"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:363</a></div>
                         </td>
                     </tr>
 
@@ -1956,8 +2104,8 @@ not enabled for this tenant.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="621"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:621</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="712"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:712</a></div>
                         </td>
                     </tr>
 
@@ -2028,8 +2176,8 @@ This is used by the web client to avoid browser CORS restrictions.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="651"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:651</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="814"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:814</a></div>
                         </td>
                     </tr>
 
@@ -2097,8 +2245,8 @@ This is used by the web client to avoid browser CORS restrictions.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1288"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1288</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1515"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1515</a></div>
                         </td>
                     </tr>
 
@@ -2178,8 +2326,8 @@ This is used by the web client to avoid browser CORS restrictions.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="579"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:579</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="670"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:670</a></div>
                         </td>
                     </tr>
 
@@ -2247,8 +2395,8 @@ This is used by the web client to avoid browser CORS restrictions.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="516"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:516</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="607"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:607</a></div>
                         </td>
                     </tr>
 
@@ -2332,8 +2480,8 @@ happens asynchronously.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="165"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:165</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="256"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:256</a></div>
                         </td>
                     </tr>
 
@@ -2458,8 +2606,8 @@ happens asynchronously.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="963"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:963</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1190"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1190</a></div>
                         </td>
                     </tr>
 
@@ -2572,8 +2720,8 @@ happens asynchronously.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="208"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:208</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="299"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:299</a></div>
                         </td>
                     </tr>
 
@@ -2691,8 +2839,8 @@ happens asynchronously.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1376"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1376</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1603"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1603</a></div>
                         </td>
                     </tr>
 
@@ -2807,8 +2955,8 @@ If no credential_sets are defined, all credentials in the query are required.</p
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1467"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1467</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1694"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1694</a></div>
                         </td>
                     </tr>
 
@@ -2931,7 +3079,7 @@ If no credential_sets are defined, all credentials in the query are required.</p
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/verifier/presentations/presentations.service.ts:77</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="168" class="link-to-prism">src/verifier/presentations/presentations.service.ts:168</a></div>
                         </td>
                     </tr>
 
@@ -2964,7 +3112,7 @@ If no credential_sets are defined, all credentials in the query are required.</p
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/verifier/presentations/presentations.service.ts:75</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="166" class="link-to-prism">src/verifier/presentations/presentations.service.ts:166</a></div>
                         </td>
                     </tr>
 
@@ -2977,7 +3125,7 @@ If no credential_sets are defined, all credentials in the query are required.</p
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createHash } from &quot;node:crypto&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { X509Certificate, createHash, createVerify } from &quot;node:crypto&quot;;
 import { lookup } from &quot;node:dns/promises&quot;;
 import { isIP } from &quot;node:net&quot;;
 import {
@@ -2989,7 +3137,9 @@ import { ConfigService } from &quot;@nestjs/config&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
 import { plainToClass } from &quot;class-transformer&quot;;
 import { Request } from &quot;express&quot;;
-import { base64url, decodeJwt } from &quot;jose&quot;;
+import * as eudiAttestationSchema from &quot;@owf/eudi-attestation-schema&quot;;
+import { type AttestationFormat } from &quot;@owf/eudi-attestation-schema&quot;;
+import { base64url, decodeJwt, decodeProtectedHeader } from &quot;jose&quot;;
 import { Span, TraceService } from &quot;nestjs-otel&quot;;
 import { PinoLogger } from &quot;nestjs-pino&quot;;
 import { Repository } from &quot;typeorm&quot;;
@@ -3044,6 +3194,95 @@ type ResolvedSchemaMetadataPayload &#x3D; {
         value?: string;
         isLoTE?: boolean;
     }&gt;;
+    resolvedReferences: Array&lt;{
+        format: string;
+        uri: string;
+        integrity?: string;
+        meta?: Record&lt;string, unknown&gt;;
+        parsedSchema?: Record&lt;string, unknown&gt;;
+    }&gt;;
+    dcqlQuery: BuildDcqlFromSchemaMetaResult;
+};
+
+type BuildDcqlFromSchemaMetaResult &#x3D; {
+    credentials: Array&lt;Record&lt;string, unknown&gt;&gt;;
+};
+
+type SchemaMetadataVerifier &#x3D; (
+    data: string,
+    signature: string,
+) &#x3D;&gt; Promise&lt;boolean&gt;;
+
+type SchemaMetaSdkCompat &#x3D; {
+    verifyResolveAndBuildDcql?: (options: {
+        jws: string;
+        verifier: SchemaMetadataVerifier;
+        selectedFormats: AttestationFormat[];
+        resolve: (uri: string) &#x3D;&gt; Promise&lt;{ content: string | object }&gt;;
+        verifyIntegrity?: boolean;
+        includeTrustedAuthorities?: boolean;
+    }) &#x3D;&gt; Promise&lt;{
+        verified: {
+            payload: {
+                id?: string;
+                version?: string;
+                schemaURIs: Array&lt;{ formatIdentifier?: string; uri: string }&gt;;
+                trustedAuthorities?: Array&lt;{
+                    frameworkType?: string;
+                    value?: string;
+                    isLOTE?: boolean;
+                }&gt;;
+            };
+        };
+        resolvedReferences: Array&lt;{
+            format: string;
+            uri: string;
+            integrity?: string;
+            meta?: unknown;
+            parsedSchema?: Record&lt;string, unknown&gt;;
+        }&gt;;
+        dcql: BuildDcqlFromSchemaMetaResult;
+    }&gt;;
+    verifySchemaMeta?: (options: {
+        jws: string;
+        verifier: SchemaMetadataVerifier;
+    }) &#x3D;&gt; Promise&lt;{
+        payload: {
+            id?: string;
+            version?: string;
+            schemaURIs: Array&lt;{ formatIdentifier?: string; uri: string }&gt;;
+            trustedAuthorities?: Array&lt;{
+                frameworkType?: string;
+                value?: string;
+                isLOTE?: boolean;
+            }&gt;;
+        };
+    }&gt;;
+    resolveSchemaReferences?: (options: {
+        schemaMeta: unknown;
+        selectedFormats: AttestationFormat[];
+        resolve: (uri: string) &#x3D;&gt; Promise&lt;{ content: string | object }&gt;;
+    }) &#x3D;&gt; Promise&lt;
+        Array&lt;{
+            format: string;
+            uri: string;
+            integrity?: string;
+            meta?: unknown;
+            parsedSchema?: Record&lt;string, unknown&gt;;
+        }&gt;
+    &gt;;
+    buildDcqlFromSchemaMeta?: (options: {
+        schemaMeta: unknown;
+        selectedFormats: AttestationFormat[];
+        resolvedReferences?: Array&lt;{
+            format: string;
+            uri: string;
+            integrity?: string;
+            meta?: unknown;
+            parsedSchema?: Record&lt;string, unknown&gt;;
+        }&gt;;
+        includeTrustedAuthorities?: boolean;
+    }) &#x3D;&gt; BuildDcqlFromSchemaMetaResult;
 };
 
 /**
@@ -3627,6 +3866,78 @@ export class PresentationsService {
         return this.registrarService.findAllSchemaMetadata(tenantId, {});
     }
 
+    private deriveSchemaMetadataFormatsFromJwt(signedJwt: string): string[] {
+        let payload: Record&lt;string, unknown&gt;;
+
+        try {
+            payload &#x3D; decodeJwt(signedJwt) as Record&lt;string, unknown&gt;;
+        } catch {
+            throw new BadRequestException(
+                &quot;signedJwt in schema metadata response is not a valid JWT&quot;,
+            );
+        }
+
+        const supportedFormats &#x3D; Array.isArray(payload.supportedFormats)
+            ? payload.supportedFormats.filter(
+                  (format): format is string &#x3D;&gt; typeof format &#x3D;&#x3D;&#x3D; &quot;string&quot;,
+              )
+            : [];
+
+        const schemaURIs &#x3D; Array.isArray(payload.schemaURIs)
+            ? (payload.schemaURIs as Array&lt;{
+                  formatIdentifier?: string;
+                  format?: string;
+              }&gt;)
+            : [];
+
+        const schemaUriFormats &#x3D; schemaURIs
+            .map((entry) &#x3D;&gt; entry.formatIdentifier ?? entry.format)
+            .filter((format): format is string &#x3D;&gt; typeof format &#x3D;&#x3D;&#x3D; &quot;string&quot;);
+
+        return Array.from(new Set([...supportedFormats, ...schemaUriFormats]));
+    }
+
+    private async buildSchemaMetadataVerifier(
+        signedJwt: string,
+    ): Promise&lt;SchemaMetadataVerifier&gt; {
+        const header &#x3D; decodeProtectedHeader(signedJwt);
+        const x5c &#x3D; Array.isArray(header.x5c)
+            ? header.x5c.filter(
+                  (cert): cert is string &#x3D;&gt; typeof cert &#x3D;&#x3D;&#x3D; &quot;string&quot;,
+              )
+            : [];
+
+        if (x5c.length &#x3D;&#x3D;&#x3D; 0) {
+            throw new BadRequestException(
+                &quot;Schema metadata JWT does not contain x5c certificate chain in header&quot;,
+            );
+        }
+
+        const leafCert &#x3D; new X509Certificate(Buffer.from(x5c[0], &quot;base64&quot;));
+        const key &#x3D; leafCert.publicKey;
+        const alg &#x3D; typeof header.alg &#x3D;&#x3D;&#x3D; &quot;string&quot; ? header.alg : &quot;ES256&quot;;
+
+        return async (data: string, signature: string) &#x3D;&gt; {
+            try {
+                const verifier &#x3D; createVerify(&quot;SHA256&quot;);
+                verifier.update(data);
+                verifier.end();
+
+                const signatureBytes &#x3D; Buffer.from(base64url.decode(signature));
+                if (alg.startsWith(&quot;ES&quot;)) {
+                    return verifier.verify(
+                        { key, dsaEncoding: &quot;ieee-p1363&quot; },
+                        signatureBytes,
+                    );
+                }
+
+                return verifier.verify(key, signatureBytes);
+            } catch {
+                return false;
+            }
+        };
+    }
+
     async resolveSchemaMetadata(schemaMetadataUrl: string): Promise&lt;{
         signedJwt: string;
         schema: ResolvedSchemaMetadataPayload;
@@ -3651,51 +3962,14 @@ export class PresentationsService {
             );
         }
 
-        let payload: Record&lt;string, unknown&gt;;
-        try {
-            payload &#x3D; decodeJwt(signedJwt) as Record&lt;string, unknown&gt;;
-        } catch {
-            throw new BadRequestException(
-                &quot;signedJwt in schema metadata response is not a valid JWT&quot;,
-            );
-        }
+        const allFormats &#x3D; this.deriveSchemaMetadataFormatsFromJwt(signedJwt);
 
-        const id &#x3D; typeof payload.id &#x3D;&#x3D;&#x3D; &quot;string&quot; ? payload.id : undefined;
-        if (!id) {
-            throw new BadRequestException(
-                &quot;Schema metadata JWT payload is missing a valid id&quot;,
-            );
-        }
-
-        const supportedFormats &#x3D; Array.isArray(payload.supportedFormats)
-            ? payload.supportedFormats.filter(
-                  (format): format is string &#x3D;&gt; typeof format &#x3D;&#x3D;&#x3D; &quot;string&quot;,
-              )
-            : [];
-
-        const schemaURIs &#x3D; Array.isArray(payload.schemaURIs)
-            ? (payload.schemaURIs as Array&lt;{
-                  formatIdentifier?: string;
-                  format?: string;
-                  uri?: string;
-              }&gt;)
-            : [];
-
-        const trustedAuthorities &#x3D; Array.isArray(payload.trustedAuthorities)
-            ? (payload.trustedAuthorities as Array&lt;{
-                  frameworkType?: string;
-                  value?: string;
-                  isLoTE?: boolean;
-              }&gt;)
-            : [];
-
-        const schemaUriFormats &#x3D; schemaURIs
-            .map((entry) &#x3D;&gt; entry.formatIdentifier ?? entry.format)
-            .filter((format): format is string &#x3D;&gt; typeof format &#x3D;&#x3D;&#x3D; &quot;string&quot;);
-
-        const allFormats &#x3D; Array.from(
-            new Set([...supportedFormats, ...schemaUriFormats]),
-        );
+        const responseMetadata &#x3D; response as {
+            name?: unknown;
+            description?: unknown;
+            category?: unknown;
+            tags?: unknown;
+        };
 
         if (allFormats.length &#x3D;&#x3D;&#x3D; 0) {
             throw new BadRequestException(
@@ -3703,32 +3977,133 @@ export class PresentationsService {
             );
         }
 
+        const verifier &#x3D; await this.buildSchemaMetadataVerifier(signedJwt);
+        const schemaMetaSdk &#x3D;
+            eudiAttestationSchema as unknown as SchemaMetaSdkCompat;
+        const resolved &#x3D;
+            typeof schemaMetaSdk.verifyResolveAndBuildDcql &#x3D;&#x3D;&#x3D; &quot;function&quot;
+                ? await schemaMetaSdk.verifyResolveAndBuildDcql({
+                      jws: signedJwt,
+                      verifier,
+                      selectedFormats: allFormats as AttestationFormat[],
+                      resolve: async (uri: string) &#x3D;&gt; ({
+                          content:
+                              await this.fetchCredentialIssuerMetadata(uri),
+                      }),
+                      includeTrustedAuthorities: true,
+                  })
+                : await (async () &#x3D;&gt; {
+                      if (
+                          typeof schemaMetaSdk.verifySchemaMeta !&#x3D;&#x3D;
+                              &quot;function&quot; ||
+                          typeof schemaMetaSdk.resolveSchemaReferences !&#x3D;&#x3D;
+                              &quot;function&quot; ||
+                          typeof schemaMetaSdk.buildDcqlFromSchemaMeta !&#x3D;&#x3D;
+                              &quot;function&quot;
+                      ) {
+                          throw new BadRequestException(
+                              &quot;Installed @owf/eudi-attestation-schema version does not support schema metadata resolution APIs&quot;,
+                          );
+                      }
+
+                      const verified &#x3D; await schemaMetaSdk.verifySchemaMeta({
+                          jws: signedJwt,
+                          verifier,
+                      });
+                      const resolvedReferences &#x3D;
+                          await schemaMetaSdk.resolveSchemaReferences({
+                              schemaMeta: verified.payload,
+                              selectedFormats:
+                                  allFormats as AttestationFormat[],
+                              resolve: async (uri: string) &#x3D;&gt; ({
+                                  content:
+                                      await this.fetchCredentialIssuerMetadata(
+                                          uri,
+                                      ),
+                              }),
+                          });
+                      const dcql &#x3D; schemaMetaSdk.buildDcqlFromSchemaMeta({
+                          schemaMeta: verified.payload,
+                          selectedFormats: allFormats as AttestationFormat[],
+                          resolvedReferences,
+                          includeTrustedAuthorities: true,
+                      });
+
+                      return {
+                          verified,
+                          resolvedReferences,
+                          dcql,
+                      };
+                  })();
+
+        const payload &#x3D; resolved.verified.payload;
+        const id &#x3D; typeof payload.id &#x3D;&#x3D;&#x3D; &quot;string&quot; ? payload.id : undefined;
+        if (!id) {
+            throw new BadRequestException(
+                &quot;Schema metadata JWT payload is missing a valid id&quot;,
+            );
+        }
+
         return {
             signedJwt,
             schema: {
                 id,
-                version:
-                    typeof payload.version &#x3D;&#x3D;&#x3D; &quot;string&quot;
-                        ? payload.version
-                        : undefined,
+                version: payload.version,
                 name:
-                    typeof payload.name &#x3D;&#x3D;&#x3D; &quot;string&quot; ? payload.name : undefined,
+                    typeof responseMetadata.name &#x3D;&#x3D;&#x3D; &quot;string&quot;
+                        ? responseMetadata.name
+                        : undefined,
                 description:
-                    typeof payload.description &#x3D;&#x3D;&#x3D; &quot;string&quot;
-                        ? payload.description
+                    typeof responseMetadata.description &#x3D;&#x3D;&#x3D; &quot;string&quot;
+                        ? responseMetadata.description
                         : undefined,
                 category:
-                    typeof payload.category &#x3D;&#x3D;&#x3D; &quot;string&quot;
-                        ? payload.category
+                    typeof responseMetadata.category &#x3D;&#x3D;&#x3D; &quot;string&quot;
+                        ? responseMetadata.category
                         : undefined,
-                tags: Array.isArray(payload.tags)
-                    ? payload.tags.filter(
+                tags: Array.isArray(responseMetadata.tags)
+                    ? responseMetadata.tags.filter(
                           (tag): tag is string &#x3D;&gt; typeof tag &#x3D;&#x3D;&#x3D; &quot;string&quot;,
                       )
                     : undefined,
                 supportedFormats: allFormats,
-                schemaURIs,
-                trustedAuthorities,
+                schemaURIs: payload.schemaURIs.map(
+                    (entry: { formatIdentifier?: string; uri: string }) &#x3D;&gt; ({
+                        formatIdentifier: entry.formatIdentifier,
+                        uri: entry.uri,
+                    }),
+                ),
+                trustedAuthorities:
+                    payload.trustedAuthorities?.map(
+                        (authority: {
+                            frameworkType?: string;
+                            value?: string;
+                            isLOTE?: boolean;
+                        }) &#x3D;&gt; ({
+                            frameworkType: authority.frameworkType,
+                            value: authority.value,
+                            isLoTE: authority.isLOTE,
+                        }),
+                    ) ?? [],
+                resolvedReferences: resolved.resolvedReferences.map(
+                    (ref: {
+                        format: string;
+                        uri: string;
+                        integrity?: string;
+                        meta?: unknown;
+                        parsedSchema?: Record&lt;string, unknown&gt;;
+                    }) &#x3D;&gt; ({
+                        format: ref.format,
+                        uri: ref.uri,
+                        integrity: ref.integrity,
+                        meta:
+                            ref.meta &amp;&amp; typeof ref.meta &#x3D;&#x3D;&#x3D; &quot;object&quot;
+                                ? (ref.meta as Record&lt;string, unknown&gt;)
+                                : undefined,
+                        parsedSchema: ref.parsedSchema,
+                    }),
+                ),
+                dcqlQuery: resolved.dcql,
             },
         };
     }
