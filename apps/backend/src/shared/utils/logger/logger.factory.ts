@@ -1,6 +1,14 @@
 import { RequestMethod } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
+function getRequestPath(req: any): string {
+    return req.originalUrl ?? req.url ?? "unknown";
+}
+
+function getRequestMethod(req: any): string {
+    return req.method ?? "UNKNOWN";
+}
+
 /**
  * Factory function for configuring the logger module
  *
@@ -18,20 +26,17 @@ import { ConfigService } from "@nestjs/config";
  */
 export const createLoggerOptions = (configService: ConfigService) => {
     // Disable pino-http's autoLogging - we handle HTTP logging explicitly
-    const enableHttpLogger = configService.get<boolean>(
+    const enableHttpLogger = configService.getOrThrow<boolean>(
         "LOG_ENABLE_HTTP_LOGGER",
-        false,
     );
 
     // Check if file logging is enabled
-    const logToFile = configService.get<boolean>("LOG_TO_FILE");
-    const logFilePath = configService.get<string>("LOG_FILE_PATH");
+    const logToFile = configService.getOrThrow<boolean>("LOG_TO_FILE");
+    const logFilePath = configService.getOrThrow<string>("LOG_FILE_PATH");
 
     // Check if OTel is disabled
-    const otelDisabled =
-        configService.get<string>("OTEL_SDK_DISABLED")?.toLowerCase() ===
-        "true";
-    const logLevel = configService.get("LOG_LEVEL", "info");
+    const otelDisabled = configService.getOrThrow<boolean>("OTEL_SDK_DISABLED");
+    const logLevel = configService.getOrThrow("LOG_LEVEL");
 
     // Build transport targets array
     const targets: any[] = [
@@ -43,7 +48,8 @@ export const createLoggerOptions = (configService: ConfigService) => {
                 colorize: true,
                 singleLine: false,
                 translateTime: "yyyy-mm-dd HH:MM:ss",
-                ignore: "pid,hostname,req,res,responseTime,context",
+                //ignore: "pid,hostname,req,res,responseTime,context",
+                ignore: "context",
                 messageFormat: "{if context}[{context}] {end}{msg}",
             },
         },
@@ -86,6 +92,16 @@ export const createLoggerOptions = (configService: ConfigService) => {
         pinoHttp: {
             level: logLevel,
             autoLogging: enableHttpLogger,
+            customReceivedMessage: (req: any) =>
+                `${getRequestMethod(req)} ${getRequestPath(req)} received`,
+            customSuccessMessage: (
+                req: any,
+                res: any,
+                responseTime: number,
+            ) =>
+                `${getRequestMethod(req)} ${getRequestPath(req)} -> ${res.statusCode} (${responseTime}ms)`,
+            customErrorMessage: (req: any, res: any, error: Error) =>
+                `${getRequestMethod(req)} ${getRequestPath(req)} -> ${res.statusCode ?? 500} ${error.name}: ${error.message}`,
             transport: {
                 targets,
             },
@@ -113,7 +129,7 @@ export const createLoggerOptions = (configService: ConfigService) => {
                     statusCode: res.statusCode,
                 }),
             },
-        },
+        },        
         exclude: [{ path: "/session/:sessionId", method: RequestMethod.ALL }],
     };
 };
