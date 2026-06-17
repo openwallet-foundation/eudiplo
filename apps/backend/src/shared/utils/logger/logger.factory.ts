@@ -1,13 +1,6 @@
-import { RequestMethod } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-
-function getRequestPath(req: any): string {
-    return req.originalUrl ?? req.url ?? "unknown";
-}
-
-function getRequestMethod(req: any): string {
-    return req.method ?? "UNKNOWN";
-}
+import { IncomingMessage } from "node:http";
+import { Params } from "nestjs-pino";
 
 /**
  * Factory function for configuring the logger module
@@ -91,17 +84,18 @@ export const createLoggerOptions = (configService: ConfigService) => {
     return {
         pinoHttp: {
             level: logLevel,
-            autoLogging: enableHttpLogger,
-            customReceivedMessage: (req: any) =>
-                `${getRequestMethod(req)} ${getRequestPath(req)} received`,
-            customSuccessMessage: (
-                req: any,
-                res: any,
-                responseTime: number,
-            ) =>
-                `${getRequestMethod(req)} ${getRequestPath(req)} -> ${res.statusCode} (${responseTime}ms)`,
-            customErrorMessage: (req: any, res: any, error: Error) =>
-                `${getRequestMethod(req)} ${getRequestPath(req)} -> ${res.statusCode ?? 500} ${error.name}: ${error.message}`,
+            autoLogging: {
+                ignore: (req: IncomingMessage) => {
+                    if (!enableHttpLogger) {
+                        return true;
+                    }
+                    //check if path includes /api to ignore it
+                    if (req.url && req.url.includes("/api")) {
+                        return true;
+                    }
+                    return false;
+                },
+            },
             transport: {
                 targets,
             },
@@ -129,7 +123,7 @@ export const createLoggerOptions = (configService: ConfigService) => {
                     statusCode: res.statusCode,
                 }),
             },
-        },        
-        exclude: [{ path: "/session/:sessionId", method: RequestMethod.ALL }],
-    };
+        },
+        forRoutes: ["*splat"],
+    } as Params;
 };

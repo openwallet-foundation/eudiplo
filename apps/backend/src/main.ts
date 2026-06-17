@@ -101,10 +101,6 @@ async function bootstrap() {
         httpsOptions: tlsOptions,
     });
 
-    // Use Pino logger for all NestJS logging (including built-in Logger instances)
-    // This ensures LOG_LEVEL env var is respected across all services
-    app.useLogger(app.get(Logger));
-
     // Set explicit body size limits (security best practice)
     // Parse encrypted credential requests sent as application/jwt (JWE compact serialization)
     // Must be registered BEFORE the JSON parser so it takes precedence for this content type
@@ -124,6 +120,10 @@ async function bootstrap() {
         new ValidationErrorFilter(),
         new AllExceptionsFilter(),
     );
+
+    // Use Pino logger for all NestJS logging (including built-in Logger instances)
+    // This ensures LOG_LEVEL env var is respected across all services
+    app.useLogger(app.get(Logger));
 
     app.useGlobalPipes(
         new ValidationPipe({

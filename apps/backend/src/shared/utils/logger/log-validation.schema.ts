@@ -34,4 +34,8 @@ export const LOG_VALIDATION_SCHEMA = Joi.object({
         .default("./logs/session.log")
         .description("File path for log output when LOG_TO_FILE is enabled")
         .meta({ group: "log", order: 70 }),
+    OTEL_SDK_DISABLED: Joi.boolean()
+        .default(false)
+        .description("Disable OpenTelemetry SDK (and OTel log forwarding)")
+        .meta({ group: "log", order: 80 }),
 });
