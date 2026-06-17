@@ -26,9 +26,17 @@
       "description": "Whether this trust authority is a List of Trusted Entities (LoTE)"
     },
     "verificationMethod": {
-      "type": "object",
       "description": "Optional verification material for external trusted authorities (for example a JWK). For internal trust-list URLs, EUDIPLO resolves verification material from the database.",
-      "additionalProperties": true
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": true
+        },
+        {
+          "type": "string",
+          "description": "JSON string representing an object. Parsed server-side for form submissions."
+        }
+      ]
     }
   },
   "additionalProperties": false

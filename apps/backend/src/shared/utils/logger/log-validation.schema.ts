@@ -26,15 +26,6 @@ export const LOG_VALIDATION_SCHEMA = Joi.object({
                 "'all' stores everything, 'verbose' stores everything including full request/response bodies and error stacks.",
         )
         .meta({ group: "log", order: 35 }),
-    LOG_DEBUG_MODE: Joi.boolean()
-        .default(false)
-        .description("Enable verbose debug logs")
-        .meta({ group: "log", order: 40 }),
-    LOG_FORMAT: Joi.string()
-        .valid("json", "pretty")
-        .default(process.env.NODE_ENV === "production" ? "json" : "pretty")
-        .description("Log output format")
-        .meta({ group: "log", order: 50 }),
     LOG_TO_FILE: Joi.boolean()
         .default(false)
         .description("Enable logging to file in addition to console")

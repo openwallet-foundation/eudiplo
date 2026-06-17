@@ -35,7 +35,6 @@ For a complete configuration example, see the [Complete Configuration Example](#
 ### Optional Fields
 
 - `description`: **OPTIONAL** - Human-readable description of the credential. Will not be displayed to the end user.
-- `configVersion`: **OPTIONAL** - Configuration format version. Use `2` for the field format.
 - `vct`: **OPTIONAL** -
   [VC Type Metadata](https://www.ietf.org/archive/id/draft-ietf-oauth-sd-jwt-vc-09.html#name-sd-jwt-vc-type-metadata)
   provided via the `/{tenantId}/credentials-metadata/vct/{id}` endpoint. This link will
