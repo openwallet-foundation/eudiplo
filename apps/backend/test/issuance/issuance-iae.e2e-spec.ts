@@ -149,19 +149,19 @@ describe("Interactive Authorization Endpoint (IAE)", () => {
             expect(credentialOfferUri).toBeDefined();
             expect(offerUri.searchParams.get("credential_offer")).toBeNull();
 
-            const offerPayloadResponse = await new Promise<
-                request.Response
-            >((resolve, reject) => {
-                request(app.getHttpServer())
-                    .get(new URL(credentialOfferUri!).pathname)
-                    .end((err, response) => {
-                        if (err) {
-                            reject(err);
-                            return;
-                        }
-                        resolve(response);
-                    });
-            });
+            const offerPayloadResponse = await new Promise<request.Response>(
+                (resolve, reject) => {
+                    request(app.getHttpServer())
+                        .get(new URL(credentialOfferUri!).pathname)
+                        .end((err, response) => {
+                            if (err) {
+                                reject(err);
+                                return;
+                            }
+                            resolve(response);
+                        });
+                },
+            );
 
             expect(offerPayloadResponse.status).toBe(200);
 
@@ -194,19 +194,18 @@ describe("Interactive Authorization Endpoint (IAE)", () => {
             let issuerState: string | undefined;
 
             if (credentialOfferUri) {
-                const offerPayloadResponse = await new Promise<
-                    request.Response
-                >((resolve, reject) => {
-                    request(app.getHttpServer())
-                        .get(new URL(credentialOfferUri).pathname)
-                        .end((err, response) => {
-                            if (err) {
-                                reject(err);
-                                return;
-                            }
-                            resolve(response);
-                        });
-                });
+                const offerPayloadResponse =
+                    await new Promise<request.Response>((resolve, reject) => {
+                        request(app.getHttpServer())
+                            .get(new URL(credentialOfferUri).pathname)
+                            .end((err, response) => {
+                                if (err) {
+                                    reject(err);
+                                    return;
+                                }
+                                resolve(response);
+                            });
+                    });
                 expect(offerPayloadResponse.status).toBe(200);
                 issuerState =
                     offerPayloadResponse.body.grants?.authorization_code
