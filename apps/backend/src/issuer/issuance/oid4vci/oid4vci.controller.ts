@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Get,
     Header,
     HttpCode,
     HttpException,
@@ -30,6 +31,20 @@ import { Oid4vciService } from "./oid4vci.service";
 @Controller("issuers/:tenantId/vci")
 export class Oid4vciController {
     constructor(private readonly oid4vciService: Oid4vciService) {}
+
+    /**
+     * Credential offer endpoint for `credential_offer_uri` references.
+     */
+    @Get("credential-offers/:sessionId")
+    credentialOfferByReference(
+        @Param("tenantId") tenantId: string,
+        @Param("sessionId") sessionId: string,
+    ) {
+        return this.oid4vciService.getCredentialOfferByReference(
+            tenantId,
+            sessionId,
+        );
+    }
 
     /**
      * Endpoint to issue credentials
