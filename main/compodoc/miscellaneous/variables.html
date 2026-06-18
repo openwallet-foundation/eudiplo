@@ -1149,20 +1149,17 @@ This decorator can be used to determine the media type of the request.</p>
                     <td class="col-md-4">
                         <i>Default value : </i><code>(configService: ConfigService) &#x3D;&gt; {
     // Disable pino-http&#x27;s autoLogging - we handle HTTP logging explicitly
-    const enableHttpLogger &#x3D; configService.get&lt;boolean&gt;(
+    const enableHttpLogger &#x3D; configService.getOrThrow&lt;boolean&gt;(
         &quot;LOG_ENABLE_HTTP_LOGGER&quot;,
-        false,
     );
 
     // Check if file logging is enabled
-    const logToFile &#x3D; configService.get&lt;boolean&gt;(&quot;LOG_TO_FILE&quot;);
-    const logFilePath &#x3D; configService.get&lt;string&gt;(&quot;LOG_FILE_PATH&quot;);
+    const logToFile &#x3D; configService.getOrThrow&lt;boolean&gt;(&quot;LOG_TO_FILE&quot;);
+    const logFilePath &#x3D; configService.getOrThrow&lt;string&gt;(&quot;LOG_FILE_PATH&quot;);
 
     // Check if OTel is disabled
-    const otelDisabled &#x3D;
-        configService.get&lt;string&gt;(&quot;OTEL_SDK_DISABLED&quot;)?.toLowerCase() &#x3D;&#x3D;&#x3D;
-        &quot;true&quot;;
-    const logLevel &#x3D; configService.get(&quot;LOG_LEVEL&quot;, &quot;info&quot;);
+    const otelDisabled &#x3D; configService.getOrThrow&lt;boolean&gt;(&quot;OTEL_SDK_DISABLED&quot;);
+    const logLevel &#x3D; configService.getOrThrow(&quot;LOG_LEVEL&quot;);
 
     // Build transport targets array
     const targets: any[] &#x3D; [
@@ -1174,7 +1171,8 @@ This decorator can be used to determine the media type of the request.</p>
                 colorize: true,
                 singleLine: false,
                 translateTime: &quot;yyyy-mm-dd HH:MM:ss&quot;,
-                ignore: &quot;pid,hostname,req,res,responseTime,context&quot;,
+                //ignore: &quot;pid,hostname,req,res,responseTime,context&quot;,
+                ignore: &quot;context&quot;,
                 messageFormat: &quot;{if context}[{context}] {end}{msg}&quot;,
             },
         },
@@ -1216,7 +1214,18 @@ This decorator can be used to determine the media type of the request.</p>
     return {
         pinoHttp: {
             level: logLevel,
-            autoLogging: enableHttpLogger,
+            autoLogging: {
+                ignore: (req: IncomingMessage) &#x3D;&gt; {
+                    if (!enableHttpLogger) {
+                        return true;
+                    }
+                    //check if path includes /api to ignore it
+                    if (req.url &amp;&amp; req.url.includes(&quot;/api&quot;)) {
+                        return true;
+                    }
+                    return false;
+                },
+            },
             transport: {
                 targets,
             },
@@ -1245,8 +1254,8 @@ This decorator can be used to determine the media type of the request.</p>
                 }),
             },
         },
-        exclude: [{ path: &quot;/session/:sessionId&quot;, method: RequestMethod.ALL }],
-    };
+        forRoutes: [&quot;*splat&quot;],
+    } as Params;
 }</code>
                     </td>
                 </tr>
@@ -2192,6 +2201,10 @@ surface without receiving a duplicate <code>/api/api</code> prefix.</p>
         .default(&quot;./logs/session.log&quot;)
         .description(&quot;File path for log output when LOG_TO_FILE is enabled&quot;)
         .meta({ group: &quot;log&quot;, order: 70 }),
+    OTEL_SDK_DISABLED: Joi.boolean()
+        .default(false)
+        .description(&quot;Disable OpenTelemetry SDK (and OTel log forwarding)&quot;)
+        .meta({ group: &quot;log&quot;, order: 80 }),
 })</code>
                     </td>
                 </tr>
