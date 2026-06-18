@@ -3,6 +3,7 @@ import {
     BadRequestException,
     ConflictException,
     Injectable,
+    NotFoundException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Cron, CronExpression } from "@nestjs/schedule";
@@ -19,6 +20,7 @@ import {
 import {
     CreateCredentialResponseReturn,
     CredentialOfferAuthorizationCodeGrant,
+    CredentialOfferObject,
     CredentialOfferPreAuthorizedCodeGrant,
     type CredentialResponse,
     type CredentialRequest,
@@ -449,12 +451,14 @@ export class Oid4vciService {
 
         const issuer = this.getIssuer(session.tenantId, session.id);
         const issuerMetadata = await this.issuerMetadata(tenantId, issuer);
+        const credentialOfferUri = `${this.configService.getOrThrow<string>("PUBLIC_URL")}/issuers/${tenantId}/vci/credential-offers/${session.id}`;
 
         return issuer
             .createCredentialOffer({
                 credentialConfigurationIds,
                 grants,
                 issuerMetadata,
+                credentialOfferUri,
             })
             .then(
                 async (offer) => {
@@ -474,6 +478,26 @@ export class Oid4vciService {
                     );
                 },
             );
+    }
+
+    /**
+     * Resolve credential offers sent by reference (credential_offer_uri).
+     */
+    async getCredentialOfferByReference(
+        tenantId: string,
+        sessionId: string,
+    ): Promise<CredentialOfferObject> {
+        const session = await this.sessionService
+            .getBy({ id: sessionId, tenantId })
+            .catch(() => {
+                throw new NotFoundException("Credential offer not found");
+            });
+
+        if (!session.offer) {
+            throw new NotFoundException("Credential offer not found");
+        }
+
+        return session.offer as CredentialOfferObject;
     }
 
     /**

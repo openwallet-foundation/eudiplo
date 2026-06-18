@@ -129,6 +129,50 @@ describe("Interactive Authorization Endpoint (IAE)", () => {
             expect(response.body.status).toBe("require_interaction");
         });
 
+        test("should expose credential offer by reference endpoint", async () => {
+            const offerResponse = await request(app.getHttpServer())
+                .post("/issuer/offer")
+                .trustLocalhost()
+                .set("Authorization", `Bearer ${authToken}`)
+                .send({
+                    response_type: "uri",
+                    credentialConfigurationIds: ["pid-no-key"],
+                    flow: "authorization_code",
+                })
+                .expect(201);
+
+            const offerUri = new URL(offerResponse.body.uri);
+            const credentialOfferUri = offerUri.searchParams.get(
+                "credential_offer_uri",
+            );
+
+            expect(credentialOfferUri).toBeDefined();
+            expect(offerUri.searchParams.get("credential_offer")).toBeNull();
+
+            const offerPayloadResponse = await new Promise<
+                request.Response
+            >((resolve, reject) => {
+                request(app.getHttpServer())
+                    .get(new URL(credentialOfferUri!).pathname)
+                    .end((err, response) => {
+                        if (err) {
+                            reject(err);
+                            return;
+                        }
+                        resolve(response);
+                    });
+            });
+
+            expect(offerPayloadResponse.status).toBe(200);
+
+            expect(offerPayloadResponse.body.credential_issuer).toContain(
+                `/issuers/${tenantId}`,
+            );
+            expect(
+                offerPayloadResponse.body.credential_configuration_ids,
+            ).toContain("pid-no-key");
+        });
+
         test("should include issuer_state when provided", async () => {
             // First create an offer to get an issuer_state
             const offerResponse = await request(app.getHttpServer())
@@ -144,9 +188,32 @@ describe("Interactive Authorization Endpoint (IAE)", () => {
 
             // Extract issuer_state from the offer URI
             const offerUri = new URL(offerResponse.body.uri);
-            const issuerState =
-                offerUri.searchParams.get("credential_offer_uri") ||
-                offerResponse.body.session;
+            const credentialOfferUri = offerUri.searchParams.get(
+                "credential_offer_uri",
+            );
+            let issuerState: string | undefined;
+
+            if (credentialOfferUri) {
+                const offerPayloadResponse = await new Promise<
+                    request.Response
+                >((resolve, reject) => {
+                    request(app.getHttpServer())
+                        .get(new URL(credentialOfferUri).pathname)
+                        .end((err, response) => {
+                            if (err) {
+                                reject(err);
+                                return;
+                            }
+                            resolve(response);
+                        });
+                });
+                expect(offerPayloadResponse.status).toBe(200);
+                issuerState =
+                    offerPayloadResponse.body.grants?.authorization_code
+                        ?.issuer_state;
+            }
+
+            issuerState ??= offerResponse.body.session;
 
             if (issuerState) {
                 const response = await request(app.getHttpServer())
