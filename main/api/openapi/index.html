@@ -5704,6 +5704,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#get-issuerstenantidvcicredential-offerssessionid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /issuers/{tenantId}/vci/credential-offers/{sessionId}
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#post-issuerstenantidvcicredential" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -11473,6 +11484,17 @@
   
     <nav class="md-nav" aria-label="OID4VCI">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-issuerstenantidvcicredential-offerssessionid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /issuers/{tenantId}/vci/credential-offers/{sessionId}
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#post-issuerstenantidvcicredential" class="md-nav__link">
@@ -32769,6 +32791,48 @@ Most likely, it is not desirable to edit this file by hand!
 <h2 id="oid4vci"><span class="api-tag">OID4VCI</span><a class="headerlink" href="#oid4vci" title="Permanent link">¶</a></h2>
 <hr class="operation-separator">
 
+<h3 id="get-issuerstenantidvcicredential-offerssessionid"><span class="http-get">GET</span> /issuers/<span class="route-param">{tenantId}</span>/vci/credential-offers/<span class="route-param">{sessionId}</span><a class="headerlink" href="#get-issuerstenantidvcicredential-offerssessionid" title="Permanent link">¶</a></h3>
+<p>Credential offer endpoint for <code>credential_offer_uri</code> references.</p>
+<p><strong>Input parameters</strong></p>
+<table>
+    <thead>
+        <tr>
+            <th>Parameter</th>
+            <th>In</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Nullable</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="parameter-name"><code>sessionId</code></td>
+            <td>path</td>
+            <td>string</td>
+            <td></td>
+            <td>No</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="parameter-name"><code>tenantId</code></td>
+            <td>path</td>
+            <td>string</td>
+            <td></td>
+            <td>No</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+<p class="responses-title"><strong>Responses</strong></p>
+
+<div class="tabbed-set tabbed-alternate" data-tabs="234:1"><input checked="checked" id="__tabbed_234_1" name="__tabbed_234" type="radio"><div class="tabbed-labels"><label for="__tabbed_234_1">200 OK</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block"></div>
+</div>
+</div>
+<hr class="operation-separator">
+
 <h3 id="post-issuerstenantidvcicredential"><span class="http-post">POST</span> /issuers/<span class="route-param">{tenantId}</span>/vci/credential<a class="headerlink" href="#post-issuerstenantidvcicredential" title="Permanent link">¶</a></h3>
 <p>Endpoint to issue credentials</p>
 <p><strong>Input parameters</strong></p>
@@ -32796,10 +32860,10 @@ Most likely, it is not desirable to edit this file by hand!
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="234:1"><input checked="checked" id="__tabbed_234_1" name="__tabbed_234" type="radio"><div class="tabbed-labels"><label for="__tabbed_234_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="235:1"><input checked="checked" id="__tabbed_235_1" name="__tabbed_235" type="radio"><div class="tabbed-labels"><label for="__tabbed_235_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="235:1"><input checked="checked" id="__tabbed_235_1" name="__tabbed_235" type="radio"><div class="tabbed-labels"><label for="__tabbed_235_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="236:1"><input checked="checked" id="__tabbed_236_1" name="__tabbed_236" type="radio"><div class="tabbed-labels"><label for="__tabbed_236_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -32846,7 +32910,7 @@ for credentials that were not immediately available.</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="236:1"><input checked="checked" id="__tabbed_236_1" name="__tabbed_236" type="radio"><div class="tabbed-labels"><label for="__tabbed_236_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="237:1"><input checked="checked" id="__tabbed_237_1" name="__tabbed_237" type="radio"><div class="tabbed-labels"><label for="__tabbed_237_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-229-1" name="__codelineno-229-1" href="#__codelineno-229-1"></a><span class="p">{</span>
@@ -32876,7 +32940,7 @@ for credentials that were not immediately available.</p>
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="237:1"><input checked="checked" id="__tabbed_237_1" name="__tabbed_237" type="radio"><div class="tabbed-labels"><label for="__tabbed_237_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="238:1"><input checked="checked" id="__tabbed_238_1" name="__tabbed_238" type="radio"><div class="tabbed-labels"><label for="__tabbed_238_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -32910,7 +32974,7 @@ for credentials that were not immediately available.</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="238:1"><input checked="checked" id="__tabbed_238_1" name="__tabbed_238" type="radio"><div class="tabbed-labels"><label for="__tabbed_238_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="239:1"><input checked="checked" id="__tabbed_239_1" name="__tabbed_239" type="radio"><div class="tabbed-labels"><label for="__tabbed_239_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-231-1" name="__codelineno-231-1" href="#__codelineno-231-1"></a><span class="p">{</span>
@@ -32948,7 +33012,7 @@ for credentials that were not immediately available.</p>
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="239:1"><input checked="checked" id="__tabbed_239_1" name="__tabbed_239" type="radio"><div class="tabbed-labels"><label for="__tabbed_239_1">201 Created</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="240:1"><input checked="checked" id="__tabbed_240_1" name="__tabbed_240" type="radio"><div class="tabbed-labels"><label for="__tabbed_240_1">201 Created</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -32981,7 +33045,7 @@ for credentials that were not immediately available.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="240:1"><input checked="checked" id="__tabbed_240_1" name="__tabbed_240" type="radio"><div class="tabbed-labels"><label for="__tabbed_240_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="241:1"><input checked="checked" id="__tabbed_241_1" name="__tabbed_241" type="radio"><div class="tabbed-labels"><label for="__tabbed_241_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -33121,7 +33185,7 @@ passed inside a signed request object it can already be an array.</td>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="241:1"><input checked="checked" id="__tabbed_241_1" name="__tabbed_241" type="radio"><div class="tabbed-labels"><label for="__tabbed_241_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="242:1"><input checked="checked" id="__tabbed_242_1" name="__tabbed_242" type="radio"><div class="tabbed-labels"><label for="__tabbed_242_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -33171,7 +33235,7 @@ passed inside a signed request object it can already be an array.</td>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="242:1"><input checked="checked" id="__tabbed_242_1" name="__tabbed_242" type="radio"><div class="tabbed-labels"><label for="__tabbed_242_1">application/x-www-form-urlencoded</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="243:1"><input checked="checked" id="__tabbed_243_1" name="__tabbed_243" type="radio"><div class="tabbed-labels"><label for="__tabbed_243_1">application/x-www-form-urlencoded</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-233-1" name="__codelineno-233-1" href="#__codelineno-233-1"></a><span class="p">{</span>
@@ -33245,10 +33309,10 @@ passed inside a signed request object it can already be an array.</td>
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="243:1"><input checked="checked" id="__tabbed_243_1" name="__tabbed_243" type="radio"><div class="tabbed-labels"><label for="__tabbed_243_1">201 Created</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="244:1"><input checked="checked" id="__tabbed_244_1" name="__tabbed_244" type="radio"><div class="tabbed-labels"><label for="__tabbed_244_1">201 Created</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="244:1"><input checked="checked" id="__tabbed_244_1" name="__tabbed_244" type="radio"><div class="tabbed-labels"><label for="__tabbed_244_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="245:1"><input checked="checked" id="__tabbed_245_1" name="__tabbed_245" type="radio"><div class="tabbed-labels"><label for="__tabbed_245_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-235-1" name="__codelineno-235-1" href="#__codelineno-235-1"></a><span class="p">{</span>
@@ -33314,10 +33378,10 @@ This endpoint is used to exchange the authorization code for an access token.</p
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="245:1"><input checked="checked" id="__tabbed_245_1" name="__tabbed_245" type="radio"><div class="tabbed-labels"><label for="__tabbed_245_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="246:1"><input checked="checked" id="__tabbed_246_1" name="__tabbed_246" type="radio"><div class="tabbed-labels"><label for="__tabbed_246_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="246:1"><input checked="checked" id="__tabbed_246_1" name="__tabbed_246" type="radio"><div class="tabbed-labels"><label for="__tabbed_246_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="247:1"><input checked="checked" id="__tabbed_247_1" name="__tabbed_247" type="radio"><div class="tabbed-labels"><label for="__tabbed_247_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -33363,7 +33427,7 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="247:1"><input checked="checked" id="__tabbed_247_1" name="__tabbed_247" type="radio"><div class="tabbed-labels"><label for="__tabbed_247_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="248:1"><input checked="checked" id="__tabbed_248_1" name="__tabbed_248" type="radio"><div class="tabbed-labels"><label for="__tabbed_248_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -33416,7 +33480,7 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="248:1"><input checked="checked" id="__tabbed_248_1" name="__tabbed_248" type="radio"><div class="tabbed-labels"><label for="__tabbed_248_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="249:1"><input checked="checked" id="__tabbed_249_1" name="__tabbed_249" type="radio"><div class="tabbed-labels"><label for="__tabbed_249_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-238-1" name="__codelineno-238-1" href="#__codelineno-238-1"></a><span class="p">{</span>
@@ -33512,10 +33576,10 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="249:2"><input checked="checked" id="__tabbed_249_1" name="__tabbed_249" type="radio"><input id="__tabbed_249_2" name="__tabbed_249" type="radio"><div class="tabbed-labels"><label for="__tabbed_249_1">200 OK</label><label for="__tabbed_249_2">400 Bad Request</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="250:2"><input checked="checked" id="__tabbed_250_1" name="__tabbed_250" type="radio"><input id="__tabbed_250_2" name="__tabbed_250" type="radio"><div class="tabbed-labels"><label for="__tabbed_250_1">200 OK</label><label for="__tabbed_250_2">400 Bad Request</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="250:1"><input checked="checked" id="__tabbed_250_1" name="__tabbed_250" type="radio"><div class="tabbed-labels"><label for="__tabbed_250_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="251:1"><input checked="checked" id="__tabbed_251_1" name="__tabbed_251" type="radio"><div class="tabbed-labels"><label for="__tabbed_251_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-240-1" name="__codelineno-240-1" href="#__codelineno-240-1"></a><span class="p">{</span>
@@ -33552,7 +33616,7 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </div>
 </div>
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="251:1"><input checked="checked" id="__tabbed_251_1" name="__tabbed_251" type="radio"><div class="tabbed-labels"><label for="__tabbed_251_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="252:1"><input checked="checked" id="__tabbed_252_1" name="__tabbed_252" type="radio"><div class="tabbed-labels"><label for="__tabbed_252_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-242-1" name="__codelineno-242-1" href="#__codelineno-242-1"></a><span class="p">{</span>
@@ -33630,7 +33694,7 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="252:2"><input checked="checked" id="__tabbed_252_1" name="__tabbed_252" type="radio"><input id="__tabbed_252_2" name="__tabbed_252" type="radio"><div class="tabbed-labels"><label for="__tabbed_252_1">200 OK</label><label for="__tabbed_252_2">404 Not Found</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="253:2"><input checked="checked" id="__tabbed_253_1" name="__tabbed_253" type="radio"><input id="__tabbed_253_2" name="__tabbed_253" type="radio"><div class="tabbed-labels"><label for="__tabbed_253_1">200 OK</label><label for="__tabbed_253_2">404 Not Found</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 <div class="tabbed-block"></div>
@@ -33673,10 +33737,10 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="253:1"><input checked="checked" id="__tabbed_253_1" name="__tabbed_253" type="radio"><div class="tabbed-labels"><label for="__tabbed_253_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="254:1"><input checked="checked" id="__tabbed_254_1" name="__tabbed_254" type="radio"><div class="tabbed-labels"><label for="__tabbed_254_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="254:1"><input checked="checked" id="__tabbed_254_1" name="__tabbed_254" type="radio"><div class="tabbed-labels"><label for="__tabbed_254_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="255:1"><input checked="checked" id="__tabbed_255_1" name="__tabbed_255" type="radio"><div class="tabbed-labels"><label for="__tabbed_255_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-244-1" name="__codelineno-244-1" href="#__codelineno-244-1"></a><span class="p">{</span>
@@ -33759,10 +33823,10 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="255:1"><input checked="checked" id="__tabbed_255_1" name="__tabbed_255" type="radio"><div class="tabbed-labels"><label for="__tabbed_255_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="256:1"><input checked="checked" id="__tabbed_256_1" name="__tabbed_256" type="radio"><div class="tabbed-labels"><label for="__tabbed_256_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="256:2"><input checked="checked" id="__tabbed_256_1" name="__tabbed_256" type="radio"><input id="__tabbed_256_2" name="__tabbed_256" type="radio"><div class="tabbed-labels"><label for="__tabbed_256_1">application/json</label><label for="__tabbed_256_2">application/jwt</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="257:2"><input checked="checked" id="__tabbed_257_1" name="__tabbed_257" type="radio"><input id="__tabbed_257_2" name="__tabbed_257" type="radio"><div class="tabbed-labels"><label for="__tabbed_257_1">application/json</label><label for="__tabbed_257_2">application/jwt</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -33816,7 +33880,7 @@ Returns a nonce for inclusion in the Client Attestation PoP JWT.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="257:1"><input checked="checked" id="__tabbed_257_1" name="__tabbed_257" type="radio"><div class="tabbed-labels"><label for="__tabbed_257_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="258:1"><input checked="checked" id="__tabbed_258_1" name="__tabbed_258" type="radio"><div class="tabbed-labels"><label for="__tabbed_258_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -33852,10 +33916,10 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="258:1"><input checked="checked" id="__tabbed_258_1" name="__tabbed_258" type="radio"><div class="tabbed-labels"><label for="__tabbed_258_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="259:1"><input checked="checked" id="__tabbed_259_1" name="__tabbed_259" type="radio"><div class="tabbed-labels"><label for="__tabbed_259_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="259:1"><input checked="checked" id="__tabbed_259_1" name="__tabbed_259" type="radio"><div class="tabbed-labels"><label for="__tabbed_259_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="260:1"><input checked="checked" id="__tabbed_260_1" name="__tabbed_260" type="radio"><div class="tabbed-labels"><label for="__tabbed_260_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -33900,10 +33964,10 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="260:1"><input checked="checked" id="__tabbed_260_1" name="__tabbed_260" type="radio"><div class="tabbed-labels"><label for="__tabbed_260_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="261:1"><input checked="checked" id="__tabbed_261_1" name="__tabbed_261" type="radio"><div class="tabbed-labels"><label for="__tabbed_261_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="261:1"><input checked="checked" id="__tabbed_261_1" name="__tabbed_261" type="radio"><div class="tabbed-labels"><label for="__tabbed_261_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="262:1"><input checked="checked" id="__tabbed_262_1" name="__tabbed_262" type="radio"><div class="tabbed-labels"><label for="__tabbed_262_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-249-1" name="__codelineno-249-1" href="#__codelineno-249-1"></a><span class="p">{</span>
@@ -33972,7 +34036,7 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="262:1"><input checked="checked" id="__tabbed_262_1" name="__tabbed_262" type="radio"><div class="tabbed-labels"><label for="__tabbed_262_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="263:1"><input checked="checked" id="__tabbed_263_1" name="__tabbed_263" type="radio"><div class="tabbed-labels"><label for="__tabbed_263_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -34059,10 +34123,10 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="263:2"><input checked="checked" id="__tabbed_263_1" name="__tabbed_263" type="radio"><input id="__tabbed_263_2" name="__tabbed_263" type="radio"><div class="tabbed-labels"><label for="__tabbed_263_1">201 Created</label><label for="__tabbed_263_2">400 Bad Request</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="264:2"><input checked="checked" id="__tabbed_264_1" name="__tabbed_264" type="radio"><input id="__tabbed_264_2" name="__tabbed_264" type="radio"><div class="tabbed-labels"><label for="__tabbed_264_1">201 Created</label><label for="__tabbed_264_2">400 Bad Request</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="264:1"><input checked="checked" id="__tabbed_264_1" name="__tabbed_264" type="radio"><div class="tabbed-labels"><label for="__tabbed_264_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="265:1"><input checked="checked" id="__tabbed_265_1" name="__tabbed_265" type="radio"><div class="tabbed-labels"><label for="__tabbed_265_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-251-1" name="__codelineno-251-1" href="#__codelineno-251-1"></a><span class="p">{</span>
@@ -34099,7 +34163,7 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </div>
 </div>
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="265:1"><input checked="checked" id="__tabbed_265_1" name="__tabbed_265" type="radio"><div class="tabbed-labels"><label for="__tabbed_265_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="266:1"><input checked="checked" id="__tabbed_266_1" name="__tabbed_266" type="radio"><div class="tabbed-labels"><label for="__tabbed_266_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-253-1" name="__codelineno-253-1" href="#__codelineno-253-1"></a><span class="p">{</span>
@@ -34184,11 +34248,11 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="266:2"><input checked="checked" id="__tabbed_266_1" name="__tabbed_266" type="radio"><input id="__tabbed_266_2" name="__tabbed_266" type="radio"><div class="tabbed-labels"><label for="__tabbed_266_1">302 Found</label><label for="__tabbed_266_2">400 Bad Request</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="267:2"><input checked="checked" id="__tabbed_267_1" name="__tabbed_267" type="radio"><input id="__tabbed_267_2" name="__tabbed_267" type="radio"><div class="tabbed-labels"><label for="__tabbed_267_1">302 Found</label><label for="__tabbed_267_2">400 Bad Request</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="267:1"><input checked="checked" id="__tabbed_267_1" name="__tabbed_267" type="radio"><div class="tabbed-labels"><label for="__tabbed_267_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="268:1"><input checked="checked" id="__tabbed_268_1" name="__tabbed_268" type="radio"><div class="tabbed-labels"><label for="__tabbed_268_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-255-1" name="__codelineno-255-1" href="#__codelineno-255-1"></a><span class="p">{</span>
@@ -34289,11 +34353,11 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="268:2"><input checked="checked" id="__tabbed_268_1" name="__tabbed_268" type="radio"><input id="__tabbed_268_2" name="__tabbed_268" type="radio"><div class="tabbed-labels"><label for="__tabbed_268_1">302 Found</label><label for="__tabbed_268_2">400 Bad Request</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="269:2"><input checked="checked" id="__tabbed_269_1" name="__tabbed_269" type="radio"><input id="__tabbed_269_2" name="__tabbed_269" type="radio"><div class="tabbed-labels"><label for="__tabbed_269_1">302 Found</label><label for="__tabbed_269_2">400 Bad Request</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="269:1"><input checked="checked" id="__tabbed_269_1" name="__tabbed_269" type="radio"><div class="tabbed-labels"><label for="__tabbed_269_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="270:1"><input checked="checked" id="__tabbed_270_1" name="__tabbed_270" type="radio"><div class="tabbed-labels"><label for="__tabbed_270_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-257-1" name="__codelineno-257-1" href="#__codelineno-257-1"></a><span class="p">{</span>
@@ -34378,7 +34442,7 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="270:1"><input checked="checked" id="__tabbed_270_1" name="__tabbed_270" type="radio"><div class="tabbed-labels"><label for="__tabbed_270_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="271:1"><input checked="checked" id="__tabbed_271_1" name="__tabbed_271" type="radio"><div class="tabbed-labels"><label for="__tabbed_271_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-259-1" name="__codelineno-259-1" href="#__codelineno-259-1"></a><span class="p">{</span>
@@ -34433,10 +34497,10 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="271:3"><input checked="checked" id="__tabbed_271_1" name="__tabbed_271" type="radio"><input id="__tabbed_271_2" name="__tabbed_271" type="radio"><input id="__tabbed_271_3" name="__tabbed_271" type="radio"><div class="tabbed-labels"><label for="__tabbed_271_1">200 OK</label><label for="__tabbed_271_2">400 Bad Request</label><label for="__tabbed_271_3">401 Unauthorized</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="272:3"><input checked="checked" id="__tabbed_272_1" name="__tabbed_272" type="radio"><input id="__tabbed_272_2" name="__tabbed_272" type="radio"><input id="__tabbed_272_3" name="__tabbed_272" type="radio"><div class="tabbed-labels"><label for="__tabbed_272_1">200 OK</label><label for="__tabbed_272_2">400 Bad Request</label><label for="__tabbed_272_3">401 Unauthorized</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="272:1"><input checked="checked" id="__tabbed_272_1" name="__tabbed_272" type="radio"><div class="tabbed-labels"><label for="__tabbed_272_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="273:1"><input checked="checked" id="__tabbed_273_1" name="__tabbed_273" type="radio"><div class="tabbed-labels"><label for="__tabbed_273_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-261-1" name="__codelineno-261-1" href="#__codelineno-261-1"></a><span class="p">{</span>
@@ -34509,7 +34573,7 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </div>
 </div>
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="273:1"><input checked="checked" id="__tabbed_273_1" name="__tabbed_273" type="radio"><div class="tabbed-labels"><label for="__tabbed_273_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="274:1"><input checked="checked" id="__tabbed_274_1" name="__tabbed_274" type="radio"><div class="tabbed-labels"><label for="__tabbed_274_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-263-1" name="__codelineno-263-1" href="#__codelineno-263-1"></a><span class="p">{</span>
@@ -34544,7 +34608,7 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 </div>
 </div>
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="274:1"><input checked="checked" id="__tabbed_274_1" name="__tabbed_274" type="radio"><div class="tabbed-labels"><label for="__tabbed_274_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="275:1"><input checked="checked" id="__tabbed_275_1" name="__tabbed_275" type="radio"><div class="tabbed-labels"><label for="__tabbed_275_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-265-1" name="__codelineno-265-1" href="#__codelineno-265-1"></a><span class="p">{</span>
@@ -34612,10 +34676,10 @@ Per OID4VP spec section 5.10.1: Response MUST use Content-Type: application/oaut
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="275:1"><input checked="checked" id="__tabbed_275_1" name="__tabbed_275" type="radio"><div class="tabbed-labels"><label for="__tabbed_275_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="276:1"><input checked="checked" id="__tabbed_276_1" name="__tabbed_276" type="radio"><div class="tabbed-labels"><label for="__tabbed_276_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="276:1"><input checked="checked" id="__tabbed_276_1" name="__tabbed_276" type="radio"><div class="tabbed-labels"><label for="__tabbed_276_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="277:1"><input checked="checked" id="__tabbed_277_1" name="__tabbed_277" type="radio"><div class="tabbed-labels"><label for="__tabbed_277_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-267-1" name="__codelineno-267-1" href="#__codelineno-267-1"></a><span class="s2">"string"</span>
@@ -34665,10 +34729,10 @@ Per OID4VP spec section 5.10.1: Response MUST use Content-Type: application/oaut
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="277:1"><input checked="checked" id="__tabbed_277_1" name="__tabbed_277" type="radio"><div class="tabbed-labels"><label for="__tabbed_277_1">201 Created</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="278:1"><input checked="checked" id="__tabbed_278_1" name="__tabbed_278" type="radio"><div class="tabbed-labels"><label for="__tabbed_278_1">201 Created</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="278:1"><input checked="checked" id="__tabbed_278_1" name="__tabbed_278" type="radio"><div class="tabbed-labels"><label for="__tabbed_278_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="279:1"><input checked="checked" id="__tabbed_279_1" name="__tabbed_279" type="radio"><div class="tabbed-labels"><label for="__tabbed_279_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-269-1" name="__codelineno-269-1" href="#__codelineno-269-1"></a><span class="s2">"string"</span>
@@ -34718,10 +34782,10 @@ Per OID4VP spec section 5.10.1: Response MUST use Content-Type: application/oaut
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="279:1"><input checked="checked" id="__tabbed_279_1" name="__tabbed_279" type="radio"><div class="tabbed-labels"><label for="__tabbed_279_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="280:1"><input checked="checked" id="__tabbed_280_1" name="__tabbed_280" type="radio"><div class="tabbed-labels"><label for="__tabbed_280_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="280:1"><input checked="checked" id="__tabbed_280_1" name="__tabbed_280" type="radio"><div class="tabbed-labels"><label for="__tabbed_280_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="281:1"><input checked="checked" id="__tabbed_281_1" name="__tabbed_281" type="radio"><div class="tabbed-labels"><label for="__tabbed_281_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-271-1" name="__codelineno-271-1" href="#__codelineno-271-1"></a><span class="s2">"string"</span>
@@ -34769,7 +34833,7 @@ Per OID4VP spec section 5.10.1: Response MUST use Content-Type: application/oaut
 </table>
 <p class="request-body-title"><strong>Request body</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="281:1"><input checked="checked" id="__tabbed_281_1" name="__tabbed_281" type="radio"><div class="tabbed-labels"><label for="__tabbed_281_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="282:1"><input checked="checked" id="__tabbed_282_1" name="__tabbed_282" type="radio"><div class="tabbed-labels"><label for="__tabbed_282_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p></p><div class="highlight"><pre><span></span><code><a id="__codelineno-273-1" name="__codelineno-273-1" href="#__codelineno-273-1"></a><span class="p">{</span>
@@ -34819,10 +34883,10 @@ Per OID4VP spec section 5.10.1: Response MUST use Content-Type: application/oaut
 </div>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="282:1"><input checked="checked" id="__tabbed_282_1" name="__tabbed_282" type="radio"><div class="tabbed-labels"><label for="__tabbed_282_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="283:1"><input checked="checked" id="__tabbed_283_1" name="__tabbed_283" type="radio"><div class="tabbed-labels"><label for="__tabbed_283_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="tabbed-set tabbed-alternate" data-tabs="283:1"><input checked="checked" id="__tabbed_283_1" name="__tabbed_283" type="radio"><div class="tabbed-labels"><label for="__tabbed_283_1">application/json</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="284:1"><input checked="checked" id="__tabbed_284_1" name="__tabbed_284" type="radio"><div class="tabbed-labels"><label for="__tabbed_284_1">application/json</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <details class="hint">
@@ -34868,7 +34932,7 @@ Per OID4VP spec section 5.10.1: Response MUST use Content-Type: application/oaut
 </table>
 <p class="responses-title"><strong>Responses</strong></p>
 
-<div class="tabbed-set tabbed-alternate" data-tabs="284:1"><input checked="checked" id="__tabbed_284_1" name="__tabbed_284" type="radio"><div class="tabbed-labels"><label for="__tabbed_284_1">200 OK</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="285:1"><input checked="checked" id="__tabbed_285_1" name="__tabbed_285" type="radio"><div class="tabbed-labels"><label for="__tabbed_285_1">200 OK</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
