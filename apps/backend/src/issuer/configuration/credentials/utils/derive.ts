@@ -25,9 +25,7 @@ function resolveChildPath(
     return [...parentPath, ...childPath];
 }
 
-function flattenFields(
-    fields: ClaimFieldDefinition[],
-): ClaimFieldDefinition[] {
+function flattenFields(fields: ClaimFieldDefinition[]): ClaimFieldDefinition[] {
     const result: ClaimFieldDefinition[] = [];
 
     for (const field of fields) {
