@@ -453,9 +453,7 @@ export class IssuanceOfferComponent implements OnInit {
       return explicit;
     }
 
-    const key = Array.isArray(field.key)
-      ? field.key.at(-1)
-      : field.key;
+    const key = Array.isArray(field.key) ? field.key.at(-1) : field.key;
     const raw = key == null ? '' : String(key);
 
     return raw
