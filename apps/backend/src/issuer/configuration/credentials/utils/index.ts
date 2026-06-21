@@ -3,6 +3,5 @@ export {
     buildClaimsByNamespace,
     buildClaimsMetadata,
     buildDisclosureFrame,
-    buildJsonSchema,
-    flattenFields,
+    buildJsonSchema,    
 } from "./derive";
