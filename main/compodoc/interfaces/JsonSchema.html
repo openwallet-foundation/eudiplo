@@ -228,7 +228,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/issuer/configuration/credentials/utils/types.ts:48</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/issuer/configuration/credentials/utils/types.ts:49</a></div>
                             </td>
                         </tr>
             </tbody>
@@ -533,6 +533,7 @@ export interface ClaimFieldDefinition {
     namespace?: string;
     display?: FieldDisplay[];
     constraints?: Record&lt;string, unknown&gt;;
+    children?: ClaimFieldDefinition[];
 }
 
 /** @internal Used by derive functions to build runtime metadata for issuance. */

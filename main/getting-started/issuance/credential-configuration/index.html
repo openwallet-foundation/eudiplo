@@ -943,6 +943,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#nested-field-groups-children" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nested Field Groups (children)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#attribute-provider" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3266,6 +3277,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#nested-field-groups-children" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nested Field Groups (children)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#attribute-provider" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3858,7 +3880,7 @@ credentials. Each credential type has its own configuration.</p>
 <li><code>keyBinding</code>: <strong>OPTIONAL</strong> - Enable cryptographic key binding. When <code>true</code>,
   credentials include a <code>cnf</code> claim with the holder's public key and require
   proof of possession. See <a href="#cryptographic-key-binding">Cryptographic Key Binding</a> for details.</li>
-<li><code>fields</code>: <strong>REQUIRED for v2</strong> - Field definitions (<code>ClaimFieldDefinition[]</code>) that describe claim paths, data types, defaults, disclosure behavior, and optional display labels.</li>
+<li><code>fields</code>: <strong>REQUIRED</strong> - Field definitions (<code>ClaimFieldDefinition[]</code>) that describe claim paths, data types, defaults, disclosure behavior, and optional display labels.</li>
 <li><code>attributeProviderId</code>: <strong>OPTIONAL</strong> - Reference to an Attribute Provider that fetches claims dynamically. See <a href="../attribute-provider/">Attribute Providers</a> for details.</li>
 <li><code>webhookEndpointId</code>: <strong>OPTIONAL</strong> - Reference to a Webhook Endpoint for receiving notifications about the issuance process. See <a href="#notification-webhook-endpoint">Notification Webhook Endpoint</a> for details.</li>
 <li><code>sdJwtTrustFormat</code>: <strong>OPTIONAL (SD-JWT only)</strong> - Controls trust signaling in issued SD-JWT credentials:<ul>
@@ -3877,7 +3899,17 @@ to create and version schema metadata entries.</p>
 </div>
 <hr>
 <h2 id="configuring-fields">Configuring Fields<a class="headerlink" href="#configuring-fields" title="Permanent link">¶</a></h2>
-<p>In v2, claim content is configured through <code>fields[]</code>. Each entry describes a single claim path (or object/array node), with type information and optional defaults.</p>
+<p>In the current configuration model, claim content is configured through <code>fields[]</code>. Each entry can describe either:</p>
+<ul>
+<li>a leaf claim (for example <code>path: ["given_name"]</code>), or</li>
+<li>a container claim (<code>object</code>/<code>array</code>) with nested <code>children</code>.</li>
+</ul>
+<p>Nested child paths can be defined in two ways:</p>
+<ul>
+<li>relative to the parent path (recommended), or</li>
+<li>as a full absolute path (also supported).</li>
+</ul>
+<p>For arrays, use numeric child path segments such as <code>[0]</code> to describe item entries.</p>
 <div class="admonition info">
 <p class="admonition-title">Claims Priority System</p>
 <p>EUDIPLO supports multiple ways to provide claims (configuration-level and offer-level), with a priority system that determines which claims are used. For a complete explanation of the claims priority order and when to use each method, see <a href="../credential-offers/#passing-claims">Credential Offers</a>.</p>
@@ -3905,13 +3937,48 @@ to create and version schema metadata entries.</p>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">            </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">        </span><span class="p">},</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">        </span><span class="p">{</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"address"</span><span class="p">,</span><span class="w"> </span><span class="s2">"postal_code"</span><span class="p">],</span>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51147"</span><span class="p">,</span>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">            </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">    </span><span class="p">]</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="p">}</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"address"</span><span class="p">],</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">            </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">            </span><span class="nt">"children"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">                </span><span class="p">{</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">                    </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"country"</span><span class="p">],</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">                    </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE"</span><span class="p">,</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">                    </span><span class="nt">"mandatory"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">                    </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="w">                </span><span class="p">},</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="w">                </span><span class="p">{</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">                    </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"postal_code"</span><span class="p">],</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">                    </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51147"</span><span class="p">,</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">                    </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">            </span><span class="p">]</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">            </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"nationalities"</span><span class="p">],</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="w">            </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"DE"</span><span class="p">],</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a><span class="w">            </span><span class="nt">"mandatory"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="w">            </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a><span class="w">            </span><span class="nt">"constraints"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="w">                </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a><span class="w">                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a><span class="w">                    </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nationality"</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a><span class="w">            </span><span class="p">},</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a><span class="w">            </span><span class="nt">"children"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a><span class="w">                </span><span class="p">{</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a><span class="w">                    </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a><span class="w">                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a><span class="w">                    </span><span class="nt">"defaultValue"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DE"</span><span class="p">,</span>
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a><span class="w">                    </span><span class="nt">"disclosable"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a><span class="w">            </span><span class="p">]</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a><span class="p">}</span>
 </code></pre></div>
 <p>Static field defaults are useful for:</p>
 <ul>
@@ -3919,6 +3986,14 @@ to create and version schema metadata entries.</p>
 <li>Fixed metadata (e.g., issuing country, issuing authority)</li>
 <li>Development and testing scenarios</li>
 </ul>
+<h3 id="nested-field-groups-children">Nested Field Groups (<code>children</code>)<a class="headerlink" href="#nested-field-groups-children" title="Permanent link">¶</a></h3>
+<p>Use <code>children</code> when you want to model grouped structures like <code>address</code>, <code>age_equal_or_over</code>, or <code>place_of_birth</code>.</p>
+<ul>
+<li>Parent node: define <code>path</code> and <code>type</code> (<code>object</code> or <code>array</code>)</li>
+<li>Child nodes: define claim fields under <code>children[]</code></li>
+<li>Child paths: prefer relative paths (for example <code>"path": ["street_address"]</code> under parent <code>"path": ["address"]</code>)</li>
+</ul>
+<p>This structure improves readability in config files and enables grouped rendering in form-based UIs.</p>
 <h3 id="attribute-provider">Attribute Provider<a class="headerlink" href="#attribute-provider" title="Permanent link">¶</a></h3>
 <p>For dynamic claim retrieval, configure an Attribute Provider that is called during issuance:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
@@ -3954,7 +4029,7 @@ to create and version schema metadata entries.</p>
 </div>
 <hr>
 <h2 id="selective-disclosure">Selective Disclosure<a class="headerlink" href="#selective-disclosure" title="Permanent link">¶</a></h2>
-<p>In v2, selective disclosure for <a href="https://www.rfc-editor.org/rfc/rfc9901.html">SD-JWT</a> is defined per field using <code>disclosable</code>.</p>
+<p>In the current configuration model, selective disclosure for <a href="https://www.rfc-editor.org/rfc/rfc9901.html">SD-JWT</a> is defined per field using <code>disclosable</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">        </span><span class="p">{</span>
