@@ -8,6 +8,35 @@ const JSON_SCHEMA_DRAFT_2020_12 = "https://json-schema.org/draft/2020-12/schema"
 
 type Segment = string | number | null;
 
+function resolveChildPath(parentPath: Segment[], childPath: Segment[]): Segment[] {
+  if (childPath.length >= parentPath.length) {
+    const startsWithParent = parentPath.every((seg, i) => seg === childPath[i]);
+    if (startsWithParent) {
+      return childPath;
+    }
+  }
+  return [...parentPath, ...childPath];
+}
+
+export function flattenFields(fields: ClaimFieldDefinition[]): ClaimFieldDefinition[] {
+  const result: ClaimFieldDefinition[] = [];
+
+  for (const field of fields) {
+    const { children, ...fieldWithoutChildren } = field;
+    result.push(fieldWithoutChildren);
+
+    if (children && children.length > 0) {
+      const resolvedChildren: ClaimFieldDefinition[] = children.map((child) => ({
+        ...child,
+        path: resolveChildPath(field.path, child.path),
+      }));
+      result.push(...flattenFields(resolvedChildren));
+    }
+  }
+
+  return result;
+}
+
 function segmentToKey(segment: Segment): string {
   if (segment === null) {
     return "*";
@@ -154,7 +183,7 @@ export function buildClaims(
 ): Record<string, unknown> {
   const claims: Record<string, unknown> = {};
 
-  for (const field of fields) {
+  for (const field of flattenFields(fields)) {
     if (!Object.prototype.hasOwnProperty.call(field, "defaultValue")) {
       continue;
     }
@@ -171,7 +200,7 @@ export function buildDisclosureFrame(
   const frame: Record<string, unknown> = {};
   let hasDisclosure = false;
 
-  for (const field of fields) {
+  for (const field of flattenFields(fields)) {
     if (!field.disclosable || field.path.length === 0) {
       continue;
     }
@@ -193,7 +222,7 @@ export function buildDisclosureFrame(
 }
 
 export function buildClaimsMetadata(fields: ClaimFieldDefinition[]): ClaimMetadata[] {
-  return fields
+  return flattenFields(fields)
     .filter((field) => field.path.length > 0)
     .map((field) => {
       const metadata: ClaimMetadata = {
@@ -241,7 +270,7 @@ export function buildJsonSchema(fields: ClaimFieldDefinition[]): JsonSchema {
     properties: {},
   };
 
-  for (const field of fields) {
+  for (const field of flattenFields(fields)) {
     if (field.path.length === 0) {
       continue;
     }
@@ -274,7 +303,7 @@ export function buildClaimsByNamespace(
 ): Record<string, Record<string, unknown>> {
   const byNamespace: Record<string, Record<string, unknown>> = {};
 
-  for (const field of fields) {
+  for (const field of flattenFields(fields)) {
     if (!field.namespace || !Object.prototype.hasOwnProperty.call(field, "defaultValue")) {
       continue;
     }

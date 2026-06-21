@@ -2481,10 +2481,7 @@ export const SchemaUriEntrySchema = {
             description: 'Schema-format specific metadata (for example { vct: \'urn:example:vct\' } for dc+sd-jwt).',
             additionalProperties: true
         }
-    },
-    required: [
-        'meta'
-    ]
+    }
 } as const;
 
 export const TrustAuthorityEntrySchema = {
@@ -2512,9 +2509,17 @@ export const TrustAuthorityEntrySchema = {
             description: 'Whether this trust authority is a List of Trusted Entities (LoTE)'
         },
         verificationMethod: {
-            type: 'object',
             description: 'Optional verification material for external trusted authorities (for example a JWK). For internal trust-list URLs, EUDIPLO resolves verification material from the database.',
-            additionalProperties: true
+            oneOf: [
+                {
+                    type: 'object',
+                    additionalProperties: true
+                },
+                {
+                    type: 'string',
+                    description: 'JSON string representing an object. Parsed server-side for form submissions.'
+                }
+            ]
         }
     }
 } as const;
@@ -2726,7 +2731,7 @@ export const ClaimFieldDefinitionDtoSchema = {
     properties: {
         path: {
             type: 'array',
-            description: 'Path to claim value',
+            description: 'Path to claim value. For nested child fields this can be relative to the parent path.',
             example: [
                 'address',
                 'locality'
@@ -2804,6 +2809,13 @@ export const ClaimFieldDefinitionDtoSchema = {
         constraints: {
             type: 'object',
             description: 'Additional JSON schema constraints for this field'
+        },
+        children: {
+            description: 'Optional nested child fields. Child paths may be specified relative to the parent field path.',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/ClaimFieldDefinitionDto'
+            }
         }
     },
     required: [

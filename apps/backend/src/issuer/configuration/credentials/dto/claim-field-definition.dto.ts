@@ -33,7 +33,8 @@ export class FieldDisplayDto {
 
 export class ClaimFieldDefinitionDto {
     @ApiProperty({
-        description: "Path to claim value",
+        description:
+            "Path to claim value. For nested child fields this can be relative to the parent path.",
         example: ["address", "locality"],
         type: "array",
         items: {
@@ -99,4 +100,15 @@ export class ClaimFieldDefinitionDto {
     @IsOptional()
     @IsObject()
     constraints?: Record<string, unknown>;
+
+    @ApiPropertyOptional({
+        description:
+            "Optional nested child fields. Child paths may be specified relative to the parent field path.",
+        type: () => [ClaimFieldDefinitionDto],
+    })
+    @IsOptional()
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => ClaimFieldDefinitionDto)
+    children?: ClaimFieldDefinitionDto[];
 }

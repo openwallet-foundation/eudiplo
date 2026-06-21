@@ -1223,7 +1223,7 @@ export type SchemaUriEntry = {
     /**
      * Schema-format specific metadata (for example { vct: 'urn:example:vct' } for dc+sd-jwt).
      */
-    meta: {
+    meta?: {
         [key: string]: unknown;
     };
 };
@@ -1250,7 +1250,7 @@ export type TrustAuthorityEntry = {
      */
     verificationMethod?: {
         [key: string]: unknown;
-    };
+    } | string;
 };
 
 export type SchemaMetaConfig = {
@@ -1347,7 +1347,7 @@ export type FieldDisplayDto = {
 
 export type ClaimFieldDefinitionDto = {
     /**
-     * Path to claim value
+     * Path to claim value. For nested child fields this can be relative to the parent path.
      */
     path: Array<string | number | null>;
     /**
@@ -1379,6 +1379,10 @@ export type ClaimFieldDefinitionDto = {
     constraints?: {
         [key: string]: unknown;
     };
+    /**
+     * Optional nested child fields. Child paths may be specified relative to the parent field path.
+     */
+    children?: Array<ClaimFieldDefinitionDto>;
 };
 
 export type AttributeProviderEntity = {

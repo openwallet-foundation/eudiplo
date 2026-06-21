@@ -25,6 +25,7 @@ export interface ClaimFieldDefinition {
   namespace?: string;
   display?: FieldDisplay[];
   constraints?: Record<string, unknown>;
+  children?: ClaimFieldDefinition[];
 }
 
 export interface ClaimMetadata {

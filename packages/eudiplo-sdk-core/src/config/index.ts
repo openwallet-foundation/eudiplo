@@ -15,4 +15,5 @@ export {
   buildDisclosureFrame,
   buildJsonSchema,
   deriveRuntimeArtifacts,
+  flattenFields,
 } from "./derive";

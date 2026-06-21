@@ -10,6 +10,44 @@ const JSON_SCHEMA_DRAFT_2020_12 =
 
 type Segment = string | number | null;
 
+function resolveChildPath(
+    parentPath: Segment[],
+    childPath: Segment[],
+): Segment[] {
+    if (childPath.length >= parentPath.length) {
+        const startsWithParent = parentPath.every(
+            (seg, i) => seg === childPath[i],
+        );
+        if (startsWithParent) {
+            return childPath;
+        }
+    }
+    return [...parentPath, ...childPath];
+}
+
+export function flattenFields(
+    fields: ClaimFieldDefinition[],
+): ClaimFieldDefinition[] {
+    const result: ClaimFieldDefinition[] = [];
+
+    for (const field of fields) {
+        const { children, ...fieldWithoutChildren } = field;
+        result.push(fieldWithoutChildren);
+
+        if (children && children.length > 0) {
+            const resolvedChildren: ClaimFieldDefinition[] = children.map(
+                (child) => ({
+                    ...child,
+                    path: resolveChildPath(field.path, child.path),
+                }),
+            );
+            result.push(...flattenFields(resolvedChildren));
+        }
+    }
+
+    return result;
+}
+
 function segmentToKey(segment: Segment): string {
     if (segment === null) {
         return "*";
@@ -99,6 +137,40 @@ function getDisplayTitle(
     return en?.name ?? display[0]?.name;
 }
 
+function mergeLeafSchema(existing: JsonSchema, next: JsonSchema): JsonSchema {
+    const merged: JsonSchema = { ...next };
+    if (existing.properties && Object.keys(existing.properties).length > 0) {
+        merged.properties = existing.properties;
+    }
+    if (Array.isArray(existing.required) && existing.required.length > 0) {
+        merged.required = existing.required;
+    }
+    return merged;
+}
+
+function buildLeafSchema(field: ClaimFieldDefinition): JsonSchema {
+    const leafSchema: JsonSchema = {
+        ...field.constraints,
+        type: field.type,
+    };
+
+    const title = getDisplayTitle(field.display);
+    if (title) {
+        leafSchema.title = title;
+    }
+
+    return leafSchema;
+}
+
+function addRequired(parent: JsonSchema, key: string): void {
+    if (!Array.isArray(parent.required)) {
+        parent.required = [];
+    }
+    if (!parent.required.includes(key)) {
+        parent.required.push(key);
+    }
+}
+
 function ensureSchemaNode(
     root: JsonSchema,
     path: Array<string | number | null>,
@@ -156,7 +228,7 @@ export function buildClaims(
 ): Record<string, unknown> {
     const claims: Record<string, unknown> = {};
 
-    for (const field of fields) {
+    for (const field of flattenFields(fields)) {
         if (!Object.prototype.hasOwnProperty.call(field, "defaultValue")) {
             continue;
         }
@@ -173,7 +245,7 @@ export function buildDisclosureFrame(
     const frame: Record<string, unknown> = {};
     let hasDisclosure = false;
 
-    for (const field of fields) {
+    for (const field of flattenFields(fields)) {
         if (!field.disclosable || field.path.length === 0) {
             continue;
         }
@@ -197,7 +269,7 @@ export function buildDisclosureFrame(
 export function buildClaimsMetadata(
     fields: ClaimFieldDefinition[],
 ): ClaimMetadata[] {
-    return fields
+    return flattenFields(fields)
         .filter((field) => field.path.length > 0)
         .map((field) => {
             const metadata: ClaimMetadata = {
@@ -224,7 +296,7 @@ export function buildJsonSchema(fields: ClaimFieldDefinition[]): JsonSchema {
         properties: {},
     };
 
-    for (const field of fields) {
+    for (const field of flattenFields(fields)) {
         if (field.path.length === 0) {
             continue;
         }
@@ -234,25 +306,16 @@ export function buildJsonSchema(fields: ClaimFieldDefinition[]): JsonSchema {
 
         parent.properties ??= {};
 
-        const leafSchema: JsonSchema = {
-            ...field.constraints,
-            type: field.type,
-        };
+        const leafSchema = buildLeafSchema(field);
 
-        const title = getDisplayTitle(field.display);
-        if (title) {
-            leafSchema.title = title;
-        }
-
-        parent.properties[leafKey] = leafSchema;
+        const existing = parent.properties[leafKey];
+        parent.properties[leafKey] =
+            existing && typeof existing === "object" && !Array.isArray(existing)
+                ? mergeLeafSchema(existing, leafSchema)
+                : leafSchema;
 
         if (field.mandatory) {
-            if (!Array.isArray(parent.required)) {
-                parent.required = [];
-            }
-            if (!parent.required.includes(leafKey)) {
-                parent.required.push(leafKey);
-            }
+            addRequired(parent, leafKey);
         }
     }
 
@@ -264,7 +327,7 @@ export function buildClaimsByNamespace(
 ): Record<string, Record<string, unknown>> {
     const byNamespace: Record<string, Record<string, unknown>> = {};
 
-    for (const field of fields) {
+    for (const field of flattenFields(fields)) {
         if (
             !field.namespace ||
             !Object.prototype.hasOwnProperty.call(field, "defaultValue")

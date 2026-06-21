@@ -4,4 +4,5 @@ export {
     buildClaimsMetadata,
     buildDisclosureFrame,
     buildJsonSchema,
+    flattenFields,
 } from "./derive";
