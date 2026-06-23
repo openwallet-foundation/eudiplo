@@ -15,7 +15,6 @@ import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { PresentationConfig } from '@eudiplo/sdk-core';
 import { PresentationManagementService } from '../presentation-management.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { WebhookConfigShowComponent } from '../../../utils/webhook-config-show/webhook-config-show.component';
 import { presentationManagementControllerReissueRegistrationCertificate } from '@eudiplo/sdk-core';
 import { decodeJwt, decodeProtectedHeader } from 'jose';
 import {
@@ -41,7 +40,6 @@ import { downloadJsonFile } from '../../../common/download-json.util';
     FlexLayoutModule,
     RouterModule,
     ClipboardModule,
-    WebhookConfigShowComponent,
   ],
   templateUrl: './presentation-show.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

@@ -392,12 +392,57 @@
           Integration
         </ng-template>
         <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
-          <!-- Webhook -->
-          <app-webhook-config-show
-            [config]="config.webhook"
-            title="Verification Result"
-            descriptions="Where verification results are sent"
-          ></app-webhook-config-show>
+          <!-- Webhook Endpoint -->
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>webhook</mat-icon>
+                Webhook Endpoint
+              </mat-card-title>
+              <mat-card-subtitle>
+                Endpoint that receives presentation lifecycle notifications
+              </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              @if ($any(config).webhookEndpointId) {
+                <mat-list class="config-list">
+                  @if ($any(config).webhookEndpoint?.name) {
+                    <mat-list-item>
+                      <mat-icon matListItemIcon>label</mat-icon>
+                      <span matListItemTitle>Name</span>
+                      <span matListItemLine>{{ $any(config).webhookEndpoint.name }}</span>
+                    </mat-list-item>
+                  }
+                  <mat-list-item>
+                    <mat-icon matListItemIcon>fingerprint</mat-icon>
+                    <span matListItemTitle>Endpoint ID</span>
+                    <span matListItemLine>{{ $any(config).webhookEndpointId }}</span>
+                  </mat-list-item>
+                </mat-list>
+
+                <div fxLayout="row" fxLayoutGap="12px" fxLayoutWrap>
+                  <button
+                    mat-stroked-button
+                    type="button"
+                    [routerLink]="['/webhook-endpoints', $any(config).webhookEndpointId]"
+                  >
+                    <mat-icon>open_in_new</mat-icon>
+                    Open endpoint
+                  </button>
+                  <button mat-button type="button" [routerLink]="['/webhook-endpoints']">
+                    <mat-icon>list</mat-icon>
+                    View all endpoints
+                  </button>
+                </div>
+              } @else {
+                <p>No webhook endpoint configured.</p>
+                <button mat-button type="button" [routerLink]="['/webhook-endpoints']">
+                  <mat-icon>settings</mat-icon>
+                  Configure webhook endpoints
+                </button>
+              }
+            </mat-card-content>
+          </mat-card>
 
           <!-- Attached Data -->
           @if (config.attached) {
