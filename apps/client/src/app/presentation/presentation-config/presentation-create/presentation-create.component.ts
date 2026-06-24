@@ -14,7 +14,9 @@ import {
   presentationManagementControllerUpdateConfiguration,
   presentationManagementControllerReissueRegistrationCertificate,
   keyChainControllerGetAll,
+  webhookEndpointControllerGetAll,
   KeyChainResponseDto,
+  WebhookEndpointEntity,
 } from '@eudiplo/sdk-core';
 import { PresentationManagementService } from '../presentation-management.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,7 +29,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { configs } from './pre-config';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { EditorComponent, extractSchema } from '../../../utils/editor/editor.component';
-import { WebhookConfigEditComponent } from '../../../utils/webhook-config-edit/webhook-config-edit.component';
+
 import {
   DCQLSchema,
   presentationConfigSchema,
@@ -59,7 +61,6 @@ import { RegistrarService } from '../../../registrar/registrar.service';
     MatTabsModule,
     MonacoEditorModule,
     EditorComponent,
-    WebhookConfigEditComponent,
     CredentialIdsComponent,
   ],
   templateUrl: './presentation-create.component.html',
@@ -81,6 +82,7 @@ export class PresentationCreateComponent implements OnInit {
   public predefinedConfigs = configs;
 
   public keyChains: KeyChainResponseDto[] = [];
+  public webhookEndpoints: WebhookEndpointEntity[] = [];
 
   readonly purposeLanguageOptions = [
     { value: 'en-US', label: 'English (US)' },
@@ -133,16 +135,7 @@ export class PresentationCreateComponent implements OnInit {
       registrationCertBodyPurpose: new FormArray([]),
       transaction_data: new FormControl(undefined), // Optional transaction data
       attached: new FormArray([]),
-      webhook: new FormGroup({
-        url: new FormControl(undefined), // Optional, but if filled, should be valid URL
-        auth: new FormGroup({
-          type: new FormControl(undefined), // Optional
-          config: new FormGroup({
-            headerName: new FormControl(undefined), // Optional
-            value: new FormControl(undefined), // Optional
-          }),
-        }),
-      }),
+      webhookEndpointId: new FormControl(''), // Predefined webhook endpoint selector
     });
   }
 
@@ -156,6 +149,17 @@ export class PresentationCreateComponent implements OnInit {
       (error) => {
         console.error('Failed to load key chains:', error);
         this.snackBar.open('Failed to load key chains', 'Close', {
+          duration: 3000,
+        });
+      }
+    );
+
+    // Load webhook endpoints for the select dropdown
+    webhookEndpointControllerGetAll({}).then(
+      (res) => (this.webhookEndpoints = (res.data || []) as WebhookEndpointEntity[]),
+      (error) => {
+        console.error('Failed to load webhook endpoints:', error);
+        this.snackBar.open('Failed to load webhook endpoints', 'Close', {
           duration: 3000,
         });
       }
@@ -195,6 +199,9 @@ export class PresentationCreateComponent implements OnInit {
           }
 
           (formData.attached || []).forEach(() => this.addAttachment());
+
+          // Remove inline webhook config since we only support webhook endpoint references
+          delete formData.webhook;
 
           if (this.copyMode) {
             // Copy mode: clear ID and keep it editable, set create mode
@@ -295,9 +302,8 @@ export class PresentationCreateComponent implements OnInit {
 
     formValue.registration_cert = this.buildRegistrationCertFromForm();
 
-    if (!formValue.webhook.url) {
-      formValue.webhook = null; // Set to null to clear the webhook
-    }
+    // Clean up webhookEndpointId - use null to clear (PATCH semantics)
+    formValue.webhookEndpointId = formValue.webhookEndpointId?.trim() || null;
 
     if (!formValue.registration_cert) {
       formValue.registration_cert = null; // Set to null to clear registration_cert
