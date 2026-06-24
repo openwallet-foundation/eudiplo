@@ -224,7 +224,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="91" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:91</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="93" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:93</a></div>
                         </td>
                     </tr>
 
@@ -260,7 +260,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="94" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:94</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="96" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:96</a></div>
                         </td>
                     </tr>
 
@@ -298,7 +298,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="98" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:98</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="100" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:100</a></div>
                         </td>
                     </tr>
 
@@ -339,11 +339,13 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
     ManyToOne,
     UpdateDateColumn,
 } from &quot;typeorm&quot;;
 import { TenantEntity } from &quot;../../../auth/tenant/entitites/tenant.entity&quot;;
 import { WebhookConfig } from &quot;../../../shared/utils/webhook/webhook.dto&quot;;
+import { WebhookEndpointEntity } from &quot;../../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity&quot;;
 import { RegistrationCertificateRequest } from &quot;../dto/vp-request.dto&quot;;
 import { IsTransactionData } from &quot;../validators/transaction-data.validator&quot;;
 
@@ -577,7 +579,26 @@ export class PresentationConfig {
     registrationCertCache?: RegistrationCertCache | null;
 
     /**
+     * Reference to the webhook endpoint used for notifications.
+     * Optional: if set, notifications will be sent to this endpoint.
+     */
+    @IsOptional()
+    @IsString()
+    @Column(&quot;varchar&quot;, { nullable: true })
+    webhookEndpointId?: string | null;
+
+    @ManyToOne(() &#x3D;&gt; WebhookEndpointEntity, {
+        createForeignKeyConstraints: false,
+    })
+    @JoinColumn([
+        { name: &quot;webhookEndpointId&quot;, referencedColumnName: &quot;id&quot; },
+        { name: &quot;tenantId&quot;, referencedColumnName: &quot;tenantId&quot; },
+    ])
+    webhookEndpoint?: WebhookEndpointEntity;
+
+    /**
      * Optional webhook URL to receive the response.
+     * @deprecated This field is deprecated. Use webhookEndpointId and the WebhookEndpoint relationship instead.
      */
     @Column(&quot;json&quot;, { nullable: true })
     @IsOptional()
