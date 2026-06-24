@@ -380,7 +380,9 @@ export class IssuanceOfferComponent implements OnInit {
 
       // Generate form fields from schema (only needed for pre-auth flow)
       if (runtime?.schema) {
-        this.fields.push(this.formlyJsonschema.toFieldConfig(runtime.schema as any));
+        console.log(JSON.stringify(runtime.schema, null, 2));
+        const baseConfig = this.formlyJsonschema.toFieldConfig(runtime.schema as any);
+        this.fields.push(this.addGroupHeaders(baseConfig));
       } else {
         this.fields.push({} as any); // Empty field config as fallback
       }
@@ -397,6 +399,7 @@ export class IssuanceOfferComponent implements OnInit {
         claimsGroup.addControl(id, new UntypedFormGroup({}));
       }
     }
+    console.log(this.fields);
     // Trigger change detection after modifications
     this.cdr.detectChanges();
   }
@@ -441,6 +444,71 @@ export class IssuanceOfferComponent implements OnInit {
 
   getFields(arg0: FormlyFieldConfig<FormlyFieldProps & Record<string, any>>) {
     return [arg0];
+  }
+
+  private formatGroupLabel(field: FormlyFieldConfig): string {
+    const props = (field.props ?? {}) as Record<string, any>;
+    const explicit = props['label'] || props['title'];
+    if (typeof explicit === 'string' && explicit.trim().length > 0) {
+      return explicit;
+    }
+
+    const key = Array.isArray(field.key) ? field.key.at(-1) : field.key;
+    const raw = key == null ? '' : String(key);
+
+    return raw
+      .replace(/[_-]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  }
+
+  private escapeHtml(value: string): string {
+    return value
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
+  private addGroupHeaders(field: FormlyFieldConfig, level = 0): FormlyFieldConfig {
+    const group = field.fieldGroup?.map((child) => this.addGroupHeaders(child, level + 1));
+    const updated: FormlyFieldConfig = {
+      ...field,
+      fieldGroup: group,
+    };
+
+    const hasChildren = Array.isArray(updated.fieldGroup) && updated.fieldGroup.length > 0;
+    const hasKey = updated.key !== undefined && updated.key !== null;
+    const type = typeof updated.type === 'string' ? updated.type : '';
+    const isContainer = type === 'object' || type === 'array' || hasChildren;
+
+    if (!hasChildren || !hasKey || !isContainer) {
+      return updated;
+    }
+
+    const label = this.formatGroupLabel(updated);
+    if (!label) {
+      return updated;
+    }
+
+    const safeLabel = this.escapeHtml(label);
+    const nextLevel = Math.min(level + 1, 3);
+
+    return {
+      ...updated,
+      className: [updated.className, `claim-group claim-group-level-${nextLevel}`]
+        .filter(Boolean)
+        .join(' '),
+      fieldGroup: [
+        {
+          type: 'template',
+          template: `<div class="claim-group-header claim-group-header-level-${nextLevel}">${safeLabel}</div>`,
+        },
+        ...(updated.fieldGroup || []),
+      ],
+    };
   }
 
   async onSubmit(): Promise<void> {

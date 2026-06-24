@@ -49,7 +49,7 @@ For a complete configuration example, see the [Complete Configuration Example](#
 - `keyBinding`: **OPTIONAL** - Enable cryptographic key binding. When `true`,
   credentials include a `cnf` claim with the holder's public key and require
   proof of possession. See [Cryptographic Key Binding](#cryptographic-key-binding) for details.
-- `fields`: **REQUIRED for v2** - Field definitions (`ClaimFieldDefinition[]`) that describe claim paths, data types, defaults, disclosure behavior, and optional display labels.
+- `fields`: **REQUIRED** - Field definitions (`ClaimFieldDefinition[]`) that describe claim paths, data types, defaults, disclosure behavior, and optional display labels.
 - `attributeProviderId`: **OPTIONAL** - Reference to an Attribute Provider that fetches claims dynamically. See [Attribute Providers](attribute-provider.md) for details.
 - `webhookEndpointId`: **OPTIONAL** - Reference to a Webhook Endpoint for receiving notifications about the issuance process. See [Notification Webhook Endpoint](#notification-webhook-endpoint) for details.
 - `sdJwtTrustFormat`: **OPTIONAL (SD-JWT only)** - Controls trust signaling in issued SD-JWT credentials:
@@ -68,7 +68,17 @@ For a complete configuration example, see the [Complete Configuration Example](#
 
 ## Configuring Fields
 
-In v2, claim content is configured through `fields[]`. Each entry describes a single claim path (or object/array node), with type information and optional defaults.
+In the current configuration model, claim content is configured through `fields[]`. Each entry can describe either:
+
+- a leaf claim (for example `path: ["given_name"]`), or
+- a container claim (`object`/`array`) with nested `children`.
+
+Nested child paths can be defined in two ways:
+
+- relative to the parent path (recommended), or
+- as a full absolute path (also supported).
+
+For arrays, use numeric child path segments such as `[0]` to describe item entries.
 
 !!! info "Claims Priority System"
 
@@ -100,10 +110,45 @@ You can define defaults directly in each field using `defaultValue`:
             "disclosable": true
         },
         {
-            "path": ["address", "postal_code"],
-            "type": "string",
-            "defaultValue": "51147",
-            "disclosable": true
+            "path": ["address"],
+            "type": "object",
+            "disclosable": true,
+            "children": [
+                {
+                    "path": ["country"],
+                    "type": "string",
+                    "defaultValue": "DE",
+                    "mandatory": true,
+                    "disclosable": true
+                },
+                {
+                    "path": ["postal_code"],
+                    "type": "string",
+                    "defaultValue": "51147",
+                    "disclosable": true
+                }
+            ]
+        },
+        {
+            "path": ["nationalities"],
+            "type": "array",
+            "defaultValue": ["DE"],
+            "mandatory": true,
+            "disclosable": true,
+            "constraints": {
+                "items": {
+                    "type": "string",
+                    "title": "Nationality"
+                }
+            },
+            "children": [
+                {
+                    "path": [0],
+                    "type": "string",
+                    "defaultValue": "DE",
+                    "disclosable": false
+                }
+            ]
         }
     ]
 }
@@ -114,6 +159,16 @@ Static field defaults are useful for:
 - Default values for all credentials of this type
 - Fixed metadata (e.g., issuing country, issuing authority)
 - Development and testing scenarios
+
+### Nested Field Groups (`children`)
+
+Use `children` when you want to model grouped structures like `address`, `age_equal_or_over`, or `place_of_birth`.
+
+- Parent node: define `path` and `type` (`object` or `array`)
+- Child nodes: define claim fields under `children[]`
+- Child paths: prefer relative paths (for example `"path": ["street_address"]` under parent `"path": ["address"]`)
+
+This structure improves readability in config files and enables grouped rendering in form-based UIs.
 
 ### Attribute Provider
 
@@ -165,7 +220,7 @@ For more details about the webhook implementation and payload structure, see [No
 
 ## Selective Disclosure
 
-In v2, selective disclosure for [SD-JWT](https://www.rfc-editor.org/rfc/rfc9901.html) is defined per field using `disclosable`.
+In the current configuration model, selective disclosure for [SD-JWT](https://www.rfc-editor.org/rfc/rfc9901.html) is defined per field using `disclosable`.
 
 ```json
 {

@@ -6,7 +6,7 @@
   "properties": {
     "path": {
       "type": "array",
-      "description": "Path to claim value",
+      "description": "Path to claim value. For nested child fields this can be relative to the parent path.",
       "example": [
         "address",
         "locality"
@@ -84,6 +84,13 @@
     "constraints": {
       "type": "object",
       "description": "Additional JSON schema constraints for this field"
+    },
+    "children": {
+      "description": "Optional nested child fields. Child paths may be specified relative to the parent field path.",
+      "type": "array",
+      "items": {
+        "$ref": "./ClaimFieldDefinitionDto.schema.json"
+      }
     }
   },
   "required": [

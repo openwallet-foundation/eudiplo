@@ -473,11 +473,25 @@
             <mat-card-header>
               <mat-card-title>
                 <mat-icon>webhook</mat-icon>
-                Webhook Configuration
+                Webhook Endpoint
               </mat-card-title>
+              <mat-card-subtitle>
+                Select a webhook endpoint to receive presentation lifecycle events
+              </mat-card-subtitle>
             </mat-card-header>
-            <mat-card-content fxLayout="column" fxLayoutGap="16px" formGroupName="webhook">
-              <app-webhook-config-edit [group]="getFormGroup('webhook')"></app-webhook-config-edit>
+            <mat-card-content fxLayout="column" fxLayoutGap="16px">
+              <mat-form-field>
+                <mat-label>Webhook Endpoint</mat-label>
+                <mat-select formControlName="webhookEndpointId">
+                  <mat-option value="">None</mat-option>
+                  @for (endpoint of webhookEndpoints; track endpoint.id) {
+                    <mat-option [value]="endpoint.id"
+                      >{{ endpoint.name }} ({{ endpoint.id }})</mat-option
+                    >
+                  }
+                </mat-select>
+                <mat-hint>Endpoint that receives presentation lifecycle notifications</mat-hint>
+              </mat-form-field>
             </mat-card-content>
           </mat-card>
         </div>

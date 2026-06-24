@@ -23,6 +23,7 @@ export interface ClaimFieldDefinition {
     namespace?: string;
     display?: FieldDisplay[];
     constraints?: Record<string, unknown>;
+    children?: ClaimFieldDefinition[];
 }
 
 /** @internal Used by derive functions to build runtime metadata for issuance. */

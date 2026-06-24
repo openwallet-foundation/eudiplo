@@ -20,11 +20,13 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
     ManyToOne,
     UpdateDateColumn,
 } from "typeorm";
 import { TenantEntity } from "../../../auth/tenant/entitites/tenant.entity";
 import { WebhookConfig } from "../../../shared/utils/webhook/webhook.dto";
+import { WebhookEndpointEntity } from "../../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { RegistrationCertificateRequest } from "../dto/vp-request.dto";
 import { IsTransactionData } from "../validators/transaction-data.validator";
 
@@ -258,7 +260,26 @@ export class PresentationConfig {
     registrationCertCache?: RegistrationCertCache | null;
 
     /**
+     * Reference to the webhook endpoint used for notifications.
+     * Optional: if set, notifications will be sent to this endpoint.
+     */
+    @IsOptional()
+    @IsString()
+    @Column("varchar", { nullable: true })
+    webhookEndpointId?: string | null;
+
+    @ManyToOne(() => WebhookEndpointEntity, {
+        createForeignKeyConstraints: false,
+    })
+    @JoinColumn([
+        { name: "webhookEndpointId", referencedColumnName: "id" },
+        { name: "tenantId", referencedColumnName: "tenantId" },
+    ])
+    webhookEndpoint?: WebhookEndpointEntity;
+
+    /**
      * Optional webhook URL to receive the response.
+     * @deprecated This field is deprecated. Use webhookEndpointId and the WebhookEndpoint relationship instead.
      */
     @Column("json", { nullable: true })
     @IsOptional()
