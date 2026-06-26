@@ -207,4 +207,4 @@ Licensed under the [Apache 2.0 License](LICENSE)
 
 ## Governance
 
-The Project Charter for EUDIPLO can be found here: [https://github.com/openwallet-foundation/technical-project-charters/blob/main/EUDIPLO%20Technical%20Charter%20(FINAL%2008.11.25).pdf](https://github.com/openwallet-foundation/technical-project-charters/blob/main/EUDIPLO%20Technical%20Charter%20(FINAL%2008.11.25).pdf)
+The Project Charter for EUDIPLO can be found [here](https://github.com/openwallet-foundation/technical-project-charters/blob/main/EUDIPLO%20Technical%20Charter%20(FINAL%2008.11.25).pdf).
