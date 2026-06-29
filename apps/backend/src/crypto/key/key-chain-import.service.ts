@@ -240,7 +240,9 @@ export class KeyChainImportService {
             .hostname;
     }
 
-    private resolveCertificateChain(dto: KeyChainImportDto): string[] | undefined {
+    private resolveCertificateChain(
+        dto: KeyChainImportDto,
+    ): string[] | undefined {
         if (!dto.crt || dto.crt.length === 0) {
             return undefined;
         }
@@ -250,7 +252,10 @@ export class KeyChainImportService {
         );
     }
 
-    private normalizeCertificateEntryToPem(value: string, index: number): string {
+    private normalizeCertificateEntryToPem(
+        value: string,
+        index: number,
+    ): string {
         const trimmed = value.trim();
         if (this.isPemCertificate(trimmed)) {
             return trimmed;
@@ -270,7 +275,11 @@ export class KeyChainImportService {
             }
 
             // Canonical PEM formatting with 64-character lines.
-            const body = der.toString("base64").match(/.{1,64}/g)?.join("\n") ?? "";
+            const body =
+                der
+                    .toString("base64")
+                    .match(/.{1,64}/g)
+                    ?.join("\n") ?? "";
             return `-----BEGIN CERTIFICATE-----\n${body}\n-----END CERTIFICATE-----`;
         } catch (error) {
             throw new BadRequestException(

@@ -48,10 +48,7 @@ export class ImageFieldComponent implements OnInit {
     };
 
     const env = globalThis as {
-      requestIdleCallback?: (
-        callback: () => void,
-        options?: { timeout?: number }
-      ) => number;
+      requestIdleCallback?: (callback: () => void, options?: { timeout?: number }) => number;
     };
 
     if (typeof env.requestIdleCallback === 'function') {

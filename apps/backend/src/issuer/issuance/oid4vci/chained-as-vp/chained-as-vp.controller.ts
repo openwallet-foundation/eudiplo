@@ -88,7 +88,10 @@ export class ChainedAsVpController {
             "Validates the request_uri and redirects the browser into an OID4VP wallet request.",
     })
     @ApiParam({ name: "tenantId", description: "Tenant identifier" })
-    @ApiResponse({ status: 302, description: "Redirect to OID4VP wallet invocation" })
+    @ApiResponse({
+        status: 302,
+        description: "Redirect to OID4VP wallet invocation",
+    })
     @ApiResponse({ status: 400, type: ChainedAsErrorResponseDto })
     async authorize(
         @Param("tenantId") tenantId: string,
@@ -113,7 +116,10 @@ export class ChainedAsVpController {
             "Receives the OID4VP verifier redirect and finishes the OAuth authorization flow.",
     })
     @ApiParam({ name: "tenantId", description: "Tenant identifier" })
-    @ApiResponse({ status: 302, description: "Redirect to wallet with authorization code" })
+    @ApiResponse({
+        status: 302,
+        description: "Redirect to wallet with authorization code",
+    })
     @ApiResponse({ status: 400, type: ChainedAsErrorResponseDto })
     async vpCallback(
         @Param("tenantId") tenantId: string,
@@ -123,13 +129,14 @@ export class ChainedAsVpController {
         @Query("error_description") errorDescription?: string,
         @Res() res?: Response,
     ): Promise<void> {
-        const redirectUrl = await this.chainedAsVpService.handleVerifierCallback(
-            tenantId,
-            cas,
-            responseCode,
-            error,
-            errorDescription,
-        );
+        const redirectUrl =
+            await this.chainedAsVpService.handleVerifierCallback(
+                tenantId,
+                cas,
+                responseCode,
+                error,
+                errorDescription,
+            );
         res!.redirect(redirectUrl);
     }
 

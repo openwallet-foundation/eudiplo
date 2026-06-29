@@ -221,7 +221,9 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
       let externalServers: string[] = [];
       if (Array.isArray((config as any).authorizationServers)) {
         externalServers = (config as any).authorizationServers
-          .filter((server: any) => server?.type === 'external' && typeof server?.issuer === 'string')
+          .filter(
+            (server: any) => server?.type === 'external' && typeof server?.issuer === 'string'
+          )
           .map((server: any) => server.issuer);
       } else if (config.authServers && Array.isArray(config.authServers)) {
         externalServers = config.authServers;
@@ -234,7 +236,10 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
 
       const managedAuthorizationServersArray = this.form.get('authorizationServers') as FormArray;
       managedAuthorizationServersArray.clear();
-      if ((config as any).authorizationServers && Array.isArray((config as any).authorizationServers)) {
+      if (
+        (config as any).authorizationServers &&
+        Array.isArray((config as any).authorizationServers)
+      ) {
         const hostedServers = (config as any).authorizationServers.filter(
           (entry: any) => entry?.type === 'oid4vp'
         );

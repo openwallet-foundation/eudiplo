@@ -170,7 +170,8 @@ export class Oid4vciService {
                     "Chained authorization server is not configured",
                 );
             }
-            const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
+            const publicUrl =
+                this.configService.getOrThrow<string>("PUBLIC_URL");
             return `${publicUrl}/issuers/${tenantId}/chained-as`;
         }
 
@@ -518,7 +519,11 @@ export class Oid4vciService {
                     await this.authorizationServersService.getExternalAuthorizationServerUrls(
                         tenantId,
                     );
-                if (!externalAuthorizationServers.includes(selectedAuthorizationServer)) {
+                if (
+                    !externalAuthorizationServers.includes(
+                        selectedAuthorizationServer,
+                    )
+                ) {
                     throw new BadRequestException(
                         "Pre-authorized code flow accepts only configured external authorization servers",
                     );
@@ -792,7 +797,8 @@ export class Oid4vciService {
 
         const isLocalAsToken = tokenPayload.iss === localIssuer;
         const isChainedAsToken =
-            (hasChainedAuthorizationServer && tokenPayload.iss === chainedAsIssuer) ||
+            (hasChainedAuthorizationServer &&
+                tokenPayload.iss === chainedAsIssuer) ||
             managedAuthorizationServerIssuers.has(tokenPayload.iss);
         const isExternalAsToken = !isLocalAsToken && !isChainedAsToken;
 

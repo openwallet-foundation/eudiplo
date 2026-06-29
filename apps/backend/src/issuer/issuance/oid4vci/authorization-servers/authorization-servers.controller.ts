@@ -43,7 +43,10 @@ export class AuthorizationServersController {
     @ApiConsumes("application/x-www-form-urlencoded")
     @ApiOperation({ summary: "Pushed Authorization Request" })
     @ApiParam({ name: "tenantId", description: "Tenant identifier" })
-    @ApiParam({ name: "authorizationServerId", description: "Authorization server identifier" })
+    @ApiParam({
+        name: "authorizationServerId",
+        description: "Authorization server identifier",
+    })
     @ApiHeader({ name: "DPoP", required: false, description: "DPoP proof JWT" })
     @ApiHeader({
         name: "OAuth-Client-Attestation",
@@ -85,8 +88,14 @@ export class AuthorizationServersController {
     @Get("authorize")
     @ApiOperation({ summary: "Authorization endpoint" })
     @ApiParam({ name: "tenantId", description: "Tenant identifier" })
-    @ApiParam({ name: "authorizationServerId", description: "Authorization server identifier" })
-    @ApiResponse({ status: 302, description: "Redirect to OID4VP wallet invocation" })
+    @ApiParam({
+        name: "authorizationServerId",
+        description: "Authorization server identifier",
+    })
+    @ApiResponse({
+        status: 302,
+        description: "Redirect to OID4VP wallet invocation",
+    })
     async authorize(
         @Param("tenantId") tenantId: string,
         @Param("authorizationServerId") authorizationServerId: string,
@@ -94,13 +103,14 @@ export class AuthorizationServersController {
         @Headers("origin") origin: string | undefined,
         @Res() res: Response,
     ): Promise<void> {
-        const redirectUrl = await this.authorizationServersService.handleAuthorize(
-            tenantId,
-            authorizationServerId,
-            query.client_id,
-            query.request_uri,
-            origin,
-        );
+        const redirectUrl =
+            await this.authorizationServersService.handleAuthorize(
+                tenantId,
+                authorizationServerId,
+                query.client_id,
+                query.request_uri,
+                origin,
+            );
         res.redirect(redirectUrl);
     }
 
@@ -108,8 +118,14 @@ export class AuthorizationServersController {
     @Get("vp-callback")
     @ApiOperation({ summary: "OID4VP callback" })
     @ApiParam({ name: "tenantId", description: "Tenant identifier" })
-    @ApiParam({ name: "authorizationServerId", description: "Authorization server identifier" })
-    @ApiResponse({ status: 302, description: "Redirect to wallet with authorization code" })
+    @ApiParam({
+        name: "authorizationServerId",
+        description: "Authorization server identifier",
+    })
+    @ApiResponse({
+        status: 302,
+        description: "Redirect to wallet with authorization code",
+    })
     async vpCallback(
         @Param("tenantId") tenantId: string,
         @Param("authorizationServerId") authorizationServerId: string,
@@ -136,7 +152,10 @@ export class AuthorizationServersController {
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: "Token endpoint" })
     @ApiParam({ name: "tenantId", description: "Tenant identifier" })
-    @ApiParam({ name: "authorizationServerId", description: "Authorization server identifier" })
+    @ApiParam({
+        name: "authorizationServerId",
+        description: "Authorization server identifier",
+    })
     @ApiHeader({ name: "DPoP", required: false, description: "DPoP proof JWT" })
     @ApiResponse({ status: 200, type: ChainedAsTokenResponseDto })
     @ApiResponse({ status: 400, type: ChainedAsErrorResponseDto })

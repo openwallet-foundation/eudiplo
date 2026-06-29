@@ -265,7 +265,9 @@ export class IssuanceOfferComponent implements OnInit {
     this.availableAuthServers = ((issuanceConfig as any)?.authorizationServers || [])
       .filter((server: any) => server?.type === 'external' && !!server?.issuer)
       .map((server: any) => server.issuer);
-    this.availableManagedAuthorizationServers = ((issuanceConfig as any)?.authorizationServers || [])
+    this.availableManagedAuthorizationServers = (
+      (issuanceConfig as any)?.authorizationServers || []
+    )
       .filter((server: any) => server?.type === 'oid4vp' && !!server?.id)
       .map((server: any) => ({
         value: `authorization-server:${server.id}`,
@@ -435,7 +437,10 @@ export class IssuanceOfferComponent implements OnInit {
     ];
   }
 
-  get authCodeAuthorizationServerGroups(): { label: string; options: { value: string; label: string }[] }[] {
+  get authCodeAuthorizationServerGroups(): {
+    label: string;
+    options: { value: string; label: string }[];
+  }[] {
     const groups: { label: string; options: { value: string; label: string }[] }[] = [];
 
     if (this.availableManagedAuthorizationServers.length > 0) {
@@ -748,7 +753,8 @@ export class IssuanceOfferComponent implements OnInit {
     this.configStepForm.patchValue({
       tx_code: offer.tx_code || '',
       tx_code_description: offer.tx_code_description || '',
-      authorization_server: offer.authorization_server || this.getDefaultAuthServerForFlow(formFlow),
+      authorization_server:
+        offer.authorization_server || this.getDefaultAuthServerForFlow(formFlow),
     });
 
     // Pre-fill claims for pre-auth flow

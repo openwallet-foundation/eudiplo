@@ -256,7 +256,9 @@ export class ChainedAsVpService {
         });
 
         if (!session) {
-            throw new BadRequestException("Invalid or expired callback session");
+            throw new BadRequestException(
+                "Invalid or expired callback session",
+            );
         }
 
         if (error) {
@@ -302,7 +304,10 @@ export class ChainedAsVpService {
 
         const redirectUrl = new URL(session.redirectUri);
         redirectUrl.searchParams.set("code", authorizationCode);
-        redirectUrl.searchParams.set("iss", this.getChainedAsVpBaseUrl(tenantId));
+        redirectUrl.searchParams.set(
+            "iss",
+            this.getChainedAsVpBaseUrl(tenantId),
+        );
         if (session.walletState) {
             redirectUrl.searchParams.set("state", session.walletState);
         }

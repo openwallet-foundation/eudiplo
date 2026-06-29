@@ -59,7 +59,9 @@ export class AuthorizationServersService {
     }
 
     extractAuthorizationServerId(selection: string): string {
-        return selection.slice(AuthorizationServersService.selectionPrefix.length);
+        return selection.slice(
+            AuthorizationServersService.selectionPrefix.length,
+        );
     }
 
     getAuthorizationServerBaseUrl(
@@ -123,9 +125,9 @@ export class AuthorizationServersService {
         tenantId: string,
         authorizationServerId: string,
     ): Promise<ManagedAuthorizationServerConfig> {
-        const config = (await this.getEnabledAuthorizationServers(tenantId)).find(
-            (entry) => entry.id === authorizationServerId,
-        );
+        const config = (
+            await this.getEnabledAuthorizationServers(tenantId)
+        ).find((entry) => entry.id === authorizationServerId);
 
         if (!config) {
             throw new NotFoundException(
@@ -142,7 +144,9 @@ export class AuthorizationServersService {
         return config;
     }
 
-    async getAuthorizationServerIssuerUrls(tenantId: string): Promise<string[]> {
+    async getAuthorizationServerIssuerUrls(
+        tenantId: string,
+    ): Promise<string[]> {
         const configs = await this.getEnabledAuthorizationServers(tenantId);
         return configs.map((config) =>
             this.getAuthorizationServerBaseUrl(tenantId, config.id!),
@@ -157,9 +161,16 @@ export class AuthorizationServersService {
             return selection;
         }
 
-        const authorizationServerId = this.extractAuthorizationServerId(selection);
-        await this.getAuthorizationServerConfig(tenantId, authorizationServerId);
-        return this.getAuthorizationServerBaseUrl(tenantId, authorizationServerId);
+        const authorizationServerId =
+            this.extractAuthorizationServerId(selection);
+        await this.getAuthorizationServerConfig(
+            tenantId,
+            authorizationServerId,
+        );
+        return this.getAuthorizationServerBaseUrl(
+            tenantId,
+            authorizationServerId,
+        );
     }
 
     async getDefaultAuthorizationServerUrl(
@@ -366,7 +377,10 @@ export class AuthorizationServersService {
         error?: string,
         errorDescription?: string,
     ): Promise<string> {
-        await this.getAuthorizationServerConfig(tenantId, authorizationServerId);
+        await this.getAuthorizationServerConfig(
+            tenantId,
+            authorizationServerId,
+        );
 
         const session = await this.sessionRepository.findOne({
             where: {
@@ -377,7 +391,9 @@ export class AuthorizationServersService {
         });
 
         if (!session) {
-            throw new BadRequestException("Invalid or expired callback session");
+            throw new BadRequestException(
+                "Invalid or expired callback session",
+            );
         }
 
         if (error) {
@@ -537,7 +553,10 @@ export class AuthorizationServersService {
     ): Record<string, unknown> {
         const now = Math.floor(Date.now() / 1000);
         const payload: Record<string, unknown> = {
-            iss: this.getAuthorizationServerBaseUrl(tenantId, authorizationServerId),
+            iss: this.getAuthorizationServerBaseUrl(
+                tenantId,
+                authorizationServerId,
+            ),
             sub: session.clientId,
             aud: `${this.configService.getOrThrow<string>("PUBLIC_URL")}/issuers/${tenantId}`,
             iat: now,
@@ -662,7 +681,10 @@ export class AuthorizationServersService {
         tenantId: string,
         authorizationServerId: string,
     ): Promise<Record<string, unknown>> {
-        await this.getAuthorizationServerConfig(tenantId, authorizationServerId);
+        await this.getAuthorizationServerConfig(
+            tenantId,
+            authorizationServerId,
+        );
         const baseUrl = this.getAuthorizationServerBaseUrl(
             tenantId,
             authorizationServerId,

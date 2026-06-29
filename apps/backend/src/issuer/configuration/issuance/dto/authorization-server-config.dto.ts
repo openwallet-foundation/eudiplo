@@ -9,7 +9,10 @@ import {
     ValidateIf,
     ValidateNested,
 } from "class-validator";
-import { ChainedAsTokenConfig, UpstreamOidcConfig } from "./chained-as-config.dto";
+import {
+    ChainedAsTokenConfig,
+    UpstreamOidcConfig,
+} from "./chained-as-config.dto";
 
 export class ManagedAuthorizationServerConfig {
     @ApiProperty({
@@ -71,7 +74,8 @@ export class ManagedAuthorizationServerConfig {
     presentationConfigId?: string;
 
     @ApiPropertyOptional({
-        description: "Immediately redirect the browser into the wallet OID4VP request",
+        description:
+            "Immediately redirect the browser into the wallet OID4VP request",
         default: true,
     })
     @ValidateIf((o) => o.type === "oid4vp")
@@ -90,7 +94,8 @@ export class ManagedAuthorizationServerConfig {
     token?: ChainedAsTokenConfig;
 
     @ApiPropertyOptional({
-        description: "Require DPoP for token requests issued by this authorization server",
+        description:
+            "Require DPoP for token requests issued by this authorization server",
         default: false,
     })
     @ValidateIf((o) => o.type === "oid4vp" || o.type === "chained")

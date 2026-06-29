@@ -82,23 +82,31 @@ function attachResponseBodyCapture(req: any, res: any): void {
     const originalWrite = response.write?.bind(response);
     const originalEnd = response.end?.bind(response);
 
-    if (typeof originalWrite !== "function" || typeof originalEnd !== "function") {
+    if (
+        typeof originalWrite !== "function" ||
+        typeof originalEnd !== "function"
+    ) {
         return;
     }
 
     response.write = (chunk: unknown, ...args: unknown[]) => {
         if (chunk !== undefined && chunk !== null) {
-            chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk)));
+            chunks.push(
+                Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk)),
+            );
         }
         return originalWrite(chunk, ...args);
     };
 
     response.end = (chunk?: unknown, ...args: unknown[]) => {
         if (chunk !== undefined && chunk !== null) {
-            chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk)));
+            chunks.push(
+                Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk)),
+            );
         }
 
-        const bodyBuffer = chunks.length > 0 ? Buffer.concat(chunks) : Buffer.alloc(0);
+        const bodyBuffer =
+            chunks.length > 0 ? Buffer.concat(chunks) : Buffer.alloc(0);
         const responseContentType =
             typeof response.getHeader === "function"
                 ? String(response.getHeader("content-type") || "")

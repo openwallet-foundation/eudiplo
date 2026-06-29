@@ -141,7 +141,10 @@ export class IssuanceConfig {
      * Each entry creates a distinct AS endpoint and can be bound to a different
      * presentation configuration.
      */
-    @ApiPropertyOptional({ type: () => ManagedAuthorizationServerConfig, isArray: true })
+    @ApiPropertyOptional({
+        type: () => ManagedAuthorizationServerConfig,
+        isArray: true,
+    })
     @ValidateNested({ each: true })
     @Type(() => ManagedAuthorizationServerConfig)
     @IsOptional()
