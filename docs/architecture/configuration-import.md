@@ -111,13 +111,32 @@ When `rotationPolicy.enabled` is `true`:
 }
 ```
 
+**Alternative Structure** (Base64 DER Without `\\n` Escapes):
+
+```json
+{
+    "id": "039af178-3ca0-48f4-a2e4-7b1209f30376",
+    "description": "Key chain with base64 certificates",
+    "usageType": "access",
+    "key": {
+        "kty": "EC",
+        "x": "...",
+        "y": "...",
+        "crv": "P-256",
+        "d": "...",
+        "alg": "ES256"
+    },
+    "crt": ["MIIBqjCCAU+gAwIBAgIBATAKBggqhkjOPQQDAjAq...", "MIIB..."]
+}
+```
+
 **Key Features**:
 
 - **Unified model**: Keys and certificates are managed together
 - **Usage types**: `access`, `attestation`, `trustList`, `statusList`, `encrypt`
 - **Rotation support**: Optional internal CA with automatic leaf key generation
 - **Algorithm support**: ES256 (ECDSA P-256)
-- **Certificate chain**: Optional PEM certificates (leaf first, then CA chain)
+- **Certificate chain**: Optional certificates in `crt` (leaf first), each entry can be PEM or base64 DER
 - **Validation**: Full schema validation during import
 
 **Usage Types**:
@@ -136,6 +155,7 @@ When `rotationPolicy.enabled` is `true`:
 - Include both `-----BEGIN CERTIFICATE-----` and `-----END CERTIFICATE-----` headers
 - The certificate content should be base64-encoded between the headers
 - Order: leaf certificate first, then intermediate/root CA certificates
+- You can provide each `crt` item either as PEM or as plain base64 DER
 
 ### Credential Configurations
 

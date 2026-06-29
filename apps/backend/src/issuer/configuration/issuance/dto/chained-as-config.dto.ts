@@ -90,6 +90,36 @@ export class ChainedAsTokenConfig {
 }
 
 /**
+ * Configuration for a VP-backed Authorization Server facade.
+ *
+ * In this mode, EUDIPLO acts as the AS for the wallet, but instead of
+ * delegating authentication to an upstream OIDC provider, it starts an
+ * OID4VP verifier flow and only returns the OAuth authorization code after
+ * a successful presentation callback.
+ */
+export class ChainedAsVpConfig {
+    /**
+     * Whether the VP-backed AS is enabled.
+     */
+    @ApiProperty({
+        description: "Enable VP-backed chained AS mode",
+        default: false,
+    })
+    @IsBoolean()
+    enabled!: boolean;
+
+    /**
+     * The presentation configuration ID used to start the OID4VP request.
+     */
+    @ApiProperty({
+        description: "Presentation configuration ID used for OID4VP",
+        example: "pid-no-hook",
+    })
+    @IsString()
+    presentationConfigId!: string;
+}
+
+/**
  * Configuration for enabling "Chained Authorization Server" mode.
  *
  * In this mode, EUDIPLO acts as the Authorization Server for wallets,
@@ -135,6 +165,18 @@ export class ChainedAsConfig {
     @ValidateNested()
     @Type(() => UpstreamOidcConfig)
     upstream?: UpstreamOidcConfig;
+
+    /**
+     * Configuration for a VP-backed AS facade.
+     */
+    @ApiPropertyOptional({
+        description: "VP-backed chained AS configuration",
+        type: () => ChainedAsVpConfig,
+    })
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => ChainedAsVpConfig)
+    vp?: ChainedAsVpConfig;
 
     /**
      * Configuration for tokens issued by EUDIPLO.

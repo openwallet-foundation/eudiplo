@@ -30,3 +30,4 @@ export { AddTenantActionLog1762000000000 } from "./1762000000000-AddTenantAction
 export { AddFederationToIssuanceConfig1763000000000 } from "./1763000000000-AddFederationToIssuanceConfig";
 export { AddKmsExternalKeyIdCheck1764000000000 } from "./1764000000000-AddKmsExternalKeyIdCheck";
 export { RenameKeyChainActiveKeyToActiveJwk1765000000000 } from "./1765000000000-RenameKeyChainActiveKeyToActiveJwk";
+export { AddAuthorizationServersToIssuanceConfig1766000000000 } from "./1766000000000-AddAuthorizationServersToIssuanceConfig";

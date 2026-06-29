@@ -26,6 +26,7 @@ import {
     AuthenticationMethodNone,
     AuthenticationMethodPresentation,
 } from "../dto/authentication-config.dto";
+import { ManagedAuthorizationServerConfig } from "../dto/authorization-server-config.dto";
 import { ChainedAsConfig } from "../dto/chained-as-config.dto";
 import { DisplayInfo } from "../dto/display.dto";
 import { FederationConfig } from "../dto/federation-config.dto";
@@ -134,6 +135,18 @@ export class IssuanceConfig {
     @IsOptional()
     @Column({ type: "json", nullable: true })
     chainedAs?: ChainedAsConfig | null;
+
+    /**
+     * Dedicated managed authorization servers hosted by this issuer.
+     * Each entry creates a distinct AS endpoint and can be bound to a different
+     * presentation configuration.
+     */
+    @ApiPropertyOptional({ type: () => ManagedAuthorizationServerConfig, isArray: true })
+    @ValidateNested({ each: true })
+    @Type(() => ManagedAuthorizationServerConfig)
+    @IsOptional()
+    @Column({ type: "json", nullable: true })
+    authorizationServers?: ManagedAuthorizationServerConfig[] | null;
 
     /**
      * Optional OpenID Federation configuration used for trust evaluation.

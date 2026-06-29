@@ -279,7 +279,7 @@ export class CredentialsService {
         //fetch the credential configuration
         return this.credentialConfigRepo
             .findOneByOrFail({ id: credentialConfigurationId, tenantId })
-            .then((credentialConfiguration) => {
+            .then((credentialConfiguration) => {                
                 //if a schema is defined, validate the claims against it
                 const schema = buildJsonSchema(
                     credentialConfiguration.fields as any,

@@ -116,6 +116,12 @@ export class IssuanceOfferComponent implements OnInit {
   credentialConfigs: CredentialConfig[] = [];
   issuanceConfig?: IssuanceConfig;
   availableAuthServers: string[] = [];
+  availableManagedAuthorizationServers: { value: string; label: string }[] = [];
+  hasChainedAuthorizationServer = false;
+  private readonly chainedAuthorizationServerOption = {
+    value: 'chained-as',
+    label: 'Chained Authorization Server',
+  };
   availableAttributeProviders: AttributeProviderEntity[] = [];
 
   // IAE status tracking for selected credential configs
@@ -145,25 +151,8 @@ export class IssuanceOfferComponent implements OnInit {
     return this.selectedFlow === 'authorization_code_external';
   }
 
-  /**
-   * Returns true if Chained AS is enabled in the issuance configuration
-   */
-  get isChainedAsEnabled(): boolean {
-    return this.issuanceConfig?.chainedAs?.enabled === true;
-  }
-
-  /**
-   * Returns the selected AS type ('external' or 'chained')
-   */
-  get selectedAsType(): string {
-    return this.configStepForm.get('as_type')?.value || 'external';
-  }
-
-  /**
-   * Returns true if chained AS is selected for the current flow
-   */
-  get isChainedAsSelected(): boolean {
-    return this.isAuthCodeExternalFlow && this.selectedAsType === 'chained';
+  get hasHostedAuthorizationServers(): boolean {
+    return this.availableManagedAuthorizationServers.length > 0;
   }
 
   /**
@@ -253,7 +242,6 @@ export class IssuanceOfferComponent implements OnInit {
       claims: new FormGroup({}),
       tx_code: new FormControl(''),
       tx_code_description: new FormControl(''),
-      as_type: new FormControl('external'), // 'external' or 'chained'
       authorization_server: new FormControl(''),
     });
 
@@ -274,7 +262,18 @@ export class IssuanceOfferComponent implements OnInit {
 
     this.credentialConfigs = configs;
     this.issuanceConfig = issuanceConfig;
-    this.availableAuthServers = issuanceConfig?.authServers || [];
+    this.availableAuthServers = ((issuanceConfig as any)?.authorizationServers || [])
+      .filter((server: any) => server?.type === 'external' && !!server?.issuer)
+      .map((server: any) => server.issuer);
+    this.availableManagedAuthorizationServers = ((issuanceConfig as any)?.authorizationServers || [])
+      .filter((server: any) => server?.type === 'oid4vp' && !!server?.id)
+      .map((server: any) => ({
+        value: `authorization-server:${server.id}`,
+        label: server.label || server.id,
+      }));
+    this.hasChainedAuthorizationServer = ((issuanceConfig as any)?.authorizationServers || []).some(
+      (server: any) => server?.type === 'chained' && server?.enabled !== false
+    );
 
     // Check for pre-fill data from navigation state (recreate offer flow)
     // Must be done BEFORE setting up subscriptions to avoid interference
@@ -305,24 +304,20 @@ export class IssuanceOfferComponent implements OnInit {
       this.selectedConfigsIaeStatus.clear();
       this.externalAsWebhooks.clear();
       this.configStepForm.patchValue({
-        // Default to chained AS if enabled, otherwise external
-        as_type:
-          flow === 'authorization_code_external' && this.isChainedAsEnabled
-            ? 'chained'
-            : 'external',
-        // Pre-select preferred AS if set, otherwise fall back to first available
-        authorization_server:
-          flow === 'authorization_code_external' && this.availableAuthServers.length > 0
-            ? this.getDefaultAuthServer()
-            : '',
+        authorization_server: this.getDefaultAuthServerForFlow(flow),
         tx_code: '',
       });
     });
 
     // Pre-select preferred AS if set and we're already on auth-code-external flow (and not prefilling)
-    if (!prefillData && this.isAuthCodeExternalFlow && this.availableAuthServers.length > 0) {
+    if (
+      !prefillData &&
+      (this.isAuthCodeExternalFlow || this.isPreAuthFlow) &&
+      (this.authCodeAuthorizationServerOptions.length > 0 ||
+        this.preAuthAuthorizationServerOptions.length > 0)
+    ) {
       this.configStepForm.patchValue({
-        authorization_server: this.getDefaultAuthServer(),
+        authorization_server: this.getDefaultAuthServerForFlow(this.selectedFlow),
       });
     }
   }
@@ -380,7 +375,6 @@ export class IssuanceOfferComponent implements OnInit {
 
       // Generate form fields from schema (only needed for pre-auth flow)
       if (runtime?.schema) {
-        console.log(JSON.stringify(runtime.schema, null, 2));
         const baseConfig = this.formlyJsonschema.toFieldConfig(runtime.schema as any);
         this.fields.push(this.addGroupHeaders(baseConfig));
       } else {
@@ -399,7 +393,6 @@ export class IssuanceOfferComponent implements OnInit {
         claimsGroup.addControl(id, new UntypedFormGroup({}));
       }
     }
-    console.log(this.fields);
     // Trigger change detection after modifications
     this.cdr.detectChanges();
   }
@@ -426,16 +419,70 @@ export class IssuanceOfferComponent implements OnInit {
     }
   }
 
+  get allAuthorizationServerOptions(): { value: string; label: string }[] {
+    return this.authCodeAuthorizationServerOptions;
+  }
+
+  get preAuthAuthorizationServerOptions(): { value: string; label: string }[] {
+    return this.availableAuthServers.map((server) => ({ value: server, label: server }));
+  }
+
+  get authCodeAuthorizationServerOptions(): { value: string; label: string }[] {
+    return [
+      ...this.availableManagedAuthorizationServers,
+      ...this.availableAuthServers.map((server) => ({ value: server, label: server })),
+      ...(this.hasChainedAuthorizationServer ? [this.chainedAuthorizationServerOption] : []),
+    ];
+  }
+
+  get authCodeAuthorizationServerGroups(): { label: string; options: { value: string; label: string }[] }[] {
+    const groups: { label: string; options: { value: string; label: string }[] }[] = [];
+
+    if (this.availableManagedAuthorizationServers.length > 0) {
+      groups.push({
+        label: 'Hosted Authorization Servers',
+        options: this.availableManagedAuthorizationServers,
+      });
+    }
+
+    if (this.availableAuthServers.length > 0) {
+      groups.push({
+        label: 'External Authorization Servers',
+        options: this.availableAuthServers.map((server) => ({ value: server, label: server })),
+      });
+    }
+
+    if (this.hasChainedAuthorizationServer) {
+      groups.push({
+        label: 'Chained Authorization Server',
+        options: [this.chainedAuthorizationServerOption],
+      });
+    }
+
+    return groups;
+  }
+
   /**
    * Returns the preferred auth server URL if it's in the available list,
    * otherwise falls back to the first available auth server.
    */
-  private getDefaultAuthServer(): string {
+  private getDefaultAuthServerForFlow(flow: string): string {
+    let options: { value: string; label: string }[] = [];
+    if (flow === 'pre_authorized_code') {
+      options = this.preAuthAuthorizationServerOptions;
+    } else if (flow === 'authorization_code_external') {
+      options = this.authCodeAuthorizationServerOptions;
+    }
+
+    if (options.length === 0) {
+      return '';
+    }
+
     const preferred = this.issuanceConfig?.preferredAuthServer;
-    if (preferred && this.availableAuthServers.includes(preferred)) {
+    if (preferred && options.some((option) => option.value === preferred)) {
       return preferred;
     }
-    return this.availableAuthServers[0] || '';
+    return options[0]?.value || '';
   }
 
   getForm(id: string) {
@@ -568,10 +615,9 @@ export class IssuanceOfferComponent implements OnInit {
         }
       }
 
-      // Build authorization_server only for external AS flow when not using chained AS
       const authorizationServer =
-        flowSelection === 'authorization_code_external' && configValue.as_type !== 'chained'
-          ? configValue.authorization_server
+        flowSelection === 'authorization_code_external' || flowSelection === 'pre_authorized_code'
+          ? configValue.authorization_server || undefined
           : undefined;
 
       const offerRequest: OfferRequestDto = {
@@ -648,7 +694,7 @@ export class IssuanceOfferComponent implements OnInit {
   resetForm(): void {
     this.flowStepForm.reset({ flow: 'pre_authorized_code' });
     this.credentialStepForm.reset({ credentialConfigurationIds: [] });
-    this.configStepForm.reset({ tx_code: '', as_type: 'external', authorization_server: '' });
+    this.configStepForm.reset({ tx_code: '', authorization_server: '' });
     this.elements = [];
     this.fields = [];
     this.selectedConfigsIaeStatus.clear();
@@ -698,21 +744,11 @@ export class IssuanceOfferComponent implements OnInit {
     // Manually set up claim form fields (normally done by valueChanges subscription)
     await this.setClaimFormFields(offer.credentialConfigurationIds || []);
 
-    // Determine AS type for external AS flow
-    let asType = 'external';
-    if (formFlow === 'authorization_code_external') {
-      // If no authorization_server was specified but chained AS is enabled, it was chained
-      if (!offer.authorization_server && this.isChainedAsEnabled) {
-        asType = 'chained';
-      }
-    }
-
     // Set config step values
     this.configStepForm.patchValue({
       tx_code: offer.tx_code || '',
       tx_code_description: offer.tx_code_description || '',
-      authorization_server: offer.authorization_server || this.getDefaultAuthServer(),
-      as_type: asType,
+      authorization_server: offer.authorization_server || this.getDefaultAuthServerForFlow(formFlow),
     });
 
     // Pre-fill claims for pre-auth flow

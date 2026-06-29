@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,6 +31,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSlideToggle, MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ImageFieldComponent } from '../../../utils/image-field/image-field.component';
 import { MatCardModule } from '@angular/material/card';
+import { PresentationManagementService } from '../../../presentation/presentation-config/presentation-management.service';
 
 @Component({
   selector: 'app-issuance-config-create',
@@ -37,6 +39,7 @@ import { MatCardModule } from '@angular/material/card';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
+    MatDividerModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -61,8 +64,10 @@ import { MatCardModule } from '@angular/material/card';
 export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public loading = false;
+  public availablePresentationConfigIds: string[] = [];
   private chainedAsEnabledSub?: Subscription;
   private readonly federationModes = ['federation-only', 'hybrid'] as const;
+  private readonly managedAuthorizationServerPrefix = 'authorization-server:';
 
   private asRecord(value: unknown): Record<string, unknown> {
     return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
@@ -80,11 +85,13 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly snackBar: MatSnackBar,
     private readonly dialog: MatDialog,
-    private readonly fb: FormBuilder
+    private readonly fb: FormBuilder,
+    private readonly presentationManagementService: PresentationManagementService
   ) {
     this.form = new FormGroup({
       display: this.fb.array([]),
       authServers: this.fb.array([]),
+      authorizationServers: this.fb.array([]),
       preferredAuthServer: new FormControl(''),
       batchSize: new FormControl(1, [Validators.min(1)]),
       dPopRequired: new FormControl(false),
@@ -123,7 +130,12 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setupChainedAsValidation();
-    this.loadConfigForEdit();
+
+    // Defer network/config hydration so tab navigation is interactive immediately.
+    setTimeout(() => {
+      this.loadPresentationConfigs();
+      void this.loadConfigForEdit();
+    }, 0);
   }
 
   ngOnDestroy(): void {
@@ -176,7 +188,7 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
       const displayArray = this.form.get('display') as FormArray;
       displayArray.clear();
       if (config.display && Array.isArray(config.display)) {
-        for (const entry of config.display) {
+        for (const [index, entry] of config.display.entries()) {
           const displayEntry = this.asRecord(entry);
           const logo = this.asRecord(displayEntry['logo']);
           displayArray.push(
@@ -194,17 +206,71 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
               }),
             })
           );
+
+          if (index > 0 && index % 5 === 0) {
+            await this.yieldToUi();
+          }
         }
       }
+
+      await this.yieldToUi();
 
       // Load auth servers
       const authServersArray = this.form.get('authServers') as FormArray;
       authServersArray.clear();
-      if (config.authServers && Array.isArray(config.authServers)) {
-        for (const server of config.authServers) {
-          authServersArray.push(new FormControl(server, [Validators.required]));
+      let externalServers: string[] = [];
+      if (Array.isArray((config as any).authorizationServers)) {
+        externalServers = (config as any).authorizationServers
+          .filter((server: any) => server?.type === 'external' && typeof server?.issuer === 'string')
+          .map((server: any) => server.issuer);
+      } else if (config.authServers && Array.isArray(config.authServers)) {
+        externalServers = config.authServers;
+      }
+      for (const server of externalServers) {
+        authServersArray.push(new FormControl(server, [Validators.required]));
+      }
+
+      await this.yieldToUi();
+
+      const managedAuthorizationServersArray = this.form.get('authorizationServers') as FormArray;
+      managedAuthorizationServersArray.clear();
+      if ((config as any).authorizationServers && Array.isArray((config as any).authorizationServers)) {
+        const hostedServers = (config as any).authorizationServers.filter(
+          (entry: any) => entry?.type === 'oid4vp'
+        );
+        for (const [index, server] of hostedServers.entries()) {
+          managedAuthorizationServersArray.push(
+            this.createManagedAuthorizationServerGroup({
+              id: server.id ?? '',
+              label: server.label ?? '',
+              type: server.type ?? 'oid4vp',
+              requireDPoP: server.requireDPoP ?? false,
+              oid4vp: {
+                presentationConfigId:
+                  server.presentationConfigId ?? server.oid4vp?.presentationConfigId ?? '',
+                immediateWalletRedirect:
+                  server.immediateWalletRedirect ?? server.oid4vp?.immediateWalletRedirect ?? true,
+              },
+              token: {
+                lifetimeSeconds: server.token?.lifetimeSeconds ?? 3600,
+                signingKeyId: server.token?.signingKeyId ?? '',
+              },
+            })
+          );
+
+          if (index > 0 && index % 5 === 0) {
+            await this.yieldToUi();
+          }
         }
       }
+
+      await this.yieldToUi();
+
+      const unifiedChainedServer = Array.isArray((config as any).authorizationServers)
+        ? (config as any).authorizationServers.find(
+            (entry: any) => entry?.type === 'chained' && entry?.enabled !== false
+          )
+        : undefined;
 
       // Load wallet provider trust lists
       const walletTrustListsArray = this.form.get('walletProviderTrustLists') as FormArray;
@@ -214,6 +280,8 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
           walletTrustListsArray.push(new FormControl(url, [Validators.required]));
         }
       }
+
+      await this.yieldToUi();
 
       // Patch other form values
       this.form.patchValue({
@@ -233,7 +301,24 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
       });
 
       // Load Chained AS config if present
-      if (config.chainedAs) {
+      if (unifiedChainedServer) {
+        this.form.patchValue({
+          chainedAs: {
+            enabled: true,
+            upstream: {
+              issuer: unifiedChainedServer.upstream?.issuer ?? '',
+              clientId: unifiedChainedServer.upstream?.clientId ?? '',
+              clientSecret: unifiedChainedServer.upstream?.clientSecret ?? '',
+              scopes: unifiedChainedServer.upstream?.scopes ?? ['openid', 'profile', 'email'],
+            },
+            token: {
+              lifetimeSeconds: unifiedChainedServer.token?.lifetimeSeconds ?? 3600,
+              signingKeyId: unifiedChainedServer.token?.signingKeyId ?? '',
+            },
+            requireDPoP: unifiedChainedServer.requireDPoP ?? false,
+          },
+        });
+      } else if (config.chainedAs) {
         this.form.patchValue({
           chainedAs: {
             enabled: config.chainedAs.enabled ?? false,
@@ -257,13 +342,17 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
         const federation = (config as any)['federation'];
         this.trustAnchors.clear();
         if (federation.trustAnchors && Array.isArray(federation.trustAnchors)) {
-          for (const anchor of federation.trustAnchors) {
+          for (const [index, anchor] of federation.trustAnchors.entries()) {
             this.trustAnchors.push(
               this.fb.group({
                 entityId: [anchor.entityId ?? '', Validators.required],
                 entityConfigurationUri: [anchor.entityConfigurationUri ?? '', Validators.required],
               })
             );
+
+            if (index > 0 && index % 5 === 0) {
+              await this.yieldToUi();
+            }
           }
         }
         this.form.patchValue({
@@ -277,6 +366,8 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
           },
         });
       }
+
+      await this.yieldToUi();
     } catch (error) {
       console.error('Error loading config:', error);
       this.snackBar.open('Failed to load configuration', 'Close', {
@@ -285,14 +376,34 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
     }
   }
 
+  private async yieldToUi(): Promise<void> {
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+  }
+
+  private loadPresentationConfigs(): void {
+    this.presentationManagementService.loadConfigurations().then(
+      (configs) => {
+        this.availablePresentationConfigIds = (configs || [])
+          .map((config) => config.id)
+          .filter((id): id is string => !!id)
+          .sort((a, b) => a.localeCompare(b));
+      },
+      (error) => {
+        console.error('Failed to load presentation configs:', error);
+      }
+    );
+  }
+
   onSubmit(): void {
     this.loading = true;
     const formValue = this.form.value;
 
-    // Build chainedAs config only if enabled, otherwise explicitly set to null to clear it
-    let chainedAsConfig: IssuanceDto['chainedAs'] | null = null;
+    // Build unified chained authorization server entry only if enabled.
+    let chainedAuthorizationServer: Record<string, unknown> | undefined;
     if (formValue.chainedAs?.enabled) {
-      chainedAsConfig = {
+      chainedAuthorizationServer = {
+        type: 'chained',
+        label: 'Chained Authorization Server',
         enabled: true,
         upstream: {
           issuer: formValue.chainedAs.upstream.issuer,
@@ -308,6 +419,37 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
       };
     }
 
+    const managedAuthorizationServers = formValue.authorizationServers?.length
+      ? formValue.authorizationServers.map((server: any) => ({
+          id: server.id,
+          label: server.label,
+          type: 'oid4vp',
+          requireDPoP: server.requireDPoP ?? false,
+          presentationConfigId: server.oid4vp.presentationConfigId,
+          immediateWalletRedirect: server.oid4vp.immediateWalletRedirect ?? true,
+          token: {
+            lifetimeSeconds: server.token?.lifetimeSeconds || 3600,
+            signingKeyId: server.token?.signingKeyId || undefined,
+          },
+        }))
+      : undefined;
+
+    const externalAuthorizationServers = formValue.authServers?.length
+      ? formValue.authServers
+          .filter((server: string) => typeof server === 'string' && server.trim().length > 0)
+          .map((server: string) => ({
+            type: 'external',
+            issuer: server.trim(),
+            label: server.trim(),
+          }))
+      : undefined;
+
+    const unifiedAuthorizationServers = [
+      ...(externalAuthorizationServers ?? []),
+      ...(managedAuthorizationServers ?? []),
+      ...(chainedAuthorizationServer ? [chainedAuthorizationServer] : []),
+    ];
+
     // Use Partial<IssuanceDto> with explicit null for chainedAs since backend accepts null to clear it
     const issuanceDto = {
       batchSize: formValue.batchSize,
@@ -320,14 +462,14 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
       credentialResponseEncryption: formValue.credentialResponseEncryption ?? false,
       credentialRequestEncryption: formValue.credentialRequestEncryption ?? false,
       txCodeMaxAttempts: formValue.txCodeMaxAttempts ?? undefined,
-      authServers: formValue.authServers?.length > 0 ? formValue.authServers : undefined,
+      authorizationServers:
+        unifiedAuthorizationServers.length > 0 ? unifiedAuthorizationServers : undefined,
       preferredAuthServer: formValue.preferredAuthServer || undefined,
       walletAttestationRequired: formValue.walletAttestationRequired,
       walletProviderTrustLists:
         formValue.walletProviderTrustLists?.length > 0
           ? formValue.walletProviderTrustLists
           : undefined,
-      chainedAs: chainedAsConfig,
       federation: this.buildFederationConfig(formValue.federation),
     } as IssuanceDto;
 
@@ -405,12 +547,41 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
     return this.form.get('authServers') as FormArray;
   }
 
+  get authorizationServers(): FormArray {
+    return this.form.get('authorizationServers') as FormArray;
+  }
+
+  private createManagedAuthorizationServerGroup(value?: any): FormGroup {
+    return this.fb.group({
+      id: [value?.id ?? '', Validators.required],
+      label: [value?.label ?? '', Validators.required],
+      type: [value?.type ?? 'oid4vp', Validators.required],
+      requireDPoP: [value?.requireDPoP ?? false],
+      oid4vp: this.fb.group({
+        presentationConfigId: [value?.oid4vp?.presentationConfigId ?? '', Validators.required],
+        immediateWalletRedirect: [value?.oid4vp?.immediateWalletRedirect ?? true],
+      }),
+      token: this.fb.group({
+        lifetimeSeconds: [value?.token?.lifetimeSeconds ?? 3600, Validators.min(60)],
+        signingKeyId: [value?.token?.signingKeyId ?? ''],
+      }),
+    });
+  }
+
   addAuthServer(): void {
     this.authServers.push(new FormControl('', [Validators.required]));
   }
 
+  addAuthorizationServer(): void {
+    this.authorizationServers.push(this.createManagedAuthorizationServerGroup());
+  }
+
   removeAuthServer(index: number): void {
     this.authServers.removeAt(index);
+  }
+
+  removeAuthorizationServer(index: number): void {
+    this.authorizationServers.removeAt(index);
   }
 
   get walletProviderTrustLists(): FormArray {
@@ -464,6 +635,15 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
     for (const url of servers) {
       if (url) {
         options.push({ value: url, label: url });
+      }
+    }
+    const managedServers = this.authorizationServers.value as any[];
+    for (const server of managedServers) {
+      if (server?.id) {
+        options.push({
+          value: `${this.managedAuthorizationServerPrefix}${server.id}`,
+          label: server.label || server.id,
+        });
       }
     }
     if (this.chainedAsEnabled) {

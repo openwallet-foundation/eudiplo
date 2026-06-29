@@ -16,7 +16,7 @@ describe("config derive helpers", () => {
         type: "string",
         defaultValue: "Erika",
         disclosable: true,
-        display: [{ lang: "en-US", label: "Given Name" }],
+        display: [{ locale: "en-US", name: "Given Name" }],
       },
       {
         path: ["address", "locality"],
@@ -24,7 +24,7 @@ describe("config derive helpers", () => {
         defaultValue: "Berlin",
         disclosable: true,
         mandatory: true,
-        display: [{ lang: "en-US", label: "City" }],
+        display: [{ locale: "en-US", name: "City" }],
       },
     ];
 
@@ -109,6 +109,38 @@ describe("config derive helpers", () => {
       $schema: "https://json-schema.org/draft/2020-12/schema",
       type: "object",
       properties: {},
+    });
+  });
+
+  it("builds array schemas using items for indexed child paths", () => {
+    const fields: ClaimFieldDefinition[] = [
+      {
+        path: ["nationalities"],
+        type: "array",
+        mandatory: true,
+        display: [{ locale: "en-US", name: "Nationalities" }],
+      },
+      {
+        path: ["nationalities", 0],
+        type: "string",
+        display: [{ locale: "en-US", name: "Nationality" }],
+      },
+    ];
+
+    expect(buildJsonSchema(fields)).toEqual({
+      $schema: "https://json-schema.org/draft/2020-12/schema",
+      type: "object",
+      properties: {
+        nationalities: {
+          type: "array",
+          title: "Nationalities",
+          items: {
+            type: "string",
+            title: "Nationality",
+          },
+        },
+      },
+      required: ["nationalities"],
     });
   });
 });

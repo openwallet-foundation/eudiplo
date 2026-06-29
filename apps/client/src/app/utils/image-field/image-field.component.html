@@ -1,7 +1,14 @@
 <div fxLayout="row" fxLayoutGap="16px">
   <mat-form-field fxFlex>
     <mat-label>{{ label }}</mat-label>
-    <input matInput [formControl]="field" [required]="required" />
+    <input
+      matInput
+      [formControl]="field"
+      [required]="required"
+      placeholder="Image URL"
+      [attr.aria-label]="label"
+      title="Image URL"
+    />
     <button
       matIconButton
       matSuffix
@@ -16,15 +23,19 @@
     #logoFileInput
     type="file"
     accept="image/*"
-    style="display: none"
+    class="hidden-file-input"
+    aria-label="Upload logo image"
+    title="Upload logo image"
     (change)="uploadLogoFile($event)"
   />
   <div fxLayout="row" fxFlex fxLayoutAlign="center center">
-    @if (field.value) {
+    @if (shouldRenderPreview) {
       <img
         [src]="field.value"
         alt="Logo Preview"
-        style="max-width: 120px; max-height: 60px; border-radius: 4px"
+        loading="lazy"
+        decoding="async"
+        class="image-preview"
       />
     }
   </div>

@@ -24,6 +24,10 @@ export const GLOBAL_PREFIX_EXCLUSIONS: {
     { path: "issuers/:tenantId/authorize", method: RequestMethod.ALL },
     { path: "issuers/:tenantId/authorize/{*path}", method: RequestMethod.ALL },
     {
+        path: "issuers/:tenantId/authorization-servers/{*path}",
+        method: RequestMethod.ALL,
+    },
+    {
         path: "issuers/:tenantId/credentials-metadata/{*path}",
         method: RequestMethod.ALL,
     },

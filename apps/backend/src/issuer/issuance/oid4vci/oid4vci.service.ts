@@ -55,7 +55,9 @@ import { ClaimsWebhookResult } from "../../configuration/credentials/dto/claims-
 import { IssuanceService } from "../../configuration/issuance/issuance.service";
 import { WebhookEndpointEntity } from "../../configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { AuthorizeService } from "./authorize/authorize.service";
+import { AuthorizationServersService } from "./authorization-servers/authorization-servers.service";
 import { ChainedAsService } from "./chained-as/chained-as.service";
+import { ChainedAsVpService } from "./chained-as-vp/chained-as-vp.service";
 import { DeferredCredentialService } from "./deferred-credential.service";
 import { DeferredCredentialRequestDto } from "./dto/deferred-credential-request.dto";
 import { NotificationRequestDto } from "./dto/notification-request.dto";
@@ -104,7 +106,9 @@ export class Oid4vciService {
         private readonly federationTrustService: FederationTrustService,
         private readonly webhookService: WebhookService,
         private readonly httpService: HttpService,
+        private readonly authorizationServersService: AuthorizationServersService,
         private readonly chainedAsService: ChainedAsService,
+        private readonly chainedAsVpService: ChainedAsVpService,
         private readonly deferredCredentialService: DeferredCredentialService,
         private readonly traceService: TraceService,
         @InjectRepository(NonceEntity)
@@ -122,13 +126,66 @@ export class Oid4vciService {
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
 
-        if (issuanceConfig.chainedAs?.enabled) {
-            const publicUrl =
-                this.configService.getOrThrow<string>("PUBLIC_URL");
+        const managedAuthorizationServer =
+            await this.authorizationServersService.getDefaultAuthorizationServerUrl(
+                tenantId,
+                issuanceConfig.preferredAuthServer,
+            );
+        if (managedAuthorizationServer) {
+            return managedAuthorizationServer;
+        }
+
+        const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
+
+        if (
+            await this.authorizationServersService.hasEnabledChainedAuthorizationServer(
+                tenantId,
+            )
+        ) {
             return `${publicUrl}/issuers/${tenantId}/chained-as`;
         }
 
         return this.authzService.getAuthzIssuer(tenantId);
+    }
+
+    private async resolveAuthorizationServerSelection(
+        tenantId: string,
+        selectedAuthorizationServer?: string,
+    ): Promise<string | undefined> {
+        if (!selectedAuthorizationServer) {
+            return undefined;
+        }
+
+        if (selectedAuthorizationServer === "built-in") {
+            return this.authzService.getAuthzIssuer(tenantId);
+        }
+
+        if (selectedAuthorizationServer === "chained-as") {
+            const hasChainedAuthorizationServer =
+                await this.authorizationServersService.hasEnabledChainedAuthorizationServer(
+                    tenantId,
+                );
+            if (!hasChainedAuthorizationServer) {
+                throw new BadRequestException(
+                    "Chained authorization server is not configured",
+                );
+            }
+            const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
+            return `${publicUrl}/issuers/${tenantId}/chained-as`;
+        }
+
+        if (
+            this.authorizationServersService.isSelectionValue(
+                selectedAuthorizationServer,
+            )
+        ) {
+            return this.authorizationServersService.resolveSelectionToIssuer(
+                tenantId,
+                selectedAuthorizationServer,
+            );
+        }
+
+        return selectedAuthorizationServer;
     }
 
     /**
@@ -185,6 +242,82 @@ export class Oid4vciService {
                 `Authorization server is not trusted by OpenID Federation policy: ${trustEvaluation.reason}`,
             );
         }
+    }
+
+    private async appendInternalAuthorizationServers(
+        tenantId: string,
+        credentialIssuer: string,
+        authServers: string[],
+        authorizationServers: AuthorizationServerMetadata[],
+    ): Promise<void> {
+        if (
+            await this.authorizationServersService.hasEnabledChainedAuthorizationServer(
+                tenantId,
+            )
+        ) {
+            const chainedAsIssuer = `${credentialIssuer}/chained-as`;
+            authServers.push(chainedAsIssuer);
+            authorizationServers.push(
+                (await this.chainedAsService.getMetadata(
+                    tenantId,
+                )) as AuthorizationServerMetadata,
+            );
+        }
+
+        const managedAuthorizationServers =
+            await this.authorizationServersService.getEnabledAuthorizationServers(
+                tenantId,
+            );
+        for (const managedAuthorizationServer of managedAuthorizationServers) {
+            authServers.push(
+                this.authorizationServersService.getAuthorizationServerBaseUrl(
+                    tenantId,
+                    managedAuthorizationServer.id!,
+                ),
+            );
+            authorizationServers.push(
+                (await this.authorizationServersService.getMetadata(
+                    tenantId,
+                    managedAuthorizationServer.id!,
+                )) as AuthorizationServerMetadata,
+            );
+        }
+
+        authServers.push(this.authzService.getAuthzIssuer(tenantId));
+        authorizationServers.push(
+            await this.authzService.authzMetadata(tenantId),
+        );
+    }
+
+    private resolvePreferredAuthorizationServer(
+        preferredAuthServer: string | undefined,
+        tenantId: string,
+        credentialIssuer: string,
+    ): string | undefined {
+        if (!preferredAuthServer) {
+            return undefined;
+        }
+
+        if (preferredAuthServer === "built-in") {
+            return this.authzService.getAuthzIssuer(tenantId);
+        }
+
+        if (preferredAuthServer === "chained-as") {
+            return `${credentialIssuer}/chained-as`;
+        }
+
+        if (
+            this.authorizationServersService.isSelectionValue(
+                preferredAuthServer,
+            )
+        ) {
+            return this.authorizationServersService.resolveSelectionToIssuer(
+                tenantId,
+                preferredAuthServer,
+            ) as unknown as string;
+        }
+
+        return preferredAuthServer;
     }
 
     /**
@@ -250,7 +383,9 @@ export class Oid4vciService {
                   } as FederationTrustSource)
                 : undefined;
 
-        for (const authServerUrl of issuanceConfig.authServers || []) {
+        for (const authServerUrl of await this.authorizationServersService.getExternalAuthorizationServerUrls(
+            tenantId,
+        )) {
             await this.assertFederationTrustForAuthorizationServer(
                 authServerUrl,
                 federationTrustSource,
@@ -284,33 +419,22 @@ export class Oid4vciService {
             );
         }
 
-        // Add Chained AS if enabled
-        if (issuanceConfig.chainedAs?.enabled) {
-            const chainedAsIssuer = `${credential_issuer}/chained-as`;
-            authServers.push(chainedAsIssuer);
-            authorizationServers.push(
-                (await this.chainedAsService.getMetadata(
-                    tenantId,
-                )) as AuthorizationServerMetadata,
-            );
-        }
-
-        authServers.push(this.authzService.getAuthzIssuer(tenantId));
-        authorizationServers.push(
-            await this.authzService.authzMetadata(tenantId),
+        await this.appendInternalAuthorizationServers(
+            tenantId,
+            credential_issuer,
+            authServers,
+            authorizationServers,
         );
 
         // Reorder so the preferred authorization server is first
-        if (issuanceConfig.preferredAuthServer) {
-            let preferred: string;
-            if (issuanceConfig.preferredAuthServer === "built-in") {
-                preferred = this.authzService.getAuthzIssuer(tenantId);
-            } else if (issuanceConfig.preferredAuthServer === "chained-as") {
-                preferred = `${credential_issuer}/chained-as`;
-            } else {
-                preferred = issuanceConfig.preferredAuthServer;
-            }
-
+        const preferred = await Promise.resolve(
+            this.resolvePreferredAuthorizationServer(
+                issuanceConfig.preferredAuthServer,
+                tenantId,
+                credential_issuer,
+            ),
+        );
+        if (preferred) {
             const idx = authServers.indexOf(preferred);
             if (idx > 0) {
                 // Move the preferred AS (and its metadata) to the front
@@ -382,6 +506,25 @@ export class Oid4vciService {
         if (body.flow === FlowType.PRE_AUTH_CODE) {
             //check if tx_code is a number
             authorization_code = v4();
+            const selectedAuthorizationServer =
+                await this.resolveAuthorizationServerSelection(
+                    tenantId,
+                    body.authorization_server,
+                );
+
+            // Pre-authorized flow should only target external AS URLs when overridden.
+            if (selectedAuthorizationServer) {
+                const externalAuthorizationServers =
+                    await this.authorizationServersService.getExternalAuthorizationServerUrls(
+                        tenantId,
+                    );
+                if (!externalAuthorizationServers.includes(selectedAuthorizationServer)) {
+                    throw new BadRequestException(
+                        "Pre-authorized code flow accepts only configured external authorization servers",
+                    );
+                }
+            }
+
             grants = {
                 [preAuthorizedCodeGrantIdentifier]: {
                     "pre-authorized_code": authorization_code,
@@ -394,16 +537,20 @@ export class Oid4vciService {
                               description: body.tx_code_description,
                           }
                         : undefined,
-                    // Pre-authorized code flow always uses the built-in AS
-                    // since the pre-authorized code is generated by the issuer
                     authorization_server:
+                        selectedAuthorizationServer ||
                         this.authzService.getAuthzIssuer(tenantId),
                 } as CredentialOfferPreAuthorizedCodeGrant,
             };
         } else {
             // For authorization code flow, use Chained AS if configured
+            const selectedAuthorizationServer =
+                await this.resolveAuthorizationServerSelection(
+                    tenantId,
+                    body.authorization_server,
+                );
             const authServer =
-                body.authorization_server ??
+                selectedAuthorizationServer ??
                 (await this.getAuthorizationServer(tenantId));
             grants = {
                 [authorizationCodeGrantIdentifier]: {
@@ -633,9 +780,20 @@ export class Oid4vciService {
         const localIssuer = this.authzService.getAuthzIssuer(tenantId);
         const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
         const chainedAsIssuer = `${publicUrl}/issuers/${tenantId}/chained-as`;
+        const hasChainedAuthorizationServer =
+            await this.authorizationServersService.hasEnabledChainedAuthorizationServer(
+                tenantId,
+            );
+        const managedAuthorizationServerIssuers = new Set(
+            await this.authorizationServersService.getAuthorizationServerIssuerUrls(
+                tenantId,
+            ),
+        );
 
         const isLocalAsToken = tokenPayload.iss === localIssuer;
-        const isChainedAsToken = tokenPayload.iss === chainedAsIssuer;
+        const isChainedAsToken =
+            (hasChainedAuthorizationServer && tokenPayload.iss === chainedAsIssuer) ||
+            managedAuthorizationServerIssuers.has(tokenPayload.iss);
         const isExternalAsToken = !isLocalAsToken && !isChainedAsToken;
 
         let session: Session;
@@ -654,9 +812,11 @@ export class Oid4vciService {
             session = await this.sessionService.getBy({ id: issuerState });
 
             const upstreamIdentity =
-                await this.chainedAsService.getUpstreamIdentityByIssuerState(
-                    issuerState,
-                );
+                tokenPayload.iss === chainedAsIssuer
+                    ? await this.chainedAsService.getUpstreamIdentityByIssuerState(
+                          issuerState,
+                      )
+                    : undefined;
 
             const identity: AuthorizationIdentity = upstreamIdentity ?? {
                 iss: tokenPayload.iss,
@@ -675,7 +835,9 @@ export class Oid4vciService {
         } else if (isExternalAsToken) {
             // External AS flow (e.g., Keycloak)
             const configuredAuthServers =
-                issuanceConfig.authServers?.map((url) => url) ?? [];
+                await this.authorizationServersService.getExternalAuthorizationServerUrls(
+                    tenantId,
+                );
             if (!configuredAuthServers.includes(tokenPayload.iss)) {
                 throw new CredentialRequestException(
                     "credential_request_denied",

@@ -57,9 +57,18 @@
         }
       ]
     },
+    "webhookEndpointId": {
+      "type": "string",
+      "nullable": true,
+      "description": "Reference to the webhook endpoint used for notifications.\nOptional: if set, notifications will be sent to this endpoint."
+    },
+    "webhookEndpoint": {
+      "$ref": "./WebhookEndpointEntity.schema.json"
+    },
     "webhook": {
       "nullable": true,
       "description": "Optional webhook URL to receive the response.",
+      "deprecated": true,
       "type": "object",
       "allOf": [
         {

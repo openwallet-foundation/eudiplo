@@ -1,4 +1,11 @@
-import { Component, Input, ElementRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  Input,
+  ElementRef,
+  ViewChild,
+  ChangeDetectionStrategy,
+  OnInit,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -21,13 +28,39 @@ import { MatButtonModule } from '@angular/material/button';
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./image-field.component.scss'],
 })
-export class ImageFieldComponent {
+export class ImageFieldComponent implements OnInit {
   @Input() field!: FormControl<string>;
   @Input() label!: string;
   @Input() required = false;
   @ViewChild('logoFileInput') logoFileInput!: ElementRef<HTMLInputElement>;
+  previewReady = false;
+
+  get shouldRenderPreview(): boolean {
+    return this.previewReady && !!this.field?.value;
+  }
 
   constructor(private snackBar: MatSnackBar) {}
+
+  ngOnInit(): void {
+    // Defer preview rendering to keep the initial form interactive.
+    const enablePreview = () => {
+      this.previewReady = true;
+    };
+
+    const env = globalThis as {
+      requestIdleCallback?: (
+        callback: () => void,
+        options?: { timeout?: number }
+      ) => number;
+    };
+
+    if (typeof env.requestIdleCallback === 'function') {
+      env.requestIdleCallback(enablePreview, { timeout: 1200 });
+      return;
+    }
+
+    setTimeout(enablePreview, 250);
+  }
 
   triggerLogoFileInput() {
     this.logoFileInput.nativeElement.click();
@@ -42,6 +75,7 @@ export class ImageFieldComponent {
       .then((response: any) => {
         const url = response.url || response.data?.url;
         this.field.setValue(url);
+        this.field.markAsDirty();
         this.snackBar.open('Logo uploaded!', 'Close', { duration: 2000 });
       })
       .catch((error: any) => {

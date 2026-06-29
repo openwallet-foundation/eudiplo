@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ChainedAsVpConfig.schema.json",
+  "title": "ChainedAsVpConfig",
+  "type": "object",
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "description": "Enable VP-backed chained AS mode",
+      "default": false
+    },
+    "presentationConfigId": {
+      "type": "string",
+      "description": "Presentation configuration ID used for OID4VP",
+      "example": "pid-no-hook"
+    }
+  },
+  "required": [
+    "enabled",
+    "presentationConfigId"
+  ],
+  "additionalProperties": false
+}

@@ -1,6 +1,117 @@
 import { ConfigService } from "@nestjs/config";
 import { IncomingMessage } from "node:http";
 import { Params } from "nestjs-pino";
+import { SerializedRequest, SerializedResponse } from "pino";
+
+const MAX_LOGGED_RESPONSE_BODY_LENGTH = 4096;
+
+const SENSITIVE_KEY_PATTERN =
+    /password|secret|token|authorization|cookie|set-cookie|clientsecret|access_token|refresh_token/i;
+
+function redactSensitiveValues(value: unknown): unknown {
+    if (Array.isArray(value)) {
+        return value.map((item) => redactSensitiveValues(item));
+    }
+
+    if (value && typeof value === "object") {
+        const redacted: Record<string, unknown> = {};
+        for (const [key, nestedValue] of Object.entries(
+            value as Record<string, unknown>,
+        )) {
+            redacted[key] = SENSITIVE_KEY_PATTERN.test(key)
+                ? "[REDACTED]"
+                : redactSensitiveValues(nestedValue);
+        }
+        return redacted;
+    }
+
+    return value;
+}
+
+function truncate(value: string): string {
+    if (value.length <= MAX_LOGGED_RESPONSE_BODY_LENGTH) {
+        return value;
+    }
+
+    return `${value.slice(0, MAX_LOGGED_RESPONSE_BODY_LENGTH)}...[truncated]`;
+}
+
+function serializeResponseBody(
+    rawBody: Buffer,
+    contentType: string | undefined,
+): unknown {
+    if (!rawBody.length) {
+        return undefined;
+    }
+
+    const normalizedContentType = (contentType || "").toLowerCase();
+    const isLikelyText =
+        normalizedContentType.includes("json") ||
+        normalizedContentType.startsWith("text/") ||
+        normalizedContentType.includes("xml") ||
+        normalizedContentType.includes("javascript") ||
+        normalizedContentType.includes("x-www-form-urlencoded") ||
+        normalizedContentType === "";
+
+    if (!isLikelyText) {
+        return "[non-text response omitted]";
+    }
+
+    const bodyText = truncate(rawBody.toString("utf8"));
+
+    if (normalizedContentType.includes("json")) {
+        try {
+            return redactSensitiveValues(JSON.parse(bodyText));
+        } catch {
+            return bodyText;
+        }
+    }
+
+    return bodyText;
+}
+
+function attachResponseBodyCapture(req: any, res: any): void {
+    const response = res?.raw ?? res;
+    if (!response || response.__eudiploResponseBodyCaptureInstalled) {
+        return;
+    }
+
+    response.__eudiploResponseBodyCaptureInstalled = true;
+
+    const chunks: Buffer[] = [];
+    const originalWrite = response.write?.bind(response);
+    const originalEnd = response.end?.bind(response);
+
+    if (typeof originalWrite !== "function" || typeof originalEnd !== "function") {
+        return;
+    }
+
+    response.write = (chunk: unknown, ...args: unknown[]) => {
+        if (chunk !== undefined && chunk !== null) {
+            chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk)));
+        }
+        return originalWrite(chunk, ...args);
+    };
+
+    response.end = (chunk?: unknown, ...args: unknown[]) => {
+        if (chunk !== undefined && chunk !== null) {
+            chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk)));
+        }
+
+        const bodyBuffer = chunks.length > 0 ? Buffer.concat(chunks) : Buffer.alloc(0);
+        const responseContentType =
+            typeof response.getHeader === "function"
+                ? String(response.getHeader("content-type") || "")
+                : undefined;
+
+        response.__eudiploLoggedResponseBody = serializeResponseBody(
+            bodyBuffer,
+            responseContentType,
+        );
+
+        return originalEnd(chunk, ...args);
+    };
+}
 
 /**
  * Factory function for configuring the logger module
@@ -42,7 +153,6 @@ export const createLoggerOptions = (configService: ConfigService) => {
                 singleLine: false,
                 translateTime: "yyyy-mm-dd HH:MM:ss",
                 //ignore: "pid,hostname,req,res,responseTime,context",
-                ignore: "context",
                 messageFormat: "{if context}[{context}] {end}{msg}",
             },
         },
@@ -90,7 +200,7 @@ export const createLoggerOptions = (configService: ConfigService) => {
                         return true;
                     }
                     //check if path includes /api to ignore it
-                    if (req.url && req.url.includes("/api")) {
+                    if (req.url?.includes("/api")) {
                         return true;
                     }
                     return false;
@@ -105,11 +215,14 @@ export const createLoggerOptions = (configService: ConfigService) => {
                     return object;
                 },
             },
-            customProps: (req: any) => ({
-                sessionId: req.params?.session,
-            }),
+            customProps: (req: any, res: any) => {
+                attachResponseBodyCapture(req, res);
+                return {
+                    sessionId: req.params?.session,
+                };
+            },
             serializers: {
-                req: (req: any) => ({
+                req: (req: SerializedRequest) => ({
                     method: req.method,
                     url: req.url,
                     headers: {
@@ -119,9 +232,12 @@ export const createLoggerOptions = (configService: ConfigService) => {
                     sessionId: req.params?.session,
                     tenantId: req.params?.tenantId,
                 }),
-                res: (res: any) => ({
-                    statusCode: res.statusCode,
-                }),
+                res: (res: SerializedResponse & { raw?: any }) => {
+                    return {
+                        statusCode: res.statusCode,
+                        body: res.raw?.__eudiploLoggedResponseBody,
+                    };
+                },
             },
         },
         forRoutes: ["*splat"],

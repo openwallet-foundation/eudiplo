@@ -134,6 +134,22 @@ export class ChainedAsService {
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
 
+        const chainedServer = (issuanceConfig.authorizationServers ?? []).find(
+            (server) =>
+                server.enabled !== false &&
+                server.type === "chained" &&
+                server.upstream,
+        );
+
+        if (chainedServer?.upstream) {
+            return {
+                enabled: true,
+                upstream: chainedServer.upstream,
+                token: chainedServer.token,
+                requireDPoP: chainedServer.requireDPoP,
+            } as ChainedAsConfig;
+        }
+
         if (!issuanceConfig.chainedAs?.enabled) {
             throw new NotFoundException(
                 "Chained Authorization Server is not enabled for this tenant",

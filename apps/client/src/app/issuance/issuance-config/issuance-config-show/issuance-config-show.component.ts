@@ -16,6 +16,19 @@ import { IssuanceConfig } from '@eudiplo/sdk-core';
 import { downloadJsonFile } from '../../../common/download-json.util';
 import { IssuanceConfigService } from '../issuance-config.service';
 
+interface ChainedAuthorizationServerView {
+  enabled: boolean;
+  upstream?: {
+    issuer?: string;
+    clientId?: string;
+    scopes?: string[];
+  };
+  token?: {
+    lifetimeSeconds?: number;
+  };
+  requireDPoP?: boolean;
+}
+
 @Component({
   selector: 'app-issuance-config-show',
   imports: [
@@ -47,6 +60,61 @@ export class IssuanceConfigShowComponent implements OnInit {
 
   get primaryDisplay(): any {
     return this.config?.display?.[0];
+  }
+
+  get externalAuthorizationServers(): string[] {
+    const authorizationServers = (this.config as any)?.authorizationServers;
+    if (Array.isArray(authorizationServers)) {
+      return authorizationServers
+        .filter((server: any) => server?.type === 'external' && typeof server?.issuer === 'string')
+        .map((server: any) => server.issuer);
+    }
+
+    return (this.config as any)?.authServers || [];
+  }
+
+  get hostedAuthorizationServers(): any[] {
+    const authorizationServers = (this.config as any)?.authorizationServers;
+    if (!Array.isArray(authorizationServers)) {
+      return [];
+    }
+
+    return authorizationServers.filter((server: any) => server?.type === 'oid4vp');
+  }
+
+  get chainedAuthorizationServer(): ChainedAuthorizationServerView | undefined {
+    const authorizationServers = (this.config as any)?.authorizationServers;
+    if (Array.isArray(authorizationServers)) {
+      const chained = authorizationServers.find(
+        (server: any) => server?.type === 'chained' && server?.enabled !== false
+      );
+      if (chained) {
+        return {
+          enabled: true,
+          upstream: {
+            issuer: chained.upstream?.issuer,
+            clientId: chained.upstream?.clientId,
+            scopes: chained.upstream?.scopes,
+          },
+          token: {
+            lifetimeSeconds: chained.token?.lifetimeSeconds,
+          },
+          requireDPoP: chained.requireDPoP,
+        };
+      }
+    }
+
+    const legacy = (this.config as any)?.chainedAs;
+    if (legacy?.enabled) {
+      return {
+        enabled: true,
+        upstream: legacy.upstream,
+        token: legacy.token,
+        requireDPoP: legacy.requireDPoP,
+      };
+    }
+
+    return undefined;
   }
 
   copyToClipboard(value: string, label: string): void {

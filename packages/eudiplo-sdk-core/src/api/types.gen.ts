@@ -861,6 +861,17 @@ export type UpstreamOidcConfig = {
     scopes?: Array<string>;
 };
 
+export type ChainedAsVpConfig = {
+    /**
+     * Enable VP-backed chained AS mode
+     */
+    enabled: boolean;
+    /**
+     * Presentation configuration ID used for OID4VP
+     */
+    presentationConfigId: string;
+};
+
 export type ChainedAsTokenConfig = {
     /**
      * Access token lifetime in seconds
@@ -882,11 +893,50 @@ export type ChainedAsConfig = {
      */
     upstream?: UpstreamOidcConfig;
     /**
+     * VP-backed chained AS configuration
+     */
+    vp?: ChainedAsVpConfig;
+    /**
      * Token configuration
      */
     token?: ChainedAsTokenConfig;
     /**
      * Require DPoP binding for tokens
+     */
+    requireDPoP?: boolean;
+};
+
+export type ManagedAuthorizationServerConfig = {
+    /**
+     * Stable identifier used in the AS URL path
+     */
+    id: string;
+    /**
+     * Human-friendly label for the UI
+     */
+    label?: string;
+    /**
+     * Authorization server implementation type
+     */
+    type: 'oid4vp';
+    /**
+     * Whether this managed authorization server is enabled
+     */
+    enabled?: boolean;
+    /**
+     * Presentation configuration ID to use for OID4VP
+     */
+    presentationConfigId: string;
+    /**
+     * Immediately redirect the browser into the wallet OID4VP request
+     */
+    immediateWalletRedirect?: boolean;
+    /**
+     * Token configuration for this authorization server
+     */
+    token?: ChainedAsTokenConfig;
+    /**
+     * Require DPoP for token requests issued by this authorization server
      */
     requireDPoP?: boolean;
 };
@@ -951,6 +1001,12 @@ export type IssuanceConfig = {
      * to an upstream OIDC provider while issuing its own tokens with issuer_state.
      */
     chainedAs?: ChainedAsConfig;
+    /**
+     * Dedicated managed authorization servers hosted by this issuer.
+     * Each entry creates a distinct AS endpoint and can be bound to a different
+     * presentation configuration.
+     */
+    authorizationServers?: Array<ManagedAuthorizationServerConfig>;
     /**
      * Optional OpenID Federation configuration used for trust evaluation.
      * When omitted, trust checks rely on existing LoTE trust-list behavior.
@@ -1034,6 +1090,12 @@ export type IssuanceDto = {
      * to an upstream OIDC provider while issuing its own tokens with issuer_state.
      */
     chainedAs?: ChainedAsConfig;
+    /**
+     * Dedicated managed authorization servers hosted by this issuer.
+     * Each entry creates a distinct AS endpoint and can be bound to a different
+     * presentation configuration.
+     */
+    authorizationServers?: Array<ManagedAuthorizationServerConfig>;
     /**
      * Optional OpenID Federation configuration used for trust evaluation.
      * When omitted, trust checks rely on existing LoTE trust-list behavior.
@@ -2106,7 +2168,15 @@ export type PresentationConfig = {
      */
     registration_cert?: RegistrationCertificateRequest;
     /**
+     * Reference to the webhook endpoint used for notifications.
+     * Optional: if set, notifications will be sent to this endpoint.
+     */
+    webhookEndpointId?: string;
+    webhookEndpoint?: WebhookEndpointEntity;
+    /**
      * Optional webhook URL to receive the response.
+     *
+     * @deprecated
      */
     webhook?: WebhookConfig;
     /**
@@ -2175,7 +2245,15 @@ export type PresentationConfigCreateDto = {
      */
     registration_cert?: RegistrationCertificateRequest;
     /**
+     * Reference to the webhook endpoint used for notifications.
+     * Optional: if set, notifications will be sent to this endpoint.
+     */
+    webhookEndpointId?: string;
+    webhookEndpoint?: WebhookEndpointEntity;
+    /**
      * Optional webhook URL to receive the response.
+     *
+     * @deprecated
      */
     webhook?: WebhookConfig;
     /**
@@ -2222,7 +2300,15 @@ export type PresentationConfigUpdateDto = {
      */
     registration_cert?: RegistrationCertificateRequest;
     /**
+     * Reference to the webhook endpoint used for notifications.
+     * Optional: if set, notifications will be sent to this endpoint.
+     */
+    webhookEndpointId?: string;
+    webhookEndpoint?: WebhookEndpointEntity;
+    /**
      * Optional webhook URL to receive the response.
+     *
+     * @deprecated
      */
     webhook?: WebhookConfig;
     /**
@@ -3088,7 +3174,15 @@ export type PresentationConfigWritable = {
      */
     registration_cert?: RegistrationCertificateRequest;
     /**
+     * Reference to the webhook endpoint used for notifications.
+     * Optional: if set, notifications will be sent to this endpoint.
+     */
+    webhookEndpointId?: string;
+    webhookEndpoint?: WebhookEndpointEntity;
+    /**
      * Optional webhook URL to receive the response.
+     *
+     * @deprecated
      */
     webhook?: WebhookConfig;
     /**
@@ -4742,6 +4836,246 @@ export type RegistrarControllerCreateAccessCertificateResponses = {
 };
 
 export type RegistrarControllerCreateAccessCertificateResponse = RegistrarControllerCreateAccessCertificateResponses[keyof RegistrarControllerCreateAccessCertificateResponses];
+
+export type AuthorizationServersControllerParData = {
+    body?: never;
+    headers?: {
+        /**
+         * DPoP proof JWT
+         */
+        DPoP?: string;
+        /**
+         * Wallet attestation JWT
+         */
+        'OAuth-Client-Attestation'?: string;
+        /**
+         * Wallet attestation proof-of-possession JWT
+         */
+        'OAuth-Client-Attestation-PoP'?: string;
+    };
+    path: {
+        /**
+         * Tenant identifier
+         */
+        tenantId: string;
+        /**
+         * Authorization server identifier
+         */
+        authorizationServerId: string;
+    };
+    query?: never;
+    url: '/api/issuers/{tenantId}/authorization-servers/{authorizationServerId}/par';
+};
+
+export type AuthorizationServersControllerParErrors = {
+    400: ChainedAsErrorResponseDto;
+};
+
+export type AuthorizationServersControllerParError = AuthorizationServersControllerParErrors[keyof AuthorizationServersControllerParErrors];
+
+export type AuthorizationServersControllerParResponses = {
+    201: ChainedAsParResponseDto;
+};
+
+export type AuthorizationServersControllerParResponse = AuthorizationServersControllerParResponses[keyof AuthorizationServersControllerParResponses];
+
+export type AuthorizationServersControllerAuthorizeData = {
+    body?: never;
+    path: {
+        /**
+         * Tenant identifier
+         */
+        tenantId: string;
+        /**
+         * Authorization server identifier
+         */
+        authorizationServerId: string;
+    };
+    query: {
+        /**
+         * Client identifier
+         */
+        client_id: string;
+        /**
+         * Request URI from PAR response
+         */
+        request_uri: string;
+    };
+    url: '/api/issuers/{tenantId}/authorization-servers/{authorizationServerId}/authorize';
+};
+
+export type AuthorizationServersControllerVpCallbackData = {
+    body?: never;
+    path: {
+        /**
+         * Tenant identifier
+         */
+        tenantId: string;
+        /**
+         * Authorization server identifier
+         */
+        authorizationServerId: string;
+    };
+    query: {
+        cas: string;
+        response_code?: string;
+        error?: string;
+        error_description?: string;
+    };
+    url: '/api/issuers/{tenantId}/authorization-servers/{authorizationServerId}/vp-callback';
+};
+
+export type AuthorizationServersControllerTokenData = {
+    body: ChainedAsTokenRequestDto;
+    headers?: {
+        /**
+         * DPoP proof JWT
+         */
+        DPoP?: string;
+    };
+    path: {
+        /**
+         * Tenant identifier
+         */
+        tenantId: string;
+        /**
+         * Authorization server identifier
+         */
+        authorizationServerId: string;
+    };
+    query?: never;
+    url: '/api/issuers/{tenantId}/authorization-servers/{authorizationServerId}/token';
+};
+
+export type AuthorizationServersControllerTokenErrors = {
+    400: ChainedAsErrorResponseDto;
+};
+
+export type AuthorizationServersControllerTokenError = AuthorizationServersControllerTokenErrors[keyof AuthorizationServersControllerTokenErrors];
+
+export type AuthorizationServersControllerTokenResponses = {
+    200: ChainedAsTokenResponseDto;
+};
+
+export type AuthorizationServersControllerTokenResponse = AuthorizationServersControllerTokenResponses[keyof AuthorizationServersControllerTokenResponses];
+
+export type ChainedAsVpControllerParData = {
+    body?: never;
+    headers?: {
+        /**
+         * DPoP proof JWT
+         */
+        DPoP?: string;
+        /**
+         * Wallet attestation JWT
+         */
+        'OAuth-Client-Attestation'?: string;
+        /**
+         * Wallet attestation proof-of-possession JWT
+         */
+        'OAuth-Client-Attestation-PoP'?: string;
+    };
+    path: {
+        /**
+         * Tenant identifier
+         */
+        tenantId: string;
+    };
+    query?: never;
+    url: '/api/issuers/{tenantId}/chained-as-vp/par';
+};
+
+export type ChainedAsVpControllerParErrors = {
+    400: ChainedAsErrorResponseDto;
+};
+
+export type ChainedAsVpControllerParError = ChainedAsVpControllerParErrors[keyof ChainedAsVpControllerParErrors];
+
+export type ChainedAsVpControllerParResponses = {
+    201: ChainedAsParResponseDto;
+};
+
+export type ChainedAsVpControllerParResponse = ChainedAsVpControllerParResponses[keyof ChainedAsVpControllerParResponses];
+
+export type ChainedAsVpControllerAuthorizeData = {
+    body?: never;
+    path: {
+        /**
+         * Tenant identifier
+         */
+        tenantId: string;
+    };
+    query: {
+        /**
+         * Client identifier
+         */
+        client_id: string;
+        /**
+         * Request URI from PAR response
+         */
+        request_uri: string;
+    };
+    url: '/api/issuers/{tenantId}/chained-as-vp/authorize';
+};
+
+export type ChainedAsVpControllerAuthorizeErrors = {
+    400: ChainedAsErrorResponseDto;
+};
+
+export type ChainedAsVpControllerAuthorizeError = ChainedAsVpControllerAuthorizeErrors[keyof ChainedAsVpControllerAuthorizeErrors];
+
+export type ChainedAsVpControllerVpCallbackData = {
+    body?: never;
+    path: {
+        /**
+         * Tenant identifier
+         */
+        tenantId: string;
+    };
+    query: {
+        cas: string;
+        response_code?: string;
+        error?: string;
+        error_description?: string;
+    };
+    url: '/api/issuers/{tenantId}/chained-as-vp/vp-callback';
+};
+
+export type ChainedAsVpControllerVpCallbackErrors = {
+    400: ChainedAsErrorResponseDto;
+};
+
+export type ChainedAsVpControllerVpCallbackError = ChainedAsVpControllerVpCallbackErrors[keyof ChainedAsVpControllerVpCallbackErrors];
+
+export type ChainedAsVpControllerTokenData = {
+    body: ChainedAsTokenRequestDto;
+    headers?: {
+        /**
+         * DPoP proof JWT
+         */
+        DPoP?: string;
+    };
+    path: {
+        /**
+         * Tenant identifier
+         */
+        tenantId: string;
+    };
+    query?: never;
+    url: '/api/issuers/{tenantId}/chained-as-vp/token';
+};
+
+export type ChainedAsVpControllerTokenErrors = {
+    400: ChainedAsErrorResponseDto;
+};
+
+export type ChainedAsVpControllerTokenError = ChainedAsVpControllerTokenErrors[keyof ChainedAsVpControllerTokenErrors];
+
+export type ChainedAsVpControllerTokenResponses = {
+    200: ChainedAsTokenResponseDto;
+};
+
+export type ChainedAsVpControllerTokenResponse = ChainedAsVpControllerTokenResponses[keyof ChainedAsVpControllerTokenResponses];
 
 export type CredentialOfferControllerGetOfferData = {
     body: OfferRequestDto;

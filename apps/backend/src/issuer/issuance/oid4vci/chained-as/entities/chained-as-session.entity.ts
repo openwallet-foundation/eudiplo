@@ -14,6 +14,8 @@ export enum ChainedAsSessionStatus {
     PENDING_AUTHORIZE = "pending_authorize",
     /** User redirected to upstream OIDC provider */
     PENDING_UPSTREAM_CALLBACK = "pending_upstream_callback",
+    /** User redirected to an OID4VP verifier flow */
+    PENDING_VP_CALLBACK = "pending_vp_callback",
     /** Upstream auth completed, token can be issued */
     AUTHORIZED = "authorized",
     /** Token has been issued */
@@ -121,6 +123,20 @@ export class ChainedAsSessionEntity {
      */
     @Column("varchar", { nullable: true })
     upstreamCodeVerifier?: string;
+
+    /**
+     * Presentation configuration used when this session is handled by a
+     * managed OID4VP-backed authorization server.
+     */
+    @Column("varchar", { nullable: true })
+    vpPresentationConfigId?: string;
+
+    /**
+     * Response code returned by the verifier callback after a successful
+     * OID4VP presentation flow.
+     */
+    @Column("varchar", { nullable: true })
+    vpResponseCode?: string;
 
     /**
      * ID token claims received from upstream OIDC (for user info).

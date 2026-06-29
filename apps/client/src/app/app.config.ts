@@ -48,8 +48,6 @@ function onMonacoLoad() {
   });
 }
 
-console.log((window as any)['env']);
-
 export const appConfig: ApplicationConfig = {
   providers: [
     {

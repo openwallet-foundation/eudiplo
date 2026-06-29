@@ -17,6 +17,10 @@ import { InteractiveAuthorizationService } from "./oid4vci/authorize/interactive
 import { ChainedAsController } from "./oid4vci/chained-as/chained-as.controller";
 import { ChainedAsService } from "./oid4vci/chained-as/chained-as.service";
 import { ChainedAsSessionEntity } from "./oid4vci/chained-as/entities/chained-as-session.entity";
+import { AuthorizationServersController } from "./oid4vci/authorization-servers/authorization-servers.controller";
+import { AuthorizationServersService } from "./oid4vci/authorization-servers/authorization-servers.service";
+import { ChainedAsVpController } from "./oid4vci/chained-as-vp/chained-as-vp.controller";
+import { ChainedAsVpService } from "./oid4vci/chained-as-vp/chained-as-vp.service";
 import { DeferredController } from "./oid4vci/deferred.controller";
 import { DeferredCredentialService } from "./oid4vci/deferred-credential.service";
 import { DeferredTransactionEntity } from "./oid4vci/entities/deferred-transaction.entity";
@@ -59,6 +63,8 @@ import { WellKnownService } from "./oid4vci/well-known/well-known.service";
         AuthorizeController,
         InteractiveAuthorizationController,
         ChainedAsController,
+        AuthorizationServersController,
+        ChainedAsVpController,
         CredentialOfferController,
         DeferredController,
         Oid4vciMetadataController,
@@ -68,6 +74,8 @@ import { WellKnownService } from "./oid4vci/well-known/well-known.service";
         AuthorizeService,
         InteractiveAuthorizationService,
         ChainedAsService,
+        AuthorizationServersService,
+        ChainedAsVpService,
         DeferredCredentialService,
         Oid4vciService,
         WellKnownService,
@@ -77,6 +85,8 @@ import { WellKnownService } from "./oid4vci/well-known/well-known.service";
         AuthorizeService,
         InteractiveAuthorizationService,
         ChainedAsService,
+        AuthorizationServersService,
+        ChainedAsVpService,
         Oid4vciService,
     ],
 })

@@ -167,6 +167,23 @@
                 Provide the claims data for each selected credential configuration.
               </p>
 
+              @if (preAuthAuthorizationServerOptions.length > 0) {
+                <mat-form-field class="full-width external-as-select">
+                  <mat-label>Authorization Server (Optional)</mat-label>
+                  <mat-select formControlName="authorization_server">
+                    <mat-option value="">Use issuer default</mat-option>
+                    @for (server of preAuthAuthorizationServerOptions; track server.value) {
+                      <mat-option [value]="server.value">{{ server.label }}</mat-option>
+                    }
+                  </mat-select>
+                  <mat-icon matSuffix>dns</mat-icon>
+                  <mat-hint
+                    >Pre-authorized offers support external AS entries only. Keep default to follow
+                    issuer metadata ordering.</mat-hint
+                  >
+                </mat-form-field>
+              }
+
               <!-- TX Code -->
               <mat-form-field class="full-width">
                 <mat-label>Transaction Code (Optional)</mat-label>
@@ -294,70 +311,24 @@
                 Choose which authorization server will handle user authentication.
               </p>
 
-              <!-- AS Type Selection (only shown when chained AS is available) -->
-              @if (isChainedAsEnabled || availableAuthServers.length > 0) {
-                @if (isChainedAsEnabled && availableAuthServers.length > 0) {
-                  <!-- Both options available -->
-                  <mat-radio-group
-                    formControlName="as_type"
-                    fxLayout="column"
-                    fxLayoutGap="12px"
-                    class="as-type-selection"
+              @if (authCodeAuthorizationServerOptions.length > 0) {
+                <mat-form-field class="full-width external-as-select">
+                  <mat-label>Authorization Server</mat-label>
+                  <mat-select formControlName="authorization_server" required>
+                    @for (group of authCodeAuthorizationServerGroups; track group.label) {
+                      <mat-optgroup [label]="group.label">
+                        @for (server of group.options; track server.value) {
+                          <mat-option [value]="server.value">{{ server.label }}</mat-option>
+                        }
+                      </mat-optgroup>
+                    }
+                  </mat-select>
+                  <mat-icon matSuffix>dns</mat-icon>
+                  <mat-hint
+                    >The selected authorization server will handle user authentication and provide
+                    claims</mat-hint
                   >
-                    <mat-radio-button value="chained" class="as-type-option">
-                      <div class="as-type-option-content">
-                        <div class="as-type-option-header">
-                          <mat-icon>account_tree</mat-icon>
-                          <strong>Chained Authorization Server</strong>
-                        </div>
-                        <p class="as-type-option-description">
-                          Use the built-in authorization server that delegates authentication to the
-                          configured upstream OIDC provider.
-                        </p>
-                      </div>
-                    </mat-radio-button>
-
-                    <mat-radio-button value="external" class="as-type-option">
-                      <div class="as-type-option-content">
-                        <div class="as-type-option-header">
-                          <mat-icon>dns</mat-icon>
-                          <strong>External Authorization Server</strong>
-                        </div>
-                        <p class="as-type-option-description">
-                          Use a directly configured external authorization server.
-                        </p>
-                      </div>
-                    </mat-radio-button>
-                  </mat-radio-group>
-                } @else if (isChainedAsEnabled) {
-                  <!-- Only chained AS available -->
-                  <div class="chained-as-confirmation">
-                    <mat-icon class="success-icon">account_tree</mat-icon>
-                    <div>
-                      <strong>Chained Authorization Server</strong>
-                      <p>
-                        User authentication will be handled by the built-in authorization server,
-                        which delegates to the configured upstream OIDC provider.
-                      </p>
-                    </div>
-                  </div>
-                }
-
-                <!-- External AS Selection (only shown when external type is selected) -->
-                @if (selectedAsType === 'external' && availableAuthServers.length > 0) {
-                  <mat-form-field class="full-width external-as-select">
-                    <mat-label>Authorization Server</mat-label>
-                    <mat-select formControlName="authorization_server" required>
-                      @for (server of availableAuthServers; track server) {
-                        <mat-option [value]="server">{{ server }}</mat-option>
-                      }
-                    </mat-select>
-                    <mat-icon matSuffix>dns</mat-icon>
-                    <mat-hint
-                      >The external AS will handle user authentication and provide claims</mat-hint
-                    >
-                  </mat-form-field>
-                }
+                </mat-form-field>
 
                 <!-- Attribute Provider configuration for each credential -->
                 <h4 class="webhook-section-title">
@@ -419,7 +390,7 @@
               <!-- Info about claims in auth code flow -->
               <div class="info-box">
                 <mat-icon>info</mat-icon>
-                @if (isChainedAsSelected) {
+                @if (configStepForm.get('authorization_server')?.value === 'chained-as') {
                   <p>
                     The chained AS will authenticate the user via the upstream OIDC provider. Your
                     webhook will receive the user's identity (iss, sub) and token claims to resolve
@@ -518,8 +489,7 @@
                 [disabled]="
                   generatingOffer ||
                   (isAuthCodeExternalFlow &&
-                    ((selectedAsType === 'external' &&
-                      !configStepForm.get('authorization_server')?.value) ||
+                    (!configStepForm.get('authorization_server')?.value ||
                       !allExternalAsWebhooksValid))
                 "
               >

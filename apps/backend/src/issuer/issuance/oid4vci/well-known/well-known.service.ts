@@ -6,7 +6,9 @@ import { KeyChainService } from "../../../../crypto/key/key-chain.service";
 import { MediaType } from "../../../../shared/utils/mediaType/media-type.enum";
 import { IssuanceService } from "../../../configuration/issuance/issuance.service";
 import { AuthorizeService } from "../authorize/authorize.service";
+import { AuthorizationServersService } from "../authorization-servers/authorization-servers.service";
 import { ChainedAsService } from "../chained-as/chained-as.service";
+import { ChainedAsVpService } from "../chained-as-vp/chained-as-vp.service";
 import { WellKnownException } from "../exceptions";
 import { Oid4vciService } from "../oid4vci.service";
 import { CredentialIssuerMetadataDto } from "./dto/credential-issuer-metadata.dto";
@@ -29,7 +31,9 @@ export class WellKnownService {
         public readonly keyChainService: KeyChainService,
         private readonly authorizeService: AuthorizeService,
         private readonly cryptoImplementationService: CryptoImplementationService,
+        private readonly authorizationServersService: AuthorizationServersService,
         private readonly chainedAsService: ChainedAsService,
+        private readonly chainedAsVpService: ChainedAsVpService,
         private readonly issuanceService: IssuanceService,
     ) {}
 
@@ -179,6 +183,84 @@ export class WellKnownService {
             }
             throw new WellKnownException(
                 `Failed to retrieve Chained AS JWKS for tenant ${tenantId}: ${error instanceof Error ? error.message : "Unknown error"}`,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
+
+    /**
+     * Returns the OAuth 2.0 Authorization Server metadata for the VP-backed Chained AS.
+     */
+    async getChainedAsVpMetadata(
+        tenantId: string,
+    ): Promise<Record<string, unknown>> {
+        try {
+            return await this.chainedAsVpService.getMetadata(tenantId);
+        } catch (error) {
+            if (error instanceof WellKnownException) {
+                throw error;
+            }
+            throw new WellKnownException(
+                `Failed to retrieve VP Chained AS metadata for tenant ${tenantId}: ${error instanceof Error ? error.message : "Unknown error"}`,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
+
+    /**
+     * Returns the JSON Web Key Set (JWKS) for the VP-backed Chained Authorization Server.
+     */
+    async getChainedAsVpJwks(
+        tenantId: string,
+    ): Promise<{ keys: Record<string, unknown>[] }> {
+        try {
+            return await this.chainedAsVpService.getJwks(tenantId);
+        } catch (error) {
+            if (error instanceof WellKnownException) {
+                throw error;
+            }
+            throw new WellKnownException(
+                `Failed to retrieve VP Chained AS JWKS for tenant ${tenantId}: ${error instanceof Error ? error.message : "Unknown error"}`,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
+
+    async getManagedAuthorizationServerMetadata(
+        tenantId: string,
+        authorizationServerId: string,
+    ): Promise<Record<string, unknown>> {
+        try {
+            return await this.authorizationServersService.getMetadata(
+                tenantId,
+                authorizationServerId,
+            );
+        } catch (error) {
+            if (error instanceof WellKnownException) {
+                throw error;
+            }
+            throw new WellKnownException(
+                `Failed to retrieve managed authorization server metadata for tenant ${tenantId}: ${error instanceof Error ? error.message : "Unknown error"}`,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
+
+    async getManagedAuthorizationServerJwks(
+        tenantId: string,
+        authorizationServerId: string,
+    ): Promise<{ keys: Record<string, unknown>[] }> {
+        try {
+            return await this.authorizationServersService.getJwks(
+                tenantId,
+                authorizationServerId,
+            );
+        } catch (error) {
+            if (error instanceof WellKnownException) {
+                throw error;
+            }
+            throw new WellKnownException(
+                `Failed to retrieve managed authorization server JWKS for tenant ${tenantId}: ${error instanceof Error ? error.message : "Unknown error"}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }

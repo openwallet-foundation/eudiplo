@@ -1748,6 +1748,26 @@ export const UpstreamOidcConfigSchema = {
     ]
 } as const;
 
+export const ChainedAsVpConfigSchema = {
+    type: 'object',
+    properties: {
+        enabled: {
+            type: 'boolean',
+            description: 'Enable VP-backed chained AS mode',
+            default: false
+        },
+        presentationConfigId: {
+            type: 'string',
+            description: 'Presentation configuration ID used for OID4VP',
+            example: 'pid-no-hook'
+        }
+    },
+    required: [
+        'enabled',
+        'presentationConfigId'
+    ]
+} as const;
+
 export const ChainedAsTokenConfigSchema = {
     type: 'object',
     properties: {
@@ -1780,6 +1800,14 @@ export const ChainedAsConfigSchema = {
                 }
             ]
         },
+        vp: {
+            description: 'VP-backed chained AS configuration',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/ChainedAsVpConfig'
+                }
+            ]
+        },
         token: {
             description: 'Token configuration',
             allOf: [
@@ -1796,6 +1824,63 @@ export const ChainedAsConfigSchema = {
     },
     required: [
         'enabled'
+    ]
+} as const;
+
+export const ManagedAuthorizationServerConfigSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: 'Stable identifier used in the AS URL path',
+            example: 'pid-auth'
+        },
+        label: {
+            type: 'string',
+            description: 'Human-friendly label for the UI',
+            example: 'PID Authorization Server'
+        },
+        type: {
+            type: 'string',
+            enum: [
+                'oid4vp'
+            ],
+            description: 'Authorization server implementation type',
+            example: 'oid4vp'
+        },
+        enabled: {
+            type: 'boolean',
+            description: 'Whether this managed authorization server is enabled',
+            default: true
+        },
+        presentationConfigId: {
+            type: 'string',
+            description: 'Presentation configuration ID to use for OID4VP',
+            example: 'playground-pid'
+        },
+        immediateWalletRedirect: {
+            type: 'boolean',
+            description: 'Immediately redirect the browser into the wallet OID4VP request',
+            default: true
+        },
+        token: {
+            description: 'Token configuration for this authorization server',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/ChainedAsTokenConfig'
+                }
+            ]
+        },
+        requireDPoP: {
+            type: 'boolean',
+            description: 'Require DPoP for token requests issued by this authorization server',
+            default: false
+        }
+    },
+    required: [
+        'id',
+        'type',
+        'presentationConfigId'
     ]
 } as const;
 
@@ -1916,6 +2001,14 @@ export const IssuanceConfigSchema = {
                 }
             ]
         },
+        authorizationServers: {
+            nullable: true,
+            description: 'Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/ManagedAuthorizationServerConfig'
+            }
+        },
         federation: {
             nullable: true,
             description: 'Optional OpenID Federation configuration used for trust evaluation.\nWhen omitted, trust checks rely on existing LoTE trust-list behavior.',
@@ -2032,6 +2125,14 @@ export const IssuanceDtoSchema = {
                     $ref: '#/components/schemas/ChainedAsConfig'
                 }
             ]
+        },
+        authorizationServers: {
+            nullable: true,
+            description: 'Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/ManagedAuthorizationServerConfig'
+            }
         },
         federation: {
             nullable: true,
@@ -4317,9 +4418,18 @@ export const PresentationConfigSchema = {
                 }
             ]
         },
+        webhookEndpointId: {
+            type: 'string',
+            nullable: true,
+            description: 'Reference to the webhook endpoint used for notifications.\nOptional: if set, notifications will be sent to this endpoint.'
+        },
+        webhookEndpoint: {
+            $ref: '#/components/schemas/WebhookEndpointEntity'
+        },
         webhook: {
             nullable: true,
             description: 'Optional webhook URL to receive the response.',
+            deprecated: true,
             type: 'object',
             allOf: [
                 {
@@ -4436,9 +4546,18 @@ export const PresentationConfigCreateDtoSchema = {
                 }
             ]
         },
+        webhookEndpointId: {
+            type: 'string',
+            nullable: true,
+            description: 'Reference to the webhook endpoint used for notifications.\nOptional: if set, notifications will be sent to this endpoint.'
+        },
+        webhookEndpoint: {
+            $ref: '#/components/schemas/WebhookEndpointEntity'
+        },
         webhook: {
             nullable: true,
             description: 'Optional webhook URL to receive the response.',
+            deprecated: true,
             type: 'object',
             allOf: [
                 {
@@ -4512,9 +4631,18 @@ export const PresentationConfigUpdateDtoSchema = {
                 }
             ]
         },
+        webhookEndpointId: {
+            type: 'string',
+            nullable: true,
+            description: 'Reference to the webhook endpoint used for notifications.\nOptional: if set, notifications will be sent to this endpoint.'
+        },
+        webhookEndpoint: {
+            $ref: '#/components/schemas/WebhookEndpointEntity'
+        },
         webhook: {
             nullable: true,
             description: 'Optional webhook URL to receive the response.',
+            deprecated: true,
             type: 'object',
             allOf: [
                 {
@@ -5923,9 +6051,18 @@ export const PresentationConfigWritableSchema = {
                 }
             ]
         },
+        webhookEndpointId: {
+            type: 'string',
+            nullable: true,
+            description: 'Reference to the webhook endpoint used for notifications.\nOptional: if set, notifications will be sent to this endpoint.'
+        },
+        webhookEndpoint: {
+            $ref: '#/components/schemas/WebhookEndpointEntity'
+        },
         webhook: {
             nullable: true,
             description: 'Optional webhook URL to receive the response.',
+            deprecated: true,
             type: 'object',
             allOf: [
                 {

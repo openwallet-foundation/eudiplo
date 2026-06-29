@@ -18,6 +18,14 @@
         }
       ]
     },
+    "authorizationServers": {
+      "nullable": true,
+      "description": "Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.",
+      "type": "array",
+      "items": {
+        "$ref": "./ManagedAuthorizationServerConfig.schema.json"
+      }
+    },
     "federation": {
       "nullable": true,
       "description": "Optional OpenID Federation configuration used for trust evaluation.\nWhen omitted, trust checks rely on existing LoTE trust-list behavior.",

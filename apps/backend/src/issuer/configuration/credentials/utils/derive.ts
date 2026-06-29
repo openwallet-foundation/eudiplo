@@ -169,6 +169,10 @@ function addRequired(parent: JsonSchema, key: string): void {
     }
 }
 
+function isArrayPathSegment(segment: string | number | null): boolean {
+    return typeof segment === "number" || segment === null;
+}
+
 function ensureSchemaNode(
     root: JsonSchema,
     path: Array<string | number | null>,
@@ -176,6 +180,26 @@ function ensureSchemaNode(
     let cursor = root;
 
     for (const segment of path) {
+        if (isArrayPathSegment(segment)) {
+            if (cursor.type !== "array") {
+                cursor.type = "array";
+            }
+
+            if (
+                !cursor.items ||
+                typeof cursor.items !== "object" ||
+                Array.isArray(cursor.items)
+            ) {
+                cursor.items = {
+                    type: "object",
+                    properties: {},
+                };
+            }
+
+            cursor = cursor.items as JsonSchema;
+            continue;
+        }
+
         const key = segmentToKey(segment);
         cursor.properties ??= {};
 
@@ -300,11 +324,31 @@ export function buildJsonSchema(fields: ClaimFieldDefinition[]): JsonSchema {
         }
 
         const parent = ensureSchemaNode(root, field.path.slice(0, -1));
-        const leafKey = segmentToKey(field.path.at(-1) ?? "");
-
-        parent.properties ??= {};
+        const leafSegment = field.path.at(-1);
 
         const leafSchema = buildLeafSchema(field);
+
+        if (isArrayPathSegment(leafSegment ?? null)) {
+            if (parent.type !== "array") {
+                parent.type = "array";
+            }
+
+            const existingItems =
+                parent.items &&
+                typeof parent.items === "object" &&
+                !Array.isArray(parent.items)
+                    ? (parent.items as JsonSchema)
+                    : undefined;
+
+            parent.items = existingItems
+                ? mergeLeafSchema(existingItems, leafSchema)
+                : leafSchema;
+
+            continue;
+        }
+
+        const leafKey = segmentToKey(leafSegment ?? "");
+        parent.properties ??= {};
 
         const existing = parent.properties[leafKey];
         parent.properties[leafKey] =

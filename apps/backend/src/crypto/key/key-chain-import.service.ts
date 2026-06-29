@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { Injectable, Logger } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { plainToClass } from "class-transformer";
@@ -91,6 +91,7 @@ export class KeyChainImportService {
         }
 
         const adapter = this.kmsRegistry.resolve(dto.kmsProvider);
+        const normalizedCertificates = this.resolveCertificateChain(dto);
 
         if (dto.rotationPolicy?.enabled) {
             return this.importKeyChainWithRotation(
@@ -110,8 +111,8 @@ export class KeyChainImportService {
         });
 
         let activeCertificate: string;
-        if (dto.crt && dto.crt.length > 0) {
-            activeCertificate = dto.crt.join("\n");
+        if (normalizedCertificates && normalizedCertificates.length > 0) {
+            activeCertificate = normalizedCertificates.join("\n");
         } else {
             const now = new Date();
             const notAfter = new Date(
@@ -169,8 +170,9 @@ export class KeyChainImportService {
         });
 
         let rootCertificate: string;
-        if (dto.crt && dto.crt.length > 0) {
-            rootCertificate = dto.crt[0];
+        const normalizedCertificates = this.resolveCertificateChain(dto);
+        if (normalizedCertificates && normalizedCertificates.length > 0) {
+            rootCertificate = normalizedCertificates[0];
         } else {
             const rootNotAfter = new Date(
                 now.getTime() + 10 * 365 * 24 * 60 * 60 * 1000,
@@ -236,5 +238,51 @@ export class KeyChainImportService {
     private getHostname(): string {
         return new URL(this.configService.getOrThrow<string>("PUBLIC_URL"))
             .hostname;
+    }
+
+    private resolveCertificateChain(dto: KeyChainImportDto): string[] | undefined {
+        if (!dto.crt || dto.crt.length === 0) {
+            return undefined;
+        }
+
+        return dto.crt.map((entry, index) =>
+            this.normalizeCertificateEntryToPem(entry, index),
+        );
+    }
+
+    private normalizeCertificateEntryToPem(value: string, index: number): string {
+        const trimmed = value.trim();
+        if (this.isPemCertificate(trimmed)) {
+            return trimmed;
+        }
+
+        try {
+            const normalized = trimmed.replace(/\s+/g, "");
+            const der = Buffer.from(normalized, "base64");
+            if (der.length === 0) {
+                throw new Error("decoded certificate is empty");
+            }
+
+            // Ensure the string was valid base64 before PEM wrapping.
+            const canonical = der.toString("base64").replace(/=+$/, "");
+            if (canonical !== normalized.replace(/=+$/, "")) {
+                throw new Error("input is not valid base64 DER");
+            }
+
+            // Canonical PEM formatting with 64-character lines.
+            const body = der.toString("base64").match(/.{1,64}/g)?.join("\n") ?? "";
+            return `-----BEGIN CERTIFICATE-----\n${body}\n-----END CERTIFICATE-----`;
+        } catch (error) {
+            throw new BadRequestException(
+                `Invalid certificate at crt[${index}]. Expected PEM or base64 DER: ${String(error)}`,
+            );
+        }
+    }
+
+    private isPemCertificate(value: string): boolean {
+        return (
+            value.includes("-----BEGIN CERTIFICATE-----") &&
+            value.includes("-----END CERTIFICATE-----")
+        );
     }
 }

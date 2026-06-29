@@ -53,39 +53,6 @@
                 </div>
               </mat-slide-toggle>
 
-              <mat-slide-toggle formControlName="refreshTokenEnabled">
-                <div fxLayout="column">
-                  <span><strong>Issue Refresh Tokens</strong></span>
-                  <span class="toggle-description"
-                    >Allow wallets to exchange a refresh token for a new access token without
-                    restarting the issuance authorization flow.</span
-                  >
-                </div>
-              </mat-slide-toggle>
-
-              @if (refreshTokenEnabled) {
-                <mat-form-field>
-                  <mat-label>Refresh Token Lifetime (seconds)</mat-label>
-                  <input
-                    matInput
-                    type="number"
-                    formControlName="refreshTokenExpiresInSeconds"
-                    placeholder="2592000"
-                    min="1"
-                  />
-                  <mat-icon matSuffix>timelapse</mat-icon>
-                  <mat-hint>
-                    How long issued refresh tokens remain valid. Default: 2592000 seconds (30 days).
-                  </mat-hint>
-                  @if (
-                    form.get('refreshTokenExpiresInSeconds')?.invalid &&
-                    form.get('refreshTokenExpiresInSeconds')?.touched
-                  ) {
-                    <mat-error>Refresh token lifetime must be at least 1 second</mat-error>
-                  }
-                </mat-form-field>
-              }
-
               <mat-slide-toggle formControlName="credentialResponseEncryption">
                 <div fxLayout="column">
                   <span><strong>Advertise Credential Response Encryption</strong></span>
@@ -193,72 +160,328 @@
           Business Logic
         </ng-template>
 
-        <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
-          <!-- Authorization Servers Card -->
-          <mat-card>
-            <mat-card-header>
-              <mat-card-title>
-                <mat-icon>dns</mat-icon>
-                Authorization Servers
-              </mat-card-title>
-              <mat-card-subtitle
-                >Configure external authorization server URLs. Leave empty to use the built-in
-                server.</mat-card-subtitle
-              >
-            </mat-card-header>
-            <mat-card-content fxLayout="column" fxLayoutGap="16px">
-              <div formArrayName="authServers">
-                @for (server of authServers.controls; track $index; let i = $index) {
-                  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
-                    <mat-form-field fxFlex>
-                      <mat-label>Authorization Server {{ i + 1 }}</mat-label>
-                      <input
-                        matInput
-                        [formControlName]="i"
-                        placeholder="https://auth.example.com"
-                        type="url"
-                      />
-                      <mat-icon matSuffix>link</mat-icon>
-                      @if (server.invalid && server.touched) {
-                        <mat-error>Please enter a valid URL</mat-error>
-                      }
-                    </mat-form-field>
-                    <button
-                      matIconButton
-                      type="button"
-                      color="warn"
-                      (click)="removeAuthServer(i)"
-                      matTooltip="Remove this authorization server"
-                    >
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </div>
-                }
-              </div>
-              <div fxLayout="row" fxLayoutAlign="center center">
-                <button mat-raised-button type="button" (click)="addAuthServer()">
-                  <mat-icon>add</mat-icon> Add Authorization Server
-                </button>
-              </div>
-
-              <!-- Preferred Authorization Server -->
-              <mat-form-field>
-                <mat-label>Preferred Authorization Server</mat-label>
-                <mat-select formControlName="preferredAuthServer">
-                  <mat-option value="">None (use default order)</mat-option>
-                  @for (option of availableAuthServerOptions; track option.value) {
-                    <mat-option [value]="option.value">{{ option.label }}</mat-option>
-                  }
-                </mat-select>
-                <mat-icon matSuffix>star</mat-icon>
-                <mat-hint
-                  >The preferred AS is placed first in the issuer metadata. Wallets typically use
-                  the first AS for wallet-initiated flows.</mat-hint
+        <ng-template matTabContent>
+          <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
+            <!-- Authorization Servers Card -->
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>dns</mat-icon>
+                  Authorization Servers
+                </mat-card-title>
+                <mat-card-subtitle
+                  >Configure external, hosted, and chained authorization servers in one place. Leave
+                  external empty to use only hosted/built-in options.</mat-card-subtitle
                 >
-              </mat-form-field>
-            </mat-card-content>
-          </mat-card>
-        </div>
+              </mat-card-header>
+              <mat-card-content fxLayout="column" fxLayoutGap="16px">
+                <div class="locale-chips">
+                  <strong>External Authorization Servers</strong>
+                </div>
+                <div formArrayName="authServers">
+                  @for (server of authServers.controls; track $index; let i = $index) {
+                    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                      <mat-form-field fxFlex>
+                        <mat-label>External Authorization Server {{ i + 1 }}</mat-label>
+                        <input
+                          matInput
+                          [formControlName]="i"
+                          placeholder="https://auth.example.com"
+                          type="url"
+                        />
+                        <mat-icon matSuffix>link</mat-icon>
+                        @if (server.invalid && server.touched) {
+                          <mat-error>Please enter a valid URL</mat-error>
+                        }
+                      </mat-form-field>
+                      <button
+                        matIconButton
+                        type="button"
+                        color="warn"
+                        (click)="removeAuthServer(i)"
+                        matTooltip="Remove this authorization server"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </div>
+                <div fxLayout="row" fxLayoutAlign="center center">
+                  <button mat-raised-button type="button" (click)="addAuthServer()">
+                    <mat-icon>add</mat-icon> Add External Authorization Server
+                  </button>
+                </div>
+
+                <mat-divider></mat-divider>
+
+                <div class="locale-chips">
+                  <strong>Hosted Authorization Servers</strong>
+                </div>
+
+                <div formArrayName="authorizationServers" fxLayout="column" fxLayoutGap="16px">
+                  @for (server of authorizationServers.controls; track $index; let i = $index) {
+                    <div [formGroupName]="i" class="mat-elevation-z2 display-entry">
+                      <div
+                        fxLayout="row"
+                        fxLayoutAlign="space-between center"
+                        class="display-entry-header"
+                      >
+                        <h3>Hosted Authorization Server {{ i + 1 }}</h3>
+                        <button
+                          matIconButton
+                          type="button"
+                          color="warn"
+                          (click)="removeAuthorizationServer(i)"
+                          matTooltip="Remove this hosted authorization server"
+                        >
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
+
+                      <div fxLayout="column" fxLayoutGap="16px">
+                        <div fxLayout="row" fxLayoutGap="16px">
+                          <mat-form-field fxFlex>
+                            <mat-label>ID</mat-label>
+                            <input
+                              matInput
+                              id="managed-auth-server-id-{{ i }}"
+                              formControlName="id"
+                              placeholder="pid-auth"
+                            />
+                            <mat-hint>Used in the AS URL path</mat-hint>
+                          </mat-form-field>
+                          <mat-form-field fxFlex>
+                            <mat-label>Label</mat-label>
+                            <input
+                              matInput
+                              id="managed-auth-server-label-{{ i }}"
+                              formControlName="label"
+                              placeholder="PID Authorization Server"
+                            />
+                            <mat-hint>Shown in the UI offer selector</mat-hint>
+                          </mat-form-field>
+                        </div>
+
+                        <div fxLayout="row" fxLayoutGap="16px">
+                          <mat-form-field fxFlex>
+                            <mat-label>Type</mat-label>
+                            <mat-select formControlName="type">
+                              <mat-option value="oid4vp">OID4VP</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          <mat-slide-toggle formControlName="requireDPoP">
+                            Require DPoP
+                          </mat-slide-toggle>
+                        </div>
+
+                        <div formGroupName="oid4vp" fxLayout="column" fxLayoutGap="16px">
+                          <mat-form-field>
+                            <mat-label>Presentation Configuration ID</mat-label>
+                            <mat-select formControlName="presentationConfigId">
+                              @if (availablePresentationConfigIds.length === 0) {
+                                <mat-option disabled value="">
+                                  No presentation configurations found
+                                </mat-option>
+                              }
+                              @for (configId of availablePresentationConfigIds; track configId) {
+                                <mat-option [value]="configId">{{ configId }}</mat-option>
+                              }
+                            </mat-select>
+                            <mat-hint
+                              >Presentation request used before returning the OAuth code</mat-hint
+                            >
+                          </mat-form-field>
+
+                          <mat-slide-toggle formControlName="immediateWalletRedirect">
+                            Immediately redirect to wallet
+                          </mat-slide-toggle>
+                        </div>
+
+                        <div formGroupName="token" fxLayout="row" fxLayoutGap="16px">
+                          <mat-form-field fxFlex>
+                            <mat-label>Token Lifetime (seconds)</mat-label>
+                            <input
+                              matInput
+                              id="managed-auth-server-lifetime-{{ i }}"
+                              type="number"
+                              formControlName="lifetimeSeconds"
+                              min="60"
+                              placeholder="3600"
+                            />
+                          </mat-form-field>
+                          <mat-form-field fxFlex>
+                            <mat-label>Signing Key ID (optional)</mat-label>
+                            <input
+                              matInput
+                              id="managed-auth-server-signing-key-{{ i }}"
+                              formControlName="signingKeyId"
+                              placeholder="Leave empty for default"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <div fxLayout="row" fxLayoutAlign="center center">
+                  <button mat-raised-button type="button" (click)="addAuthorizationServer()">
+                    <mat-icon>add</mat-icon> Add Hosted Authorization Server
+                  </button>
+                </div>
+
+                <!-- Preferred Authorization Server -->
+                <mat-form-field>
+                  <mat-label>Preferred Authorization Server</mat-label>
+                  <mat-select formControlName="preferredAuthServer">
+                    <mat-option value="">None (use default order)</mat-option>
+                    @for (option of availableAuthServerOptions; track option.value) {
+                      <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                    }
+                  </mat-select>
+                  <mat-icon matSuffix>star</mat-icon>
+                  <mat-hint
+                    >The preferred AS is placed first in the issuer metadata. Wallets typically use
+                    the first AS for wallet-initiated flows. Values are external URLs,
+                    authorization-server:SERVER_ID, chained-as, or built-in.</mat-hint
+                  >
+                </mat-form-field>
+
+                <mat-divider></mat-divider>
+
+                <div class="locale-chips">
+                  <strong>Chained Authorization Server</strong>
+                </div>
+
+                <mat-card formGroupName="chainedAs">
+                  <mat-card-header>
+                    <mat-card-title>
+                      <mat-icon>account_tree</mat-icon>
+                      Chained Authorization Server
+                    </mat-card-title>
+                    <mat-card-subtitle
+                      >Delegate user authentication to an upstream OIDC provider while issuing
+                      EUDIPLO tokens</mat-card-subtitle
+                    >
+                  </mat-card-header>
+                  <mat-card-content fxLayout="column" fxLayoutGap="16px">
+                    <mat-slide-toggle formControlName="enabled">
+                      <div fxLayout="column">
+                        <span><strong>Enable Chained AS</strong></span>
+                        <span class="toggle-description"
+                          >When enabled, EUDIPLO acts as an OAuth AS facade, delegating
+                          authentication to an upstream OIDC provider (e.g., Keycloak)</span
+                        >
+                      </div>
+                    </mat-slide-toggle>
+
+                    @if (chainedAsEnabled) {
+                      <div
+                        formGroupName="upstream"
+                        fxLayout="column"
+                        fxLayoutGap="16px"
+                        class="chained-as-section"
+                      >
+                        <h4>
+                          <mat-icon>cloud</mat-icon>
+                          Upstream OIDC Provider
+                        </h4>
+                        <mat-form-field>
+                          <mat-label>Issuer URL</mat-label>
+                          <input
+                            matInput
+                            formControlName="issuer"
+                            placeholder="https://keycloak.example.com/realms/my-realm"
+                            type="url"
+                          />
+                          <mat-icon matSuffix>link</mat-icon>
+                          <mat-hint
+                            >The upstream OIDC provider URL (must support discovery)</mat-hint
+                          >
+                        </mat-form-field>
+
+                        <div fxLayout="row" fxLayoutGap="16px">
+                          <mat-form-field fxFlex>
+                            <mat-label>Client ID</mat-label>
+                            <input
+                              matInput
+                              formControlName="clientId"
+                              placeholder="eudiplo-client"
+                            />
+                            <mat-icon matSuffix>fingerprint</mat-icon>
+                          </mat-form-field>
+                          <mat-form-field fxFlex>
+                            <mat-label>Client Secret</mat-label>
+                            <input
+                              matInput
+                              formControlName="clientSecret"
+                              type="password"
+                              placeholder="••••••••"
+                            />
+                            <mat-icon matSuffix>lock</mat-icon>
+                          </mat-form-field>
+                        </div>
+
+                        <p class="section-hint">
+                          <mat-icon>info</mat-icon>
+                          Configure your upstream OIDC provider with redirect URI:
+                          <code
+                            >https://your-eudiplo-url/&#123;tenant&#125;/chained-as/callback</code
+                          >
+                        </p>
+                      </div>
+
+                      <div
+                        formGroupName="token"
+                        fxLayout="column"
+                        fxLayoutGap="16px"
+                        class="chained-as-section"
+                      >
+                        <h4>
+                          <mat-icon>token</mat-icon>
+                          Token Configuration
+                        </h4>
+                        <div fxLayout="row" fxLayoutGap="16px">
+                          <mat-form-field fxFlex>
+                            <mat-label>Token Lifetime (seconds)</mat-label>
+                            <input
+                              matInput
+                              type="number"
+                              formControlName="lifetimeSeconds"
+                              placeholder="3600"
+                              min="60"
+                            />
+                            <mat-icon matSuffix>schedule</mat-icon>
+                            <mat-hint>Access token lifetime in seconds (default: 3600)</mat-hint>
+                          </mat-form-field>
+                          <mat-form-field fxFlex>
+                            <mat-label>Signing Key ID (optional)</mat-label>
+                            <input
+                              matInput
+                              formControlName="signingKeyId"
+                              placeholder="Leave empty for default"
+                            />
+                            <mat-icon matSuffix>key</mat-icon>
+                            <mat-hint>Key ID for token signing (uses default if empty)</mat-hint>
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <mat-slide-toggle formControlName="requireDPoP">
+                        <div fxLayout="column">
+                          <span><strong>Require DPoP</strong></span>
+                          <span class="toggle-description"
+                            >Require wallets to provide DPoP proof when requesting tokens</span
+                          >
+                        </div>
+                      </mat-slide-toggle>
+                    }
+                  </mat-card-content>
+                </mat-card>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </ng-template>
       </mat-tab>
 
       <mat-tab>
@@ -267,402 +490,336 @@
           Security
         </ng-template>
 
-        <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
-          <!-- tx_code Brute-Force Protection Card -->
-          <mat-card>
-            <mat-card-header>
-              <mat-card-title>
-                <mat-icon>pin</mat-icon>
-                Transaction Code (tx_code) Protection
-              </mat-card-title>
-              <mat-card-subtitle
-                >Limit failed PIN/OTP attempts in the pre-authorized code flow</mat-card-subtitle
-              >
-            </mat-card-header>
-            <mat-card-content fxLayout="column" fxLayoutGap="16px">
-              <mat-form-field>
-                <mat-label>Max Failed tx_code Attempts</mat-label>
-                <input
-                  matInput
-                  type="number"
-                  formControlName="txCodeMaxAttempts"
-                  placeholder="5"
-                  min="1"
-                />
-                <mat-icon matSuffix>lock</mat-icon>
-                <mat-hint>
-                  Maximum number of wrong PIN/OTP attempts before the pre-authorized code is
-                  invalidated. Leave empty to use the default (5). Set higher only if you have a
-                  specific need.
-                </mat-hint>
-                @if (
-                  form.get('txCodeMaxAttempts')?.invalid && form.get('txCodeMaxAttempts')?.touched
-                ) {
-                  <mat-error>Must be at least 1</mat-error>
-                }
-              </mat-form-field>
-            </mat-card-content>
-          </mat-card>
+        <ng-template matTabContent>
+          <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>refresh</mat-icon>
+                  Refresh Tokens
+                </mat-card-title>
+                <mat-card-subtitle
+                  >Configure whether wallets can refresh access tokens and for how long refresh
+                  tokens remain valid</mat-card-subtitle
+                >
+              </mat-card-header>
+              <mat-card-content fxLayout="column" fxLayoutGap="16px">
+                <mat-slide-toggle formControlName="refreshTokenEnabled">
+                  <div fxLayout="column">
+                    <span><strong>Issue Refresh Tokens</strong></span>
+                    <span class="toggle-description"
+                      >Allow wallets to exchange a refresh token for a new access token without
+                      restarting the issuance authorization flow.</span
+                    >
+                  </div>
+                </mat-slide-toggle>
 
-          <!-- Wallet Attestation Card -->
-          <mat-card>
-            <mat-card-header>
-              <mat-card-title>
-                <mat-icon>verified_user</mat-icon>
-                Wallet Attestation
-              </mat-card-title>
-              <mat-card-subtitle
-                >Configure wallet attestation requirements for client
-                authentication</mat-card-subtitle
-              >
-            </mat-card-header>
-            <mat-card-content fxLayout="column" fxLayoutGap="16px">
-              <mat-slide-toggle formControlName="walletAttestationRequired">
-                <div fxLayout="column">
-                  <span><strong>Require Wallet Attestation</strong></span>
-                  <span class="toggle-description"
-                    >When enabled, wallets must provide OAuth-Client-Attestation headers at the
-                    token endpoint</span
-                  >
-                </div>
-              </mat-slide-toggle>
-
-              @if (form.get('walletAttestationRequired')?.value) {
-                <div fxLayout="column" fxLayoutGap="16px" class="trust-lists-section">
-                  <p class="section-hint">
-                    <mat-icon>info</mat-icon>
-                    Add trust list URLs containing trusted wallet providers. The wallet's X.509
-                    certificate will be validated against these lists.
-                  </p>
-                  <div formArrayName="walletProviderTrustLists">
-                    @for (
-                      trustList of walletProviderTrustLists.controls;
-                      track $index;
-                      let i = $index
+                @if (refreshTokenEnabled) {
+                  <mat-form-field>
+                    <mat-label>Refresh Token Lifetime (seconds)</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      formControlName="refreshTokenExpiresInSeconds"
+                      placeholder="2592000"
+                      min="1"
+                    />
+                    <mat-icon matSuffix>timelapse</mat-icon>
+                    <mat-hint>
+                      How long issued refresh tokens remain valid. Default: 2592000 seconds (30
+                      days).
+                    </mat-hint>
+                    @if (
+                      form.get('refreshTokenExpiresInSeconds')?.invalid &&
+                      form.get('refreshTokenExpiresInSeconds')?.touched
                     ) {
-                      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
-                        <mat-form-field fxFlex>
-                          <mat-label>Trust List URL {{ i + 1 }}</mat-label>
-                          <input
-                            matInput
-                            [formControlName]="i"
-                            placeholder="https://trust-list.example.com/wallet-providers"
-                            type="url"
-                          />
-                          <mat-icon matSuffix>security</mat-icon>
-                          @if (trustList.invalid && trustList.touched) {
-                            <mat-error>Please enter a valid URL</mat-error>
-                          }
-                        </mat-form-field>
-                        <button
-                          matIconButton
-                          type="button"
-                          color="warn"
-                          (click)="removeWalletProviderTrustList(i)"
-                          matTooltip="Remove this trust list"
-                        >
-                          <mat-icon>delete</mat-icon>
-                        </button>
-                      </div>
+                      <mat-error>Refresh token lifetime must be at least 1 second</mat-error>
+                    }
+                  </mat-form-field>
+                }
+              </mat-card-content>
+            </mat-card>
+
+            <!-- tx_code Brute-Force Protection Card -->
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>pin</mat-icon>
+                  Transaction Code (tx_code) Protection
+                </mat-card-title>
+                <mat-card-subtitle
+                  >Limit failed PIN/OTP attempts in the pre-authorized code flow</mat-card-subtitle
+                >
+              </mat-card-header>
+              <mat-card-content fxLayout="column" fxLayoutGap="16px">
+                <mat-form-field>
+                  <mat-label>Max Failed tx_code Attempts</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="txCodeMaxAttempts"
+                    placeholder="5"
+                    min="1"
+                  />
+                  <mat-icon matSuffix>lock</mat-icon>
+                  <mat-hint>
+                    Maximum number of wrong PIN/OTP attempts before the pre-authorized code is
+                    invalidated. Leave empty to use the default (5). Set higher only if you have a
+                    specific need.
+                  </mat-hint>
+                  @if (
+                    form.get('txCodeMaxAttempts')?.invalid && form.get('txCodeMaxAttempts')?.touched
+                  ) {
+                    <mat-error>Must be at least 1</mat-error>
+                  }
+                </mat-form-field>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Wallet Attestation Card -->
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>verified_user</mat-icon>
+                  Wallet Attestation
+                </mat-card-title>
+                <mat-card-subtitle
+                  >Configure wallet attestation requirements for client
+                  authentication</mat-card-subtitle
+                >
+              </mat-card-header>
+              <mat-card-content fxLayout="column" fxLayoutGap="16px">
+                <mat-slide-toggle formControlName="walletAttestationRequired">
+                  <div fxLayout="column">
+                    <span><strong>Require Wallet Attestation</strong></span>
+                    <span class="toggle-description"
+                      >When enabled, wallets must provide OAuth-Client-Attestation headers at the
+                      token endpoint</span
+                    >
+                  </div>
+                </mat-slide-toggle>
+
+                @if (form.get('walletAttestationRequired')?.value) {
+                  <div fxLayout="column" fxLayoutGap="16px" class="trust-lists-section">
+                    <p class="section-hint">
+                      <mat-icon>info</mat-icon>
+                      Add trust list URLs containing trusted wallet providers. The wallet's X.509
+                      certificate will be validated against these lists.
+                    </p>
+                    <div formArrayName="walletProviderTrustLists">
+                      @for (
+                        trustList of walletProviderTrustLists.controls;
+                        track $index;
+                        let i = $index
+                      ) {
+                        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                          <mat-form-field fxFlex>
+                            <mat-label>Trust List URL {{ i + 1 }}</mat-label>
+                            <input
+                              matInput
+                              [formControlName]="i"
+                              placeholder="https://trust-list.example.com/wallet-providers"
+                              type="url"
+                            />
+                            <mat-icon matSuffix>security</mat-icon>
+                            @if (trustList.invalid && trustList.touched) {
+                              <mat-error>Please enter a valid URL</mat-error>
+                            }
+                          </mat-form-field>
+                          <button
+                            matIconButton
+                            type="button"
+                            color="warn"
+                            (click)="removeWalletProviderTrustList(i)"
+                            matTooltip="Remove this trust list"
+                          >
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                      <button
+                        mat-raised-button
+                        type="button"
+                        (click)="addWalletProviderTrustList()"
+                      >
+                        <mat-icon>add</mat-icon> Add Trust List URL
+                      </button>
+                    </div>
+                    @if (walletProviderTrustLists.length === 0) {
+                      <p class="warning-hint">
+                        <mat-icon>warning</mat-icon>
+                        No trust lists configured. All wallet providers will be rejected when wallet
+                        attestation is required.
+                      </p>
                     }
                   </div>
-                  <div fxLayout="row" fxLayoutAlign="center center">
-                    <button mat-raised-button type="button" (click)="addWalletProviderTrustList()">
-                      <mat-icon>add</mat-icon> Add Trust List URL
-                    </button>
-                  </div>
-                  @if (walletProviderTrustLists.length === 0) {
-                    <p class="warning-hint">
-                      <mat-icon>warning</mat-icon>
-                      No trust lists configured. All wallet providers will be rejected when wallet
-                      attestation is required.
-                    </p>
-                  }
-                </div>
-              }
-            </mat-card-content>
-          </mat-card>
-        </div>
+                }
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </ng-template>
       </mat-tab>
 
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">account_tree</mat-icon>
-          Advanced Federation
+          <mat-icon class="tab-icon">security</mat-icon>
+          Federation
         </ng-template>
 
-        <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
-          <!-- Chained Authorization Server Card -->
-          <mat-card formGroupName="chainedAs">
-            <mat-card-header>
-              <mat-card-title>
-                <mat-icon>account_tree</mat-icon>
-                Chained Authorization Server
-              </mat-card-title>
-              <mat-card-subtitle
-                >Delegate user authentication to an upstream OIDC provider while issuing EUDIPLO
-                tokens</mat-card-subtitle
-              >
-            </mat-card-header>
-            <mat-card-content fxLayout="column" fxLayoutGap="16px">
-              <mat-slide-toggle formControlName="enabled">
-                <div fxLayout="column">
-                  <span><strong>Enable Chained AS</strong></span>
-                  <span class="toggle-description"
-                    >When enabled, EUDIPLO acts as an OAuth AS facade, delegating authentication to
-                    an upstream OIDC provider (e.g., Keycloak)</span
-                  >
-                </div>
-              </mat-slide-toggle>
-
-              @if (chainedAsEnabled) {
-                <!-- Upstream OIDC Provider Section -->
-                <div
-                  formGroupName="upstream"
-                  fxLayout="column"
-                  fxLayoutGap="16px"
-                  class="chained-as-section"
+        <ng-template matTabContent>
+          <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
+            <!-- OpenID Federation Card -->
+            <mat-card formGroupName="federation">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>security</mat-icon>
+                  OpenID Federation
+                </mat-card-title>
+                <mat-card-subtitle
+                  >Enable federation-based trust evaluation for credential verification and issuer
+                  authentication</mat-card-subtitle
                 >
-                  <h4>
-                    <mat-icon>cloud</mat-icon>
-                    Upstream OIDC Provider
-                  </h4>
+              </mat-card-header>
+              <mat-card-content fxLayout="column" fxLayoutGap="16px">
+                <mat-slide-toggle formControlName="enabled">
+                  <div fxLayout="column">
+                    <span><strong>Enable OpenID Federation</strong></span>
+                    <span class="toggle-description"
+                      >When enabled, uses federation trust anchors for entity validation</span
+                    >
+                  </div>
+                </mat-slide-toggle>
+
+                @if (federationEnabled) {
+                  <!-- Entity Role -->
                   <mat-form-field>
-                    <mat-label>Issuer URL</mat-label>
+                    <mat-label>Entity Role</mat-label>
+                    <mat-select formControlName="role">
+                      <mat-option value="trust_anchor">Trust Anchor</mat-option>
+                      <mat-option value="intermediate">Intermediate</mat-option>
+                      <mat-option value="leaf">Leaf (default)</mat-option>
+                    </mat-select>
+                    <mat-icon matSuffix>category</mat-icon>
+                    <mat-hint>This entity's role in the federation topology</mat-hint>
+                  </mat-form-field>
+
+                  <!-- Trust Mode -->
+                  <mat-form-field>
+                    <mat-label>Trust Decision Mode</mat-label>
+                    <mat-select formControlName="mode">
+                      <mat-option value="federation-only">Federation Only</mat-option>
+                      <mat-option value="hybrid">Hybrid (default)</mat-option>
+                    </mat-select>
+                    <mat-icon matSuffix>merge</mat-icon>
+                    <mat-hint
+                      >How to combine federation and LoTE trust decisions. In hybrid mode,
+                      federation is authoritative with LoTE fallback.</mat-hint
+                    >
+                  </mat-form-field>
+
+                  <!-- Entity ID -->
+                  <mat-form-field>
+                    <mat-label>Entity ID (optional)</mat-label>
                     <input
                       matInput
-                      formControlName="issuer"
-                      placeholder="https://keycloak.example.com/realms/my-realm"
+                      formControlName="entityId"
+                      placeholder="https://issuer.example.org"
                       type="url"
                     />
                     <mat-icon matSuffix>link</mat-icon>
-                    <mat-hint>The upstream OIDC provider URL (must support discovery)</mat-hint>
+                    <mat-hint>This issuer's unique identifier in the federation</mat-hint>
                   </mat-form-field>
 
-                  <div fxLayout="row" fxLayoutGap="16px">
-                    <mat-form-field fxFlex>
-                      <mat-label>Client ID</mat-label>
-                      <input matInput formControlName="clientId" placeholder="eudiplo-client" />
-                      <mat-icon matSuffix>fingerprint</mat-icon>
-                    </mat-form-field>
-                    <mat-form-field fxFlex>
-                      <mat-label>Client Secret</mat-label>
-                      <input
-                        matInput
-                        formControlName="clientSecret"
-                        type="password"
-                        placeholder="••••••••"
-                      />
-                      <mat-icon matSuffix>lock</mat-icon>
-                    </mat-form-field>
-                  </div>
-
-                  <p class="section-hint">
-                    <mat-icon>info</mat-icon>
-                    Configure your upstream OIDC provider with redirect URI:
-                    <code>https://your-eudiplo-url/&#123;tenant&#125;/chained-as/callback</code>
-                  </p>
-                </div>
-
-                <!-- Token Configuration Section -->
-                <div
-                  formGroupName="token"
-                  fxLayout="column"
-                  fxLayoutGap="16px"
-                  class="chained-as-section"
-                >
-                  <h4>
-                    <mat-icon>token</mat-icon>
-                    Token Configuration
-                  </h4>
-                  <div fxLayout="row" fxLayoutGap="16px">
-                    <mat-form-field fxFlex>
-                      <mat-label>Token Lifetime (seconds)</mat-label>
-                      <input
-                        matInput
-                        type="number"
-                        formControlName="lifetimeSeconds"
-                        placeholder="3600"
-                        min="60"
-                      />
-                      <mat-icon matSuffix>schedule</mat-icon>
-                      <mat-hint>Access token lifetime in seconds (default: 3600)</mat-hint>
-                    </mat-form-field>
-                    <mat-form-field fxFlex>
-                      <mat-label>Signing Key ID (optional)</mat-label>
-                      <input
-                        matInput
-                        formControlName="signingKeyId"
-                        placeholder="Leave empty for default"
-                      />
-                      <mat-icon matSuffix>key</mat-icon>
-                      <mat-hint>Key ID for token signing (uses default if empty)</mat-hint>
-                    </mat-form-field>
-                  </div>
-                </div>
-
-                <!-- DPoP Requirement -->
-                <mat-slide-toggle formControlName="requireDPoP">
-                  <div fxLayout="column">
-                    <span><strong>Require DPoP</strong></span>
-                    <span class="toggle-description"
-                      >Require wallets to provide DPoP proof when requesting tokens</span
+                  <!-- Cache TTL -->
+                  <mat-form-field>
+                    <mat-label>Cache TTL (seconds)</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      formControlName="cacheTtlSeconds"
+                      placeholder="300"
+                      min="60"
+                    />
+                    <mat-icon matSuffix>schedule</mat-icon>
+                    <mat-hint
+                      >Cache expiry for federation trust decisions (default: 300 seconds)</mat-hint
                     >
-                  </div>
-                </mat-slide-toggle>
-              }
-            </mat-card-content>
-          </mat-card>
+                  </mat-form-field>
 
-          <!-- OpenID Federation Card -->
-          <mat-card formGroupName="federation">
-            <mat-card-header>
-              <mat-card-title>
-                <mat-icon>security</mat-icon>
-                OpenID Federation
-              </mat-card-title>
-              <mat-card-subtitle
-                >Enable federation-based trust evaluation for credential verification and issuer
-                authentication</mat-card-subtitle
-              >
-            </mat-card-header>
-            <mat-card-content fxLayout="column" fxLayoutGap="16px">
-              <mat-slide-toggle formControlName="enabled">
-                <div fxLayout="column">
-                  <span><strong>Enable OpenID Federation</strong></span>
-                  <span class="toggle-description"
-                    >When enabled, uses federation trust anchors for entity validation</span
-                  >
-                </div>
-              </mat-slide-toggle>
+                  <!-- Enforce Signing Policy -->
+                  <mat-slide-toggle formControlName="enforceSigningPolicy">
+                    <div fxLayout="column">
+                      <span><strong>Enforce Signing Policy</strong></span>
+                      <span class="toggle-description"
+                        >Require federation trust checks to pass for upstream metadata and signing
+                        decisions</span
+                      >
+                    </div>
+                  </mat-slide-toggle>
 
-              @if (federationEnabled) {
-                <!-- Entity Role -->
-                <mat-form-field>
-                  <mat-label>Entity Role</mat-label>
-                  <mat-select formControlName="role">
-                    <mat-option value="trust_anchor">Trust Anchor</mat-option>
-                    <mat-option value="intermediate">Intermediate</mat-option>
-                    <mat-option value="leaf">Leaf (default)</mat-option>
-                  </mat-select>
-                  <mat-icon matSuffix>category</mat-icon>
-                  <mat-hint>This entity's role in the federation topology</mat-hint>
-                </mat-form-field>
+                  <!-- Trust Anchors -->
+                  <div formArrayName="trustAnchors">
+                    <h4>
+                      <mat-icon>account_tree</mat-icon>
+                      Federation Trust Anchors
+                    </h4>
+                    @for (anchor of trustAnchors.controls; track $index; let i = $index) {
+                      <div
+                        [formGroupName]="i"
+                        fxLayout="column"
+                        fxLayoutGap="16px"
+                        class="trust-anchor-entry"
+                      >
+                        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+                          <mat-form-field fxFlex>
+                            <mat-label>Trust Anchor {{ i + 1 }} Entity ID</mat-label>
+                            <input
+                              matInput
+                              formControlName="entityId"
+                              placeholder="https://ta.example.org"
+                              type="url"
+                            />
+                            <mat-icon matSuffix>link</mat-icon>
+                            <mat-hint>The trust anchor's entity ID</mat-hint>
+                          </mat-form-field>
+                          <button
+                            mat-icon-button
+                            type="button"
+                            (click)="removeTrustAnchor(i)"
+                            matTooltip="Remove trust anchor"
+                          >
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </div>
 
-                <!-- Trust Mode -->
-                <mat-form-field>
-                  <mat-label>Trust Decision Mode</mat-label>
-                  <mat-select formControlName="mode">
-                    <mat-option value="federation-only">Federation Only</mat-option>
-                    <mat-option value="hybrid">Hybrid (default)</mat-option>
-                  </mat-select>
-                  <mat-icon matSuffix>merge</mat-icon>
-                  <mat-hint
-                    >How to combine federation and LoTE trust decisions. In hybrid mode, federation
-                    is authoritative with LoTE fallback.</mat-hint
-                  >
-                </mat-form-field>
-
-                <!-- Entity ID -->
-                <mat-form-field>
-                  <mat-label>Entity ID (optional)</mat-label>
-                  <input
-                    matInput
-                    formControlName="entityId"
-                    placeholder="https://issuer.example.org"
-                    type="url"
-                  />
-                  <mat-icon matSuffix>link</mat-icon>
-                  <mat-hint>This issuer's unique identifier in the federation</mat-hint>
-                </mat-form-field>
-
-                <!-- Cache TTL -->
-                <mat-form-field>
-                  <mat-label>Cache TTL (seconds)</mat-label>
-                  <input
-                    matInput
-                    type="number"
-                    formControlName="cacheTtlSeconds"
-                    placeholder="300"
-                    min="60"
-                  />
-                  <mat-icon matSuffix>schedule</mat-icon>
-                  <mat-hint
-                    >Cache expiry for federation trust decisions (default: 300 seconds)</mat-hint
-                  >
-                </mat-form-field>
-
-                <!-- Enforce Signing Policy -->
-                <mat-slide-toggle formControlName="enforceSigningPolicy">
-                  <div fxLayout="column">
-                    <span><strong>Enforce Signing Policy</strong></span>
-                    <span class="toggle-description"
-                      >Require federation trust checks to pass for upstream metadata and signing
-                      decisions</span
-                    >
-                  </div>
-                </mat-slide-toggle>
-
-                <!-- Trust Anchors -->
-                <div formArrayName="trustAnchors">
-                  <h4>
-                    <mat-icon>account_tree</mat-icon>
-                    Federation Trust Anchors
-                  </h4>
-                  @for (anchor of trustAnchors.controls; track $index; let i = $index) {
-                    <div
-                      [formGroupName]="i"
-                      fxLayout="column"
-                      fxLayoutGap="16px"
-                      class="trust-anchor-entry"
-                    >
-                      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
-                        <mat-form-field fxFlex>
-                          <mat-label>Trust Anchor {{ i + 1 }} Entity ID</mat-label>
+                        <mat-form-field fxFull>
+                          <mat-label>Entity Configuration URI</mat-label>
                           <input
                             matInput
-                            formControlName="entityId"
-                            placeholder="https://ta.example.org"
+                            formControlName="entityConfigurationUri"
+                            placeholder="https://ta.example.org/.well-known/openid-federation"
                             type="url"
                           />
-                          <mat-icon matSuffix>link</mat-icon>
-                          <mat-hint>The trust anchor's entity ID</mat-hint>
+                          <mat-icon matSuffix>language</mat-icon>
+                          <mat-hint>Federation endpoint URL for this trust anchor</mat-hint>
                         </mat-form-field>
-                        <button
-                          mat-icon-button
-                          type="button"
-                          (click)="removeTrustAnchor(i)"
-                          matTooltip="Remove trust anchor"
-                        >
-                          <mat-icon>delete</mat-icon>
-                        </button>
                       </div>
+                    }
 
-                      <mat-form-field fxFull>
-                        <mat-label>Entity Configuration URI</mat-label>
-                        <input
-                          matInput
-                          formControlName="entityConfigurationUri"
-                          placeholder="https://ta.example.org/.well-known/openid-federation"
-                          type="url"
-                        />
-                        <mat-icon matSuffix>language</mat-icon>
-                        <mat-hint>Federation endpoint URL for this trust anchor</mat-hint>
-                      </mat-form-field>
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                      <button mat-raised-button type="button" (click)="addTrustAnchor()">
+                        <mat-icon>add</mat-icon>
+                        Add Trust Anchor
+                      </button>
                     </div>
-                  }
-
-                  <div fxLayout="row" fxLayoutAlign="center center">
-                    <button mat-raised-button type="button" (click)="addTrustAnchor()">
-                      <mat-icon>add</mat-icon>
-                      Add Trust Anchor
-                    </button>
                   </div>
-                </div>
-              }
-            </mat-card-content>
-          </mat-card>
-        </div>
+                }
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </ng-template>
       </mat-tab>
     </mat-tab-group>
 
