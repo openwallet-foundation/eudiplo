@@ -453,7 +453,7 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         if (app) {
             await app.close();
         }
-    });
+    }, 30000);
 
     // ============================================================================
     // MODULE EXECUTION MATRIX
