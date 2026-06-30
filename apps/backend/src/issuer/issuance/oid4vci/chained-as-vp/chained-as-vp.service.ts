@@ -70,7 +70,7 @@ export class ChainedAsVpService {
             );
         }
 
-        return (chainedServer as unknown as ChainedAsConfig);
+        return chainedServer as unknown as ChainedAsConfig;
     }
 
     async handlePar(

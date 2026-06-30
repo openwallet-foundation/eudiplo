@@ -193,8 +193,7 @@ export class IssuanceService {
             credentialResponseEncryption: config.credentialResponseEncryption,
             credentialRequestEncryption: config.credentialRequestEncryption,
             refreshTokenEnabled: config.refreshTokenEnabled,
-            refreshTokenExpiresInSeconds:
-                config.refreshTokenExpiresInSeconds,
+            refreshTokenExpiresInSeconds: config.refreshTokenExpiresInSeconds,
             txCodeMaxAttempts: config.txCodeMaxAttempts,
         };
     }
