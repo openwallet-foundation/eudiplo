@@ -19,11 +19,11 @@ authorization, token behavior, and trust-related requirements.
 
 ## Configuration Fields
 
-- `authServers` (array of strings, optional): Authentication server URL for the issuance process.
+- `authorizationServers` (array, optional): Managed authorization server definitions. Supports `external`, `oid4vp`, and `chained` types.
 - `batchSize` (number, optional): Value to determine the amount of credentials that are issued in a batch. Default is 1.
 - `dPopRequired` (boolean, optional): Indicates whether DPoP is required for the issuance process. Default value is true.
 - `signingKeyId` (string, optional): Key ID used for signing access tokens. If omitted, the default signing key for the tenant is used.
-- `preferredAuthServer` (string, optional): Preferred authorization server shown first in issuer metadata (`authorization_servers`). Supports configured auth server URL, `built-in`, or `chained-as`.
+- `preferredAuthServer` (string, optional): Preferred authorization server shown first in issuer metadata (`authorization_servers`). Supports `built-in`, `chained-as`, an explicit issuer URL, or a managed AS selection value in the form `authorization-server:<id>`.
 - `refreshTokenEnabled` (boolean, optional): Controls whether the token endpoint returns a refresh token in OID4VCI token responses. Default is `true`.
 - `refreshTokenExpiresInSeconds` (number, optional): Lifetime of issued refresh tokens in seconds. Default is `2592000` (30 days).
 - `txCodeMaxAttempts` (number, optional): Maximum failed `tx_code` attempts before invalidating pre-authorized code flow.
@@ -31,9 +31,105 @@ authorization, token behavior, and trust-related requirements.
 - `walletProviderTrustLists` (array of strings, optional): URLs of trust lists containing trusted wallet providers. Required when `walletAttestationRequired` is true.
 - `credentialRequestEncryption` (boolean, optional): Advertise support for encrypted credential requests (`credential_request_encryption`).
 - `credentialResponseEncryption` (boolean, optional): Advertise support for encrypted credential responses (`credential_response_encryption`).
-- `chainedAs` (object, optional): Chained Authorization Server configuration. See [Chained Authorization Server](#chained-authorization-server).
 - `federation` (object, optional): OpenID Federation trust configuration for auth-server/upstream trust evaluation. See [OpenID Federation](../../architecture/federation.md).
 - `display` (array of objects, required): The display information from the [OID4VCI spec](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html#name-credential-issuer-metadata:~:text=2%20or%20greater.-,display,-%3A%20OPTIONAL.%20A%20non). To host images or logos, you can use the [storage](../../architecture/storage.md) system provided by EUDIPLO.
+
+!!! warning "Migration Note"
+
+        `authServers` and `chainedAs` are legacy fields. New configurations should use `authorizationServers` only. See [Migrating from 4.x to 5.0](../../migration/4.x-to-5.0.md) for the breaking-change mapping.
+
+---
+
+## Authorization Servers (`authorizationServers`)
+
+Use `authorizationServers` to define wallet-facing AS behavior for OID4VCI auth-code flows.
+
+### Example
+
+```json
+{
+    "authorizationServers": [
+        {
+            "type": "external",
+            "label": "Corporate IdP",
+            "issuer": "https://auth.example.com"
+        },
+        {
+            "type": "oid4vp",
+            "id": "pid-auth",
+            "label": "PID VP AS",
+            "presentationConfigId": "pid-no-hook",
+            "enabled": true,
+            "immediateWalletRedirect": true,
+            "requireDPoP": false,
+            "token": {
+                "lifetimeSeconds": 3600,
+                "signingKeyId": "default"
+            }
+        },
+        {
+            "type": "chained",
+            "enabled": true,
+            "upstream": {
+                "issuer": "https://keycloak.example.com/realms/eudiplo",
+                "clientId": "eudiplo-chained-as",
+                "clientSecret": "your-client-secret",
+                "scopes": ["openid", "profile", "email"]
+            },
+            "requireDPoP": true,
+            "token": {
+                "lifetimeSeconds": 3600,
+                "signingKeyId": "default"
+            }
+        }
+    ],
+    "preferredAuthServer": "authorization-server:pid-auth"
+}
+```
+
+### Type Reference
+
+| Type       | Purpose                                                                                       |
+| ---------- | --------------------------------------------------------------------------------------------- |
+| `external` | Uses a remote OAuth/OIDC AS via issuer URL discovery.                                         |
+| `oid4vp`   | Creates a tenant-local AS facade at `/issuers/{tenant}/authorization-servers/{id}`.           |
+| `chained`  | Creates a tenant-local chained AS facade at `/issuers/{tenant}/chained-as` via upstream OIDC. |
+
+### Common Fields
+
+| Field                   | Type    | Required                | Description                                        |
+| ----------------------- | ------- | ----------------------- | -------------------------------------------------- |
+| `type`                  | string  | Yes                     | One of `external`, `oid4vp`, `chained`.            |
+| `label`                 | string  | No                      | Optional UI label.                                 |
+| `enabled`               | boolean | No                      | Enables/disables this entry. Default `true`.       |
+| `requireDPoP`           | boolean | No (`oid4vp`/`chained`) | Require DPoP proofs on token requests for this AS. |
+| `token.lifetimeSeconds` | number  | No (`oid4vp`/`chained`) | Access token lifetime for this AS.                 |
+| `token.signingKeyId`    | string  | No (`oid4vp`/`chained`) | Key used to sign AS-issued tokens.                 |
+
+### Type-Specific Fields
+
+- `external`
+    - `issuer` (required): External AS issuer URL.
+- `oid4vp`
+    - `id` (required): Stable identifier used in the AS URL path.
+    - `presentationConfigId` (required): Presentation config used for the VP flow.
+    - `immediateWalletRedirect` (optional): Redirect browser immediately to wallet request.
+- `chained`
+    - `upstream.issuer` (required): Upstream OIDC issuer URL.
+    - `upstream.clientId` (required): Client ID at upstream provider.
+    - `upstream.clientSecret` (optional): Client secret for confidential clients.
+    - `upstream.scopes` (optional): Scopes requested upstream.
+
+### Preferred Authorization Server
+
+`preferredAuthServer` controls ordering in the published `authorization_servers` metadata array.
+
+Supported values:
+
+- `built-in`
+- `chained-as`
+- `authorization-server:<id>` (managed `oid4vp` AS)
+- Explicit issuer URL
 
 ---
 
@@ -139,131 +235,31 @@ The wallet attestation JWT may optionally contain a `status` claim that provides
 
 ## Chained Authorization Server
 
-Chained AS mode allows EUDIPLO to act as an OAuth Authorization Server facade, delegating user authentication to an upstream OIDC provider (e.g., Keycloak) while issuing its own access tokens containing `issuer_state` for session correlation.
+Chained AS is now configured as an `authorizationServers` entry with `type: "chained"`.
 
-This approach enables credential issuance flows that require user authentication without modifying your existing OIDC provider.
-
-### When to Use Chained AS
-
-| Use Case                                     | Recommendation              |
-| -------------------------------------------- | --------------------------- |
-| Need session correlation with `issuer_state` | ✅ Use Chained AS           |
-| Cannot modify upstream OIDC provider         | ✅ Use Chained AS           |
-| Want EUDIPLO to control token claims         | ✅ Use Chained AS           |
-| Upstream already includes `issuer_state`     | ❌ Use External AS directly |
-| Pre-authorized code flow only                | ❌ Not needed               |
-
-### How It Works
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant Wallet as EUDI Wallet
-    participant EUDIPLO as EUDIPLO (Chained AS)
-    participant Upstream as Upstream OIDC (e.g., Keycloak)
-
-    Wallet->>EUDIPLO: PAR Request
-    EUDIPLO-->>Wallet: request_uri
-
-    Wallet->>EUDIPLO: Authorize (request_uri)
-    EUDIPLO->>Upstream: Redirect to upstream /authorize
-
-    Note over Upstream: User authenticates
-
-    Upstream->>EUDIPLO: Callback with authorization code
-    EUDIPLO->>Upstream: Exchange code for tokens
-    Upstream-->>EUDIPLO: ID token + access token
-
-    EUDIPLO->>EUDIPLO: Store upstream identity
-    EUDIPLO-->>Wallet: Redirect with EUDIPLO auth code
-
-    Wallet->>EUDIPLO: Token Request (code + PKCE)
-    EUDIPLO-->>Wallet: EUDIPLO access token (with issuer_state)
-
-    Wallet->>EUDIPLO: Credential Request
-    Note over EUDIPLO: Correlate session via issuer_state
-    EUDIPLO-->>Wallet: Credential
-```
-
-### Configuration
-
-Add the `chainedAs` object to your issuance configuration:
+Example:
 
 ```json
 {
-  "display": [...],
-  "chainedAs": {
-    "enabled": true,
-    "upstream": {
-      "issuer": "https://keycloak.example.com/realms/eudiplo",
-      "clientId": "eudiplo-chained-as",
-      "clientSecret": "your-client-secret",
-      "scopes": ["openid", "profile", "email"]
-    },
-    "token": {
-      "lifetimeSeconds": 3600,
-      "signingKeyId": "default"
-    },
-    "requireDPoP": false
-  }
+    "authorizationServers": [
+        {
+            "type": "chained",
+            "enabled": true,
+            "upstream": {
+                "issuer": "https://keycloak.example.com/realms/eudiplo",
+                "clientId": "eudiplo-chained-as",
+                "clientSecret": "your-client-secret",
+                "scopes": ["openid", "profile", "email"]
+            },
+            "token": {
+                "lifetimeSeconds": 3600,
+                "signingKeyId": "default"
+            },
+            "requireDPoP": true
+        }
+    ],
+    "preferredAuthServer": "chained-as"
 }
 ```
 
-### Configuration Fields
-
-| Field                             | Type     | Required | Description                                                                  |
-| --------------------------------- | -------- | -------- | ---------------------------------------------------------------------------- |
-| `chainedAs.enabled`               | boolean  | Yes      | Enable Chained AS mode                                                       |
-| `chainedAs.upstream.issuer`       | string   | Yes      | Upstream OIDC provider URL (must support discovery)                          |
-| `chainedAs.upstream.clientId`     | string   | Yes      | Client ID registered at upstream provider                                    |
-| `chainedAs.upstream.clientSecret` | string   | Yes      | Client secret for upstream provider                                          |
-| `chainedAs.upstream.scopes`       | string[] | No       | Scopes to request (default: `["openid", "profile", "email"]`)                |
-| `chainedAs.token.lifetimeSeconds` | number   | No       | Access token lifetime in seconds (default: 3600)                             |
-| `chainedAs.token.signingKeyId`    | string   | No       | Key chain ID for signing tokens (uses default `access` key chain if omitted) |
-| `chainedAs.requireDPoP`           | boolean  | No       | Require DPoP proof from wallets (default: false)                             |
-
-### Upstream OIDC Provider Setup
-
-Configure your upstream OIDC provider (e.g., Keycloak) with:
-
-1. **Client Type**: Confidential client with client credentials
-2. **Redirect URI**: `https://your-eudiplo-url/{tenant}/chained-as/callback`
-3. **Scopes**: Enable `openid`, `profile`, `email` (or as needed)
-
-### Endpoints
-
-When Chained AS is enabled, the following endpoints become available:
-
-| Endpoint                                                      | Method | Description                  |
-| ------------------------------------------------------------- | ------ | ---------------------------- |
-| `/{tenant}/chained-as/par`                                    | POST   | Pushed Authorization Request |
-| `/{tenant}/chained-as/authorize`                              | GET    | Authorization endpoint       |
-| `/{tenant}/chained-as/callback`                               | GET    | Upstream callback handler    |
-| `/{tenant}/chained-as/token`                                  | POST   | Token endpoint               |
-| `/{tenant}/chained-as/.well-known/oauth-authorization-server` | GET    | AS metadata                  |
-| `/{tenant}/chained-as/.well-known/jwks.json`                  | GET    | JSON Web Key Set             |
-
-### Token Claims
-
-Access tokens issued by the Chained AS include:
-
-```json
-{
-    "iss": "https://eudiplo.example.com/{tenant}/chained-as",
-    "sub": "{client_id}",
-    "aud": "https://eudiplo.example.com/{tenant}",
-    "issuer_state": "{session_id}",
-    "client_id": "{wallet_client_id}",
-    "upstream_sub": "{upstream_user_subject}",
-    "upstream_iss": "{upstream_issuer}",
-    "cnf": { "jkt": "{dpop_thumbprint}" }
-}
-```
-
-!!! tip "Session Correlation"
-
-    The `issuer_state` claim links the access token to the credential offer session, enabling EUDIPLO to correlate the credential request with the original offer without requiring the upstream OIDC provider to include custom claims.
-
-!!! warning "Client Secret Security"
-
-    Store the upstream client secret securely. Consider using environment variables or a secrets manager rather than storing it directly in configuration files.
+When enabled, EUDIPLO exposes the same chained endpoints as before under `/{tenant}/chained-as/*` and publishes this issuer in `authorization_servers` metadata.

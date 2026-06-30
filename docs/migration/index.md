@@ -32,6 +32,7 @@ When upgrading EUDIPLO, follow this general process:
 | 3.x     | Maintained         | Introduced automatic database migrations. Bumped from v2 due to the migration system being flagged as a breaking change, though no user-facing API changes were made. |
 | 4.x     | Maintained         | Unified Key Chain model, Attribute Providers, `/api/` prefix, @owf ecosystem packages.                                                                                |
 | 5.0     | **Current stable** | Field-based credential configuration model (v2), improved UX for config creation.                                                                                     |
+| 6.0     | Planned            | Authorization server model migration to `authorizationServers` and related issuance config updates.                                                                   |
 
 ## Migration Guides
 
@@ -40,6 +41,7 @@ When upgrading EUDIPLO, follow this general process:
 | 2.x  | 3.0 | No action required — the migration system is backward compatible. Just update and start. |
 | 3.x  | 4.0 | [Migration Guide](3.x-to-4.0.md) — API prefix, Key Chains, Attribute Providers, and more |
 | 4.x  | 5.0 | [Migration Guide](4.x-to-5.0.md) — Field-based credential configuration (v2)             |
+| 5.x  | 6.0 | [Migration Guide](5.x-to-6.0.md) — Authorization server model (`authorizationServers`)   |
 
 ## What Can Break Between Versions
 

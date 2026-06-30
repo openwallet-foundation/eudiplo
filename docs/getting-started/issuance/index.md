@@ -100,15 +100,16 @@ optional webhook calls, and you can use it to query issuance status via the API.
 
 ## Supported Issuance Flows
 
-EUDIPLO supports three authentication patterns for OID4VCI credential issuance. Each pattern serves different use cases depending on how users are identified and authenticated.
+EUDIPLO supports four authentication patterns for OID4VCI credential issuance. Each pattern serves different use cases depending on how users are identified and authenticated.
 
 ### Quick Reference
 
-| Authentication Pattern               | User is Known | User Authentication                              | Initiator        | Claims Source                 |
-| ------------------------------------ | ------------- | ------------------------------------------------ | ---------------- | ----------------------------- |
-| **Pre-authorized code**              | Yes           | Already authenticated (before offer)             | Issuer only      | Offer or Attribute Provider   |
-| **Authorization code + External AS** | No            | OIDC login at external IdP                       | Issuer or Wallet | Attribute Provider (required) |
-| **Interactive Authorization (IAE)**  | No            | Credential presentation (OID4VP) or web redirect | Issuer or Wallet | Attribute Provider (required) |
+| Authentication Pattern                              | User is Known | User Authentication                                    | Initiator        | Claims Source                 |
+| --------------------------------------------------- | ------------- | ------------------------------------------------------ | ---------------- | ----------------------------- |
+| **Pre-authorized code**                             | Yes           | Already authenticated (before offer)                   | Issuer only      | Offer or Attribute Provider   |
+| **Authorization code + External AS**                | No            | OIDC login at external IdP                             | Issuer or Wallet | Attribute Provider (required) |
+| **Authorization code + Managed AS (nested OID4VP)** | No            | OID4VP presentation handled by issuer-hosted AS facade | Issuer or Wallet | Attribute Provider (required) |
+| **Interactive Authorization (IAE)**                 | No            | Credential presentation (OID4VP) or web redirect       | Issuer or Wallet | Attribute Provider (required) |
 
 ### Understanding the Three Dimensions
 
@@ -116,6 +117,7 @@ EUDIPLO supports three authentication patterns for OID4VCI credential issuance. 
 
 - **Pre-authorized code**: User was already authenticated _before_ the OID4VCI flow starts. You know who they are and can include their claims in the offer.
 - **Authorization code + External AS**: User authenticates during the flow at an external Identity Provider (Keycloak, Azure AD, Okta) via OIDC.
+- **Authorization code + Managed AS (nested OID4VP)**: User authenticates through an issuer-hosted authorization server facade that internally starts an OID4VP request and only returns the OAuth code once presentation succeeds.
 - **Interactive Authorization (IAE)**: User proves their identity by presenting an existing credential (OID4VP) or completing a web-based flow.
 
 #### 2. Initiator (Who starts the flow?)
@@ -124,7 +126,8 @@ EUDIPLO supports three authentication patterns for OID4VCI credential issuance. 
 - **Wallet-initiated**: The wallet discovers available credentials via issuer metadata and initiates the request. Used for self-service scenarios where users browse available credentials.
 
 !!! info "Pre-authorized code is issuer-initiated only"
-Since the user must be known before creating the offer, pre-authorized code flows are always issuer-initiated. The other patterns support both.
+
+    Since the user must be known before creating the offer, pre-authorized code flows are always issuer-initiated. The other patterns support both.
 
 #### 3. Claims Source (Where do credential claims come from?)
 
@@ -221,7 +224,12 @@ sequenceDiagram
 
 ```json
 {
-    "authServers": ["https://keycloak.example.com/realms/myrealm"],
+    "authorizationServers": [
+        {
+            "type": "external",
+            "issuer": "https://keycloak.example.com/realms/myrealm"
+        }
+    ],
     "dPopRequired": true
 }
 ```
@@ -252,6 +260,62 @@ Your Attribute Provider receives:
 ```
 
 See [Attribute Providers](attribute-provider.md) for setup details, request/response formats, and full payload documentation.
+
+---
+
+#### Authorization Code Flow with Managed Authorization Server (Nested OID4VP)
+
+**Use when:** You want to keep a pure OAuth/OID4VCI authorization-code interface for wallets, but authenticate users by nesting an OID4VP request inside an issuer-hosted authorization server.
+
+```mermaid
+sequenceDiagram
+    participant Wallet
+    participant AS as EUDIPLO Managed AS
+    participant Verifier as EUDIPLO OID4VP Verifier
+    participant Backend as Your Backend
+
+    alt Issuer-initiated
+        AS->>Wallet: Credential offer
+    else Wallet-initiated
+        Wallet->>AS: Discover metadata
+    end
+    Wallet->>AS: PAR + authorize
+    AS->>Verifier: Start nested OID4VP request
+    Verifier-->>Wallet: OID4VP request
+    Wallet->>Verifier: VP response
+    Verifier-->>AS: Presentation verified
+    AS-->>Wallet: OAuth authorization code
+    Wallet->>AS: Token request
+    AS-->>Wallet: Access token
+    Wallet->>Backend: Credential flow continues (claims webhook)
+```
+
+**Why this pattern exists:**
+
+- It provides an interoperable authorization-code surface for wallets today.
+- It is a practical solution beside IAE when you need wallet-facing AS endpoints and nested OID4VP verification.
+
+**Configuration example:**
+
+```json
+{
+    "authorizationServers": [
+        {
+            "type": "oid4vp",
+            "id": "pid-auth",
+            "presentationConfigId": "pid-no-hook",
+            "enabled": true,
+            "immediateWalletRedirect": true,
+            "requireDPoP": false
+        }
+    ],
+    "preferredAuthServer": "authorization-server:pid-auth"
+}
+```
+
+!!! note "Relationship to IAE"
+
+    Interactive Authorization (IAE) is still available and documented below, but it is not yet part of the final OID4VCI 1.0 specification. Managed authorization servers with nested OID4VP can be used as a spec-aligned alternative when you want to keep authorization within the authorization-code pattern.
 
 ---
 
@@ -374,21 +438,24 @@ flowchart TD
     B -->|No| D{How should the user<br/>prove their identity?}
 
     D -->|Login at existing IdP| E[Authorization code + External AS]
-    D -->|Present existing credential| F[IAE: openid4vp_presentation]
-    D -->|Custom web verification| G[IAE: redirect_to_web]
+    D -->|Nested OID4VP via managed AS| F[Authorization code + Managed AS]
+    D -->|Present existing credential| G[IAE: openid4vp_presentation]
+    D -->|Custom web verification| H[IAE: redirect_to_web]
 
-    C --> H{Where are claims?}
-    H -->|Known at offer creation| I[Include claims in offer]
-    H -->|Need to fetch later| J[Use Attribute Provider]
+    C --> Q{Where are claims?}
+    Q -->|Known at offer creation| I[Include claims in offer]
+    Q -->|Need to fetch later| J[Use Attribute Provider]
 
     E --> K[Attribute Provider required]
     F --> L[Attribute Provider required]
     G --> M[Attribute Provider required]
+    H --> N[Attribute Provider required]
 
     style C fill:#90EE90
     style E fill:#87CEEB
-    style F fill:#DDA0DD
+    style F fill:#87CEEB
     style G fill:#DDA0DD
+    style H fill:#DDA0DD
 ```
 
 ---
