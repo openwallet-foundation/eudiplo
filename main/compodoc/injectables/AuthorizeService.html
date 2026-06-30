@@ -537,8 +537,8 @@ case no <code>authorization_details</code> will be placed on the token.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="347"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/authorize.service.ts:347</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="350"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/authorize.service.ts:350</a></div>
                         </td>
                     </tr>
 
@@ -894,8 +894,8 @@ See OAuth2-ATCA07-8</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="364"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/authorize.service.ts:364</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="367"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/authorize.service.ts:367</a></div>
                         </td>
                     </tr>
 
@@ -1073,8 +1073,8 @@ According to OID4VCI Section 6.3:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="424"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/authorize.service.ts:424</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="427"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/authorize.service.ts:427</a></div>
                         </td>
                     </tr>
 
@@ -1154,8 +1154,8 @@ According to OID4VCI Section 6.3:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="792"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/authorize.service.ts:792</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="795"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/authorize.service.ts:795</a></div>
                         </td>
                     </tr>
 
@@ -1225,8 +1225,8 @@ According to OID4VCI Section 6.3:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="472"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/authorize.service.ts:472</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="475"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/authorize.service.ts:475</a></div>
                         </td>
                     </tr>
 
@@ -1662,14 +1662,17 @@ export class AuthorizeService {
             pushed_authorization_request_endpoint: &#x60;${authServer}/authorize/par&#x60;,
             code_challenge_methods_supported: [PkceCodeChallengeMethod.S256],
             authorization_details_types_supported: [&quot;openid_credential&quot;],
-            token_endpoint_auth_methods_supported: [&quot;none&quot;],
+            token_endpoint_auth_methods_supported: [
+                &quot;none&quot;,
+                &quot;attest_jwt_client_auth&quot;,
+            ],
             status_list_aggregation_endpoint: statusListAggregationEndpoint,
+            challenge_endpoint: &#x60;${authServer}/authorize/challenge&#x60;,
+            client_attestation_signing_alg_values_supported: [&quot;ES256&quot;],
+            client_attestation_pop_signing_alg_values_supported: [&quot;ES256&quot;],
         };
 
         if (walletAttestationRequired) {
-            metadata.token_endpoint_auth_methods_supported &#x3D; [
-                &quot;attest_jwt_client_auth&quot;,
-            ];
             metadata.challenge_endpoint &#x3D; &#x60;${authServer}/authorize/challenge&#x60;;
             metadata.client_attestation_signing_alg_values_supported &#x3D; [
                 &quot;ES256&quot;,

@@ -264,7 +264,7 @@ The import can be done in two ways:</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Certificate chain in PEM format (leaf first, then intermediates/CA).&#x27;})<br />@IsString({each: true})<br />@IsOptional()<br />
+                            @ApiPropertyOptional({description: &#x27;Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import.&#x27;})<br />@IsString({each: true})<br />@IsOptional()<br />
                         </code>
                     </td>
                 </tr>
@@ -646,7 +646,7 @@ export class KeyChainImportDto {
 
     @ApiPropertyOptional({
         description:
-            &quot;Certificate chain in PEM format (leaf first, then intermediates/CA).&quot;,
+            &quot;Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import.&quot;,
     })
     @IsString({ each: true })
     @IsOptional()

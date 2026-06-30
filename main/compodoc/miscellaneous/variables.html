@@ -245,6 +245,9 @@
                             <a href="#LOG_VALIDATION_SCHEMA" title="src/shared/utils/logger/log-validation.schema.ts" ><b>LOG_VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../log-validation.schema.ts)</a>
                         </li>
                         <li>
+                            <a href="#MAX_LOGGED_RESPONSE_BODY_LENGTH" title="src/shared/utils/logger/logger.factory.ts" ><b>MAX_LOGGED_RESPONSE_BODY_LENGTH</b>&nbsp;&nbsp;&nbsp;(src/.../logger.factory.ts)</a>
+                        </li>
+                        <li>
                             <a href="#mdocContext" title="src/verifier/presentations/mdoc-context.ts" ><b>mdocContext</b>&nbsp;&nbsp;&nbsp;(src/.../mdoc-context.ts)</a>
                         </li>
                         <li>
@@ -273,6 +276,9 @@
                         </li>
                         <li>
                             <a href="#SD_JWT_DC_FORMAT" title="src/issuer/configuration/credentials/types/credential-config-types.ts" ><b>SD_JWT_DC_FORMAT</b>&nbsp;&nbsp;&nbsp;(src/.../credential-config-types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#SENSITIVE_KEY_PATTERN" title="src/shared/utils/logger/logger.factory.ts" ><b>SENSITIVE_KEY_PATTERN</b>&nbsp;&nbsp;&nbsp;(src/.../logger.factory.ts)</a>
                         </li>
                         <li>
                             <a href="#ServiceTypeIdentifiers" title="src/shared/trust/types.ts" ><b>ServiceTypeIdentifiers</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</a>
@@ -1172,7 +1178,6 @@ This decorator can be used to determine the media type of the request.</p>
                 singleLine: false,
                 translateTime: &quot;yyyy-mm-dd HH:MM:ss&quot;,
                 //ignore: &quot;pid,hostname,req,res,responseTime,context&quot;,
-                ignore: &quot;context&quot;,
                 messageFormat: &quot;{if context}[{context}] {end}{msg}&quot;,
             },
         },
@@ -1220,7 +1225,7 @@ This decorator can be used to determine the media type of the request.</p>
                         return true;
                     }
                     //check if path includes /api to ignore it
-                    if (req.url &amp;&amp; req.url.includes(&quot;/api&quot;)) {
+                    if (req.url?.includes(&quot;/api&quot;)) {
                         return true;
                     }
                     return false;
@@ -1235,11 +1240,14 @@ This decorator can be used to determine the media type of the request.</p>
                     return object;
                 },
             },
-            customProps: (req: any) &#x3D;&gt; ({
-                sessionId: req.params?.session,
-            }),
+            customProps: (req: any, res: any) &#x3D;&gt; {
+                attachResponseBodyCapture(req, res);
+                return {
+                    sessionId: req.params?.session,
+                };
+            },
             serializers: {
-                req: (req: any) &#x3D;&gt; ({
+                req: (req: SerializedRequest) &#x3D;&gt; ({
                     method: req.method,
                     url: req.url,
                     headers: {
@@ -1249,9 +1257,12 @@ This decorator can be used to determine the media type of the request.</p>
                     sessionId: req.params?.session,
                     tenantId: req.params?.tenantId,
                 }),
-                res: (res: any) &#x3D;&gt; ({
-                    statusCode: res.statusCode,
-                }),
+                res: (res: SerializedResponse &amp; { raw?: any }) &#x3D;&gt; {
+                    return {
+                        statusCode: res.statusCode,
+                        body: res.raw?.__eudiploLoggedResponseBody,
+                    };
+                },
             },
         },
         forRoutes: [&quot;*splat&quot;],
@@ -1273,6 +1284,58 @@ This decorator can be used to determine the media type of the request.</p>
 </div>
                 </td>
             </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MAX_LOGGED_RESPONSE_BODY_LENGTH"></a>
+                    <span class="name">
+                        <span ><b>MAX_LOGGED_RESPONSE_BODY_LENGTH</b></span>
+                        <a href="#MAX_LOGGED_RESPONSE_BODY_LENGTH"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>4096</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SENSITIVE_KEY_PATTERN"></a>
+                    <span class="name">
+                        <span ><b>SENSITIVE_KEY_PATTERN</b></span>
+                        <a href="#SENSITIVE_KEY_PATTERN"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>/password|secret|token|authorization|cookie|set-cookie|clientsecret|access_token|refresh_token/i</code>
+                    </td>
+                </tr>
+
 
         </tbody>
     </table>
@@ -1922,6 +1985,10 @@ This is necessary because TypeORM transformers don&#39;t support dependency inje
     { path: &quot;issuers/:tenantId/vci/{*path}&quot;, method: RequestMethod.ALL },
     { path: &quot;issuers/:tenantId/authorize&quot;, method: RequestMethod.ALL },
     { path: &quot;issuers/:tenantId/authorize/{*path}&quot;, method: RequestMethod.ALL },
+    {
+        path: &quot;issuers/:tenantId/authorization-servers/{*path}&quot;,
+        method: RequestMethod.ALL,
+    },
     {
         path: &quot;issuers/:tenantId/credentials-metadata/{*path}&quot;,
         method: RequestMethod.ALL,

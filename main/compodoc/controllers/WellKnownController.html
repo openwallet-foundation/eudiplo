@@ -169,8 +169,17 @@
                             </li>
                             <li>
                                     <span class="modifier"></span>
+                                <a href="#chainedAsVpMetadata" >chainedAsVpMetadata</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#getChainedAsJwks" >getChainedAsJwks</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                <a href="#getChainedAsVpJwks" >getChainedAsVpJwks</a>
                             </li>
                             <li>
                                     <span class="modifier"></span>
@@ -183,6 +192,15 @@
                                     <span class="modifier"></span>
                                     <span class="modifier">Async</span>
                                 <a href="#issuerMetadata" >issuerMetadata</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                <a href="#managedAuthorizationServerJwks" >managedAuthorizationServerJwks</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#managedAuthorizationServerMetadata" >managedAuthorizationServerMetadata</a>
                             </li>
                         </ul>
                     </td>
@@ -363,6 +381,84 @@ for wallets that construct the discovery URL per RFC 8414.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="chainedAsVpMetadata"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>chainedAsVpMetadata</b></span>
+                        <a href="#chainedAsVpMetadata"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>chainedAsVpMetadata(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get(&#x27;.well-known/oauth-authorization-server/issuers/:tenantId/chained-as-vp&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="78"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.controller.ts:78</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>VP-backed Chained Authorization Server Metadata.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="getChainedAsJwks"></a>
                     <span class="name">
                             <span class="modifier"></span>
@@ -389,8 +485,8 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="88"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.controller.ts:88</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="98"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.controller.ts:98</a></div>
                         </td>
                     </tr>
 
@@ -398,6 +494,85 @@ for wallets that construct the discovery URL per RFC 8414.</p>
             <tr>
                 <td class="col-md-4">
                         <div class="io-description"><p>Returns the JSON Web Key Set (JWKS) for the Chained Authorization Server.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getChainedAsVpJwks"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                        <span ><b>getChainedAsVpJwks</b></span>
+                        <a href="#getChainedAsVpJwks"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getChainedAsVpJwks(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Header(&#x27;Content-Type&#x27;, &#x27;application/jwk-set+json&#x27;)<br />@Get(&#x27;.well-known/jwks.json/issuers/:tenantId/chained-as-vp&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="110"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.controller.ts:110</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Returns the JSON Web Key Set (JWKS) for the VP-backed Chained Authorization Server.</p>
 </div>
 
                             <div class="io-description">
@@ -468,8 +643,8 @@ for wallets that construct the discovery URL per RFC 8414.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="78"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.controller.ts:78</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="88"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.controller.ts:88</a></div>
                         </td>
                     </tr>
 
@@ -622,6 +797,183 @@ for wallets that construct the discovery URL per RFC 8414.</p>
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="managedAuthorizationServerJwks"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                        <span ><b>managedAuthorizationServerJwks</b></span>
+                        <a href="#managedAuthorizationServerJwks"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>managedAuthorizationServerJwks(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationServerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Header(&#x27;Content-Type&#x27;, &#x27;application/jwk-set+json&#x27;)<br />@Get(&#x27;.well-known/jwks.json/issuers/:tenantId/authorization-servers/:authorizationServerId&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.controller.ts:133</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="managedAuthorizationServerMetadata"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>managedAuthorizationServerMetadata</b></span>
+                        <a href="#managedAuthorizationServerMetadata"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>managedAuthorizationServerMetadata(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationServerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get(&#x27;.well-known/oauth-authorization-server/issuers/:tenantId/authorization-servers/:authorizationServerId&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="119"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.controller.ts:119</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>    </div>
 
 
@@ -698,6 +1050,16 @@ export class WellKnownController {
     }
 
     /**
+     * VP-backed Chained Authorization Server Metadata.
+     */
+    @Get(
+        &quot;.well-known/oauth-authorization-server/issuers/:tenantId/chained-as-vp&quot;,
+    )
+    chainedAsVpMetadata(@Param(&quot;tenantId&quot;) tenantId: string) {
+        return this.wellKnownService.getChainedAsVpMetadata(tenantId);
+    }
+
+    /**
      * Returns the JSON Web Key Set (JWKS) for the authorization server.
      * @returns
      */
@@ -717,6 +1079,45 @@ export class WellKnownController {
         @Param(&quot;tenantId&quot;) tenantId: string,
     ): Promise&lt;{ keys: Record&lt;string, unknown&gt;[] }&gt; {
         return this.wellKnownService.getChainedAsJwks(tenantId);
+    }
+
+    /**
+     * Returns the JSON Web Key Set (JWKS) for the VP-backed Chained Authorization Server.
+     * @returns
+     */
+    @Header(&quot;Content-Type&quot;, &quot;application/jwk-set+json&quot;)
+    @Get(&quot;.well-known/jwks.json/issuers/:tenantId/chained-as-vp&quot;)
+    getChainedAsVpJwks(
+        @Param(&quot;tenantId&quot;) tenantId: string,
+    ): Promise&lt;{ keys: Record&lt;string, unknown&gt;[] }&gt; {
+        return this.wellKnownService.getChainedAsVpJwks(tenantId);
+    }
+
+    @Get(
+        &quot;.well-known/oauth-authorization-server/issuers/:tenantId/authorization-servers/:authorizationServerId&quot;,
+    )
+    managedAuthorizationServerMetadata(
+        @Param(&quot;tenantId&quot;) tenantId: string,
+        @Param(&quot;authorizationServerId&quot;) authorizationServerId: string,
+    ) {
+        return this.wellKnownService.getManagedAuthorizationServerMetadata(
+            tenantId,
+            authorizationServerId,
+        );
+    }
+
+    @Header(&quot;Content-Type&quot;, &quot;application/jwk-set+json&quot;)
+    @Get(
+        &quot;.well-known/jwks.json/issuers/:tenantId/authorization-servers/:authorizationServerId&quot;,
+    )
+    managedAuthorizationServerJwks(
+        @Param(&quot;tenantId&quot;) tenantId: string,
+        @Param(&quot;authorizationServerId&quot;) authorizationServerId: string,
+    ): Promise&lt;{ keys: Record&lt;string, unknown&gt;[] }&gt; {
+        return this.wellKnownService.getManagedAuthorizationServerJwks(
+            tenantId,
+            authorizationServerId,
+        );
     }
 }
 </code></pre>

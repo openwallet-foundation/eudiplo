@@ -1,0 +1,2775 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >ChainedAsVpService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#AUTH_CODE_LIFETIME_SECONDS" >AUTH_CODE_LIFETIME_SECONDS</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#REQUEST_URI_PREFIX" >REQUEST_URI_PREFIX</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#SESSION_LIFETIME_SECONDS" >SESSION_LIFETIME_SECONDS</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#assertTokenRequestSessionValid" >assertTokenRequestSessionValid</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildErrorRedirect" >buildErrorRedirect</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildTokenPayload" >buildTokenPayload</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getChainedAsVpBaseUrl" >getChainedAsVpBaseUrl</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getChainedAsVpConfig" >getChainedAsVpConfig</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getJwks" >getJwks</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getMetadata" >getMetadata</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleAuthorize" >handleAuthorize</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#handlePar" >handlePar</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleToken" >handleToken</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleVerifierCallback" >handleVerifierCallback</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#issueRefreshTokenIfEnabled" >issueRefreshTokenIfEnabled</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#resolveAuthorizationCodeSession" >resolveAuthorizationCodeSession</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#resolveRefreshTokenSession" >resolveRefreshTokenSession</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#resolveSessionForTokenRequest" >resolveSessionForTokenRequest</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#resolveTokenBinding" >resolveTokenBinding</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#verifyPkce" >verifyPkce</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(configService: ConfigService, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>, sessionService: <a href="../injectables/SessionService.html" target="_self">SessionService</a>, issuanceService: <a href="../injectables/IssuanceService.html" target="_self">IssuanceService</a>, walletAttestationService: <a href="../injectables/WalletAttestationService.html" target="_self">WalletAttestationService</a>, traceService: TraceService, oid4vpService: <a href="../injectables/Oid4vpService.html" target="_self">Oid4vpService</a>, sessionRepository: Repository<ChainedAsSessionEntity>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:37</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>configService</td>
+                                                  
+                                                        <td>
+                                                                    <code>ConfigService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>keyChainService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/KeyChainService.html" target="_self" >KeyChainService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>sessionService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SessionService.html" target="_self" >SessionService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>issuanceService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/IssuanceService.html" target="_self" >IssuanceService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>walletAttestationService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/WalletAttestationService.html" target="_self" >WalletAttestationService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>traceService</td>
+                                                  
+                                                        <td>
+                                                                    <code>TraceService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>oid4vpService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/Oid4vpService.html" target="_self" >Oid4vpService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>sessionRepository</td>
+                                                  
+                                                        <td>
+                                                                    <code>Repository&lt;ChainedAsSessionEntity&gt;</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="assertTokenRequestSessionValid"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>assertTokenRequestSessionValid</b></span>
+                        <a href="#assertTokenRequestSessionValid"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>assertTokenRequestSessionValid(session: <a href="../entitys/ChainedAsSessionEntity.html" target="_self">ChainedAsSessionEntity</a>, request: <a href="../classes/ChainedAsTokenRequestDto.html" target="_self">ChainedAsTokenRequestDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="435"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:435</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                            <code><a href="../entitys/ChainedAsSessionEntity.html" target="_self" >ChainedAsSessionEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>request</td>
+                                            <td>
+                                                            <code><a href="../classes/ChainedAsTokenRequestDto.html" target="_self" >ChainedAsTokenRequestDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildErrorRedirect"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildErrorRedirect</b></span>
+                        <a href="#buildErrorRedirect"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildErrorRedirect(redirectUri: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, error: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, errorDescription?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, walletState?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="233"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:233</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>redirectUri</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>errorDescription</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>walletState</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildTokenPayload"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildTokenPayload</b></span>
+                        <a href="#buildTokenPayload"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildTokenPayload(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, session: <a href="../entitys/ChainedAsSessionEntity.html" target="_self">ChainedAsSessionEntity</a>, tokenLifetime: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, jti: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, dpopJkt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="343"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:343</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                            <code><a href="../entitys/ChainedAsSessionEntity.html" target="_self" >ChainedAsSessionEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tokenLifetime</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>jti</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>dpopJkt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Record&lt;string, unknown&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getChainedAsVpBaseUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getChainedAsVpBaseUrl</b></span>
+                        <a href="#getChainedAsVpBaseUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getChainedAsVpBaseUrl(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="51"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getChainedAsVpConfig"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getChainedAsVpConfig</b></span>
+                        <a href="#getChainedAsVpConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getChainedAsVpConfig(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="56"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ChainedAsConfig.html" target="_self" >Promise&lt;ChainedAsConfig&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getJwks"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getJwks</b></span>
+                        <a href="#getJwks"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getJwks(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="583"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:583</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getMetadata"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getMetadata</b></span>
+                        <a href="#getMetadata"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getMetadata(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="606"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:606</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Record&lt;string, unknown&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleAuthorize"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>handleAuthorize</b></span>
+                        <a href="#handleAuthorize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleAuthorize(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, clientId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, requestUri: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="154"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:154</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>clientId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>requestUri</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>origin</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handlePar"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>handlePar</b></span>
+                        <a href="#handlePar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handlePar(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, request: <a href="../classes/ChainedAsParRequestDto.html" target="_self">ChainedAsParRequestDto</a>, dpopJkt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, clientAttestation?: literal type)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:76</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>request</td>
+                                            <td>
+                                                            <code><a href="../classes/ChainedAsParRequestDto.html" target="_self" >ChainedAsParRequestDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>dpopJkt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>clientAttestation</td>
+                                            <td>
+                                                        <code>literal type</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;ChainedAsParResponseDto&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleToken"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>handleToken</b></span>
+                        <a href="#handleToken"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleToken(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, request: <a href="../classes/ChainedAsTokenRequestDto.html" target="_self">ChainedAsTokenRequestDto</a>, dpopJwt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="506"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:506</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>request</td>
+                                            <td>
+                                                            <code><a href="../classes/ChainedAsTokenRequestDto.html" target="_self" >ChainedAsTokenRequestDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>dpopJwt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#Token" target="_self" >Promise&lt;ChainedAsTokenResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleVerifierCallback"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>handleVerifierCallback</b></span>
+                        <a href="#handleVerifierCallback"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleVerifierCallback(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, chainedAsSessionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, responseCode?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, error?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, errorDescription?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="250"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:250</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>chainedAsSessionId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>responseCode</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>errorDescription</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="issueRefreshTokenIfEnabled"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>issueRefreshTokenIfEnabled</b></span>
+                        <a href="#issueRefreshTokenIfEnabled"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>issueRefreshTokenIfEnabled(session: <a href="../entitys/ChainedAsSessionEntity.html" target="_self">ChainedAsSessionEntity</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="480"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:480</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                            <code><a href="../entitys/ChainedAsSessionEntity.html" target="_self" >ChainedAsSessionEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string | undefined&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resolveAuthorizationCodeSession"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>resolveAuthorizationCodeSession</b></span>
+                        <a href="#resolveAuthorizationCodeSession"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resolveAuthorizationCodeSession(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, request: <a href="../classes/ChainedAsTokenRequestDto.html" target="_self">ChainedAsTokenRequestDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="410"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:410</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>request</td>
+                                            <td>
+                                                            <code><a href="../classes/ChainedAsTokenRequestDto.html" target="_self" >ChainedAsTokenRequestDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;ChainedAsSessionEntity&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resolveRefreshTokenSession"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>resolveRefreshTokenSession</b></span>
+                        <a href="#resolveRefreshTokenSession"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resolveRefreshTokenSession(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, request: <a href="../classes/ChainedAsTokenRequestDto.html" target="_self">ChainedAsTokenRequestDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="382"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:382</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>request</td>
+                                            <td>
+                                                            <code><a href="../classes/ChainedAsTokenRequestDto.html" target="_self" >ChainedAsTokenRequestDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;ChainedAsSessionEntity&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resolveSessionForTokenRequest"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>resolveSessionForTokenRequest</b></span>
+                        <a href="#resolveSessionForTokenRequest"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resolveSessionForTokenRequest(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, request: <a href="../classes/ChainedAsTokenRequestDto.html" target="_self">ChainedAsTokenRequestDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="373"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:373</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>request</td>
+                                            <td>
+                                                            <code><a href="../classes/ChainedAsTokenRequestDto.html" target="_self" >ChainedAsTokenRequestDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;ChainedAsSessionEntity&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resolveTokenBinding"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>resolveTokenBinding</b></span>
+                        <a href="#resolveTokenBinding"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resolveTokenBinding(config: <a href="../classes/ChainedAsConfig.html" target="_self">ChainedAsConfig</a>, session: <a href="../entitys/ChainedAsSessionEntity.html" target="_self">ChainedAsSessionEntity</a>, dpopJwt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="461"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:461</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>config</td>
+                                            <td>
+                                                            <code><a href="../classes/ChainedAsConfig.html" target="_self" >ChainedAsConfig</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                            <code><a href="../entitys/ChainedAsSessionEntity.html" target="_self" >ChainedAsSessionEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>dpopJwt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>literal type</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="verifyPkce"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>verifyPkce</b></span>
+                        <a href="#verifyPkce"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>verifyPkce(session: <a href="../entitys/ChainedAsSessionEntity.html" target="_self">ChainedAsSessionEntity</a>, codeVerifier?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="324"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:324</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                            <code><a href="../entitys/ChainedAsSessionEntity.html" target="_self" >ChainedAsSessionEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>codeVerifier</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AUTH_CODE_LIFETIME_SECONDS"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>AUTH_CODE_LIFETIME_SECONDS</b></span>
+                        <a href="#AUTH_CODE_LIFETIME_SECONDS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>300</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(ChainedAsVpService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="REQUEST_URI_PREFIX"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>REQUEST_URI_PREFIX</b></span>
+                        <a href="#REQUEST_URI_PREFIX"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;urn:ietf:params:oauth:request_uri:&quot;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SESSION_LIFETIME_SECONDS"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>SESSION_LIFETIME_SECONDS</b></span>
+                        <a href="#SESSION_LIFETIME_SECONDS"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>600</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createHash, randomBytes } from &quot;node:crypto&quot;;
+import {
+    BadRequestException,
+    Injectable,
+    Logger,
+    NotFoundException,
+    UnauthorizedException,
+} from &quot;@nestjs/common&quot;;
+import { ConfigService } from &quot;@nestjs/config&quot;;
+import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
+import { TraceService } from &quot;nestjs-otel&quot;;
+import { Repository } from &quot;typeorm&quot;;
+import { v4 } from &quot;uuid&quot;;
+import { KeyChainService } from &quot;../../../../crypto/key/key-chain.service&quot;;
+import { SessionStatus } from &quot;../../../../session/entities/session.entity&quot;;
+import { SessionService } from &quot;../../../../session/session.service&quot;;
+import { WalletAttestationService } from &quot;../../../../shared/trust/wallet-attestation.service&quot;;
+import type { ChainedAsConfig } from &quot;../../../configuration/issuance/dto/chained-as-config.dto&quot;;
+import { IssuanceService } from &quot;../../../configuration/issuance/issuance.service&quot;;
+import { Oid4vpService } from &quot;../../../../verifier/oid4vp/oid4vp.service&quot;;
+import {
+    ChainedAsParRequestDto,
+    ChainedAsParResponseDto,
+    ChainedAsTokenRequestDto,
+    ChainedAsTokenResponseDto,
+} from &quot;../chained-as/dto/chained-as.dto&quot;;
+import {
+    ChainedAsSessionEntity,
+    ChainedAsSessionStatus,
+} from &quot;../chained-as/entities/chained-as-session.entity&quot;;
+
+@Injectable()
+export class ChainedAsVpService {
+    private readonly logger &#x3D; new Logger(ChainedAsVpService.name);
+    private readonly REQUEST_URI_PREFIX &#x3D; &quot;urn:ietf:params:oauth:request_uri:&quot;;
+    private readonly SESSION_LIFETIME_SECONDS &#x3D; 600;
+    private readonly AUTH_CODE_LIFETIME_SECONDS &#x3D; 300;
+
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly keyChainService: KeyChainService,
+        private readonly sessionService: SessionService,
+        private readonly issuanceService: IssuanceService,
+        private readonly walletAttestationService: WalletAttestationService,
+        private readonly traceService: TraceService,
+        private readonly oid4vpService: Oid4vpService,
+        @InjectRepository(ChainedAsSessionEntity)
+        private readonly sessionRepository: Repository&lt;ChainedAsSessionEntity&gt;,
+    ) {}
+
+    private getChainedAsVpBaseUrl(tenantId: string): string {
+        const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
+        return &#x60;${publicUrl}/issuers/${tenantId}/chained-as-vp&#x60;;
+    }
+
+    async getChainedAsVpConfig(tenantId: string): Promise&lt;ChainedAsConfig&gt; {
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        const chainedServer &#x3D; (issuanceConfig.authorizationServers ?? []).find(
+            (server) &#x3D;&gt;
+                server.enabled !&#x3D;&#x3D; false &amp;&amp;
+                server.type &#x3D;&#x3D;&#x3D; &quot;chained&quot; &amp;&amp;
+                (server as { vp?: { enabled?: boolean } }).vp?.enabled,
+        );
+
+        if (!chainedServer) {
+            throw new NotFoundException(
+                &quot;VP-backed Chained Authorization Server is not enabled for this tenant&quot;,
+            );
+        }
+
+        return chainedServer as unknown as ChainedAsConfig;
+    }
+
+    async handlePar(
+        tenantId: string,
+        request: ChainedAsParRequestDto,
+        dpopJkt?: string,
+        clientAttestation?: {
+            clientAttestationJwt: string;
+            clientAttestationPopJwt: string;
+        },
+    ): Promise&lt;ChainedAsParResponseDto&gt; {
+        const config &#x3D; await this.getChainedAsVpConfig(tenantId);
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        if (request.response_type !&#x3D;&#x3D; &quot;code&quot;) {
+            throw new BadRequestException(
+                &#x27;Invalid response_type, must be &quot;code&quot;&#x27;,
+            );
+        }
+
+        if (config.requireDPoP &amp;&amp; !dpopJkt) {
+            throw new BadRequestException(&quot;DPoP is required&quot;);
+        }
+
+        await this.walletAttestationService.verifyWalletAttestation(
+            tenantId,
+            clientAttestation,
+            this.getChainedAsVpBaseUrl(tenantId),
+            issuanceConfig.walletAttestationRequired ?? false,
+            issuanceConfig.walletProviderTrustLists ?? [],
+        );
+
+        let issuerState &#x3D; request.issuer_state;
+        if (issuerState) {
+            try {
+                await this.sessionService.get(issuerState);
+            } catch {
+                throw new BadRequestException(&quot;Invalid issuer_state&quot;);
+            }
+        } else {
+            issuerState &#x3D; v4();
+        }
+
+        const sessionId &#x3D; v4();
+        const expiresAt &#x3D; new Date(
+            Date.now() + this.SESSION_LIFETIME_SECONDS * 1000,
+        );
+
+        const session &#x3D; this.sessionRepository.create({
+            id: sessionId,
+            tenantId,
+            status: ChainedAsSessionStatus.PENDING_AUTHORIZE,
+            issuerState,
+            clientId: request.client_id,
+            redirectUri: request.redirect_uri,
+            codeChallenge: request.code_challenge,
+            codeChallengeMethod: request.code_challenge_method,
+            walletState: request.state,
+            scope: request.scope,
+            authorizationDetails: request.authorization_details,
+            dpopJkt,
+            expiresAt,
+        });
+
+        await this.sessionRepository.save(session);
+
+        this.traceService.getSpan()?.setAttributes({
+            &quot;session.id&quot;: issuerState,
+            &quot;chained_as_vp.session.id&quot;: sessionId,
+            &quot;session.tenantId&quot;: tenantId,
+            &quot;chained_as_vp.endpoint&quot;: &quot;par&quot;,
+        });
+
+        return {
+            request_uri: &#x60;${this.REQUEST_URI_PREFIX}${sessionId}&#x60;,
+            expires_in: this.SESSION_LIFETIME_SECONDS,
+        };
+    }
+
+    async handleAuthorize(
+        tenantId: string,
+        clientId: string,
+        requestUri: string,
+        origin?: string,
+    ): Promise&lt;string&gt; {
+        const config &#x3D; await this.getChainedAsVpConfig(tenantId);
+
+        if (!config.vp?.presentationConfigId) {
+            throw new BadRequestException(
+                &quot;Presentation configuration is not configured&quot;,
+            );
+        }
+
+        if (!requestUri.startsWith(this.REQUEST_URI_PREFIX)) {
+            throw new BadRequestException(&quot;Invalid request_uri format&quot;);
+        }
+
+        const sessionId &#x3D; requestUri.slice(this.REQUEST_URI_PREFIX.length);
+        const session &#x3D; await this.sessionRepository.findOne({
+            where: {
+                id: sessionId,
+                tenantId,
+                status: ChainedAsSessionStatus.PENDING_AUTHORIZE,
+            },
+        });
+
+        if (!session) {
+            throw new BadRequestException(&quot;Invalid or expired request_uri&quot;);
+        }
+
+        if (session.clientId !&#x3D;&#x3D; clientId) {
+            throw new BadRequestException(&quot;Client ID mismatch&quot;);
+        }
+
+        if (session.expiresAt &lt; new Date()) {
+            session.status &#x3D; ChainedAsSessionStatus.EXPIRED;
+            await this.sessionRepository.save(session);
+            throw new BadRequestException(&quot;Session expired&quot;);
+        }
+
+        session.status &#x3D; ChainedAsSessionStatus.PENDING_VP_CALLBACK;
+        await this.sessionRepository.save(session);
+
+        this.traceService.getSpan()?.setAttributes({
+            &quot;session.id&quot;: session.issuerState,
+            &quot;chained_as_vp.session.id&quot;: session.id,
+            &quot;session.tenantId&quot;: tenantId,
+            &quot;chained_as_vp.endpoint&quot;: &quot;authorize&quot;,
+        });
+
+        const callbackUrl &#x3D; &#x60;${this.getChainedAsVpBaseUrl(tenantId)}/vp-callback?cas&#x3D;${encodeURIComponent(session.id)}&#x60;;
+        const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
+
+        await this.sessionService.create({
+            id: session.id,
+            tenantId,
+            requestId: config.vp.presentationConfigId,
+            redirectUri: callbackUrl,
+        });
+
+        const offer &#x3D; await this.oid4vpService.createRequest(
+            config.vp.presentationConfigId,
+            {
+                session: session.id,
+                redirectUri: callbackUrl,
+            },
+            tenantId,
+            false,
+            origin || publicUrl,
+        );
+
+        this.logger.debug(
+            &#x60;Redirecting session ${session.id} to OID4VP wallet invocation&#x60;,
+        );
+
+        return &#x60;openid4vp://?${offer.uri}&#x60;;
+    }
+
+    private buildErrorRedirect(
+        redirectUri: string,
+        error: string,
+        errorDescription?: string,
+        walletState?: string,
+    ): string {
+        const redirectUrl &#x3D; new URL(redirectUri);
+        redirectUrl.searchParams.set(&quot;error&quot;, error);
+        if (errorDescription) {
+            redirectUrl.searchParams.set(&quot;error_description&quot;, errorDescription);
+        }
+        if (walletState) {
+            redirectUrl.searchParams.set(&quot;state&quot;, walletState);
+        }
+        return redirectUrl.toString();
+    }
+
+    async handleVerifierCallback(
+        tenantId: string,
+        chainedAsSessionId: string,
+        responseCode?: string,
+        error?: string,
+        errorDescription?: string,
+    ): Promise&lt;string&gt; {
+        const session &#x3D; await this.sessionRepository.findOne({
+            where: {
+                id: chainedAsSessionId,
+                tenantId,
+                status: ChainedAsSessionStatus.PENDING_VP_CALLBACK,
+            },
+        });
+
+        if (!session) {
+            throw new BadRequestException(
+                &quot;Invalid or expired callback session&quot;,
+            );
+        }
+
+        if (error) {
+            session.status &#x3D; ChainedAsSessionStatus.EXPIRED;
+            await this.sessionRepository.save(session);
+            return this.buildErrorRedirect(
+                session.redirectUri,
+                error,
+                errorDescription,
+                session.walletState,
+            );
+        }
+
+        const verifierSession &#x3D; await this.sessionService.get(session.id);
+        if (
+            verifierSession.status !&#x3D;&#x3D; SessionStatus.Completed ||
+            !responseCode ||
+            verifierSession.responseCode !&#x3D;&#x3D; responseCode
+        ) {
+            session.status &#x3D; ChainedAsSessionStatus.EXPIRED;
+            await this.sessionRepository.save(session);
+            return this.buildErrorRedirect(
+                session.redirectUri,
+                &quot;invalid_request&quot;,
+                &quot;OID4VP verification did not complete successfully&quot;,
+                session.walletState,
+            );
+        }
+
+        if (session.issuerState &amp;&amp; verifierSession.credentials) {
+            await this.sessionService.add(session.issuerState, {
+                credentials: verifierSession.credentials as any,
+            });
+        }
+
+        const authorizationCode &#x3D; randomBytes(32).toString(&quot;base64url&quot;);
+        session.status &#x3D; ChainedAsSessionStatus.AUTHORIZED;
+        session.authorizationCode &#x3D; authorizationCode;
+        session.authorizationCodeExpiresAt &#x3D; new Date(
+            Date.now() + this.AUTH_CODE_LIFETIME_SECONDS * 1000,
+        );
+        await this.sessionRepository.save(session);
+
+        const redirectUrl &#x3D; new URL(session.redirectUri);
+        redirectUrl.searchParams.set(&quot;code&quot;, authorizationCode);
+        redirectUrl.searchParams.set(
+            &quot;iss&quot;,
+            this.getChainedAsVpBaseUrl(tenantId),
+        );
+        if (session.walletState) {
+            redirectUrl.searchParams.set(&quot;state&quot;, session.walletState);
+        }
+        return redirectUrl.toString();
+    }
+
+    private verifyPkce(
+        session: ChainedAsSessionEntity,
+        codeVerifier?: string,
+    ): void {
+        if (session.codeChallenge &amp;&amp; codeVerifier) {
+            const expectedChallenge &#x3D;
+                session.codeChallengeMethod &#x3D;&#x3D;&#x3D; &quot;S256&quot;
+                    ? createHash(&quot;sha256&quot;)
+                          .update(codeVerifier)
+                          .digest(&quot;base64url&quot;)
+                    : codeVerifier;
+            if (expectedChallenge !&#x3D;&#x3D; session.codeChallenge) {
+                throw new UnauthorizedException(&quot;Invalid code_verifier&quot;);
+            }
+        } else if (session.codeChallenge &amp;&amp; !codeVerifier) {
+            throw new BadRequestException(&quot;code_verifier is required&quot;);
+        }
+    }
+
+    private buildTokenPayload(
+        tenantId: string,
+        session: ChainedAsSessionEntity,
+        tokenLifetime: number,
+        jti: string,
+        dpopJkt?: string,
+    ): Record&lt;string, unknown&gt; {
+        const now &#x3D; Math.floor(Date.now() / 1000);
+        const payload: Record&lt;string, unknown&gt; &#x3D; {
+            iss: this.getChainedAsVpBaseUrl(tenantId),
+            sub: session.clientId,
+            aud: &#x60;${this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;)}/issuers/${tenantId}&#x60;,
+            iat: now,
+            exp: now + tokenLifetime,
+            jti,
+            issuer_state: session.issuerState,
+            client_id: session.clientId,
+        };
+        if (dpopJkt) {
+            payload.cnf &#x3D; { jkt: dpopJkt };
+        }
+        if (
+            Array.isArray(session.authorizationDetails) &amp;&amp;
+            session.authorizationDetails.length &gt; 0
+        ) {
+            payload.authorization_details &#x3D; session.authorizationDetails;
+        }
+        return payload;
+    }
+
+    private async resolveSessionForTokenRequest(
+        tenantId: string,
+        request: ChainedAsTokenRequestDto,
+    ): Promise&lt;ChainedAsSessionEntity&gt; {
+        return request.grant_type &#x3D;&#x3D;&#x3D; &quot;refresh_token&quot;
+            ? this.resolveRefreshTokenSession(tenantId, request)
+            : this.resolveAuthorizationCodeSession(tenantId, request);
+    }
+
+    private async resolveRefreshTokenSession(
+        tenantId: string,
+        request: ChainedAsTokenRequestDto,
+    ): Promise&lt;ChainedAsSessionEntity&gt; {
+        if (!request.refresh_token) {
+            throw new BadRequestException(
+                &quot;refresh_token is required for refresh_token grant&quot;,
+            );
+        }
+
+        const session &#x3D; await this.sessionRepository.findOne({
+            where: { tenantId, refreshToken: request.refresh_token },
+        });
+
+        if (!session) {
+            throw new UnauthorizedException(&quot;Invalid or expired refresh_token&quot;);
+        }
+
+        if (
+            session.refreshTokenExpiresAt &amp;&amp;
+            session.refreshTokenExpiresAt &lt; new Date()
+        ) {
+            throw new UnauthorizedException(&quot;refresh_token has expired&quot;);
+        }
+
+        return session;
+    }
+
+    private async resolveAuthorizationCodeSession(
+        tenantId: string,
+        request: ChainedAsTokenRequestDto,
+    ): Promise&lt;ChainedAsSessionEntity&gt; {
+        if (!request.code) {
+            throw new BadRequestException(
+                &quot;code is required for authorization_code grant&quot;,
+            );
+        }
+
+        const session &#x3D; await this.sessionRepository.findOne({
+            where: {
+                tenantId,
+                authorizationCode: request.code,
+                status: ChainedAsSessionStatus.AUTHORIZED,
+            },
+        });
+
+        if (!session) {
+            throw new UnauthorizedException(&quot;Invalid authorization code&quot;);
+        }
+
+        return session;
+    }
+
+    private async assertTokenRequestSessionValid(
+        session: ChainedAsSessionEntity,
+        request: ChainedAsTokenRequestDto,
+    ): Promise&lt;void&gt; {
+        if (
+            request.grant_type &#x3D;&#x3D;&#x3D; &quot;authorization_code&quot; &amp;&amp;
+            session.authorizationCodeExpiresAt &amp;&amp;
+            session.authorizationCodeExpiresAt &lt; new Date()
+        ) {
+            session.status &#x3D; ChainedAsSessionStatus.EXPIRED;
+            await this.sessionRepository.save(session);
+            throw new UnauthorizedException(&quot;Authorization code expired&quot;);
+        }
+
+        if (
+            request.redirect_uri &amp;&amp;
+            request.redirect_uri !&#x3D;&#x3D; session.redirectUri
+        ) {
+            throw new BadRequestException(&quot;redirect_uri mismatch&quot;);
+        }
+
+        if (request.grant_type &#x3D;&#x3D;&#x3D; &quot;authorization_code&quot;) {
+            this.verifyPkce(session, request.code_verifier);
+        }
+    }
+
+    private resolveTokenBinding(
+        config: ChainedAsConfig,
+        session: ChainedAsSessionEntity,
+        dpopJwt?: string,
+    ): { tokenType: string; dpopJkt?: string } {
+        if (dpopJwt) {
+            return {
+                tokenType: &quot;DPoP&quot;,
+                dpopJkt: session.dpopJkt,
+            };
+        }
+
+        if (config.requireDPoP) {
+            throw new BadRequestException(&quot;DPoP proof is required&quot;);
+        }
+
+        return { tokenType: &quot;Bearer&quot; };
+    }
+
+    private async issueRefreshTokenIfEnabled(
+        session: ChainedAsSessionEntity,
+        tenantId: string,
+    ): Promise&lt;string | undefined&gt; {
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        if (!issuanceConfig.refreshTokenEnabled) {
+            return undefined;
+        }
+
+        const refreshToken &#x3D; randomBytes(32).toString(&quot;base64url&quot;);
+        let refreshTokenExpiresAt: Date | undefined;
+
+        if (issuanceConfig.refreshTokenExpiresInSeconds) {
+            refreshTokenExpiresAt &#x3D; new Date(
+                Date.now() + issuanceConfig.refreshTokenExpiresInSeconds * 1000,
+            );
+        }
+
+        session.refreshToken &#x3D; refreshToken;
+        session.refreshTokenExpiresAt &#x3D; refreshTokenExpiresAt;
+
+        return refreshToken;
+    }
+
+    async handleToken(
+        tenantId: string,
+        request: ChainedAsTokenRequestDto,
+        dpopJwt?: string,
+    ): Promise&lt;ChainedAsTokenResponseDto&gt; {
+        if (
+            request.grant_type !&#x3D;&#x3D; &quot;authorization_code&quot; &amp;&amp;
+            request.grant_type !&#x3D;&#x3D; &quot;refresh_token&quot;
+        ) {
+            throw new BadRequestException(
+                &#x27;Invalid grant_type, must be &quot;authorization_code&quot; or &quot;refresh_token&quot;&#x27;,
+            );
+        }
+
+        const session &#x3D; await this.resolveSessionForTokenRequest(
+            tenantId,
+            request,
+        );
+        await this.assertTokenRequestSessionValid(session, request);
+
+        const config &#x3D; await this.getChainedAsVpConfig(tenantId);
+        const { tokenType, dpopJkt } &#x3D; this.resolveTokenBinding(
+            config,
+            session,
+            dpopJwt,
+        );
+
+        const tokenLifetime &#x3D; config.token?.lifetimeSeconds || 3600;
+        const jti &#x3D; v4();
+        const tokenPayload &#x3D; this.buildTokenPayload(
+            tenantId,
+            session,
+            tokenLifetime,
+            jti,
+            dpopJkt,
+        );
+
+        const signingKeyId &#x3D;
+            config.token?.signingKeyId ||
+            (await this.keyChainService.getKid(tenantId));
+        const publicKey &#x3D; await this.keyChainService.getPublicKey(
+            &quot;jwk&quot;,
+            tenantId,
+            signingKeyId,
+        );
+        const kid &#x3D; (publicKey as { kid?: string }).kid || signingKeyId;
+
+        const accessToken &#x3D; await this.keyChainService.signJWT(
+            tokenPayload as any,
+            { alg: &quot;ES256&quot;, kid, typ: &quot;at+jwt&quot; },
+            tenantId,
+            signingKeyId,
+        );
+
+        session.status &#x3D; ChainedAsSessionStatus.TOKEN_ISSUED;
+        session.accessTokenJti &#x3D; jti;
+
+        const refreshToken &#x3D; await this.issueRefreshTokenIfEnabled(
+            session,
+            tenantId,
+        );
+
+        await this.sessionRepository.save(session);
+
+        return {
+            access_token: accessToken,
+            token_type: tokenType,
+            expires_in: tokenLifetime,
+            scope: session.scope,
+            ...(Array.isArray(session.authorizationDetails) &amp;&amp;
+                session.authorizationDetails.length &gt; 0 &amp;&amp; {
+                    authorization_details: session.authorizationDetails,
+                }),
+            ...(refreshToken &amp;&amp; { refresh_token: refreshToken }),
+        };
+    }
+
+    async getJwks(
+        tenantId: string,
+    ): Promise&lt;{ keys: Record&lt;string, unknown&gt;[] }&gt; {
+        const config &#x3D; await this.getChainedAsVpConfig(tenantId);
+        const signingKeyId &#x3D;
+            config.token?.signingKeyId ||
+            (await this.keyChainService.getKid(tenantId));
+        const publicKey &#x3D; await this.keyChainService.getPublicKey(
+            &quot;jwk&quot;,
+            tenantId,
+            signingKeyId,
+        );
+
+        return {
+            keys: [
+                {
+                    ...publicKey,
+                    kid: (publicKey as { kid?: string }).kid || signingKeyId,
+                } as Record&lt;string, unknown&gt;,
+            ],
+        };
+    }
+
+    async getMetadata(tenantId: string): Promise&lt;Record&lt;string, unknown&gt;&gt; {
+        const baseUrl &#x3D; this.getChainedAsVpBaseUrl(tenantId);
+        const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
+
+        const metadata: Record&lt;string, unknown&gt; &#x3D; {
+            issuer: baseUrl,
+            authorization_endpoint: &#x60;${baseUrl}/authorize&#x60;,
+            token_endpoint: &#x60;${baseUrl}/token&#x60;,
+            pushed_authorization_request_endpoint: &#x60;${baseUrl}/par&#x60;,
+            jwks_uri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/chained-as-vp&#x60;,
+            response_types_supported: [&quot;code&quot;],
+            grant_types_supported: [&quot;authorization_code&quot;, &quot;refresh_token&quot;],
+            authorization_details_types_supported: [&quot;openid_credential&quot;],
+            token_endpoint_auth_methods_supported: [
+                &quot;none&quot;,
+                &quot;attest_jwt_client_auth&quot;,
+            ],
+            code_challenge_methods_supported: [&quot;S256&quot;],
+            dpop_signing_alg_values_supported: [&quot;ES256&quot;, &quot;ES384&quot;, &quot;ES512&quot;],
+            client_attestation_signing_alg_values_supported: [&quot;ES256&quot;],
+            client_attestation_pop_signing_alg_values_supported: [&quot;ES256&quot;],
+        };
+
+        return metadata;
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'ChainedAsVpService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

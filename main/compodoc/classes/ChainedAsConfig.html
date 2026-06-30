@@ -213,6 +213,14 @@ but delegates user authentication to an upstream OIDC provider (e.g., Keycloak).
                                     <span class="modifier">Optional</span>
                                 <a href="#upstream" >upstream</a>
                             </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#vp" >vp</a>
+                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -262,7 +270,7 @@ but delegates user authentication to an upstream OIDC provider (e.g., Keycloak).
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="124" class="link-to-prism">src/issuer/configuration/issuance/dto/chained-as-config.dto.ts:124</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="154" class="link-to-prism">src/issuer/configuration/issuance/dto/chained-as-config.dto.ts:154</a></div>
                         </td>
                     </tr>
 
@@ -308,7 +316,7 @@ When enabled, EUDIPLO acts as the AS and delegates to upstream for authenticatio
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="162" class="link-to-prism">src/issuer/configuration/issuance/dto/chained-as-config.dto.ts:162</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="204" class="link-to-prism">src/issuer/configuration/issuance/dto/chained-as-config.dto.ts:204</a></div>
                         </td>
                     </tr>
 
@@ -355,7 +363,7 @@ When true, wallets must provide DPoP proofs.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="149" class="link-to-prism">src/issuer/configuration/issuance/dto/chained-as-config.dto.ts:149</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="191" class="link-to-prism">src/issuer/configuration/issuance/dto/chained-as-config.dto.ts:191</a></div>
                         </td>
                     </tr>
 
@@ -401,7 +409,7 @@ When true, wallets must provide DPoP proofs.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="137" class="link-to-prism">src/issuer/configuration/issuance/dto/chained-as-config.dto.ts:137</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="167" class="link-to-prism">src/issuer/configuration/issuance/dto/chained-as-config.dto.ts:167</a></div>
                         </td>
                     </tr>
 
@@ -409,6 +417,52 @@ When true, wallets must provide DPoP proofs.</p>
                 <td class="col-md-4">
                     <div class="io-description"><p>Configuration for the upstream OIDC provider.
 Required when enabled is true.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="vp"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>vp</b></span>
+                        <a href="#vp"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/ChainedAsVpConfig.html" target="_self" >ChainedAsVpConfig</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiPropertyOptional({description: &#x27;VP-backed chained AS configuration&#x27;, type: () &#x3D;&gt; ChainedAsVpConfig})<br />@IsOptional()<br />@ValidateNested()<br />@Type(undefined)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="179" class="link-to-prism">src/issuer/configuration/issuance/dto/chained-as-config.dto.ts:179</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Configuration for a VP-backed AS facade.</p>
 </div>
                 </td>
             </tr>
@@ -519,6 +573,36 @@ export class ChainedAsTokenConfig {
 }
 
 /**
+ * Configuration for a VP-backed Authorization Server facade.
+ *
+ * In this mode, EUDIPLO acts as the AS for the wallet, but instead of
+ * delegating authentication to an upstream OIDC provider, it starts an
+ * OID4VP verifier flow and only returns the OAuth authorization code after
+ * a successful presentation callback.
+ */
+export class ChainedAsVpConfig {
+    /**
+     * Whether the VP-backed AS is enabled.
+     */
+    @ApiProperty({
+        description: &quot;Enable VP-backed chained AS mode&quot;,
+        default: false,
+    })
+    @IsBoolean()
+    enabled!: boolean;
+
+    /**
+     * The presentation configuration ID used to start the OID4VP request.
+     */
+    @ApiProperty({
+        description: &quot;Presentation configuration ID used for OID4VP&quot;,
+        example: &quot;pid-no-hook&quot;,
+    })
+    @IsString()
+    presentationConfigId!: string;
+}
+
+/**
  * Configuration for enabling &quot;Chained Authorization Server&quot; mode.
  *
  * In this mode, EUDIPLO acts as the Authorization Server for wallets,
@@ -564,6 +648,18 @@ export class ChainedAsConfig {
     @ValidateNested()
     @Type(() &#x3D;&gt; UpstreamOidcConfig)
     upstream?: UpstreamOidcConfig;
+
+    /**
+     * Configuration for a VP-backed AS facade.
+     */
+    @ApiPropertyOptional({
+        description: &quot;VP-backed chained AS configuration&quot;,
+        type: () &#x3D;&gt; ChainedAsVpConfig,
+    })
+    @IsOptional()
+    @ValidateNested()
+    @Type(() &#x3D;&gt; ChainedAsVpConfig)
+    vp?: ChainedAsVpConfig;
 
     /**
      * Configuration for tokens issued by EUDIPLO.

@@ -614,7 +614,7 @@ export class KeyChainImportDto {
 
     @ApiPropertyOptional({
         description:
-            &quot;Certificate chain in PEM format (leaf first, then intermediates/CA).&quot;,
+            &quot;Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import.&quot;,
     })
     @IsString({ each: true })
     @IsOptional()

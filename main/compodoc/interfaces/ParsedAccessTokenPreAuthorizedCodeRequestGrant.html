@@ -615,14 +615,17 @@ export class AuthorizeService {
             pushed_authorization_request_endpoint: &#x60;${authServer}/authorize/par&#x60;,
             code_challenge_methods_supported: [PkceCodeChallengeMethod.S256],
             authorization_details_types_supported: [&quot;openid_credential&quot;],
-            token_endpoint_auth_methods_supported: [&quot;none&quot;],
+            token_endpoint_auth_methods_supported: [
+                &quot;none&quot;,
+                &quot;attest_jwt_client_auth&quot;,
+            ],
             status_list_aggregation_endpoint: statusListAggregationEndpoint,
+            challenge_endpoint: &#x60;${authServer}/authorize/challenge&#x60;,
+            client_attestation_signing_alg_values_supported: [&quot;ES256&quot;],
+            client_attestation_pop_signing_alg_values_supported: [&quot;ES256&quot;],
         };
 
         if (walletAttestationRequired) {
-            metadata.token_endpoint_auth_methods_supported &#x3D; [
-                &quot;attest_jwt_client_auth&quot;,
-            ];
             metadata.challenge_endpoint &#x3D; &#x60;${authServer}/authorize/challenge&#x60;;
             metadata.client_attestation_signing_alg_values_supported &#x3D; [
                 &quot;ES256&quot;,
