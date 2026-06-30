@@ -619,6 +619,7 @@ export class ChainedAsVpService {
             jwks_uri: `${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/chained-as-vp`,
             response_types_supported: ["code"],
             grant_types_supported: ["authorization_code", "refresh_token"],
+            authorization_details_types_supported: ["openid_credential"],
             code_challenge_methods_supported: ["S256"],
             dpop_signing_alg_values_supported: ["ES256", "ES384", "ES512"],
         };
