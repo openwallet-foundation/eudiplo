@@ -315,14 +315,14 @@ export class AuthorizeService {
             pushed_authorization_request_endpoint: `${authServer}/authorize/par`,
             code_challenge_methods_supported: [PkceCodeChallengeMethod.S256],
             authorization_details_types_supported: ["openid_credential"],
-            token_endpoint_auth_methods_supported: ["none"],
+            token_endpoint_auth_methods_supported: [
+                "none",
+                "attest_jwt_client_auth",
+            ],
             status_list_aggregation_endpoint: statusListAggregationEndpoint,
         };
 
         if (walletAttestationRequired) {
-            metadata.token_endpoint_auth_methods_supported = [
-                "attest_jwt_client_auth",
-            ];
             metadata.challenge_endpoint = `${authServer}/authorize/challenge`;
             metadata.client_attestation_signing_alg_values_supported = [
                 "ES256",

@@ -620,14 +620,15 @@ export class ChainedAsVpService {
             response_types_supported: ["code"],
             grant_types_supported: ["authorization_code", "refresh_token"],
             authorization_details_types_supported: ["openid_credential"],
+            token_endpoint_auth_methods_supported: [
+                "none",
+                "attest_jwt_client_auth",
+            ],
             code_challenge_methods_supported: ["S256"],
             dpop_signing_alg_values_supported: ["ES256", "ES384", "ES512"],
         };
 
         if (walletAttestationRequired) {
-            metadata.token_endpoint_auth_methods_supported = [
-                "attest_jwt_client_auth",
-            ];
             metadata.client_attestation_signing_alg_values_supported = [
                 "ES256",
             ];
