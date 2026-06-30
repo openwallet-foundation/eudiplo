@@ -320,6 +320,9 @@ export class AuthorizeService {
                 "attest_jwt_client_auth",
             ],
             status_list_aggregation_endpoint: statusListAggregationEndpoint,
+            challenge_endpoint: `${authServer}/authorize/challenge`,
+            client_attestation_signing_alg_values_supported: ["ES256"],
+            client_attestation_pop_signing_alg_values_supported: ["ES256"],
         };
 
         if (walletAttestationRequired) {

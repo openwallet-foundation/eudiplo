@@ -689,11 +689,7 @@ export class AuthorizationServersService {
             tenantId,
             authorizationServerId,
         );
-        const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
-        const issuanceConfig =
-            await this.issuanceService.getIssuanceConfiguration(tenantId);
-        const walletAttestationRequired =
-            issuanceConfig.walletAttestationRequired ?? false;
+        const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");        
 
         const metadata: Record<string, unknown> = {
             issuer: baseUrl,
@@ -710,16 +706,9 @@ export class AuthorizationServersService {
             ],
             code_challenge_methods_supported: ["S256"],
             dpop_signing_alg_values_supported: ["ES256", "ES384", "ES512"],
+            client_attestation_signing_alg_values_supported: ["ES256"],
+            client_attestation_pop_signing_alg_values_supported: ["ES256"],
         };
-
-        if (walletAttestationRequired) {
-            metadata.client_attestation_signing_alg_values_supported = [
-                "ES256",
-            ];
-            metadata.client_attestation_pop_signing_alg_values_supported = [
-                "ES256",
-            ];
-        }
 
         return metadata;
     }
