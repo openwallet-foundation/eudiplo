@@ -891,7 +891,7 @@ export class ChainedAsService {
      */
     async getMetadata(tenantId: string): Promise<Record<string, unknown>> {
         const baseUrl = this.getChainedAsBaseUrl(tenantId);
-        const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");        
+        const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
 
         const metadata: Record<string, unknown> = {
             issuer: baseUrl,

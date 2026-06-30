@@ -689,7 +689,7 @@ export class AuthorizationServersService {
             tenantId,
             authorizationServerId,
         );
-        const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");        
+        const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
 
         const metadata: Record<string, unknown> = {
             issuer: baseUrl,
