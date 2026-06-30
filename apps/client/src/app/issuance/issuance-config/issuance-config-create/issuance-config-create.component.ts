@@ -225,8 +225,6 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
             (server: any) => server?.type === 'external' && typeof server?.issuer === 'string'
           )
           .map((server: any) => server.issuer);
-      } else if (config.authServers && Array.isArray(config.authServers)) {
-        externalServers = config.authServers;
       }
       for (const server of externalServers) {
         authServersArray.push(new FormControl(server, [Validators.required]));
@@ -321,23 +319,6 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
               signingKeyId: unifiedChainedServer.token?.signingKeyId ?? '',
             },
             requireDPoP: unifiedChainedServer.requireDPoP ?? false,
-          },
-        });
-      } else if (config.chainedAs) {
-        this.form.patchValue({
-          chainedAs: {
-            enabled: config.chainedAs.enabled ?? false,
-            upstream: {
-              issuer: config.chainedAs.upstream?.issuer ?? '',
-              clientId: config.chainedAs.upstream?.clientId ?? '',
-              clientSecret: config.chainedAs.upstream?.clientSecret ?? '',
-              scopes: config.chainedAs.upstream?.scopes ?? ['openid', 'profile', 'email'],
-            },
-            token: {
-              lifetimeSeconds: config.chainedAs.token?.lifetimeSeconds ?? 3600,
-              signingKeyId: config.chainedAs.token?.signingKeyId ?? '',
-            },
-            requireDPoP: config.chainedAs.requireDPoP ?? false,
           },
         });
       }
@@ -455,7 +436,6 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
       ...(chainedAuthorizationServer ? [chainedAuthorizationServer] : []),
     ];
 
-    // Use Partial<IssuanceDto> with explicit null for chainedAs since backend accepts null to clear it
     const issuanceDto = {
       batchSize: formValue.batchSize,
       display: formValue.display,

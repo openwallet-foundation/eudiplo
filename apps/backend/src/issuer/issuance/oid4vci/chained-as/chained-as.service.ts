@@ -150,13 +150,9 @@ export class ChainedAsService {
             } as ChainedAsConfig;
         }
 
-        if (!issuanceConfig.chainedAs?.enabled) {
-            throw new NotFoundException(
-                "Chained Authorization Server is not enabled for this tenant",
-            );
-        }
-
-        return issuanceConfig.chainedAs;
+        throw new NotFoundException(
+            "Chained Authorization Server is not enabled for this tenant",
+        );
     }
 
     /**

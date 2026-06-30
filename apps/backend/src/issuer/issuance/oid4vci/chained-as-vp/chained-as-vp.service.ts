@@ -57,13 +57,20 @@ export class ChainedAsVpService {
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
 
-        if (!issuanceConfig.chainedAs?.vp?.enabled) {
+        const chainedServer = (issuanceConfig.authorizationServers ?? []).find(
+            (server) =>
+                server.enabled !== false &&
+                server.type === "chained" &&
+                (server as { vp?: { enabled?: boolean } }).vp?.enabled,
+        );
+
+        if (!chainedServer) {
             throw new NotFoundException(
                 "VP-backed Chained Authorization Server is not enabled for this tenant",
             );
         }
 
-        return issuanceConfig.chainedAs;
+        return (chainedServer as unknown as ChainedAsConfig);
     }
 
     async handlePar(

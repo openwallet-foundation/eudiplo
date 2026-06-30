@@ -101,7 +101,13 @@ describe("Issuance - OpenID Federation", () => {
             });
 
         await updateIssuanceConfig({
-            authServers: [authServer],
+            authorizationServers: [
+                {
+                    type: "external",
+                    issuer: authServer,
+                    label: authServer,
+                },
+            ],
             federation: {
                 mode: FederationTrustMode.FEDERATION_ONLY,
                 entityId: "http://localhost:3000/issuers/root",
@@ -151,7 +157,13 @@ describe("Issuance - OpenID Federation", () => {
             });
 
         await updateIssuanceConfig({
-            authServers: [authServer],
+            authorizationServers: [
+                {
+                    type: "external",
+                    issuer: authServer,
+                    label: authServer,
+                },
+            ],
             federation: {
                 mode: FederationTrustMode.FEDERATION_ONLY,
                 entityId: "http://localhost:3000/issuers/root",
@@ -186,7 +198,13 @@ describe("Issuance - OpenID Federation", () => {
             });
 
         await updateIssuanceConfig({
-            authServers: [authServer],
+            authorizationServers: [
+                {
+                    type: "external",
+                    issuer: authServer,
+                    label: authServer,
+                },
+            ],
             federation: {
                 mode: FederationTrustMode.FEDERATION_ONLY,
                 entityId: "http://localhost:3000/issuers/root",

@@ -259,19 +259,22 @@ describe("Issuance - Chained AS Flow", () => {
             .send({
                 ...currentConfig,
                 refreshTokenEnabled,
-                chainedAs: {
-                    enabled: true,
-                    upstream: {
-                        issuer: UPSTREAM_ISSUER,
-                        clientId: UPSTREAM_CLIENT_ID,
-                        clientSecret: UPSTREAM_CLIENT_SECRET,
-                        scopes: ["openid", "profile", "email"],
+                authorizationServers: [
+                    {
+                        type: "chained",
+                        enabled: true,
+                        upstream: {
+                            issuer: UPSTREAM_ISSUER,
+                            clientId: UPSTREAM_CLIENT_ID,
+                            clientSecret: UPSTREAM_CLIENT_SECRET,
+                            scopes: ["openid", "profile", "email"],
+                        },
+                        token: {
+                            lifetimeSeconds: 3600,
+                        },
+                        requireDPoP: false,
                     },
-                    token: {
-                        lifetimeSeconds: 3600,
-                    },
-                    requireDPoP: false,
-                },
+                ],
             })
             .expect(201);
     }
@@ -295,17 +298,20 @@ describe("Issuance - Chained AS Flow", () => {
                 ...currentConfig,
                 refreshTokenEnabled,
                 preferredAuthServer: "chained-as-vp",
-                chainedAs: {
-                    enabled: false,
-                    vp: {
+                authorizationServers: [
+                    {
+                        type: "chained",
                         enabled: true,
-                        presentationConfigId: "pid-no-hook",
+                        vp: {
+                            enabled: true,
+                            presentationConfigId: "pid-no-hook",
+                        },
+                        token: {
+                            lifetimeSeconds: 3600,
+                        },
+                        requireDPoP: false,
                     },
-                    token: {
-                        lifetimeSeconds: 3600,
-                    },
-                    requireDPoP: false,
-                },
+                ],
             })
             .expect(201);
     }

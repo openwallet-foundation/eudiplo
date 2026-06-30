@@ -182,20 +182,19 @@ export class IssuanceService {
     ): Record<string, unknown> {
         return {
             display: config.display,
-            authServers: config.authServers,
             batchSize: config.batchSize,
             dPopRequired: config.dPopRequired,
             walletAttestationRequired: config.walletAttestationRequired,
             walletProviderTrustLists: config.walletProviderTrustLists,
             signingKeyId: config.signingKeyId,
             preferredAuthServer: config.preferredAuthServer,
-            chainedAs: config.chainedAs,
             authorizationServers: config.authorizationServers,
             federation: config.federation,
             credentialResponseEncryption: config.credentialResponseEncryption,
             credentialRequestEncryption: config.credentialRequestEncryption,
             refreshTokenEnabled: config.refreshTokenEnabled,
-            refreshTokenExpiresInSeconds: config.refreshTokenExpiresInSeconds,
+            refreshTokenExpiresInSeconds:
+                config.refreshTokenExpiresInSeconds,
             txCodeMaxAttempts: config.txCodeMaxAttempts,
         };
     }

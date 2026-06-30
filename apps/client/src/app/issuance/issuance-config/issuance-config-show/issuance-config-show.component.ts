@@ -70,7 +70,7 @@ export class IssuanceConfigShowComponent implements OnInit {
         .map((server: any) => server.issuer);
     }
 
-    return (this.config as any)?.authServers || [];
+    return [];
   }
 
   get hostedAuthorizationServers(): any[] {
@@ -102,16 +102,6 @@ export class IssuanceConfigShowComponent implements OnInit {
           requireDPoP: chained.requireDPoP,
         };
       }
-    }
-
-    const legacy = (this.config as any)?.chainedAs;
-    if (legacy?.enabled) {
-      return {
-        enabled: true,
-        upstream: legacy.upstream,
-        token: legacy.token,
-        requireDPoP: legacy.requireDPoP,
-      };
     }
 
     return undefined;
