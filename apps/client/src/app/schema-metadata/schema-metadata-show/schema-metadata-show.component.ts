@@ -195,8 +195,7 @@ export class SchemaMetadataShowComponent implements OnInit {
         {
           category:
             (this.metadataForm.get('category')?.value as
-              | UpdateSchemaMetadataDto['category']
-              | undefined) || undefined,
+              UpdateSchemaMetadataDto['category'] | undefined) || undefined,
           tags,
         }
       );
