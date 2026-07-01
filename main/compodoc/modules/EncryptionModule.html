@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -107,6 +114,11 @@
     <li class="breadcrumb-item">Modules</li>
     <li class="breadcrumb-item" >EncryptionModule</li>
 </ol>
+
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/shared/utils/encryption/encryption.module.ts</code>
+</div>
 
 <div class="text-center module-graph-container">
     <div id="module-graph-svg">
@@ -136,26 +148,26 @@
 <title>cluster_EncryptionModule</title>
 <polygon fill="none" stroke="black" stroke-dasharray="1,5" points="149,-70 149,-268 347,-268 347,-70 149,-70"/>
 </g>
-<g id="clust6" class="cluster">
-<title>cluster_EncryptionModule_providers</title>
-<polygon fill="none" stroke="black" points="157,-78 157,-130 339,-130 339,-78 157,-78"/>
-</g>
 <g id="clust4" class="cluster">
 <title>cluster_EncryptionModule_exports</title>
 <polygon fill="none" stroke="black" points="178,-208 178,-260 318,-260 318,-208 178,-208"/>
 </g>
+<g id="clust6" class="cluster">
+<title>cluster_EncryptionModule_providers</title>
+<polygon fill="none" stroke="black" points="157,-78 157,-130 339,-130 339,-78 157,-78"/>
+</g>
 <!-- EncryptionService  -->
-<g id="node1" class="node">
+<g id="node1" class="node"><a xlink:href="../injectables/EncryptionService-1.html" href="../injectables/EncryptionService-1.html" target="_top">
 <title>EncryptionService </title>
 <polygon fill="#fb8072" stroke="black" points="309.69,-252 186.31,-252 186.31,-216 309.69,-216 309.69,-252"/>
 <text text-anchor="middle" x="248" y="-229.8" font-family="Times,serif" font-size="14.00">EncryptionService </text>
-</g>
+</a></g>
 <!-- EncryptionModule -->
-<g id="node2" class="node">
+<g id="node2" class="node"><a xlink:href="../modules/EncryptionModule.html" href="../modules/EncryptionModule.html" target="_top">
 <title>EncryptionModule</title>
 <polygon fill="#8dd3c7" stroke="black" points="308.76,-187 305.76,-191 284.76,-191 281.76,-187 187.24,-187 187.24,-151 308.76,-151 308.76,-187"/>
 <text text-anchor="middle" x="248" y="-164.8" font-family="Times,serif" font-size="14.00">EncryptionModule</text>
-</g>
+</a></g>
 <!-- EncryptionModule&#45;&gt;EncryptionService  -->
 <g id="edge1" class="edge">
 <title>EncryptionModule&#45;&gt;EncryptionService </title>
@@ -163,11 +175,11 @@
 <polygon fill="black" stroke="black" points="244.5,-205.99 248,-215.99 251.5,-205.99 244.5,-205.99"/>
 </g>
 <!-- EncryptionService -->
-<g id="node3" class="node">
+<g id="node3" class="node"><a xlink:href="../injectables/EncryptionService-1.html" href="../injectables/EncryptionService-1.html" target="_top">
 <title>EncryptionService</title>
 <ellipse fill="#fdb462" stroke="black" cx="248" cy="-104" rx="82.81" ry="18"/>
 <text text-anchor="middle" x="248" y="-99.8" font-family="Times,serif" font-size="14.00">EncryptionService</text>
-</g>
+</a></g>
 <!-- EncryptionService&#45;&gt;EncryptionModule -->
 <g id="edge2" class="edge">
 <title>EncryptionService&#45;&gt;EncryptionModule</title>
@@ -205,13 +217,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/shared/utils/encryption/encryption.module.ts</code>
-        </p>
 
 
 
@@ -255,6 +260,30 @@ This module initializes the encryption transformer on startup.</p>
                 </div>
             </div>
         </div>
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/AppModule.html" target="_self" >AppModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../injectables/EncryptionService.html" target="_self" >EncryptionService</a></code>
+                                </li>
+                        </ul>
+                </div>
+            </div>
+        </section>
 
         <section data-compodoc="block-methods">
     
@@ -301,6 +330,7 @@ This module initializes the encryption transformer on startup.</p>
         </tbody>
     </table>
 </section>
+
     </div>
 
 
@@ -409,6 +439,7 @@ export class EncryptionModule implements OnModuleInit {
 
 
 
+
                    </div><div class="search-results">
     <div class="has-results">
         <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
@@ -441,6 +472,24 @@ export class EncryptionModule implements OnModuleInit {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -456,7 +505,6 @@ export class EncryptionModule implements OnModuleInit {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

@@ -1,0 +1,254 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+	   <link rel="stylesheet" href="./styles/style.css">
+        <link rel="stylesheet" href="./styles/dark.css">
+        <link rel="stylesheet" href="./styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="./" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content architecture">
+                   <div class="content-data">
+
+
+
+
+
+
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">Architecture</li>
+</ol>
+
+    <div class="architecture-legend">
+        <button type="button" class="architecture-legend-item" data-architecture-filter="component" aria-pressed="true">
+            <span class="architecture-legend-color architecture-component"></span>Component
+        </button>
+        <button type="button" class="architecture-legend-item" data-architecture-filter="directive" aria-pressed="true">
+            <span class="architecture-legend-color architecture-directive"></span>Directive
+        </button>
+        <button type="button" class="architecture-legend-item" data-architecture-filter="pipe" aria-pressed="true">
+            <span class="architecture-legend-color architecture-pipe"></span>Pipe
+        </button>
+        <button type="button" class="architecture-legend-item" data-architecture-filter="module" aria-pressed="true">
+            <span class="architecture-legend-color architecture-module"></span>Module
+        </button>
+        <button type="button" class="architecture-legend-item" data-architecture-filter="injectable" aria-pressed="true">
+            <span class="architecture-legend-color architecture-injectable"></span>Injectable
+        </button>
+    </div>
+
+    <div class="text-center module-graph-container architecture-graph-wrapper">
+        <div id="architecture-graph"></div>
+        <div class="btn-group size-buttons">
+            <button id="architecture-zoom-in" class="btn btn-default btn-sm">Zoom in</button>
+            <button id="architecture-reset" class="btn btn-default btn-sm">Reset</button>
+            <button id="architecture-zoom-out" class="btn btn-default btn-sm">Zoom out</button>
+        </div>
+    </div>
+
+    <script>
+        var ARCHITECTURE_DEP_GRAPH = {"nodes":[{"id":"module:AppModule","name":"AppModule","type":"module","url":"./modules/AppModule.html"},{"id":"module:AuthModule","name":"AuthModule","type":"module","url":"./modules/AuthModule.html"},{"id":"module:ConfigImportModule","name":"ConfigImportModule","type":"module","url":"./modules/ConfigImportModule.html"},{"id":"module:CoreModule","name":"CoreModule","type":"module","url":"./modules/CoreModule.html"},{"id":"module:CryptoModule","name":"CryptoModule","type":"module","url":"./modules/CryptoModule.html"},{"id":"module:DatabaseModule","name":"DatabaseModule","type":"module","url":"./modules/DatabaseModule.html"},{"id":"module:EncryptionModule","name":"EncryptionModule","type":"module","url":"./modules/EncryptionModule.html"},{"id":"module:IssuerModule","name":"IssuerModule","type":"module","url":"./modules/IssuerModule.html"},{"id":"module:RegistrarModule","name":"RegistrarModule","type":"module","url":"./modules/RegistrarModule.html"},{"id":"module:SessionModule","name":"SessionModule","type":"module","url":"./modules/SessionModule.html"},{"id":"module:StorageModule","name":"StorageModule","type":"module","url":"./modules/StorageModule.html"},{"id":"module:VerifierModule","name":"VerifierModule","type":"module","url":"./modules/VerifierModule.html"},{"id":"module:AuditLogModule","name":"AuditLogModule","type":"module","url":"./modules/AuditLogModule.html"},{"id":"injectable:AuditLogService","name":"AuditLogService","type":"injectable","url":"./injectables/AuditLogService.html"},{"id":"injectable:SessionLogStoreService","name":"SessionLogStoreService","type":"injectable","url":"./injectables/SessionLogStoreService.html"},{"id":"injectable:SessionLoggerService","name":"SessionLoggerService","type":"injectable","url":"./injectables/SessionLoggerService.html"},{"id":"module:ClientModule","name":"ClientModule","type":"module","url":"./modules/ClientModule.html"},{"id":"module:TenantModule","name":"TenantModule","type":"module","url":"./modules/TenantModule.html"},{"id":"module:UserModule","name":"UserModule","type":"module","url":"./modules/UserModule.html"},{"id":"injectable:JwtService","name":"JwtService","type":"injectable","url":"./injectables/JwtService.html"},{"id":"injectable:JwtStrategy","name":"JwtStrategy","type":"injectable","url":"./injectables/JwtStrategy.html"},{"id":"injectable:AuthService","name":"AuthService","type":"injectable","url":"./injectables/AuthService.html"},{"id":"injectable:ConfigImportOrchestratorService","name":"ConfigImportOrchestratorService","type":"injectable","url":"./injectables/ConfigImportOrchestratorService.html"},{"id":"injectable:ConfigImportService","name":"ConfigImportService","type":"injectable","url":"./injectables/ConfigImportService.html"},{"id":"module:ConfigurationModule","name":"ConfigurationModule","type":"module","url":"./modules/ConfigurationModule.html"},{"id":"module:PresentationsModule","name":"PresentationsModule","type":"module","url":"./modules/PresentationsModule.html"},{"id":"module:StatusListModule","name":"StatusListModule","type":"module","url":"./modules/StatusListModule.html"},{"id":"module:TrustListModule","name":"TrustListModule","type":"module","url":"./modules/TrustListModule.html"},{"id":"module:TrustModule","name":"TrustModule","type":"module","url":"./modules/TrustModule.html"},{"id":"injectable:AttributeProviderService","name":"AttributeProviderService","type":"injectable","url":"./injectables/AttributeProviderService.html"},{"id":"injectable:CredentialConfigService","name":"CredentialConfigService","type":"injectable","url":"./injectables/CredentialConfigService.html"},{"id":"injectable:CredentialsService","name":"CredentialsService","type":"injectable","url":"./injectables/CredentialsService.html"},{"id":"injectable:IssuanceService","name":"IssuanceService","type":"injectable","url":"./injectables/IssuanceService.html"},{"id":"injectable:WebhookEndpointService","name":"WebhookEndpointService","type":"injectable","url":"./injectables/WebhookEndpointService.html"},{"id":"injectable:MdocIssuerService","name":"MdocIssuerService","type":"injectable","url":"./injectables/MdocIssuerService.html"},{"id":"injectable:SchemaMetaAdapterService","name":"SchemaMetaAdapterService","type":"injectable","url":"./injectables/SchemaMetaAdapterService.html"},{"id":"injectable:SchemaMetadataSigningService","name":"SchemaMetadataSigningService","type":"injectable","url":"./injectables/SchemaMetadataSigningService.html"},{"id":"injectable:SdjwtvcIssuerService","name":"SdjwtvcIssuerService","type":"injectable","url":"./injectables/SdjwtvcIssuerService.html"},{"id":"injectable:WebhookService","name":"WebhookService","type":"injectable","url":"./injectables/WebhookService.html"},{"id":"module:HealthModule","name":"HealthModule","type":"module","url":"./modules/HealthModule.html"},{"id":"injectable:TraceIdInterceptor","name":"TraceIdInterceptor","type":"injectable","url":"./injectables/TraceIdInterceptor.html"},{"id":"module:CryptoImplementatationModule","name":"CryptoImplementatationModule","type":"module","url":"./modules/CryptoImplementatationModule.html"},{"id":"injectable:CryptoImplementationService","name":"CryptoImplementationService","type":"injectable","url":"./injectables/CryptoImplementationService.html"},{"id":"injectable:CryptoService","name":"CryptoService","type":"injectable","url":"./injectables/CryptoService.html"},{"id":"injectable:EncryptionService","name":"EncryptionService","type":"injectable","url":"./injectables/EncryptionService.html"},{"id":"module:IssuanceModule","name":"IssuanceModule","type":"module","url":"./modules/IssuanceModule.html"},{"id":"module:Oid4vpModule","name":"Oid4vpModule","type":"module","url":"./modules/Oid4vpModule.html"},{"id":"injectable:AuthorizationServersService","name":"AuthorizationServersService","type":"injectable","url":"./injectables/AuthorizationServersService.html"},{"id":"injectable:AuthorizeService","name":"AuthorizeService","type":"injectable","url":"./injectables/AuthorizeService.html"},{"id":"injectable:ChainedAsService","name":"ChainedAsService","type":"injectable","url":"./injectables/ChainedAsService.html"},{"id":"injectable:ChainedAsVpService","name":"ChainedAsVpService","type":"injectable","url":"./injectables/ChainedAsVpService.html"},{"id":"injectable:InteractiveAuthorizationService","name":"InteractiveAuthorizationService","type":"injectable","url":"./injectables/InteractiveAuthorizationService.html"},{"id":"injectable:Oid4vciService","name":"Oid4vciService","type":"injectable","url":"./injectables/Oid4vciService.html"},{"id":"injectable:DeferredCredentialService","name":"DeferredCredentialService","type":"injectable","url":"./injectables/DeferredCredentialService.html"},{"id":"injectable:WellKnownService","name":"WellKnownService","type":"injectable","url":"./injectables/WellKnownService.html"},{"id":"module:LifecycleModule","name":"LifecycleModule","type":"module","url":"./modules/LifecycleModule.html"},{"id":"injectable:Oid4vpService","name":"Oid4vpService","type":"injectable","url":"./injectables/Oid4vpService.html"},{"id":"module:ResolverModule","name":"ResolverModule","type":"module","url":"./modules/ResolverModule.html"},{"id":"injectable:CredentialChainValidationService","name":"CredentialChainValidationService","type":"injectable","url":"./injectables/CredentialChainValidationService.html"},{"id":"injectable:PresentationsService","name":"PresentationsService","type":"injectable","url":"./injectables/PresentationsService.html"},{"id":"injectable:MdocverifierService","name":"MdocverifierService","type":"injectable","url":"./injectables/MdocverifierService.html"},{"id":"injectable:SdjwtvcverifierService","name":"SdjwtvcverifierService","type":"injectable","url":"./injectables/SdjwtvcverifierService.html"},{"id":"injectable:RegistrarService","name":"RegistrarService","type":"injectable","url":"./injectables/RegistrarService.html"},{"id":"injectable:SchemaMetadataService","name":"SchemaMetadataService","type":"injectable","url":"./injectables/SchemaMetadataService.html"},{"id":"injectable:AccessCertificateService","name":"AccessCertificateService","type":"injectable","url":"./injectables/AccessCertificateService.html"},{"id":"injectable:RegistrarAuthService","name":"RegistrarAuthService","type":"injectable","url":"./injectables/RegistrarAuthService.html"},{"id":"injectable:RegistrarConfigService","name":"RegistrarConfigService","type":"injectable","url":"./injectables/RegistrarConfigService.html"},{"id":"injectable:RegistrationCertificateService","name":"RegistrationCertificateService","type":"injectable","url":"./injectables/RegistrationCertificateService.html"},{"id":"injectable:ResolverService","name":"ResolverService","type":"injectable","url":"./injectables/ResolverService.html"},{"id":"injectable:SessionConfigService","name":"SessionConfigService","type":"injectable","url":"./injectables/SessionConfigService.html"},{"id":"injectable:SessionEventsService","name":"SessionEventsService","type":"injectable","url":"./injectables/SessionEventsService.html"},{"id":"injectable:SessionService","name":"SessionService","type":"injectable","url":"./injectables/SessionService.html"},{"id":"injectable:StatusListConfigService","name":"StatusListConfigService","type":"injectable","url":"./injectables/StatusListConfigService.html"},{"id":"injectable:StatusListService","name":"StatusListService","type":"injectable","url":"./injectables/StatusListService.html"},{"id":"injectable:TenantService","name":"TenantService","type":"injectable","url":"./injectables/TenantService.html"},{"id":"injectable:TrustListService","name":"TrustListService","type":"injectable","url":"./injectables/TrustListService.html"},{"id":"injectable:FederationTrustService","name":"FederationTrustService","type":"injectable","url":"./injectables/FederationTrustService.html"},{"id":"injectable:StatusListVerifierService","name":"StatusListVerifierService","type":"injectable","url":"./injectables/StatusListVerifierService.html"},{"id":"injectable:TrustStoreService","name":"TrustStoreService","type":"injectable","url":"./injectables/TrustStoreService.html"},{"id":"injectable:WalletAttestationService","name":"WalletAttestationService","type":"injectable","url":"./injectables/WalletAttestationService.html"},{"id":"injectable:X509ValidationService","name":"X509ValidationService","type":"injectable","url":"./injectables/X509ValidationService.html"},{"id":"injectable:LoteParserService","name":"LoteParserService","type":"injectable","url":"./injectables/LoteParserService.html"},{"id":"injectable:TrustListJwtService","name":"TrustListJwtService","type":"injectable","url":"./injectables/TrustListJwtService.html"}],"edges":[{"source":"module:AppModule","target":"module:AuthModule"},{"source":"module:AppModule","target":"module:ConfigImportModule"},{"source":"module:AppModule","target":"module:CoreModule"},{"source":"module:AppModule","target":"module:CryptoModule"},{"source":"module:AppModule","target":"module:DatabaseModule"},{"source":"module:AppModule","target":"module:EncryptionModule"},{"source":"module:AppModule","target":"module:IssuerModule"},{"source":"module:AppModule","target":"module:RegistrarModule"},{"source":"module:AppModule","target":"module:SessionModule"},{"source":"module:AppModule","target":"module:StorageModule"},{"source":"module:AppModule","target":"module:VerifierModule"},{"source":"module:AuditLogModule","target":"injectable:AuditLogService"},{"source":"module:AuditLogModule","target":"injectable:SessionLogStoreService"},{"source":"module:AuditLogModule","target":"injectable:SessionLoggerService"},{"source":"module:AuthModule","target":"module:ClientModule"},{"source":"module:AuthModule","target":"module:TenantModule"},{"source":"module:AuthModule","target":"module:UserModule"},{"source":"module:AuthModule","target":"injectable:JwtService"},{"source":"module:AuthModule","target":"injectable:JwtStrategy"},{"source":"module:AuthModule","target":"injectable:AuthService"},{"source":"module:ConfigImportModule","target":"injectable:ConfigImportOrchestratorService"},{"source":"module:ConfigImportModule","target":"injectable:ConfigImportService"},{"source":"module:ConfigurationModule","target":"module:AuditLogModule"},{"source":"module:ConfigurationModule","target":"module:CryptoModule"},{"source":"module:ConfigurationModule","target":"module:PresentationsModule"},{"source":"module:ConfigurationModule","target":"module:RegistrarModule"},{"source":"module:ConfigurationModule","target":"module:SessionModule"},{"source":"module:ConfigurationModule","target":"module:StatusListModule"},{"source":"module:ConfigurationModule","target":"module:TrustListModule"},{"source":"module:ConfigurationModule","target":"module:TrustModule"},{"source":"module:ConfigurationModule","target":"injectable:AttributeProviderService"},{"source":"module:ConfigurationModule","target":"injectable:CredentialConfigService"},{"source":"module:ConfigurationModule","target":"injectable:CredentialsService"},{"source":"module:ConfigurationModule","target":"injectable:IssuanceService"},{"source":"module:ConfigurationModule","target":"injectable:WebhookEndpointService"},{"source":"module:ConfigurationModule","target":"injectable:MdocIssuerService"},{"source":"module:ConfigurationModule","target":"injectable:SchemaMetaAdapterService"},{"source":"module:ConfigurationModule","target":"injectable:SchemaMetadataSigningService"},{"source":"module:ConfigurationModule","target":"injectable:SdjwtvcIssuerService"},{"source":"module:ConfigurationModule","target":"injectable:WebhookService"},{"source":"module:CoreModule","target":"module:HealthModule"},{"source":"module:CoreModule","target":"injectable:TraceIdInterceptor"},{"source":"module:CryptoImplementatationModule","target":"injectable:CryptoImplementationService"},{"source":"module:CryptoModule","target":"injectable:CryptoService"},{"source":"module:CryptoModule","target":"injectable:EncryptionService"},{"source":"module:EncryptionModule","target":"injectable:EncryptionService"},{"source":"module:IssuanceModule","target":"module:ConfigurationModule"},{"source":"module:IssuanceModule","target":"module:CryptoModule"},{"source":"module:IssuanceModule","target":"module:Oid4vpModule"},{"source":"module:IssuanceModule","target":"module:PresentationsModule"},{"source":"module:IssuanceModule","target":"module:SessionModule"},{"source":"module:IssuanceModule","target":"module:TrustModule"},{"source":"module:IssuanceModule","target":"injectable:AuthorizationServersService"},{"source":"module:IssuanceModule","target":"injectable:AuthorizeService"},{"source":"module:IssuanceModule","target":"injectable:ChainedAsService"},{"source":"module:IssuanceModule","target":"injectable:ChainedAsVpService"},{"source":"module:IssuanceModule","target":"injectable:InteractiveAuthorizationService"},{"source":"module:IssuanceModule","target":"injectable:Oid4vciService"},{"source":"module:IssuanceModule","target":"injectable:DeferredCredentialService"},{"source":"module:IssuanceModule","target":"injectable:WebhookService"},{"source":"module:IssuanceModule","target":"injectable:WellKnownService"},{"source":"module:IssuerModule","target":"module:ConfigurationModule"},{"source":"module:IssuerModule","target":"module:IssuanceModule"},{"source":"module:IssuerModule","target":"module:LifecycleModule"},{"source":"module:IssuerModule","target":"module:TrustListModule"},{"source":"module:LifecycleModule","target":"module:StatusListModule"},{"source":"module:Oid4vpModule","target":"module:CryptoModule"},{"source":"module:Oid4vpModule","target":"module:PresentationsModule"},{"source":"module:Oid4vpModule","target":"module:RegistrarModule"},{"source":"module:Oid4vpModule","target":"module:SessionModule"},{"source":"module:Oid4vpModule","target":"injectable:Oid4vpService"},{"source":"module:Oid4vpModule","target":"injectable:WebhookService"},{"source":"module:PresentationsModule","target":"module:AuditLogModule"},{"source":"module:PresentationsModule","target":"module:RegistrarModule"},{"source":"module:PresentationsModule","target":"module:ResolverModule"},{"source":"module:PresentationsModule","target":"module:TrustModule"},{"source":"module:PresentationsModule","target":"injectable:CredentialChainValidationService"},{"source":"module:PresentationsModule","target":"injectable:PresentationsService"},{"source":"module:PresentationsModule","target":"injectable:MdocverifierService"},{"source":"module:PresentationsModule","target":"injectable:SdjwtvcverifierService"},{"source":"module:RegistrarModule","target":"module:CryptoModule"},{"source":"module:RegistrarModule","target":"injectable:RegistrarService"},{"source":"module:RegistrarModule","target":"injectable:SchemaMetadataService"},{"source":"module:RegistrarModule","target":"injectable:AccessCertificateService"},{"source":"module:RegistrarModule","target":"injectable:RegistrarAuthService"},{"source":"module:RegistrarModule","target":"injectable:RegistrarConfigService"},{"source":"module:RegistrarModule","target":"injectable:RegistrationCertificateService"},{"source":"module:ResolverModule","target":"injectable:ResolverService"},{"source":"module:SessionModule","target":"module:AuditLogModule"},{"source":"module:SessionModule","target":"module:StatusListModule"},{"source":"module:SessionModule","target":"injectable:SessionConfigService"},{"source":"module:SessionModule","target":"injectable:SessionEventsService"},{"source":"module:SessionModule","target":"injectable:SessionService"},{"source":"module:StatusListModule","target":"module:AuditLogModule"},{"source":"module:StatusListModule","target":"module:CryptoModule"},{"source":"module:StatusListModule","target":"injectable:StatusListConfigService"},{"source":"module:StatusListModule","target":"injectable:StatusListService"},{"source":"module:TenantModule","target":"module:AuditLogModule"},{"source":"module:TenantModule","target":"module:ClientModule"},{"source":"module:TenantModule","target":"module:CryptoModule"},{"source":"module:TenantModule","target":"module:IssuerModule"},{"source":"module:TenantModule","target":"module:RegistrarModule"},{"source":"module:TenantModule","target":"module:SessionModule"},{"source":"module:TenantModule","target":"module:StatusListModule"},{"source":"module:TenantModule","target":"injectable:TenantService"},{"source":"module:TrustListModule","target":"injectable:TrustListService"},{"source":"module:TrustModule","target":"injectable:FederationTrustService"},{"source":"module:TrustModule","target":"injectable:StatusListVerifierService"},{"source":"module:TrustModule","target":"injectable:TrustStoreService"},{"source":"module:TrustModule","target":"injectable:WalletAttestationService"},{"source":"module:TrustModule","target":"injectable:X509ValidationService"},{"source":"module:TrustModule","target":"injectable:LoteParserService"},{"source":"module:TrustModule","target":"injectable:TrustListJwtService"},{"source":"module:VerifierModule","target":"module:CryptoModule"},{"source":"module:VerifierModule","target":"module:Oid4vpModule"},{"source":"module:VerifierModule","target":"module:PresentationsModule"},{"source":"module:VerifierModule","target":"module:RegistrarModule"},{"source":"module:VerifierModule","target":"module:SessionModule"}]};
+    </script>
+    <script src="./js/libs/vis-network.min.js"></script>
+    <script src="./js/architecture-graph.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'architecture';
+            var COMPODOC_CURRENT_PAGE_URL = 'architecture.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="./js/libs/custom-elements.min.js"></script>
+       <script src="./js/libs/lit-html.js"></script>
+
+       <script src="./js/menu-wc.js" defer></script>
+
+       <script src="./js/libs/bootstrap-native.js"></script>
+
+       <script src="./js/libs/es6-shim.min.js"></script>
+       <script src="./js/libs/EventDispatcher.js"></script>
+       <script src="./js/libs/promise.min.js"></script>
+
+       <script src="./js/compodoc.js"></script>
+
+       <script src="./js/tabs.js"></script>
+       <script src="./js/menu.js"></script>
+       <script src="./js/libs/clipboard.min.js"></script>
+       <script src="./js/libs/prism.js"></script>
+       <script src="./js/sourceCode.js"></script>
+          <script src="./js/search/search.js"></script>
+          <script src="./js/search/lunr.min.js"></script>
+          <script src="./js/search/search-lunr.js"></script>
+          <script src="./js/search/search_index.js"></script>
+       <script src="./js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

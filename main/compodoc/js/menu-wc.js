@@ -19,7 +19,14 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                 </li>
 
                 <li class="divider"></li>
-                ${ isNormalMode ? `<div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>` : '' }
+                ${ isNormalMode ? `<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+` : '' }
                 <li class="chapter">
                     <a data-type="chapter-link" href="index.html"><span class="icon ion-ios-home"></span>Getting started</a>
                     <ul class="links">
@@ -29,6 +36,11 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                     </a>
                                 </li>
 
+                                <li class="link">
+                                    <a href="architecture.html" data-type="chapter-link">
+                                        <span class="icon ion-ios-git-branch"></span>Architecture
+                                    </a>
+                                </li>
                                 <li class="link">
                                     <a href="dependencies.html" data-type="chapter-link">
                                         <span class="icon ion-ios-list"></span>Dependencies
@@ -1766,7 +1778,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/HttpKmsAdapterConfig.html" data-type="entity-link" >HttpKmsAdapterConfig</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/ImportOptions.html" data-type="entity-link" >ImportOptions</a>
+                                <a href="interfaces/ImportOptions.html" data-type="entity-link" >ImportOptions&lt;T extends object&gt;</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/InteractiveAuthFollowUpRequest.html" data-type="entity-link" >InteractiveAuthFollowUpRequest</a>

@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >Oid4vciService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/issuer/issuance/oid4vci/oid4vci.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,13 +148,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/issuer/issuance/oid4vci/oid4vci.service.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
@@ -148,19 +159,41 @@
 
 
 
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/IssuanceModule.html" target="_self" >IssuanceModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Properties</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Public</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#credentialsService" >credentialsService</a>
@@ -168,118 +201,144 @@
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#appendInternalAuthorizationServers" >appendInternalAuthorizationServers</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#assertFederationTrustForAuthorizationServer" >assertFederationTrustForAuthorizationServer</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#completeDeferredTransaction" >completeDeferredTransaction</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Async</span>
                                 <a href="#createOffer" >createOffer</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#enforceAuthorizationDetails" >enforceAuthorizationDetails</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#failDeferredTransaction" >failDeferredTransaction</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getAuthorizationServer" >getAuthorizationServer</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Async</span>
                                 <a href="#getCredential" >getCredential</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getCredentialOfferByReference" >getCredentialOfferByReference</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getCredentialRequestEncryptionMetadata" >getCredentialRequestEncryptionMetadata</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Async</span>
                                 <a href="#getDeferredCredential" >getDeferredCredential</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getIssuer" >getIssuer</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getResourceServer" >getResourceServer</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Async</span>
                                 <a href="#handleNotification" >handleNotification</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#issueCredentialsForProofs" >issueCredentialsForProofs</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#issuerMetadata" >issuerMetadata</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#mapToCredentialRequestException" >mapToCredentialRequestException</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                 <a href="#nonceCleanup" >nonceCleanup</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#nonceRequest" >nonceRequest</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#resolveAuthorizationServerSelection" >resolveAuthorizationServerSelection</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#resolvePreferredAuthorizationServer" >resolvePreferredAuthorizationServer</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#resolveSessionAndClaims" >resolveSessionAndClaims</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#validateAndConsumeNonces" >validateAndConsumeNonces</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#verifyResourceAccessToken" >verifyResourceAccessToken</a>
@@ -287,13 +346,13 @@
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -757,7 +816,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>completeDeferredTransaction(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, transactionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, claims: Record<string | unknown>)</code>
+                    <code>completeDeferredTransaction(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, transactionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, claims: Record<string, unknown>)</code>
                 </td>
             </tr>
 
@@ -823,7 +882,7 @@
                                         <tr>
                                                 <td>claims</td>
                                             <td>
-                                                        <code>Record&lt;string | unknown&gt;</code>
+                                                        <code>Record&lt;string, unknown&gt;</code>
                                             </td>
 
                                             <td>
@@ -1050,6 +1109,14 @@ OID4VCI Section 6. If the token does not carry <code>authorization_details</code
                         </div>
                             <div class="io-description">
                                 
+                            </div>
+                            <div class="io-description">
+                                <b>Throws :</b>
+                                <ul>
+                                        <li><p>CredentialRequestException with <code>invalid_credential_request</code>
+when the requested credential is not authorized by the token.</p>
+</li>
+                                </ul>
                             </div>
                 </td>
             </tr>
@@ -2503,7 +2570,7 @@ Called when wallet polls with transaction_id.</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>resolveSessionAndClaims(tokenPayload: <a href="../miscellaneous/typealiases.html#OAuth2TokenPayload" target="_self">OAuth2TokenPayload</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, credentialConfigurationId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, issuanceConfig: Awaited<ReturnType<unknown>>)</code>
+                    <code>resolveSessionAndClaims(tokenPayload: <a href="../miscellaneous/typealiases.html#OAuth2TokenPayload" target="_self">OAuth2TokenPayload</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, credentialConfigurationId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, issuanceConfig: <a href="../injectables/IssuanceService.html" target="_self">Awaited&lt;ReturnType&lt;IssuanceService&gt;&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -2573,7 +2640,7 @@ Handles Local AS, Chained AS, and External AS flows.</p>
                                         <tr>
                                                 <td>issuanceConfig</td>
                                             <td>
-                                                        <code>Awaited&lt;ReturnType&lt;unknown&gt;&gt;</code>
+                                                            <code><a href="../injectables/IssuanceService.html" target="_self" >Awaited&lt;ReturnType&lt;IssuanceService&gt;&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -2586,7 +2653,7 @@ Handles Local AS, Chained AS, and External AS flows.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+                            <b>Returns : </b>        <code><a href="../interfaces/ClaimsWebhookResult.html" target="_self" >Promise&lt;{ session: Session; claimsResult: ClaimsWebhookResult | undefined; isExternalAsToken: boolean; isChainedAsToken: boolean }&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2721,7 +2788,7 @@ Ensures all proofs contain valid, non-expired nonces and consumes them.</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>verifyResourceAccessToken(req: Request, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, issuerMetadata: IssuerMetadataResult, issuanceConfig: Awaited<ReturnType<unknown>>)</code>
+                    <code>verifyResourceAccessToken(req: Request, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, issuerMetadata: IssuerMetadataResult, issuanceConfig: <a href="../injectables/IssuanceService.html" target="_self">Awaited&lt;ReturnType&lt;IssuanceService&gt;&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -2791,7 +2858,7 @@ Supports both DPoP and Bearer authentication schemes based on configuration.</p>
                                         <tr>
                                                 <td>issuanceConfig</td>
                                             <td>
-                                                        <code>Awaited&lt;ReturnType&lt;unknown&gt;&gt;</code>
+                                                            <code><a href="../injectables/IssuanceService.html" target="_self" >Awaited&lt;ReturnType&lt;IssuanceService&gt;&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -2815,6 +2882,7 @@ Supports both DPoP and Bearer authentication schemes based on configuration.</p>
         </tbody>
     </table>
 </section>
+
             <section data-compodoc="block-properties">
     
     <h3 id="inputs">
@@ -4445,6 +4513,24 @@ export class Oid4vciService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -4460,7 +4546,6 @@ export class Oid4vciService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 
