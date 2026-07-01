@@ -46,7 +46,7 @@ const SEMVER_REGEX =
     RouterModule,
   ],
   templateUrl: './schema-metadata-show.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './schema-metadata-show.component.scss',
 })
 export class SchemaMetadataShowComponent implements OnInit {

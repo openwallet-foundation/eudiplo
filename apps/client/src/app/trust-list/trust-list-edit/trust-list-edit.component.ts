@@ -69,7 +69,7 @@ interface ExternalEntityForm extends EntityInfoForm {
     EditorComponent,
   ],
   templateUrl: './trust-list-edit.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './trust-list-edit.component.scss',
 })
 export class TrustListEditComponent implements OnInit {

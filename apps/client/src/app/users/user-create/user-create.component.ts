@@ -36,7 +36,7 @@ import { UserTemporaryPasswordDialogComponent } from '../user-temporary-password
     MatTooltipModule,
     MatCheckboxModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './user-create.component.html',
 })
 export class UserCreateComponent implements OnInit {

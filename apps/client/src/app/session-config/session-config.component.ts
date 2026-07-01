@@ -31,7 +31,7 @@ import { SessionStorageConfig } from '@eudiplo/sdk-core';
     FlexLayoutModule,
   ],
   templateUrl: './session-config.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './session-config.component.scss',
 })
 export class SessionConfigComponent implements OnInit {

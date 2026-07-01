@@ -25,7 +25,7 @@ import { ApiService } from '../../core';
     RouterModule,
   ],
   templateUrl: './connection-settings.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './connection-settings.component.scss',
 })
 export class ConnectionSettingsComponent {

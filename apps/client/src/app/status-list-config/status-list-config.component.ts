@@ -33,7 +33,7 @@ import { StatusListConfig } from '@eudiplo/sdk-core';
     FlexLayoutModule,
   ],
   templateUrl: './status-list-config.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './status-list-config.component.scss',
 })
 export class StatusListConfigComponent implements OnInit {

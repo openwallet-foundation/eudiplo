@@ -25,7 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
   ],
   templateUrl: './image-field.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./image-field.component.scss'],
 })
 export class ImageFieldComponent implements OnInit {

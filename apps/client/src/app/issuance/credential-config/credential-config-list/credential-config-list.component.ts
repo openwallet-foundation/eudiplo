@@ -13,7 +13,7 @@ import { DisplayFormValue } from '../credential-config.types';
   selector: 'app-credential-config-list',
   imports: [MatTableModule, MatIconModule, MatButtonModule, RouterModule, FlexLayoutModule],
   templateUrl: './credential-config-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './credential-config-list.component.scss',
 })
 export class CredentialConfigListComponent extends BaseAsyncListComponent<CredentialConfig> {

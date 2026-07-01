@@ -37,7 +37,7 @@ import { KeyChainResponseDto, KeyChainUpdateDto, RotationPolicyUpdateDto } from 
     RouterModule,
   ],
   templateUrl: './key-management-create.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './key-management-create.component.scss',
 })
 export class KeyManagementCreateComponent implements OnInit {

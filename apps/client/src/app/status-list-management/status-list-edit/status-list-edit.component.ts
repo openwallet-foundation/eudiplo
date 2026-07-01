@@ -43,7 +43,7 @@ import { StatusListManagementService } from '../status-list-management.service';
     RouterModule,
   ],
   templateUrl: './status-list-edit.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './status-list-edit.component.scss',
 })
 export class StatusListEditComponent implements OnInit {

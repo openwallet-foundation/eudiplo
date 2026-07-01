@@ -45,7 +45,7 @@ import { transactionDataArraySchema } from '../../utils/schemas';
     EditorComponent,
   ],
   templateUrl: './presentation-request.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './presentation-request.component.scss',
 })
 export class PresentationRequestComponent implements OnInit {

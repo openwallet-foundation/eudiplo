@@ -21,7 +21,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatChipsModule,
     MatTooltipModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './user-show.component.html',
 })
 export class UserShowComponent implements OnInit {

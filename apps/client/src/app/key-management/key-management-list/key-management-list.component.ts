@@ -49,7 +49,7 @@ interface UsageGroup {
     FlexLayoutModule,
   ],
   templateUrl: './key-management-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './key-management-list.component.scss',
 })
 export class KeyManagementListComponent implements OnInit {

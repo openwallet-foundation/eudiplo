@@ -21,7 +21,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatChipsModule,
   ],
   templateUrl: './client-show.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './client-show.component.scss',
 })
 export class ClientShowComponent implements OnInit {

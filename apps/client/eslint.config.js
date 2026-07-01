@@ -44,6 +44,7 @@ module.exports = tseslint.config(
       '@angular-eslint/use-pipe-transform-interface': 'error',
       '@angular-eslint/prefer-inject': 'off', // Disable for now as it requires major refactoring
       '@angular-eslint/no-empty-lifecycle-method': 'warn',
+      '@angular-eslint/prefer-on-push-component-change-detection': 'off',
     },
   },
   {

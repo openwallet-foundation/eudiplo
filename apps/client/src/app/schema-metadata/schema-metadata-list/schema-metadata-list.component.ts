@@ -30,7 +30,7 @@ interface GroupedSchemaMetadata {
     FlexLayoutModule,
   ],
   templateUrl: './schema-metadata-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './schema-metadata-list.component.scss',
 })
 export class SchemaMetadataListComponent implements OnInit {

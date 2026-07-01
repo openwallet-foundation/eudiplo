@@ -26,7 +26,7 @@ import {
     MatChipsModule,
     MatTooltipModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './user-list.component.html',
 })
 export class UserListComponent implements OnInit {

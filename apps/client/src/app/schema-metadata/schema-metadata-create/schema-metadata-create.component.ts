@@ -50,7 +50,7 @@ const SEMVER_REGEX =
     RouterModule,
   ],
   templateUrl: './schema-metadata-create.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './schema-metadata-create.component.scss',
 })
 export class SchemaMetadataCreateComponent implements OnInit {

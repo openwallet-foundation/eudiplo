@@ -19,7 +19,7 @@ export interface SecretDialogData {
   standalone: true,
   imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule, FlexLayoutModule],
   templateUrl: './secret-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './secret-dialog.component.scss',
 })
 export class SecretDialogComponent {

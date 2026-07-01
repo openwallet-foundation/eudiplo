@@ -26,7 +26,7 @@ import { WebhookEndpointService } from '../webhook-endpoint.service';
     RouterModule,
   ],
   templateUrl: './webhook-endpoint-show.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './webhook-endpoint-show.component.scss',
 })
 export class WebhookEndpointShowComponent implements OnInit {

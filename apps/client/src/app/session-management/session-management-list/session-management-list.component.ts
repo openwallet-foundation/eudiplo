@@ -51,7 +51,7 @@ export type SessionStatus = 'active' | 'fetched' | 'completed' | 'expired' | 'fa
     MatPaginatorModule,
   ],
   templateUrl: './session-management-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './session-management-list.component.scss',
 })
 export class SessionManagementListComponent implements AfterViewInit {

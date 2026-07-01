@@ -43,7 +43,7 @@ export type AccessSourceSelection = 'selfSigned' | 'registrar';
     RouterModule,
   ],
   templateUrl: './key-create-wizard.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './key-create-wizard.component.scss',
 })
 export class KeyCreateWizardComponent implements OnInit {

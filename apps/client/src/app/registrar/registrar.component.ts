@@ -43,7 +43,7 @@ interface RegistrarPreset {
     RouterModule,
   ],
   templateUrl: './registrar.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './registrar.component.scss',
 })
 export class RegistrarComponent implements OnInit {
