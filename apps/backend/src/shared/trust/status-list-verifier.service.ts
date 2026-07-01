@@ -5,22 +5,10 @@ import {
     getStatusListFromJWT,
     StatusList,
     StatusListEntry,
+    StatusType,
 } from "@owf/token-status-list";
 import { decodeJwt } from "jose";
 import { firstValueFrom } from "rxjs";
-
-/**
- * Status values as defined in the Token Status List spec.
- * @see https://datatracker.ietf.org/doc/html/draft-ietf-oauth-status-list
- */
-enum StatusValue {
-    /** The status is valid */
-    VALID = 0x00,
-    /** The status is invalid/revoked */
-    INVALID = 0x01,
-    /** The status is suspended */
-    SUSPENDED = 0x02,
-}
 
 /**
  * Cached status list with metadata.
@@ -139,7 +127,7 @@ export class StatusListVerifierService {
 
         return {
             status,
-            isValid: status === StatusValue.VALID,
+            isValid: status === StatusType.Valid,
             description: this.getStatusDescription(status),
         };
     }
@@ -244,13 +232,13 @@ export class StatusListVerifierService {
     /**
      * Get a human-readable description for a status value.
      */
-    private getStatusDescription(status: number): string {
+    private getStatusDescription(status: StatusType): string {
         switch (status) {
-            case StatusValue.VALID:
+            case StatusType.Valid:
                 return "Valid";
-            case StatusValue.INVALID:
+            case StatusType.Invalid:
                 return "Invalid/Revoked";
-            case StatusValue.SUSPENDED:
+            case StatusType.Suspended:
                 return "Suspended";
             default:
                 return `Unknown status (${status})`;

@@ -8,7 +8,7 @@ import {
     extractScopesForCredentialConfigurationIds,
     Openid4vciClient,
 } from "@openid4vc/openid4vci";
-import { digest } from "@sd-jwt/core";
+import { digest } from "@owf/crypto";
 import { SDJwtVcInstance } from "@sd-jwt/sd-jwt-vc";
 import { exportJWK, generateKeyPair } from "jose";
 import request from "supertest";

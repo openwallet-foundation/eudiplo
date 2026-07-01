@@ -4,7 +4,7 @@ import {
     Openid4vpAuthorizationRequest,
     Openid4vpClient,
 } from "@openid4vc/openid4vp";
-import { digest, ES256 } from "@sd-jwt/core";
+import { digest, ES256 } from "@owf/crypto";
 import { SDJwtVcInstance } from "@sd-jwt/sd-jwt-vc";
 import { kbPayload } from "@sd-jwt/core";
 import { base64url, CryptoKey } from "jose";

@@ -1,10 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import {
-    base64,
+import {    
     DeviceRequest,
     DeviceResponse,
-    DocRequest,
-    hex,
+    DocRequest,    
     ItemsRequest,
     SessionTranscript,
     Verifier,
@@ -18,6 +16,7 @@ import {
     ChainValidationResult,
     CredentialChainValidationService,
 } from "../credential-chain-validation.service";
+import {hex } from '@owf/identity-common';
 
 export type MdocSessionData = {
     protocol: "openid4vp";
@@ -125,6 +124,23 @@ export class MdocverifierService {
                 claimsByNamespace,
             );
 
+            const issuerX5Chain = mdocDocument?.issuerSigned?.issuerAuth?.x5chain;
+            const trustedCertBuffers =
+                await this.chainValidation.getTrustedCertificateBuffers(
+                    options.trustListSource,
+                );
+            const trustedAnchors = trustedCertBuffers.map(
+                (buffer) => new Uint8Array(buffer),
+            );
+            const trustedCertificates =
+                issuerX5Chain && issuerX5Chain.length > 0
+                    ? [
+                          {
+                              issuance: [...issuerX5Chain, ...trustedAnchors],
+                          },
+                      ]
+                    : [];
+
             // 5) Verify the device response (signature, device binding, etc.)
             // Certificate chain validation is disabled here - we do it separately via CredentialChainValidationService
             await Verifier.verifyDeviceResponse(
@@ -132,8 +148,7 @@ export class MdocverifierService {
                     deviceRequest,
                     deviceResponse,
                     sessionTranscript,
-                    trustedCertificates: [],
-                    disableCertificateChainValidation: true,
+                    trustedCertificates,
                 },
                 mdocContext,
             );
@@ -215,7 +230,7 @@ export class MdocverifierService {
         }
 
         // Convert Uint8Array[] to base64 string[] for CredentialChainValidationService
-        const x5cBase64 = x5chain.map((cert) => base64.encode(cert));
+        const x5cBase64 = x5chain.map((cert) => Buffer.from(cert).toString("base64"));
 
         return this.chainValidation.validateChain(
             x5cBase64,

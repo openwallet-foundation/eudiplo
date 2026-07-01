@@ -24,7 +24,7 @@ import {
     SignatureAlgorithm,
 } from "@owf/mdoc";
 import { X509Certificate } from "@peculiar/x509";
-import { digest, ES256 } from "@sd-jwt/core";
+import { digest, ES256 } from "@owf/crypto";
 import { SDJwtVcInstance } from "@sd-jwt/sd-jwt-vc";
 import { kbPayload } from "@sd-jwt/core";
 import {
@@ -136,7 +136,9 @@ export async function prepareMdocPresentation(
             deviceRequest,
             issuerSigned: [credential],
             sessionTranscript,
-            signature: { signingKey: CoseKey.fromJwk(DEVICE_JWK) },
+            signature: {
+                signingKey: CoseKey.fromJwk({ ...DEVICE_JWK, alg: "ES256" }),
+            },
         },
         mdocContext,
     );

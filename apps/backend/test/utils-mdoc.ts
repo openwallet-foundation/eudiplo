@@ -2,20 +2,18 @@ import crypto from "node:crypto";
 import { p256 } from "@noble/curves/nist.js";
 import { hmac } from "@noble/hashes/hmac.js";
 import { sha256 } from "@noble/hashes/sha2.js";
+import { coseKeyToJwkClaim } from "@owf/cose";
 import {
     CoseKey,
-    hex,
-    KeyOps,
-    KeyType,
-    MacAlgorithm,
     type MdocContext,
-    stringToBytes,
 } from "@owf/mdoc";
 import { hkdf } from "@panva/hkdf";
 import * as x509 from "@peculiar/x509";
 import { X509Certificate } from "@peculiar/x509";
 import { exportJWK, importX509 } from "jose";
 import { toBuffer } from "../src/shared/utils/buffer.util";
+import { hex } from "@owf/identity-common";
+
 
 export const DEVICE_JWK = {
     kty: "EC",
@@ -26,6 +24,7 @@ export const DEVICE_JWK = {
 };
 
 export const mdocContext: MdocContext = {
+    fetch,
     crypto: {
         digest: async ({ digestAlgorithm, bytes }) => {
             const digest = await crypto.subtle.digest(
@@ -37,69 +36,50 @@ export const mdocContext: MdocContext = {
         random: (length: number) => {
             return crypto.getRandomValues(new Uint8Array(length));
         },
-        calculateEphemeralMacKey: async (input) => {
-            const { privateKey, publicKey, sessionTranscriptBytes, info } =
+        hdkf: async (input) => {
+            const { digestAlgorithm: da, salt, info, publicKey, privateKey } =
                 input;
             const ikm = p256
                 .getSharedSecret(privateKey, publicKey, true)
                 .slice(1);
-            const salt = new Uint8Array(
-                await crypto.subtle.digest(
-                    "SHA-256",
-                    toBuffer(sessionTranscriptBytes),
-                ),
-            );
-            const infoAsBytes = stringToBytes(info);
-            const digest = "sha256";
-            const result = await hkdf(digest, ikm, salt, infoAsBytes, 32);
-
-            return CoseKey.create({
-                keyOps: [KeyOps.Sign, KeyOps.Verify],
-                keyType: KeyType.Oct,
-                k: result,
-                algorithm: MacAlgorithm.HS256,
-            });
+            let digestAlgorithm: "sha256" | "sha384" | "sha512" = "sha256";
+            if (da === "SHA-384") {
+                digestAlgorithm = "sha384";
+            } else if (da === "SHA-512") {
+                digestAlgorithm = "sha512";
+            }
+            return hkdf(digestAlgorithm, ikm, salt, info, 32);
         },
     },
 
     cose: {
         mac0: {
-            sign: (input) => {
+            authenticate: async (input) => {
                 const { key, toBeAuthenticated } = input;
-                return hmac(sha256, key.privateKey, toBeAuthenticated);
+                const keyBytes = key instanceof CoseKey ? key.privateKey : key;
+                return hmac(sha256, keyBytes, toBeAuthenticated);
             },
-            verify: (input) => {
-                const { mac0, key } = input;
-
-                if (!mac0.tag) {
-                    throw new Error("tag is required for mac0 verification");
+            verify: async (input) => {
+                const { tag, toBeAuthenticated, key } = input;
+                const keyBytes = key instanceof CoseKey ? key.privateKey : key;
+                const expectedTag = hmac(sha256, keyBytes, toBeAuthenticated);
+                if (tag.length !== expectedTag.length) {
+                    return false;
                 }
-
-                return (
-                    mac0.tag ===
-                    hmac(sha256, key.privateKey, mac0.toBeAuthenticated)
-                );
+                return crypto.timingSafeEqual(tag, expectedTag);
             },
         },
         sign1: {
-            sign: (input) => {
+            sign: async (input) => {
                 const { key, toBeSigned } = input;
                 return p256.sign(toBeSigned, key.privateKey, {
                     format: "compact",
                 });
             },
-            verify: (input) => {
-                const { sign1, key } = input;
-                const { toBeSigned, signature } = sign1;
-
-                if (!signature) {
-                    throw new Error(
-                        "signature is required for sign1 verification",
-                    );
-                }
-
+            verify: async (input) => {
+                const { signature, key, toBeVerified } = input;
                 // lowS is needed after upgrade of @noble/curves to keep existing tests passing
-                return p256.verify(signature, toBeSigned, key.publicKey, {
+                return p256.verify(signature, toBeVerified, key.publicKey, {
                     lowS: false,
                 });
             },
@@ -118,13 +98,16 @@ export const mdocContext: MdocContext = {
         },
         getPublicKey: async (input: {
             certificate: Uint8Array;
-            alg: string;
+            algorithm?: Parameters<typeof coseKeyToJwkClaim.algorithm>[0];
         }) => {
             const certificate = new X509Certificate(
                 toBuffer(input.certificate),
             );
+            const alg = input.algorithm
+                ? coseKeyToJwkClaim.algorithm(input.algorithm)
+                : "ES256";
 
-            const key = await importX509(certificate.toString(), input.alg, {
+            const key = await importX509(certificate.toString(), alg, {
                 extractable: true,
             });
 
@@ -200,6 +183,10 @@ export const mdocContext: MdocContext = {
                     date: input.now ?? new Date(),
                 });
             }
+
+            return {
+                chain: parsedChain.map((cert) => new Uint8Array(cert.rawData)),
+            };
         },
         getCertificateData: async (input: { certificate: Uint8Array }) => {
             const certificate = new X509Certificate(
