@@ -5,7 +5,7 @@ import {
     JwtSignerJwk,
 } from "@openid4vc/oauth2";
 import { Openid4vciClient } from "@openid4vc/openid4vci";
-import { digest } from "@sd-jwt/crypto-nodejs";
+import { digest } from "@sd-jwt/core";
 import { SDJwtVcInstance } from "@sd-jwt/sd-jwt-vc";
 import { exportJWK, generateKeyPair } from "jose";
 import nock from "nock";

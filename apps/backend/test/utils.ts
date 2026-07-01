@@ -24,9 +24,9 @@ import {
     SignatureAlgorithm,
 } from "@owf/mdoc";
 import { X509Certificate } from "@peculiar/x509";
-import { digest, ES256 } from "@sd-jwt/crypto-nodejs";
+import { digest, ES256 } from "@sd-jwt/core";
 import { SDJwtVcInstance } from "@sd-jwt/sd-jwt-vc";
-import { kbPayload } from "@sd-jwt/types";
+import { kbPayload } from "@sd-jwt/core";
 import {
     calculateJwkThumbprint,
     EncryptJWT,

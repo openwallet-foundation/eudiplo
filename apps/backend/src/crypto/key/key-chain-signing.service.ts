@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import type { Signer } from "@sd-jwt/types";
+import type { Signer } from "@sd-jwt/core";
 import {
     exportSPKI,
     importJWK,

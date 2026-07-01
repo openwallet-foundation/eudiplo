@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { digest } from "@sd-jwt/crypto-nodejs";
+import { digest } from "@sd-jwt/core";
 import { SDJwtVcInstance, VerificationResult } from "@sd-jwt/sd-jwt-vc";
 import { base64url, JWK } from "jose";
 import { Span } from "nestjs-otel";

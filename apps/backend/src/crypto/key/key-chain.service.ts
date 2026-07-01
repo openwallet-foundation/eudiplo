@@ -2,7 +2,7 @@ import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as x509 from "@peculiar/x509";
-import type { Signer } from "@sd-jwt/types";
+import type { Signer } from "@sd-jwt/core";
 import type { JWK, JWSHeaderParameters, JWTPayload } from "jose";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";

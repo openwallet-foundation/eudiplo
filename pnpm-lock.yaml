@@ -174,6 +174,9 @@ importers:
       '@opentelemetry/semantic-conventions':
         specifier: ^1.40.0
         version: 1.41.1
+      '@owf/crypto':
+        specifier: ^0.3.0
+        version: 0.3.0
       '@owf/eudi-attestation-schema':
         specifier: 0.3.1-alpha-20260613182022
         version: 0.3.1-alpha-20260613182022
@@ -198,15 +201,12 @@ importers:
       '@peculiar/x509':
         specifier: ^2.0.0
         version: 2.0.0
-      '@sd-jwt/crypto-nodejs':
-        specifier: ^0.19.0
-        version: 0.19.0
+      '@sd-jwt/core':
+        specifier: ^0.20.0
+        version: 0.20.0
       '@sd-jwt/sd-jwt-vc':
         specifier: ^0.20.0
         version: 0.20.0
-      '@sd-jwt/types':
-        specifier: ^0.19.0
-        version: 0.19.0
       ajv:
         specifier: ^8.18.0
         version: 8.20.0
@@ -4897,19 +4897,9 @@ packages:
     resolution: {integrity: sha512-thTj5xtKqOvqnULELJGvCa64Hf+Hf7v0Dlao6mTh198rmZcyFCBop3vT1ShgWMhg5cL04ofXeiEhnQR10/8wjA==}
     engines: {node: '>=20'}
 
-  '@sd-jwt/crypto-nodejs@0.19.0':
-    resolution: {integrity: sha512-mRUZ5pgMBqisXIJyq9vzNH0p4szHV7Dg87Mzm7mI7pgPjIkx9g8R1gRBWaRNzy6mblrTvEpcziPe6bnTY04Lqw==}
-    engines: {node: '>=20'}
-    deprecated: 'Merged into @sd-jwt/core (>= 0.20.0). Security: GHSA-f9j6-8p6x-r9j6.'
-
   '@sd-jwt/sd-jwt-vc@0.20.0':
     resolution: {integrity: sha512-V+pwRt4nRPDPnrHPRCbZubM3jL1Yn2DOT/AM/N/AawbFLWxsIf2HM7ioTrhpXRFC2kVFnWFmgNcq4mXXAzOBCA==}
     engines: {node: '>=20'}
-
-  '@sd-jwt/types@0.19.0':
-    resolution: {integrity: sha512-nfuC9zRLKe7o4HSvc+N4ojWRAxo4JGfgcNWpR7bJloLUlnE9eQuu9h9pEaJZht7KRwMpGorNTIdYpoi1btuiew==}
-    engines: {node: '>=20'}
-    deprecated: Package got merged into @sd-jwt/core, please use this instead
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
@@ -16029,15 +16019,11 @@ snapshots:
     dependencies:
       '@owf/identity-common': 0.1.0-alpha-20260422101556
 
-  '@sd-jwt/crypto-nodejs@0.19.0': {}
-
   '@sd-jwt/sd-jwt-vc@0.20.0':
     dependencies:
       '@owf/token-status-list': 0.1.0-alpha-20260422101556
       '@sd-jwt/core': 0.20.0
       zod: 4.4.3
-
-  '@sd-jwt/types@0.19.0': {}
 
   '@sec-ant/readable-stream@0.4.1': {}
 

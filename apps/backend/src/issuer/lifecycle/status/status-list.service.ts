@@ -16,7 +16,7 @@ import {
     StatusList,
     StatusListJWTHeaderParameters,
 } from "@owf/token-status-list";
-import { JwtPayload } from "@sd-jwt/types";
+import { JwtPayload } from "@sd-jwt/core";
 import { IsNull, Repository } from "typeorm";
 import { v4 } from "uuid";
 import { TenantEntity } from "../../../auth/tenant/entitites/tenant.entity";

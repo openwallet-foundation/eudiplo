@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import type { Jwk } from "@openid4vc/oauth2";
 import { JWTwithStatusListPayload } from "@owf/token-status-list";
-import { digest, generateSalt } from "@sd-jwt/crypto-nodejs";
+import { digest, generateSalt } from "@owf/crypto";
 import { SDJwtVcInstance } from "@sd-jwt/sd-jwt-vc";
 import { CertService } from "../../../../../crypto/key/cert/cert.service";
 import { CryptoImplementationService } from "../../../../../crypto/key/crypto-implementation/crypto-implementation.service";
