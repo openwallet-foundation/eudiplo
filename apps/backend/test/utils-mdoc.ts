@@ -3,17 +3,13 @@ import { p256 } from "@noble/curves/nist.js";
 import { hmac } from "@noble/hashes/hmac.js";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { coseKeyToJwkClaim } from "@owf/cose";
-import {
-    CoseKey,
-    type MdocContext,
-} from "@owf/mdoc";
+import { CoseKey, type MdocContext } from "@owf/mdoc";
 import { hkdf } from "@panva/hkdf";
 import * as x509 from "@peculiar/x509";
 import { X509Certificate } from "@peculiar/x509";
 import { exportJWK, importX509 } from "jose";
 import { toBuffer } from "../src/shared/utils/buffer.util";
 import { hex } from "@owf/identity-common";
-
 
 export const DEVICE_JWK = {
     kty: "EC",
@@ -37,8 +33,13 @@ export const mdocContext: MdocContext = {
             return crypto.getRandomValues(new Uint8Array(length));
         },
         hdkf: async (input) => {
-            const { digestAlgorithm: da, salt, info, publicKey, privateKey } =
-                input;
+            const {
+                digestAlgorithm: da,
+                salt,
+                info,
+                publicKey,
+                privateKey,
+            } = input;
             const ikm = p256
                 .getSharedSecret(privateKey, publicKey, true)
                 .slice(1);

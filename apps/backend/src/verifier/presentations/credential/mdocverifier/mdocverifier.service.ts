@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import {    
+import {
     DeviceRequest,
     DeviceResponse,
-    DocRequest,    
+    DocRequest,
     ItemsRequest,
     SessionTranscript,
     Verifier,
@@ -16,7 +16,7 @@ import {
     ChainValidationResult,
     CredentialChainValidationService,
 } from "../credential-chain-validation.service";
-import {hex } from '@owf/identity-common';
+import { hex } from "@owf/identity-common";
 
 export type MdocSessionData = {
     protocol: "openid4vp";
@@ -124,7 +124,8 @@ export class MdocverifierService {
                 claimsByNamespace,
             );
 
-            const issuerX5Chain = mdocDocument?.issuerSigned?.issuerAuth?.x5chain;
+            const issuerX5Chain =
+                mdocDocument?.issuerSigned?.issuerAuth?.x5chain;
             const trustedCertBuffers =
                 await this.chainValidation.getTrustedCertificateBuffers(
                     options.trustListSource,
@@ -230,7 +231,9 @@ export class MdocverifierService {
         }
 
         // Convert Uint8Array[] to base64 string[] for CredentialChainValidationService
-        const x5cBase64 = x5chain.map((cert) => Buffer.from(cert).toString("base64"));
+        const x5cBase64 = x5chain.map((cert) =>
+            Buffer.from(cert).toString("base64"),
+        );
 
         return this.chainValidation.validateChain(
             x5cBase64,

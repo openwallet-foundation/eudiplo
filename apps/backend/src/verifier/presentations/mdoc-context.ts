@@ -3,10 +3,7 @@ import { p256 } from "@noble/curves/nist.js";
 import { hmac } from "@noble/hashes/hmac.js";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { coseKeyToJwkClaim } from "@owf/cose";
-import {
-    CoseKey,
-    type MdocContext,
-} from "@owf/mdoc";
+import { CoseKey, type MdocContext } from "@owf/mdoc";
 import { hkdf } from "@panva/hkdf";
 import * as x509 from "@peculiar/x509";
 import { X509Certificate } from "@peculiar/x509";
@@ -31,8 +28,13 @@ export const mdocContext: MdocContext = {
             return webCrypto.getRandomValues(new Uint8Array(length));
         },
         hdkf: async (input) => {
-            const { digestAlgorithm: da, salt, info, publicKey, privateKey } =
-                input;
+            const {
+                digestAlgorithm: da,
+                salt,
+                info,
+                publicKey,
+                privateKey,
+            } = input;
             const ikm = p256
                 .getSharedSecret(privateKey, publicKey, true)
                 .slice(1);
@@ -115,8 +117,11 @@ export const mdocContext: MdocContext = {
             x5chain: Array<Uint8Array>;
             now?: Date;
         }) => {
-            const { trustedCertificates, x5chain: certificateChain, now } =
-                input;
+            const {
+                trustedCertificates,
+                x5chain: certificateChain,
+                now,
+            } = input;
 
             if (certificateChain.length === 0) {
                 throw new Error("Certificate chain is empty");
@@ -128,12 +133,17 @@ export const mdocContext: MdocContext = {
             const certificatesToBuildChain = [
                 ...certificateChain,
                 ...(trustedCertificates ?? []),
-            ].map((certificate) => new x509.X509Certificate(toBuffer(certificate)));
+            ].map(
+                (certificate) =>
+                    new x509.X509Certificate(toBuffer(certificate)),
+            );
 
             const certificateChainBuilder = new x509.X509ChainBuilder({
                 certificates: certificatesToBuildChain,
             });
-            const chain = await certificateChainBuilder.build(parsedLeafCertificate);
+            const chain = await certificateChainBuilder.build(
+                parsedLeafCertificate,
+            );
 
             // x5c is leaf-first, but chain builder returns root-first.
             let parsedChain = chain.reverse();
@@ -164,7 +174,8 @@ export const mdocContext: MdocContext = {
                 }
 
                 if (trustedCertificateIndex > 0) {
-                    previousCertificate = parsedChain[trustedCertificateIndex - 1];
+                    previousCertificate =
+                        parsedChain[trustedCertificateIndex - 1];
                     parsedChain = parsedChain.slice(trustedCertificateIndex);
                 }
             }
