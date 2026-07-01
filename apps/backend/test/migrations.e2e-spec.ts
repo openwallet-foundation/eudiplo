@@ -181,7 +181,7 @@ describe("Migration tests", () => {
                 tmpDir = mkdtempSync(join(tmpdir(), "eudiplo-migration-test-"));
 
                 dataSource = new DataSource({
-                    type: "sqlite",
+                    type: "better-sqlite3",
                     database: join(tmpDir, "test.db"),
                     synchronize: false,
                     logging: false,
@@ -449,7 +449,7 @@ describe("Migration tests", () => {
                 );
 
                 dataSource = new DataSource({
-                    type: "sqlite",
+                    type: "better-sqlite3",
                     database: join(tmpDir, "test.db"),
                     synchronize: false,
                     logging: false,
@@ -721,7 +721,7 @@ describe("Migration tests", () => {
                 );
 
                 dataSource = new DataSource({
-                    type: "sqlite",
+                    type: "better-sqlite3",
                     database: join(tmpDir, "test.db"),
                     synchronize: false,
                     logging: false,
