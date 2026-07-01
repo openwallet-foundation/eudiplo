@@ -10,7 +10,15 @@ import { Issuer } from "@owf/mdoc";
 import request from "supertest";
 import { App } from "supertest/types";
 import { Agent, setGlobalDispatcher } from "undici";
-import { afterAll, afterEach, beforeAll, describe, expect, test, vi } from "vitest";
+import {
+    afterAll,
+    afterEach,
+    beforeAll,
+    describe,
+    expect,
+    test,
+    vi,
+} from "vitest";
 import {
     callbacks,
     getSignJwtCallback,
@@ -48,7 +56,10 @@ describe("Issuance - mDOC Credentials", () => {
     });
 
     test("issue mso_mdoc credential", async () => {
-        const addNamespaceSpy = vi.spyOn(Issuer.prototype as any, "addIssuerNamespace");
+        const addNamespaceSpy = vi.spyOn(
+            Issuer.prototype as any,
+            "addIssuerNamespace",
+        );
 
         // Create an offer for mDOC credential
         const offerResponse = await request(app.getHttpServer())
@@ -135,7 +146,7 @@ describe("Issuance - mDOC Credentials", () => {
         const credential: string = (
             credentialResponse.credentialResponse.credentials?.[0] as any
         ).credential;
-        expect(credential).toBeDefined();    
+        expect(credential).toBeDefined();
 
         // mDOC credential should be a base64url encoded string
         expect(typeof credential).toBe("string");

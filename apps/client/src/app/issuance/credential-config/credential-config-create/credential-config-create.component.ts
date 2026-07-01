@@ -114,9 +114,9 @@ export class CredentialConfigCreateComponent implements OnInit {
       label: 'Mobile Driving License (mDL)',
       value: 'org.iso.18013.5.1.mDL',
     },
-       { label: 'EU PID', value: 'eu.europa.ec.eudi.pid.1' },
-       { label: 'EU mDL', value: 'org.iso.18013.5.1.mDL' },
-       { label: 'Custom', value: '' },
+    { label: 'EU PID', value: 'eu.europa.ec.eudi.pid.1' },
+    { label: 'EU mDL', value: 'org.iso.18013.5.1.mDL' },
+    { label: 'Custom', value: '' },
   ];
 
   selectedLifetimePreset: number | null = 3600;
@@ -996,8 +996,8 @@ export class CredentialConfigCreateComponent implements OnInit {
         }
 
         return field;
-        })
-        .filter((field) => field.path.length > 0);
+      })
+      .filter((field) => field.path.length > 0);
   }
 
   private parseFieldPath(value: string): string[] {
@@ -1013,7 +1013,7 @@ export class CredentialConfigCreateComponent implements OnInit {
 
   private normalizeFieldPathForForm(
     field: ClaimFieldDefinitionDto | undefined,
-    isMdoc: boolean,
+    isMdoc: boolean
   ): string {
     const path = field?.path || [];
     if (!isMdoc || path.length === 0) {

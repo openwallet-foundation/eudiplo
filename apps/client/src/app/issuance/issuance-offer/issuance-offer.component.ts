@@ -580,7 +580,10 @@ export class IssuanceOfferComponent implements OnInit {
     return firstField?.path?.[0] ? String(firstField.path[0]) : undefined;
   }
 
-  private getSchemaForForm(config: CredentialConfig, schema: Record<string, any>): Record<string, any> {
+  private getSchemaForForm(
+    config: CredentialConfig,
+    schema: Record<string, any>
+  ): Record<string, any> {
     const namespace = this.getMdocNamespace(config);
     const propertyNames = Object.keys(schema?.['properties'] ?? {});
 
@@ -591,7 +594,11 @@ export class IssuanceOfferComponent implements OnInit {
       propertyNames[0] === namespace
     ) {
       const namespaceSchema = schema['properties']?.[namespace];
-      if (namespaceSchema && typeof namespaceSchema === 'object' && !Array.isArray(namespaceSchema)) {
+      if (
+        namespaceSchema &&
+        typeof namespaceSchema === 'object' &&
+        !Array.isArray(namespaceSchema)
+      ) {
         return namespaceSchema;
       }
     }

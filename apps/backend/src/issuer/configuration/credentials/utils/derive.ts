@@ -86,8 +86,11 @@ function getOrCreateChild(
 }
 
 function getArrayIndex(segment: Segment): number | undefined {
-    const arrayIndex = typeof segment === "number" ? segment : Number(segmentToKey(segment));
-    return Number.isFinite(arrayIndex) && arrayIndex >= 0 ? arrayIndex : undefined;
+    const arrayIndex =
+        typeof segment === "number" ? segment : Number(segmentToKey(segment));
+    return Number.isFinite(arrayIndex) && arrayIndex >= 0
+        ? arrayIndex
+        : undefined;
 }
 
 function setArrayPathValue(
@@ -272,10 +275,7 @@ function ensureFrameNode(
     return cursor;
 }
 
-function applyLeafSchema(
-    root: JsonSchema,
-    field: ClaimFieldDefinition,
-): void {
+function applyLeafSchema(root: JsonSchema, field: ClaimFieldDefinition): void {
     const parent = ensureSchemaNode(root, field.path.slice(0, -1));
     const leafSegment = field.path.at(-1);
     const leafSchema = buildLeafSchema(field);
@@ -288,7 +288,10 @@ function applyLeafSchema(
     mergeObjectLeafSchema(parent, leafSegment, leafSchema, field.mandatory);
 }
 
-function mergeArrayLeafSchema(parent: JsonSchema, leafSchema: JsonSchema): void {
+function mergeArrayLeafSchema(
+    parent: JsonSchema,
+    leafSchema: JsonSchema,
+): void {
     if (parent.type !== "array") {
         parent.type = "array";
     }
