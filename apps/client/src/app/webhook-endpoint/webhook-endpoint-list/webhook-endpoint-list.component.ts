@@ -13,7 +13,7 @@ import { WebhookEndpointService } from '../webhook-endpoint.service';
   selector: 'app-webhook-endpoint-list',
   imports: [MatTableModule, MatIconModule, MatButtonModule, RouterModule, FlexLayoutModule],
   templateUrl: './webhook-endpoint-list.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './webhook-endpoint-list.component.scss',
 })
 export class WebhookEndpointListComponent extends BaseAsyncListComponent<WebhookEndpointEntity> {

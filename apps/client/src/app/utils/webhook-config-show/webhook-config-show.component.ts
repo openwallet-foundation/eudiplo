@@ -8,7 +8,7 @@ import { WebhookConfig } from '@eudiplo/sdk-core';
   selector: 'app-webhook-config-show',
   imports: [MatCardModule, MatIconModule, MatExpansionModule],
   templateUrl: './webhook-config-show.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './webhook-config-show.component.scss',
 })
 export class WebhookConfigShowComponent {

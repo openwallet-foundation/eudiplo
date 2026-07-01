@@ -42,7 +42,7 @@ import { downloadJsonFile } from '../../../common/download-json.util';
     ClipboardModule,
   ],
   templateUrl: './presentation-show.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./presentation-show.component.scss'],
 })
 export class PresentationShowComponent implements OnInit {

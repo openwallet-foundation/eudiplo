@@ -32,7 +32,7 @@ import { decodeJwt } from 'jose';
     UpperCasePipe,
   ],
   templateUrl: './session-management-show.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './session-management-show.component.scss',
 })
 export class SessionManagementShowComponent implements OnInit, OnDestroy {

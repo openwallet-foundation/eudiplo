@@ -71,7 +71,7 @@ type TrustListEntity = InternalEntity | ExternalEntity;
     RouterModule,
   ],
   templateUrl: './trust-list-show.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './trust-list-show.component.scss',
 })
 export class TrustListShowComponent implements OnInit {

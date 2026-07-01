@@ -88,7 +88,7 @@ function arrayNotEmpty(control: AbstractControl): ValidationErrors | null {
     },
   ],
   templateUrl: './issuance-offer.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./issuance-offer.component.scss'],
 })
 export class IssuanceOfferComponent implements OnInit {

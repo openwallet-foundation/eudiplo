@@ -24,7 +24,7 @@ export class AddKmsExternalKeyIdCheck1764000000000
                 `ALTER TABLE "key_chain" ADD CONSTRAINT "chk_key_chain_external_key_id"
                  CHECK ("kmsProvider" = 'db' OR "externalKeyId" IS NOT NULL)`,
             );
-        } else if (dbType === "sqlite" || dbType === "better-sqlite3") {
+        } else if (dbType === "better-sqlite3") {
             await queryRunner.query(
                 `CREATE TRIGGER IF NOT EXISTS trg_key_chain_external_key_id_ins
                  BEFORE INSERT ON "key_chain"
@@ -52,7 +52,7 @@ export class AddKmsExternalKeyIdCheck1764000000000
             await queryRunner.query(
                 `ALTER TABLE "key_chain" DROP CONSTRAINT IF EXISTS "chk_key_chain_external_key_id"`,
             );
-        } else if (dbType === "sqlite" || dbType === "better-sqlite3") {
+        } else if (dbType === "better-sqlite3") {
             await queryRunner.query(
                 `DROP TRIGGER IF EXISTS "trg_key_chain_external_key_id_ins"`,
             );

@@ -33,7 +33,7 @@ import { webhookSchema } from '../../../utils/schemas';
     RouterModule,
   ],
   templateUrl: './attribute-provider-create.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './attribute-provider-create.component.scss',
 })
 export class AttributeProviderCreateComponent implements OnInit {

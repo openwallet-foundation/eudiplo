@@ -64,7 +64,7 @@ import { RegistrarService } from '../../../registrar/registrar.service';
     CredentialIdsComponent,
   ],
   templateUrl: './presentation-create.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./presentation-create.component.scss'],
 })
 export class PresentationCreateComponent implements OnInit {

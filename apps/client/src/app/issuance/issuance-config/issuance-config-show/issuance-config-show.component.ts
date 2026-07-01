@@ -46,7 +46,7 @@ interface ChainedAuthorizationServerView {
     ClipboardModule,
   ],
   templateUrl: './issuance-config-show.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './issuance-config-show.component.scss',
 })
 export class IssuanceConfigShowComponent implements OnInit {

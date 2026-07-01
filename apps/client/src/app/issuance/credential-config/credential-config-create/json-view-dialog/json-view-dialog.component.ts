@@ -36,7 +36,7 @@ export interface JsonViewDialogData {
     EditorComponent,
   ],
   templateUrl: './json-view-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './json-view-dialog.component.scss',
 })
 export class JsonViewDialogComponent {

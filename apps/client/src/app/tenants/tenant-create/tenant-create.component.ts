@@ -42,7 +42,7 @@ import { ApiService } from '../../core';
     MatDialogModule,
   ],
   templateUrl: './tenant-create.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './tenant-create.component.scss',
 })
 export class TenantCreateComponent implements OnInit {

@@ -2,9 +2,7 @@ import { join } from "node:path";
 import { Logger, Module, OnModuleInit } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
-import { DataSource } from "typeorm";
-import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions.js";
-import { SqliteConnectionOptions } from "typeorm/driver/sqlite/SqliteConnectionOptions.js";
+import { DataSource, DataSourceOptions } from "typeorm";
 import * as migrations from "./migrations";
 import { buildPostgresSslOptions } from "./postgres-ssl-options";
 
@@ -52,17 +50,17 @@ import { buildPostgresSslOptions } from "./postgres-ssl-options";
                             configService.get(key),
                         ),
                         ...commonOptions,
-                    } as PostgresConnectionOptions;
+                    } as DataSourceOptions;
                 }
 
                 return {
-                    type: "sqlite",
+                    type: "better-sqlite3",
                     database: join(
                         configService.getOrThrow<string>("FOLDER"),
                         "service.db",
                     ),
                     ...commonOptions,
-                } as SqliteConnectionOptions;
+                } as DataSourceOptions;
             },
         }),
     ],

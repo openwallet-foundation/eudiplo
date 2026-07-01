@@ -29,7 +29,7 @@ import { JsonViewDialogComponent } from '../../issuance/credential-config/creden
     RouterModule,
   ],
   templateUrl: './key-management-show.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './key-management-show.component.scss',
 })
 export class KeyManagementShowComponent implements OnInit, OnDestroy {

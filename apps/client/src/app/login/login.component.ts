@@ -35,7 +35,7 @@ import { OidcService } from '../core/oidc.service';
     FlexLayoutModule,
   ],
   templateUrl: './login.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {

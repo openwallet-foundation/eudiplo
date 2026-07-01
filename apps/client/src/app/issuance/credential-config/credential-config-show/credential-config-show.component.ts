@@ -52,7 +52,7 @@ interface SchemaPathInfo {
     ClipboardModule,
   ],
   templateUrl: './credential-config-show.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './credential-config-show.component.scss',
 })
 export class CredentialConfigShowComponent implements OnInit {

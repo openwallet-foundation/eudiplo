@@ -33,7 +33,7 @@ import { webhookSchema } from '../../utils/schemas';
     RouterModule,
   ],
   templateUrl: './webhook-endpoint-create.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './webhook-endpoint-create.component.scss',
 })
 export class WebhookEndpointCreateComponent implements OnInit {

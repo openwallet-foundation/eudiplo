@@ -17,7 +17,7 @@ import { MatAnchor } from '@angular/material/button';
     MatAnchor,
   ],
   templateUrl: './webhook-config-edit.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './webhook-config-edit.component.scss',
 })
 export class WebhookConfigEditComponent implements OnInit {

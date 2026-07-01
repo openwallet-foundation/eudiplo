@@ -82,7 +82,7 @@ import { getApiErrorMessage } from '../../../utils/error-message';
     DragDropModule,
   ],
   templateUrl: './credential-config-create.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './credential-config-create.component.scss',
 })
 export class CredentialConfigCreateComponent implements OnInit {

@@ -38,7 +38,7 @@ import { SecretDialogComponent } from '../secret-dialog/secret-dialog.component'
     MatDialogModule,
   ],
   templateUrl: './client-create.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './client-create.component.scss',
 })
 export class ClientCreateComponent implements OnInit {

@@ -27,7 +27,7 @@ import {
     MatTooltipModule,
   ],
   templateUrl: './presentation-list.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './presentation-list.component.scss',
 })
 export class PresentationListComponent implements OnInit {

@@ -199,7 +199,9 @@ export class TenantService implements OnApplicationBootstrap {
     getTenant(id: string): Promise<TenantEntity> {
         return this.tenantRepository.findOneOrFail({
             where: { id },
-            relations: ["clients"],
+            relations: {
+                clients: true,
+            },
         });
     }
 

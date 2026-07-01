@@ -37,7 +37,7 @@ import { StatusListManagementService } from '../status-list-management.service';
     FlexLayoutModule,
   ],
   templateUrl: './status-list-list.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './status-list-list.component.scss',
 })
 export class StatusListListComponent implements OnInit, AfterViewInit {

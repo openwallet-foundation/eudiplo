@@ -27,7 +27,7 @@ import { FlexLayoutModule } from 'ngx-flexible-layout';
     MatButtonModule,
   ],
   templateUrl: './credential-ids.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './credential-ids.component.scss',
 })
 export class CredentialIdsComponent implements OnInit {

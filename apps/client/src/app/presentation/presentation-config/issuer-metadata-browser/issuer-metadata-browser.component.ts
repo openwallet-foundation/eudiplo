@@ -48,7 +48,7 @@ export interface IssuerMetadataBrowserDialogData {
   ],
   providers: [IssuerMetadataService],
   templateUrl: './issuer-metadata-browser.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './issuer-metadata-browser.component.scss',
 })
 export class IssuerMetadataBrowserComponent implements OnInit {

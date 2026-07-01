@@ -26,7 +26,7 @@ import { FlexLayoutModule } from 'ngx-flexible-layout';
     FlexLayoutModule,
   ],
   templateUrl: './trust-list-list.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './trust-list-list.component.scss',
 })
 export class TrustListListComponent implements OnInit {

@@ -13,7 +13,7 @@ import { AttributeProviderService } from '../attribute-provider.service';
   selector: 'app-attribute-provider-list',
   imports: [MatTableModule, MatIconModule, MatButtonModule, RouterModule, FlexLayoutModule],
   templateUrl: './attribute-provider-list.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './attribute-provider-list.component.scss',
 })
 export class AttributeProviderListComponent extends BaseAsyncListComponent<AttributeProviderEntity> {

@@ -23,7 +23,7 @@ import { FormlyField, FormlyValidationMessage } from '@ngx-formly/core';
     </div>
   `,
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormlyField, FormlyValidationMessage],
 })
 export class ObjectTypeComponent extends FieldType {}

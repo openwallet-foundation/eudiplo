@@ -26,7 +26,7 @@ import { AttributeProviderService } from '../attribute-provider.service';
     RouterModule,
   ],
   templateUrl: './attribute-provider-show.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './attribute-provider-show.component.scss',
 })
 export class AttributeProviderShowComponent implements OnInit {

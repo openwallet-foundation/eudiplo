@@ -58,7 +58,7 @@ import { PresentationManagementService } from '../../../presentation/presentatio
     ImageFieldComponent,
   ],
   templateUrl: './issuance-config-create.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './issuance-config-create.component.scss',
 })
 export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {

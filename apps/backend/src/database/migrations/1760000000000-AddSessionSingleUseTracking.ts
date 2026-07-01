@@ -51,7 +51,8 @@ export class AddSessionSingleUseTracking1760000000000
             new TableColumn({
                 name: "consumedAt",
                 type:
-                    queryRunner.connection.driver.options.type === "sqlite"
+                    queryRunner.connection.driver.options.type ===
+                    "better-sqlite3"
                         ? "datetime"
                         : "timestamp",
                 isNullable: true,

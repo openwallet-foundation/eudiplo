@@ -16,7 +16,7 @@ export interface UserTemporaryPasswordDialogData {
   standalone: true,
   imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule, FlexLayoutModule],
   templateUrl: './user-temporary-password-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './user-temporary-password-dialog.component.scss',
 })
 export class UserTemporaryPasswordDialogComponent {

@@ -28,7 +28,7 @@ import { getApiErrorMessage } from '../../utils/error-message';
     MatFormFieldModule,
   ],
   templateUrl: './admin-activity-logs.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './admin-activity-logs.component.scss',
 })
 export class AdminActivityLogsComponent implements OnInit {

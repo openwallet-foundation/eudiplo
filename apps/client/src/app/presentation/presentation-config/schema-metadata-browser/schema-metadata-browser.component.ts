@@ -50,7 +50,7 @@ export interface SchemaMetadataBrowserDialogData {
   ],
   providers: [SchemaMetadataBrowserService],
   templateUrl: './schema-metadata-browser.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './schema-metadata-browser.component.scss',
 })
 export class SchemaMetadataBrowserComponent implements OnInit {

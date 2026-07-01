@@ -41,7 +41,7 @@ import { MatIconModule } from '@angular/material/icon';
     </div>
   `,
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormlyField, FormlyValidationMessage, MatButtonModule, MatIconModule, MatButtonModule],
 })
 export class ArrayTypeComponent extends FieldArrayType {}
