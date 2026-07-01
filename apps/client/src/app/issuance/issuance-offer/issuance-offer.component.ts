@@ -367,6 +367,8 @@ export class IssuanceOfferComponent implements OnInit {
     for (const id of credentialConfigIds) {
       const config = this.credentialConfigs.find((cred) => cred.id === id);
       const runtime = config?.fields?.length ? deriveRuntimeArtifacts(config.fields as any) : null;
+      const schemaForForm =
+        config && runtime?.schema ? this.getSchemaForForm(config, runtime.schema as any) : null;
 
       // Schema is always assumed to be available (form input is always possible)
       // attributeProviderId is optional (attribute provider input is only available if configured)
@@ -376,8 +378,8 @@ export class IssuanceOfferComponent implements OnInit {
       const defaultSource = 'form';
 
       // Generate form fields from schema (only needed for pre-auth flow)
-      if (runtime?.schema) {
-        const baseConfig = this.formlyJsonschema.toFieldConfig(runtime.schema as any);
+      if (schemaForForm) {
+        const baseConfig = this.formlyJsonschema.toFieldConfig(schemaForForm as any);
         this.fields.push(this.addGroupHeaders(baseConfig));
       } else {
         this.fields.push({} as any); // Empty field config as fallback
@@ -385,7 +387,7 @@ export class IssuanceOfferComponent implements OnInit {
 
       this.elements.push({
         id,
-        defaultClaims: runtime?.claims, // Optional default values for pre-filling the form
+        defaultClaims: this.normalizeClaimsForForm(config, runtime?.claims),
         attributeProviderId: config!.attributeProviderId || undefined, // Optional attribute provider reference
         claimSource: defaultSource,
       });
@@ -563,6 +565,74 @@ export class IssuanceOfferComponent implements OnInit {
     };
   }
 
+  private isMdocConfig(config: CredentialConfig | undefined): boolean {
+    return config?.config?.format === 'mso_mdoc';
+  }
+
+  private getMdocNamespace(config: CredentialConfig | undefined): string | undefined {
+    if (!this.isMdocConfig(config)) {
+      return undefined;
+    }
+
+    const firstField = config?.fields?.find(
+      (field) => Array.isArray(field.path) && field.path.length > 0
+    );
+    return firstField?.path?.[0] ? String(firstField.path[0]) : undefined;
+  }
+
+  private getSchemaForForm(config: CredentialConfig, schema: Record<string, any>): Record<string, any> {
+    const namespace = this.getMdocNamespace(config);
+    const propertyNames = Object.keys(schema?.['properties'] ?? {});
+
+    if (
+      namespace &&
+      schema?.['type'] === 'object' &&
+      propertyNames.length === 1 &&
+      propertyNames[0] === namespace
+    ) {
+      const namespaceSchema = schema['properties']?.[namespace];
+      if (namespaceSchema && typeof namespaceSchema === 'object' && !Array.isArray(namespaceSchema)) {
+        return namespaceSchema;
+      }
+    }
+
+    return schema;
+  }
+
+  private normalizeClaimsForForm(config: CredentialConfig | undefined, claims: unknown): unknown {
+    const namespace = this.getMdocNamespace(config);
+    if (!namespace || !claims || typeof claims !== 'object' || Array.isArray(claims)) {
+      return claims;
+    }
+
+    const namespacedClaims = claims as Record<string, unknown>;
+    const nestedClaims = namespacedClaims[namespace];
+    if (nestedClaims && typeof nestedClaims === 'object' && !Array.isArray(nestedClaims)) {
+      return nestedClaims;
+    }
+
+    return claims;
+  }
+
+  private normalizeClaimsForSubmission(
+    config: CredentialConfig | undefined,
+    claims: unknown
+  ): unknown {
+    const namespace = this.getMdocNamespace(config);
+    if (!namespace || !claims || typeof claims !== 'object' || Array.isArray(claims)) {
+      return claims;
+    }
+
+    const claimObject = claims as Record<string, unknown>;
+    if (Object.prototype.hasOwnProperty.call(claimObject, namespace)) {
+      return claims;
+    }
+
+    return {
+      [namespace]: claims,
+    };
+  }
+
   async onSubmit(): Promise<void> {
     // Validate all step forms
     if (this.flowStepForm.invalid || this.credentialStepForm.invalid) {
@@ -590,10 +660,11 @@ export class IssuanceOfferComponent implements OnInit {
       if (flowSelection === 'pre_authorized_code') {
         credentialClaims = {};
         for (const element of this.elements) {
+          const config = this.credentialConfigs.find((cred) => cred.id === element.id);
           if (element.claimSource === 'form') {
             credentialClaims[element.id] = {
               type: 'inline',
-              claims: configValue.claims[element.id],
+              claims: this.normalizeClaimsForSubmission(config, configValue.claims[element.id]),
             };
           } else if (element.claimSource === 'attributeProvider') {
             credentialClaims[element.id] = {
@@ -764,7 +835,10 @@ export class IssuanceOfferComponent implements OnInit {
         if (element && claimData && typeof claimData === 'object') {
           if ('type' in claimData && claimData.type === 'inline' && 'claims' in claimData) {
             element.claimSource = 'form';
-            this.configStepForm.get('claims')?.patchValue({ [credId]: claimData.claims });
+            const config = this.credentialConfigs.find((cred) => cred.id === credId);
+            this.configStepForm.get('claims')?.patchValue({
+              [credId]: this.normalizeClaimsForForm(config, claimData.claims),
+            });
           } else if ('type' in claimData && claimData.type === 'attributeProvider') {
             element.claimSource = 'attributeProvider';
           }

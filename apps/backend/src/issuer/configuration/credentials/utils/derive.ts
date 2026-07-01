@@ -9,6 +9,7 @@ const JSON_SCHEMA_DRAFT_2020_12 =
     "https://json-schema.org/draft/2020-12/schema";
 
 type Segment = string | number | null;
+type PathCursor = Record<string, unknown> | unknown[];
 
 function resolveChildPath(
     parentPath: Segment[],
@@ -46,6 +47,17 @@ function flattenFields(fields: ClaimFieldDefinition[]): ClaimFieldDefinition[] {
     return result;
 }
 
+function getFieldNamespace(field: ClaimFieldDefinition): string | undefined {
+    if (field.namespace) {
+        return field.namespace;
+    }
+
+    const firstPathSegment = field.path.at(0);
+    return typeof firstPathSegment === "string" && field.path.length > 1
+        ? firstPathSegment
+        : undefined;
+}
+
 function segmentToKey(segment: Segment): string {
     if (segment === null) {
         return "*";
@@ -57,7 +69,7 @@ function getOrCreateChild(
     target: Record<string, unknown>,
     key: string,
     nextIsArray: boolean,
-): Record<string, unknown> | unknown[] {
+): PathCursor {
     const current = target[key];
     if (current !== undefined) {
         if (Array.isArray(current)) {
@@ -68,9 +80,56 @@ function getOrCreateChild(
         }
     }
 
-    const created: Record<string, unknown> | unknown[] = nextIsArray ? [] : {};
+    const created: PathCursor = nextIsArray ? [] : {};
     target[key] = created;
     return created;
+}
+
+function getArrayIndex(segment: Segment): number | undefined {
+    const arrayIndex = typeof segment === "number" ? segment : Number(segmentToKey(segment));
+    return Number.isFinite(arrayIndex) && arrayIndex >= 0 ? arrayIndex : undefined;
+}
+
+function setArrayPathValue(
+    cursor: unknown[],
+    segment: Segment,
+    isLast: boolean,
+    next: Segment,
+    value: unknown,
+): PathCursor | undefined {
+    const arrayIndex = getArrayIndex(segment);
+    if (arrayIndex === undefined) {
+        return undefined;
+    }
+
+    if (isLast) {
+        cursor[arrayIndex] = value;
+        return undefined;
+    }
+
+    const current = cursor[arrayIndex];
+    if (typeof current !== "object" || current === null) {
+        cursor[arrayIndex] = typeof next === "number" ? [] : {};
+    }
+
+    return cursor[arrayIndex] as Record<string, unknown> | unknown[];
+}
+
+function setObjectPathValue(
+    cursor: Record<string, unknown>,
+    segment: Segment,
+    isLast: boolean,
+    next: Segment,
+    value: unknown,
+): PathCursor | undefined {
+    const key = segmentToKey(segment);
+
+    if (isLast) {
+        cursor[key] = value;
+        return undefined;
+    }
+
+    return getOrCreateChild(cursor, key, typeof next === "number");
 }
 
 function setValueAtPath(
@@ -82,43 +141,21 @@ function setValueAtPath(
         return;
     }
 
-    let cursor: Record<string, unknown> | unknown[] = target;
+    let cursor: PathCursor = target;
 
     for (let index = 0; index < path.length; index += 1) {
         const segment = path[index];
         const isLast = index === path.length - 1;
         const next = path[index + 1];
+        const nextCursor: PathCursor | undefined = Array.isArray(cursor)
+            ? setArrayPathValue(cursor, segment, isLast, next, value)
+            : setObjectPathValue(cursor, segment, isLast, next, value);
 
-        if (Array.isArray(cursor)) {
-            const arrayIndex =
-                typeof segment === "number"
-                    ? segment
-                    : Number(segmentToKey(segment));
-            if (!Number.isFinite(arrayIndex) || arrayIndex < 0) {
-                return;
-            }
-
-            if (isLast) {
-                cursor[arrayIndex] = value;
-                return;
-            }
-
-            const current = cursor[arrayIndex];
-            if (typeof current !== "object" || current === null) {
-                cursor[arrayIndex] = typeof next === "number" ? [] : {};
-            }
-
-            cursor = cursor[arrayIndex] as Record<string, unknown> | unknown[];
-            continue;
-        }
-
-        const key = segmentToKey(segment);
-        if (isLast) {
-            cursor[key] = value;
+        if (!nextCursor) {
             return;
         }
 
-        cursor = getOrCreateChild(cursor, key, typeof next === "number");
+        cursor = nextCursor;
     }
 }
 
@@ -235,6 +272,59 @@ function ensureFrameNode(
     return cursor;
 }
 
+function applyLeafSchema(
+    root: JsonSchema,
+    field: ClaimFieldDefinition,
+): void {
+    const parent = ensureSchemaNode(root, field.path.slice(0, -1));
+    const leafSegment = field.path.at(-1);
+    const leafSchema = buildLeafSchema(field);
+
+    if (isArrayPathSegment(leafSegment ?? null)) {
+        mergeArrayLeafSchema(parent, leafSchema);
+        return;
+    }
+
+    mergeObjectLeafSchema(parent, leafSegment, leafSchema, field.mandatory);
+}
+
+function mergeArrayLeafSchema(parent: JsonSchema, leafSchema: JsonSchema): void {
+    if (parent.type !== "array") {
+        parent.type = "array";
+    }
+
+    const existingItems =
+        parent.items &&
+        typeof parent.items === "object" &&
+        !Array.isArray(parent.items)
+            ? (parent.items as JsonSchema)
+            : undefined;
+
+    parent.items = existingItems
+        ? mergeLeafSchema(existingItems, leafSchema)
+        : leafSchema;
+}
+
+function mergeObjectLeafSchema(
+    parent: JsonSchema,
+    leafSegment: string | number | null | undefined,
+    leafSchema: JsonSchema,
+    mandatory: boolean | undefined,
+): void {
+    const leafKey = segmentToKey(leafSegment ?? "");
+    parent.properties ??= {};
+
+    const existing = parent.properties[leafKey];
+    parent.properties[leafKey] =
+        existing && typeof existing === "object" && !Array.isArray(existing)
+            ? mergeLeafSchema(existing, leafSchema)
+            : leafSchema;
+
+    if (mandatory) {
+        addRequired(parent, leafKey);
+    }
+}
+
 function normalizeDisplayInfo(
     display: ClaimFieldDefinition["display"],
 ): ClaimDisplayInfo[] | undefined {
@@ -323,42 +413,7 @@ export function buildJsonSchema(fields: ClaimFieldDefinition[]): JsonSchema {
             continue;
         }
 
-        const parent = ensureSchemaNode(root, field.path.slice(0, -1));
-        const leafSegment = field.path.at(-1);
-
-        const leafSchema = buildLeafSchema(field);
-
-        if (isArrayPathSegment(leafSegment ?? null)) {
-            if (parent.type !== "array") {
-                parent.type = "array";
-            }
-
-            const existingItems =
-                parent.items &&
-                typeof parent.items === "object" &&
-                !Array.isArray(parent.items)
-                    ? (parent.items as JsonSchema)
-                    : undefined;
-
-            parent.items = existingItems
-                ? mergeLeafSchema(existingItems, leafSchema)
-                : leafSchema;
-
-            continue;
-        }
-
-        const leafKey = segmentToKey(leafSegment ?? "");
-        parent.properties ??= {};
-
-        const existing = parent.properties[leafKey];
-        parent.properties[leafKey] =
-            existing && typeof existing === "object" && !Array.isArray(existing)
-                ? mergeLeafSchema(existing, leafSchema)
-                : leafSchema;
-
-        if (field.mandatory) {
-            addRequired(parent, leafKey);
-        }
+        applyLeafSchema(root, field);
     }
 
     return root;
@@ -370,23 +425,28 @@ export function buildClaimsByNamespace(
     const byNamespace: Record<string, Record<string, unknown>> = {};
 
     for (const field of flattenFields(fields)) {
+        const namespace = getFieldNamespace(field);
         if (
-            !field.namespace ||
+            !namespace ||
             !Object.prototype.hasOwnProperty.call(field, "defaultValue")
         ) {
             continue;
         }
 
-        if (!byNamespace[field.namespace]) {
-            byNamespace[field.namespace] = {};
+        if (!byNamespace[namespace]) {
+            byNamespace[namespace] = {};
         }
 
-        const namespaceTarget = byNamespace[field.namespace];
+        const namespaceTarget = byNamespace[namespace];
         const normalizedPath =
             field.path.length > 0 &&
-            segmentToKey(field.path[0] ?? "") === field.namespace
+            segmentToKey(field.path[0] ?? "") === namespace
                 ? field.path.slice(1)
                 : field.path;
+
+        if (normalizedPath.length === 0) {
+            continue;
+        }
 
         setValueAtPath(namespaceTarget, normalizedPath, field.defaultValue);
     }

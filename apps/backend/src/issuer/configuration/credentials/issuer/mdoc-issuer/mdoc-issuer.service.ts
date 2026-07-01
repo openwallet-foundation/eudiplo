@@ -52,18 +52,25 @@ export class MdocIssuerService {
         const claimsByNamespace = buildClaimsByNamespace(
             credentialConfiguration.fields as any,
         );
+        const namespaceNames = new Set(Object.keys(claimsByNamespace));
+        const defaultNamespaceClaims =
+            claims && typeof claims === "object" && !Array.isArray(claims)
+                ? Object.fromEntries(
+                      Object.entries(claims).filter(
+                          ([key]) => !namespaceNames.has(key),
+                      ),
+                  )
+                : {};
 
         if (claimsByNamespace && Object.keys(claimsByNamespace).length > 0) {
             // Multiple namespaces specified
             for (const [ns, nsClaims] of Object.entries(claimsByNamespace)) {
                 issuer.addIssuerNamespace(ns, nsClaims);
             }
-            if (claims && Object.keys(claims).length > 0) {
-                issuer.addIssuerNamespace(defaultNamespace, claims);
-            }
-        } else {
-            // Single namespace with flat claims
-            issuer.addIssuerNamespace(defaultNamespace, claims);
+        }
+
+        if (Object.keys(defaultNamespaceClaims).length > 0) {
+            issuer.addIssuerNamespace(defaultNamespace, defaultNamespaceClaims);
         }
 
         // Get signing certificate
