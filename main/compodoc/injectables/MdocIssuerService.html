@@ -329,8 +329,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="153"
-                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:153</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="160"
+                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:160</a></div>
                         </td>
                     </tr>
 
@@ -410,8 +410,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="199"
-                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:199</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="206"
+                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:206</a></div>
                         </td>
                     </tr>
 
@@ -638,18 +638,25 @@ export class MdocIssuerService {
         const claimsByNamespace &#x3D; buildClaimsByNamespace(
             credentialConfiguration.fields as any,
         );
+        const namespaceNames &#x3D; new Set(Object.keys(claimsByNamespace));
+        const defaultNamespaceClaims &#x3D;
+            claims &amp;&amp; typeof claims &#x3D;&#x3D;&#x3D; &quot;object&quot; &amp;&amp; !Array.isArray(claims)
+                ? Object.fromEntries(
+                      Object.entries(claims).filter(
+                          ([key]) &#x3D;&gt; !namespaceNames.has(key),
+                      ),
+                  )
+                : {};
 
         if (claimsByNamespace &amp;&amp; Object.keys(claimsByNamespace).length &gt; 0) {
             // Multiple namespaces specified
             for (const [ns, nsClaims] of Object.entries(claimsByNamespace)) {
                 issuer.addIssuerNamespace(ns, nsClaims);
             }
-            if (claims &amp;&amp; Object.keys(claims).length &gt; 0) {
-                issuer.addIssuerNamespace(defaultNamespace, claims);
-            }
-        } else {
-            // Single namespace with flat claims
-            issuer.addIssuerNamespace(defaultNamespace, claims);
+        }
+
+        if (Object.keys(defaultNamespaceClaims).length &gt; 0) {
+            issuer.addIssuerNamespace(defaultNamespace, defaultNamespaceClaims);
         }
 
         // Get signing certificate

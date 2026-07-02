@@ -295,7 +295,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="113" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:113</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="114" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:114</a></div>
                         </td>
                     </tr>
 
@@ -334,7 +334,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="102" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:102</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="103" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:103</a></div>
                         </td>
                     </tr>
 
@@ -452,7 +452,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="94" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:94</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="95" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:95</a></div>
                         </td>
                     </tr>
 
@@ -524,13 +524,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Namespace for mDOC field&#x27;, example: &#x27;eu.europa.ec.eudi.pid.1&#x27;})<br />@IsOptional()<br />@IsString()<br />
+                            @ApiPropertyOptional({description: &#x27;Namespace for mDOC field. Optional when the namespace is already present as the first path segment.&#x27;, example: &#x27;eu.europa.ec.eudi.pid.1&#x27;})<br />@IsOptional()<br />@IsString()<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="87" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:87</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:88</a></div>
                         </td>
                     </tr>
 
@@ -705,7 +705,8 @@ export class ClaimFieldDefinitionDto {
     disclosable?: boolean;
 
     @ApiPropertyOptional({
-        description: &quot;Namespace for mDOC field&quot;,
+        description:
+            &quot;Namespace for mDOC field. Optional when the namespace is already present as the first path segment.&quot;,
         example: &quot;eu.europa.ec.eudi.pid.1&quot;,
     })
     @IsOptional()
