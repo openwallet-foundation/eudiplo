@@ -8,6 +8,8 @@ export default defineConfig({
         globals: true,
         root: "./",
         fileParallelism: false,
+        maxWorkers: 1,
+        maxConcurrency: 1,
         coverage: {
             provider: "v8",
             reportsDirectory: "./coverage/e2e",
