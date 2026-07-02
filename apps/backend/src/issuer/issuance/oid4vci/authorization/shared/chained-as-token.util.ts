@@ -33,7 +33,10 @@ export async function resolveSessionForTokenRequest(
             throw new UnauthorizedException("Invalid or expired refresh_token");
         }
 
-        if (session.refreshTokenExpiresAt && session.refreshTokenExpiresAt < new Date()) {
+        if (
+            session.refreshTokenExpiresAt &&
+            session.refreshTokenExpiresAt < new Date()
+        ) {
             throw new UnauthorizedException("refresh_token has expired");
         }
 

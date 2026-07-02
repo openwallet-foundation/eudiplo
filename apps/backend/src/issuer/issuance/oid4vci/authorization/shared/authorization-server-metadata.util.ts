@@ -20,9 +20,7 @@ interface JwkWithOptionalKid {
     [key: string]: unknown;
 }
 
-export const DEFAULT_CODE_CHALLENGE_METHODS_SUPPORTED = [
-    "S256",
-] as const;
+export const DEFAULT_CODE_CHALLENGE_METHODS_SUPPORTED = ["S256"] as const;
 
 export const DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED = [
     "ES256",
@@ -43,7 +41,9 @@ export const DEFAULT_ATTESTED_AUTH_SERVER_CAPABILITIES = {
     tokenEndpointAuthMethodsSupported: [
         ...DEFAULT_TOKEN_ENDPOINT_AUTH_METHODS_SUPPORTED,
     ],
-    dpopSigningAlgValuesSupported: [...DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED],
+    dpopSigningAlgValuesSupported: [
+        ...DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+    ],
     clientAttestationSigningAlgValuesSupported: [
         ...DEFAULT_CLIENT_ATTESTATION_SIGNING_ALG_VALUES_SUPPORTED,
     ],
@@ -66,10 +66,9 @@ export function buildWalletAttestationMetadata(
         clientAttestationSigningAlgValuesSupported: walletAttestationRequired
             ? [...DEFAULT_CLIENT_ATTESTATION_SIGNING_ALG_VALUES_SUPPORTED]
             : undefined,
-        clientAttestationPopSigningAlgValuesSupported:
-            walletAttestationRequired
-                ? [...DEFAULT_CLIENT_ATTESTATION_SIGNING_ALG_VALUES_SUPPORTED]
-                : undefined,
+        clientAttestationPopSigningAlgValuesSupported: walletAttestationRequired
+            ? [...DEFAULT_CLIENT_ATTESTATION_SIGNING_ALG_VALUES_SUPPORTED]
+            : undefined,
     };
 }
 
@@ -90,9 +89,11 @@ export function buildAuthorizationServerMetadata(
         token_endpoint_auth_methods_supported:
             options.tokenEndpointAuthMethodsSupported,
         code_challenge_methods_supported:
-            options.codeChallengeMethodsSupported ??
-            [...DEFAULT_CODE_CHALLENGE_METHODS_SUPPORTED],
-        dpop_signing_alg_values_supported: options.dpopSigningAlgValuesSupported,
+            options.codeChallengeMethodsSupported ?? [
+                ...DEFAULT_CODE_CHALLENGE_METHODS_SUPPORTED,
+            ],
+        dpop_signing_alg_values_supported:
+            options.dpopSigningAlgValuesSupported,
     };
 
     if (options.clientAttestationSigningAlgValuesSupported) {

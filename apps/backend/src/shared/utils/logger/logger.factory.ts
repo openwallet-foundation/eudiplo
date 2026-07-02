@@ -96,9 +96,7 @@ function attachResponseBodyCapture(req: any, res: any): void {
         if (totalLength >= MAX_LOGGED_RESPONSE_BODY_LENGTH) {
             return;
         }
-        const buf = Buffer.isBuffer(chunk)
-            ? chunk
-            : Buffer.from(String(chunk));
+        const buf = Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk));
         const remaining = MAX_LOGGED_RESPONSE_BODY_LENGTH - totalLength;
         chunks.push(buf.length > remaining ? buf.subarray(0, remaining) : buf);
         totalLength += Math.min(buf.length, remaining);
@@ -223,10 +221,8 @@ export const createLoggerOptions = (configService: ConfigService) => {
                     }
                     // Parse the pathname so query strings and substrings like
                     // "/foo/api-docs" don't accidentally match.
-                    const pathname = new URL(
-                        req.url ?? "",
-                        "http://localhost",
-                    ).pathname;
+                    const pathname = new URL(req.url ?? "", "http://localhost")
+                        .pathname;
                     return (
                         pathname.startsWith("/api") ||
                         pathname === "/health" ||
@@ -238,9 +234,9 @@ export const createLoggerOptions = (configService: ConfigService) => {
             // additionally gated behind LOG_HTTP_RESPONSE_BODY.
             redact: {
                 paths: [
-                    'req.headers.authorization',
-                    'req.headers.cookie',
-                    'req.headers.dpop',
+                    "req.headers.authorization",
+                    "req.headers.cookie",
+                    "req.headers.dpop",
                     'req.headers["oauth-client-attestation"]',
                     'req.headers["oauth-client-attestation-pop"]',
                     'res.headers["set-cookie"]',

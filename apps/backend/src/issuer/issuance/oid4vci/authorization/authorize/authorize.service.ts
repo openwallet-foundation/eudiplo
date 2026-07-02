@@ -310,8 +310,9 @@ export class AuthorizeService {
                 "authorization_code",
                 "refresh_token",
                 "urn:ietf:params:oauth:grant-type:pre-authorized_code",
-            ],            
-            dpopSigningAlgValuesSupported: DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+            ],
+            dpopSigningAlgValuesSupported:
+                DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
             ...buildWalletAttestationMetadata(walletAttestationRequired),
             additionalMetadata: {
                 // TODO: verify this on the server

@@ -474,7 +474,8 @@ export class ChainedAsVpService {
             pushedAuthorizationRequestEndpoint: `${baseUrl}/par`,
             jwksUri: `${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/chained-as-vp`,
             grantTypesSupported: ["authorization_code", "refresh_token"],
-            dpopSigningAlgValuesSupported: DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+            dpopSigningAlgValuesSupported:
+                DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
             ...buildWalletAttestationMetadata(walletAttestationRequired),
         });
     }
