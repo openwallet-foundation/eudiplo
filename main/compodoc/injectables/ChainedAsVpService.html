@@ -122,7 +122,7 @@
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
     <span class="icon ion-ios-document" aria-hidden="true"></span>
-    <code>src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts</code>
+    <code>src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts</code>
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -161,7 +161,7 @@
                     <h4>Used by</h4>
                         <ul class="list-unstyled relationships-list">
                                 <li>
-                                            <code><a href="../modules/IssuanceModule.html" target="_self" >IssuanceModule</a></code>
+                                            <code><a href="../modules/AuthorizationModule.html" target="_self" >AuthorizationModule</a></code>
                                 </li>
                         </ul>
                 </div>
@@ -226,12 +226,6 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
-                                    <span class="modifier">Async</span>
-                                <a href="#assertTokenRequestSessionValid" >assertTokenRequestSessionValid</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                    <span class="modifier">Private</span>
                                 <a href="#buildErrorRedirect" >buildErrorRedirect</a>
                             </li>
                             <li>
@@ -279,40 +273,6 @@
                                     <span class="modifier">Async</span>
                                 <a href="#handleVerifierCallback" >handleVerifierCallback</a>
                             </li>
-                            <li>
-                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                    <span class="modifier">Private</span>
-                                    <span class="modifier">Async</span>
-                                <a href="#issueRefreshTokenIfEnabled" >issueRefreshTokenIfEnabled</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                    <span class="modifier">Private</span>
-                                    <span class="modifier">Async</span>
-                                <a href="#resolveAuthorizationCodeSession" >resolveAuthorizationCodeSession</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                    <span class="modifier">Private</span>
-                                    <span class="modifier">Async</span>
-                                <a href="#resolveRefreshTokenSession" >resolveRefreshTokenSession</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                    <span class="modifier">Private</span>
-                                    <span class="modifier">Async</span>
-                                <a href="#resolveSessionForTokenRequest" >resolveSessionForTokenRequest</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                    <span class="modifier">Private</span>
-                                <a href="#resolveTokenBinding" >resolveTokenBinding</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                    <span class="modifier">Private</span>
-                                <a href="#verifyPkce" >verifyPkce</a>
-                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -336,7 +296,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:42</a></div>
                             </td>
                         </tr>
 
@@ -467,88 +427,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="assertTokenRequestSessionValid"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                            <span class="modifier">Async</span>
-                        <span ><b>assertTokenRequestSessionValid</b></span>
-                        <a href="#assertTokenRequestSessionValid"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>assertTokenRequestSessionValid(session: <a href="../entitys/ChainedAsSessionEntity.html" target="_self">ChainedAsSessionEntity</a>, request: <a href="../classes/ChainedAsTokenRequestDto.html" target="_self">ChainedAsTokenRequestDto</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="435"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:435</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>session</td>
-                                            <td>
-                                                            <code><a href="../entitys/ChainedAsSessionEntity.html" target="_self" >ChainedAsSessionEntity</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>request</td>
-                                            <td>
-                                                            <code><a href="../classes/ChainedAsTokenRequestDto.html" target="_self" >ChainedAsTokenRequestDto</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="buildErrorRedirect"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -567,8 +445,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="233"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:233</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="238"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:238</a></div>
                         </td>
                     </tr>
 
@@ -672,8 +550,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="343"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:343</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="329"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:329</a></div>
                         </td>
                     </tr>
 
@@ -789,8 +667,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="51"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:51</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="56"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:56</a></div>
                         </td>
                     </tr>
 
@@ -858,8 +736,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="56"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:56</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:61</a></div>
                         </td>
                     </tr>
 
@@ -927,8 +805,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="583"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:583</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="443"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:443</a></div>
                         </td>
                     </tr>
 
@@ -996,8 +874,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="606"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:606</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="462"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:462</a></div>
                         </td>
                     </tr>
 
@@ -1065,8 +943,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="154"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:154</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="159"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:159</a></div>
                         </td>
                     </tr>
 
@@ -1170,8 +1048,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="76"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:76</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="81"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:81</a></div>
                         </td>
                     </tr>
 
@@ -1275,8 +1153,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="506"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:506</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="359"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:359</a></div>
                         </td>
                     </tr>
 
@@ -1368,8 +1246,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="250"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:250</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="255"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:255</a></div>
                         </td>
                     </tr>
 
@@ -1463,508 +1341,6 @@
             </tr>
         </tbody>
     </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="issueRefreshTokenIfEnabled"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                            <span class="modifier">Async</span>
-                        <span ><b>issueRefreshTokenIfEnabled</b></span>
-                        <a href="#issueRefreshTokenIfEnabled"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>issueRefreshTokenIfEnabled(session: <a href="../entitys/ChainedAsSessionEntity.html" target="_self">ChainedAsSessionEntity</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="480"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:480</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>session</td>
-                                            <td>
-                                                            <code><a href="../entitys/ChainedAsSessionEntity.html" target="_self" >ChainedAsSessionEntity</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;string | undefined&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="resolveAuthorizationCodeSession"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                            <span class="modifier">Async</span>
-                        <span ><b>resolveAuthorizationCodeSession</b></span>
-                        <a href="#resolveAuthorizationCodeSession"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>resolveAuthorizationCodeSession(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, request: <a href="../classes/ChainedAsTokenRequestDto.html" target="_self">ChainedAsTokenRequestDto</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="410"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:410</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>request</td>
-                                            <td>
-                                                            <code><a href="../classes/ChainedAsTokenRequestDto.html" target="_self" >ChainedAsTokenRequestDto</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;ChainedAsSessionEntity&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="resolveRefreshTokenSession"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                            <span class="modifier">Async</span>
-                        <span ><b>resolveRefreshTokenSession</b></span>
-                        <a href="#resolveRefreshTokenSession"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>resolveRefreshTokenSession(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, request: <a href="../classes/ChainedAsTokenRequestDto.html" target="_self">ChainedAsTokenRequestDto</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="382"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:382</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>request</td>
-                                            <td>
-                                                            <code><a href="../classes/ChainedAsTokenRequestDto.html" target="_self" >ChainedAsTokenRequestDto</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;ChainedAsSessionEntity&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="resolveSessionForTokenRequest"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                            <span class="modifier">Async</span>
-                        <span ><b>resolveSessionForTokenRequest</b></span>
-                        <a href="#resolveSessionForTokenRequest"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>resolveSessionForTokenRequest(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, request: <a href="../classes/ChainedAsTokenRequestDto.html" target="_self">ChainedAsTokenRequestDto</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="373"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:373</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>request</td>
-                                            <td>
-                                                            <code><a href="../classes/ChainedAsTokenRequestDto.html" target="_self" >ChainedAsTokenRequestDto</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;ChainedAsSessionEntity&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="resolveTokenBinding"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>resolveTokenBinding</b></span>
-                        <a href="#resolveTokenBinding"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>resolveTokenBinding(config: <a href="../classes/ChainedAsConfig.html" target="_self">ChainedAsConfig</a>, session: <a href="../entitys/ChainedAsSessionEntity.html" target="_self">ChainedAsSessionEntity</a>, dpopJwt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="461"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:461</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>config</td>
-                                            <td>
-                                                            <code><a href="../classes/ChainedAsConfig.html" target="_self" >ChainedAsConfig</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>session</td>
-                                            <td>
-                                                            <code><a href="../entitys/ChainedAsSessionEntity.html" target="_self" >ChainedAsSessionEntity</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>dpopJwt</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    Yes
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>{ tokenType: string; dpopJkt?: string }</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="verifyPkce"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>verifyPkce</b></span>
-                        <a href="#verifyPkce"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>verifyPkce(session: <a href="../entitys/ChainedAsSessionEntity.html" target="_self">ChainedAsSessionEntity</a>, codeVerifier?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="324"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:324</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>session</td>
-                                            <td>
-                                                            <code><a href="../entitys/ChainedAsSessionEntity.html" target="_self" >ChainedAsSessionEntity</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>codeVerifier</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    Yes
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-properties">
@@ -1998,7 +1374,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:42</a></div>
                         </td>
                     </tr>
 
@@ -2031,7 +1407,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:34</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:39</a></div>
                         </td>
                     </tr>
 
@@ -2064,7 +1440,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -2097,7 +1473,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.service.ts:36</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:41</a></div>
                         </td>
                     </tr>
 
@@ -2110,36 +1486,41 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createHash, randomBytes } from &quot;node:crypto&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { randomBytes } from &quot;node:crypto&quot;;
 import {
     BadRequestException,
     Injectable,
     Logger,
     NotFoundException,
-    UnauthorizedException,
 } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
 import { TraceService } from &quot;nestjs-otel&quot;;
 import { Repository } from &quot;typeorm&quot;;
 import { v4 } from &quot;uuid&quot;;
-import { KeyChainService } from &quot;../../../../crypto/key/key-chain.service&quot;;
-import { SessionStatus } from &quot;../../../../session/entities/session.entity&quot;;
-import { SessionService } from &quot;../../../../session/session.service&quot;;
-import { WalletAttestationService } from &quot;../../../../shared/trust/wallet-attestation.service&quot;;
-import type { ChainedAsConfig } from &quot;../../../configuration/issuance/dto/chained-as-config.dto&quot;;
-import { IssuanceService } from &quot;../../../configuration/issuance/issuance.service&quot;;
-import { Oid4vpService } from &quot;../../../../verifier/oid4vp/oid4vp.service&quot;;
+import { KeyChainService } from &quot;../../../../../crypto/key/key-chain.service&quot;;
+import { SessionStatus } from &quot;../../../../../session/entities/session.entity&quot;;
+import { SessionService } from &quot;../../../../../session/session.service&quot;;
+import { WalletAttestationService } from &quot;../../../../../shared/trust/wallet-attestation.service&quot;;
+import type { ChainedAsConfig } from &quot;../../../../configuration/issuance/dto/chained-as-config.dto&quot;;
+import { IssuanceService } from &quot;../../../../configuration/issuance/issuance.service&quot;;
+import { Oid4vpService } from &quot;../../../../../verifier/oid4vp/oid4vp.service&quot;;
 import {
+    assertTokenRequestSessionValid,
+    buildAuthorizationServerMetadata,
+    buildWalletAttestationMetadata,
+    buildJwksResponse,
     ChainedAsParRequestDto,
     ChainedAsParResponseDto,
-    ChainedAsTokenRequestDto,
-    ChainedAsTokenResponseDto,
-} from &quot;../chained-as/dto/chained-as.dto&quot;;
-import {
     ChainedAsSessionEntity,
     ChainedAsSessionStatus,
-} from &quot;../chained-as/entities/chained-as-session.entity&quot;;
+    ChainedAsTokenRequestDto,
+    ChainedAsTokenResponseDto,
+    issueRefreshTokenIfEnabled,
+    resolveSessionForTokenRequest,
+    resolveTokenBinding,
+    DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+} from &quot;../shared&quot;;
 
 @Injectable()
 export class ChainedAsVpService {
@@ -2433,25 +1814,6 @@ export class ChainedAsVpService {
         return redirectUrl.toString();
     }
 
-    private verifyPkce(
-        session: ChainedAsSessionEntity,
-        codeVerifier?: string,
-    ): void {
-        if (session.codeChallenge &amp;&amp; codeVerifier) {
-            const expectedChallenge &#x3D;
-                session.codeChallengeMethod &#x3D;&#x3D;&#x3D; &quot;S256&quot;
-                    ? createHash(&quot;sha256&quot;)
-                          .update(codeVerifier)
-                          .digest(&quot;base64url&quot;)
-                    : codeVerifier;
-            if (expectedChallenge !&#x3D;&#x3D; session.codeChallenge) {
-                throw new UnauthorizedException(&quot;Invalid code_verifier&quot;);
-            }
-        } else if (session.codeChallenge &amp;&amp; !codeVerifier) {
-            throw new BadRequestException(&quot;code_verifier is required&quot;);
-        }
-    }
-
     private buildTokenPayload(
         tenantId: string,
         session: ChainedAsSessionEntity,
@@ -2482,139 +1844,6 @@ export class ChainedAsVpService {
         return payload;
     }
 
-    private async resolveSessionForTokenRequest(
-        tenantId: string,
-        request: ChainedAsTokenRequestDto,
-    ): Promise&lt;ChainedAsSessionEntity&gt; {
-        return request.grant_type &#x3D;&#x3D;&#x3D; &quot;refresh_token&quot;
-            ? this.resolveRefreshTokenSession(tenantId, request)
-            : this.resolveAuthorizationCodeSession(tenantId, request);
-    }
-
-    private async resolveRefreshTokenSession(
-        tenantId: string,
-        request: ChainedAsTokenRequestDto,
-    ): Promise&lt;ChainedAsSessionEntity&gt; {
-        if (!request.refresh_token) {
-            throw new BadRequestException(
-                &quot;refresh_token is required for refresh_token grant&quot;,
-            );
-        }
-
-        const session &#x3D; await this.sessionRepository.findOne({
-            where: { tenantId, refreshToken: request.refresh_token },
-        });
-
-        if (!session) {
-            throw new UnauthorizedException(&quot;Invalid or expired refresh_token&quot;);
-        }
-
-        if (
-            session.refreshTokenExpiresAt &amp;&amp;
-            session.refreshTokenExpiresAt &lt; new Date()
-        ) {
-            throw new UnauthorizedException(&quot;refresh_token has expired&quot;);
-        }
-
-        return session;
-    }
-
-    private async resolveAuthorizationCodeSession(
-        tenantId: string,
-        request: ChainedAsTokenRequestDto,
-    ): Promise&lt;ChainedAsSessionEntity&gt; {
-        if (!request.code) {
-            throw new BadRequestException(
-                &quot;code is required for authorization_code grant&quot;,
-            );
-        }
-
-        const session &#x3D; await this.sessionRepository.findOne({
-            where: {
-                tenantId,
-                authorizationCode: request.code,
-                status: ChainedAsSessionStatus.AUTHORIZED,
-            },
-        });
-
-        if (!session) {
-            throw new UnauthorizedException(&quot;Invalid authorization code&quot;);
-        }
-
-        return session;
-    }
-
-    private async assertTokenRequestSessionValid(
-        session: ChainedAsSessionEntity,
-        request: ChainedAsTokenRequestDto,
-    ): Promise&lt;void&gt; {
-        if (
-            request.grant_type &#x3D;&#x3D;&#x3D; &quot;authorization_code&quot; &amp;&amp;
-            session.authorizationCodeExpiresAt &amp;&amp;
-            session.authorizationCodeExpiresAt &lt; new Date()
-        ) {
-            session.status &#x3D; ChainedAsSessionStatus.EXPIRED;
-            await this.sessionRepository.save(session);
-            throw new UnauthorizedException(&quot;Authorization code expired&quot;);
-        }
-
-        if (
-            request.redirect_uri &amp;&amp;
-            request.redirect_uri !&#x3D;&#x3D; session.redirectUri
-        ) {
-            throw new BadRequestException(&quot;redirect_uri mismatch&quot;);
-        }
-
-        if (request.grant_type &#x3D;&#x3D;&#x3D; &quot;authorization_code&quot;) {
-            this.verifyPkce(session, request.code_verifier);
-        }
-    }
-
-    private resolveTokenBinding(
-        config: ChainedAsConfig,
-        session: ChainedAsSessionEntity,
-        dpopJwt?: string,
-    ): { tokenType: string; dpopJkt?: string } {
-        if (dpopJwt) {
-            return {
-                tokenType: &quot;DPoP&quot;,
-                dpopJkt: session.dpopJkt,
-            };
-        }
-
-        if (config.requireDPoP) {
-            throw new BadRequestException(&quot;DPoP proof is required&quot;);
-        }
-
-        return { tokenType: &quot;Bearer&quot; };
-    }
-
-    private async issueRefreshTokenIfEnabled(
-        session: ChainedAsSessionEntity,
-        tenantId: string,
-    ): Promise&lt;string | undefined&gt; {
-        const issuanceConfig &#x3D;
-            await this.issuanceService.getIssuanceConfiguration(tenantId);
-
-        if (!issuanceConfig.refreshTokenEnabled) {
-            return undefined;
-        }
-
-        const refreshToken &#x3D; randomBytes(32).toString(&quot;base64url&quot;);
-        let refreshTokenExpiresAt: Date | undefined;
-
-        if (issuanceConfig.refreshTokenExpiresInSeconds) {
-            refreshTokenExpiresAt &#x3D; new Date(
-                Date.now() + issuanceConfig.refreshTokenExpiresInSeconds * 1000,
-            );
-        }
-
-        session.refreshToken &#x3D; refreshToken;
-        session.refreshTokenExpiresAt &#x3D; refreshTokenExpiresAt;
-
-        return refreshToken;
-    }
-
     async handleToken(
         tenantId: string,
         request: ChainedAsTokenRequestDto,
@@ -2629,15 +1858,20 @@ export class ChainedAsVpService {
             );
         }
 
-        const session &#x3D; await this.resolveSessionForTokenRequest(
+        const session &#x3D; await resolveSessionForTokenRequest(
+            this.sessionRepository,
             tenantId,
             request,
         );
-        await this.assertTokenRequestSessionValid(session, request);
+        await assertTokenRequestSessionValid(
+            this.sessionRepository,
+            session,
+            request,
+        );
 
         const config &#x3D; await this.getChainedAsVpConfig(tenantId);
-        const { tokenType, dpopJkt } &#x3D; this.resolveTokenBinding(
-            config,
+        const { tokenType, dpopJkt } &#x3D; resolveTokenBinding(
+            config.requireDPoP,
             session,
             dpopJwt,
         );
@@ -2672,9 +1906,11 @@ export class ChainedAsVpService {
         session.status &#x3D; ChainedAsSessionStatus.TOKEN_ISSUED;
         session.accessTokenJti &#x3D; jti;
 
-        const refreshToken &#x3D; await this.issueRefreshTokenIfEnabled(
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const refreshToken &#x3D; issueRefreshTokenIfEnabled(
             session,
-            tenantId,
+            issuanceConfig,
         );
 
         await this.sessionRepository.save(session);
@@ -2705,40 +1941,31 @@ export class ChainedAsVpService {
             signingKeyId,
         );
 
-        return {
-            keys: [
-                {
-                    ...publicKey,
-                    kid: (publicKey as { kid?: string }).kid || signingKeyId,
-                } as Record&lt;string, unknown&gt;,
-            ],
-        };
+        return buildJwksResponse(
+            publicKey as { kid?: string; [key: string]: unknown },
+            signingKeyId,
+        );
     }
 
     async getMetadata(tenantId: string): Promise&lt;Record&lt;string, unknown&gt;&gt; {
         const baseUrl &#x3D; this.getChainedAsVpBaseUrl(tenantId);
         const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const walletAttestationRequired &#x3D;
+            issuanceConfig.walletAttestationRequired ?? false;
 
-        const metadata: Record&lt;string, unknown&gt; &#x3D; {
+        return buildAuthorizationServerMetadata({
             issuer: baseUrl,
-            authorization_endpoint: &#x60;${baseUrl}/authorize&#x60;,
-            token_endpoint: &#x60;${baseUrl}/token&#x60;,
-            pushed_authorization_request_endpoint: &#x60;${baseUrl}/par&#x60;,
-            jwks_uri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/chained-as-vp&#x60;,
-            response_types_supported: [&quot;code&quot;],
-            grant_types_supported: [&quot;authorization_code&quot;, &quot;refresh_token&quot;],
-            authorization_details_types_supported: [&quot;openid_credential&quot;],
-            token_endpoint_auth_methods_supported: [
-                &quot;none&quot;,
-                &quot;attest_jwt_client_auth&quot;,
-            ],
-            code_challenge_methods_supported: [&quot;S256&quot;],
-            dpop_signing_alg_values_supported: [&quot;ES256&quot;, &quot;ES384&quot;, &quot;ES512&quot;],
-            client_attestation_signing_alg_values_supported: [&quot;ES256&quot;],
-            client_attestation_pop_signing_alg_values_supported: [&quot;ES256&quot;],
-        };
-
-        return metadata;
+            authorizationEndpoint: &#x60;${baseUrl}/authorize&#x60;,
+            tokenEndpoint: &#x60;${baseUrl}/token&#x60;,
+            pushedAuthorizationRequestEndpoint: &#x60;${baseUrl}/par&#x60;,
+            jwksUri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/chained-as-vp&#x60;,
+            grantTypesSupported: [&quot;authorization_code&quot;, &quot;refresh_token&quot;],
+            dpopSigningAlgValuesSupported:
+                DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+            ...buildWalletAttestationMetadata(walletAttestationRequired),
+        });
     }
 }
 </code></pre>

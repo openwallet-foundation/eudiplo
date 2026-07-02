@@ -119,7 +119,7 @@
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
     <span class="icon ion-ios-document" aria-hidden="true"></span>
-    <code>src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.controller.ts</code>
+    <code>src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.controller.ts</code>
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -165,7 +165,7 @@
                     <h4>Used by</h4>
                         <ul class="list-unstyled relationships-list">
                                 <li>
-                                            <code><a href="../modules/IssuanceModule.html" target="_self" >IssuanceModule</a></code>
+                                            <code><a href="../modules/AuthorizationModule.html" target="_self" >AuthorizationModule</a></code>
                                 </li>
                         </ul>
                 </div>
@@ -294,7 +294,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="96"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.controller.ts:96</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.controller.ts:96</a></div>
                         </td>
                     </tr>
 
@@ -417,7 +417,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="61"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.controller.ts:61</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.controller.ts:61</a></div>
                         </td>
                     </tr>
 
@@ -549,7 +549,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="155"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.controller.ts:155</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.controller.ts:155</a></div>
                         </td>
                     </tr>
 
@@ -655,7 +655,7 @@
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="124"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as-vp/chained-as-vp.controller.ts:124</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.controller.ts:124</a></div>
                         </td>
                     </tr>
 
@@ -787,15 +787,15 @@ import {
     ApiTags,
 } from &quot;@nestjs/swagger&quot;;
 import type { Response } from &quot;express&quot;;
-import { Public } from &quot;../../../../auth/public.decorator&quot;;
+import { Public } from &quot;../../../../../auth/public.decorator&quot;;
 import {
     ChainedAsAuthorizeQueryDto,
     ChainedAsErrorResponseDto,
     ChainedAsParResponseDto,
     ChainedAsTokenRequestDto,
     ChainedAsTokenResponseDto,
-} from &quot;../chained-as/dto/chained-as.dto&quot;;
-import { extractDpopJkt } from &quot;../chained-as/chained-as.service&quot;;
+    extractDpopJkt,
+} from &quot;../shared&quot;;
 import { ChainedAsVpService } from &quot;./chained-as-vp.service&quot;;
 
 @ApiTags(&quot;Chained AS VP&quot;)

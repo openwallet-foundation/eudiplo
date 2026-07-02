@@ -119,7 +119,7 @@
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
     <span class="icon ion-ios-document" aria-hidden="true"></span>
-    <code>src/issuer/issuance/oid4vci/chained-as/chained-as.controller.ts</code>
+    <code>src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts</code>
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -183,7 +183,7 @@ issuing its own tokens containing issuer_state for session correlation.</p>
                     <h4>Used by</h4>
                         <ul class="list-unstyled relationships-list">
                                 <li>
-                                            <code><a href="../modules/IssuanceModule.html" target="_self" >IssuanceModule</a></code>
+                                            <code><a href="../modules/AuthorizationModule.html" target="_self" >AuthorizationModule</a></code>
                                 </li>
                         </ul>
                 </div>
@@ -312,8 +312,8 @@ issuing its own tokens containing issuer_state for session correlation.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="137"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.controller.ts:137</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="138"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:138</a></div>
                         </td>
                     </tr>
 
@@ -421,8 +421,8 @@ Validates the request_uri and redirects to the upstream OIDC provider.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="172"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.controller.ts:172</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="173"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:173</a></div>
                         </td>
                     </tr>
 
@@ -571,8 +571,8 @@ Receives the authorization code from upstream and redirects the wallet.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="90"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.controller.ts:90</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="91"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:91</a></div>
                         </td>
                     </tr>
 
@@ -707,8 +707,8 @@ Wallets submit authorization parameters here before redirecting to authorize.</p
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="223"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.controller.ts:223</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="224"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:224</a></div>
                         </td>
                     </tr>
 
@@ -807,15 +807,16 @@ import {
     ApiTags,
 } from &quot;@nestjs/swagger&quot;;
 import type { Response } from &quot;express&quot;;
-import { Public } from &quot;../../../../auth/public.decorator&quot;;
-import { ChainedAsService, extractDpopJkt } from &quot;./chained-as.service&quot;;
+import { Public } from &quot;../../../../../auth/public.decorator&quot;;
+import { ChainedAsService } from &quot;./chained-as.service&quot;;
 import {
     ChainedAsAuthorizeQueryDto,
     ChainedAsErrorResponseDto,
     ChainedAsParResponseDto,
     ChainedAsTokenRequestDto,
     ChainedAsTokenResponseDto,
-} from &quot;./dto/chained-as.dto&quot;;
+    extractDpopJkt,
+} from &quot;../shared&quot;;
 
 /**
  * Controller for Chained Authorization Server endpoints.
