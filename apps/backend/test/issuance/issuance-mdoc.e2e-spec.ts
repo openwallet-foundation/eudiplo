@@ -6,10 +6,19 @@ import {
 } from "@openid4vc/oauth2";
 import { Openid4vciClient } from "@openid4vc/openid4vci";
 import { exportJWK, generateKeyPair } from "jose";
+import { Issuer } from "@owf/mdoc";
 import request from "supertest";
 import { App } from "supertest/types";
 import { Agent, setGlobalDispatcher } from "undici";
-import { afterAll, beforeAll, describe, expect, test } from "vitest";
+import {
+    afterAll,
+    afterEach,
+    beforeAll,
+    describe,
+    expect,
+    test,
+    vi,
+} from "vitest";
 import {
     callbacks,
     getSignJwtCallback,
@@ -42,7 +51,16 @@ describe("Issuance - mDOC Credentials", () => {
         await app.close();
     });
 
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
     test("issue mso_mdoc credential", async () => {
+        const addNamespaceSpy = vi.spyOn(
+            Issuer.prototype as any,
+            "addIssuerNamespace",
+        );
+
         // Create an offer for mDOC credential
         const offerResponse = await request(app.getHttpServer())
             .post("/issuer/offer")
@@ -134,5 +152,15 @@ describe("Issuance - mDOC Credentials", () => {
         expect(typeof credential).toBe("string");
         // Verify it's valid base64url (no padding, no + or /)
         expect(credential).toMatch(/^[A-Za-z0-9_-]+$/);
+
+        expect(addNamespaceSpy).toHaveBeenCalledTimes(1);
+        expect(addNamespaceSpy).toHaveBeenCalledWith(
+            "eu.europa.ec.eudi.pid.1",
+            expect.objectContaining({
+                age_birth_year: 1964,
+                age_over_18: true,
+                birth_date: "1964-08-12",
+            }),
+        );
     });
 });

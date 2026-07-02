@@ -113,11 +113,10 @@ export class CredentialConfigCreateComponent implements OnInit {
     {
       label: 'Mobile Driving License (mDL)',
       value: 'org.iso.18013.5.1.mDL',
-      namespace: 'org.iso.18013.5.1',
     },
-    { label: 'EU PID', value: 'eu.europa.ec.eudi.pid.1', namespace: 'eu.europa.ec.eudi.pid.1' },
-    { label: 'EU mDL', value: 'org.iso.18013.5.1.mDL', namespace: 'org.iso.18013.5.1' },
-    { label: 'Custom', value: '', namespace: '' },
+    { label: 'EU PID', value: 'eu.europa.ec.eudi.pid.1' },
+    { label: 'EU mDL', value: 'org.iso.18013.5.1.mDL' },
+    { label: 'Custom', value: '' },
   ];
 
   selectedLifetimePreset: number | null = 3600;
@@ -180,7 +179,6 @@ export class CredentialConfigCreateComponent implements OnInit {
       sdJwtTrustFormat: new FormControl('x5c'),
       // mDOC specific fields
       docType: new FormControl(''),
-      namespace: new FormControl(''),
       fields: new FormArray([]),
       displayConfigs: new FormArray([this.createDisplayConfigGroup()]),
       embeddedDisclosurePolicy: new FormControl(''),
@@ -509,7 +507,6 @@ export class CredentialConfigCreateComponent implements OnInit {
       sdJwtTrustFormat: (normalizedConfig as any).sdJwtTrustFormat || 'x5c',
       // mDOC specific
       docType: normalizedConfig.config?.docType || '',
-      namespace: (normalizedConfig.config as any)?.namespace || '',
       displayConfigs: normalizedConfig.config?.display || [],
       embeddedDisclosurePolicy: this.stringifyField(normalizedConfig.embeddedDisclosurePolicy),
       // Key attestation requirements
@@ -596,11 +593,8 @@ export class CredentialConfigCreateComponent implements OnInit {
   /**
    * Handle docType preset selection
    */
-  onDocTypePresetChange(preset: { value: string; namespace: string }): void {
+  onDocTypePresetChange(preset: { value: string }): void {
     this.form.get('docType')?.setValue(preset.value);
-    if (preset.namespace) {
-      this.form.get('namespace')?.setValue(preset.namespace);
-    }
   }
 
   /**
@@ -706,14 +700,14 @@ export class CredentialConfigCreateComponent implements OnInit {
     const display = new FormArray(
       (field?.display || []).map((entry) => this.createFieldDisplayGroup(entry))
     );
+    const isMdoc = this.form.get('format')?.value === 'mso_mdoc';
 
     return new FormGroup({
-      path: new FormControl(field?.path?.join('.') || '', [Validators.required]),
+      path: new FormControl(this.normalizeFieldPathForForm(field, isMdoc), [Validators.required]),
       type: new FormControl(field?.type || 'string', [Validators.required]),
       defaultValue: new FormControl(this.stringifyField(field?.defaultValue)),
       mandatory: new FormControl(!!field?.mandatory),
       disclosable: new FormControl(field?.disclosable ?? true),
-      namespace: new FormControl(field?.namespace || ''),
       display,
     });
   }
@@ -877,7 +871,11 @@ export class CredentialConfigCreateComponent implements OnInit {
       }),
     };
 
-    formValue.fields = this.buildFieldsPayload(formValue.fields || [], isMdoc, formValue.namespace);
+    formValue.fields = this.buildFieldsPayload(
+      formValue.fields || [],
+      isMdoc,
+      formValue.docType || formValue.namespace
+    );
 
     // Convert empty strings to null to clear optional fields (for PATCH semantics)
     formValue.keyChainId = formValue.keyChainId || null;
@@ -970,13 +968,15 @@ export class CredentialConfigCreateComponent implements OnInit {
         const path = this.parseFieldPath(rawField['path']);
         const defaultValueRaw = rawField['defaultValue']?.trim();
         const namespace = rawField['namespace']?.trim() || defaultNamespace?.trim() || undefined;
+        const normalizedPath =
+          isMdoc && namespace ? this.ensureNamespacedPath(path, namespace) : path;
 
         const field: ClaimFieldDefinitionDto = {
-          path,
+          path: normalizedPath,
           type: rawField['type'],
           mandatory: !!rawField['mandatory'],
           ...(isMdoc ? {} : { disclosable: !!rawField['disclosable'] }),
-          ...(namespace ? { namespace } : {}),
+          ...(!isMdoc && namespace ? { namespace } : {}),
         };
 
         if (defaultValueRaw) {
@@ -1009,6 +1009,35 @@ export class CredentialConfigCreateComponent implements OnInit {
       .split('.')
       .map((segment) => segment.trim())
       .filter(Boolean);
+  }
+
+  private normalizeFieldPathForForm(
+    field: ClaimFieldDefinitionDto | undefined,
+    isMdoc: boolean
+  ): string {
+    const path = field?.path || [];
+    if (!isMdoc || path.length === 0) {
+      return path.join('.') || '';
+    }
+
+    const namespace = field?.namespace?.trim() || this.form.get('docType')?.value?.trim() || '';
+    if (namespace && path[0] === namespace) {
+      return path.slice(1).join('.');
+    }
+
+    return path.join('.');
+  }
+
+  private ensureNamespacedPath(path: string[], namespace: string): string[] {
+    if (path.length === 0) {
+      return path;
+    }
+
+    if (path[0] === namespace) {
+      return path;
+    }
+
+    return [namespace, ...path];
   }
 
   /**

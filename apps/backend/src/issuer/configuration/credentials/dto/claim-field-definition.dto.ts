@@ -79,7 +79,8 @@ export class ClaimFieldDefinitionDto {
     disclosable?: boolean;
 
     @ApiPropertyOptional({
-        description: "Namespace for mDOC field",
+        description:
+            "Namespace for mDOC field. Optional when the namespace is already present as the first path segment.",
         example: "eu.europa.ec.eudi.pid.1",
     })
     @IsOptional()
