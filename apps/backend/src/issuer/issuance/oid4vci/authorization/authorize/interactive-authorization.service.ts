@@ -10,21 +10,21 @@ import {
 import type { Request } from "express";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
-import { CryptoService } from "../../../../crypto/crypto.service";
-import { SessionService } from "../../../../session/session.service";
-import { Oid4vpService } from "../../../../verifier/oid4vp/oid4vp.service";
-import { PresentationsService } from "../../../../verifier/presentations/presentations.service";
-import { CredentialsService } from "../../../configuration/credentials/credentials.service";
+import { CryptoService } from "../../../../../crypto/crypto.service";
+import { SessionService } from "../../../../../session/session.service";
+import { Oid4vpService } from "../../../../../verifier/oid4vp/oid4vp.service";
+import { PresentationsService } from "../../../../../verifier/presentations/presentations.service";
+import { CredentialsService } from "../../../../configuration/credentials/credentials.service";
 import {
     type IaeAction,
     type IaeActionOpenid4vpPresentation,
     IaeActionType,
-} from "../../../configuration/credentials/entities/iae-action.dto";
-import { IssuanceService } from "../../../configuration/issuance/issuance.service";
+} from "../../../../configuration/credentials/entities/iae-action.dto";
+import { IssuanceService } from "../../../../configuration/issuance/issuance.service";
 import {
     InteractiveAuthSessionEntity,
     InteractiveAuthSessionStatus,
-} from "../entities/interactive-auth-session.entity";
+} from "../../entities/interactive-auth-session.entity";
 import {
     InteractionType,
     InteractiveAuthorizationRequestDto,

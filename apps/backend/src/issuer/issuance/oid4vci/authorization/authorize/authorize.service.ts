@@ -9,7 +9,6 @@ import {
     type HttpMethod,
     Jwk,
     Oauth2AuthorizationServer,
-    PkceCodeChallengeMethod,
     PreAuthorizedCodeGrantIdentifier,
     preAuthorizedCodeGrantIdentifier,
     type RefreshTokenGrantIdentifier,
@@ -18,15 +17,20 @@ import {
 import type { Request } from "express";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
-import { CryptoService } from "../../../../crypto/crypto.service";
-import { KeyChainService } from "../../../../crypto/key/key-chain.service";
-import { SessionService } from "../../../../session/session.service";
-import { WalletAttestationService } from "../../../../shared/trust/wallet-attestation.service";
-import { IssuanceService } from "../../../configuration/issuance/issuance.service";
-import { StatusListConfigService } from "../../../lifecycle/status/status-list-config.service";
-import { NonceEntity } from "../entities/nonces.entity";
-import { TokenErrorException } from "../exceptions";
-import { getHeadersFromRequest } from "../util";
+import { CryptoService } from "../../../../../crypto/crypto.service";
+import { KeyChainService } from "../../../../../crypto/key/key-chain.service";
+import { SessionService } from "../../../../../session/session.service";
+import { WalletAttestationService } from "../../../../../shared/trust/wallet-attestation.service";
+import { IssuanceService } from "../../../../configuration/issuance/issuance.service";
+import { StatusListConfigService } from "../../../../lifecycle/status/status-list-config.service";
+import {
+    buildAuthorizationServerMetadata,
+    buildWalletAttestationMetadata,
+    DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+} from "../shared";
+import { NonceEntity } from "../../entities/nonces.entity";
+import { TokenErrorException } from "../../exceptions";
+import { getHeadersFromRequest } from "../../util";
 import { AuthorizeQueries } from "./dto/authorize-request.dto";
 
 interface ParsedAccessTokenAuthorizationCodeRequestGrant {
@@ -281,9 +285,6 @@ export class AuthorizeService {
     async authzMetadata(
         tenantId: string,
     ): Promise<AuthorizationServerMetadata> {
-        //TODO: read from config
-        const useDpop = true;
-
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
         const walletAttestationRequired =
@@ -299,41 +300,27 @@ export class AuthorizeService {
             ? `${authServer}/status-management/status-list-aggregation`
             : undefined;
 
-        const metadata: AuthorizationServerMetadata = {
+        const metadata = buildAuthorizationServerMetadata({
             issuer: authServer,
-            token_endpoint: `${authServer}/authorize/token`,
-            authorization_endpoint: `${authServer}/authorize`,
-            interactive_authorization_endpoint: `${authServer}/authorize/interactive`,
-            jwks_uri: `${publicUrl}/.well-known/jwks.json/issuers/${tenantId}`,
-            grant_types_supported: [
+            authorizationEndpoint: `${authServer}/authorize`,
+            tokenEndpoint: `${authServer}/authorize/token`,
+            pushedAuthorizationRequestEndpoint: `${authServer}/authorize/par`,
+            jwksUri: `${publicUrl}/.well-known/jwks.json/issuers/${tenantId}`,
+            grantTypesSupported: [
                 "authorization_code",
+                "refresh_token",
                 "urn:ietf:params:oauth:grant-type:pre-authorized_code",
-            ],
-            dpop_signing_alg_values_supported: useDpop ? ["ES256"] : undefined,
-            // TODO: verify this on the server
-            require_pushed_authorization_requests: true,
-            pushed_authorization_request_endpoint: `${authServer}/authorize/par`,
-            code_challenge_methods_supported: [PkceCodeChallengeMethod.S256],
-            authorization_details_types_supported: ["openid_credential"],
-            token_endpoint_auth_methods_supported: [
-                "none",
-                "attest_jwt_client_auth",
-            ],
-            status_list_aggregation_endpoint: statusListAggregationEndpoint,
-            challenge_endpoint: `${authServer}/authorize/challenge`,
-            client_attestation_signing_alg_values_supported: ["ES256"],
-            client_attestation_pop_signing_alg_values_supported: ["ES256"],
-        };
-
-        if (walletAttestationRequired) {
-            metadata.challenge_endpoint = `${authServer}/authorize/challenge`;
-            metadata.client_attestation_signing_alg_values_supported = [
-                "ES256",
-            ];
-            metadata.client_attestation_pop_signing_alg_values_supported = [
-                "ES256",
-            ];
-        }
+            ],            
+            dpopSigningAlgValuesSupported: DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+            ...buildWalletAttestationMetadata(walletAttestationRequired),
+            additionalMetadata: {
+                // TODO: verify this on the server
+                require_pushed_authorization_requests: true,
+                interactive_authorization_endpoint: `${authServer}/authorize/interactive`,
+                status_list_aggregation_endpoint: statusListAggregationEndpoint,
+                challenge_endpoint: `${authServer}/authorize/challenge`,
+            },
+        }) as AuthorizationServerMetadata;
 
         return this.getAuthorizationServer(
             tenantId,

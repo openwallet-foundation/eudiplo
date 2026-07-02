@@ -2,6 +2,7 @@
 | --- | ---- | ----- |
 | `LOG_LEVEL` | `string` | Application log level  (default: `debug`) |
 | `LOG_ENABLE_HTTP_LOGGER` | `boolean` | Enable HTTP request logging  (default: `false`) |
+| `LOG_HTTP_RESPONSE_BODY` | `boolean` | Capture and log HTTP response bodies (buffered up to 4 KB). Disabled by default because response bodies may contain access tokens, credentials, or other sensitive data.  (default: `false`) |
 | `LOG_ENABLE_SESSION_LOGGER` | `boolean` | Enable session flow logging  (default: `false`) |
 | `LOG_SESSION_STORE` | `string` | Controls whether session log entries are persisted to the database. 'off' disables storage, 'errors' stores only warn/error entries, 'all' stores everything, 'verbose' stores everything including full request/response bodies and error stacks.  (default: `off`) |
 | `LOG_TO_FILE` | `boolean` | Enable logging to file in addition to console  (default: `false`) |

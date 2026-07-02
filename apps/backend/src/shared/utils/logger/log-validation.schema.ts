@@ -13,6 +13,14 @@ export const LOG_VALIDATION_SCHEMA = Joi.object({
         .default(false)
         .description("Enable HTTP request logging")
         .meta({ group: "log", order: 20 }),
+    LOG_HTTP_RESPONSE_BODY: Joi.boolean()
+        .default(false)
+        .description(
+            "Capture and log HTTP response bodies (buffered up to 4 KB). " +
+                "Disabled by default because response bodies may contain access tokens, " +
+                "credentials, or other sensitive data.",
+        )
+        .meta({ group: "log", order: 25 }),
     LOG_ENABLE_SESSION_LOGGER: Joi.boolean()
         .default(false)
         .description("Enable session flow logging")

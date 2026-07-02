@@ -13,7 +13,7 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 import { TenantEntity } from "../../auth/tenant/entitites/tenant.entity";
-import { AuthorizeQueries } from "../../issuer/issuance/oid4vci/authorize/dto/authorize-request.dto";
+import { AuthorizeQueries } from "../../issuer/issuance/oid4vci/authorization/authorize/dto/authorize-request.dto";
 import { OfferRequestDto } from "../../issuer/issuance/oid4vci/dto/offer-request.dto";
 import { EncryptedJsonTransformer } from "../../shared/utils/encryption";
 import { WebhookConfig } from "../../shared/utils/webhook/webhook.dto";

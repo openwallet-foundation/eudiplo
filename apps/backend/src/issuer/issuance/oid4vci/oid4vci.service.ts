@@ -54,10 +54,10 @@ import { AuthorizationIdentity } from "../../configuration/credentials/dto/autho
 import { ClaimsWebhookResult } from "../../configuration/credentials/dto/claims-webhook-result";
 import { IssuanceService } from "../../configuration/issuance/issuance.service";
 import { WebhookEndpointEntity } from "../../configuration/webhook-endpoint/entities/webhook-endpoint.entity";
-import { AuthorizeService } from "./authorize/authorize.service";
-import { AuthorizationServersService } from "./authorization-servers/authorization-servers.service";
-import { ChainedAsService } from "./chained-as/chained-as.service";
-import { ChainedAsVpService } from "./chained-as-vp/chained-as-vp.service";
+import { AuthorizeService } from "./authorization/authorize/authorize.service";
+import { AuthorizationServersService } from "./authorization/authorization-servers/authorization-servers.service";
+import { ChainedAsService } from "./authorization/chained-as/chained-as.service";
+import { ChainedAsVpService } from "./authorization/chained-as-vp/chained-as-vp.service";
 import { DeferredCredentialService } from "./deferred-credential.service";
 import { DeferredCredentialRequestDto } from "./dto/deferred-credential-request.dto";
 import { NotificationRequestDto } from "./dto/notification-request.dto";

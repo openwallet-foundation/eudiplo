@@ -5,27 +5,20 @@ import { SerializedRequest, SerializedResponse } from "pino";
 
 const MAX_LOGGED_RESPONSE_BODY_LENGTH = 4096;
 
-const SENSITIVE_KEY_PATTERN =
-    /password|secret|token|authorization|cookie|set-cookie|clientsecret|access_token|refresh_token/i;
-
-function redactSensitiveValues(value: unknown): unknown {
-    if (Array.isArray(value)) {
-        return value.map((item) => redactSensitiveValues(item));
-    }
-
-    if (value && typeof value === "object") {
-        const redacted: Record<string, unknown> = {};
-        for (const [key, nestedValue] of Object.entries(
-            value as Record<string, unknown>,
-        )) {
-            redacted[key] = SENSITIVE_KEY_PATTERN.test(key)
-                ? "[REDACTED]"
-                : redactSensitiveValues(nestedValue);
-        }
-        return redacted;
-    }
-
-    return value;
+/**
+ * Content types we consider safe to buffer and stringify for logs. Anything else
+ * (binary uploads/downloads, streaming) is skipped entirely.
+ */
+function isLoggableContentType(contentType: string | undefined): boolean {
+    const normalized = (contentType || "").toLowerCase();
+    return (
+        normalized === "" ||
+        normalized.includes("json") ||
+        normalized.startsWith("text/") ||
+        normalized.includes("xml") ||
+        normalized.includes("javascript") ||
+        normalized.includes("x-www-form-urlencoded")
+    );
 }
 
 function truncate(value: string): string {
@@ -44,24 +37,11 @@ function serializeResponseBody(
         return undefined;
     }
 
-    const normalizedContentType = (contentType || "").toLowerCase();
-    const isLikelyText =
-        normalizedContentType.includes("json") ||
-        normalizedContentType.startsWith("text/") ||
-        normalizedContentType.includes("xml") ||
-        normalizedContentType.includes("javascript") ||
-        normalizedContentType.includes("x-www-form-urlencoded") ||
-        normalizedContentType === "";
-
-    if (!isLikelyText) {
-        return "[non-text response omitted]";
-    }
-
     const bodyText = truncate(rawBody.toString("utf8"));
 
-    if (normalizedContentType.includes("json")) {
+    if ((contentType || "").toLowerCase().includes("json")) {
         try {
-            return redactSensitiveValues(JSON.parse(bodyText));
+            return JSON.parse(bodyText);
         } catch {
             return bodyText;
         }
@@ -78,7 +58,6 @@ function attachResponseBodyCapture(req: any, res: any): void {
 
     response.__eudiploResponseBodyCaptureInstalled = true;
 
-    const chunks: Buffer[] = [];
     const originalWrite = response.write?.bind(response);
     const originalEnd = response.end?.bind(response);
 
@@ -89,33 +68,62 @@ function attachResponseBodyCapture(req: any, res: any): void {
         return;
     }
 
-    response.write = (chunk: unknown, ...args: unknown[]) => {
-        if (chunk !== undefined && chunk !== null) {
-            chunks.push(
-                Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk)),
-            );
-        }
-        return originalWrite(chunk, ...args);
-    };
+    // Skip streaming/binary responses upfront (checked on first write/end).
+    let capturing: boolean | undefined;
+    const chunks: Buffer[] = [];
+    let totalLength = 0;
 
-    response.end = (chunk?: unknown, ...args: unknown[]) => {
-        if (chunk !== undefined && chunk !== null) {
-            chunks.push(
-                Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk)),
-            );
+    const shouldCapture = (): boolean => {
+        if (capturing !== undefined) {
+            return capturing;
         }
-
-        const bodyBuffer =
-            chunks.length > 0 ? Buffer.concat(chunks) : Buffer.alloc(0);
         const responseContentType =
             typeof response.getHeader === "function"
                 ? String(response.getHeader("content-type") || "")
                 : undefined;
+        capturing = isLoggableContentType(responseContentType);
+        if (!capturing) {
+            response.__eudiploLoggedResponseBody =
+                "[non-text response omitted]";
+        }
+        return capturing;
+    };
 
-        response.__eudiploLoggedResponseBody = serializeResponseBody(
-            bodyBuffer,
-            responseContentType,
-        );
+    const pushChunk = (chunk: unknown): void => {
+        if (chunk === undefined || chunk === null || !shouldCapture()) {
+            return;
+        }
+        if (totalLength >= MAX_LOGGED_RESPONSE_BODY_LENGTH) {
+            return;
+        }
+        const buf = Buffer.isBuffer(chunk)
+            ? chunk
+            : Buffer.from(String(chunk));
+        const remaining = MAX_LOGGED_RESPONSE_BODY_LENGTH - totalLength;
+        chunks.push(buf.length > remaining ? buf.subarray(0, remaining) : buf);
+        totalLength += Math.min(buf.length, remaining);
+    };
+
+    response.write = (chunk: unknown, ...args: unknown[]) => {
+        pushChunk(chunk);
+        return originalWrite(chunk, ...args);
+    };
+
+    response.end = (chunk?: unknown, ...args: unknown[]) => {
+        pushChunk(chunk);
+
+        if (capturing !== false) {
+            const responseContentType =
+                typeof response.getHeader === "function"
+                    ? String(response.getHeader("content-type") || "")
+                    : undefined;
+            const bodyBuffer =
+                chunks.length > 0 ? Buffer.concat(chunks) : Buffer.alloc(0);
+            response.__eudiploLoggedResponseBody = serializeResponseBody(
+                bodyBuffer,
+                responseContentType,
+            );
+        }
 
         return originalEnd(chunk, ...args);
     };
@@ -142,6 +150,12 @@ export const createLoggerOptions = (configService: ConfigService) => {
         "LOG_ENABLE_HTTP_LOGGER",
     );
 
+    // Opt-in response body capture. Disabled by default because response bodies
+    // can contain access tokens, credentials, and other secrets.
+    const captureResponseBody = configService.getOrThrow<boolean>(
+        "LOG_HTTP_RESPONSE_BODY",
+    );
+
     // Check if file logging is enabled
     const logToFile = configService.getOrThrow<boolean>("LOG_TO_FILE");
     const logFilePath = configService.getOrThrow<string>("LOG_FILE_PATH");
@@ -160,7 +174,7 @@ export const createLoggerOptions = (configService: ConfigService) => {
                 colorize: true,
                 singleLine: false,
                 translateTime: "yyyy-mm-dd HH:MM:ss",
-                //ignore: "pid,hostname,req,res,responseTime,context",
+                ignore: "pid,hostname,req,res,responseTime,context",
                 messageFormat: "{if context}[{context}] {end}{msg}",
             },
         },
@@ -207,16 +221,58 @@ export const createLoggerOptions = (configService: ConfigService) => {
                     if (!enableHttpLogger) {
                         return true;
                     }
-                    //check if path includes /api to ignore it
-                    if (req.url?.includes("/api")) {
-                        return true;
-                    }
-                    return false;
+                    // Parse the pathname so query strings and substrings like
+                    // "/foo/api-docs" don't accidentally match.
+                    const pathname = new URL(
+                        req.url ?? "",
+                        "http://localhost",
+                    ).pathname;
+                    return (
+                        pathname.startsWith("/api") ||
+                        pathname === "/health" ||
+                        pathname === "/metrics"
+                    );
                 },
+            },
+            // Redact sensitive request/response fields. Response bodies are
+            // additionally gated behind LOG_HTTP_RESPONSE_BODY.
+            redact: {
+                paths: [
+                    'req.headers.authorization',
+                    'req.headers.cookie',
+                    'req.headers.dpop',
+                    'req.headers["oauth-client-attestation"]',
+                    'req.headers["oauth-client-attestation-pop"]',
+                    'res.headers["set-cookie"]',
+                    "res.body.access_token",
+                    "res.body.refresh_token",
+                    "res.body.id_token",
+                    "res.body.c_nonce",
+                    "res.body.credential",
+                    "res.body.credentials",
+                    "res.body.attestation_challenge",
+                ],
+                censor: "[redacted]",
             },
             transport: {
                 targets,
             },
+            // Put request/response essentials directly into `msg` so they
+            // remain visible after pino-pretty ignores nested req/res fields.
+            customReceivedMessage: (req: IncomingMessage) =>
+                `--> ${req.method} ${req.url}`,
+            customSuccessMessage: (
+                req: IncomingMessage,
+                res: { statusCode: number },
+                responseTime: number,
+            ) =>
+                `<-- ${req.method} ${req.url} ${res.statusCode} ${Math.round(responseTime)}ms`,
+            customErrorMessage: (
+                req: IncomingMessage,
+                res: { statusCode: number },
+                err: Error,
+            ) =>
+                `<-- ${req.method} ${req.url} ${res.statusCode} ${err.message}`,
             formatters: {
                 log: (object: any) => {
                     object.hostname = undefined;
@@ -224,7 +280,9 @@ export const createLoggerOptions = (configService: ConfigService) => {
                 },
             },
             customProps: (req: any, res: any) => {
-                attachResponseBodyCapture(req, res);
+                if (captureResponseBody) {
+                    attachResponseBodyCapture(req, res);
+                }
                 return {
                     sessionId: req.params?.session,
                 };
@@ -243,7 +301,9 @@ export const createLoggerOptions = (configService: ConfigService) => {
                 res: (res: SerializedResponse & { raw?: any }) => {
                     return {
                         statusCode: res.statusCode,
-                        body: res.raw?.__eudiploLoggedResponseBody,
+                        body: captureResponseBody
+                            ? res.raw?.__eudiploLoggedResponseBody
+                            : undefined,
                     };
                 },
             },

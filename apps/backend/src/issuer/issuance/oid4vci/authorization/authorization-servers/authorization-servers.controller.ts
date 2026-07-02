@@ -19,15 +19,15 @@ import {
     ApiTags,
 } from "@nestjs/swagger";
 import type { Response } from "express";
-import { Public } from "../../../../auth/public.decorator";
-import { extractDpopJkt } from "../chained-as/chained-as.service";
+import { Public } from "../../../../../auth/public.decorator";
 import {
     ChainedAsAuthorizeQueryDto,
     ChainedAsErrorResponseDto,
     ChainedAsParResponseDto,
     ChainedAsTokenRequestDto,
     ChainedAsTokenResponseDto,
-} from "../chained-as/dto/chained-as.dto";
+    extractDpopJkt,
+} from "../shared";
 import { AuthorizationServersService } from "./authorization-servers.service";
 
 @ApiTags("Authorization Servers")

@@ -1,33 +1,38 @@
-import { createHash, randomBytes } from "node:crypto";
+import { randomBytes } from "node:crypto";
 import {
     BadRequestException,
     Injectable,
     Logger,
     NotFoundException,
-    UnauthorizedException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TraceService } from "nestjs-otel";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
-import { KeyChainService } from "../../../../crypto/key/key-chain.service";
-import { SessionStatus } from "../../../../session/entities/session.entity";
-import { SessionService } from "../../../../session/session.service";
-import { WalletAttestationService } from "../../../../shared/trust/wallet-attestation.service";
-import { ManagedAuthorizationServerConfig } from "../../../configuration/issuance/dto/authorization-server-config.dto";
-import { IssuanceService } from "../../../configuration/issuance/issuance.service";
-import { Oid4vpService } from "../../../../verifier/oid4vp/oid4vp.service";
+import { KeyChainService } from "../../../../../crypto/key/key-chain.service";
+import { SessionStatus } from "../../../../../session/entities/session.entity";
+import { SessionService } from "../../../../../session/session.service";
+import { WalletAttestationService } from "../../../../../shared/trust/wallet-attestation.service";
+import { ManagedAuthorizationServerConfig } from "../../../../configuration/issuance/dto/authorization-server-config.dto";
+import { IssuanceService } from "../../../../configuration/issuance/issuance.service";
+import { Oid4vpService } from "../../../../../verifier/oid4vp/oid4vp.service";
 import {
+    assertTokenRequestSessionValid,
+    buildAuthorizationServerMetadata,
+    buildWalletAttestationMetadata,
+    buildJwksResponse,
     ChainedAsParRequestDto,
     ChainedAsParResponseDto,
-    ChainedAsTokenRequestDto,
-    ChainedAsTokenResponseDto,
-} from "../chained-as/dto/chained-as.dto";
-import {
     ChainedAsSessionEntity,
     ChainedAsSessionStatus,
-} from "../chained-as/entities/chained-as-session.entity";
+    ChainedAsTokenRequestDto,
+    ChainedAsTokenResponseDto,
+    issueRefreshTokenIfEnabled,
+    resolveSessionForTokenRequest,
+    resolveTokenBinding,
+    DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+} from "../shared";
 
 @Injectable()
 export class AuthorizationServersService {
@@ -451,98 +456,6 @@ export class AuthorizationServersService {
         return redirectUrl.toString();
     }
 
-    private verifyPkce(
-        session: ChainedAsSessionEntity,
-        codeVerifier?: string,
-    ): void {
-        if (session.codeChallenge && codeVerifier) {
-            const expectedChallenge =
-                session.codeChallengeMethod === "S256"
-                    ? createHash("sha256")
-                          .update(codeVerifier)
-                          .digest("base64url")
-                    : codeVerifier;
-            if (expectedChallenge !== session.codeChallenge) {
-                throw new UnauthorizedException("Invalid code_verifier");
-            }
-        } else if (session.codeChallenge && !codeVerifier) {
-            throw new BadRequestException("code_verifier is required");
-        }
-    }
-
-    private async resolveSessionForTokenRequest(
-        tenantId: string,
-        request: ChainedAsTokenRequestDto,
-    ): Promise<ChainedAsSessionEntity> {
-        if (request.grant_type === "refresh_token") {
-            if (!request.refresh_token) {
-                throw new BadRequestException(
-                    "refresh_token is required for refresh_token grant",
-                );
-            }
-            const session = await this.sessionRepository.findOne({
-                where: { tenantId, refreshToken: request.refresh_token },
-            });
-            if (!session) {
-                throw new UnauthorizedException(
-                    "Invalid or expired refresh_token",
-                );
-            }
-            if (
-                session.refreshTokenExpiresAt &&
-                session.refreshTokenExpiresAt < new Date()
-            ) {
-                throw new UnauthorizedException("refresh_token has expired");
-            }
-            return session;
-        }
-
-        if (!request.code) {
-            throw new BadRequestException(
-                "code is required for authorization_code grant",
-            );
-        }
-
-        const session = await this.sessionRepository.findOne({
-            where: {
-                tenantId,
-                authorizationCode: request.code,
-                status: ChainedAsSessionStatus.AUTHORIZED,
-            },
-        });
-        if (!session) {
-            throw new UnauthorizedException("Invalid authorization code");
-        }
-
-        return session;
-    }
-
-    private async assertTokenRequestSessionValid(
-        session: ChainedAsSessionEntity,
-        request: ChainedAsTokenRequestDto,
-    ): Promise<void> {
-        if (
-            request.grant_type === "authorization_code" &&
-            session.authorizationCodeExpiresAt &&
-            session.authorizationCodeExpiresAt < new Date()
-        ) {
-            session.status = ChainedAsSessionStatus.EXPIRED;
-            await this.sessionRepository.save(session);
-            throw new UnauthorizedException("Authorization code expired");
-        }
-
-        if (
-            request.redirect_uri &&
-            request.redirect_uri !== session.redirectUri
-        ) {
-            throw new BadRequestException("redirect_uri mismatch");
-        }
-
-        if (request.grant_type === "authorization_code") {
-            this.verifyPkce(session, request.code_verifier);
-        }
-    }
-
     private buildTokenPayload(
         tenantId: string,
         authorizationServerId: string,
@@ -600,20 +513,22 @@ export class AuthorizationServersService {
             );
         }
 
-        const session = await this.resolveSessionForTokenRequest(
+        const session = await resolveSessionForTokenRequest(
+            this.sessionRepository,
             tenantId,
             request,
         );
-        await this.assertTokenRequestSessionValid(session, request);
+        await assertTokenRequestSessionValid(
+            this.sessionRepository,
+            session,
+            request,
+        );
 
-        let tokenType = "Bearer";
-        let dpopJkt: string | undefined;
-        if (dpopJwt) {
-            tokenType = "DPoP";
-            dpopJkt = session.dpopJkt;
-        } else if (config.requireDPoP) {
-            throw new BadRequestException("DPoP proof is required");
-        }
+        const { tokenType, dpopJkt } = resolveTokenBinding(
+            config.requireDPoP,
+            session,
+            dpopJwt,
+        );
 
         const tokenLifetime = config.token?.lifetimeSeconds || 3600;
         const jti = v4();
@@ -648,19 +563,10 @@ export class AuthorizationServersService {
 
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
-        let refreshToken: string | undefined;
-        if (issuanceConfig.refreshTokenEnabled) {
-            refreshToken = randomBytes(32).toString("base64url");
-            let refreshTokenExpiresAt: Date | undefined;
-            if (issuanceConfig.refreshTokenExpiresInSeconds) {
-                refreshTokenExpiresAt = new Date(
-                    Date.now() +
-                        issuanceConfig.refreshTokenExpiresInSeconds * 1000,
-                );
-            }
-            session.refreshToken = refreshToken;
-            session.refreshTokenExpiresAt = refreshTokenExpiresAt;
-        }
+        const refreshToken = issueRefreshTokenIfEnabled(
+            session,
+            issuanceConfig,
+        );
 
         await this.sessionRepository.save(session);
 
@@ -690,27 +596,21 @@ export class AuthorizationServersService {
             authorizationServerId,
         );
         const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
+        const issuanceConfig =
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const walletAttestationRequired =
+            issuanceConfig.walletAttestationRequired ?? false;
 
-        const metadata: Record<string, unknown> = {
+        return buildAuthorizationServerMetadata({
             issuer: baseUrl,
-            authorization_endpoint: `${baseUrl}/authorize`,
-            token_endpoint: `${baseUrl}/token`,
-            pushed_authorization_request_endpoint: `${baseUrl}/par`,
-            jwks_uri: `${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/authorization-servers/${authorizationServerId}`,
-            response_types_supported: ["code"],
-            grant_types_supported: ["authorization_code", "refresh_token"],
-            authorization_details_types_supported: ["openid_credential"],
-            token_endpoint_auth_methods_supported: [
-                "none",
-                "attest_jwt_client_auth",
-            ],
-            code_challenge_methods_supported: ["S256"],
-            dpop_signing_alg_values_supported: ["ES256", "ES384", "ES512"],
-            client_attestation_signing_alg_values_supported: ["ES256"],
-            client_attestation_pop_signing_alg_values_supported: ["ES256"],
-        };
-
-        return metadata;
+            authorizationEndpoint: `${baseUrl}/authorize`,
+            tokenEndpoint: `${baseUrl}/token`,
+            pushedAuthorizationRequestEndpoint: `${baseUrl}/par`,
+            jwksUri: `${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/authorization-servers/${authorizationServerId}`,
+            grantTypesSupported: ["authorization_code", "refresh_token"],
+            dpopSigningAlgValuesSupported: DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+            ...buildWalletAttestationMetadata(walletAttestationRequired),
+        });
     }
 
     async getJwks(
@@ -730,13 +630,9 @@ export class AuthorizationServersService {
             signingKeyId,
         );
 
-        return {
-            keys: [
-                {
-                    ...publicKey,
-                    kid: (publicKey as { kid?: string }).kid || signingKeyId,
-                } as Record<string, unknown>,
-            ],
-        };
+        return buildJwksResponse(
+            publicKey as { kid?: string; [key: string]: unknown },
+            signingKeyId,
+        );
     }
 }
