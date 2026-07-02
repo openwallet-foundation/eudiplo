@@ -20,7 +20,7 @@ interface JwkWithOptionalKid {
     [key: string]: unknown;
 }
 
-export const DEFAULT_CODE_CHALLENGE_METHODS_SUPPORTED = ["S256"] as const;
+const DEFAULT_CODE_CHALLENGE_METHODS_SUPPORTED = ["S256"] as const;
 
 export const DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED = [
     "ES256",
@@ -28,29 +28,14 @@ export const DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED = [
     "ES512",
 ] as const;
 
-export const DEFAULT_CLIENT_ATTESTATION_SIGNING_ALG_VALUES_SUPPORTED = [
+const DEFAULT_CLIENT_ATTESTATION_SIGNING_ALG_VALUES_SUPPORTED = [
     "ES256",
 ] as const;
 
-export const DEFAULT_TOKEN_ENDPOINT_AUTH_METHODS_SUPPORTED = [
+const DEFAULT_TOKEN_ENDPOINT_AUTH_METHODS_SUPPORTED = [
     "attest_jwt_client_auth",
     "none",
 ] as const;
-
-export const DEFAULT_ATTESTED_AUTH_SERVER_CAPABILITIES = {
-    tokenEndpointAuthMethodsSupported: [
-        ...DEFAULT_TOKEN_ENDPOINT_AUTH_METHODS_SUPPORTED,
-    ],
-    dpopSigningAlgValuesSupported: [
-        ...DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
-    ],
-    clientAttestationSigningAlgValuesSupported: [
-        ...DEFAULT_CLIENT_ATTESTATION_SIGNING_ALG_VALUES_SUPPORTED,
-    ],
-    clientAttestationPopSigningAlgValuesSupported: [
-        ...DEFAULT_CLIENT_ATTESTATION_SIGNING_ALG_VALUES_SUPPORTED,
-    ],
-} as const;
 
 export function buildWalletAttestationMetadata(
     walletAttestationRequired: boolean,
