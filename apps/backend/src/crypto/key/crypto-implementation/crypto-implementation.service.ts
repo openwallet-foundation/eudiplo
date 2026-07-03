@@ -12,6 +12,12 @@ export type CryptoType = "ES256";
  */
 export type JoseAlgorithm = "ES256" | "ES384" | "ES512";
 
+const JOSE_TO_CLASSIC_COSE_ALG: Record<JoseAlgorithm, number> = {
+    ES256: -7,
+    ES384: -35,
+    ES512: -36,
+};
+
 /**
  * COSE algorithm identifiers used for mDOC (ISO 18013-5)
  * Uses RFC 9864 fully-specified algorithm identifiers
@@ -57,11 +63,21 @@ export class CryptoImplementationService {
         }
 
         if (credentialFormat === CredentialFormat.MSO_MDOC) {
-            return joseAlgs
-                .map((alg) =>
-                    jwaSignatureAlgorithmToFullySpecifiedCoseAlgorithm(alg),
-                )
-                .filter((alg) => alg !== undefined);
+            const coseAlgs = new Set<number>();
+
+            for (const alg of joseAlgs) {
+                // Include classic COSE alg IDs for compatibility with generic identifiers.
+                coseAlgs.add(JOSE_TO_CLASSIC_COSE_ALG[alg]);
+
+                // Also include RFC 9864 fully-specified identifiers.
+                const fullySpecifiedAlg =
+                    jwaSignatureAlgorithmToFullySpecifiedCoseAlgorithm(alg);
+                if (fullySpecifiedAlg !== undefined) {
+                    coseAlgs.add(fullySpecifiedAlg);
+                }
+            }
+
+            return Array.from(coseAlgs);
         }
 
         // Default to JOSE algorithms
