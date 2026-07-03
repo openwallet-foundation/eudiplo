@@ -1048,6 +1048,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#registration-certificate-in-issuer-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registration Certificate in Issuer Metadata
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Registration Certificate in Issuer Metadata">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-generate-mode-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When generate Mode Runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-and-refresh-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache and Refresh Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mode-specific-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mode-Specific Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#refresh-tokens" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3033,6 +3105,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#registration-certificate-in-issuer-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registration Certificate in Issuer Metadata
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Registration Certificate in Issuer Metadata">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-generate-mode-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When generate Mode Runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-and-refresh-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache and Refresh Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mode-specific-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mode-Specific Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#refresh-tokens" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3313,6 +3457,7 @@ authorization, token behavior, and trust-related requirements.</p>
 <li><code>credentialRequestEncryption</code> (boolean, optional): Advertise support for encrypted credential requests (<code>credential_request_encryption</code>).</li>
 <li><code>credentialResponseEncryption</code> (boolean, optional): Advertise support for encrypted credential responses (<code>credential_response_encryption</code>).</li>
 <li><code>federation</code> (object, optional): OpenID Federation trust configuration for auth-server/upstream trust evaluation. See <a href="../../../architecture/federation/">OpenID Federation</a>.</li>
+<li><code>registrationCertificate</code> (object, optional): Controls whether a registration certificate is published in issuer metadata (<code>issuer_info</code>) and whether it is imported as JWT or generated from selected schema metadata.</li>
 <li><code>display</code> (array of objects, required): The display information from the <a href="https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html#name-credential-issuer-metadata:~:text=2%20or%20greater.-,display,-%3A%20OPTIONAL.%20A%20non">OID4VCI spec</a>. To host images or logos, you can use the <a href="../../../architecture/storage/">storage</a> system provided by EUDIPLO.</li>
 </ul>
 <div class="admonition warning">
@@ -3465,14 +3610,73 @@ authorization, token behavior, and trust-related requirements.</p>
 <li>Explicit issuer URL</li>
 </ul>
 <hr>
+<h2 id="registration-certificate-in-issuer-metadata">Registration Certificate in Issuer Metadata<a class="headerlink" href="#registration-certificate-in-issuer-metadata" title="Permanent link">¶</a></h2>
+<p>EUDIPLO can publish a registration certificate in the OID4VCI issuer metadata
+under <code>issuer_info</code> using:</p>
+<ul>
+<li><code>import</code> mode: use an existing JWT from configuration.</li>
+<li><code>generate</code> mode: derive provided attestations from selected schema metadata and generate via registrar.</li>
+</ul>
+<h3 id="example-configuration">Example Configuration<a class="headerlink" href="#example-configuration" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">"registrationCertificate"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">        </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">        </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"generate"</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">        </span><span class="nt">"schemaMetadataIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">            </span><span class="s2">"9a2f4033-f0ab-4f61-bd1d-6f4c321cb41b@1.0.0"</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">            </span><span class="s2">"5c53fcd0-63b4-4f5c-8674-599dbe9be2f3@1.2.0"</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">        </span><span class="p">],</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">        </span><span class="nt">"privacyPolicy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://issuer.example/privacy"</span><span class="p">,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="nt">"supportUri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mailto:support@issuer.example"</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="when-generate-mode-runs">When <code>generate</code> Mode Runs<a class="headerlink" href="#when-generate-mode-runs" title="Permanent link">¶</a></h3>
+<p>Generation is <strong>lazy/on-demand</strong>. It is triggered when issuer metadata is built,
+for example when a wallet calls:</p>
+<ul>
+<li><code>/.well-known/openid-credential-issuer/issuers/{tenant}</code></li>
+</ul>
+<p>Saving issuance configuration does not immediately generate a new registration certificate.</p>
+<h3 id="cache-and-refresh-behavior">Cache and Refresh Behavior<a class="headerlink" href="#cache-and-refresh-behavior" title="Permanent link">¶</a></h3>
+<p>For <code>generate</code> mode, EUDIPLO caches the generated JWT in issuance configuration.</p>
+<p>It reuses cache when:</p>
+<ul>
+<li>the effective registration certificate config fingerprint is unchanged, and</li>
+<li>the cached JWT is still active (not expired / not-before valid).</li>
+</ul>
+<p>It regenerates when:</p>
+<ul>
+<li><code>registrationCertificate</code> inputs change (mode, selected schema metadata, provided attestations-related values), or</li>
+<li>cached JWT is expired or not active.</li>
+</ul>
+<h3 id="mode-specific-fields">Mode-Specific Fields<a class="headerlink" href="#mode-specific-fields" title="Permanent link">¶</a></h3>
+<ul>
+<li><code>import</code> mode:<ul>
+<li><code>jwt</code> (required): existing registration certificate JWT.</li>
+</ul>
+</li>
+<li><code>generate</code> mode:<ul>
+<li><code>schemaMetadataIds</code> (required): selected schema metadata entries (<code>&lt;id&gt;@&lt;version&gt;</code>).</li>
+<li><code>privacyPolicy</code> / <code>supportUri</code> (optional, can also be provided via registrar defaults).</li>
+</ul>
+</li>
+</ul>
+<h3 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">¶</a></h3>
+<ul>
+<li>If generation fails, issuer metadata is still returned, but <code>issuer_info</code> omits
+  the registration certificate entry.</li>
+<li>Schema metadata management is documented in <a href="../schema-metadata/">Schema Metadata</a>.</li>
+</ul>
+<hr>
 <h2 id="refresh-tokens">Refresh Tokens<a class="headerlink" href="#refresh-tokens" title="Permanent link">¶</a></h2>
 <p>EUDIPLO can issue refresh tokens from the OID4VCI token endpoint so wallets can obtain a new access token without re-running the authorization flow.</p>
 <h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">¶</a></h3>
 <p>Use these issuance configuration fields:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">"refreshTokenEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">"refreshTokenExpiresInSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">2592000</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">"refreshTokenEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">"refreshTokenExpiresInSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">2592000</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="field-reference">Field Reference<a class="headerlink" href="#field-reference" title="Permanent link">¶</a></h3>
 <table>
@@ -3540,10 +3744,10 @@ authorization, token behavior, and trust-related requirements.</p>
 </ol>
 <h3 id="configuration_1">Configuration<a class="headerlink" href="#configuration_1" title="Permanent link">¶</a></h3>
 <p>To enable wallet attestation, set <code>walletAttestationRequired</code> to <code>true</code> and provide at least one trust list URL:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">"walletAttestationRequired"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">"walletProviderTrustLists"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://trust-list.example.eu/wallet-providers"</span><span class="p">]</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nt">"walletAttestationRequired"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">"walletProviderTrustLists"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://trust-list.example.eu/wallet-providers"</span><span class="p">]</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="trust-lists">Trust Lists<a class="headerlink" href="#trust-lists" title="Permanent link">¶</a></h3>
 <p>Trust lists must be in the LoTE (List of Trusted Entities) format as defined by <a href="https://www.etsi.org/deliver/etsi_ts/119600_119699/119612/">ETSI TS 119 612</a>. The trust list should contain entries with the service type <code>http://uri.etsi.org/19602/SvcType/WalletProvider</code>.</p>
@@ -3572,26 +3776,26 @@ authorization, token behavior, and trust-related requirements.</p>
 <h2 id="chained-authorization-server">Chained Authorization Server<a class="headerlink" href="#chained-authorization-server" title="Permanent link">¶</a></h2>
 <p>Chained AS is now configured as an <code>authorizationServers</code> entry with <code>type: "chained"</code>.</p>
 <p>Example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nt">"authorizationServers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">        </span><span class="p">{</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chained"</span><span class="p">,</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">            </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">            </span><span class="nt">"upstream"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">                </span><span class="nt">"issuer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://keycloak.example.com/realms/eudiplo"</span><span class="p">,</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">                </span><span class="nt">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eudiplo-chained-as"</span><span class="p">,</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">                </span><span class="nt">"clientSecret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-client-secret"</span><span class="p">,</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">                </span><span class="nt">"scopes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"openid"</span><span class="p">,</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w"> </span><span class="s2">"email"</span><span class="p">]</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">            </span><span class="nt">"token"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">                </span><span class="nt">"lifetimeSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span><span class="p">,</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">                </span><span class="nt">"signingKeyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default"</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">            </span><span class="nt">"requireDPoP"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span><span class="p">],</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span><span class="nt">"preferredAuthServer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chained-as"</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="nt">"authorizationServers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chained"</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">            </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">            </span><span class="nt">"upstream"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">                </span><span class="nt">"issuer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://keycloak.example.com/realms/eudiplo"</span><span class="p">,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">                </span><span class="nt">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eudiplo-chained-as"</span><span class="p">,</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">                </span><span class="nt">"clientSecret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-client-secret"</span><span class="p">,</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">                </span><span class="nt">"scopes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"openid"</span><span class="p">,</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w"> </span><span class="s2">"email"</span><span class="p">]</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">            </span><span class="p">},</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">            </span><span class="nt">"token"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">                </span><span class="nt">"lifetimeSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span><span class="p">,</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">                </span><span class="nt">"signingKeyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default"</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">            </span><span class="p">},</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">            </span><span class="nt">"requireDPoP"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span><span class="p">],</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span><span class="nt">"preferredAuthServer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chained-as"</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="p">}</span>
 </code></pre></div>
 <p>When enabled, EUDIPLO exposes the same chained endpoints as before under <code>/{tenant}/chained-as/*</code> and publishes this issuer in <code>authorization_servers</code> metadata.</p>
 

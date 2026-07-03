@@ -429,13 +429,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="modules/IssuanceModule.html" data-type="entity-link" >IssuanceModule</a>
                                     <li class="chapter inner">
                                         <div class="simple menu-toggler" data-bs-toggle="collapse" ${ isNormalMode ?
-                                            'data-bs-target="#controllers-links-module-IssuanceModule-adccfd73f88b98f3148abf6ebab64c4a5652c73f8e92398bcb8c2b15f0040260d2249645a1cb638e7b336fb42f3cc4a01f9b4ede7026af4656fa1a5e5d0ba276"' : 'data-bs-target="#xs-controllers-links-module-IssuanceModule-adccfd73f88b98f3148abf6ebab64c4a5652c73f8e92398bcb8c2b15f0040260d2249645a1cb638e7b336fb42f3cc4a01f9b4ede7026af4656fa1a5e5d0ba276"' }>
+                                            'data-bs-target="#controllers-links-module-IssuanceModule-2f55542ec6d38d3bb186429878e7cbb424fd51d23825d894828cc23bf63c47385d902e8e38d32e8e313cda085578310206b1f9ee83e50ad797575da2ed586d57"' : 'data-bs-target="#xs-controllers-links-module-IssuanceModule-2f55542ec6d38d3bb186429878e7cbb424fd51d23825d894828cc23bf63c47385d902e8e38d32e8e313cda085578310206b1f9ee83e50ad797575da2ed586d57"' }>
                                             <span class="icon ion-md-swap"></span>
                                             <span>Controllers</span>
                                             <span class="icon ion-ios-arrow-down"></span>
                                         </div>
-                                        <ul class="links collapse" ${ isNormalMode ? 'id="controllers-links-module-IssuanceModule-adccfd73f88b98f3148abf6ebab64c4a5652c73f8e92398bcb8c2b15f0040260d2249645a1cb638e7b336fb42f3cc4a01f9b4ede7026af4656fa1a5e5d0ba276"' :
-                                            'id="xs-controllers-links-module-IssuanceModule-adccfd73f88b98f3148abf6ebab64c4a5652c73f8e92398bcb8c2b15f0040260d2249645a1cb638e7b336fb42f3cc4a01f9b4ede7026af4656fa1a5e5d0ba276"' }>
+                                        <ul class="links collapse" ${ isNormalMode ? 'id="controllers-links-module-IssuanceModule-2f55542ec6d38d3bb186429878e7cbb424fd51d23825d894828cc23bf63c47385d902e8e38d32e8e313cda085578310206b1f9ee83e50ad797575da2ed586d57"' :
+                                            'id="xs-controllers-links-module-IssuanceModule-2f55542ec6d38d3bb186429878e7cbb424fd51d23825d894828cc23bf63c47385d902e8e38d32e8e313cda085578310206b1f9ee83e50ad797575da2ed586d57"' }>
                                             <li class="link">
                                                 <a href="controllers/CredentialOfferController.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >CredentialOfferController</a>
                                             </li>
@@ -455,13 +455,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                     </li>
                                 <li class="chapter inner">
                                     <div class="simple menu-toggler" data-bs-toggle="collapse" ${ isNormalMode ?
-                                        'data-bs-target="#injectables-links-module-IssuanceModule-adccfd73f88b98f3148abf6ebab64c4a5652c73f8e92398bcb8c2b15f0040260d2249645a1cb638e7b336fb42f3cc4a01f9b4ede7026af4656fa1a5e5d0ba276"' : 'data-bs-target="#xs-injectables-links-module-IssuanceModule-adccfd73f88b98f3148abf6ebab64c4a5652c73f8e92398bcb8c2b15f0040260d2249645a1cb638e7b336fb42f3cc4a01f9b4ede7026af4656fa1a5e5d0ba276"' }>
+                                        'data-bs-target="#injectables-links-module-IssuanceModule-2f55542ec6d38d3bb186429878e7cbb424fd51d23825d894828cc23bf63c47385d902e8e38d32e8e313cda085578310206b1f9ee83e50ad797575da2ed586d57"' : 'data-bs-target="#xs-injectables-links-module-IssuanceModule-2f55542ec6d38d3bb186429878e7cbb424fd51d23825d894828cc23bf63c47385d902e8e38d32e8e313cda085578310206b1f9ee83e50ad797575da2ed586d57"' }>
                                         <span class="icon ion-md-arrow-round-down"></span>
                                         <span>Injectables</span>
                                         <span class="icon ion-ios-arrow-down"></span>
                                     </div>
-                                    <ul class="links collapse" ${ isNormalMode ? 'id="injectables-links-module-IssuanceModule-adccfd73f88b98f3148abf6ebab64c4a5652c73f8e92398bcb8c2b15f0040260d2249645a1cb638e7b336fb42f3cc4a01f9b4ede7026af4656fa1a5e5d0ba276"' :
-                                        'id="xs-injectables-links-module-IssuanceModule-adccfd73f88b98f3148abf6ebab64c4a5652c73f8e92398bcb8c2b15f0040260d2249645a1cb638e7b336fb42f3cc4a01f9b4ede7026af4656fa1a5e5d0ba276"' }>
+                                    <ul class="links collapse" ${ isNormalMode ? 'id="injectables-links-module-IssuanceModule-2f55542ec6d38d3bb186429878e7cbb424fd51d23825d894828cc23bf63c47385d902e8e38d32e8e313cda085578310206b1f9ee83e50ad797575da2ed586d57"' :
+                                        'id="xs-injectables-links-module-IssuanceModule-2f55542ec6d38d3bb186429878e7cbb424fd51d23825d894828cc23bf63c47385d902e8e38d32e8e313cda085578310206b1f9ee83e50ad797575da2ed586d57"' }>
                                         <li class="link">
                                             <a href="injectables/DeferredCredentialService.html" data-type="entity-link" data-context="sub-entity" data-context-id="modules" >DeferredCredentialService</a>
                                         </li>
@@ -975,6 +975,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/AddFederationToIssuanceConfig1763000000000.html" data-type="entity-link" >AddFederationToIssuanceConfig1763000000000</a>
                             </li>
                             <li class="link">
+                                <a href="classes/AddIssuerRegistrationCertificateToIssuanceConfig1767000000000.html" data-type="entity-link" >AddIssuerRegistrationCertificateToIssuanceConfig1767000000000</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/AddKeyRotation1744000000000.html" data-type="entity-link" >AddKeyRotation1744000000000</a>
                             </li>
                             <li class="link">
@@ -1315,6 +1318,15 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/IssuerMetadataCredentialConfig.html" data-type="entity-link" >IssuerMetadataCredentialConfig</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/IssuerProvidedAttestation.html" data-type="entity-link" >IssuerProvidedAttestation</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/IssuerRegistrationCertificateCache.html" data-type="entity-link" >IssuerRegistrationCertificateCache</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/IssuerRegistrationCertificateConfig.html" data-type="entity-link" >IssuerRegistrationCertificateConfig</a>
                             </li>
                             <li class="link">
                                 <a href="classes/IsTransactionDataConstraint.html" data-type="entity-link" >IsTransactionDataConstraint</a>
@@ -1816,6 +1828,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="interfaces/InternalTokenPayload.html" data-type="entity-link" >InternalTokenPayload</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/IssuerInfo.html" data-type="entity-link" >IssuerInfo</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/JsonSchema.html" data-type="entity-link" >JsonSchema</a>

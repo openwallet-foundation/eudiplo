@@ -239,6 +239,11 @@ It provides methods to get, store, and delete issuance configurations.</p>
                                     <span class="modifier">Async</span>
                                 <a href="#storeIssuanceConfiguration" >storeIssuanceConfiguration</a>
                             </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateRegistrationCertificateCache" >updateRegistrationCertificateCache</a>
+                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -601,8 +606,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="180"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:180</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="194"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:194</a></div>
                         </td>
                     </tr>
 
@@ -670,8 +675,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="125"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:125</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="139"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:139</a></div>
                         </td>
                     </tr>
 
@@ -750,6 +755,89 @@ It provides methods to get, store, and delete issuance configurations.</p>
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateRegistrationCertificateCache"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>updateRegistrationCertificateCache</b></span>
+                        <a href="#updateRegistrationCertificateCache"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateRegistrationCertificateCache(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, registrationCertificateCache: <a href="../classes/IssuanceConfig.html" target="_self">IssuanceConfig</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="120"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:120</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Updates only the server-managed registration certificate cache.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>registrationCertificateCache</td>
+                                            <td>
+                                                            <code><a href="../classes/IssuanceConfig.html" target="_self" >IssuanceConfig</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -922,6 +1010,20 @@ export class IssuanceService {
     }
 
     /**
+     * Updates only the server-managed registration certificate cache.
+     */
+    async updateRegistrationCertificateCache(
+        tenantId: string,
+        registrationCertificateCache: IssuanceConfig[&quot;registrationCertificateCache&quot;],
+    ): Promise&lt;void&gt; {
+        await this.issuanceConfigRepo.save({
+            ...(await this.getIssuanceConfiguration(tenantId)),
+            tenantId,
+            registrationCertificateCache,
+        });
+    }
+
+    /**
      * Store the config. If it already exist, merge with existing values.
      * - Undefined values are ignored, preserving existing configuration.
      * - Null values explicitly clear/unset the field.
@@ -987,6 +1089,22 @@ export class IssuanceService {
     private sanitizeIssuanceConfigForLog(
         config: IssuanceConfig,
     ): Record&lt;string, unknown&gt; {
+        const registrationCertificate &#x3D; config.registrationCertificate
+            ? {
+                  ...config.registrationCertificate,
+                  jwt: config.registrationCertificate.jwt
+                      ? &quot;[REDACTED]&quot;
+                      : undefined,
+              }
+            : config.registrationCertificate;
+
+        const registrationCertificateCache &#x3D; config.registrationCertificateCache
+            ? {
+                  ...config.registrationCertificateCache,
+                  jwt: &quot;[REDACTED]&quot;,
+              }
+            : config.registrationCertificateCache;
+
         return {
             display: config.display,
             batchSize: config.batchSize,
@@ -997,6 +1115,8 @@ export class IssuanceService {
             preferredAuthServer: config.preferredAuthServer,
             authorizationServers: config.authorizationServers,
             federation: config.federation,
+            registrationCertificate,
+            registrationCertificateCache,
             credentialResponseEncryption: config.credentialResponseEncryption,
             credentialRequestEncryption: config.credentialRequestEncryption,
             refreshTokenEnabled: config.refreshTokenEnabled,
