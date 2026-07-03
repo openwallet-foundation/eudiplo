@@ -75,7 +75,9 @@ describe("OutboundUrlPolicyService", () => {
 
     it("rejects hostnames that resolve to private IPs", async () => {
         process.env.NODE_ENV = "production";
-        vi.mocked(lookup).mockResolvedValue([{ address: "127.0.0.1", family: 4 }]);
+        vi.mocked(lookup).mockResolvedValue([
+            { address: "127.0.0.1", family: 4 },
+        ]);
 
         const { service } = createService();
 

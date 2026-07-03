@@ -16,7 +16,10 @@ export class OutboundUrlPolicyService {
         }
 
         const protocol = parsed.protocol.toLowerCase();
-        if (protocol !== "https:" && !(protocol === "http:" && this.allowHttp())) {
+        if (
+            protocol !== "https:" &&
+            !(protocol === "http:" && this.allowHttp())
+        ) {
             throw new BadRequestException(
                 "Outbound URL must use HTTPS in this environment",
             );
@@ -26,8 +29,8 @@ export class OutboundUrlPolicyService {
         const allowlistedHosts = this.allowedHosts();
         if (
             allowlistedHosts.length > 0 &&
-            !allowlistedHosts.some((entry) =>
-                hostname === entry || hostname.endsWith(`.${entry}`),
+            !allowlistedHosts.some(
+                (entry) => hostname === entry || hostname.endsWith(`.${entry}`),
             )
         ) {
             throw new BadRequestException(
@@ -59,11 +62,15 @@ export class OutboundUrlPolicyService {
         try {
             resolved = await lookup(hostname, { all: true, verbatim: true });
         } catch {
-            throw new BadRequestException("Outbound URL host cannot be resolved");
+            throw new BadRequestException(
+                "Outbound URL host cannot be resolved",
+            );
         }
 
         if (resolved.length === 0) {
-            throw new BadRequestException("Outbound URL host cannot be resolved");
+            throw new BadRequestException(
+                "Outbound URL host cannot be resolved",
+            );
         }
 
         if (resolved.some((entry) => this.isPrivateIp(entry.address))) {
@@ -99,7 +106,9 @@ export class OutboundUrlPolicyService {
     }
 
     private allowedHosts(): string[] {
-        const raw = this.configService.get<string>("OUTBOUND_URL_ALLOWED_HOSTS");
+        const raw = this.configService.get<string>(
+            "OUTBOUND_URL_ALLOWED_HOSTS",
+        );
         if (!raw) return [];
         return raw
             .split(",")
@@ -120,7 +129,9 @@ export class OutboundUrlPolicyService {
 
         const version = isIP(normalized);
         if (version === 4) {
-            const octets = normalized.split(".").map((v) => Number.parseInt(v, 10));
+            const octets = normalized
+                .split(".")
+                .map((v) => Number.parseInt(v, 10));
             const [a, b] = octets;
             if (a === 10) return true;
             if (a === 127) return true;
