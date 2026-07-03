@@ -177,6 +177,8 @@ export interface IssuanceOfferOptions {
   txCode?: string;
   /** Flow type (default: 'pre_authorized_code') */
   flow?: 'authorization_code' | 'pre_authorized_code';
+  /** Optional authorization server URL */
+  authorizationServer?: string;
 }
 
 /**
@@ -349,6 +351,7 @@ export class EudiploClient {
       credentialConfigurationIds: options.credentialConfigurationIds,
       flow: options.flow ?? 'pre_authorized_code',
       tx_code: options.txCode,
+      authorization_server: options.authorizationServer,
     };
 
     // Build credential claims if provided

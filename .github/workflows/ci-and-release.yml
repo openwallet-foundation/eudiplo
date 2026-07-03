@@ -635,6 +635,8 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v6
         name: Install pnpm
@@ -657,8 +659,15 @@ jobs:
       - name: Set pre-release version
         working-directory: packages/eudiplo-sdk-core
         run: |
-          # Get current version and append commit SHA for uniqueness
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          # Base prerelease on the latest repository semver tag (e.g., v5.1.0 -> 5.1.0).
+          # Fallback to package.json if tags are not available.
+          LATEST_TAG=$(git tag --sort=-v:refname | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1 || true)
+          if [ -n "$LATEST_TAG" ]; then
+            CURRENT_VERSION="${LATEST_TAG#v}"
+          else
+            CURRENT_VERSION=$(node -p "require('./package.json').version")
+          fi
+
           SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
           PRE_VERSION="${CURRENT_VERSION}-main.${SHORT_SHA}"
           echo "Publishing version: ${PRE_VERSION}"
