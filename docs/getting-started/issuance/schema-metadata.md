@@ -77,6 +77,18 @@ The schema metadata URL can also be used to configure presentation configuration
 wallets and verifiers to reference the same schema metadata for consistent validation rules
 and claim definitions.
 
+## Usage in Issuance Registration Certificate Generation
+
+Schema metadata entries can also be selected in issuance configuration for
+registration certificate generation (`registrationCertificate.mode = "generate"`).
+
+In this mode, EUDIPLO derives provided attestations from the selected schema
+metadata entries and uses them when generating the registration certificate that
+can be published in issuer metadata (`issuer_info`).
+
+See [Issuance Configuration](issuance-configuration.md#registration-certificate-in-issuer-metadata)
+for configuration details and generation timing behavior.
+
 ---
 
 ## Regional Availability

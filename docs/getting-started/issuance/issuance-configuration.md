@@ -32,6 +32,7 @@ authorization, token behavior, and trust-related requirements.
 - `credentialRequestEncryption` (boolean, optional): Advertise support for encrypted credential requests (`credential_request_encryption`).
 - `credentialResponseEncryption` (boolean, optional): Advertise support for encrypted credential responses (`credential_response_encryption`).
 - `federation` (object, optional): OpenID Federation trust configuration for auth-server/upstream trust evaluation. See [OpenID Federation](../../architecture/federation.md).
+- `registrationCertificate` (object, optional): Controls whether a registration certificate is published in issuer metadata (`issuer_info`) and whether it is imported as JWT or generated from selected schema metadata.
 - `display` (array of objects, required): The display information from the [OID4VCI spec](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html#name-credential-issuer-metadata:~:text=2%20or%20greater.-,display,-%3A%20OPTIONAL.%20A%20non). To host images or logos, you can use the [storage](../../architecture/storage.md) system provided by EUDIPLO.
 
 !!! warning "Migration Note"
@@ -130,6 +131,70 @@ Supported values:
 - `chained-as`
 - `authorization-server:<id>` (managed `oid4vp` AS)
 - Explicit issuer URL
+
+---
+
+## Registration Certificate in Issuer Metadata
+
+EUDIPLO can publish a registration certificate in the OID4VCI issuer metadata
+under `issuer_info` using:
+
+- `import` mode: use an existing JWT from configuration.
+- `generate` mode: derive provided attestations from selected schema metadata and generate via registrar.
+
+### Example Configuration
+
+```json
+{
+    "registrationCertificate": {
+        "enabled": true,
+        "mode": "generate",
+        "schemaMetadataIds": [
+            "9a2f4033-f0ab-4f61-bd1d-6f4c321cb41b@1.0.0",
+            "5c53fcd0-63b4-4f5c-8674-599dbe9be2f3@1.2.0"
+        ],
+        "privacyPolicy": "https://issuer.example/privacy",
+        "supportUri": "mailto:support@issuer.example"
+    }
+}
+```
+
+### When `generate` Mode Runs
+
+Generation is **lazy/on-demand**. It is triggered when issuer metadata is built,
+for example when a wallet calls:
+
+- `/.well-known/openid-credential-issuer/issuers/{tenant}`
+
+Saving issuance configuration does not immediately generate a new registration certificate.
+
+### Cache and Refresh Behavior
+
+For `generate` mode, EUDIPLO caches the generated JWT in issuance configuration.
+
+It reuses cache when:
+
+- the effective registration certificate config fingerprint is unchanged, and
+- the cached JWT is still active (not expired / not-before valid).
+
+It regenerates when:
+
+- `registrationCertificate` inputs change (mode, selected schema metadata, provided attestations-related values), or
+- cached JWT is expired or not active.
+
+### Mode-Specific Fields
+
+- `import` mode:
+    - `jwt` (required): existing registration certificate JWT.
+- `generate` mode:
+    - `schemaMetadataIds` (required): selected schema metadata entries (`<id>@<version>`).
+    - `privacyPolicy` / `supportUri` (optional, can also be provided via registrar defaults).
+
+### Notes
+
+- If generation fails, issuer metadata is still returned, but `issuer_info` omits
+  the registration certificate entry.
+- Schema metadata management is documented in [Schema Metadata](schema-metadata.md).
 
 ---
 

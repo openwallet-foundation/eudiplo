@@ -997,7 +997,6 @@
         },
         "credentialClaims": {
           "type": "object",
-          "description": "Credential claims configuration per credential. Keys must match credentialConfigurationIds.",
           "additionalProperties": {
             "oneOf": [
               {
@@ -1055,6 +1054,7 @@
               }
             ]
           },
+          "description": "Credential claims configuration per credential. Keys must match credentialConfigurationIds.",
           "example": {
             "citizen": {
               "type": "inline",
@@ -1497,6 +1497,7 @@
         },
         "detail": {
           "type": "object",
+          "additionalProperties": true,
           "description": "Additional structured detail"
         }
       },
@@ -1853,30 +1854,6 @@
     }
   },
   {
-    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ChainedAsVpConfig.schema.json",
-    "fileMatch": ["a://b/ChainedAsVpConfig*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ChainedAsVpConfig.schema.json",
-      "title": "ChainedAsVpConfig",
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "type": "boolean",
-          "description": "Enable VP-backed chained AS mode",
-          "default": false
-        },
-        "presentationConfigId": {
-          "type": "string",
-          "description": "Presentation configuration ID used for OID4VP",
-          "example": "pid-no-hook"
-        }
-      },
-      "required": ["enabled", "presentationConfigId"],
-      "additionalProperties": false
-    }
-  },
-  {
     "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ChainedAsTokenConfig.schema.json",
     "fileMatch": ["a://b/ChainedAsTokenConfig*.schema.json"],
     "schema": {
@@ -1900,54 +1877,6 @@
     }
   },
   {
-    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ChainedAsConfig.schema.json",
-    "fileMatch": ["a://b/ChainedAsConfig*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ChainedAsConfig.schema.json",
-      "title": "ChainedAsConfig",
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "type": "boolean",
-          "description": "Enable chained AS mode",
-          "default": false
-        },
-        "upstream": {
-          "description": "Upstream OIDC provider configuration",
-          "allOf": [
-            {
-              "$ref": "./UpstreamOidcConfig.schema.json"
-            }
-          ]
-        },
-        "vp": {
-          "description": "VP-backed chained AS configuration",
-          "allOf": [
-            {
-              "$ref": "./ChainedAsVpConfig.schema.json"
-            }
-          ]
-        },
-        "token": {
-          "description": "Token configuration",
-          "allOf": [
-            {
-              "$ref": "./ChainedAsTokenConfig.schema.json"
-            }
-          ]
-        },
-        "requireDPoP": {
-          "type": "boolean",
-          "description": "Require DPoP binding for tokens",
-          "default": true
-        }
-      },
-      "required": ["enabled"],
-      "additionalProperties": false
-    }
-  },
-  {
     "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ManagedAuthorizationServerConfig.schema.json",
     "fileMatch": ["a://b/ManagedAuthorizationServerConfig*.schema.json"],
     "schema": {
@@ -1967,7 +1896,7 @@
           "example": "PID Authorization Server"
         },
         "type": {
-          "enum": ["external", "oid4vp"],
+          "enum": ["external", "oid4vp", "chained"],
           "type": "string",
           "description": "Authorization server implementation type",
           "example": "external"
@@ -1977,6 +1906,14 @@
           "format": "uri",
           "description": "Issuer URL for external authorization servers",
           "example": "https://auth.example.com"
+        },
+        "upstream": {
+          "description": "Upstream OIDC provider configuration for chained mode",
+          "allOf": [
+            {
+              "$ref": "./UpstreamOidcConfig.schema.json"
+            }
+          ]
         },
         "enabled": {
           "type": "boolean",
@@ -2084,6 +2021,114 @@
     }
   },
   {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/IssuerProvidedAttestation.schema.json",
+    "fileMatch": ["a://b/IssuerProvidedAttestation*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/IssuerProvidedAttestation.schema.json",
+      "title": "IssuerProvidedAttestation",
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string",
+          "description": "Attestation format as expected by the registrar (for example dc+sd-jwt, mso_mdoc).",
+          "example": "dc+sd-jwt"
+        },
+        "meta": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Arbitrary attestation metadata forwarded to the registrar."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/IssuerRegistrationCertificateConfig.schema.json",
+    "fileMatch": ["a://b/IssuerRegistrationCertificateConfig*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/IssuerRegistrationCertificateConfig.schema.json",
+      "title": "IssuerRegistrationCertificateConfig",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable inclusion of a registration certificate in credential issuer metadata.",
+          "default": false
+        },
+        "mode": {
+          "enum": ["import", "generate"],
+          "type": "string",
+          "description": "import: use an existing JWT, generate: create via registrar from provided attestations and selected credential configurations.",
+          "default": "import"
+        },
+        "jwt": {
+          "type": "string",
+          "description": "Existing registration certificate JWT used when mode is import."
+        },
+        "schemaMetadataIds": {
+          "description": "Schema metadata IDs selected for inclusion in generated registration certificates.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "privacyPolicy": {
+          "type": "string",
+          "description": "Privacy policy URL used when generating a registration certificate (optional if registrar defaults are configured).",
+          "example": "https://issuer.example/privacy"
+        },
+        "supportUri": {
+          "type": "string",
+          "description": "Support URI used when generating a registration certificate (optional if registrar defaults are configured).",
+          "example": "mailto:support@issuer.example"
+        },
+        "providedAttestations": {
+          "description": "Provided attestations included in generated registration certificates.",
+          "type": "array",
+          "items": {
+            "$ref": "./IssuerProvidedAttestation.schema.json"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/IssuerRegistrationCertificateCache.schema.json",
+    "fileMatch": ["a://b/IssuerRegistrationCertificateCache*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/IssuerRegistrationCertificateCache.schema.json",
+      "title": "IssuerRegistrationCertificateCache",
+      "type": "object",
+      "properties": {
+        "jwt": {
+          "type": "string",
+          "description": "Cached registration certificate JWT generated by EUDIPLO.",
+          "readOnly": true
+        },
+        "fingerprint": {
+          "type": "string",
+          "description": "Config fingerprint used to detect cache invalidation.",
+          "readOnly": true
+        },
+        "issuedAt": {
+          "type": "number",
+          "description": "JWT iat claim, seconds since epoch.",
+          "readOnly": true
+        },
+        "expiresAt": {
+          "type": "number",
+          "description": "JWT exp claim, seconds since epoch.",
+          "readOnly": true
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  {
     "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/DisplayLogo.schema.json",
     "fileMatch": ["a://b/DisplayLogo*.schema.json"],
     "schema": {
@@ -2138,16 +2183,6 @@
           "type": "string",
           "description": "Key ID for signing access tokens. If unset, the default signing key is used."
         },
-        "chainedAs": {
-          "nullable": true,
-          "description": "Configuration for Chained Authorization Server mode.\nWhen enabled, EUDIPLO acts as an OAuth AS facade, delegating user authentication\nto an upstream OIDC provider while issuing its own tokens with issuer_state.",
-          "type": "object",
-          "allOf": [
-            {
-              "$ref": "./ChainedAsConfig.schema.json"
-            }
-          ]
-        },
         "authorizationServers": {
           "nullable": true,
           "description": "Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.",
@@ -2163,6 +2198,27 @@
           "allOf": [
             {
               "$ref": "./FederationConfig.schema.json"
+            }
+          ]
+        },
+        "registrationCertificate": {
+          "nullable": true,
+          "description": "Optional registration certificate configuration for issuer metadata (`issuer_info`).\nSupports importing an existing JWT or generating one via registrar.",
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "./IssuerRegistrationCertificateConfig.schema.json"
+            }
+          ]
+        },
+        "registrationCertificateCache": {
+          "nullable": true,
+          "description": "Server-managed cache for generated issuer registration certificates.",
+          "readOnly": true,
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "./IssuerRegistrationCertificateCache.schema.json"
             }
           ]
         },
@@ -2200,13 +2256,6 @@
               "$ref": "./TenantEntity.schema.json"
             }
           ]
-        },
-        "authServers": {
-          "description": "Authentication server URL for the issuance process.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         },
         "batchSize": {
           "type": "number",
@@ -2265,16 +2314,6 @@
           "type": "string",
           "description": "Key ID for signing access tokens. If unset, the default signing key is used."
         },
-        "chainedAs": {
-          "nullable": true,
-          "description": "Configuration for Chained Authorization Server mode.\nWhen enabled, EUDIPLO acts as an OAuth AS facade, delegating user authentication\nto an upstream OIDC provider while issuing its own tokens with issuer_state.",
-          "type": "object",
-          "allOf": [
-            {
-              "$ref": "./ChainedAsConfig.schema.json"
-            }
-          ]
-        },
         "authorizationServers": {
           "nullable": true,
           "description": "Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.",
@@ -2290,6 +2329,27 @@
           "allOf": [
             {
               "$ref": "./FederationConfig.schema.json"
+            }
+          ]
+        },
+        "registrationCertificate": {
+          "nullable": true,
+          "description": "Optional registration certificate configuration for issuer metadata (`issuer_info`).\nSupports importing an existing JWT or generating one via registrar.",
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "./IssuerRegistrationCertificateConfig.schema.json"
+            }
+          ]
+        },
+        "registrationCertificateCache": {
+          "nullable": true,
+          "description": "Server-managed cache for generated issuer registration certificates.",
+          "readOnly": true,
+          "type": "object",
+          "allOf": [
+            {
+              "$ref": "./IssuerRegistrationCertificateCache.schema.json"
             }
           ]
         },
@@ -2319,13 +2379,6 @@
           "description": "Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.",
           "default": 5,
           "nullable": true
-        },
-        "authServers": {
-          "description": "Authentication server URL for the issuance process.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         },
         "batchSize": {
           "type": "number",
@@ -3112,7 +3165,7 @@
         },
         "namespace": {
           "type": "string",
-          "description": "Namespace for mDOC field",
+          "description": "Namespace for mDOC field. Optional when the namespace is already present as the first path segment.",
           "example": "eu.europa.ec.eudi.pid.1"
         },
         "display": {
@@ -3123,6 +3176,7 @@
         },
         "constraints": {
           "type": "object",
+          "additionalProperties": true,
           "description": "Additional JSON schema constraints for this field"
         },
         "children": {
@@ -3823,8 +3877,8 @@
         },
         "schemaContent": {
           "type": "object",
-          "description": "Inline schema content (JSON Schema)",
-          "additionalProperties": true
+          "additionalProperties": true,
+          "description": "Inline schema content (JSON Schema)"
         },
         "integrity": {
           "type": "string",
@@ -3859,8 +3913,8 @@
         },
         "verificationMethod": {
           "type": "object",
-          "description": "Verification method for the trust list signature (e.g., JWK)",
-          "additionalProperties": true
+          "additionalProperties": true,
+          "description": "Verification method for the trust list signature (e.g., JWK)"
         }
       },
       "required": ["id", "frameworkType", "value"],
@@ -5229,6 +5283,186 @@
     }
   },
   {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/OfferResponse.schema.json",
+    "fileMatch": ["a://b/OfferResponse*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/OfferResponse.schema.json",
+      "title": "OfferResponse",
+      "type": "object",
+      "properties": {
+        "uri": {
+          "type": "string"
+        },
+        "crossDeviceUri": {
+          "type": "string",
+          "description": "URI for cross-device flows (no redirect after completion)"
+        },
+        "session": {
+          "type": "string"
+        }
+      },
+      "required": ["uri", "session"],
+      "additionalProperties": false
+    }
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/CompleteDeferredDto.schema.json",
+    "fileMatch": ["a://b/CompleteDeferredDto*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/CompleteDeferredDto.schema.json",
+      "title": "CompleteDeferredDto",
+      "type": "object",
+      "properties": {
+        "claims": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Claims to include in the credential. The structure should match the credential configuration's expected claims.",
+          "example": {
+            "given_name": "John",
+            "family_name": "Doe",
+            "birthdate": "1990-01-15"
+          }
+        }
+      },
+      "required": ["claims"],
+      "additionalProperties": false
+    }
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/DeferredOperationResponse.schema.json",
+    "fileMatch": ["a://b/DeferredOperationResponse*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/DeferredOperationResponse.schema.json",
+      "title": "DeferredOperationResponse",
+      "type": "object",
+      "properties": {
+        "transactionId": {
+          "type": "string",
+          "description": "The transaction ID"
+        },
+        "status": {
+          "description": "The new status of the transaction",
+          "enum": ["pending", "ready", "retrieved", "expired", "failed"],
+          "type": "string"
+        },
+        "message": {
+          "type": "string",
+          "description": "Optional message"
+        }
+      },
+      "required": ["transactionId", "status"],
+      "additionalProperties": false
+    }
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/FailDeferredDto.schema.json",
+    "fileMatch": ["a://b/FailDeferredDto*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/FailDeferredDto.schema.json",
+      "title": "FailDeferredDto",
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "description": "Optional error message explaining why the issuance failed",
+          "example": "Identity verification failed"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/EC_Public.schema.json",
+    "fileMatch": ["a://b/EC_Public*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/EC_Public.schema.json",
+      "title": "EC_Public",
+      "type": "object",
+      "properties": {
+        "kty": {
+          "type": "string",
+          "description": "The key type, which is always 'EC' for Elliptic Curve keys."
+        },
+        "crv": {
+          "type": "string",
+          "description": "The algorithm intended for use with the key, such as 'ES256'."
+        },
+        "x": {
+          "type": "string",
+          "description": "The x coordinate of the EC public key."
+        },
+        "y": {
+          "type": "string",
+          "description": "The y coordinate of the EC public key."
+        }
+      },
+      "required": ["kty", "crv", "x", "y"],
+      "additionalProperties": false
+    }
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/JwksResponseDto.schema.json",
+    "fileMatch": ["a://b/JwksResponseDto*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/JwksResponseDto.schema.json",
+      "title": "JwksResponseDto",
+      "type": "object",
+      "properties": {
+        "keys": {
+          "description": "An array of EC public keys in JWK format.",
+          "type": "array",
+          "items": {
+            "$ref": "./EC_Public.schema.json"
+          }
+        }
+      },
+      "required": ["keys"],
+      "additionalProperties": false
+    }
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/AuthorizationResponse.schema.json",
+    "fileMatch": ["a://b/AuthorizationResponse*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/AuthorizationResponse.schema.json",
+      "title": "AuthorizationResponse",
+      "type": "object",
+      "properties": {
+        "response": {
+          "type": "string",
+          "description": "The response string containing the authorization details (JWE-encrypted VP token).\nRequired for success responses, absent for error responses."
+        },
+        "sendResponse": {
+          "type": "boolean",
+          "description": "When set to true, the authorization response will be sent to the client."
+        },
+        "error": {
+          "type": "string"
+        },
+        "error_description": {
+          "type": "string",
+          "description": "Human-readable description of the error."
+        },
+        "error_uri": {
+          "type": "string",
+          "description": "URI with additional information about the error."
+        },
+        "state": {
+          "type": "string",
+          "description": "State value from the authorization request (for correlation)."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  {
     "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/Object.schema.json",
     "fileMatch": ["a://b/Object*.schema.json"],
     "schema": {
@@ -5517,185 +5751,6 @@
         }
       },
       "required": ["access_token", "token_type", "expires_in"],
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/OfferResponse.schema.json",
-    "fileMatch": ["a://b/OfferResponse*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/OfferResponse.schema.json",
-      "title": "OfferResponse",
-      "type": "object",
-      "properties": {
-        "uri": {
-          "type": "string"
-        },
-        "crossDeviceUri": {
-          "type": "string",
-          "description": "URI for cross-device flows (no redirect after completion)"
-        },
-        "session": {
-          "type": "string"
-        }
-      },
-      "required": ["uri", "session"],
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/CompleteDeferredDto.schema.json",
-    "fileMatch": ["a://b/CompleteDeferredDto*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/CompleteDeferredDto.schema.json",
-      "title": "CompleteDeferredDto",
-      "type": "object",
-      "properties": {
-        "claims": {
-          "type": "object",
-          "description": "Claims to include in the credential. The structure should match the credential configuration's expected claims.",
-          "example": {
-            "given_name": "John",
-            "family_name": "Doe",
-            "birthdate": "1990-01-15"
-          }
-        }
-      },
-      "required": ["claims"],
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/DeferredOperationResponse.schema.json",
-    "fileMatch": ["a://b/DeferredOperationResponse*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/DeferredOperationResponse.schema.json",
-      "title": "DeferredOperationResponse",
-      "type": "object",
-      "properties": {
-        "transactionId": {
-          "type": "string",
-          "description": "The transaction ID"
-        },
-        "status": {
-          "description": "The new status of the transaction",
-          "enum": ["pending", "ready", "retrieved", "expired", "failed"],
-          "type": "string"
-        },
-        "message": {
-          "type": "string",
-          "description": "Optional message"
-        }
-      },
-      "required": ["transactionId", "status"],
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/FailDeferredDto.schema.json",
-    "fileMatch": ["a://b/FailDeferredDto*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/FailDeferredDto.schema.json",
-      "title": "FailDeferredDto",
-      "type": "object",
-      "properties": {
-        "error": {
-          "type": "string",
-          "description": "Optional error message explaining why the issuance failed",
-          "example": "Identity verification failed"
-        }
-      },
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/EC_Public.schema.json",
-    "fileMatch": ["a://b/EC_Public*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/EC_Public.schema.json",
-      "title": "EC_Public",
-      "type": "object",
-      "properties": {
-        "kty": {
-          "type": "string",
-          "description": "The key type, which is always 'EC' for Elliptic Curve keys."
-        },
-        "crv": {
-          "type": "string",
-          "description": "The algorithm intended for use with the key, such as 'ES256'."
-        },
-        "x": {
-          "type": "string",
-          "description": "The x coordinate of the EC public key."
-        },
-        "y": {
-          "type": "string",
-          "description": "The y coordinate of the EC public key."
-        }
-      },
-      "required": ["kty", "crv", "x", "y"],
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/JwksResponseDto.schema.json",
-    "fileMatch": ["a://b/JwksResponseDto*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/JwksResponseDto.schema.json",
-      "title": "JwksResponseDto",
-      "type": "object",
-      "properties": {
-        "keys": {
-          "description": "An array of EC public keys in JWK format.",
-          "type": "array",
-          "items": {
-            "$ref": "./EC_Public.schema.json"
-          }
-        }
-      },
-      "required": ["keys"],
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/AuthorizationResponse.schema.json",
-    "fileMatch": ["a://b/AuthorizationResponse*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/AuthorizationResponse.schema.json",
-      "title": "AuthorizationResponse",
-      "type": "object",
-      "properties": {
-        "response": {
-          "type": "string",
-          "description": "The response string containing the authorization details (JWE-encrypted VP token).\nRequired for success responses, absent for error responses."
-        },
-        "sendResponse": {
-          "type": "boolean",
-          "description": "When set to true, the authorization response will be sent to the client."
-        },
-        "error": {
-          "type": "string"
-        },
-        "error_description": {
-          "type": "string",
-          "description": "Human-readable description of the error."
-        },
-        "error_uri": {
-          "type": "string",
-          "description": "URI with additional information about the error."
-        },
-        "state": {
-          "type": "string",
-          "description": "State value from the authorization request (for correlation)."
-        }
-      },
       "additionalProperties": false
     }
   },
@@ -6317,7 +6372,7 @@
           "description": "Usage type for this key chain."
         },
         "crt": {
-          "description": "Certificate chain in PEM format (leaf first, then intermediates/CA).",
+          "description": "Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import.",
           "type": "array",
           "items": {
             "type": "string"

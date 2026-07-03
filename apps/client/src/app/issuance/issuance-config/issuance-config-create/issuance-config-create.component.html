@@ -405,6 +405,8 @@
                             <mat-label>Client ID</mat-label>
                             <input
                               matInput
+                              id="chained-as-client-id"
+                              aria-label="Chained AS client ID"
                               formControlName="clientId"
                               placeholder="eudiplo-client"
                             />
@@ -815,6 +817,114 @@
                       </button>
                     </div>
                   </div>
+                }
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">badge</mat-icon>
+          Registration Certificate
+        </ng-template>
+
+        <ng-template matTabContent>
+          <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
+            <mat-card formGroupName="registrationCertificate">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>verified</mat-icon>
+                  Issuer Registration Certificate
+                </mat-card-title>
+                <mat-card-subtitle
+                  >Configure `issuer_info` registration certificate advertisement in issuer
+                  metadata</mat-card-subtitle
+                >
+              </mat-card-header>
+
+              <mat-card-content fxLayout="column" fxLayoutGap="16px">
+                <mat-slide-toggle formControlName="enabled">
+                  <div fxLayout="column">
+                    <span><strong>Enable Registration Certificate in Issuer Metadata</strong></span>
+                    <span class="toggle-description"
+                      >When enabled, a `registration_cert` entry is included in `issuer_info`.</span
+                    >
+                  </div>
+                </mat-slide-toggle>
+
+                @if (registrationCertificateEnabled) {
+                  <mat-form-field>
+                    <mat-label>Mode</mat-label>
+                    <mat-select formControlName="mode">
+                      <mat-option value="import">Import existing JWT</mat-option>
+                      <mat-option value="generate"
+                        >Generate from selected schema metadata</mat-option
+                      >
+                    </mat-select>
+                    <mat-icon matSuffix>tune</mat-icon>
+                  </mat-form-field>
+
+                  @if (registrationCertificateMode === 'import') {
+                    <mat-form-field>
+                      <mat-label>Registration Certificate JWT</mat-label>
+                      <textarea
+                        matInput
+                        id="registration-cert-jwt"
+                        aria-label="Registration certificate JWT"
+                        formControlName="jwt"
+                        placeholder="eyJ..."
+                        rows="7"
+                      ></textarea>
+                      <mat-icon matSuffix>key</mat-icon>
+                      <mat-hint>Paste an existing registration certificate JWT.</mat-hint>
+                    </mat-form-field>
+                  }
+
+                  @if (registrationCertificateMode === 'generate') {
+                    <mat-form-field>
+                      <mat-label>Schema Metadata</mat-label>
+                      <mat-select formControlName="schemaMetadataIds" multiple>
+                        @for (
+                          schema of availableSchemaMetadata;
+                          track schema.id + '@' + schema.version
+                        ) {
+                          <mat-option [value]="schema.id + '@' + schema.version">
+                            {{ schema.id }} @ {{ schema.version }}
+                          </mat-option>
+                        }
+                      </mat-select>
+                      <mat-icon matSuffix>schema</mat-icon>
+                      <mat-hint
+                        >Select schema metadata entries to include as provided
+                        attestations.</mat-hint
+                      >
+                    </mat-form-field>
+
+                    <mat-form-field>
+                      <mat-label>Privacy Policy URL (optional)</mat-label>
+                      <input
+                        matInput
+                        type="url"
+                        formControlName="privacyPolicy"
+                        placeholder="https://issuer.example/privacy"
+                      />
+                      <mat-icon matSuffix>privacy_tip</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                      <mat-label>Support URI (optional)</mat-label>
+                      <input
+                        matInput
+                        id="registration-cert-support-uri"
+                        aria-label="Registration certificate support URI"
+                        formControlName="supportUri"
+                        placeholder="mailto:support@issuer.example"
+                      />
+                      <mat-icon matSuffix>support_agent</mat-icon>
+                    </mat-form-field>
+                  }
                 }
               </mat-card-content>
             </mat-card>

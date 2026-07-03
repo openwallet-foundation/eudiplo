@@ -29,6 +29,10 @@ import {
 import { ManagedAuthorizationServerConfig } from "../dto/authorization-server-config.dto";
 import { DisplayInfo } from "../dto/display.dto";
 import { FederationConfig } from "../dto/federation-config.dto";
+import {
+    IssuerRegistrationCertificateCache,
+    IssuerRegistrationCertificateConfig,
+} from "../dto/issuer-registration-certificate.dto";
 
 /**
  * Entity to manage issuance configs
@@ -140,6 +144,30 @@ export class IssuanceConfig {
     @IsOptional()
     @Column({ type: "json", nullable: true })
     federation?: FederationConfig | null;
+
+    /**
+     * Optional registration certificate configuration for issuer metadata (`issuer_info`).
+     * Supports importing an existing JWT or generating one via registrar.
+     */
+    @ApiPropertyOptional({ type: () => IssuerRegistrationCertificateConfig })
+    @ValidateNested()
+    @Type(() => IssuerRegistrationCertificateConfig)
+    @IsOptional()
+    @Column({ type: "json", nullable: true })
+    registrationCertificate?: IssuerRegistrationCertificateConfig | null;
+
+    /**
+     * Server-managed cache for generated issuer registration certificates.
+     */
+    @ApiPropertyOptional({
+        type: () => IssuerRegistrationCertificateCache,
+        readOnly: true,
+    })
+    @ValidateNested()
+    @Type(() => IssuerRegistrationCertificateCache)
+    @IsOptional()
+    @Column({ type: "json", nullable: true })
+    registrationCertificateCache?: IssuerRegistrationCertificateCache | null;
 
     @ValidateNested({ each: true })
     @Type(() => DisplayInfo)

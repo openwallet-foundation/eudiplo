@@ -361,6 +361,69 @@
               </mat-list>
             </mat-card-content>
           </mat-card>
+
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>badge</mat-icon>
+                Registration Certificate
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <mat-list class="config-list">
+                <mat-list-item>
+                  <mat-icon
+                    matListItemIcon
+                    [class]="registrationCertificateConfig?.enabled ? '' : 'icon-disabled'"
+                  >
+                    {{ registrationCertificateConfig?.enabled ? 'verified' : 'block' }}
+                  </mat-icon>
+                  <span matListItemTitle>Enabled</span>
+                  <span matListItemLine>
+                    {{ registrationCertificateConfig?.enabled ? 'Yes' : 'No' }}
+                  </span>
+                </mat-list-item>
+
+                @if (registrationCertificateConfig?.enabled) {
+                  <mat-list-item>
+                    <mat-icon matListItemIcon>tune</mat-icon>
+                    <span matListItemTitle>Mode</span>
+                    <span matListItemLine>{{
+                      registrationCertificateConfig?.mode || 'import'
+                    }}</span>
+                  </mat-list-item>
+
+                  @if (registrationCertificateConfig?.mode === 'import') {
+                    <mat-list-item>
+                      <mat-icon matListItemIcon>key</mat-icon>
+                      <span matListItemTitle>Imported JWT</span>
+                      <span matListItemLine>
+                        {{ registrationCertificateConfig?.jwt ? 'Configured' : 'Not configured' }}
+                      </span>
+                    </mat-list-item>
+                  }
+
+                  @if (registrationCertificateConfig?.mode === 'generate') {
+                    <mat-list-item>
+                      <mat-icon matListItemIcon>schema</mat-icon>
+                      <span matListItemTitle>Schema Metadata</span>
+                      <span matListItemLine>
+                        {{ registrationCertificateConfig?.schemaMetadataIds?.length || 0 }} selected
+                      </span>
+                    </mat-list-item>
+                    <mat-list-item>
+                      <mat-icon matListItemIcon>data_object</mat-icon>
+                      <span matListItemTitle>Provided Attestations</span>
+                      <span matListItemLine>
+                        {{ registrationCertificateConfig?.providedAttestations?.length || 0 }}
+                        configured
+                      </span>
+                    </mat-list-item>
+                  }
+                }
+              </mat-list>
+            </mat-card-content>
+          </mat-card>
         </div>
       </mat-tab>
     </mat-tab-group>

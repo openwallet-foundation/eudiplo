@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/IssuerProvidedAttestation.schema.json",
+  "title": "IssuerProvidedAttestation",
+  "type": "object",
+  "properties": {
+    "format": {
+      "type": "string",
+      "description": "Attestation format as expected by the registrar (for example dc+sd-jwt, mso_mdoc).",
+      "example": "dc+sd-jwt"
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Arbitrary attestation metadata forwarded to the registrar."
+    }
+  },
+  "additionalProperties": false
+}

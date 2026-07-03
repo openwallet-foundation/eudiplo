@@ -4,7 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import type { Jwk } from "@openid4vc/oauth2";
 import type { CredentialConfigurationSupported } from "@openid4vc/openid4vci";
 import Ajv from "ajv/dist/2020";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { CryptoImplementationService } from "../../../crypto/key/crypto-implementation/crypto-implementation.service";
 import { Session } from "../../../session/entities/session.entity";
 import { FederationTrustService } from "../../../shared/trust/federation-trust.service";
@@ -70,6 +70,35 @@ export class CredentialsService {
         tenantId: string,
     ): Promise<CredentialConfig | null> {
         return this.credentialConfigRepo.findOneBy({ id, tenantId });
+    }
+
+    /**
+     * Returns tenant credential configurations, optionally filtered by IDs.
+     * Throws when one or more requested IDs do not exist.
+     */
+    async getCredentialConfigsForTenant(
+        tenantId: string,
+        ids?: string[],
+    ): Promise<CredentialConfig[]> {
+        if (!ids?.length) {
+            return this.credentialConfigRepo.findBy({ tenantId });
+        }
+
+        const uniqueIds = Array.from(new Set(ids));
+        const configs = await this.credentialConfigRepo.findBy({
+            tenantId,
+            id: In(uniqueIds),
+        });
+
+        if (configs.length !== uniqueIds.length) {
+            const foundIds = new Set(configs.map((config) => config.id));
+            const missing = uniqueIds.filter((id) => !foundIds.has(id));
+            throw new ConflictException(
+                `Credential configuration(s) not found: ${missing.join(", ")}`,
+            );
+        }
+
+        return configs;
     }
 
     /**
