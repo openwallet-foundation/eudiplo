@@ -19,7 +19,9 @@ export class AddIssuerRegistrationCertificateToIssuanceConfig1767000000000
             return;
         }
 
-        if (!table.columns.some((col) => col.name === "registrationCertificate")) {
+        if (
+            !table.columns.some((col) => col.name === "registrationCertificate")
+        ) {
             await queryRunner.addColumn(
                 "issuance_config",
                 new TableColumn({
@@ -30,7 +32,11 @@ export class AddIssuerRegistrationCertificateToIssuanceConfig1767000000000
             );
         }
 
-        if (!table.columns.some((col) => col.name === "registrationCertificateCache")) {
+        if (
+            !table.columns.some(
+                (col) => col.name === "registrationCertificateCache",
+            )
+        ) {
             await queryRunner.addColumn(
                 "issuance_config",
                 new TableColumn({
@@ -48,15 +54,24 @@ export class AddIssuerRegistrationCertificateToIssuanceConfig1767000000000
             return;
         }
 
-        if (table.columns.some((col) => col.name === "registrationCertificateCache")) {
+        if (
+            table.columns.some(
+                (col) => col.name === "registrationCertificateCache",
+            )
+        ) {
             await queryRunner.dropColumn(
                 "issuance_config",
                 "registrationCertificateCache",
             );
         }
 
-        if (table.columns.some((col) => col.name === "registrationCertificate")) {
-            await queryRunner.dropColumn("issuance_config", "registrationCertificate");
+        if (
+            table.columns.some((col) => col.name === "registrationCertificate")
+        ) {
+            await queryRunner.dropColumn(
+                "issuance_config",
+                "registrationCertificate",
+            );
         }
     }
 }

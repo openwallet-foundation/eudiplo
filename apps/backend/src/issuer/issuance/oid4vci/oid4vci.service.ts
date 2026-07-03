@@ -413,9 +413,12 @@ export class Oid4vciService {
         }
     }
 
-    private toRegistrationCertificateCredentialFromAttestation(
-        attestation: { format?: string; meta?: Record<string, unknown> },
-    ): NonNullable<RegistrationCertificateCreation["credentials"]>[number] | undefined {
+    private toRegistrationCertificateCredentialFromAttestation(attestation: {
+        format?: string;
+        meta?: Record<string, unknown>;
+    }):
+        | NonNullable<RegistrationCertificateCreation["credentials"]>[number]
+        | undefined {
         if (!attestation.format) {
             return undefined;
         }
@@ -427,7 +430,9 @@ export class Oid4vciService {
     }
 
     private buildRegistrationCertificateDcql(
-        credentials: NonNullable<RegistrationCertificateCreation["credentials"]>,
+        credentials: NonNullable<
+            RegistrationCertificateCreation["credentials"]
+        >,
     ): {
         credentials: Array<{
             format: string;
@@ -471,7 +476,9 @@ export class Oid4vciService {
         }
 
         if (
-            !Array.isArray(registrationCertificateConfig.providedAttestations) ||
+            !Array.isArray(
+                registrationCertificateConfig.providedAttestations,
+            ) ||
             registrationCertificateConfig.providedAttestations.length === 0
         ) {
             this.logger.warn(
@@ -523,32 +530,39 @@ export class Oid4vciService {
                 registrationCertificateConfig.providedAttestations as RegistrationCertificateCreation["provided_attestations"],
             credentials,
             ...(registrationCertificateConfig.privacyPolicy
-                ? { privacy_policy: registrationCertificateConfig.privacyPolicy }
+                ? {
+                      privacy_policy:
+                          registrationCertificateConfig.privacyPolicy,
+                  }
                 : {}),
             ...(registrationCertificateConfig.supportUri
                 ? { support_uri: registrationCertificateConfig.supportUri }
                 : {}),
         };
 
-        const resolved = await this.registrarService.resolveRegistrationCertificate(
-            { body: creationBody },
-            this.buildRegistrationCertificateDcql(credentials),
-            v4(),
-            tenantId,
-        );
+        const resolved =
+            await this.registrarService.resolveRegistrationCertificate(
+                { body: creationBody },
+                this.buildRegistrationCertificateDcql(credentials),
+                v4(),
+                tenantId,
+            );
 
-        await this.issuanceService.updateRegistrationCertificateCache(tenantId, {
-            jwt: resolved.jwt,
-            fingerprint,
-            issuedAt:
-                typeof resolved.payload.iat === "number"
-                    ? resolved.payload.iat
-                    : undefined,
-            expiresAt:
-                typeof resolved.payload.exp === "number"
-                    ? resolved.payload.exp
-                    : undefined,
-        });
+        await this.issuanceService.updateRegistrationCertificateCache(
+            tenantId,
+            {
+                jwt: resolved.jwt,
+                fingerprint,
+                issuedAt:
+                    typeof resolved.payload.iat === "number"
+                        ? resolved.payload.iat
+                        : undefined,
+                expiresAt:
+                    typeof resolved.payload.exp === "number"
+                        ? resolved.payload.exp
+                        : undefined,
+            },
+        );
 
         return resolved.jwt;
     }
@@ -569,7 +583,10 @@ export class Oid4vciService {
 
     private async appendIssuerRegistrationCertificateInfo(
         tenantId: string,
-        registrationCertificateConfig: IssuerRegistrationCertificateConfig | null | undefined,
+        registrationCertificateConfig:
+            | IssuerRegistrationCertificateConfig
+            | null
+            | undefined,
         issuerInfo: IssuerInfo[],
     ): Promise<void> {
         if (!registrationCertificateConfig?.enabled) {

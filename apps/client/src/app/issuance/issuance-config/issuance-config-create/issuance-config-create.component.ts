@@ -495,7 +495,9 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
 
   private findSchemaMetadataBySelection(selection: string): SchemaMetadataResponseDto | undefined {
     const [id, version] = String(selection).split('@');
-    return this.availableSchemaMetadata.find((entry) => entry.id === id && entry.version === version);
+    return this.availableSchemaMetadata.find(
+      (entry) => entry.id === id && entry.version === version
+    );
   }
 
   private buildAttestationsFromSchemaMetadata(metadata: SchemaMetadataResponseDto): any[] {
@@ -521,9 +523,9 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
     }));
   }
 
-  private buildProvidedAttestationsFromSchemaSelection(registrationCertificate: any):
-    | { ok: true; value: any[] }
-    | { ok: false; error: string } {
+  private buildProvidedAttestationsFromSchemaSelection(
+    registrationCertificate: any
+  ): { ok: true; value: any[] } | { ok: false; error: string } {
     if (!registrationCertificate?.enabled || registrationCertificate.mode !== 'generate') {
       return { ok: true, value: [] };
     }

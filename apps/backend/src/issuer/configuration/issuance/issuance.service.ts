@@ -203,13 +203,12 @@ export class IssuanceService {
               }
             : config.registrationCertificate;
 
-        const registrationCertificateCache =
-            config.registrationCertificateCache
-                ? {
-                      ...config.registrationCertificateCache,
-                      jwt: "[REDACTED]",
-                  }
-                : config.registrationCertificateCache;
+        const registrationCertificateCache = config.registrationCertificateCache
+            ? {
+                  ...config.registrationCertificateCache,
+                  jwt: "[REDACTED]",
+              }
+            : config.registrationCertificateCache;
 
         return {
             display: config.display,
