@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/IssuerRegistrationCertificateConfig.schema.json",
+  "title": "IssuerRegistrationCertificateConfig",
+  "type": "object",
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "description": "Enable inclusion of a registration certificate in credential issuer metadata.",
+      "default": false
+    },
+    "mode": {
+      "enum": [
+        "import",
+        "generate"
+      ],
+      "type": "string",
+      "description": "import: use an existing JWT, generate: create via registrar from provided attestations and selected credential configurations.",
+      "default": "import"
+    },
+    "jwt": {
+      "type": "string",
+      "description": "Existing registration certificate JWT used when mode is import."
+    },
+    "schemaMetadataIds": {
+      "description": "Schema metadata IDs selected for inclusion in generated registration certificates.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "privacyPolicy": {
+      "type": "string",
+      "description": "Privacy policy URL used when generating a registration certificate (optional if registrar defaults are configured).",
+      "example": "https://issuer.example/privacy"
+    },
+    "supportUri": {
+      "type": "string",
+      "description": "Support URI used when generating a registration certificate (optional if registrar defaults are configured).",
+      "example": "mailto:support@issuer.example"
+    },
+    "providedAttestations": {
+      "description": "Provided attestations included in generated registration certificates.",
+      "type": "array",
+      "items": {
+        "$ref": "./IssuerProvidedAttestation.schema.json"
+      }
+    }
+  },
+  "additionalProperties": false
+}

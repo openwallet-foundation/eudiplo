@@ -1,8 +1,10 @@
+import { createHash } from "node:crypto";
 import { HttpService } from "@nestjs/axios";
 import {
     BadRequestException,
     ConflictException,
     Injectable,
+    Logger,
     NotFoundException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
@@ -52,8 +54,14 @@ import { WebhookService } from "../../../shared/utils/webhook/webhook.service";
 import { CredentialsService } from "../../configuration/credentials/credentials.service";
 import { AuthorizationIdentity } from "../../configuration/credentials/dto/authorization-identity";
 import { ClaimsWebhookResult } from "../../configuration/credentials/dto/claims-webhook-result";
+import {
+    IssuerRegistrationCertificateConfig,
+    IssuerRegistrationCertificateMode,
+} from "../../configuration/issuance/dto/issuer-registration-certificate.dto";
 import { IssuanceService } from "../../configuration/issuance/issuance.service";
 import { WebhookEndpointEntity } from "../../configuration/webhook-endpoint/entities/webhook-endpoint.entity";
+import { type RegistrationCertificateCreation } from "../../../registrar/generated";
+import { RegistrarService } from "../../../registrar/registrar.service";
 import { AuthorizeService } from "./authorization/authorize/authorize.service";
 import { AuthorizationServersService } from "./authorization/authorization-servers/authorization-servers.service";
 import { ChainedAsService } from "./authorization/chained-as/chained-as.service";
@@ -90,11 +98,18 @@ type OAuth2TokenPayload = {
     cnf?: { jwk?: Jwk };
 };
 
+interface IssuerInfo {
+    format: string;
+    data: string;
+}
+
 /**
  * Service for handling OID4VCI (OpenID 4 Verifiable Credential Issuance) operations.
  */
 @Injectable()
 export class Oid4vciService {
+    private readonly logger = new Logger(Oid4vciService.name);
+
     constructor(
         private readonly authzService: AuthorizeService,
         private readonly cryptoService: CryptoService,
@@ -110,6 +125,7 @@ export class Oid4vciService {
         private readonly chainedAsService: ChainedAsService,
         private readonly chainedAsVpService: ChainedAsVpService,
         private readonly deferredCredentialService: DeferredCredentialService,
+        private readonly registrarService: RegistrarService,
         private readonly traceService: TraceService,
         @InjectRepository(NonceEntity)
         private readonly nonceRepository: Repository<NonceEntity>,
@@ -351,6 +367,235 @@ export class Oid4vciService {
         };
     }
 
+    private computeRegistrationCertificateFingerprint(
+        registrationCertificateConfig: IssuerRegistrationCertificateConfig,
+    ): string {
+        const material = {
+            mode: registrationCertificateConfig.mode,
+            schemaMetadataIds:
+                registrationCertificateConfig.schemaMetadataIds
+                    ?.slice()
+                    .sort() ?? [],
+            privacyPolicy: registrationCertificateConfig.privacyPolicy,
+            supportUri: registrationCertificateConfig.supportUri,
+            providedAttestations:
+                registrationCertificateConfig.providedAttestations ?? [],
+        };
+
+        return createHash("sha256")
+            .update(JSON.stringify(material))
+            .digest("hex");
+    }
+
+    private isJwtActive(jwt: string): boolean {
+        try {
+            const payload = decodeJwt(jwt);
+            const now = Math.floor(Date.now() / 1000);
+            const skewSeconds = 30;
+
+            if (
+                typeof payload.nbf === "number" &&
+                now + skewSeconds < payload.nbf
+            ) {
+                return false;
+            }
+
+            if (
+                typeof payload.exp === "number" &&
+                now - skewSeconds >= payload.exp
+            ) {
+                return false;
+            }
+
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    private toRegistrationCertificateCredentialFromAttestation(
+        attestation: { format?: string; meta?: Record<string, unknown> },
+    ): NonNullable<RegistrationCertificateCreation["credentials"]>[number] | undefined {
+        if (!attestation.format) {
+            return undefined;
+        }
+
+        return {
+            format: attestation.format as "dc+sd-jwt" | "mso_mdoc",
+            meta: attestation.meta ?? {},
+        };
+    }
+
+    private buildRegistrationCertificateDcql(
+        credentials: NonNullable<RegistrationCertificateCreation["credentials"]>,
+    ): {
+        credentials: Array<{
+            format: string;
+            claims?: Array<{ path: string[] }>;
+            meta: Record<string, unknown>;
+        }>;
+    } {
+        return {
+            credentials: credentials.map((credential) => ({
+                format: credential.format,
+                claims: credential.claims,
+                meta: credential.meta ?? {},
+            })),
+        };
+    }
+
+    private async resolveIssuerRegistrationCertificateJwt(
+        tenantId: string,
+        registrationCertificateConfig: IssuerRegistrationCertificateConfig,
+    ): Promise<string | undefined> {
+        const mode =
+            registrationCertificateConfig.mode ??
+            IssuerRegistrationCertificateMode.IMPORT;
+
+        if (mode === IssuerRegistrationCertificateMode.IMPORT) {
+            if (!registrationCertificateConfig.jwt) {
+                this.logger.warn(
+                    `[${tenantId}] registrationCertificate is enabled in import mode but no jwt is configured`,
+                );
+                return undefined;
+            }
+
+            if (!this.isJwtActive(registrationCertificateConfig.jwt)) {
+                this.logger.warn(
+                    `[${tenantId}] configured registration certificate jwt is expired or not active`,
+                );
+                return undefined;
+            }
+
+            return registrationCertificateConfig.jwt;
+        }
+
+        if (
+            !Array.isArray(registrationCertificateConfig.providedAttestations) ||
+            registrationCertificateConfig.providedAttestations.length === 0
+        ) {
+            this.logger.warn(
+                `[${tenantId}] registrationCertificate generate mode requires providedAttestations`,
+            );
+            return undefined;
+        }
+
+        const fingerprint = this.computeRegistrationCertificateFingerprint(
+            registrationCertificateConfig,
+        );
+
+        const issuanceConfig =
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const cache = issuanceConfig.registrationCertificateCache;
+        if (
+            cache?.jwt &&
+            cache.fingerprint === fingerprint &&
+            this.isJwtActive(cache.jwt)
+        ) {
+            return cache.jwt;
+        }
+
+        const credentials = (
+            registrationCertificateConfig.providedAttestations ?? []
+        )
+            .map((attestation) =>
+                this.toRegistrationCertificateCredentialFromAttestation(
+                    attestation,
+                ),
+            )
+            .filter(
+                (
+                    value,
+                ): value is NonNullable<
+                    RegistrationCertificateCreation["credentials"]
+                >[number] => !!value,
+            );
+
+        if (credentials.length === 0) {
+            this.logger.warn(
+                `[${tenantId}] registrationCertificate generate mode could not derive credentials from providedAttestations`,
+            );
+            return undefined;
+        }
+
+        const creationBody: Partial<RegistrationCertificateCreation> = {
+            provided_attestations:
+                registrationCertificateConfig.providedAttestations as RegistrationCertificateCreation["provided_attestations"],
+            credentials,
+            ...(registrationCertificateConfig.privacyPolicy
+                ? { privacy_policy: registrationCertificateConfig.privacyPolicy }
+                : {}),
+            ...(registrationCertificateConfig.supportUri
+                ? { support_uri: registrationCertificateConfig.supportUri }
+                : {}),
+        };
+
+        const resolved = await this.registrarService.resolveRegistrationCertificate(
+            { body: creationBody },
+            this.buildRegistrationCertificateDcql(credentials),
+            v4(),
+            tenantId,
+        );
+
+        await this.issuanceService.updateRegistrationCertificateCache(tenantId, {
+            jwt: resolved.jwt,
+            fingerprint,
+            issuedAt:
+                typeof resolved.payload.iat === "number"
+                    ? resolved.payload.iat
+                    : undefined,
+            expiresAt:
+                typeof resolved.payload.exp === "number"
+                    ? resolved.payload.exp
+                    : undefined,
+        });
+
+        return resolved.jwt;
+    }
+
+    private reorderPreferredAuthorizationServer(
+        authServers: string[],
+        authorizationServers: AuthorizationServerMetadata[],
+        preferred: string,
+    ): void {
+        const idx = authServers.indexOf(preferred);
+        if (idx > 0) {
+            const [url] = authServers.splice(idx, 1);
+            const [meta] = authorizationServers.splice(idx, 1);
+            authServers.unshift(url);
+            authorizationServers.unshift(meta);
+        }
+    }
+
+    private async appendIssuerRegistrationCertificateInfo(
+        tenantId: string,
+        registrationCertificateConfig: IssuerRegistrationCertificateConfig | null | undefined,
+        issuerInfo: IssuerInfo[],
+    ): Promise<void> {
+        if (!registrationCertificateConfig?.enabled) {
+            return;
+        }
+
+        try {
+            const registrationCertificateJwt =
+                await this.resolveIssuerRegistrationCertificateJwt(
+                    tenantId,
+                    registrationCertificateConfig,
+                );
+
+            if (registrationCertificateJwt) {
+                issuerInfo.push({
+                    format: "registration_cert",
+                    data: registrationCertificateJwt,
+                });
+            }
+        } catch (error) {
+            this.logger.warn(
+                `[${tenantId}] Failed to resolve issuer registration certificate: ${error instanceof Error ? error.message : "unknown error"}`,
+            );
+        }
+    }
+
     /**
      * Get the OID4VCI issuer metadata for a specific session.
      * @param session The session for which to retrieve the issuer metadata.
@@ -436,15 +681,19 @@ export class Oid4vciService {
             ),
         );
         if (preferred) {
-            const idx = authServers.indexOf(preferred);
-            if (idx > 0) {
-                // Move the preferred AS (and its metadata) to the front
-                const [url] = authServers.splice(idx, 1);
-                const [meta] = authorizationServers.splice(idx, 1);
-                authServers.unshift(url);
-                authorizationServers.unshift(meta);
-            }
+            this.reorderPreferredAuthorizationServer(
+                authServers,
+                authorizationServers,
+                preferred,
+            );
         }
+
+        const issuer_info: IssuerInfo[] = [];
+        await this.appendIssuerRegistrationCertificateInfo(
+            tenantId,
+            issuanceConfig.registrationCertificate,
+            issuer_info,
+        );
 
         const credentialIssuer = issuer.createCredentialIssuerMetadata({
             credential_issuer,
@@ -478,6 +727,7 @@ export class Oid4vciService {
                           batch_size: issuanceConfig?.batchSize,
                       }
                     : undefined,
+            issuer_info: issuer_info.length > 0 ? issuer_info : undefined,
         });
         return {
             credentialIssuer,

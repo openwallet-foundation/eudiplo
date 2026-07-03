@@ -72,7 +72,7 @@
     },
     "namespace": {
       "type": "string",
-      "description": "Namespace for mDOC field",
+      "description": "Namespace for mDOC field. Optional when the namespace is already present as the first path segment.",
       "example": "eu.europa.ec.eudi.pid.1"
     },
     "display": {
@@ -83,6 +83,7 @@
     },
     "constraints": {
       "type": "object",
+      "additionalProperties": true,
       "description": "Additional JSON schema constraints for this field"
     },
     "children": {

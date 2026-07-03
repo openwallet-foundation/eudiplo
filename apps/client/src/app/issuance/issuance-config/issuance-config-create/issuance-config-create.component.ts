@@ -23,7 +23,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
-import { IssuanceDto } from '@eudiplo/sdk-core';
+import { IssuanceDto, type SchemaMetadataResponseDto } from '@eudiplo/sdk-core';
 import { IssuanceConfigService } from '../issuance-config.service';
 import { issuanceConfigSchema } from '../../../utils/schemas';
 import { JsonViewDialogComponent } from '../../credential-config/credential-config-create/json-view-dialog/json-view-dialog.component';
@@ -65,6 +65,7 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
   public form: FormGroup;
   public loading = false;
   public availablePresentationConfigIds: string[] = [];
+  public availableSchemaMetadata: SchemaMetadataResponseDto[] = [];
   private chainedAsEnabledSub?: Subscription;
   private readonly federationModes = ['federation-only', 'hybrid'] as const;
   private readonly managedAuthorizationServerPrefix = 'authorization-server:';
@@ -125,6 +126,14 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
         cacheTtlSeconds: [300],
         trustAnchors: this.fb.array([]),
       }),
+      registrationCertificate: this.fb.group({
+        enabled: [false],
+        mode: ['import'],
+        jwt: [''],
+        schemaMetadataIds: [[]],
+        privacyPolicy: [''],
+        supportUri: [''],
+      }),
     } as { [k in keyof IssuanceDto]: any });
   }
 
@@ -134,6 +143,7 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
     // Defer network/config hydration so tab navigation is interactive immediately.
     setTimeout(() => {
       this.loadPresentationConfigs();
+      this.loadSchemaMetadata();
       void this.loadConfigForEdit();
     }, 0);
   }
@@ -287,6 +297,7 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
       await this.yieldToUi();
 
       // Patch other form values
+      const registrationCertificate = (config as any).registrationCertificate;
       this.form.patchValue({
         batchSize: config.batchSize,
         dPopRequired: config.dPopRequired,
@@ -301,6 +312,14 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
         walletAttestationRequired: config.walletAttestationRequired ?? false,
         preferredAuthServer: config.preferredAuthServer ?? '',
         txCodeMaxAttempts: config.txCodeMaxAttempts ?? null,
+        registrationCertificate: {
+          enabled: registrationCertificate?.enabled ?? false,
+          mode: registrationCertificate?.mode ?? 'import',
+          jwt: registrationCertificate?.jwt ?? '',
+          schemaMetadataIds: registrationCertificate?.schemaMetadataIds ?? [],
+          privacyPolicy: registrationCertificate?.privacyPolicy ?? '',
+          supportUri: registrationCertificate?.supportUri ?? '',
+        },
       });
 
       // Load Chained AS config if present
@@ -380,11 +399,20 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
     );
   }
 
-  onSubmit(): void {
-    this.loading = true;
-    const formValue = this.form.value;
+  private loadSchemaMetadata(): void {
+    this.issuanceConfigService.getSchemaMetadata().then(
+      (schemas) => {
+        this.availableSchemaMetadata = [...(schemas || [])].sort((a, b) =>
+          `${a.id}@${a.version}`.localeCompare(`${b.id}@${b.version}`)
+        );
+      },
+      (error) => {
+        console.error('Failed to load schema metadata:', error);
+      }
+    );
+  }
 
-    // Build unified chained authorization server entry only if enabled.
+  private buildUnifiedAuthorizationServers(formValue: any): any[] {
     let chainedAuthorizationServer: Record<string, unknown> | undefined;
     if (formValue.chainedAs?.enabled) {
       chainedAuthorizationServer = {
@@ -418,7 +446,7 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
             signingKeyId: server.token?.signingKeyId || undefined,
           },
         }))
-      : undefined;
+      : [];
 
     const externalAuthorizationServers = formValue.authServers?.length
       ? formValue.authServers
@@ -428,13 +456,135 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
             issuer: server.trim(),
             label: server.trim(),
           }))
-      : undefined;
+      : [];
 
-    const unifiedAuthorizationServers = [
-      ...(externalAuthorizationServers ?? []),
-      ...(managedAuthorizationServers ?? []),
+    return [
+      ...externalAuthorizationServers,
+      ...managedAuthorizationServers,
       ...(chainedAuthorizationServer ? [chainedAuthorizationServer] : []),
     ];
+  }
+
+  private buildRegistrationCertificatePayload(
+    registrationCertificateFormValue: any,
+    providedAttestations: any[]
+  ): any {
+    if (!registrationCertificateFormValue?.enabled) {
+      return undefined;
+    }
+
+    if (registrationCertificateFormValue.mode === 'import') {
+      return {
+        enabled: true,
+        mode: 'import',
+        jwt: registrationCertificateFormValue.jwt || undefined,
+      };
+    }
+
+    return {
+      enabled: true,
+      mode: 'generate',
+      schemaMetadataIds: registrationCertificateFormValue.schemaMetadataIds?.length
+        ? registrationCertificateFormValue.schemaMetadataIds
+        : undefined,
+      providedAttestations,
+      privacyPolicy: registrationCertificateFormValue.privacyPolicy || undefined,
+      supportUri: registrationCertificateFormValue.supportUri || undefined,
+    };
+  }
+
+  private findSchemaMetadataBySelection(selection: string): SchemaMetadataResponseDto | undefined {
+    const [id, version] = String(selection).split('@');
+    return this.availableSchemaMetadata.find((entry) => entry.id === id && entry.version === version);
+  }
+
+  private buildAttestationsFromSchemaMetadata(metadata: SchemaMetadataResponseDto): any[] {
+    const schemaUris = Array.isArray(metadata.schemaURIs) ? metadata.schemaURIs : [];
+    if (schemaUris.length > 0) {
+      return schemaUris.map((schema) => ({
+        format: schema.formatIdentifier,
+        meta: {
+          schema_metadata_id: metadata.id,
+          schema_metadata_version: metadata.version,
+          schema_uri: schema.uri,
+          schema_entry_id: schema.id,
+        },
+      }));
+    }
+
+    return (metadata.supportedFormats || []).map((format) => ({
+      format,
+      meta: {
+        schema_metadata_id: metadata.id,
+        schema_metadata_version: metadata.version,
+      },
+    }));
+  }
+
+  private buildProvidedAttestationsFromSchemaSelection(registrationCertificate: any):
+    | { ok: true; value: any[] }
+    | { ok: false; error: string } {
+    if (!registrationCertificate?.enabled || registrationCertificate.mode !== 'generate') {
+      return { ok: true, value: [] };
+    }
+
+    const selected = Array.isArray(registrationCertificate.schemaMetadataIds)
+      ? registrationCertificate.schemaMetadataIds
+      : [];
+
+    if (selected.length === 0) {
+      return {
+        ok: false,
+        error: 'Select at least one schema metadata entry in generate mode.',
+      };
+    }
+
+    const missingSelection = selected.find(
+      (selection: string) => !this.findSchemaMetadataBySelection(String(selection))
+    );
+    if (missingSelection) {
+      return {
+        ok: false,
+        error: `Selected schema metadata ${missingSelection} is no longer available.`,
+      };
+    }
+
+    const providedAttestations = selected.flatMap((selection: string) =>
+      this.buildAttestationsFromSchemaMetadata(
+        this.findSchemaMetadataBySelection(String(selection)) as SchemaMetadataResponseDto
+      )
+    );
+
+    if (providedAttestations.length === 0) {
+      return {
+        ok: false,
+        error: 'No attestations could be derived from selected schema metadata entries.',
+      };
+    }
+
+    return { ok: true, value: providedAttestations };
+  }
+
+  onSubmit(): void {
+    this.loading = true;
+    const formValue = this.form.value;
+
+    const parseResult = this.buildProvidedAttestationsFromSchemaSelection(
+      formValue.registrationCertificate
+    );
+    if (!parseResult.ok) {
+      this.snackBar.open(parseResult.error, 'Close', {
+        duration: 4000,
+      });
+      this.loading = false;
+      return;
+    }
+
+    const unifiedAuthorizationServers = this.buildUnifiedAuthorizationServers(formValue);
+    const registrationCertificate = this.buildRegistrationCertificatePayload(
+      formValue.registrationCertificate,
+      parseResult.value
+    );
 
     const issuanceDto = {
       batchSize: formValue.batchSize,
@@ -456,6 +606,7 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
           ? formValue.walletProviderTrustLists
           : undefined,
       federation: this.buildFederationConfig(formValue.federation),
+      registrationCertificate,
     } as IssuanceDto;
 
     this.issuanceConfigService
@@ -589,6 +740,18 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
     return this.form.get('federation') as FormGroup;
   }
 
+  get registrationCertificate(): FormGroup {
+    return this.form.get('registrationCertificate') as FormGroup;
+  }
+
+  get registrationCertificateEnabled(): boolean {
+    return this.registrationCertificate.get('enabled')?.value ?? false;
+  }
+
+  get registrationCertificateMode(): 'import' | 'generate' {
+    return this.registrationCertificate.get('mode')?.value ?? 'import';
+  }
+
   get federationEnabled(): boolean {
     return this.federation.get('enabled')?.value ?? false;
   }
@@ -658,6 +821,44 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
    */
   viewAsJson(): void {
     const currentConfig = this.form.value;
+    const parseResult = this.buildProvidedAttestationsFromSchemaSelection(
+      currentConfig.registrationCertificate
+    );
+    if (!parseResult.ok) {
+      this.snackBar.open(parseResult.error, 'Close', {
+        duration: 4000,
+      });
+      return;
+    }
+
+    if (currentConfig.registrationCertificate?.enabled) {
+      currentConfig.registrationCertificate = {
+        enabled: true,
+        mode: currentConfig.registrationCertificate.mode,
+        jwt:
+          currentConfig.registrationCertificate.mode === 'import'
+            ? currentConfig.registrationCertificate.jwt || undefined
+            : undefined,
+        schemaMetadataIds:
+          currentConfig.registrationCertificate.mode === 'generate' &&
+          currentConfig.registrationCertificate.schemaMetadataIds?.length
+            ? currentConfig.registrationCertificate.schemaMetadataIds
+            : undefined,
+        providedAttestations:
+          currentConfig.registrationCertificate.mode === 'generate' ? parseResult.value : undefined,
+        privacyPolicy:
+          currentConfig.registrationCertificate.mode === 'generate'
+            ? currentConfig.registrationCertificate.privacyPolicy || undefined
+            : undefined,
+        supportUri:
+          currentConfig.registrationCertificate.mode === 'generate'
+            ? currentConfig.registrationCertificate.supportUri || undefined
+            : undefined,
+      };
+    } else {
+      currentConfig.registrationCertificate = undefined;
+    }
+
     currentConfig.id = this.route.snapshot.params['id'];
     currentConfig.credentialConfigs = undefined;
 

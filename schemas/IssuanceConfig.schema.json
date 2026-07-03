@@ -26,6 +26,27 @@
         }
       ]
     },
+    "registrationCertificate": {
+      "nullable": true,
+      "description": "Optional registration certificate configuration for issuer metadata (`issuer_info`).\nSupports importing an existing JWT or generating one via registrar.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "./IssuerRegistrationCertificateConfig.schema.json"
+        }
+      ]
+    },
+    "registrationCertificateCache": {
+      "nullable": true,
+      "description": "Server-managed cache for generated issuer registration certificates.",
+      "readOnly": true,
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "./IssuerRegistrationCertificateCache.schema.json"
+        }
+      ]
+    },
     "refreshTokenEnabled": {
       "type": "boolean",
       "description": "Whether refresh tokens should be issued for OID4VCI token responses.",

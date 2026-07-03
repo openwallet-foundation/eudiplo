@@ -929,7 +929,6 @@ export const OfferRequestDtoSchema = {
         },
         credentialClaims: {
             type: 'object',
-            description: 'Credential claims configuration per credential. Keys must match credentialConfigurationIds.',
             additionalProperties: {
                 oneOf: [
                     {
@@ -1000,6 +999,7 @@ export const OfferRequestDtoSchema = {
                     }
                 ]
             },
+            description: 'Credential claims configuration per credential. Keys must match credentialConfigurationIds.',
             example: {
                 citizen: {
                     type: 'inline',
@@ -1427,6 +1427,7 @@ export const SessionLogEntryResponseDtoSchema = {
         },
         detail: {
             type: 'object',
+            additionalProperties: true,
             description: 'Additional structured detail'
         }
     },
@@ -1748,26 +1749,6 @@ export const UpstreamOidcConfigSchema = {
     ]
 } as const;
 
-export const ChainedAsVpConfigSchema = {
-    type: 'object',
-    properties: {
-        enabled: {
-            type: 'boolean',
-            description: 'Enable VP-backed chained AS mode',
-            default: false
-        },
-        presentationConfigId: {
-            type: 'string',
-            description: 'Presentation configuration ID used for OID4VP',
-            example: 'pid-no-hook'
-        }
-    },
-    required: [
-        'enabled',
-        'presentationConfigId'
-    ]
-} as const;
-
 export const ChainedAsTokenConfigSchema = {
     type: 'object',
     properties: {
@@ -1784,49 +1765,6 @@ export const ChainedAsTokenConfigSchema = {
     }
 } as const;
 
-export const ChainedAsConfigSchema = {
-    type: 'object',
-    properties: {
-        enabled: {
-            type: 'boolean',
-            description: 'Enable chained AS mode',
-            default: false
-        },
-        upstream: {
-            description: 'Upstream OIDC provider configuration',
-            allOf: [
-                {
-                    $ref: '#/components/schemas/UpstreamOidcConfig'
-                }
-            ]
-        },
-        vp: {
-            description: 'VP-backed chained AS configuration',
-            allOf: [
-                {
-                    $ref: '#/components/schemas/ChainedAsVpConfig'
-                }
-            ]
-        },
-        token: {
-            description: 'Token configuration',
-            allOf: [
-                {
-                    $ref: '#/components/schemas/ChainedAsTokenConfig'
-                }
-            ]
-        },
-        requireDPoP: {
-            type: 'boolean',
-            description: 'Require DPoP binding for tokens',
-            default: true
-        }
-    },
-    required: [
-        'enabled'
-    ]
-} as const;
-
 export const ManagedAuthorizationServerConfigSchema = {
     type: 'object',
     properties: {
@@ -1841,12 +1779,28 @@ export const ManagedAuthorizationServerConfigSchema = {
             example: 'PID Authorization Server'
         },
         type: {
-            type: 'string',
             enum: [
-                'oid4vp'
+                'external',
+                'oid4vp',
+                'chained'
             ],
+            type: 'string',
             description: 'Authorization server implementation type',
-            example: 'oid4vp'
+            example: 'external'
+        },
+        issuer: {
+            type: 'string',
+            format: 'uri',
+            description: 'Issuer URL for external authorization servers',
+            example: 'https://auth.example.com'
+        },
+        upstream: {
+            description: 'Upstream OIDC provider configuration for chained mode',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/UpstreamOidcConfig'
+                }
+            ]
         },
         enabled: {
             type: 'boolean',
@@ -1878,9 +1832,7 @@ export const ManagedAuthorizationServerConfigSchema = {
         }
     },
     required: [
-        'id',
-        'type',
-        'presentationConfigId'
+        'type'
     ]
 } as const;
 
@@ -1954,6 +1906,96 @@ export const FederationConfigSchema = {
     ]
 } as const;
 
+export const IssuerProvidedAttestationSchema = {
+    type: 'object',
+    properties: {
+        format: {
+            type: 'string',
+            description: 'Attestation format as expected by the registrar (for example dc+sd-jwt, mso_mdoc).',
+            example: 'dc+sd-jwt'
+        },
+        meta: {
+            type: 'object',
+            additionalProperties: true,
+            description: 'Arbitrary attestation metadata forwarded to the registrar.'
+        }
+    }
+} as const;
+
+export const IssuerRegistrationCertificateConfigSchema = {
+    type: 'object',
+    properties: {
+        enabled: {
+            type: 'boolean',
+            description: 'Enable inclusion of a registration certificate in credential issuer metadata.',
+            default: false
+        },
+        mode: {
+            enum: [
+                'import',
+                'generate'
+            ],
+            type: 'string',
+            description: 'import: use an existing JWT, generate: create via registrar from provided attestations and selected credential configurations.',
+            default: 'import'
+        },
+        jwt: {
+            type: 'string',
+            description: 'Existing registration certificate JWT used when mode is import.'
+        },
+        schemaMetadataIds: {
+            description: 'Schema metadata IDs selected for inclusion in generated registration certificates.',
+            type: 'array',
+            items: {
+                type: 'string'
+            }
+        },
+        privacyPolicy: {
+            type: 'string',
+            description: 'Privacy policy URL used when generating a registration certificate (optional if registrar defaults are configured).',
+            example: 'https://issuer.example/privacy'
+        },
+        supportUri: {
+            type: 'string',
+            description: 'Support URI used when generating a registration certificate (optional if registrar defaults are configured).',
+            example: 'mailto:support@issuer.example'
+        },
+        providedAttestations: {
+            description: 'Provided attestations included in generated registration certificates.',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/IssuerProvidedAttestation'
+            }
+        }
+    }
+} as const;
+
+export const IssuerRegistrationCertificateCacheSchema = {
+    type: 'object',
+    properties: {
+        jwt: {
+            type: 'string',
+            description: 'Cached registration certificate JWT generated by EUDIPLO.',
+            readOnly: true
+        },
+        fingerprint: {
+            type: 'string',
+            description: 'Config fingerprint used to detect cache invalidation.',
+            readOnly: true
+        },
+        issuedAt: {
+            type: 'number',
+            description: 'JWT iat claim, seconds since epoch.',
+            readOnly: true
+        },
+        expiresAt: {
+            type: 'number',
+            description: 'JWT exp claim, seconds since epoch.',
+            readOnly: true
+        }
+    }
+} as const;
+
 export const DisplayLogoSchema = {
     type: 'object',
     properties: {
@@ -1991,16 +2033,6 @@ export const IssuanceConfigSchema = {
             type: 'string',
             description: 'Key ID for signing access tokens. If unset, the default signing key is used.'
         },
-        chainedAs: {
-            nullable: true,
-            description: 'Configuration for Chained Authorization Server mode.\nWhen enabled, EUDIPLO acts as an OAuth AS facade, delegating user authentication\nto an upstream OIDC provider while issuing its own tokens with issuer_state.',
-            type: 'object',
-            allOf: [
-                {
-                    $ref: '#/components/schemas/ChainedAsConfig'
-                }
-            ]
-        },
         authorizationServers: {
             nullable: true,
             description: 'Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.',
@@ -2016,6 +2048,27 @@ export const IssuanceConfigSchema = {
             allOf: [
                 {
                     $ref: '#/components/schemas/FederationConfig'
+                }
+            ]
+        },
+        registrationCertificate: {
+            nullable: true,
+            description: 'Optional registration certificate configuration for issuer metadata (`issuer_info`).\nSupports importing an existing JWT or generating one via registrar.',
+            type: 'object',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/IssuerRegistrationCertificateConfig'
+                }
+            ]
+        },
+        registrationCertificateCache: {
+            nullable: true,
+            description: 'Server-managed cache for generated issuer registration certificates.',
+            readOnly: true,
+            type: 'object',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/IssuerRegistrationCertificateCache'
                 }
             ]
         },
@@ -2053,13 +2106,6 @@ export const IssuanceConfigSchema = {
                     $ref: '#/components/schemas/TenantEntity'
                 }
             ]
-        },
-        authServers: {
-            description: 'Authentication server URL for the issuance process.',
-            type: 'array',
-            items: {
-                type: 'string'
-            }
         },
         batchSize: {
             type: 'number',
@@ -2116,16 +2162,6 @@ export const IssuanceDtoSchema = {
             type: 'string',
             description: 'Key ID for signing access tokens. If unset, the default signing key is used.'
         },
-        chainedAs: {
-            nullable: true,
-            description: 'Configuration for Chained Authorization Server mode.\nWhen enabled, EUDIPLO acts as an OAuth AS facade, delegating user authentication\nto an upstream OIDC provider while issuing its own tokens with issuer_state.',
-            type: 'object',
-            allOf: [
-                {
-                    $ref: '#/components/schemas/ChainedAsConfig'
-                }
-            ]
-        },
         authorizationServers: {
             nullable: true,
             description: 'Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.',
@@ -2141,6 +2177,27 @@ export const IssuanceDtoSchema = {
             allOf: [
                 {
                     $ref: '#/components/schemas/FederationConfig'
+                }
+            ]
+        },
+        registrationCertificate: {
+            nullable: true,
+            description: 'Optional registration certificate configuration for issuer metadata (`issuer_info`).\nSupports importing an existing JWT or generating one via registrar.',
+            type: 'object',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/IssuerRegistrationCertificateConfig'
+                }
+            ]
+        },
+        registrationCertificateCache: {
+            nullable: true,
+            description: 'Server-managed cache for generated issuer registration certificates.',
+            readOnly: true,
+            type: 'object',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/IssuerRegistrationCertificateCache'
                 }
             ]
         },
@@ -2170,13 +2227,6 @@ export const IssuanceDtoSchema = {
             description: 'Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.',
             default: 5,
             nullable: true
-        },
-        authServers: {
-            description: 'Authentication server URL for the issuance process.',
-            type: 'array',
-            items: {
-                type: 'string'
-            }
         },
         batchSize: {
             type: 'number',
@@ -2898,7 +2948,7 @@ export const ClaimFieldDefinitionDtoSchema = {
         },
         namespace: {
             type: 'string',
-            description: 'Namespace for mDOC field',
+            description: 'Namespace for mDOC field. Optional when the namespace is already present as the first path segment.',
             example: 'eu.europa.ec.eudi.pid.1'
         },
         display: {
@@ -2909,6 +2959,7 @@ export const ClaimFieldDefinitionDtoSchema = {
         },
         constraints: {
             type: 'object',
+            additionalProperties: true,
             description: 'Additional JSON schema constraints for this field'
         },
         children: {
@@ -3594,8 +3645,8 @@ export const MetadataSchemaDtoSchema = {
         },
         schemaContent: {
             type: 'object',
-            description: 'Inline schema content (JSON Schema)',
-            additionalProperties: true
+            additionalProperties: true,
+            description: 'Inline schema content (JSON Schema)'
         },
         integrity: {
             type: 'string',
@@ -3628,8 +3679,8 @@ export const TrustAuthorityDtoSchema = {
         },
         verificationMethod: {
             type: 'object',
-            description: 'Verification method for the trust list signature (e.g., JWK)',
-            additionalProperties: true
+            additionalProperties: true,
+            description: 'Verification method for the trust list signature (e.g., JWK)'
         }
     },
     required: [
@@ -4887,6 +4938,158 @@ export const NotificationRequestDtoSchema = {
     ]
 } as const;
 
+export const OfferResponseSchema = {
+    type: 'object',
+    properties: {
+        uri: {
+            type: 'string'
+        },
+        crossDeviceUri: {
+            type: 'string',
+            description: 'URI for cross-device flows (no redirect after completion)'
+        },
+        session: {
+            type: 'string'
+        }
+    },
+    required: [
+        'uri',
+        'session'
+    ]
+} as const;
+
+export const CompleteDeferredDtoSchema = {
+    type: 'object',
+    properties: {
+        claims: {
+            type: 'object',
+            additionalProperties: true,
+            description: 'Claims to include in the credential. The structure should match the credential configuration\'s expected claims.',
+            example: {
+                given_name: 'John',
+                family_name: 'Doe',
+                birthdate: '1990-01-15'
+            }
+        }
+    },
+    required: [
+        'claims'
+    ]
+} as const;
+
+export const DeferredOperationResponseSchema = {
+    type: 'object',
+    properties: {
+        transactionId: {
+            type: 'string',
+            description: 'The transaction ID'
+        },
+        status: {
+            description: 'The new status of the transaction',
+            enum: [
+                'pending',
+                'ready',
+                'retrieved',
+                'expired',
+                'failed'
+            ],
+            type: 'string'
+        },
+        message: {
+            type: 'string',
+            description: 'Optional message'
+        }
+    },
+    required: [
+        'transactionId',
+        'status'
+    ]
+} as const;
+
+export const FailDeferredDtoSchema = {
+    type: 'object',
+    properties: {
+        error: {
+            type: 'string',
+            description: 'Optional error message explaining why the issuance failed',
+            example: 'Identity verification failed'
+        }
+    }
+} as const;
+
+export const EC_PublicSchema = {
+    type: 'object',
+    properties: {
+        kty: {
+            type: 'string',
+            description: 'The key type, which is always \'EC\' for Elliptic Curve keys.'
+        },
+        crv: {
+            type: 'string',
+            description: 'The algorithm intended for use with the key, such as \'ES256\'.'
+        },
+        x: {
+            type: 'string',
+            description: 'The x coordinate of the EC public key.'
+        },
+        y: {
+            type: 'string',
+            description: 'The y coordinate of the EC public key.'
+        }
+    },
+    required: [
+        'kty',
+        'crv',
+        'x',
+        'y'
+    ]
+} as const;
+
+export const JwksResponseDtoSchema = {
+    type: 'object',
+    properties: {
+        keys: {
+            description: 'An array of EC public keys in JWK format.',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/EC_Public'
+            }
+        }
+    },
+    required: [
+        'keys'
+    ]
+} as const;
+
+export const AuthorizationResponseSchema = {
+    type: 'object',
+    properties: {
+        response: {
+            type: 'string',
+            description: 'The response string containing the authorization details (JWE-encrypted VP token).\nRequired for success responses, absent for error responses.'
+        },
+        sendResponse: {
+            type: 'boolean',
+            description: 'When set to true, the authorization response will be sent to the client.'
+        },
+        error: {
+            type: 'string'
+        },
+        error_description: {
+            type: 'string',
+            description: 'Human-readable description of the error.'
+        },
+        error_uri: {
+            type: 'string',
+            description: 'URI with additional information about the error.'
+        },
+        state: {
+            type: 'string',
+            description: 'State value from the authorization request (for correlation).'
+        }
+    }
+} as const;
+
 export const ObjectSchema = {
     type: 'object'
 } as const;
@@ -5132,157 +5335,6 @@ export const ChainedAsTokenResponseDtoSchema = {
         'token_type',
         'expires_in'
     ]
-} as const;
-
-export const OfferResponseSchema = {
-    type: 'object',
-    properties: {
-        uri: {
-            type: 'string'
-        },
-        crossDeviceUri: {
-            type: 'string',
-            description: 'URI for cross-device flows (no redirect after completion)'
-        },
-        session: {
-            type: 'string'
-        }
-    },
-    required: [
-        'uri',
-        'session'
-    ]
-} as const;
-
-export const CompleteDeferredDtoSchema = {
-    type: 'object',
-    properties: {
-        claims: {
-            type: 'object',
-            description: 'Claims to include in the credential. The structure should match the credential configuration\'s expected claims.',
-            example: {
-                given_name: 'John',
-                family_name: 'Doe',
-                birthdate: '1990-01-15'
-            }
-        }
-    },
-    required: [
-        'claims'
-    ]
-} as const;
-
-export const DeferredOperationResponseSchema = {
-    type: 'object',
-    properties: {
-        transactionId: {
-            type: 'string',
-            description: 'The transaction ID'
-        },
-        status: {
-            description: 'The new status of the transaction',
-            enum: [
-                'pending',
-                'ready',
-                'retrieved',
-                'expired',
-                'failed'
-            ],
-            type: 'string'
-        },
-        message: {
-            type: 'string',
-            description: 'Optional message'
-        }
-    },
-    required: [
-        'transactionId',
-        'status'
-    ]
-} as const;
-
-export const FailDeferredDtoSchema = {
-    type: 'object',
-    properties: {
-        error: {
-            type: 'string',
-            description: 'Optional error message explaining why the issuance failed',
-            example: 'Identity verification failed'
-        }
-    }
-} as const;
-
-export const EC_PublicSchema = {
-    type: 'object',
-    properties: {
-        kty: {
-            type: 'string',
-            description: 'The key type, which is always \'EC\' for Elliptic Curve keys.'
-        },
-        crv: {
-            type: 'string',
-            description: 'The algorithm intended for use with the key, such as \'ES256\'.'
-        },
-        x: {
-            type: 'string',
-            description: 'The x coordinate of the EC public key.'
-        },
-        y: {
-            type: 'string',
-            description: 'The y coordinate of the EC public key.'
-        }
-    },
-    required: [
-        'kty',
-        'crv',
-        'x',
-        'y'
-    ]
-} as const;
-
-export const JwksResponseDtoSchema = {
-    type: 'object',
-    properties: {
-        keys: {
-            description: 'An array of EC public keys in JWK format.',
-            type: 'array',
-            items: {
-                $ref: '#/components/schemas/EC_Public'
-            }
-        }
-    },
-    required: [
-        'keys'
-    ]
-} as const;
-
-export const AuthorizationResponseSchema = {
-    type: 'object',
-    properties: {
-        response: {
-            type: 'string',
-            description: 'The response string containing the authorization details (JWE-encrypted VP token).\nRequired for success responses, absent for error responses.'
-        },
-        sendResponse: {
-            type: 'boolean',
-            description: 'When set to true, the authorization response will be sent to the client.'
-        },
-        error: {
-            type: 'string'
-        },
-        error_description: {
-            type: 'string',
-            description: 'Human-readable description of the error.'
-        },
-        error_uri: {
-            type: 'string',
-            description: 'URI with additional information about the error.'
-        },
-        state: {
-            type: 'string',
-            description: 'State value from the authorization request (for correlation).'
-        }
-    }
 } as const;
 
 export const KmsProviderCapabilitiesDtoSchema = {
@@ -5875,7 +5927,7 @@ export const KeyChainImportDtoSchema = {
             description: 'Usage type for this key chain.'
         },
         crt: {
-            description: 'Certificate chain in PEM format (leaf first, then intermediates/CA).',
+            description: 'Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import.',
             type: 'array',
             items: {
                 type: 'string'
@@ -6000,6 +6052,221 @@ export const FileUploadDtoSchema = {
     },
     required: [
         'file'
+    ]
+} as const;
+
+export const IssuanceConfigWritableSchema = {
+    type: 'object',
+    properties: {
+        signingKeyId: {
+            type: 'string',
+            description: 'Key ID for signing access tokens. If unset, the default signing key is used.'
+        },
+        authorizationServers: {
+            nullable: true,
+            description: 'Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/ManagedAuthorizationServerConfig'
+            }
+        },
+        federation: {
+            nullable: true,
+            description: 'Optional OpenID Federation configuration used for trust evaluation.\nWhen omitted, trust checks rely on existing LoTE trust-list behavior.',
+            type: 'object',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/FederationConfig'
+                }
+            ]
+        },
+        registrationCertificate: {
+            nullable: true,
+            description: 'Optional registration certificate configuration for issuer metadata (`issuer_info`).\nSupports importing an existing JWT or generating one via registrar.',
+            type: 'object',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/IssuerRegistrationCertificateConfig'
+                }
+            ]
+        },
+        refreshTokenEnabled: {
+            type: 'boolean',
+            description: 'Whether refresh tokens should be issued for OID4VCI token responses.',
+            default: true
+        },
+        credentialResponseEncryption: {
+            type: 'boolean',
+            description: 'Whether `credential_response_encryption` should be advertised in the credential issuer metadata.',
+            default: false
+        },
+        credentialRequestEncryption: {
+            type: 'boolean',
+            description: 'Whether `credential_request_encryption` should be advertised in the credential issuer metadata.',
+            default: false
+        },
+        refreshTokenExpiresInSeconds: {
+            type: 'number',
+            description: 'Refresh token lifetime in seconds. Defaults to 2592000 (30 days).',
+            default: 2592000,
+            nullable: true
+        },
+        txCodeMaxAttempts: {
+            type: 'number',
+            description: 'Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.',
+            default: 5,
+            nullable: true
+        },
+        tenant: {
+            description: 'The tenant that owns this object.',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/TenantEntity'
+                }
+            ]
+        },
+        batchSize: {
+            type: 'number',
+            description: 'Value to determine the amount of credentials that are issued in a batch.\nDefault is 1.'
+        },
+        dPopRequired: {
+            type: 'boolean',
+            description: 'Indicates whether DPoP is required for the issuance process. Default value is true.'
+        },
+        walletAttestationRequired: {
+            type: 'boolean',
+            description: 'Indicates whether wallet attestation is required for the token endpoint.\nWhen enabled, wallets must provide OAuth-Client-Attestation headers.\nDefault value is false.'
+        },
+        walletProviderTrustLists: {
+            description: 'URLs of trust lists containing trusted wallet providers.\nThe wallet attestation\'s X.509 certificate will be validated against these trust lists.\nIf empty and walletAttestationRequired is true, all wallet providers are rejected.',
+            type: 'array',
+            items: {
+                type: 'string'
+            }
+        },
+        preferredAuthServer: {
+            type: 'string',
+            description: 'The URL of the preferred authorization server for wallet-initiated flows.\nWhen set, this AS is placed first in the `authorization_servers` array\nof the credential issuer metadata, signaling wallets to use it by default.\nMust match one of the configured auth servers, the chained AS URL, or "built-in".'
+        },
+        display: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/DisplayInfo'
+            }
+        },
+        createdAt: {
+            format: 'date-time',
+            type: 'string',
+            description: 'The timestamp when the VP request was created.'
+        },
+        updatedAt: {
+            format: 'date-time',
+            type: 'string',
+            description: 'The timestamp when the VP request was last updated.'
+        }
+    },
+    required: [
+        'tenant',
+        'display',
+        'createdAt',
+        'updatedAt'
+    ]
+} as const;
+
+export const IssuanceDtoWritableSchema = {
+    type: 'object',
+    properties: {
+        signingKeyId: {
+            type: 'string',
+            description: 'Key ID for signing access tokens. If unset, the default signing key is used.'
+        },
+        authorizationServers: {
+            nullable: true,
+            description: 'Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/ManagedAuthorizationServerConfig'
+            }
+        },
+        federation: {
+            nullable: true,
+            description: 'Optional OpenID Federation configuration used for trust evaluation.\nWhen omitted, trust checks rely on existing LoTE trust-list behavior.',
+            type: 'object',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/FederationConfig'
+                }
+            ]
+        },
+        registrationCertificate: {
+            nullable: true,
+            description: 'Optional registration certificate configuration for issuer metadata (`issuer_info`).\nSupports importing an existing JWT or generating one via registrar.',
+            type: 'object',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/IssuerRegistrationCertificateConfig'
+                }
+            ]
+        },
+        refreshTokenEnabled: {
+            type: 'boolean',
+            description: 'Whether refresh tokens should be issued for OID4VCI token responses.',
+            default: true
+        },
+        credentialResponseEncryption: {
+            type: 'boolean',
+            description: 'Whether `credential_response_encryption` should be advertised in the credential issuer metadata.',
+            default: false
+        },
+        credentialRequestEncryption: {
+            type: 'boolean',
+            description: 'Whether `credential_request_encryption` should be advertised in the credential issuer metadata.',
+            default: false
+        },
+        refreshTokenExpiresInSeconds: {
+            type: 'number',
+            description: 'Refresh token lifetime in seconds. Defaults to 2592000 (30 days).',
+            default: 2592000,
+            nullable: true
+        },
+        txCodeMaxAttempts: {
+            type: 'number',
+            description: 'Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.',
+            default: 5,
+            nullable: true
+        },
+        batchSize: {
+            type: 'number',
+            description: 'Value to determine the amount of credentials that are issued in a batch.\nDefault is 1.'
+        },
+        dPopRequired: {
+            type: 'boolean',
+            description: 'Indicates whether DPoP is required for the issuance process. Default value is true.'
+        },
+        walletAttestationRequired: {
+            type: 'boolean',
+            description: 'Indicates whether wallet attestation is required for the token endpoint.\nWhen enabled, wallets must provide OAuth-Client-Attestation headers.\nDefault value is false.'
+        },
+        walletProviderTrustLists: {
+            description: 'URLs of trust lists containing trusted wallet providers.\nThe wallet attestation\'s X.509 certificate will be validated against these trust lists.\nIf empty and walletAttestationRequired is true, all wallet providers are rejected.',
+            type: 'array',
+            items: {
+                type: 'string'
+            }
+        },
+        preferredAuthServer: {
+            type: 'string',
+            description: 'The URL of the preferred authorization server for wallet-initiated flows.\nWhen set, this AS is placed first in the `authorization_servers` array\nof the credential issuer metadata, signaling wallets to use it by default.\nMust match one of the configured auth servers, the chained AS URL, or "built-in".'
+        },
+        display: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/DisplayInfo'
+            }
+        }
+    },
+    required: [
+        'display'
     ]
 } as const;
 

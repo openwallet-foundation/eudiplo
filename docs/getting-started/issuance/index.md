@@ -29,6 +29,9 @@ Schema metadata is managed in a dedicated flow. See [Schema Metadata](schema-met
 
 The endpoints to manage issuance configuration can be found in the [API documentation](../../api/openapi.md) section.
 
+Registration certificate publication in issuer metadata (`issuer_info`) is configured
+in issuance configuration. See [Issuance Configuration](issuance-configuration.md#registration-certificate-in-issuer-metadata).
+
 Based on your passed access token, endpoints will be scoped to the tenant ID of the
 token. You also need the `issuance:manage` role to access these endpoints.
 The configurations are internally stored in a database.

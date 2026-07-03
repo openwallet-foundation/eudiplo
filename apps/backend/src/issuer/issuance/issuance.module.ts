@@ -2,6 +2,7 @@ import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { CryptoModule } from "../../crypto/crypto.module";
+import { RegistrarModule } from "../../registrar/registrar.module";
 import { SessionModule } from "../../session/session.module";
 import { TrustModule } from "../../shared/trust/trust.module";
 import { WebhookService } from "../../shared/utils/webhook/webhook.service";
@@ -40,6 +41,7 @@ import { WellKnownService } from "./oid4vci/well-known/well-known.service";
         HttpModule,
         TrustModule,
         AuthorizationModule,
+        RegistrarModule,
         TypeOrmModule.forFeature([
             NonceEntity,
             DeferredTransactionEntity,

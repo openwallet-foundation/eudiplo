@@ -115,6 +115,20 @@ export class IssuanceService {
     }
 
     /**
+     * Updates only the server-managed registration certificate cache.
+     */
+    async updateRegistrationCertificateCache(
+        tenantId: string,
+        registrationCertificateCache: IssuanceConfig["registrationCertificateCache"],
+    ): Promise<void> {
+        await this.issuanceConfigRepo.save({
+            ...(await this.getIssuanceConfiguration(tenantId)),
+            tenantId,
+            registrationCertificateCache,
+        });
+    }
+
+    /**
      * Store the config. If it already exist, merge with existing values.
      * - Undefined values are ignored, preserving existing configuration.
      * - Null values explicitly clear/unset the field.
@@ -180,6 +194,23 @@ export class IssuanceService {
     private sanitizeIssuanceConfigForLog(
         config: IssuanceConfig,
     ): Record<string, unknown> {
+        const registrationCertificate = config.registrationCertificate
+            ? {
+                  ...config.registrationCertificate,
+                  jwt: config.registrationCertificate.jwt
+                      ? "[REDACTED]"
+                      : undefined,
+              }
+            : config.registrationCertificate;
+
+        const registrationCertificateCache =
+            config.registrationCertificateCache
+                ? {
+                      ...config.registrationCertificateCache,
+                      jwt: "[REDACTED]",
+                  }
+                : config.registrationCertificateCache;
+
         return {
             display: config.display,
             batchSize: config.batchSize,
@@ -190,6 +221,8 @@ export class IssuanceService {
             preferredAuthServer: config.preferredAuthServer,
             authorizationServers: config.authorizationServers,
             federation: config.federation,
+            registrationCertificate,
+            registrationCertificateCache,
             credentialResponseEncryption: config.credentialResponseEncryption,
             credentialRequestEncryption: config.credentialRequestEncryption,
             refreshTokenEnabled: config.refreshTokenEnabled,

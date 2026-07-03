@@ -107,6 +107,10 @@ export class IssuanceConfigShowComponent implements OnInit {
     return undefined;
   }
 
+  get registrationCertificateConfig(): any {
+    return (this.config as any)?.registrationCertificate;
+  }
+
   copyToClipboard(value: string, label: string): void {
     this.clipboard.copy(value);
     this.snackBar.open(`${label} copied to clipboard`, 'Close', {

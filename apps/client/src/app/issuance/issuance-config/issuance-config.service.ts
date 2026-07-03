@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
   type IssuanceDto,
+  type SchemaMetadataResponseDto,
   issuanceConfigControllerGetIssuanceConfigurations,
   issuanceConfigControllerStoreIssuanceConfiguration,
   credentialOfferControllerGetOffer,
+  schemaMetadataControllerFindAll,
   type OfferRequestDto,
 } from '@eudiplo/sdk-core';
 
@@ -26,5 +28,9 @@ export class IssuanceConfigService {
 
   getOffer(values: OfferRequestDto) {
     return credentialOfferControllerGetOffer({ body: values }).then((response) => response.data);
+  }
+
+  getSchemaMetadata(): Promise<SchemaMetadataResponseDto[]> {
+    return schemaMetadataControllerFindAll().then((response) => response.data || []);
   }
 }

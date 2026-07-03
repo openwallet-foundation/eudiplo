@@ -32,7 +32,7 @@
       "description": "Usage type for this key chain."
     },
     "crt": {
-      "description": "Certificate chain in PEM format (leaf first, then intermediates/CA).",
+      "description": "Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import.",
       "type": "array",
       "items": {
         "type": "string"
