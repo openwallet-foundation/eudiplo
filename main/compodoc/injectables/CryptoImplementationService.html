@@ -255,7 +255,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:32</a></div>
                             </td>
                         </tr>
 
@@ -318,8 +318,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="75"
-                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:75</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="91"
+                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:91</a></div>
                         </td>
                     </tr>
 
@@ -361,8 +361,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="40"
-                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:40</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="46"
+                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -440,8 +440,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="120"
-                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:120</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="136"
+                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:136</a></div>
                         </td>
                     </tr>
 
@@ -524,8 +524,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="99"
-                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:99</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="115"
+                                    class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:115</a></div>
                         </td>
                     </tr>
 
@@ -621,7 +621,7 @@ Currently supports ES256 (P-256 curve).</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:32</a></div>
                         </td>
                     </tr>
 
@@ -649,7 +649,7 @@ Currently supports ES256 (P-256 curve).</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:25</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:31</a></div>
                         </td>
                     </tr>
 
@@ -682,7 +682,7 @@ Currently supports ES256 (P-256 curve).</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:24</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/crypto/key/crypto-implementation/crypto-implementation.service.ts:30</a></div>
                         </td>
                     </tr>
 
@@ -708,6 +708,12 @@ export type CryptoType &#x3D; &quot;ES256&quot;;
  * JOSE algorithm names used for SD-JWT VC
  */
 export type JoseAlgorithm &#x3D; &quot;ES256&quot; | &quot;ES384&quot; | &quot;ES512&quot;;
+
+const JOSE_TO_CLASSIC_COSE_ALG: Record&lt;JoseAlgorithm, number&gt; &#x3D; {
+    ES256: -7,
+    ES384: -35,
+    ES512: -36,
+};
 
 /**
  * COSE algorithm identifiers used for mDOC (ISO 18013-5)
@@ -754,11 +760,21 @@ export class CryptoImplementationService {
         }
 
         if (credentialFormat &#x3D;&#x3D;&#x3D; CredentialFormat.MSO_MDOC) {
-            return joseAlgs
-                .map((alg) &#x3D;&gt;
-                    jwaSignatureAlgorithmToFullySpecifiedCoseAlgorithm(alg),
-                )
-                .filter((alg) &#x3D;&gt; alg !&#x3D;&#x3D; undefined);
+            const coseAlgs &#x3D; new Set&lt;number&gt;();
+
+            for (const alg of joseAlgs) {
+                // Include classic COSE alg IDs for compatibility with generic identifiers.
+                coseAlgs.add(JOSE_TO_CLASSIC_COSE_ALG[alg]);
+
+                // Also include RFC 9864 fully-specified identifiers.
+                const fullySpecifiedAlg &#x3D;
+                    jwaSignatureAlgorithmToFullySpecifiedCoseAlgorithm(alg);
+                if (fullySpecifiedAlg !&#x3D;&#x3D; undefined) {
+                    coseAlgs.add(fullySpecifiedAlg);
+                }
+            }
+
+            return Array.from(coseAlgs);
         }
 
         // Default to JOSE algorithms
