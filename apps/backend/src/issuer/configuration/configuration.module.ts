@@ -7,6 +7,7 @@ import { RegistrarModule } from "../../registrar/registrar.module";
 import { SchemaMetadataController } from "../../registrar/schema-metadata.controller";
 import { SessionModule } from "../../session/session.module";
 import { TrustModule } from "../../shared/trust/trust.module";
+import { OutboundUrlPolicyService } from "../../shared/utils/webhook/outbound-url-policy.service";
 import { WebhookService } from "../../shared/utils/webhook/webhook.service";
 import { PresentationsModule } from "../../verifier/presentations/presentations.module";
 import { StatusListModule } from "../lifecycle/status/status-list.module";
@@ -67,6 +68,7 @@ import { WebhookEndpointService } from "./webhook-endpoint/webhook-endpoint.serv
         CredentialsService,
         CredentialConfigService,
         WebhookService,
+        OutboundUrlPolicyService,
         SdjwtvcIssuerService,
         MdocIssuerService,
         AttributeProviderService,

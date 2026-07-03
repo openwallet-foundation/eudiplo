@@ -49,8 +49,11 @@ export class SessionController {
      */
     @ApiParam({ name: "id", description: "The session ID", type: String })
     @Get(":id")
-    getSession(@Param("id") id: string): Promise<Session> {
-        return this.sessionService.get(id);
+    getSession(
+        @Param("id") id: string,
+        @Token() token: TokenPayload,
+    ): Promise<Session> {
+        return this.sessionService.getBy({ id, tenantId: token.entity!.id });
     }
 
     /**
@@ -75,9 +78,11 @@ export class SessionController {
     @ApiOperation({ summary: "Get session log entries" })
     @ApiResponse({ status: 200, type: [SessionLogEntryResponseDto] })
     @Get(":id/logs")
-    getSessionLogs(
+    async getSessionLogs(
         @Param("id") id: string,
+        @Token() token: TokenPayload,
     ): Promise<SessionLogEntryResponseDto[]> {
+        await this.sessionService.getBy({ id, tenantId: token.entity!.id });
         return this.logStoreService.findBySessionId(id);
     }
 

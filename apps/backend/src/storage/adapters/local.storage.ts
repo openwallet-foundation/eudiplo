@@ -8,7 +8,7 @@ import {
     statSync,
     writeFileSync,
 } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, relative, resolve } from "node:path";
 import { Readable } from "node:stream";
 import { FileStorage, type PutOptions } from "../storage.types";
 
@@ -22,6 +22,27 @@ export class LocalFileStorage implements FileStorage {
      */
     constructor(private readonly baseDir: string) {}
 
+    private resolveSafePath(key: string): string {
+        if (!key || key.includes("\0")) {
+            throw new Error("Invalid storage key");
+        }
+
+        const basePath = resolve(this.baseDir);
+        const fullPath = resolve(basePath, key);
+        const relativePath = relative(basePath, fullPath);
+
+        // Reject absolute paths and any path escaping the base directory.
+        if (
+            relativePath.startsWith("..") ||
+            relativePath.includes(`/..`) ||
+            relativePath === ""
+        ) {
+            throw new Error("Invalid storage key");
+        }
+
+        return fullPath;
+    }
+
     /**
      * Saves a file to the local storage.
      * @param key
@@ -32,7 +53,7 @@ export class LocalFileStorage implements FileStorage {
         body: Buffer | Readable,
         opts?: PutOptions,
     ): Promise<void> {
-        const fullPath = join(this.baseDir, key);
+        const fullPath = this.resolveSafePath(key);
         mkdirSync(dirname(fullPath), { recursive: true });
 
         await new Promise<void>((resolve, reject) => {
@@ -57,7 +78,7 @@ export class LocalFileStorage implements FileStorage {
      * @returns
      */
     getStream(key: string) {
-        const fullPath = join(this.baseDir, key);
+        const fullPath = this.resolveSafePath(key);
         const stat = statSync(fullPath);
         const metaPath = `${fullPath}.meta`;
         const contentType = existsSync(metaPath)
@@ -76,7 +97,7 @@ export class LocalFileStorage implements FileStorage {
      * @returns
      */
     delete(key: string) {
-        const fullPath = join(this.baseDir, key);
+        const fullPath = this.resolveSafePath(key);
         rmSync(fullPath);
         const metaPath = `${fullPath}.meta`;
         if (existsSync(metaPath)) rmSync(metaPath);
@@ -89,6 +110,10 @@ export class LocalFileStorage implements FileStorage {
      * @returns
      */
     exists(key: string) {
-        return Promise.resolve(existsSync(join(this.baseDir, key)));
+        try {
+            return Promise.resolve(existsSync(this.resolveSafePath(key)));
+        } catch {
+            return Promise.resolve(false);
+        }
     }
 }

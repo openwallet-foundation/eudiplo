@@ -15,6 +15,7 @@ import {
     ConfigImportOrchestratorService,
     ImportPhase,
 } from "../../../shared/utils/config-import/config-import-orchestrator.service";
+import { OutboundUrlPolicyService } from "../../../shared/utils/webhook/outbound-url-policy.service";
 import { CreateWebhookEndpointDto } from "./dto/create-webhook-endpoint.dto";
 import { UpdateWebhookEndpointDto } from "./dto/update-webhook-endpoint.dto";
 import { WebhookEndpointEntity } from "./entities/webhook-endpoint.entity";
@@ -27,6 +28,7 @@ export class WebhookEndpointService {
         private readonly configImportService: ConfigImportService,
         private readonly configImportOrchestrator: ConfigImportOrchestratorService,
         private readonly tenantActionLogService: AuditLogService,
+        private readonly outboundUrlPolicyService: OutboundUrlPolicyService,
     ) {
         this.configImportOrchestrator.register(
             "webhook-endpoints",
@@ -78,6 +80,8 @@ export class WebhookEndpointService {
         actorToken?: TokenPayload,
         req?: Request,
     ) {
+        await this.outboundUrlPolicyService.assertSafeUrl(dto.url);
+
         const saved = await this.repo.save({ ...dto, tenantId });
 
         if (actorToken) {
@@ -105,6 +109,11 @@ export class WebhookEndpointService {
         req?: Request,
     ) {
         const existing = await this.getById(tenantId, id);
+
+        if (dto.url) {
+            await this.outboundUrlPolicyService.assertSafeUrl(dto.url);
+        }
+
         const saved = await this.repo.save({
             ...existing,
             ...dto,

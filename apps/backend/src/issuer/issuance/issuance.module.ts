@@ -4,6 +4,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { CryptoModule } from "../../crypto/crypto.module";
 import { RegistrarModule } from "../../registrar/registrar.module";
 import { SessionModule } from "../../session/session.module";
+import { OutboundUrlPolicyService } from "../../shared/utils/webhook/outbound-url-policy.service";
 import { TrustModule } from "../../shared/trust/trust.module";
 import { WebhookService } from "../../shared/utils/webhook/webhook.service";
 import { Oid4vpModule } from "../../verifier/oid4vp/oid4vp.module";
@@ -60,6 +61,7 @@ import { WellKnownService } from "./oid4vci/well-known/well-known.service";
         Oid4vciService,
         WellKnownService,
         WebhookService,
+        OutboundUrlPolicyService,
     ],
     exports: [AuthorizationModule, Oid4vciService],
 })

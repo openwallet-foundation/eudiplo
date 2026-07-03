@@ -7,6 +7,7 @@ import {
     Session,
 } from "../../../session/entities/session.entity";
 import { SessionService } from "../../../session/session.service";
+import { OutboundUrlPolicyService } from "./outbound-url-policy.service";
 import { WebhookConfig } from "./webhook.dto";
 import { extractRawTokenFromSubmission } from "./webhook.utils";
 
@@ -50,6 +51,7 @@ export class WebhookService {
     constructor(
         private readonly httpService: HttpService,
         private readonly sessionService: SessionService,
+        private readonly outboundUrlPolicyService: OutboundUrlPolicyService,
         private readonly logger: PinoLogger,
     ) {
         this.logger.setContext("WebhookService");
@@ -60,6 +62,18 @@ export class WebhookService {
      * @returns WebhookResponse containing claims data or deferred issuance indicator
      */
     sendWebhook(values: {
+        webhook: WebhookConfig;
+        session: Session;
+        credentials?: any[];
+        expectResponse: boolean;
+        rawPresentationPayload?: any;
+    }): Promise<WebhookResponse> {
+        return this.outboundUrlPolicyService
+            .assertSafeUrl(values.webhook.url)
+            .then(() => this.sendWebhookInternal(values));
+    }
+
+    private sendWebhookInternal(values: {
         webhook: WebhookConfig;
         session: Session;
         credentials?: any[];
@@ -147,6 +161,8 @@ export class WebhookService {
         session: Session,
         notification: Notification,
     ) {
+        await this.outboundUrlPolicyService.assertSafeUrl(webhook.url);
+
         const headers: Record<string, string> = {};
 
         if (webhook.auth && webhook.auth.type === "apiKey") {
@@ -205,6 +221,8 @@ export class WebhookService {
         };
         credentials?: any[];
     }): Promise<WebhookResponse> {
+        await this.outboundUrlPolicyService.assertSafeUrl(values.webhook.url);
+
         const headers: Record<string, string> = {};
 
         if (values.webhook.auth?.type === "apiKey") {
