@@ -26,6 +26,14 @@ import {
 import { afterAll, beforeAll } from "vitest";
 
 const TEST_DB_PATH = resolve(__dirname, "../../../tmp/service.db");
+const OIDF_LIFECYCLE_STATE_KEY = "__eudiploOidfLifecycleState__";
+
+type OidfLifecycleState = {
+    setupPromise?: Promise<void>;
+    teardownPromise?: Promise<void>;
+    started: boolean;
+    exitHooksRegistered: boolean;
+};
 
 /**
  * Path inside the OIDF nginx image where the self-signed server certificate
@@ -68,6 +76,58 @@ let network: StartedNetwork | undefined;
 let mongoDb: StartedTestContainer | undefined;
 let containerServer: StartedTestContainer | undefined;
 let containerHttp: StartedTestContainer | undefined;
+
+function getOidfLifecycleState(): OidfLifecycleState {
+    const runtime = globalThis as typeof globalThis & {
+        [OIDF_LIFECYCLE_STATE_KEY]?: OidfLifecycleState;
+    };
+
+    runtime[OIDF_LIFECYCLE_STATE_KEY] ??= {
+        started: false,
+        exitHooksRegistered: false,
+    };
+
+    return runtime[OIDF_LIFECYCLE_STATE_KEY];
+}
+
+function shouldTeardownContainersPerFile(): boolean {
+    const raw =
+        process.env.OIDF_TEARDOWN_PER_FILE ??
+        process.env.VITE_OIDF_TEARDOWN_PER_FILE;
+    return raw !== "0" && raw !== "false";
+}
+
+function registerProcessExitHooks(state: OidfLifecycleState): void {
+    if (state.exitHooksRegistered) {
+        return;
+    }
+    state.exitHooksRegistered = true;
+
+    const cleanup = () => {
+        if (state.teardownPromise || !state.started) {
+            return;
+        }
+
+        state.teardownPromise = teardownOidfContainers()
+            .catch((error) => {
+                console.error("Failed to teardown OIDF containers on exit:", error);
+            })
+            .finally(() => {
+                state.started = false;
+                state.setupPromise = undefined;
+                state.teardownPromise = undefined;
+            });
+    };
+
+    process.once("beforeExit", cleanup);
+    process.once("SIGINT", cleanup);
+    process.once("SIGTERM", cleanup);
+}
+
+export function shouldExportOidfLogs(): boolean {
+    const raw = process.env.OIDF_EXPORT_LOGS ?? process.env.VITE_OIDF_EXPORT_LOGS;
+    return raw !== "0" && raw !== "false";
+}
 
 /**
  * Setup OIDF containers - starts MongoDB, server, and httpd containers
@@ -210,6 +270,11 @@ async function teardownOidfContainers(): Promise<void> {
             console.error("Failed to stop network on retry:", retryError);
         }
     }
+
+        containerHttp = undefined;
+        containerServer = undefined;
+        mongoDb = undefined;
+        network = undefined;
 }
 
 /**
@@ -229,21 +294,50 @@ function deleteTestDatabase(): void {
  */
 async function setupOidfTest(): Promise<void> {
     console.log("Setting up OIDF test containers...");
-    // Delete database to ensure fresh start for each test file
+    // Delete database to ensure fresh start for each test file.
     deleteTestDatabase();
-    try {
-        await setupOidfContainers();
-    } catch (error) {
-        console.error("Failed to setup OIDF containers:", error);
-        throw error;
-    }
+
+    const state = getOidfLifecycleState();
+    registerProcessExitHooks(state);
+
+    state.setupPromise ??= (async () => {
+        try {
+            await setupOidfContainers();
+            state.started = true;
+        } catch (error) {
+            console.error("Failed to setup OIDF containers:", error);
+            state.setupPromise = undefined;
+            throw error;
+        }
+    })();
+
+    await state.setupPromise;
 }
 
 /**
  * Teardown hook for OIDF tests - stops containers
  */
 async function teardownOidfTest(): Promise<void> {
-    await teardownOidfContainers();
+    const state = getOidfLifecycleState();
+
+    if (!state.started) {
+        return;
+    }
+
+    if (!shouldTeardownContainersPerFile()) {
+        console.log(
+            "Keeping OIDF containers running for subsequent spec files; they will be cleaned up on process exit.",
+        );
+        return;
+    }
+
+    state.teardownPromise ??= teardownOidfContainers().finally(() => {
+        state.started = false;
+        state.setupPromise = undefined;
+        state.teardownPromise = undefined;
+    });
+
+    await state.teardownPromise;
 }
 
 /**

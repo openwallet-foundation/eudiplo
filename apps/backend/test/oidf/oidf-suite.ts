@@ -34,7 +34,7 @@ interface TestResult {
 export class OIDFSuite {
     instance: axios.AxiosInstance;
     private readonly oidfUrl: string;
-    constructor(OIDF_URL: string, OIDF_DEMO_TOKEN?: string) {
+    constructor(OIDF_URL: string, OIDF_DEMO_TOKEN?: string) {        
         this.oidfUrl = OIDF_URL;
         // --- Prepare demo OIDF instance ----------------------------------------
         this.instance = axios.default.create({
@@ -414,14 +414,26 @@ export class OIDFSuite {
      * Starts a test instance for a specific test module.
      * Fetches the variant from the plan's module configuration.
      */
-    async startTest(planId: string, testName: string): Promise<TestInstance> {
+    async startTest(
+        planId: string,
+        testName: string,
+        moduleVariantFilter?: Record<string, string>,
+    ): Promise<TestInstance> {
         // Fetch the plan to get the variant for this specific test module
         const plan = await this.getPlan(planId);
-        const module = plan.modules.find((m: any) => m.testModule === testName);
+        const module = moduleVariantFilter
+            ? plan.modules.find(
+                  (m: any) =>
+                      m.testModule === testName &&
+                      Object.entries(moduleVariantFilter).every(
+                          ([k, v]) => String(m.variant?.[k]) === String(v),
+                      ),
+              )
+            : plan.modules.find((m: any) => m.testModule === testName);
 
         if (!module) {
             throw new Error(
-                `Test module '${testName}' not found in plan. Available: ${plan.modules.map((m: any) => m.testModule).join(", ")}`,
+                `Test module '${testName}'${moduleVariantFilter ? ` (variant: ${JSON.stringify(moduleVariantFilter)})` : ""} not found in plan. Available: ${plan.modules.map((m: any) => `${m.testModule}(${JSON.stringify(m.variant ?? {})})`).join(", ")}`,
             );
         }
 

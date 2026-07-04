@@ -30,6 +30,7 @@
         "test:debug": "vitest --inspect-brk --inspect --logHeapUsage --threads=false",
         "test:e2e": "vitest run --coverage --config ./test/vitest.config.ts",
         "test:e2e:watch": "vitest --coverage --config ./test/vitest.config.ts",
+        "test:oidf": "vitest run --config ./test/vitest.oidf.config.ts",
         "registrar": "openapi-ts",
         "typeorm": "tsx ./node_modules/typeorm/cli.js -d ./src/database/data-source.ts",
         "migration:generate": "pnpm typeorm migration:generate ./src/database/migrations/$npm_config_name",

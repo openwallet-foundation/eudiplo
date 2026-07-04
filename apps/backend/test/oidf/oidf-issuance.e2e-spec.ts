@@ -19,6 +19,7 @@ import { getDefaultSecret } from "../utils";
 import {
     BACKEND_TEST_CA_PATH,
     OIDF_HTTPD_CA_PATH,
+    shouldExportOidfLogs,
     useOidfContainers,
 } from "./oidf-setup";
 import { OIDFSuite, TestInstance } from "./oidf-suite";
@@ -227,6 +228,13 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
             cn: "OIDF Key Attestation",
         });
 
+        // Generate encryption key material for encrypted credential delivery
+        const encryptionJwk = await generateCaSignedJwk({
+            use: "enc",
+            alg: "ECDH-ES",
+            cn: "OIDF Encryption Key",
+        });
+
         // Generate trust anchor PEMs from the issuer's key chains
         // These are the CA certificates that signed the issuer's credential and status list
         const configFolder = resolve(__dirname + "/../fixtures");
@@ -267,6 +275,7 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
                     signing_jwk: clientSigningJwk,
                     trust_anchor_pem: trustAnchorPem,
                     status_list_trust_anchor_pem: statusListTrustAnchorPem,
+                    encryption_jwk: encryptionJwk,
                 },
                 vci: {
                     credential_issuer_url: `https://${PUBLIC_DOMAIN}/issuers/haip`,
@@ -431,30 +440,36 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
     });
 
     afterAll(async () => {
-        for (const { planId, variant } of createdPlans) {
-            if (!executedPlanIds.has(planId)) {
-                console.log(
-                    `Skipping OIDF log export for matrix-only plan ${planId} (${variant.credential_format}/${variant.vci_authorization_code_flow_variant})`,
-                );
-                continue;
-            }
+        if (shouldExportOidfLogs()) {
+            for (const { planId, variant } of createdPlans) {
+                if (!executedPlanIds.has(planId)) {
+                    console.log(
+                        `Skipping OIDF log export for matrix-only plan ${planId} (${variant.credential_format}/${variant.vci_authorization_code_flow_variant})`,
+                    );
+                    continue;
+                }
 
-            const outputDir = resolve(
-                __dirname,
-                `../../../../tmp/oidf-logs/${planId}`,
+                const outputDir = resolve(
+                    __dirname,
+                    `../../../../tmp/oidf-logs/${planId}`,
+                );
+
+                try {
+                    await oidfSuite.storeLog(planId, outputDir);
+                    console.log(
+                        `Test log extracted to: ${outputDir} (${variant.credential_format}/${variant.vci_authorization_code_flow_variant})`,
+                    );
+                } catch (error) {
+                    console.error(
+                        `Failed to export OIDF logs for plan ${planId}:`,
+                        error,
+                    );
+                }
+            }
+        } else {
+            console.log(
+                "Skipping OIDF log export because OIDF_EXPORT_LOGS is disabled.",
             );
-
-            try {
-                await oidfSuite.storeLog(planId, outputDir);
-                console.log(
-                    `Test log extracted to: ${outputDir} (${variant.credential_format}/${variant.vci_authorization_code_flow_variant})`,
-                );
-            } catch (error) {
-                console.error(
-                    `Failed to export OIDF logs for plan ${planId}:`,
-                    error,
-                );
-            }
         }
 
         if (app) {

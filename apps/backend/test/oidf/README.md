@@ -31,6 +31,15 @@ These are practical defaults for local/CI until you have your own baseline:
 - `OIDF_WAIT_NO_PROGRESS_ATTEMPTS=120` (about 36s)
 - `OIDF_WAIT_MAX_ATTEMPTS=240` (about 72s)
 
+## Speed knobs (local runs)
+
+- `OIDF_EXPORT_LOGS=false`
+  - Skips HTML log archive export in `afterAll` for faster local runs.
+- `OIDF_TEARDOWN_PER_FILE=false`
+  - Reuses OIDF Testcontainers across OIDF spec files in the same vitest worker and tears down on process exit.
+- `OIDF_TEARDOWN_PER_FILE=true`
+  - Default. Uses strict per-file teardown behavior for maximum isolation.
+
 ## Tuning rule of thumb
 
 1. `WAITING` no-progress limit:

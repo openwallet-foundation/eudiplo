@@ -14,6 +14,7 @@ import { getDefaultSecret } from "../utils";
 import {
     BACKEND_TEST_CA_PATH,
     OIDF_HTTPD_CA_PATH,
+    shouldExportOidfLogs,
     useOidfContainers,
 } from "./oidf-setup";
 import { OIDFSuite, TestInstance } from "./oidf-suite";
@@ -458,30 +459,36 @@ describe("OIDF", () => {
     });
 
     afterAll(async () => {
-        for (const { planId, variant } of createdPlans) {
-            if (!executedPlanIds.has(planId)) {
-                console.log(
-                    `Skipping OIDF log export for matrix-only plan ${planId} (${variant.credential_format})`,
-                );
-                continue;
-            }
+        if (shouldExportOidfLogs()) {
+            for (const { planId, variant } of createdPlans) {
+                if (!executedPlanIds.has(planId)) {
+                    console.log(
+                        `Skipping OIDF log export for matrix-only plan ${planId} (${variant.credential_format})`,
+                    );
+                    continue;
+                }
 
-            const outputDir = resolve(
-                __dirname,
-                `../../../../tmp/oidf-logs/${planId}`,
+                const outputDir = resolve(
+                    __dirname,
+                    `../../../../tmp/oidf-logs/${planId}`,
+                );
+
+                try {
+                    await oidfSuite.storeLog(planId, outputDir);
+                    console.log(
+                        `Logs stored in: ${outputDir} (${variant.credential_format})`,
+                    );
+                } catch (error) {
+                    console.error(
+                        `Failed to export OIDF logs for plan ${planId}:`,
+                        error,
+                    );
+                }
+            }
+        } else {
+            console.log(
+                "Skipping OIDF log export because OIDF_EXPORT_LOGS is disabled.",
             );
-
-            try {
-                await oidfSuite.storeLog(planId, outputDir);
-                console.log(
-                    `Logs stored in: ${outputDir} (${variant.credential_format})`,
-                );
-            } catch (error) {
-                console.error(
-                    `Failed to export OIDF logs for plan ${planId}:`,
-                    error,
-                );
-            }
         }
 
         if (app) {

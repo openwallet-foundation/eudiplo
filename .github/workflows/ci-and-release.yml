@@ -266,7 +266,7 @@ jobs:
   test-e2e:
     permissions:
       contents: read
-    name: E2E Tests
+    name: E2E Tests (non-OIDF)
     runs-on: ubuntu-latest
     needs: [lint]
     steps:
@@ -298,6 +298,41 @@ jobs:
         env:
           TESTCONTAINERS_HOST_OVERRIDE: host.testcontainers.internal
 
+  test-e2e-oidf:
+    permissions:
+      contents: read
+    name: E2E Tests (OIDF)
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Add entry to /etc/hosts
+        run: echo "127.0.0.1       host.testcontainers.internal" | sudo tee -a /etc/hosts
+
+      - uses: pnpm/action-setup@v6
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: setup test webhooks
+        run: |
+          nohup pnpm --filter test-rp dev &
+
+      - name: Run OIDF E2E tests
+        run: pnpm run --filter @eudiplo/backend e2e:oidf
+        env:
+          TESTCONTAINERS_HOST_OVERRIDE: host.testcontainers.internal
+
       - name: Upload OIDF test results
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
@@ -313,7 +348,7 @@ jobs:
   # =============================================================================
   docker-backend:
     name: Build & Test Backend Docker (${{ matrix.arch }})
-    needs: [test-e2e]
+    needs: [test-e2e, test-e2e-oidf]
     strategy:
       fail-fast: false
       matrix:
