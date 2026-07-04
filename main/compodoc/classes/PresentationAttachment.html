@@ -244,7 +244,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:50</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -280,7 +280,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:46</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:47</a></div>
                         </td>
                     </tr>
 
@@ -316,7 +316,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:43</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -344,6 +344,7 @@ import { Type } from &quot;class-transformer&quot;;
 import {
     IsArray,
     IsBoolean,
+    Matches,
     IsEnum,
     IsNotEmpty,
     IsNumber,
@@ -400,6 +401,10 @@ export class TrustedAuthorityQuery {
 //TODO: extend: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-credential-query
 export class CredentialQuery {
     @IsString()
+    @Matches(/^[A-Za-z0-9_-]+$/, {
+        message:
+            &quot;id must be a non-empty string containing only alphanumeric characters, underscores, or hyphens&quot;,
+    })
     id!: string;
 
     @IsString()

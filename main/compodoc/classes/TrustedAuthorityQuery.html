@@ -231,7 +231,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:56</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:57</a></div>
                         </td>
                     </tr>
 
@@ -268,7 +268,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:60</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:61</a></div>
                         </td>
                     </tr>
 
@@ -296,6 +296,7 @@ import { Type } from &quot;class-transformer&quot;;
 import {
     IsArray,
     IsBoolean,
+    Matches,
     IsEnum,
     IsNotEmpty,
     IsNumber,
@@ -352,6 +353,10 @@ export class TrustedAuthorityQuery {
 //TODO: extend: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-credential-query
 export class CredentialQuery {
     @IsString()
+    @Matches(/^[A-Za-z0-9_-]+$/, {
+        message:
+            &quot;id must be a non-empty string containing only alphanumeric characters, underscores, or hyphens&quot;,
+    })
     id!: string;
 
     @IsString()
