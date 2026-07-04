@@ -329,7 +329,7 @@ jobs:
           nohup pnpm --filter test-rp dev &
 
       - name: Run OIDF E2E tests
-        run: pnpm run --filter @eudiplo/backend e2e:oidf
+        run: pnpm run --filter @eudiplo/backend test:oidf
         env:
           TESTCONTAINERS_HOST_OVERRIDE: host.testcontainers.internal
 

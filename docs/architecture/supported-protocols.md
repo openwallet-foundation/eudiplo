@@ -86,7 +86,7 @@ To run the OIDF conformance tests yourself:
 
 ```bash
 cd apps/backend
-pnpm run test:e2e:oidf
+pnpm run test:oidf
 ```
 
 These tests execute against your running instance and communicate with the hosted OIDF conformance suite to validate protocol compliance.
