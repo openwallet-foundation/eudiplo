@@ -7,7 +7,7 @@ export default defineConfig({
         exclude: ["**/oidf/**"],
         globals: true,
         root: "./",
-        fileParallelism: false,        
+        fileParallelism: false,
         coverage: {
             provider: "v8",
             reportsDirectory: "./coverage/e2e",

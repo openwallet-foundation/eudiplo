@@ -34,7 +34,7 @@ interface TestResult {
 export class OIDFSuite {
     instance: axios.AxiosInstance;
     private readonly oidfUrl: string;
-    constructor(OIDF_URL: string, OIDF_DEMO_TOKEN?: string) {        
+    constructor(OIDF_URL: string, OIDF_DEMO_TOKEN?: string) {
         this.oidfUrl = OIDF_URL;
         // --- Prepare demo OIDF instance ----------------------------------------
         this.instance = axios.default.create({

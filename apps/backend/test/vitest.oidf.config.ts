@@ -6,7 +6,7 @@ export default defineConfig({
         include: ["**/oidf/*.e2e-spec.ts"],
         globals: true,
         root: "./",
-        fileParallelism: false,        
+        fileParallelism: false,
         env: {
             MASTER_SECRET: "e2e-test-master-secret-do-not-use-in-production",
             AUTH_CLIENT_ID: "e2e-test-client",

@@ -110,7 +110,10 @@ function registerProcessExitHooks(state: OidfLifecycleState): void {
 
         state.teardownPromise = teardownOidfContainers()
             .catch((error) => {
-                console.error("Failed to teardown OIDF containers on exit:", error);
+                console.error(
+                    "Failed to teardown OIDF containers on exit:",
+                    error,
+                );
             })
             .finally(() => {
                 state.started = false;
@@ -125,7 +128,8 @@ function registerProcessExitHooks(state: OidfLifecycleState): void {
 }
 
 export function shouldExportOidfLogs(): boolean {
-    const raw = process.env.OIDF_EXPORT_LOGS ?? process.env.VITE_OIDF_EXPORT_LOGS;
+    const raw =
+        process.env.OIDF_EXPORT_LOGS ?? process.env.VITE_OIDF_EXPORT_LOGS;
     return raw !== "0" && raw !== "false";
 }
 
@@ -271,10 +275,10 @@ async function teardownOidfContainers(): Promise<void> {
         }
     }
 
-        containerHttp = undefined;
-        containerServer = undefined;
-        mongoDb = undefined;
-        network = undefined;
+    containerHttp = undefined;
+    containerServer = undefined;
+    mongoDb = undefined;
+    network = undefined;
 }
 
 /**
