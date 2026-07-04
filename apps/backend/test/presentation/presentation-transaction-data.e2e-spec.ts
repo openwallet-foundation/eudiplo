@@ -340,6 +340,41 @@ describe("Presentation - Transaction Data", () => {
         await app.close();
     });
 
+    test("should reject presentation config with invalid dcql credentials id", async () => {
+        const res = await request(app.getHttpServer())
+            .post("/verifier/config")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                id: "pid-invalid-credential-id",
+                description: "PID presentation with invalid DCQL credential id",
+                dcql_query: {
+                    credentials: [
+                        {
+                            id: "some.identifier",
+                            format: "dc+sd-jwt",
+                            meta: {
+                                vct_values: [
+                                    `${host}/issuers/demo/credentials-metadata/vct/pid`,
+                                ],
+                            },
+                            claims: [
+                                {
+                                    path: ["address", "locality"],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            } satisfies PresentationConfigCreateDto)
+            .expect(400);
+
+        expect(Array.isArray(res.body.message)).toBe(true);
+        expect(
+            res.body.message.some((msg: string) => msg.includes("id")),
+        ).toBe(true);
+    });
+
     test("should accept presentation with valid transaction data hashes", async () => {
         const transactionData: TransactionData[] = [
             {

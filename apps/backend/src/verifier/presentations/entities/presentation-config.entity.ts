@@ -7,6 +7,7 @@ import { Type } from "class-transformer";
 import {
     IsArray,
     IsBoolean,
+    Matches,
     IsEnum,
     IsNotEmpty,
     IsNumber,
@@ -63,6 +64,10 @@ export class TrustedAuthorityQuery {
 //TODO: extend: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-credential-query
 export class CredentialQuery {
     @IsString()
+    @Matches(/^[A-Za-z0-9_-]+$/, {
+        message:
+            "id must be a non-empty string containing only alphanumeric characters, underscores, or hyphens",
+    })
     id!: string;
 
     @IsString()
