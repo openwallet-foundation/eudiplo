@@ -216,7 +216,7 @@ Can include claims data for immediate issuance or a deferred flag for deferred i
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:31</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:32</a></div>
                             </td>
                         </tr>
                 <tr>
@@ -270,7 +270,7 @@ Allows dynamic keys for credential configuration IDs.</p>
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:26</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:27</a></div>
                                 </td>
                             </tr>
 
@@ -321,7 +321,7 @@ The wallet will receive a transaction_id to poll later.</p>
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:31</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:32</a></div>
                                 </td>
                             </tr>
 
@@ -372,7 +372,7 @@ Defaults to 5 seconds if not specified.</p>
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:21</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:22</a></div>
                                 </td>
                             </tr>
 
@@ -398,6 +398,7 @@ import {
     Session,
 } from &quot;../../../session/entities/session.entity&quot;;
 import { SessionService } from &quot;../../../session/session.service&quot;;
+import { OutboundUrlPolicyService } from &quot;./outbound-url-policy.service&quot;;
 import { WebhookConfig } from &quot;./webhook.dto&quot;;
 import { extractRawTokenFromSubmission } from &quot;./webhook.utils&quot;;
 
@@ -441,6 +442,7 @@ export class WebhookService {
     constructor(
         private readonly httpService: HttpService,
         private readonly sessionService: SessionService,
+        private readonly outboundUrlPolicyService: OutboundUrlPolicyService,
         private readonly logger: PinoLogger,
     ) {
         this.logger.setContext(&quot;WebhookService&quot;);
@@ -451,6 +453,18 @@ export class WebhookService {
      * @returns WebhookResponse containing claims data or deferred issuance indicator
      */
     sendWebhook(values: {
+        webhook: WebhookConfig;
+        session: Session;
+        credentials?: any[];
+        expectResponse: boolean;
+        rawPresentationPayload?: any;
+    }): Promise&lt;WebhookResponse&gt; {
+        return this.outboundUrlPolicyService
+            .assertSafeUrl(values.webhook.url)
+            .then(() &#x3D;&gt; this.sendWebhookInternal(values));
+    }
+
+    private sendWebhookInternal(values: {
         webhook: WebhookConfig;
         session: Session;
         credentials?: any[];
@@ -538,6 +552,8 @@ export class WebhookService {
         session: Session,
         notification: Notification,
     ) {
+        await this.outboundUrlPolicyService.assertSafeUrl(webhook.url);
+
         const headers: Record&lt;string, string&gt; &#x3D; {};
 
         if (webhook.auth &amp;&amp; webhook.auth.type &#x3D;&#x3D;&#x3D; &quot;apiKey&quot;) {
@@ -596,6 +612,8 @@ export class WebhookService {
         };
         credentials?: any[];
     }): Promise&lt;WebhookResponse&gt; {
+        await this.outboundUrlPolicyService.assertSafeUrl(values.webhook.url);
+
         const headers: Record&lt;string, string&gt; &#x3D; {};
 
         if (values.webhook.auth?.type &#x3D;&#x3D;&#x3D; &quot;apiKey&quot;) {

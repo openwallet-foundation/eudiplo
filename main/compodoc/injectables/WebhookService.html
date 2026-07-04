@@ -211,6 +211,11 @@ HTTP calls are auto-instrumented by OpenTelemetry for distributed tracing.</p>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#sendWebhookInternal" >sendWebhookInternal</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#sendWebhookNotification" >sendWebhookNotification</a>
                             </li>
@@ -232,12 +237,12 @@ HTTP calls are auto-instrumented by OpenTelemetry for distributed tracing.</p>
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(httpService: HttpService, sessionService: <a href="../injectables/SessionService.html" target="_self">SessionService</a>, logger: PinoLogger)</code>
+<code>constructor(httpService: HttpService, sessionService: <a href="../injectables/SessionService.html" target="_self">SessionService</a>, outboundUrlPolicyService: <a href="../injectables/OutboundUrlPolicyService.html" target="_self">OutboundUrlPolicyService</a>, logger: PinoLogger)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:49</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:50</a></div>
                             </td>
                         </tr>
 
@@ -271,6 +276,18 @@ HTTP calls are auto-instrumented by OpenTelemetry for distributed tracing.</p>
                                                   
                                                         <td>
                                                                         <code><a href="../injectables/SessionService.html" target="_self" >SessionService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>outboundUrlPolicyService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/OutboundUrlPolicyService.html" target="_self" >OutboundUrlPolicyService</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -326,8 +343,8 @@ HTTP calls are auto-instrumented by OpenTelemetry for distributed tracing.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="197"
-                                    class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:197</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="213"
+                                    class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:213</a></div>
                         </td>
                     </tr>
 
@@ -397,8 +414,8 @@ Sends a consistent payload regardless of AS type (internal or external).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="62"
-                                    class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:62</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="64"
+                                    class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:64</a></div>
                         </td>
                     </tr>
 
@@ -451,6 +468,75 @@ Sends a consistent payload regardless of AS type (internal or external).</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="sendWebhookInternal"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>sendWebhookInternal</b></span>
+                        <a href="#sendWebhookInternal"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>sendWebhookInternal(values: <a href="../classes/WebhookConfig.html" target="_self">{ webhook: WebhookConfig; session: Session; credentials?: any[]; expectResponse: boolean; rawPresentationPayload?: any }</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:76</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>values</td>
+                                            <td>
+                                                            <code><a href="../classes/WebhookConfig.html" target="_self" >{ webhook: WebhookConfig; session: Session; credentials?: any[]; expectResponse: boolean; rawPresentationPayload?: any }</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/WebhookResponse.html" target="_self" >Promise&lt;WebhookResponse&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="sendWebhookNotification"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -469,8 +555,8 @@ Sends a consistent payload regardless of AS type (internal or external).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="145"
-                                    class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:145</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="159"
+                                    class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:159</a></div>
                         </td>
                     </tr>
 
@@ -571,6 +657,7 @@ import {
     Session,
 } from &quot;../../../session/entities/session.entity&quot;;
 import { SessionService } from &quot;../../../session/session.service&quot;;
+import { OutboundUrlPolicyService } from &quot;./outbound-url-policy.service&quot;;
 import { WebhookConfig } from &quot;./webhook.dto&quot;;
 import { extractRawTokenFromSubmission } from &quot;./webhook.utils&quot;;
 
@@ -614,6 +701,7 @@ export class WebhookService {
     constructor(
         private readonly httpService: HttpService,
         private readonly sessionService: SessionService,
+        private readonly outboundUrlPolicyService: OutboundUrlPolicyService,
         private readonly logger: PinoLogger,
     ) {
         this.logger.setContext(&quot;WebhookService&quot;);
@@ -624,6 +712,18 @@ export class WebhookService {
      * @returns WebhookResponse containing claims data or deferred issuance indicator
      */
     sendWebhook(values: {
+        webhook: WebhookConfig;
+        session: Session;
+        credentials?: any[];
+        expectResponse: boolean;
+        rawPresentationPayload?: any;
+    }): Promise&lt;WebhookResponse&gt; {
+        return this.outboundUrlPolicyService
+            .assertSafeUrl(values.webhook.url)
+            .then(() &#x3D;&gt; this.sendWebhookInternal(values));
+    }
+
+    private sendWebhookInternal(values: {
         webhook: WebhookConfig;
         session: Session;
         credentials?: any[];
@@ -711,6 +811,8 @@ export class WebhookService {
         session: Session,
         notification: Notification,
     ) {
+        await this.outboundUrlPolicyService.assertSafeUrl(webhook.url);
+
         const headers: Record&lt;string, string&gt; &#x3D; {};
 
         if (webhook.auth &amp;&amp; webhook.auth.type &#x3D;&#x3D;&#x3D; &quot;apiKey&quot;) {
@@ -769,6 +871,8 @@ export class WebhookService {
         };
         credentials?: any[];
     }): Promise&lt;WebhookResponse&gt; {
+        await this.outboundUrlPolicyService.assertSafeUrl(values.webhook.url);
+
         const headers: Record&lt;string, string&gt; &#x3D; {};
 
         if (values.webhook.auth?.type &#x3D;&#x3D;&#x3D; &quot;apiKey&quot;) {

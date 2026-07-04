@@ -383,9 +383,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
     private readonly logger &#x3D; new Logger(AllExceptionsFilter.name);
 
     catch(exception: unknown, host: ArgumentsHost) {
+        const isProduction &#x3D; process.env.NODE_ENV &#x3D;&#x3D;&#x3D; &quot;production&quot;;
         const ctx &#x3D; host.switchToHttp();
         const response &#x3D; ctx.getResponse&lt;Response&gt;();
         const request &#x3D; ctx.getRequest&lt;Request&gt;();
+        const requestPath &#x3D; request.path || request.url.split(&quot;?&quot;)[0] || &quot;/&quot;;
 
         let status: number;
         if (exception instanceof HttpException) {
@@ -399,7 +401,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         let message: unknown;
         if (exception instanceof HttpException) {
             message &#x3D; exception.getResponse();
-        } else if (exception instanceof Error) {
+        } else if (exception instanceof Error &amp;&amp; !isProduction) {
             message &#x3D; exception.message;
         } else {
             message &#x3D; &quot;Internal Server Error&quot;;
@@ -407,14 +409,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
         // Log the error with stack trace if available using NestJS Logger
         this.logger.error(
-            &#x60;[${request.method}] ${request.url} ${status} - ${JSON.stringify(message)}&#x60;,
+            &#x60;[${request.method}] ${requestPath} ${status} - ${JSON.stringify(message)}&#x60;,
             exception instanceof Error ? exception.stack : undefined,
         );
 
         response.status(status).json({
             statusCode: status,
             timestamp: new Date().toISOString(),
-            path: request.url,
+            path: requestPath,
             message,
         });
     }

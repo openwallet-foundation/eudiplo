@@ -2338,6 +2338,26 @@ surface without receiving a duplicate <code>/api/api</code> prefix.</p>
         .default(&quot;http://localhost:3000&quot;)
         .description(&quot;The public URL of the issuer&quot;)
         .meta({ group: &quot;general&quot;, order: 10 }),
+
+    OUTBOUND_URL_ALLOW_HTTP: Joi.boolean()
+        .optional()
+        .description(&quot;Allow HTTP (non-TLS) for outbound webhook calls&quot;)
+        .meta({ group: &quot;issuer&quot;, order: 20 }),
+
+    OUTBOUND_URL_ALLOW_PRIVATE_NETWORK: Joi.boolean()
+        .optional()
+        .description(
+            &quot;Allow outbound webhook calls to private, loopback, or link-local IP ranges&quot;,
+        )
+        .meta({ group: &quot;issuer&quot;, order: 30 }),
+
+    OUTBOUND_URL_ALLOWED_HOSTS: Joi.string()
+        .allow(&quot;&quot;)
+        .optional()
+        .description(
+            &quot;Comma-separated hostname allowlist for outbound webhook calls (supports exact host and subdomains)&quot;,
+        )
+        .meta({ group: &quot;issuer&quot;, order: 40 }),
 })</code>
                     </td>
                 </tr>

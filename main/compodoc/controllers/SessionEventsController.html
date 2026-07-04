@@ -471,16 +471,25 @@ export class SessionEventsController {
             );
         }
 
+        let tenantId: string | undefined;
         try {
-            await this.jwtService.verifyToken(token);
+            const payload &#x3D; await this.jwtService.verifyToken(token);
+            tenantId &#x3D; payload.entity?.id;
         } catch (error) {
             this.logger.warn(&#x60;Invalid token for session ${id} SSE: ${error}&#x60;);
             throw new UnauthorizedException(&quot;Invalid or expired token&quot;);
         }
 
-        // Verify session exists
+        if (!tenantId) {
+            throw new UnauthorizedException(&quot;Token is not tenant-scoped&quot;);
+        }
+
+        // Verify session exists and belongs to caller tenant.
         try {
-            const session &#x3D; await this.sessionService.get(id);
+            const session &#x3D; await this.sessionService.getBy({
+                id,
+                tenantId,
+            });
 
             this.logger.debug(&#x60;Client subscribed to session ${id} events&#x60;);
 
