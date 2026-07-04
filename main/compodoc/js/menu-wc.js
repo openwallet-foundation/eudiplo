@@ -1185,6 +1185,15 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/CredentialSetQuery.html" data-type="entity-link" >CredentialSetQuery</a>
                             </li>
                             <li class="link">
+                                <a href="classes/CscAuthorizeAuthDataDto.html" data-type="entity-link" >CscAuthorizeAuthDataDto</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/CscKmsAdapter.html" data-type="entity-link" >CscKmsAdapter</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/CscKmsConfigDto.html" data-type="entity-link" >CscKmsConfigDto</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/DbKmsAdapter.html" data-type="entity-link" >DbKmsAdapter</a>
                             </li>
                             <li class="link">
@@ -1804,6 +1813,12 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="interfaces/CryptoImplementation.html" data-type="entity-link" >CryptoImplementation</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/CscAuthorizeAuthData.html" data-type="entity-link" >CscAuthorizeAuthData</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/CscKmsAdapterConfig.html" data-type="entity-link" >CscKmsAdapterConfig</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/EncryptionKeyProvider.html" data-type="entity-link" >EncryptionKeyProvider</a>

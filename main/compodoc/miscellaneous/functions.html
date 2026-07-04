@@ -168,6 +168,9 @@
                             <a href="#base64url" title="src/crypto/key/key-chain-signing.service.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>base64url</b>&nbsp;&nbsp;&nbsp;(src/.../key-chain-signing.service.ts)</span></a>
                         </li>
                         <li>
+                            <a href="#base64UrlOrBase64ToBytes" title="src/crypto/key/kms/adapters/csc-kms.adapter.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>base64UrlOrBase64ToBytes</b>&nbsp;&nbsp;&nbsp;(src/.../csc-kms.adapter.ts)</span></a>
+                        </li>
+                        <li>
                             <a href="#base64UrlOrBase64ToBytes" title="src/crypto/key/kms/adapters/vault-kms.adapter.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>base64UrlOrBase64ToBytes</b>&nbsp;&nbsp;&nbsp;(src/.../vault-kms.adapter.ts)</span></a>
                         </li>
                         <li>
@@ -225,6 +228,9 @@
                             <a href="#derEcdsaToRaw" title="src/crypto/key/kms/adapters/aws-kms.adapter.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>derEcdsaToRaw</b>&nbsp;&nbsp;&nbsp;(src/.../aws-kms.adapter.ts)</span></a>
                         </li>
                         <li>
+                            <a href="#derEcdsaToRaw" title="src/crypto/key/kms/adapters/csc-kms.adapter.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>derEcdsaToRaw</b>&nbsp;&nbsp;&nbsp;(src/.../csc-kms.adapter.ts)</span></a>
+                        </li>
+                        <li>
                             <a href="#ensureFrameNode" title="src/issuer/configuration/credentials/utils/derive.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>ensureFrameNode</b>&nbsp;&nbsp;&nbsp;(src/.../derive.ts)</span></a>
                         </li>
                         <li>
@@ -232,6 +238,9 @@
                         </li>
                         <li>
                             <a href="#extractDpopJkt" title="src/issuer/issuance/oid4vci/authorization/shared/dpop.util.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>extractDpopJkt</b>&nbsp;&nbsp;&nbsp;(src/.../dpop.util.ts)</span></a>
+                        </li>
+                        <li>
+                            <a href="#extractFirstCertificate" title="src/crypto/key/kms/adapters/csc-kms.adapter.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>extractFirstCertificate</b>&nbsp;&nbsp;&nbsp;(src/.../csc-kms.adapter.ts)</span></a>
                         </li>
                         <li>
                             <a href="#extractRawTokenFromSubmission" title="src/shared/utils/webhook/webhook.utils.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>extractRawTokenFromSubmission</b>&nbsp;&nbsp;&nbsp;(src/.../webhook.utils.ts)</span></a>
@@ -319,6 +328,9 @@
                         </li>
                         <li>
                             <a href="#mergeObjectLeafSchema" title="src/issuer/configuration/credentials/utils/derive.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>mergeObjectLeafSchema</b>&nbsp;&nbsp;&nbsp;(src/.../derive.ts)</span></a>
+                        </li>
+                        <li>
+                            <a href="#normalizeCertificateToPem" title="src/crypto/key/kms/adapters/csc-kms.adapter.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>normalizeCertificateToPem</b>&nbsp;&nbsp;&nbsp;(src/.../csc-kms.adapter.ts)</span></a>
                         </li>
                         <li>
                             <a href="#normalizeDisplayInfo" title="src/issuer/configuration/credentials/utils/derive.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>normalizeDisplayInfo</b>&nbsp;&nbsp;&nbsp;(src/.../derive.ts)</span></a>
@@ -3535,6 +3547,265 @@ Converts to PEM format which is more reliably parsed by</p>
                                     <tbody>
                                         <tr>
                                                 <td>input</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <h3>src/crypto/key/kms/adapters/csc-kms.adapter.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="base64UrlOrBase64ToBytes"></a>
+                    <span class="name">
+                        <span ><b>base64UrlOrBase64ToBytes</b></span>
+                        <a href="#base64UrlOrBase64ToBytes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>base64UrlOrBase64ToBytes(s: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>s</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Uint8Array</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="derEcdsaToRaw"></a>
+                    <span class="name">
+                        <span ><b>derEcdsaToRaw</b></span>
+                        <a href="#derEcdsaToRaw"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>derEcdsaToRaw(der: Uint8Array, coordLength: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>der</td>
+                                            <td>
+                                                        <code>Uint8Array</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>coordLength</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Uint8Array</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="extractFirstCertificate"></a>
+                    <span class="name">
+                        <span ><b>extractFirstCertificate</b></span>
+                        <a href="#extractFirstCertificate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>extractFirstCertificate(data: Record)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                        <code>Record</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string | undefined</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="normalizeCertificateToPem"></a>
+                    <span class="name">
+                        <span ><b>normalizeCertificateToPem</b></span>
+                        <a href="#normalizeCertificateToPem"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>normalizeCertificateToPem(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
                                             <td>
                                                             <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                             </td>

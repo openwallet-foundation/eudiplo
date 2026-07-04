@@ -162,7 +162,7 @@
             <p class="comment">
                 <p>Provider-agnostic contract for key material operations.</p>
 <p>Implementations encapsulate the storage and signing backend (database,
-HashiCorp Vault, AWS KMS, ...). For non-<code>db</code> providers the private key
+HashiCorp Vault, AWS KMS, CSC, ...). For non-<code>db</code> providers the private key
 material MUST stay inside the backend — adapters never return private
 CryptoKey objects. Certificate construction routes its signing
 operations through a custom <code>@peculiar/x509</code> crypto provider that
@@ -180,6 +180,9 @@ calls back into <a href="KmsAdapter.sign">KmsAdapter.sign</a>.</p>
                         <ul class="list-unstyled relationships-list">
                                 <li>
                                             <code><a href="../classes/AwsKmsAdapter.html" target="_self" >AwsKmsAdapter</a></code>
+                                </li>
+                                <li>
+                                            <code><a href="../classes/CscKmsAdapter.html" target="_self" >CscKmsAdapter</a></code>
                                 </li>
                                 <li>
                                             <code><a href="../classes/DbKmsAdapter.html" target="_self" >DbKmsAdapter</a></code>
@@ -786,7 +789,7 @@ export type KmsSigningAlg &#x3D; &quot;ES256&quot;;
  *
  * - For the &#x60;db&#x60; provider: &#x60;privateJwk&#x60; is populated (key material lives in
  *   the DB column, encrypted at rest).
- * - For external providers (&#x60;vault&#x60;, &#x60;aws-kms&#x60;): &#x60;externalKeyId&#x60; identifies
+ * - For external providers (&#x60;vault&#x60;, &#x60;aws-kms&#x60;, &#x60;csc&#x60;): &#x60;externalKeyId&#x60; identifies
  *   the key inside the provider (e.g. Vault key name, AWS KMS key ID/ARN)
  *   and the private key never leaves the provider.
  *
@@ -826,7 +829,7 @@ export interface KmsAdapterCapabilities {
  * Provider-agnostic contract for key material operations.
  *
  * Implementations encapsulate the storage and signing backend (database,
- * HashiCorp Vault, AWS KMS, ...). For non-&#x60;db&#x60; providers the private key
+ * HashiCorp Vault, AWS KMS, CSC, ...). For non-&#x60;db&#x60; providers the private key
  * material MUST stay inside the backend — adapters never return private
  * CryptoKey objects. Certificate construction routes its signing
  * operations through a custom &#x60;@peculiar/x509&#x60; crypto provider that

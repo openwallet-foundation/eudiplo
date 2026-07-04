@@ -264,7 +264,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="226" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:226</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="227" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:227</a></div>
                         </td>
                     </tr>
 
@@ -297,7 +297,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/HttpAuthBaseConfigDto.html#source" target="_self" >HttpAuthBaseConfigDto:218</a></code>
+                                <div class="io-line">        <code><a href="../classes/HttpAuthBaseConfigDto.html#source" target="_self" >HttpAuthBaseConfigDto:219</a></code>
 </div>
                         </td>
                     </tr>
@@ -338,6 +338,7 @@ const KMS_PROVIDER_TYPES &#x3D; [
     &quot;aws-kms&quot;,
     &quot;pkcs11&quot;,
     &quot;http&quot;,
+    &quot;csc&quot;,
 ] as const;
 export type KmsProviderType &#x3D; (typeof KMS_PROVIDER_TYPES)[number];
 
@@ -699,6 +700,156 @@ class HttpKmsConfigDto extends BaseKmsProviderConfigDto {
     canImport?: boolean;
 }
 
+// ---------------------------------------------------------------------------
+// CSC KMS provider config
+// ---------------------------------------------------------------------------
+
+class CscAuthorizeAuthDataDto {
+    @ApiProperty({
+        description:
+            &quot;Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).&quot;,
+        example: &quot;PIN&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    id!: string;
+
+    @ApiProperty({
+        description:
+            &quot;Authentication factor value sent to CSC credentials/authorize.&quot;,
+        example: &quot;123456&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    value!: string;
+}
+
+/**
+ * Configuration for a CSC (Cloud Signature Consortium) compatible
+ * remote signature service.
+ */
+class CscKmsConfigDto extends BaseKmsProviderConfigDto {
+    @ApiProperty({
+        description: &quot;Type of the KMS provider.&quot;,
+        enum: [&quot;csc&quot;],
+        example: &quot;csc&quot;,
+    })
+    @IsIn([&quot;csc&quot;])
+    declare type: &quot;csc&quot;;
+
+    @ApiProperty({
+        description:
+            &quot;Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${CSC_URL}&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    baseUrl!: string;
+
+    @ApiProperty({
+        description:
+            &quot;OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${CSC_TOKEN_URL}&quot;,
+    })
+    @IsUrl({ require_tld: false })
+    tokenUrl!: string;
+
+    @ApiProperty({
+        description: &quot;OAuth2 client ID. Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${CSC_CLIENT_ID}&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    clientId!: string;
+
+    @ApiProperty({
+        description: &quot;OAuth2 client secret. Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${CSC_CLIENT_SECRET}&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    clientSecret!: string;
+
+    @ApiPropertyOptional({
+        description: &quot;OAuth2 scope to request during token acquisition.&quot;,
+        example: &quot;service&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    scope?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.&quot;,
+        example: &quot;[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    credentialId?: string;
+
+    @ApiPropertyOptional({
+        description: &quot;Optional CSC user ID used in credentials/list requests.&quot;,
+        example: &quot;eudiplo_user&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    userId?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;CSC API path prefix appended to baseUrl. Defaults to /csc/v2.&quot;,
+        example: &quot;/csc/v2&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    apiPath?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.&quot;,
+        example: &quot;2.16.840.1.101.3.4.2.1&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    hashAlgorithmOid?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.&quot;,
+        example: &quot;1.2.840.10045.4.3.2&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    signAlgorithmOid?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    sad?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.&quot;,
+        example: false,
+    })
+    @IsOptional()
+    useAuthorizeEndpoint?: boolean;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).&quot;,
+        type: [CscAuthorizeAuthDataDto],
+    })
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() &#x3D;&gt; CscAuthorizeAuthDataDto)
+    @IsOptional()
+    authorizeAuthData?: CscAuthorizeAuthDataDto[];
+}
+
 /**
  * Union type for all provider configurations.
  */
@@ -707,7 +858,8 @@ export type KmsProviderConfigDto &#x3D;
     | VaultKmsConfigDto
     | AwsKmsConfigDto
     | Pkcs11KmsConfigDto
-    | HttpKmsConfigDto;
+    | HttpKmsConfigDto
+    | CscKmsConfigDto;
 
 /**
  * Root DTO for kms.json.
@@ -771,6 +923,7 @@ export class KmsConfigDto {
                 { value: AwsKmsConfigDto, name: &quot;aws-kms&quot; },
                 { value: Pkcs11KmsConfigDto, name: &quot;pkcs11&quot; },
                 { value: HttpKmsConfigDto, name: &quot;http&quot; },
+                { value: CscKmsConfigDto, name: &quot;csc&quot; },
             ],
         },
         keepDiscriminatorProperty: true,
