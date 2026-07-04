@@ -9,6 +9,13 @@ export const keyManagementRoutes: Routes = [
       ),
   },
   {
+    path: 'providers',
+    loadComponent: () =>
+      import('./key-management-providers/key-management-providers.component').then(
+        (m) => m.KeyManagementProvidersComponent
+      ),
+  },
+  {
     path: 'create',
     loadComponent: () =>
       import('./key-create-wizard/key-create-wizard.component').then(

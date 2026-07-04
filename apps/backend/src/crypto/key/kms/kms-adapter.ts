@@ -12,7 +12,7 @@ export type KmsSigningAlg = "ES256";
  *
  * - For the `db` provider: `privateJwk` is populated (key material lives in
  *   the DB column, encrypted at rest).
- * - For external providers (`vault`, `aws-kms`): `externalKeyId` identifies
+ * - For external providers (`vault`, `aws-kms`, `csc`): `externalKeyId` identifies
  *   the key inside the provider (e.g. Vault key name, AWS KMS key ID/ARN)
  *   and the private key never leaves the provider.
  *
@@ -52,7 +52,7 @@ export interface KmsAdapterCapabilities {
  * Provider-agnostic contract for key material operations.
  *
  * Implementations encapsulate the storage and signing backend (database,
- * HashiCorp Vault, AWS KMS, ...). For non-`db` providers the private key
+ * HashiCorp Vault, AWS KMS, CSC, ...). For non-`db` providers the private key
  * material MUST stay inside the backend — adapters never return private
  * CryptoKey objects. Certificate construction routes its signing
  * operations through a custom `@peculiar/x509` crypto provider that

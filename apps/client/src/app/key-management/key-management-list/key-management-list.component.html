@@ -2,6 +2,10 @@
   <div fxLayout="row" fxLayoutAlign="space-between center" class="header">
     <h2>Key Management</h2>
     <div fxLayout="row" fxLayoutGap="8px">
+      <button mat-stroked-button [routerLink]="['providers']">
+        <mat-icon>dns</mat-icon>
+        Providers
+      </button>
       @if (usageGroups.length > 0) {
         <button mat-icon-button (click)="collapseAll()" matTooltip="Collapse all">
           <mat-icon>unfold_less</mat-icon>

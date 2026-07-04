@@ -19,6 +19,7 @@ const KMS_PROVIDER_TYPES = [
     "aws-kms",
     "pkcs11",
     "http",
+    "csc",
 ] as const;
 export type KmsProviderType = (typeof KMS_PROVIDER_TYPES)[number];
 
@@ -380,6 +381,156 @@ class HttpKmsConfigDto extends BaseKmsProviderConfigDto {
     canImport?: boolean;
 }
 
+// ---------------------------------------------------------------------------
+// CSC KMS provider config
+// ---------------------------------------------------------------------------
+
+class CscAuthorizeAuthDataDto {
+    @ApiProperty({
+        description:
+            "Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).",
+        example: "PIN",
+    })
+    @IsString()
+    @IsNotEmpty()
+    id!: string;
+
+    @ApiProperty({
+        description:
+            "Authentication factor value sent to CSC credentials/authorize.",
+        example: "123456",
+    })
+    @IsString()
+    @IsNotEmpty()
+    value!: string;
+}
+
+/**
+ * Configuration for a CSC (Cloud Signature Consortium) compatible
+ * remote signature service.
+ */
+class CscKmsConfigDto extends BaseKmsProviderConfigDto {
+    @ApiProperty({
+        description: "Type of the KMS provider.",
+        enum: ["csc"],
+        example: "csc",
+    })
+    @IsIn(["csc"])
+    declare type: "csc";
+
+    @ApiProperty({
+        description:
+            "Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.",
+        example: "${CSC_URL}",
+    })
+    @IsString()
+    @IsNotEmpty()
+    baseUrl!: string;
+
+    @ApiProperty({
+        description:
+            "OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.",
+        example: "${CSC_TOKEN_URL}",
+    })
+    @IsUrl({ require_tld: false })
+    tokenUrl!: string;
+
+    @ApiProperty({
+        description: "OAuth2 client ID. Supports ${ENV_VAR} placeholders.",
+        example: "${CSC_CLIENT_ID}",
+    })
+    @IsString()
+    @IsNotEmpty()
+    clientId!: string;
+
+    @ApiProperty({
+        description: "OAuth2 client secret. Supports ${ENV_VAR} placeholders.",
+        example: "${CSC_CLIENT_SECRET}",
+    })
+    @IsString()
+    @IsNotEmpty()
+    clientSecret!: string;
+
+    @ApiPropertyOptional({
+        description: "OAuth2 scope to request during token acquisition.",
+        example: "service",
+    })
+    @IsString()
+    @IsOptional()
+    scope?: string;
+
+    @ApiPropertyOptional({
+        description:
+            "Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.",
+        example: "[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758",
+    })
+    @IsString()
+    @IsOptional()
+    credentialId?: string;
+
+    @ApiPropertyOptional({
+        description: "Optional CSC user ID used in credentials/list requests.",
+        example: "eudiplo_user",
+    })
+    @IsString()
+    @IsOptional()
+    userId?: string;
+
+    @ApiPropertyOptional({
+        description:
+            "CSC API path prefix appended to baseUrl. Defaults to /csc/v2.",
+        example: "/csc/v2",
+    })
+    @IsString()
+    @IsOptional()
+    apiPath?: string;
+
+    @ApiPropertyOptional({
+        description:
+            "Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.",
+        example: "2.16.840.1.101.3.4.2.1",
+    })
+    @IsString()
+    @IsOptional()
+    hashAlgorithmOid?: string;
+
+    @ApiPropertyOptional({
+        description:
+            "Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.",
+        example: "1.2.840.10045.4.3.2",
+    })
+    @IsString()
+    @IsOptional()
+    signAlgorithmOid?: string;
+
+    @ApiPropertyOptional({
+        description:
+            "Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.",
+    })
+    @IsString()
+    @IsOptional()
+    sad?: string;
+
+    @ApiPropertyOptional({
+        description:
+            "When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.",
+        example: false,
+    })
+    @IsOptional()
+    useAuthorizeEndpoint?: boolean;
+
+    @ApiPropertyOptional({
+        description:
+            "Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).",
+        type: [CscAuthorizeAuthDataDto],
+    })
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => CscAuthorizeAuthDataDto)
+    @IsOptional()
+    authorizeAuthData?: CscAuthorizeAuthDataDto[];
+}
+
 /**
  * Union type for all provider configurations.
  */
@@ -388,7 +539,8 @@ export type KmsProviderConfigDto =
     | VaultKmsConfigDto
     | AwsKmsConfigDto
     | Pkcs11KmsConfigDto
-    | HttpKmsConfigDto;
+    | HttpKmsConfigDto
+    | CscKmsConfigDto;
 
 /**
  * Root DTO for kms.json.
@@ -452,6 +604,7 @@ export class KmsConfigDto {
                 { value: AwsKmsConfigDto, name: "aws-kms" },
                 { value: Pkcs11KmsConfigDto, name: "pkcs11" },
                 { value: HttpKmsConfigDto, name: "http" },
+                { value: CscKmsConfigDto, name: "csc" },
             ],
         },
         keepDiscriminatorProperty: true,

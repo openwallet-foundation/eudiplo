@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  type KmsProvidersResponseDto,
   type KeyChainCreateDto,
   type KeyChainResponseDto,
   type KeyChainUpdateDto,
@@ -8,6 +9,8 @@ import {
   keyChainControllerExport,
   keyChainControllerGetAll,
   keyChainControllerGetById,
+  keyChainControllerGetProviders,
+  keyChainControllerGetProvidersHealth,
   keyChainControllerRotate,
   keyChainControllerUpdate,
 } from '@eudiplo/sdk-core';
@@ -24,6 +27,40 @@ import {
   providedIn: 'root',
 })
 export class KeyChainService {
+  /**
+   * Get available KMS providers and configured default provider.
+   */
+  async getProviders(): Promise<KmsProvidersResponseDto> {
+    const response = await keyChainControllerGetProviders();
+    return response.data as KmsProvidersResponseDto;
+  }
+
+  /**
+   * Get runtime health for all configured KMS providers.
+   */
+  async getProvidersHealth(): Promise<
+    {
+      providerId: string;
+      type: string;
+      ok: boolean;
+      latencyMs?: number;
+      error?: string;
+    }[]
+  > {
+    const response = await keyChainControllerGetProvidersHealth();
+    return (
+      (response.data as
+        | {
+            providerId: string;
+            type: string;
+            ok: boolean;
+            latencyMs?: number;
+            error?: string;
+          }[]
+        | undefined) || []
+    );
+  }
+
   /**
    * Get all key chains for the current tenant.
    */

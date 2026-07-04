@@ -249,6 +249,26 @@
                 />
                 <mat-hint>Optional description for this key chain</mat-hint>
               </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>KMS Provider</mat-label>
+                <mat-select formControlName="kmsProvider" [disabled]="isLoadingKmsProviders">
+                  @if (availableKmsProviders.length > 0) {
+                    @for (provider of availableKmsProviders; track provider.name) {
+                      <mat-option [value]="provider.name">
+                        {{ provider.name }} ({{ provider.type }})
+                      </mat-option>
+                    }
+                  } @else {
+                    <mat-option value="db">db (fallback)</mat-option>
+                  }
+                </mat-select>
+                @if (isLoadingKmsProviders) {
+                  <mat-hint>Loading configured providers...</mat-hint>
+                } @else {
+                  <mat-hint> Selected provider stores and signs with this key chain. </mat-hint>
+                }
+              </mat-form-field>
             </mat-card-content>
           </mat-card>
 

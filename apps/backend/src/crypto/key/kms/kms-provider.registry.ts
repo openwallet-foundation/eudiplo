@@ -15,6 +15,7 @@ import { KmsCryptoProvider } from "./kms-crypto-provider";
 import type { KmsProviderInfoDto } from "../dto/kms-provider-capabilities.dto";
 import type { KmsProvidersResponseDto } from "../dto/kms-providers-response.dto";
 import { AwsKmsAdapter } from "./adapters/aws-kms.adapter";
+import { CscKmsAdapter } from "./adapters/csc-kms.adapter";
 import { DbKmsAdapter } from "./adapters/db-kms.adapter";
 import { HttpKmsAdapter } from "./adapters/http-kms.adapter";
 import { Pkcs11KmsAdapter } from "./adapters/pkcs11-kms.adapter";
@@ -181,6 +182,31 @@ export class KmsProviderRegistry implements OnModuleInit {
                         keysPath: p.keysPath,
                         healthPath: p.healthPath,
                         canImport: p.canImport,
+                    },
+                    this.httpService,
+                );
+            }
+            case "csc": {
+                const p = provider as Extract<
+                    KmsProviderConfigDto,
+                    { type: "csc" }
+                >;
+                return new CscKmsAdapter(
+                    {
+                        providerId: provider.id,
+                        baseUrl: p.baseUrl,
+                        tokenUrl: p.tokenUrl,
+                        clientId: p.clientId,
+                        clientSecret: p.clientSecret,
+                        scope: p.scope,
+                        credentialId: p.credentialId,
+                        userId: p.userId,
+                        apiPath: p.apiPath,
+                        hashAlgorithmOid: p.hashAlgorithmOid,
+                        signAlgorithmOid: p.signAlgorithmOid,
+                        sad: p.sad,
+                        useAuthorizeEndpoint: p.useAuthorizeEndpoint,
+                        authorizeAuthData: p.authorizeAuthData,
                     },
                     this.httpService,
                 );

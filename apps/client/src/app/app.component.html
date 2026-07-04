@@ -135,6 +135,15 @@
             <mat-icon matListItemIcon>vpn_key</mat-icon>
             <span matListItemTitle>Keys</span>
           </mat-list-item>
+
+          <mat-list-item
+            [routerLink]="['/keys/providers']"
+            routerLinkActive="active-link"
+            (click)="closeSidenavOnMobile()"
+          >
+            <mat-icon matListItemIcon>dns</mat-icon>
+            <span matListItemTitle>KMS Providers</span>
+          </mat-list-item>
         }
 
         <!-- Credential Issuance Section -->

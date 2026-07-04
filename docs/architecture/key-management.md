@@ -8,13 +8,14 @@ configured in a single `kms.json` file inside the config folder.
 
 ## Available Providers
 
-| Provider                            | Type     | Description                            | Import Support |
-| ----------------------------------- | -------- | -------------------------------------- | -------------- |
-| [`db`](#database-key-management-db) | Built-in | Keys stored encrypted in the database  | ✅ Yes         |
-| [`vault`](#vault-hashicorp-vault)   | Built-in | HashiCorp Vault Transit secrets engine | ❌ No          |
-| [`aws-kms`](#aws-kms)               | Built-in | AWS Key Management Service             | ❌ No          |
-| [`pkcs11`](#pkcs11-hsm)             | Built-in | PKCS#11 Hardware Security Module       | ❌ No          |
-| [`http`](#http-remote-kms)          | Built-in | Remote KMS microservice (HTTP/HTTPS)   | ✅ Optional    |
+| Provider                                 | Type     | Description                            | Import Support |
+| ---------------------------------------- | -------- | -------------------------------------- | -------------- |
+| [`db`](#database-key-management-db)      | Built-in | Keys stored encrypted in the database  | ✅ Yes         |
+| [`vault`](#vault-hashicorp-vault)        | Built-in | HashiCorp Vault Transit secrets engine | ❌ No          |
+| [`aws-kms`](#aws-kms)                    | Built-in | AWS Key Management Service             | ❌ No          |
+| [`pkcs11`](#pkcs11-hsm)                  | Built-in | PKCS#11 Hardware Security Module       | ❌ No          |
+| [`http`](#http-remote-kms)               | Built-in | Remote KMS microservice (HTTP/HTTPS)   | ✅ Optional    |
+| [`csc`](#csc-cloud-signature-consortium) | Built-in | Cloud Signature Consortium (CSC) API   | ❌ No          |
 
 ## Configuration
 
@@ -53,7 +54,7 @@ Each provider entry has:
 | Field         | Description                                                              |
 | ------------- | ------------------------------------------------------------------------ |
 | `id`          | Unique identifier for the provider instance (used when generating keys). |
-| `type`        | Adapter type: `db`, `vault`, `aws-kms`, or `pkcs11`.                     |
+| `type`        | Adapter type: `db`, `vault`, `aws-kms`, `pkcs11`, `http`, or `csc`.      |
 | `description` | Optional human-readable description.                                     |
 | ...           | Additional type-specific configuration fields.                           |
 
@@ -557,6 +558,68 @@ In this mode:
 - All **signing operations** are delegated to the remote service.
 - EUDIPLO only stores a stub entity (kid + cached public JWK) locally.
 - The remote service is fully responsible for protecting the private keys.
+
+---
+
+## CSC (Cloud Signature Consortium)
+
+The `csc` provider integrates EUDIPLO with remote signing services that expose
+the CSC v2 API.
+
+Supported operations:
+
+- `credentials/list` (optional, used when `credentialId` is not configured)
+- `credentials/info` (load public certificate / key metadata)
+- `signatures/signHash` (remote signing)
+- `credentials/authorize` (optional, used to request SAD)
+
+### Configuration
+
+```json
+{
+    "defaultProvider": "csc-main",
+    "providers": [
+        { "id": "db", "type": "db" },
+        {
+            "id": "csc-main",
+            "type": "csc",
+            "description": "Qualified remote signing service",
+            "baseUrl": "${CSC_URL}",
+            "apiPath": "/csc/v2",
+            "tokenUrl": "${CSC_TOKEN_URL}",
+            "clientId": "${CSC_CLIENT_ID}",
+            "clientSecret": "${CSC_CLIENT_SECRET}",
+            "scope": "service",
+            "userId": "${CSC_USER_ID}",
+            "credentialId": "${CSC_CREDENTIAL_ID}",
+            "useAuthorizeEndpoint": true,
+            "authorizeAuthData": [{ "id": "PIN", "value": "${CSC_PIN}" }]
+        }
+    ]
+}
+```
+
+| Field                  | Description                                                                                |
+| ---------------------- | ------------------------------------------------------------------------------------------ |
+| `baseUrl`              | Base URL of the CSC service (e.g. `https://csc.example.com`).                              |
+| `apiPath`              | CSC path prefix. Defaults to `/csc/v2`.                                                    |
+| `tokenUrl`             | OAuth2 token endpoint for client credentials flow.                                         |
+| `clientId`             | OAuth2 client ID.                                                                          |
+| `clientSecret`         | OAuth2 client secret.                                                                      |
+| `scope`                | Optional OAuth2 scope (e.g. `service`).                                                    |
+| `userId`               | Optional CSC user ID for `credentials/list`.                                               |
+| `credentialId`         | Optional fixed CSC credential ID. If omitted, EUDIPLO resolves one via `credentials/list`. |
+| `hashAlgorithmOid`     | Optional hash OID for `signatures/signHash` (default: SHA-256 OID).                        |
+| `signAlgorithmOid`     | Optional signing algorithm OID (default: ECDSA-with-SHA256 OID).                           |
+| `sad`                  | Optional static SAD value passed to `signatures/signHash`.                                 |
+| `useAuthorizeEndpoint` | If `true`, EUDIPLO calls `credentials/authorize` to obtain SAD dynamically.                |
+| `authorizeAuthData`    | Optional auth data array sent to `credentials/authorize` (e.g. PIN/OTP factors).           |
+
+### Notes
+
+- CSC credentials are managed externally by the CSC service.
+- EUDIPLO does not import or delete CSC private keys.
+- Private keys never leave the remote CSC provider.
 
 ---
 

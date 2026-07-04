@@ -12,11 +12,11 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { KeyChainService } from '../key-chain.service';
 import { RegistrarConfig, RegistrarService } from '../../registrar/registrar.service';
-import { KeyChainCreateDto } from '@eudiplo/sdk-core';
+import { KeyChainCreateDto, KmsProviderInfoDto } from '@eudiplo/sdk-core';
 
 export type KeyUsageSelection = 'attestation' | 'statusList' | 'access' | 'trustList';
 export type KeyChainTypeSelection = 'internalChain' | 'standalone';
@@ -57,8 +57,11 @@ export class KeyCreateWizardComponent implements OnInit {
 
   isSubmitting = false;
   isCheckingRegistrar = false;
+  isLoadingKmsProviders = false;
   registrarConfig: RegistrarConfig | null = null;
   registrarConfigChecked = false;
+  availableKmsProviders: KmsProviderInfoDto[] = [];
+  defaultKmsProvider = 'db';
 
   // Usage options with descriptions
   usageOptions = [
@@ -134,6 +137,7 @@ export class KeyCreateWizardComponent implements OnInit {
     private readonly fb: FormBuilder,
     private readonly keyChainService: KeyChainService,
     private readonly registrarService: RegistrarService,
+    private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly snackBar: MatSnackBar
   ) {
@@ -156,6 +160,8 @@ export class KeyCreateWizardComponent implements OnInit {
     this.configForm = this.fb.group({
       // Description for the key chain
       description: [''],
+      // KMS provider for key storage/signing
+      kmsProvider: ['db', Validators.required],
       // Rotation settings (only for internal chain)
       rotationEnabled: [true],
       rotationIntervalDays: [30, [Validators.min(1)]],
@@ -166,6 +172,42 @@ export class KeyCreateWizardComponent implements OnInit {
   ngOnInit(): void {
     // Pre-check registrar config so we can show status quickly
     this.checkRegistrarConfig();
+    this.loadKmsProviders();
+  }
+
+  /**
+   * Load available KMS providers and preselect backend default provider.
+   */
+  async loadKmsProviders(): Promise<void> {
+    this.isLoadingKmsProviders = true;
+    try {
+      const response = await this.keyChainService.getProviders();
+      this.availableKmsProviders = response.providers || [];
+      this.defaultKmsProvider = response.default || 'db';
+
+      const requestedProvider = this.route.snapshot.queryParamMap.get('kmsProvider');
+      const requestedIsValid =
+        requestedProvider != null &&
+        this.availableKmsProviders.some((p) => p.name === requestedProvider);
+
+      const selected =
+        (requestedIsValid ? requestedProvider : null) ||
+        this.availableKmsProviders.find((p) => p.name === this.defaultKmsProvider)?.name ||
+        this.availableKmsProviders[0]?.name ||
+        'db';
+
+      this.configForm.patchValue({ kmsProvider: selected });
+    } catch (error) {
+      console.error('Failed to load KMS providers:', error);
+      this.availableKmsProviders = [];
+      this.defaultKmsProvider = 'db';
+      this.configForm.patchValue({ kmsProvider: 'db' });
+      this.snackBar.open('Failed to load KMS providers. Falling back to db.', 'Close', {
+        duration: 3000,
+      });
+    } finally {
+      this.isLoadingKmsProviders = false;
+    }
   }
 
   /**
@@ -285,7 +327,7 @@ export class KeyCreateWizardComponent implements OnInit {
         usageType: usage,
         type: usage === 'access' || !this.isInternalChain ? 'standalone' : 'internalChain',
         description: description || this.getDefaultDescription(),
-        kmsProvider: 'db', // Default to database storage
+        kmsProvider: this.configForm.value.kmsProvider || this.defaultKmsProvider || 'db',
         rotationPolicy: {
           enabled: this.rotationEnabled,
           intervalDays: this.rotationEnabled
@@ -411,6 +453,15 @@ export class KeyCreateWizardComponent implements OnInit {
 
     if (this.configForm.value.description) {
       summary.push({ label: 'Description', value: this.configForm.value.description });
+    }
+
+    const selectedKmsProvider = this.configForm.value.kmsProvider;
+    if (selectedKmsProvider) {
+      const providerInfo = this.availableKmsProviders.find((p) => p.name === selectedKmsProvider);
+      summary.push({
+        label: 'KMS Provider',
+        value: providerInfo ? `${providerInfo.name} (${providerInfo.type})` : selectedKmsProvider,
+      });
     }
 
     if (this.isInternalChain) {
