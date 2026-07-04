@@ -370,9 +370,9 @@ describe("Presentation - Transaction Data", () => {
             .expect(400);
 
         expect(Array.isArray(res.body.message)).toBe(true);
-        expect(
-            res.body.message.some((msg: string) => msg.includes("id")),
-        ).toBe(true);
+        expect(res.body.message.some((msg: string) => msg.includes("id"))).toBe(
+            true,
+        );
     });
 
     test("should accept presentation with valid transaction data hashes", async () => {
