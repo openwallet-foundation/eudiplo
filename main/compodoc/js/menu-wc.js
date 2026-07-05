@@ -1122,6 +1122,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ClaimFieldDefinitionDto.html" data-type="entity-link" >ClaimFieldDefinitionDto</a>
                             </li>
                             <li class="link">
+                                <a href="classes/ClaimSetsConsistencyConstraint.html" data-type="entity-link" >ClaimSetsConsistencyConstraint</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/ClaimsQuery.html" data-type="entity-link" >ClaimsQuery</a>
                             </li>
                             <li class="link">

@@ -221,6 +221,11 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
+                                <a href="#areClaimPathsEqual" >areClaimPathsEqual</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#assertSafeMetadataUrl" >assertSafeMetadataUrl</a>
                             </li>
@@ -253,6 +258,11 @@
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#getCredentialClaimSelections" >getCredentialClaimSelections</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getOrIssueRegistrationCertificate" >getOrIssueRegistrationCertificate</a>
                             </li>
@@ -276,6 +286,11 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
+                                <a href="#hasClaimPath" >hasClaimPath</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#importForTenant" >importForTenant</a>
                             </li>
@@ -288,6 +303,16 @@
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#listSchemaMetadataCatalog" >listSchemaMetadataCatalog</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#matchesClaimSelection" >matchesClaimSelection</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#matchesMdocClaimSelection" >matchesMdocClaimSelection</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
@@ -355,6 +380,11 @@
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#throwMdocVerificationFailure" >throwMdocVerificationFailure</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#updatePresentationConfig" >updatePresentationConfig</a>
                             </li>
@@ -367,6 +397,30 @@
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#validateMdocClaims" >validateMdocClaims</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#verifyCredentialValue" >verifyCredentialValue</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#verifyMdocCredentialValue" >verifyMdocCredentialValue</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#verifyMdocCredentialWithClaimSets" >verifyMdocCredentialWithClaimSets</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#verifySdJwtCredentialValue" >verifySdJwtCredentialValue</a>
                             </li>
                         </ul>
                     </td>
@@ -569,6 +623,87 @@
     <h3 id="methods">
         Methods
     </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="areClaimPathsEqual"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>areClaimPathsEqual</b></span>
+                        <a href="#areClaimPathsEqual"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>areClaimPathsEqual(left: string[], right: string[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="2009"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:2009</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>left</td>
+                                            <td>
+                                                        <code>string[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>right</td>
+                                            <td>
+                                                        <code>string[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -1050,6 +1185,75 @@ OID4VCI credential issuer metadata endpoint.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="getCredentialClaimSelections"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getCredentialClaimSelections</b></span>
+                        <a href="#getCredentialClaimSelections"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getCredentialClaimSelections(credential: <a href="../classes/CredentialQuery.html" target="_self">CredentialQuery</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="1647"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1647</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>credential</td>
+                                            <td>
+                                                            <code><a href="../classes/CredentialQuery.html" target="_self" >CredentialQuery</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>[][]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="getOrIssueRegistrationCertificate"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -1340,8 +1544,8 @@ the registrar is not enabled for this tenant.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1664"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1664</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1572"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1572</a></div>
                         </td>
                     </tr>
 
@@ -1437,8 +1641,8 @@ For mDOC: the first path element is the namespace, so we return the claim name (
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1585"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1585</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1493"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1493</a></div>
                         </td>
                     </tr>
 
@@ -1489,6 +1693,87 @@ For mDOC: the first path element is the namespace, so we return the claim name (
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#CredentialType" target="_self" >CredentialType</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasClaimPath"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>hasClaimPath</b></span>
+                        <a href="#hasClaimPath"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>hasClaimPath(value: unknown, path: string[])</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="2017"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:2017</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                        <code>unknown</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>path</td>
+                                            <td>
+                                                        <code>string[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1715,6 +2000,180 @@ Returns an empty array when the registrar is not enabled for the tenant.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="matchesClaimSelection"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>matchesClaimSelection</b></span>
+                        <a href="#matchesClaimSelection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>matchesClaimSelection(payload: Record<string, unknown>, allClaims: <a href="../classes/ClaimsQuery.html" target="_self">ClaimsQuery[] | undefined</a>, selectedClaims: <a href="../classes/ClaimsQuery.html" target="_self">ClaimsQuery[]</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="1983"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1983</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>payload</td>
+                                            <td>
+                                                        <code>Record&lt;string, unknown&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>allClaims</td>
+                                            <td>
+                                                            <code><a href="../classes/ClaimsQuery.html" target="_self" >ClaimsQuery[] | undefined</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>selectedClaims</td>
+                                            <td>
+                                                            <code><a href="../classes/ClaimsQuery.html" target="_self" >ClaimsQuery[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="matchesMdocClaimSelection"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>matchesMdocClaimSelection</b></span>
+                        <a href="#matchesMdocClaimSelection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>matchesMdocClaimSelection(payload: Record<string, unknown>, selectedClaims: <a href="../classes/ClaimsQuery.html" target="_self">ClaimsQuery[]</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="1997"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1997</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>payload</td>
+                                            <td>
+                                                        <code>Record&lt;string, unknown&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>selectedClaims</td>
+                                            <td>
+                                                            <code><a href="../classes/ClaimsQuery.html" target="_self" >ClaimsQuery[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="normalizeDcApiOrigin"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -1733,8 +2192,8 @@ Returns an empty array when the registrar is not enabled for the tenant.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1548"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1548</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1456"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1456</a></div>
                         </td>
                     </tr>
 
@@ -2310,8 +2769,8 @@ This is used by the web client to avoid browser CORS restrictions.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1515"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1515</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1423"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1423</a></div>
                         </td>
                     </tr>
 
@@ -2767,6 +3226,87 @@ happens asynchronously.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="throwMdocVerificationFailure"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>throwMdocVerificationFailure</b></span>
+                        <a href="#throwMdocVerificationFailure"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>throwMdocVerificationFailure(attId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, result: { failureType?: "signature_invalid" | "no_trust_chain_to_root" | "trust_chain_not_trusted" | "x5c_missing" | "verification_error"; failureReason?: string })</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="1939"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1939</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>attId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>result</td>
+                                            <td>
+                                                        <code>{ failureType?: &quot;signature_invalid&quot; | &quot;no_trust_chain_to_root&quot; | &quot;trust_chain_not_trusted&quot; | &quot;x5c_missing&quot; | &quot;verification_error&quot;; failureReason?: string }</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>never</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="updatePresentationConfig"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -2904,8 +3444,8 @@ happens asynchronously.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1603"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1603</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1511"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1511</a></div>
                         </td>
                     </tr>
 
@@ -3027,8 +3567,8 @@ If no credential_sets are defined, all credentials in the query are required.</p
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1694"
-                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1694</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1602"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1602</a></div>
                         </td>
                     </tr>
 
@@ -3121,6 +3661,286 @@ If no credential_sets are defined, all credentials in the query are required.</p
                                         <li><p>IncompletePresentationException if any required claims are missing</p>
 </li>
                                 </ul>
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="verifyCredentialValue"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>verifyCredentialValue</b></span>
+                        <a href="#verifyCredentialValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>verifyCredentialValue(options: <a href="../classes/CredentialQuery.html" target="_self">{ cred: string; attId: string; type: CredentialType; session: Session; requestObjectSessionData: literal type | undefined; requestObjectJwkThumbprint: Uint8Array | undefined; verifyOptions: VerifierOptions; dcqlCredential: CredentialQuery; claimSelections: [][]; hasClaimSets: boolean; requiredClaimKeys: string[] }</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="1680"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1680</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../classes/CredentialQuery.html" target="_self" >{ cred: string; attId: string; type: CredentialType; session: Session; requestObjectSessionData: literal type | undefined; requestObjectJwkThumbprint: Uint8Array | undefined; verifyOptions: VerifierOptions; dcqlCredential: CredentialQuery; claimSelections: [][]; hasClaimSets: boolean; requiredClaimKeys: string[] }</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Record&lt;string, unknown&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="verifyMdocCredentialValue"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>verifyMdocCredentialValue</b></span>
+                        <a href="#verifyMdocCredentialValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>verifyMdocCredentialValue(options: <a href="../classes/CredentialQuery.html" target="_self">{ cred: string; attId: string; session: Session; requestObjectSessionData: literal type | undefined; requestObjectJwkThumbprint: Uint8Array | undefined; verifyOptions: VerifierOptions; dcqlCredential: CredentialQuery; claimSelections: [][]; hasClaimSets: boolean }</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="1714"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1714</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../classes/CredentialQuery.html" target="_self" >{ cred: string; attId: string; session: Session; requestObjectSessionData: literal type | undefined; requestObjectJwkThumbprint: Uint8Array | undefined; verifyOptions: VerifierOptions; dcqlCredential: CredentialQuery; claimSelections: [][]; hasClaimSets: boolean }</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Record&lt;string, unknown&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="verifyMdocCredentialWithClaimSets"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>verifyMdocCredentialWithClaimSets</b></span>
+                        <a href="#verifyMdocCredentialWithClaimSets"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>verifyMdocCredentialWithClaimSets(options: <a href="../classes/CredentialQuery.html" target="_self">{ cred: string; attId: string; sessionData: { nonce: string; clientId: string; responseUri: string; protocol: openid4vp; responseMode: string; jwkThumbprint: Uint8Array | undefined }; verifyOptions: VerifierOptions; dcqlCredential: CredentialQuery; claimSelections: [][] }</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="1777"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1777</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../classes/CredentialQuery.html" target="_self" >{ cred: string; attId: string; sessionData: { nonce: string; clientId: string; responseUri: string; protocol: openid4vp; responseMode: string; jwkThumbprint: Uint8Array | undefined }; verifyOptions: VerifierOptions; dcqlCredential: CredentialQuery; claimSelections: [][] }</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Record&lt;string, unknown&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="verifySdJwtCredentialValue"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>verifySdJwtCredentialValue</b></span>
+                        <a href="#verifySdJwtCredentialValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>verifySdJwtCredentialValue(options: <a href="../classes/CredentialQuery.html" target="_self">{ cred: string; attId: string; session: Session; requestObjectSessionData: literal type | undefined; requestObjectJwkThumbprint: Uint8Array | undefined; verifyOptions: VerifierOptions; dcqlCredential: CredentialQuery; claimSelections: [][]; hasClaimSets: boolean; requiredClaimKeys: string[] }</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="1854"
+                                    class="link-to-prism">src/verifier/presentations/presentations.service.ts:1854</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../classes/CredentialQuery.html" target="_self" >{ cred: string; attId: string; session: Session; requestObjectSessionData: literal type | undefined; requestObjectJwkThumbprint: Uint8Array | undefined; verifyOptions: VerifierOptions; dcqlCredential: CredentialQuery; claimSelections: [][]; hasClaimSets: boolean; requiredClaimKeys: string[] }</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Record&lt;string, unknown&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
                             </div>
                 </td>
             </tr>
@@ -4596,119 +5416,27 @@ export class PresentationsService {
                     dcqlCredential.claims,
                     type,
                 );
+                const claimSelections &#x3D;
+                    this.getCredentialClaimSelections(dcqlCredential);
+                const hasClaimSets &#x3D;
+                    !!dcqlCredential.claim_sets &amp;&amp;
+                    dcqlCredential.claim_sets.length &gt; 0;
 
                 const values &#x3D; await Promise.all(
                     credentials.map(async (cred) &#x3D;&gt; {
-                        if (type &#x3D;&#x3D;&#x3D; &quot;mso_mdoc&quot;) {
-                            const result &#x3D;
-                                await this.mdocverifierService.verify(
-                                    cred,
-                                    {
-                                        nonce:
-                                            requestObjectSessionData?.nonce ??
-                                            (session.vp_nonce as string),
-                                        clientId:
-                                            requestObjectSessionData?.client_id ??
-                                            session.clientId!,
-                                        responseUri:
-                                            requestObjectSessionData?.response_uri ??
-                                            session.responseUri!,
-                                        protocol: &quot;openid4vp&quot;,
-                                        responseMode:
-                                            requestObjectSessionData?.response_mode ??
-                                            (session.useDcApi
-                                                ? &quot;dc_api.jwt&quot;
-                                                : &quot;direct_post.jwt&quot;),
-                                        jwkThumbprint:
-                                            requestObjectJwkThumbprint,
-                                    },
-                                    verifyOptions,
-                                    dcqlCredential.claims?.map(
-                                        (claim) &#x3D;&gt; claim.path,
-                                    ),
-                                );
-                            if (!result.verified) {
-                                const reasonByType: Record&lt;string, string&gt; &#x3D; {
-                                    signature_invalid:
-                                        &quot;mDOC signature is invalid&quot;,
-                                    no_trust_chain_to_root:
-                                        &quot;no trust chain to a trusted root could be built&quot;,
-                                    trust_chain_not_trusted:
-                                        &quot;certificate chain does not match any trusted entity&quot;,
-                                    x5c_missing:
-                                        &quot;credential does not include an x5c chain but it is required&quot;,
-                                    verification_error:
-                                        &quot;mDOC verification failed&quot;,
-                                };
-
-                                const reason &#x3D;
-                                    (result.failureType
-                                        ? reasonByType[result.failureType]
-                                        : undefined) ||
-                                    result.failureReason ||
-                                    &quot;mDOC verification failed&quot;;
-
-                                this.logger.warn(
-                                    {
-                                        credentialId: attId,
-                                        failureType: result.failureType,
-                                        failureReason: result.failureReason,
-                                    },
-                                    &quot;mDOC verification failed&quot;,
-                                );
-
-                                throw new BadRequestException(
-                                    &#x60;mDOC verification failed for credential &quot;${attId}&quot;: ${reason}&#x60;,
-                                );
-                            }
-
-                            // Validate all required claims are present in mDOC
-                            this.validateMdocClaims(
-                                attId,
-                                dcqlCredential.claims,
-                                result.claims,
-                            );
-
-                            return result.claims;
-                        } else if (type &#x3D;&#x3D;&#x3D; &quot;dc+sd-jwt&quot;) {
-                            const result &#x3D;
-                                await this.sdjwtvcverifierService.verify(cred, {
-                                    requiredClaimKeys,
-                                    keyBindingNonce: session.vp_nonce!,
-                                    keyBindingAudience:
-                                        this.resolveSdJwtKeyBindingAudience(
-                                            session,
-                                            requestObjectSessionData,
-                                        ),
-                                    ...verifyOptions,
-                                });
-                            this.logger.debug(
-                                {
-                                    credentialId: attId,
-                                    requiredClaimKeys,
-                                    disclosedClaimKeys: Object.keys(
-                                        result.payload ?? {},
-                                    ),
-                                },
-                                &quot;SD-JWT-VC disclosed claims after verification&quot;,
-                            );
-                            this.logger.trace(
-                                {
-                                    credentialId: attId,
-                                    requiredClaimKeys,
-                                    disclosedClaims: result.payload,
-                                },
-                                &quot;[TRACE] SD-JWT-VC full disclosed claims payload&quot;,
-                            );
-                            return {
-                                ...result.payload,
-                                cnf: undefined,
-                                status: undefined,
-                            };
-                        }
-                        throw new ConflictException(
-                            &#x60;Unsupported credential type: ${type}&#x60;,
-                        );
+                        return this.verifyCredentialValue({
+                            cred,
+                            attId,
+                            type,
+                            session,
+                            requestObjectSessionData,
+                            requestObjectJwkThumbprint,
+                            verifyOptions,
+                            dcqlCredential,
+                            claimSelections,
+                            hasClaimSets,
+                            requiredClaimKeys,
+                        });
                     }),
                 );
 
@@ -4941,6 +5669,408 @@ export class PresentationsService {
                 { missingClaims: { [credentialId]: missingClaims } },
             );
         }
+    }
+
+    private getCredentialClaimSelections(
+        credential: CredentialQuery,
+    ): ClaimsQuery[][] {
+        const claims &#x3D; credential.claims ?? [];
+
+        if (!credential.claim_sets || credential.claim_sets.length &#x3D;&#x3D;&#x3D; 0) {
+            return [claims];
+        }
+
+        const claimsById &#x3D; new Map(
+            claims
+                .filter(
+                    (claim): claim is ClaimsQuery &amp; { id: string } &#x3D;&gt;
+                        typeof claim.id &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp; claim.id.trim() !&#x3D;&#x3D; &quot;&quot;,
+                )
+                .map((claim) &#x3D;&gt; [claim.id, claim] as const),
+        );
+
+        return credential.claim_sets.map((claimSet) &#x3D;&gt; {
+            const resolvedClaims &#x3D; claimSet.map((claimId) &#x3D;&gt; {
+                const claim &#x3D; claimsById.get(claimId);
+                if (!claim) {
+                    throw new BadRequestException(
+                        &#x60;claim_sets references unknown claim id &#x27;${claimId}&#x27; for credential &#x27;${credential.id}&#x27;&#x60;,
+                    );
+                }
+                return claim;
+            });
+
+            return resolvedClaims;
+        });
+    }
+
+    private async verifyCredentialValue(options: {
+        cred: string;
+        attId: string;
+        type: CredentialType;
+        session: Session;
+        requestObjectSessionData:
+            | {
+                  nonce?: string;
+                  client_id?: string;
+                  response_uri?: string;
+                  response_mode?: string;
+                  expected_origins?: string[];
+              }
+            | undefined;
+        requestObjectJwkThumbprint: Uint8Array | undefined;
+        verifyOptions: VerifierOptions;
+        dcqlCredential: CredentialQuery;
+        claimSelections: ClaimsQuery[][];
+        hasClaimSets: boolean;
+        requiredClaimKeys: string[];
+    }): Promise&lt;Record&lt;string, unknown&gt;&gt; {
+        if (options.type &#x3D;&#x3D;&#x3D; &quot;mso_mdoc&quot;) {
+            return this.verifyMdocCredentialValue(options);
+        }
+
+        if (options.type &#x3D;&#x3D;&#x3D; &quot;dc+sd-jwt&quot;) {
+            return this.verifySdJwtCredentialValue(options);
+        }
+
+        throw new ConflictException(
+            &#x60;Unsupported credential type: ${options.type}&#x60;,
+        );
+    }
+
+    private async verifyMdocCredentialValue(options: {
+        cred: string;
+        attId: string;
+        session: Session;
+        requestObjectSessionData:
+            | {
+                  nonce?: string;
+                  client_id?: string;
+                  response_uri?: string;
+                  response_mode?: string;
+                  expected_origins?: string[];
+              }
+            | undefined;
+        requestObjectJwkThumbprint: Uint8Array | undefined;
+        verifyOptions: VerifierOptions;
+        dcqlCredential: CredentialQuery;
+        claimSelections: ClaimsQuery[][];
+        hasClaimSets: boolean;
+    }): Promise&lt;Record&lt;string, unknown&gt;&gt; {
+        const sessionData &#x3D; {
+            nonce:
+                options.requestObjectSessionData?.nonce ??
+                (options.session.vp_nonce as string),
+            clientId:
+                options.requestObjectSessionData?.client_id ??
+                options.session.clientId!,
+            responseUri:
+                options.requestObjectSessionData?.response_uri ??
+                options.session.responseUri!,
+            protocol: &quot;openid4vp&quot; as const,
+            responseMode:
+                options.requestObjectSessionData?.response_mode ??
+                (options.session.useDcApi ? &quot;dc_api.jwt&quot; : &quot;direct_post.jwt&quot;),
+            jwkThumbprint: options.requestObjectJwkThumbprint,
+        };
+
+        if (options.hasClaimSets) {
+            return this.verifyMdocCredentialWithClaimSets({
+                ...options,
+                sessionData,
+            });
+        }
+
+        const result &#x3D; await this.mdocverifierService.verify(
+            options.cred,
+            sessionData,
+            options.verifyOptions,
+            options.dcqlCredential.claims?.map((claim) &#x3D;&gt; claim.path),
+        );
+
+        if (!result.verified) {
+            this.throwMdocVerificationFailure(options.attId, result);
+        }
+
+        this.validateMdocClaims(
+            options.attId,
+            options.dcqlCredential.claims,
+            result.claims,
+        );
+
+        return result.claims;
+    }
+
+    private async verifyMdocCredentialWithClaimSets(options: {
+        cred: string;
+        attId: string;
+        sessionData: {
+            nonce: string;
+            clientId: string;
+            responseUri: string;
+            protocol: &quot;openid4vp&quot;;
+            responseMode: string;
+            jwkThumbprint: Uint8Array | undefined;
+        };
+        verifyOptions: VerifierOptions;
+        dcqlCredential: CredentialQuery;
+        claimSelections: ClaimsQuery[][];
+    }): Promise&lt;Record&lt;string, unknown&gt;&gt; {
+        let lastVerificationFailure:
+            | {
+                  failureType?:
+                      | &quot;signature_invalid&quot;
+                      | &quot;no_trust_chain_to_root&quot;
+                      | &quot;trust_chain_not_trusted&quot;
+                      | &quot;x5c_missing&quot;
+                      | &quot;verification_error&quot;;
+                  failureReason?: string;
+              }
+            | undefined;
+
+        for (const selectedClaims of options.claimSelections) {
+            let result;
+
+            try {
+                result &#x3D; await this.mdocverifierService.verify(
+                    options.cred,
+                    options.sessionData,
+                    options.verifyOptions,
+                    selectedClaims.map((claim) &#x3D;&gt; claim.path),
+                );
+            } catch (error) {
+                lastVerificationFailure &#x3D; {
+                    failureType: &quot;verification_error&quot;,
+                    failureReason:
+                        error instanceof Error ? error.message : undefined,
+                };
+
+                continue;
+            }
+
+            if (!result.verified) {
+                lastVerificationFailure &#x3D; result;
+                continue;
+            }
+
+            if (this.matchesMdocClaimSelection(result.claims, selectedClaims)) {
+                return result.claims;
+            }
+        }
+
+        if (lastVerificationFailure) {
+            this.throwMdocVerificationFailure(
+                options.attId,
+                lastVerificationFailure,
+            );
+        }
+
+        throw new IncompletePresentationException(
+            &#x60;Credential &quot;${options.attId}&quot; does not satisfy any claim_set&#x60;,
+            {
+                missingClaims: {
+                    [options.attId]:
+                        options.dcqlCredential.claims?.map((claim) &#x3D;&gt;
+                            claim.path.join(&quot;.&quot;),
+                        ) ?? [],
+                },
+            },
+        );
+    }
+
+    private async verifySdJwtCredentialValue(options: {
+        cred: string;
+        attId: string;
+        session: Session;
+        requestObjectSessionData:
+            | {
+                  nonce?: string;
+                  client_id?: string;
+                  response_uri?: string;
+                  response_mode?: string;
+                  expected_origins?: string[];
+              }
+            | undefined;
+        requestObjectJwkThumbprint: Uint8Array | undefined;
+        verifyOptions: VerifierOptions;
+        dcqlCredential: CredentialQuery;
+        claimSelections: ClaimsQuery[][];
+        hasClaimSets: boolean;
+        requiredClaimKeys: string[];
+    }): Promise&lt;Record&lt;string, unknown&gt;&gt; {
+        const result &#x3D; await this.sdjwtvcverifierService.verify(options.cred, {
+            requiredClaimKeys: options.hasClaimSets
+                ? []
+                : options.requiredClaimKeys,
+            keyBindingNonce: options.session.vp_nonce!,
+            keyBindingAudience: this.resolveSdJwtKeyBindingAudience(
+                options.session,
+                options.requestObjectSessionData,
+            ),
+            ...options.verifyOptions,
+        });
+
+        if (options.hasClaimSets) {
+            const matchingSelection &#x3D; options.claimSelections.find(
+                (selectedClaims) &#x3D;&gt;
+                    this.matchesClaimSelection(
+                        (result.payload ?? {}) as Record&lt;string, unknown&gt;,
+                        options.dcqlCredential.claims,
+                        selectedClaims,
+                    ),
+            );
+
+            if (!matchingSelection) {
+                throw new IncompletePresentationException(
+                    &#x60;Credential &quot;${options.attId}&quot; does not satisfy any claim_set&#x60;,
+                    {
+                        missingClaims: {
+                            [options.attId]:
+                                options.dcqlCredential.claims?.map((claim) &#x3D;&gt;
+                                    claim.path.join(&quot;.&quot;),
+                                ) ?? [],
+                        },
+                    },
+                );
+            }
+        }
+
+        this.logger.debug(
+            {
+                credentialId: options.attId,
+                requiredClaimKeys: options.hasClaimSets
+                    ? []
+                    : options.requiredClaimKeys,
+                disclosedClaimKeys: Object.keys(result.payload ?? {}),
+            },
+            &quot;SD-JWT-VC disclosed claims after verification&quot;,
+        );
+        this.logger.trace(
+            {
+                credentialId: options.attId,
+                requiredClaimKeys: options.hasClaimSets
+                    ? []
+                    : options.requiredClaimKeys,
+                disclosedClaims: result.payload,
+            },
+            &quot;[TRACE] SD-JWT-VC full disclosed claims payload&quot;,
+        );
+
+        return {
+            ...result.payload,
+            cnf: undefined,
+            status: undefined,
+        };
+    }
+
+    private throwMdocVerificationFailure(
+        attId: string,
+        result: {
+            failureType?:
+                | &quot;signature_invalid&quot;
+                | &quot;no_trust_chain_to_root&quot;
+                | &quot;trust_chain_not_trusted&quot;
+                | &quot;x5c_missing&quot;
+                | &quot;verification_error&quot;;
+            failureReason?: string;
+        },
+    ): never {
+        const reasonByType: Record&lt;string, string&gt; &#x3D; {
+            signature_invalid: &quot;mDOC signature is invalid&quot;,
+            no_trust_chain_to_root:
+                &quot;no trust chain to a trusted root could be built&quot;,
+            trust_chain_not_trusted:
+                &quot;certificate chain does not match any trusted entity&quot;,
+            x5c_missing:
+                &quot;credential does not include an x5c chain but it is required&quot;,
+            verification_error: &quot;mDOC verification failed&quot;,
+        };
+
+        const reason &#x3D;
+            (result.failureType
+                ? reasonByType[result.failureType]
+                : undefined) ||
+            result.failureReason ||
+            &quot;mDOC verification failed&quot;;
+
+        this.logger.warn(
+            {
+                credentialId: attId,
+                failureType: result.failureType,
+                failureReason: result.failureReason,
+            },
+            &quot;mDOC verification failed&quot;,
+        );
+
+        throw new BadRequestException(
+            &#x60;mDOC verification failed for credential &quot;${attId}&quot;: ${reason}&#x60;,
+        );
+    }
+
+    private matchesClaimSelection(
+        payload: Record&lt;string, unknown&gt;,
+        allClaims: ClaimsQuery[] | undefined,
+        selectedClaims: ClaimsQuery[],
+    ): boolean {
+        if (!allClaims || allClaims.length &#x3D;&#x3D;&#x3D; 0) {
+            return selectedClaims.length &#x3D;&#x3D;&#x3D; 0;
+        }
+
+        return selectedClaims.every((claim) &#x3D;&gt;
+            this.hasClaimPath(payload, claim.path),
+        );
+    }
+
+    private matchesMdocClaimSelection(
+        payload: Record&lt;string, unknown&gt;,
+        selectedClaims: ClaimsQuery[],
+    ): boolean {
+        return selectedClaims.every((claim) &#x3D;&gt; {
+            const claimName &#x3D;
+                claim.path.length &gt; 1 ? claim.path[1] : claim.path[0];
+
+            return claimName in payload;
+        });
+    }
+
+    private areClaimPathsEqual(left: string[], right: string[]): boolean {
+        if (left.length !&#x3D;&#x3D; right.length) {
+            return false;
+        }
+
+        return left.every((segment, index) &#x3D;&gt; segment &#x3D;&#x3D;&#x3D; right[index]);
+    }
+
+    private hasClaimPath(value: unknown, path: string[]): boolean {
+        let current: unknown &#x3D; value;
+
+        for (const segment of path) {
+            if (current &#x3D;&#x3D;&#x3D; null || current &#x3D;&#x3D;&#x3D; undefined) {
+                return false;
+            }
+
+            if (Array.isArray(current)) {
+                const index &#x3D; Number(segment);
+                if (!Number.isInteger(index) || index &lt; 0) {
+                    return false;
+                }
+
+                current &#x3D; current[index];
+                continue;
+            }
+
+            if (typeof current !&#x3D;&#x3D; &quot;object&quot;) {
+                return false;
+            }
+
+            if (!(segment in current)) {
+                return false;
+            }
+
+            current &#x3D; (current as Record&lt;string, unknown&gt;)[segment];
+        }
+
+        return current !&#x3D;&#x3D; undefined;
     }
 }
 </code></pre>
