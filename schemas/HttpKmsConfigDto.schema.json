@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/HttpKmsConfigDto.schema.json",
+  "title": "HttpKmsConfigDto",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+      "example": "main-vault"
+    },
+    "type": {
+      "enum": [
+        "http"
+      ],
+      "type": "string",
+      "description": "Type of the KMS provider.",
+      "example": "http"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of this provider instance.",
+      "example": "Production HashiCorp Vault for signing keys"
+    },
+    "baseUrl": {
+      "type": "string",
+      "description": "Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.",
+      "example": "${KMS_SERVICE_URL}"
+    },
+    "auth": {
+      "description": "Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to \"none\") for unauthenticated services.",
+      "allOf": [
+        {
+          "$ref": "./HttpAuthBaseConfigDto.schema.json"
+        }
+      ]
+    },
+    "keysPath": {
+      "type": "string",
+      "description": "Path prefix for key endpoints on the remote service. Defaults to /keys.",
+      "example": "/v1/keys"
+    },
+    "healthPath": {
+      "type": "string",
+      "description": "Path for the health check endpoint on the remote service. Defaults to /health.",
+      "example": "/health"
+    },
+    "canImport": {
+      "type": "boolean",
+      "description": "Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.",
+      "example": false
+    }
+  },
+  "required": [
+    "id",
+    "type",
+    "baseUrl"
+  ],
+  "additionalProperties": false
+}

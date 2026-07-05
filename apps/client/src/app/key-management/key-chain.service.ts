@@ -1,18 +1,23 @@
 import { Injectable } from '@angular/core';
 import {
+  type KmsConfigDto,
   type KmsProvidersResponseDto,
+  type KmsTenantConfigResponseDto,
   type KeyChainCreateDto,
   type KeyChainResponseDto,
   type KeyChainUpdateDto,
   keyChainControllerCreate,
   keyChainControllerDelete,
+  keyChainControllerDeleteTenantKmsConfig,
   keyChainControllerExport,
   keyChainControllerGetAll,
   keyChainControllerGetById,
   keyChainControllerGetProviders,
   keyChainControllerGetProvidersHealth,
+  keyChainControllerGetTenantKmsConfig,
   keyChainControllerRotate,
   keyChainControllerUpdate,
+  keyChainControllerUpdateTenantKmsConfig,
 } from '@eudiplo/sdk-core';
 
 /**
@@ -59,6 +64,22 @@ export class KeyChainService {
           }[]
         | undefined) || []
     );
+  }
+
+  async getTenantKmsConfig(): Promise<KmsTenantConfigResponseDto> {
+    const response = await keyChainControllerGetTenantKmsConfig();
+    return response.data as KmsTenantConfigResponseDto;
+  }
+
+  async updateTenantKmsConfig(config: KmsConfigDto): Promise<KmsTenantConfigResponseDto> {
+    const response = await keyChainControllerUpdateTenantKmsConfig({
+      body: config,
+    });
+    return response.data as KmsTenantConfigResponseDto;
+  }
+
+  async deleteTenantKmsConfig(): Promise<void> {
+    await keyChainControllerDeleteTenantKmsConfig();
   }
 
   /**

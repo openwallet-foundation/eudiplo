@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/KmsConfigDto.schema.json",
+  "title": "KmsConfigDto",
+  "type": "object",
+  "properties": {
+    "defaultProvider": {
+      "type": "string",
+      "description": "ID of the default KMS provider. Defaults to \"db\" if not set.",
+      "example": "main-vault"
+    },
+    "providers": {
+      "type": "array",
+      "description": "List of KMS provider configurations. Each provider must have a unique id and a type.",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "./DbKmsConfigDto.schema.json"
+          },
+          {
+            "$ref": "./VaultKmsConfigDto.schema.json"
+          },
+          {
+            "$ref": "./AwsKmsConfigDto.schema.json"
+          },
+          {
+            "$ref": "./Pkcs11KmsConfigDto.schema.json"
+          },
+          {
+            "$ref": "./HttpKmsConfigDto.schema.json"
+          },
+          {
+            "$ref": "./CscKmsConfigDto.schema.json"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "db": "#/components/schemas/DbKmsConfigDto",
+            "vault": "#/components/schemas/VaultKmsConfigDto",
+            "aws-kms": "#/components/schemas/AwsKmsConfigDto",
+            "pkcs11": "#/components/schemas/Pkcs11KmsConfigDto",
+            "http": "#/components/schemas/HttpKmsConfigDto",
+            "csc": "#/components/schemas/CscKmsConfigDto"
+          }
+        }
+      },
+      "example": [
+        {
+          "id": "db",
+          "type": "db",
+          "description": "Default database provider"
+        },
+        {
+          "id": "main-vault",
+          "type": "vault",
+          "description": "Production Vault",
+          "vaultUrl": "${VAULT_URL}",
+          "vaultToken": "${VAULT_TOKEN}"
+        },
+        {
+          "id": "aws",
+          "type": "aws-kms",
+          "description": "AWS KMS",
+          "region": "${AWS_REGION}"
+        }
+      ]
+    }
+  },
+  "required": [
+    "providers"
+  ],
+  "additionalProperties": false
+}

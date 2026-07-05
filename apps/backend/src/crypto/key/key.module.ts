@@ -15,6 +15,7 @@ import { KeyChainSigningService } from "./key-chain-signing.service";
 import { KeyRotationService } from "./key-rotation.service";
 import { KmsConfigService } from "./kms/kms-config.service";
 import { KmsProviderRegistry } from "./kms/kms-provider.registry";
+import { KmsTenantConfigService } from "./kms/kms-tenant-config.service";
 
 @Global()
 export class KeyModule {
@@ -31,6 +32,7 @@ export class KeyModule {
             providers: [
                 KmsConfigService,
                 KmsProviderRegistry,
+                KmsTenantConfigService,
                 CertificateBuilderService,
                 KeyChainSigningService,
                 KeyChainImportService,

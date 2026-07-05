@@ -90,7 +90,7 @@ export class KeyChainImportService {
             privateKey.alg = "ES256";
         }
 
-        const adapter = this.kmsRegistry.resolve(dto.kmsProvider);
+        const adapter = this.kmsRegistry.resolve(dto.kmsProvider, tenantId);
         const normalizedCertificates = this.resolveCertificateChain(dto);
 
         if (dto.rotationPolicy?.enabled) {

@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/CscKmsConfigDto.schema.json",
+  "title": "CscKmsConfigDto",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+      "example": "main-vault"
+    },
+    "type": {
+      "enum": [
+        "csc"
+      ],
+      "type": "string",
+      "description": "Type of the KMS provider.",
+      "example": "csc"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of this provider instance.",
+      "example": "Production HashiCorp Vault for signing keys"
+    },
+    "baseUrl": {
+      "type": "string",
+      "description": "Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.",
+      "example": "${CSC_URL}"
+    },
+    "tokenUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.",
+      "example": "${CSC_TOKEN_URL}"
+    },
+    "clientId": {
+      "type": "string",
+      "description": "OAuth2 client ID. Supports ${ENV_VAR} placeholders.",
+      "example": "${CSC_CLIENT_ID}"
+    },
+    "clientSecret": {
+      "type": "string",
+      "description": "OAuth2 client secret. Supports ${ENV_VAR} placeholders.",
+      "example": "${CSC_CLIENT_SECRET}"
+    },
+    "scope": {
+      "type": "string",
+      "description": "OAuth2 scope to request during token acquisition.",
+      "example": "service"
+    },
+    "credentialId": {
+      "type": "string",
+      "description": "Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.",
+      "example": "[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758"
+    },
+    "userId": {
+      "type": "string",
+      "description": "Optional CSC user ID used in credentials/list requests.",
+      "example": "eudiplo_user"
+    },
+    "apiPath": {
+      "type": "string",
+      "description": "CSC API path prefix appended to baseUrl. Defaults to /csc/v2.",
+      "example": "/csc/v2"
+    },
+    "hashAlgorithmOid": {
+      "type": "string",
+      "description": "Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.",
+      "example": "2.16.840.1.101.3.4.2.1"
+    },
+    "signAlgorithmOid": {
+      "type": "string",
+      "description": "Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.",
+      "example": "1.2.840.10045.4.3.2"
+    },
+    "sad": {
+      "type": "string",
+      "description": "Static SAD token. If set, the adapter sends it directly in signatures/signHash requests."
+    },
+    "useAuthorizeEndpoint": {
+      "type": "boolean",
+      "description": "When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.",
+      "example": false
+    },
+    "authorizeAuthData": {
+      "description": "Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).",
+      "type": "array",
+      "items": {
+        "$ref": "./CscAuthorizeAuthDataDto.schema.json"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "type",
+    "baseUrl",
+    "tokenUrl",
+    "clientId",
+    "clientSecret"
+  ],
+  "additionalProperties": false
+}

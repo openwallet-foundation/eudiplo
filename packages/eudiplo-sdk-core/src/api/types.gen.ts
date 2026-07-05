@@ -2818,6 +2818,43 @@ export type KmsProvidersResponseDto = {
     default: string;
 };
 
+export type BaseKmsProviderConfigDto = {
+    /**
+     * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
+     */
+    id: string;
+    /**
+     * Type of the KMS provider. Must match a supported adapter type.
+     */
+    type: 'db' | 'vault' | 'aws-kms' | 'pkcs11' | 'http' | 'csc';
+    /**
+     * Human-readable description of this provider instance.
+     */
+    description?: string;
+};
+
+export type KmsConfigDto = {
+    /**
+     * ID of the default KMS provider. Defaults to "db" if not set.
+     */
+    defaultProvider?: string;
+    /**
+     * List of KMS provider configurations. Each provider must have a unique id and a type.
+     */
+    providers: Array<BaseKmsProviderConfigDto>;
+};
+
+export type KmsTenantConfigResponseDto = {
+    /**
+     * Tenant-specific KMS configuration from <CONFIG_FOLDER>/<tenantId>/kms.json. Null when no tenant file exists.
+     */
+    tenantConfig?: KmsConfigDto;
+    /**
+     * Effective configuration used at runtime for the tenant (global + tenant merge).
+     */
+    effectiveConfig: KmsConfigDto;
+};
+
 export type CertificateInfoDto = {
     /**
      * Certificate in PEM format.
@@ -5237,6 +5274,52 @@ export type KeyChainControllerGetProvidersHealthResponses = {
      */
     200: unknown;
 };
+
+export type KeyChainControllerDeleteTenantKmsConfigData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/key-chain/providers/config';
+};
+
+export type KeyChainControllerDeleteTenantKmsConfigResponses = {
+    /**
+     * Tenant-specific KMS config removed.
+     */
+    200: unknown;
+};
+
+export type KeyChainControllerGetTenantKmsConfigData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/key-chain/providers/config';
+};
+
+export type KeyChainControllerGetTenantKmsConfigResponses = {
+    /**
+     * Tenant and effective KMS configuration.
+     */
+    200: KmsTenantConfigResponseDto;
+};
+
+export type KeyChainControllerGetTenantKmsConfigResponse = KeyChainControllerGetTenantKmsConfigResponses[keyof KeyChainControllerGetTenantKmsConfigResponses];
+
+export type KeyChainControllerUpdateTenantKmsConfigData = {
+    body: KmsConfigDto;
+    path?: never;
+    query?: never;
+    url: '/api/key-chain/providers/config';
+};
+
+export type KeyChainControllerUpdateTenantKmsConfigResponses = {
+    /**
+     * Updated tenant KMS config.
+     */
+    200: KmsTenantConfigResponseDto;
+};
+
+export type KeyChainControllerUpdateTenantKmsConfigResponse = KeyChainControllerUpdateTenantKmsConfigResponses[keyof KeyChainControllerUpdateTenantKmsConfigResponses];
 
 export type KeyChainControllerGetAllData = {
     body?: never;

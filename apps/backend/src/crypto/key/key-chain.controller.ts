@@ -18,8 +18,11 @@ import { KeyChainImportDto } from "./dto/key-chain-import.dto";
 import { KeyChainResponseDto } from "./dto/key-chain-response.dto";
 import { KeyChainUpdateDto } from "./dto/key-chain-update.dto";
 import { KmsProvidersResponseDto } from "./dto/kms-providers-response.dto";
+import { KmsConfigDto } from "./dto/kms-config.dto";
+import { KmsTenantConfigResponseDto } from "./dto/kms-tenant-config-response.dto";
 import { KeyUsageType } from "./entities/key-chain.entity";
 import { KeyChainService } from "./key-chain.service";
+import { KmsTenantConfigService } from "./kms/kms-tenant-config.service";
 
 /**
  * KeyChainController manages unified key chains.
@@ -33,7 +36,10 @@ import { KeyChainService } from "./key-chain.service";
 @Secured([Role.Issuances, Role.Presentations])
 @Controller("key-chain")
 export class KeyChainController {
-    constructor(private readonly keyChainService: KeyChainService) {}
+    constructor(
+        private readonly keyChainService: KeyChainService,
+        private readonly kmsTenantConfigService: KmsTenantConfigService,
+    ) {}
 
     /**
      * Get available KMS providers and their capabilities.
@@ -45,8 +51,8 @@ export class KeyChainController {
         description: "List of available KMS providers with capabilities",
         type: KmsProvidersResponseDto,
     })
-    getProviders(): KmsProvidersResponseDto {
-        return this.keyChainService.getProviders();
+    getProviders(@Token() token: TokenPayload): KmsProvidersResponseDto {
+        return this.keyChainService.getProviders(token.entity!.id);
     }
 
     /**
@@ -59,8 +65,70 @@ export class KeyChainController {
         description:
             "Per-provider health result (ok, latencyMs, optional error).",
     })
-    getProvidersHealth() {
-        return this.keyChainService.getProviderHealth();
+    getProvidersHealth(@Token() token: TokenPayload) {
+        return this.keyChainService.getProviderHealth(token.entity!.id);
+    }
+
+    @Get("providers/config")
+    @ApiOperation({
+        summary: "Get tenant KMS provider configuration",
+        description:
+            "Returns tenant-specific KMS config (if present) and the effective merged runtime config.",
+    })
+    @ApiResponse({
+        status: 200,
+        description: "Tenant and effective KMS configuration.",
+        type: KmsTenantConfigResponseDto,
+    })
+    getTenantKmsConfig(
+        @Token() token: TokenPayload,
+    ): KmsTenantConfigResponseDto {
+        const tenantId = token.entity!.id;
+        return {
+            tenantConfig: this.kmsTenantConfigService.getTenantConfig(tenantId),
+            effectiveConfig: this.kmsTenantConfigService.getEffectiveConfig(
+                tenantId,
+            ),
+        };
+    }
+
+    @Put("providers/config")
+    @ApiOperation({
+        summary: "Create or replace tenant KMS provider configuration",
+    })
+    @ApiResponse({
+        status: 200,
+        description: "Updated tenant KMS config.",
+        type: KmsTenantConfigResponseDto,
+    })
+    updateTenantKmsConfig(
+        @Token() token: TokenPayload,
+        @Body() body: KmsConfigDto,
+    ): KmsTenantConfigResponseDto {
+        const tenantId = token.entity!.id;
+        const effectiveConfig = this.kmsTenantConfigService.saveTenantConfig(
+            tenantId,
+            body,
+        );
+
+        return {
+            tenantConfig: this.kmsTenantConfigService.getTenantConfig(tenantId),
+            effectiveConfig,
+        };
+    }
+
+    @Delete("providers/config")
+    @ApiOperation({
+        summary: "Delete tenant KMS provider configuration",
+        description:
+            "Removes <CONFIG_FOLDER>/<tenantId>/kms.json and falls back to global KMS config.",
+    })
+    @ApiResponse({
+        status: 200,
+        description: "Tenant-specific KMS config removed.",
+    })
+    deleteTenantKmsConfig(@Token() token: TokenPayload): void {
+        this.kmsTenantConfigService.deleteTenantConfig(token.entity!.id);
     }
 
     /**

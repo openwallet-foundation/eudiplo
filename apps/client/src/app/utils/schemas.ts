@@ -6,6 +6,7 @@ import issuanceConfigSchemaObj from '../../../../../schemas/IssuanceDto.schema.j
 import DCQLObj from '../../../../../schemas/DCQL.schema.json';
 import presnetationConfigCreateSchemaObj from '../../../../../schemas/PresentationConfigCreateDto.schema.json';
 import transactionDataSchemaObj from '../../../../../schemas/TransactionData.schema.json';
+import kmsConfigSchemaObj from '../../../../../schemas/KmsConfigDto.schema.json';
 
 // Create an array schema for TransactionData (URI-based matching allows arrays as root)
 const transactionDataArraySchemaObj = {
@@ -53,3 +54,5 @@ export const presentationConfigSchema = new SchemaValidation(presnetationConfigC
 export const DCQLSchema = new SchemaValidation(DCQLObj);
 
 export const transactionDataArraySchema = new SchemaValidation(transactionDataArraySchemaObj);
+
+export const kmsConfigSchema = new SchemaValidation(kmsConfigSchemaObj);

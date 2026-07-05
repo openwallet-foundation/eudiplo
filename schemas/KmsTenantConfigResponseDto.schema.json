@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/KmsTenantConfigResponseDto.schema.json",
+  "title": "KmsTenantConfigResponseDto",
+  "type": "object",
+  "properties": {
+    "tenantConfig": {
+      "nullable": true,
+      "description": "Tenant-specific KMS configuration from <CONFIG_FOLDER>/<tenantId>/kms.json. Null when no tenant file exists.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "./KmsConfigDto.schema.json"
+        }
+      ]
+    },
+    "effectiveConfig": {
+      "description": "Effective configuration used at runtime for the tenant (global + tenant merge).",
+      "allOf": [
+        {
+          "$ref": "./KmsConfigDto.schema.json"
+        }
+      ]
+    }
+  },
+  "required": [
+    "effectiveConfig"
+  ],
+  "additionalProperties": false
+}

@@ -1,37 +1,34 @@
 <div class="activity-page">
-  <div class="activity-header">
+  <div class="header" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
     <div class="header-main">
-      <h2>
-        <mat-icon>history</mat-icon>
-        Activity Logs
-      </h2>
-      <p>View change history for your tenant only</p>
+      <h2>Activity Logs</h2>
     </div>
 
-    <div class="header-controls">
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Filter by Object Type</mat-label>
-        <mat-select [(value)]="selectedObjectType" (selectionChange)="onFilterChange()">
-          <mat-option value="">All Objects</mat-option>
-          @for (objectType of getObjectTypes(); track objectType.value) {
-            <mat-option [value]="objectType.value">
-              {{ objectType.label }}
-            </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-
+    <div class="header-controls" fxLayout="row" fxLayoutGap="8px">
       <button
-        mat-stroked-button
+        mat-icon-button
         color="primary"
         (click)="refresh()"
         [disabled]="activityLoading"
         matTooltip="Refresh activity logs"
       >
         <mat-icon>refresh</mat-icon>
-        Refresh
       </button>
     </div>
+  </div>
+
+  <div class="filters" fxLayout="row" fxLayoutGap="12px" fxLayoutAlign="start center">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Filter by Object Type</mat-label>
+      <mat-select [(value)]="selectedObjectType" (selectionChange)="onFilterChange()">
+        <mat-option value="">All Objects</mat-option>
+        @for (objectType of getObjectTypes(); track objectType.value) {
+          <mat-option [value]="objectType.value">
+            {{ objectType.label }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
   </div>
 
   <!-- Loading State -->
@@ -61,7 +58,7 @@
   <!-- Activity Table -->
   @if (!activityLoading && activityLogs.length > 0) {
     <div class="table-container">
-      <table mat-table [dataSource]="visibleLogs" class="activity-table">
+      <table mat-table [dataSource]="visibleLogs" class="activity-table mat-elevation-z8">
         <!-- Timestamp Column -->
         <ng-container matColumnDef="timestamp">
           <th mat-header-cell *matHeaderCellDef>Timestamp</th>

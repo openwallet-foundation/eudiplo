@@ -3,6 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -10,7 +11,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
-import { KmsProviderInfoDto } from '@eudiplo/sdk-core';
+import { KmsConfigDto, KmsProviderInfoDto } from '@eudiplo/sdk-core';
+import { JsonViewDialogComponent } from '../../issuance/credential-config/credential-config-create/json-view-dialog/json-view-dialog.component';
+import { kmsConfigSchema } from '../../utils/schemas';
 import { KeyChainService } from '../key-chain.service';
 
 interface ProviderHealthItem {
@@ -42,6 +45,7 @@ interface ProviderRow {
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
+    MatDialogModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
@@ -56,13 +60,17 @@ interface ProviderRow {
 })
 export class KeyManagementProvidersComponent implements OnInit {
   isLoading = false;
+  isSavingConfig = false;
   defaultProvider = 'db';
   rows: ProviderRow[] = [];
+  tenantConfig: KmsConfigDto = { providers: [] };
+  hasTenantConfig = false;
   displayedColumns = ['name', 'type', 'capabilities', 'algorithms', 'health', 'actions'];
 
   constructor(
     private readonly keyChainService: KeyChainService,
-    private readonly snackBar: MatSnackBar
+    private readonly snackBar: MatSnackBar,
+    private readonly dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -90,12 +98,75 @@ export class KeyManagementProvidersComponent implements OnInit {
       this.rows = providersRes.providers.map((provider) =>
         this.toRow(provider, healthByProvider.get(provider.name))
       );
+
+      await this.loadTenantConfigEditor();
     } catch (error) {
       console.error('Failed to load KMS providers:', error);
       this.snackBar.open('Failed to load KMS providers', 'Dismiss', { duration: 4000 });
     } finally {
       this.isLoading = false;
     }
+  }
+
+  async openTenantConfigEditor(): Promise<void> {
+    const dialogRef = this.dialog.open(JsonViewDialogComponent, {
+      data: {
+        title: 'Tenant KMS Configuration JSON',
+        jsonData: this.tenantConfig,
+        readonly: false,
+        schema: kmsConfigSchema,
+      },
+      disableClose: true,
+      minWidth: '60vw',
+      maxWidth: '95vw',
+      maxHeight: '95vh',
+    });
+
+    dialogRef.afterClosed().subscribe(async (result) => {
+      if (!result) {
+        return;
+      }
+
+      await this.saveTenantConfig(result as KmsConfigDto);
+    });
+  }
+
+  async saveTenantConfig(config: KmsConfigDto): Promise<void> {
+    this.isSavingConfig = true;
+    try {
+      const result = await this.keyChainService.updateTenantKmsConfig(config);
+      this.hasTenantConfig = !!result.tenantConfig;
+      this.tenantConfig = (result.tenantConfig ?? result.effectiveConfig) as KmsConfigDto;
+      this.snackBar.open('Tenant KMS configuration saved', 'Dismiss', { duration: 3000 });
+      await this.loadProviders();
+    } catch (error) {
+      console.error('Failed to save tenant KMS config:', error);
+      this.snackBar.open('Failed to save tenant KMS configuration', 'Dismiss', { duration: 4000 });
+    } finally {
+      this.isSavingConfig = false;
+    }
+  }
+
+  async resetTenantConfig(): Promise<void> {
+    this.isSavingConfig = true;
+    try {
+      await this.keyChainService.deleteTenantKmsConfig();
+      this.snackBar.open('Tenant KMS configuration reset to global defaults', 'Dismiss', {
+        duration: 3000,
+      });
+      await this.loadProviders();
+    } catch (error) {
+      console.error('Failed to reset tenant KMS config:', error);
+      this.snackBar.open('Failed to reset tenant KMS configuration', 'Dismiss', { duration: 4000 });
+    } finally {
+      this.isSavingConfig = false;
+    }
+  }
+
+  private async loadTenantConfigEditor(): Promise<void> {
+    const config = await this.keyChainService.getTenantKmsConfig();
+    this.hasTenantConfig = !!config.tenantConfig;
+    this.tenantConfig = (config.tenantConfig ?? config.effectiveConfig) as KmsConfigDto;
   }
 
   private toRow(provider: KmsProviderInfoDto, health?: ProviderHealthItem): ProviderRow {

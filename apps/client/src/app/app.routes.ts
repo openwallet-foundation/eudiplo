@@ -124,6 +124,14 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: keyManagementRoutes,
   },
+  {
+    path: 'kms',
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./key-management/key-management-providers/key-management-providers.component').then(
+        (m) => m.KeyManagementProvidersComponent
+      ),
+  },
 
   // Registrar
   {

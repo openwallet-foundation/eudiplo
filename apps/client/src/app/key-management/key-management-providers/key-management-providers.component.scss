@@ -1,23 +1,42 @@
 .providers-container {
-  padding: 24px;
-  max-width: 1200px;
   margin: 0 auto;
 }
 
 .header {
-  h2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+
+}
+
+.tenant-config {
+  margin-top: 4px;
+
+  h3 {
     margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
   }
 
-  .subtitle {
-    margin: 4px 0 0;
+  .tenant-config-subtitle {
+    margin: 4px 0 12px;
     color: var(--mat-sys-on-surface-variant);
+  }
+
+  .tenant-config-actions {
+    flex-wrap: wrap;
   }
 }
 
 .loading {
   padding: 32px;
   color: var(--mat-sys-on-surface-variant);
+}
+
+.table-container {
+  overflow-x: auto;
 }
 
 .providers-table {

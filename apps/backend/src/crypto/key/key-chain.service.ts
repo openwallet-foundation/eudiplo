@@ -53,12 +53,12 @@ export class KeyChainService {
     ) {}
 
     /** Return registered KMS providers (delegated to the registry). */
-    getProviders(): KmsProvidersResponseDto {
-        return this.kmsRegistry.list();
+    getProviders(tenantId: string): KmsProvidersResponseDto {
+        return this.kmsRegistry.list(tenantId);
     }
 
     /** Run a health probe for every registered KMS provider. */
-    getProviderHealth(): Promise<
+    getProviderHealth(tenantId: string): Promise<
         Array<{
             providerId: string;
             type: string;
@@ -67,7 +67,7 @@ export class KeyChainService {
             error?: string;
         }>
     > {
-        return this.kmsRegistry.health();
+        return this.kmsRegistry.health(tenantId);
     }
 
     async create(tenantId: string, dto: KeyChainCreateDto): Promise<string> {
@@ -84,7 +84,7 @@ export class KeyChainService {
             now.getTime() + certValidityDays * 24 * 60 * 60 * 1000,
         );
 
-        const adapter = this.kmsRegistry.resolve(dto.kmsProvider);
+        const adapter = this.kmsRegistry.resolve(dto.kmsProvider, tenantId);
 
         let keyChain: Partial<KeyChainEntity>;
 
@@ -385,7 +385,10 @@ export class KeyChainService {
 
         // Best-effort: ask the adapter to clean up external key material.
         try {
-            const adapter = this.kmsRegistry.resolve(keyChain.kmsProvider);
+            const adapter = this.kmsRegistry.resolve(
+                keyChain.kmsProvider,
+                keyChain.tenantId,
+            );
             if (adapter.capabilities.canDelete) {
                 await adapter.deleteKey(this.refFromEntity(keyChain));
             }
@@ -430,7 +433,10 @@ export class KeyChainService {
         const previousJwk = keyChain.activeJwk;
         const previousCertificate = keyChain.activeCertificate;
 
-        const adapter = this.kmsRegistry.resolve(keyChain.kmsProvider);
+        const adapter = this.kmsRegistry.resolve(
+            keyChain.kmsProvider,
+            keyChain.tenantId,
+        );
         const newMat = await adapter.generateKey({
             kid: `${id}-${Date.now()}`,
         });
@@ -560,7 +566,7 @@ export class KeyChainService {
      */
     private refFromEntity(keyChain: KeyChainEntity): KmsKeyRef {
         return this.refForStoredKey(
-            this.kmsRegistry.resolve(keyChain.kmsProvider),
+            this.kmsRegistry.resolve(keyChain.kmsProvider, keyChain.tenantId),
             keyChain.activeJwk,
             keyChain.externalKeyId ?? undefined,
         );

@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, type OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { RouterModule } from '@angular/router';
@@ -11,7 +13,7 @@ import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { KeyChainResponseDto } from '@eudiplo/sdk-core';
 import { KeyChainService } from '../key-chain.service';
 
-type KeyUsageType = 'attestation' | 'statusList' | 'access' | 'trustList';
+type KeyUsageType = 'attestation' | 'statusList' | 'access' | 'trustList' | 'encrypt';
 
 /**
  * Display item for key chains.
@@ -23,16 +25,8 @@ interface KeyDisplayItem {
   type: 'internalChain' | 'standalone';
   rotationEnabled: boolean;
   hasRootCa: boolean;
+  kmsProvider: string;
   keyChain: KeyChainResponseDto;
-}
-
-interface UsageGroup {
-  usage: KeyUsageType;
-  label: string;
-  icon: string;
-  description: string;
-  items: KeyDisplayItem[];
-  expanded: boolean;
 }
 
 @Component({
@@ -43,7 +37,9 @@ interface UsageGroup {
     MatButtonModule,
     MatSnackBarModule,
     MatTooltipModule,
-    MatExpansionModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatTableModule,
     MatChipsModule,
     RouterModule,
     FlexLayoutModule,
@@ -54,7 +50,13 @@ interface UsageGroup {
 })
 export class KeyManagementListComponent implements OnInit {
   displayItems: KeyDisplayItem[] = [];
-  usageGroups: UsageGroup[] = [];
+  filteredItems: KeyDisplayItem[] = [];
+  displayedColumns: string[] = ['usage', 'name', 'type', 'kmsProvider', 'rotation', 'id', 'actions'];
+
+  selectedUsageType = '';
+  selectedKeyType = '';
+  selectedKmsProvider = '';
+  availableKmsProviders: string[] = [];
 
   private readonly usageConfig: Record<
     KeyUsageType,
@@ -81,6 +83,11 @@ export class KeyManagementListComponent implements OnInit {
       icon: 'shield',
       description: 'Keys for signing trust list entries.',
     },
+    encrypt: {
+      label: 'Encryption Keys',
+      icon: 'lock',
+      description: 'Keys for encryption use cases.',
+    },
   };
 
   constructor(
@@ -96,10 +103,11 @@ export class KeyManagementListComponent implements OnInit {
     try {
       const keyChains = await this.keyChainService.getAll();
 
-      // Convert to display items
       this.displayItems = this.convertKeyChains(keyChains);
-
-      this.buildUsageGroups();
+      this.availableKmsProviders = [...new Set(this.displayItems.map((item) => item.kmsProvider))]
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b));
+      this.applyFilters();
     } catch (error) {
       console.error('Error loading keys:', error);
       this.snackBar.open('Failed to load keys', 'Dismiss', { duration: 5000 });
@@ -114,56 +122,46 @@ export class KeyManagementListComponent implements OnInit {
       type: kc.type,
       rotationEnabled: kc.rotationPolicy?.enabled || false,
       hasRootCa: kc.type === 'internalChain' && !!kc.rootCertificate,
+      kmsProvider: kc.kmsProvider,
       keyChain: kc,
     }));
   }
 
-  collapseAll(): void {
-    for (const group of this.usageGroups) {
-      group.expanded = false;
-    }
+  onFilterChange(): void {
+    this.applyFilters();
   }
 
-  private buildUsageGroups(): void {
-    const usageOrder: KeyUsageType[] = ['attestation', 'access', 'statusList', 'trustList'];
+  clearFilters(): void {
+    this.selectedUsageType = '';
+    this.selectedKeyType = '';
+    this.selectedKmsProvider = '';
+    this.applyFilters();
+  }
 
-    // Group items by usage type
-    const itemsByUsage = new Map<KeyUsageType, KeyDisplayItem[]>();
+  private applyFilters(): void {
+    this.filteredItems = this.displayItems.filter((item) => {
+      const usageMatches = !this.selectedUsageType || item.usageType === this.selectedUsageType;
+      const typeMatches = !this.selectedKeyType || item.type === this.selectedKeyType;
+      const kmsMatches = !this.selectedKmsProvider || item.kmsProvider === this.selectedKmsProvider;
 
-    for (const item of this.displayItems) {
-      if (!itemsByUsage.has(item.usageType)) {
-        itemsByUsage.set(item.usageType, []);
-      }
-      itemsByUsage.get(item.usageType)!.push(item);
-    }
-
-    // Build usage groups
-    this.usageGroups = usageOrder
-      .map((usage) => {
-        const config = this.usageConfig[usage];
-        const items = itemsByUsage.get(usage) || [];
-
-        return {
-          usage,
-          label: config.label,
-          icon: config.icon,
-          description: config.description,
-          items,
-          expanded: items.length > 0,
-        };
-      })
-      .filter((group) => group.items.length > 0);
+      return usageMatches && typeMatches && kmsMatches;
+    });
   }
 
   getDisplayName(item: KeyDisplayItem): string {
     return item.description || item.id;
   }
 
+  getUsageLabel(item: KeyDisplayItem): string {
+    return this.usageConfig[item.usageType]?.label ?? item.usageType;
+  }
+
+  getUsageIcon(item: KeyDisplayItem): string {
+    return this.usageConfig[item.usageType]?.icon ?? 'key';
+  }
+
   getTypeLabel(item: KeyDisplayItem): string {
-    if (item.type === 'internalChain') {
-      return item.rotationEnabled ? 'Internal Chain (Rotating)' : 'Internal Chain';
-    }
-    return item.rotationEnabled ? 'Standalone (Rotating)' : 'Standalone';
+    return item.type === 'internalChain' ? 'Internal Chain' : 'Standalone';
   }
 
   getTypeIcon(item: KeyDisplayItem): string {
@@ -171,10 +169,6 @@ export class KeyManagementListComponent implements OnInit {
       return 'account_tree';
     }
     return item.rotationEnabled ? 'autorenew' : 'key';
-  }
-
-  getTotalKeyCount(group: UsageGroup): number {
-    return group.items.length;
   }
 
   /**

@@ -37,7 +37,10 @@ export class KeyChainSigningService {
             ? await this.getKeyChain(tenantId, keyId)
             : await this.getFirstKeyChain(tenantId);
 
-        const adapter = this.kmsRegistry.resolve(keyChain.kmsProvider);
+        const adapter = this.kmsRegistry.resolve(
+            keyChain.kmsProvider,
+            keyChain.tenantId,
+        );
         const ref = this.refFromEntity(keyChain);
 
         return async (data: string): Promise<string> => {
@@ -60,7 +63,10 @@ export class KeyChainSigningService {
             ? await this.getKeyChain(tenantId, keyId)
             : await this.getFirstKeyChain(tenantId);
 
-        const adapter = this.kmsRegistry.resolve(keyChain.kmsProvider);
+        const adapter = this.kmsRegistry.resolve(
+            keyChain.kmsProvider,
+            keyChain.tenantId,
+        );
         const ref = this.refFromEntity(keyChain);
 
         const { b64: _b64, ...compatibleHeader } = header;
@@ -137,7 +143,10 @@ export class KeyChainSigningService {
     }
 
     private refFromEntity(keyChain: KeyChainEntity): KmsKeyRef {
-        const adapter = this.kmsRegistry.resolve(keyChain.kmsProvider);
+        const adapter = this.kmsRegistry.resolve(
+            keyChain.kmsProvider,
+            keyChain.tenantId,
+        );
         return this.refForStoredKey(
             adapter,
             keyChain.activeJwk,

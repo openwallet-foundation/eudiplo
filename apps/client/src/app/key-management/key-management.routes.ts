@@ -10,10 +10,8 @@ export const keyManagementRoutes: Routes = [
   },
   {
     path: 'providers',
-    loadComponent: () =>
-      import('./key-management-providers/key-management-providers.component').then(
-        (m) => m.KeyManagementProvidersComponent
-      ),
+    redirectTo: '/kms',
+    pathMatch: 'full',
   },
   {
     path: 'create',

@@ -22,6 +22,16 @@ configured in a single `kms.json` file inside the config folder.
 KMS providers are configured in `<CONFIG_FOLDER>/kms.json`. If no file is found,
 a single `db` provider is registered automatically.
 
+You can also define tenant-scoped providers in
+`<CONFIG_FOLDER>/<tenantId>/kms.json`.
+
+- Providers defined in the root file are available to all tenants.
+- Providers defined in a tenant file are only available for that tenant.
+- If a tenant file defines a provider with the same `id` as the root file, the
+  tenant definition overrides the root one for that tenant.
+- The tenant file can set its own `defaultProvider`; otherwise the root
+  `defaultProvider` is used.
+
 ```json
 {
     "defaultProvider": "db",

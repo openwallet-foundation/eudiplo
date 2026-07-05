@@ -2,22 +2,27 @@
   <div fxLayout="row" fxLayoutAlign="space-between center" class="header">
     <div>
       <h2>KMS Providers</h2>
-      <p class="subtitle">Configured key management systems and runtime health status.</p>
     </div>
     <div fxLayout="row" fxLayoutGap="8px">
-      <button mat-stroked-button type="button" [routerLink]="['/keys']">
-        <mat-icon>arrow_back</mat-icon>
-        Back to Keys
+      <button
+        mat-icon-button
+        color="primary"
+        type="button"
+        [disabled]="isSavingConfig"
+        (click)="openTenantConfigEditor()"
+        matTooltip="Show tenant config JSON"
+      >
+        <mat-icon>edit_note</mat-icon>
       </button>
       <button
-        mat-flat-button
+        mat-icon-button
         color="primary"
         type="button"
         (click)="refresh()"
         [disabled]="isLoading"
+        matTooltip="Refresh providers"
       >
         <mat-icon>refresh</mat-icon>
-        Refresh
       </button>
     </div>
   </div>
@@ -28,107 +33,108 @@
       <span>Loading KMS providers...</span>
     </div>
   } @else {
-    <mat-card>
-      <mat-card-content>
-        <table mat-table [dataSource]="rows" class="providers-table">
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Provider</th>
-            <td mat-cell *matCellDef="let row">
-              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
-                <span>{{ row.name }}</span>
-                @if (row.isDefault) {
-                  <mat-chip class="default-chip">Default</mat-chip>
-                }
-              </div>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef>Type</th>
-            <td mat-cell *matCellDef="let row">
-              <mat-chip>{{ row.type }}</mat-chip>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="capabilities">
-            <th mat-header-cell *matHeaderCellDef>Capabilities</th>
-            <td mat-cell *matCellDef="let row">
-              <div fxLayout="row" fxLayoutGap="6px" class="caps">
-                <mat-chip [class.cap-ok]="row.canCreate" [class.cap-off]="!row.canCreate"
-                  >create</mat-chip
-                >
-                <mat-chip [class.cap-ok]="row.canImport" [class.cap-off]="!row.canImport"
-                  >import</mat-chip
-                >
-                <mat-chip [class.cap-ok]="row.canDelete" [class.cap-off]="!row.canDelete"
-                  >delete</mat-chip
-                >
-              </div>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="algorithms">
-            <th mat-header-cell *matHeaderCellDef>Algorithms</th>
-            <td mat-cell *matCellDef="let row">
-              <div fxLayout="row" fxLayoutGap="6px" class="algs">
-                @for (alg of row.supportedAlgs; track alg) {
-                  <mat-chip>{{ alg }}</mat-chip>
-                }
-              </div>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="health">
-            <th mat-header-cell *matHeaderCellDef>Health</th>
-            <td mat-cell *matCellDef="let row">
-              @if (row.healthOk === true) {
-                <div
-                  fxLayout="row"
-                  fxLayoutAlign="start center"
-                  fxLayoutGap="6px"
-                  class="health ok"
-                >
-                  <mat-icon>check_circle</mat-icon>
-                  <span>OK</span>
-                  @if (row.latencyMs !== null) {
-                    <span class="latency">({{ row.latencyMs }} ms)</span>
-                  }
-                </div>
-              } @else if (row.healthOk === false) {
-                <div
-                  fxLayout="row"
-                  fxLayoutAlign="start center"
-                  fxLayoutGap="6px"
-                  class="health err"
-                  [matTooltip]="row.healthError || ''"
-                >
-                  <mat-icon>error</mat-icon>
-                  <span>Unavailable</span>
-                </div>
-              } @else {
-                <span class="muted">Unknown</span>
+    <div class="tenant-config">
+      <h3>Tenant KMS Configuration</h3>
+      <p class="tenant-config-subtitle">
+        Manage tenant-scoped providers (stored in assets/config/&lt;tenant&gt;/kms.json). If unset,
+        global configuration is used.
+      </p>
+    </div>
+    <div class="table-container">
+      <table mat-table [dataSource]="rows" class="providers-table mat-elevation-z8">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Provider</th>
+          <td mat-cell *matCellDef="let row">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+              <span>{{ row.name }}</span>
+              @if (row.isDefault) {
+                <mat-chip class="default-chip">Default</mat-chip>
               }
-            </td>
-          </ng-container>
+            </div>
+          </td>
+        </ng-container>
 
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Use</th>
-            <td mat-cell *matCellDef="let row">
-              <button
-                mat-button
-                type="button"
-                [routerLink]="['/keys/create']"
-                [queryParams]="{ kmsProvider: row.name }"
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let row">
+            <mat-chip>{{ row.type }}</mat-chip>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="capabilities">
+          <th mat-header-cell *matHeaderCellDef>Capabilities</th>
+          <td mat-cell *matCellDef="let row">
+            <div fxLayout="row" fxLayoutGap="6px" class="caps">
+              <mat-chip [class.cap-ok]="row.canCreate" [class.cap-off]="!row.canCreate"
+                >create</mat-chip
               >
-                Create key
-              </button>
-            </td>
-          </ng-container>
+              <mat-chip [class.cap-ok]="row.canImport" [class.cap-off]="!row.canImport"
+                >import</mat-chip
+              >
+              <mat-chip [class.cap-ok]="row.canDelete" [class.cap-off]="!row.canDelete"
+                >delete</mat-chip
+              >
+            </div>
+          </td>
+        </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-      </mat-card-content>
-    </mat-card>
+        <ng-container matColumnDef="algorithms">
+          <th mat-header-cell *matHeaderCellDef>Algorithms</th>
+          <td mat-cell *matCellDef="let row">
+            <div fxLayout="row" fxLayoutGap="6px" class="algs">
+              @for (alg of row.supportedAlgs; track alg) {
+                <mat-chip>{{ alg }}</mat-chip>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="health">
+          <th mat-header-cell *matHeaderCellDef>Health</th>
+          <td mat-cell *matCellDef="let row">
+            @if (row.healthOk === true) {
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="6px" class="health ok">
+                <mat-icon>check_circle</mat-icon>
+                <span>OK</span>
+                @if (row.latencyMs !== null) {
+                  <span class="latency">({{ row.latencyMs }} ms)</span>
+                }
+              </div>
+            } @else if (row.healthOk === false) {
+              <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="6px"
+                class="health err"
+                [matTooltip]="row.healthError || ''"
+              >
+                <mat-icon>error</mat-icon>
+                <span>Unavailable</span>
+              </div>
+            } @else {
+              <span class="muted">Unknown</span>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Use</th>
+          <td mat-cell *matCellDef="let row">
+            <button
+              mat-icon-button
+              type="button"
+              [routerLink]="['/keys/create']"
+              [queryParams]="{ kmsProvider: row.name }"
+              matTooltip="Create key with this provider"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
   }
 </div>

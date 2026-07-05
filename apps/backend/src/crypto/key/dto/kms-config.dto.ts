@@ -1,4 +1,9 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import {
+    ApiExtraModels,
+    ApiProperty,
+    ApiPropertyOptional,
+    getSchemaPath,
+} from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
     IsArray,
@@ -562,6 +567,14 @@ export type KmsProviderConfigDto =
  * }
  * ```
  */
+@ApiExtraModels(
+    DbKmsConfigDto,
+    VaultKmsConfigDto,
+    AwsKmsConfigDto,
+    Pkcs11KmsConfigDto,
+    HttpKmsConfigDto,
+    CscKmsConfigDto,
+)
 export class KmsConfigDto {
     @ApiPropertyOptional({
         description:
@@ -575,7 +588,28 @@ export class KmsConfigDto {
     @ApiProperty({
         description:
             "List of KMS provider configurations. Each provider must have a unique id and a type.",
-        type: [BaseKmsProviderConfigDto],
+        type: "array",
+        items: {
+            oneOf: [
+                { $ref: getSchemaPath(DbKmsConfigDto) },
+                { $ref: getSchemaPath(VaultKmsConfigDto) },
+                { $ref: getSchemaPath(AwsKmsConfigDto) },
+                { $ref: getSchemaPath(Pkcs11KmsConfigDto) },
+                { $ref: getSchemaPath(HttpKmsConfigDto) },
+                { $ref: getSchemaPath(CscKmsConfigDto) },
+            ],
+            discriminator: {
+                propertyName: "type",
+                mapping: {
+                    db: getSchemaPath(DbKmsConfigDto),
+                    vault: getSchemaPath(VaultKmsConfigDto),
+                    "aws-kms": getSchemaPath(AwsKmsConfigDto),
+                    pkcs11: getSchemaPath(Pkcs11KmsConfigDto),
+                    http: getSchemaPath(HttpKmsConfigDto),
+                    csc: getSchemaPath(CscKmsConfigDto),
+                },
+            },
+        },
         example: [
             { id: "db", type: "db", description: "Default database provider" },
             {

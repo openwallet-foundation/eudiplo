@@ -2314,7 +2314,8 @@ export const CredentialQuerySchema = {
     type: 'object',
     properties: {
         id: {
-            type: 'string'
+            type: 'string',
+            pattern: '^[A-Za-z0-9_-]+$'
         },
         format: {
             type: 'string'
@@ -5433,6 +5434,107 @@ export const KmsProvidersResponseDtoSchema = {
     required: [
         'providers',
         'default'
+    ]
+} as const;
+
+export const BaseKmsProviderConfigDtoSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
+            example: 'main-vault'
+        },
+        type: {
+            enum: [
+                'db',
+                'vault',
+                'aws-kms',
+                'pkcs11',
+                'http',
+                'csc'
+            ],
+            type: 'string',
+            description: 'Type of the KMS provider. Must match a supported adapter type.',
+            example: 'vault'
+        },
+        description: {
+            type: 'string',
+            description: 'Human-readable description of this provider instance.',
+            example: 'Production HashiCorp Vault for signing keys'
+        }
+    },
+    required: [
+        'id',
+        'type'
+    ]
+} as const;
+
+export const KmsConfigDtoSchema = {
+    type: 'object',
+    properties: {
+        defaultProvider: {
+            type: 'string',
+            description: 'ID of the default KMS provider. Defaults to "db" if not set.',
+            example: 'main-vault'
+        },
+        providers: {
+            description: 'List of KMS provider configurations. Each provider must have a unique id and a type.',
+            example: [
+                {
+                    id: 'db',
+                    type: 'db',
+                    description: 'Default database provider'
+                },
+                {
+                    id: 'main-vault',
+                    type: 'vault',
+                    description: 'Production Vault',
+                    vaultUrl: '${VAULT_URL}',
+                    vaultToken: '${VAULT_TOKEN}'
+                },
+                {
+                    id: 'aws',
+                    type: 'aws-kms',
+                    description: 'AWS KMS',
+                    region: '${AWS_REGION}'
+                }
+            ],
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/BaseKmsProviderConfigDto'
+            }
+        }
+    },
+    required: [
+        'providers'
+    ]
+} as const;
+
+export const KmsTenantConfigResponseDtoSchema = {
+    type: 'object',
+    properties: {
+        tenantConfig: {
+            nullable: true,
+            description: 'Tenant-specific KMS configuration from <CONFIG_FOLDER>/<tenantId>/kms.json. Null when no tenant file exists.',
+            type: 'object',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/KmsConfigDto'
+                }
+            ]
+        },
+        effectiveConfig: {
+            description: 'Effective configuration used at runtime for the tenant (global + tenant merge).',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/KmsConfigDto'
+                }
+            ]
+        }
+    },
+    required: [
+        'effectiveConfig'
     ]
 } as const;
 

@@ -17,32 +17,55 @@ const DEFAULT_PROVIDER_ID = "db";
 @Injectable()
 export class KmsConfigService {
     private readonly logger = new Logger(KmsConfigService.name);
-    private readonly config: KmsConfigDto;
+    private readonly globalConfig: KmsConfigDto;
+    private readonly tenantConfigCache = new Map<string, KmsConfigDto>();
 
     constructor(private readonly configService: ConfigService) {
-        this.config = this.loadConfig();
+        this.globalConfig = this.loadGlobalConfig();
     }
 
-    getDefaultProviderId(): string {
-        return this.config.defaultProvider || DEFAULT_PROVIDER_ID;
+    getDefaultProviderId(tenantId?: string): string {
+        return this.getConfig(tenantId).defaultProvider || DEFAULT_PROVIDER_ID;
     }
 
-    getProviders(): KmsProviderConfigDto[] {
-        return this.config.providers;
+    getProviders(tenantId?: string): KmsProviderConfigDto[] {
+        return this.getConfig(tenantId).providers;
     }
 
-    getConfig(): KmsConfigDto {
-        return this.config;
+    getConfig(tenantId?: string): KmsConfigDto {
+        if (!tenantId) {
+            return this.globalConfig;
+        }
+
+        const cached = this.tenantConfigCache.get(tenantId);
+        if (cached) {
+            return cached;
+        }
+
+        const tenantConfig = this.loadTenantConfig(tenantId);
+        const merged = tenantConfig
+            ? mergeConfigs(this.globalConfig, tenantConfig)
+            : this.globalConfig;
+        this.tenantConfigCache.set(tenantId, merged);
+        return merged;
     }
 
-    private loadConfig(): KmsConfigDto {
-        const configFolder = this.configService.get<string>("CONFIG_FOLDER");
-        const path = configFolder ? join(configFolder, "kms.json") : null;
-        if (!path || !existsSync(path)) {
+    invalidateTenantCache(tenantId: string): void {
+        this.tenantConfigCache.delete(tenantId);
+    }
+
+    invalidateAllCaches(): void {
+        this.tenantConfigCache.clear();
+    }
+
+    private loadGlobalConfig(): KmsConfigDto {
+        const globalPath = this.resolveConfigPath();
+        if (!globalPath) {
             return defaultConfig();
         }
+
         try {
-            const raw = readFileSync(path, "utf8");
+            const raw = readFileSync(globalPath, "utf8");
             const parsed = JSON.parse(raw) as KmsConfigDto;
             return resolveEnvPlaceholders(parsed) as KmsConfigDto;
         } catch (err) {
@@ -51,6 +74,37 @@ export class KmsConfigService {
             );
             return defaultConfig();
         }
+    }
+
+    private loadTenantConfig(tenantId: string): KmsConfigDto | null {
+        const tenantPath = this.resolveConfigPath(tenantId);
+        if (!tenantPath) {
+            return null;
+        }
+
+        try {
+            const raw = readFileSync(tenantPath, "utf8");
+            const parsed = JSON.parse(raw) as KmsConfigDto;
+            return resolveEnvPlaceholders(parsed) as KmsConfigDto;
+        } catch (err) {
+            this.logger.warn(
+                `Failed to read tenant kms.json for '${tenantId}', using global config: ${String(err)}`,
+            );
+            return null;
+        }
+    }
+
+    private resolveConfigPath(tenantId?: string): string | null {
+        const configFolder = this.configService.get<string>("CONFIG_FOLDER");
+        if (!configFolder) {
+            return null;
+        }
+
+        const path = tenantId
+            ? join(configFolder, tenantId, "kms.json")
+            : join(configFolder, "kms.json");
+
+        return existsSync(path) ? path : null;
     }
 }
 
@@ -64,6 +118,23 @@ function defaultConfig(): KmsConfigDto {
                 description: "Default database provider",
             },
         ],
+    };
+}
+
+function mergeConfigs(global: KmsConfigDto, tenant: KmsConfigDto): KmsConfigDto {
+    const mergedProviders = new Map<string, KmsProviderConfigDto>();
+
+    for (const provider of global.providers ?? []) {
+        mergedProviders.set(provider.id, provider);
+    }
+
+    for (const provider of tenant.providers ?? []) {
+        mergedProviders.set(provider.id, provider);
+    }
+
+    return {
+        defaultProvider: tenant.defaultProvider || global.defaultProvider,
+        providers: [...mergedProviders.values()],
     };
 }
 

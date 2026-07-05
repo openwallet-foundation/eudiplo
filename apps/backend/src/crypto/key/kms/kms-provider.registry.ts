@@ -34,8 +34,20 @@ const DEFAULT_PROVIDER_ID = "db";
 @Injectable()
 export class KmsProviderRegistry implements OnModuleInit {
     private readonly logger = new Logger(KmsProviderRegistry.name);
-    private readonly adapters = new Map<string, KmsAdapter>();
-    private defaultProviderId: string = DEFAULT_PROVIDER_ID;
+    private globalBundle: {
+        adapters: Map<string, KmsAdapter>;
+        defaultProviderId: string;
+    } = {
+        adapters: new Map<string, KmsAdapter>(),
+        defaultProviderId: DEFAULT_PROVIDER_ID,
+    };
+    private readonly tenantBundles = new Map<
+        string,
+        {
+            adapters: Map<string, KmsAdapter>;
+            defaultProviderId: string;
+        }
+    >();
 
     constructor(
         private readonly kmsConfig: KmsConfigService,
@@ -43,23 +55,10 @@ export class KmsProviderRegistry implements OnModuleInit {
     ) {}
 
     onModuleInit(): void {
-        this.defaultProviderId =
-            this.kmsConfig.getDefaultProviderId() || DEFAULT_PROVIDER_ID;
-
-        for (const provider of this.kmsConfig.getProviders()) {
-            this.adapters.set(provider.id, this.instantiate(provider));
-        }
-
-        // Always ensure a default db adapter exists.
-        if (!this.adapters.has(DEFAULT_PROVIDER_ID)) {
-            this.adapters.set(
-                DEFAULT_PROVIDER_ID,
-                new DbKmsAdapter(DEFAULT_PROVIDER_ID),
-            );
-        }
+        this.globalBundle = this.buildBundle();
 
         this.logger.log(
-            `Registered KMS providers: ${[...this.adapters.keys()].join(", ")} (default: ${this.defaultProviderId})`,
+            `Registered global KMS providers: ${[...this.globalBundle.adapters.keys()].join(", ")} (default: ${this.globalBundle.defaultProviderId})`,
         );
 
         // Install our KMS-aware crypto provider so @peculiar/x509 routes
@@ -69,37 +68,39 @@ export class KmsProviderRegistry implements OnModuleInit {
     }
 
     /** Resolve an adapter by provider id. Throws if not registered. */
-    resolve(providerId?: string): KmsAdapter {
-        const id = providerId || this.defaultProviderId;
-        const adapter = this.adapters.get(id);
+    resolve(providerId?: string, tenantId?: string): KmsAdapter {
+        const bundle = this.getBundle(tenantId);
+        const id = providerId || bundle.defaultProviderId;
+        const adapter = bundle.adapters.get(id);
         if (!adapter) {
             throw new BadRequestException(
-                `Unknown KMS provider '${id}'. Configured providers: ${[...this.adapters.keys()].join(", ")}`,
+                `Unknown KMS provider '${id}'. Configured providers: ${[...bundle.adapters.keys()].join(", ")}`,
             );
         }
         return adapter;
     }
 
-    getDefault(): KmsAdapter {
-        return this.resolve(this.defaultProviderId);
+    getDefault(tenantId?: string): KmsAdapter {
+        return this.resolve(undefined, tenantId);
     }
 
     /** Return the public view of registered providers (for the API). */
-    list(): KmsProvidersResponseDto {
-        const providers: KmsProviderInfoDto[] = [...this.adapters.values()].map(
-            (a) => ({
-                name: a.providerId,
-                type: a.type,
-                capabilities: a.capabilities,
-            }),
-        );
-        return { providers, default: this.defaultProviderId };
+    list(tenantId?: string): KmsProvidersResponseDto {
+        const bundle = this.getBundle(tenantId);
+        const providers: KmsProviderInfoDto[] = [
+            ...bundle.adapters.values(),
+        ].map((a) => ({
+            name: a.providerId,
+            type: a.type,
+            capabilities: a.capabilities,
+        }));
+        return { providers, default: bundle.defaultProviderId };
     }
 
     /**
      * Run the health probe for every registered adapter in parallel.
      */
-    async health(): Promise<
+    async health(tenantId?: string): Promise<
         Array<{
             providerId: string;
             type: string;
@@ -108,7 +109,8 @@ export class KmsProviderRegistry implements OnModuleInit {
             error?: string;
         }>
     > {
-        const entries = [...this.adapters.values()];
+        const bundle = this.getBundle(tenantId);
+        const entries = [...bundle.adapters.values()];
         return Promise.all(
             entries.map(async (a) => {
                 const result = await a.health();
@@ -119,6 +121,51 @@ export class KmsProviderRegistry implements OnModuleInit {
                 };
             }),
         );
+    }
+
+    private getBundle(tenantId?: string): {
+        adapters: Map<string, KmsAdapter>;
+        defaultProviderId: string;
+    } {
+        if (!tenantId) {
+            return this.globalBundle;
+        }
+
+        const cached = this.tenantBundles.get(tenantId);
+        if (cached) {
+            return cached;
+        }
+
+        const bundle = this.buildBundle(tenantId);
+        this.tenantBundles.set(tenantId, bundle);
+        return bundle;
+    }
+
+    private buildBundle(tenantId?: string): {
+        adapters: Map<string, KmsAdapter>;
+        defaultProviderId: string;
+    } {
+        const adapters = new Map<string, KmsAdapter>();
+        const defaultProviderId =
+            this.kmsConfig.getDefaultProviderId(tenantId) || DEFAULT_PROVIDER_ID;
+
+        for (const provider of this.kmsConfig.getProviders(tenantId)) {
+            adapters.set(provider.id, this.instantiate(provider));
+        }
+
+        // Always ensure a default db adapter exists.
+        if (!adapters.has(DEFAULT_PROVIDER_ID)) {
+            adapters.set(DEFAULT_PROVIDER_ID, new DbKmsAdapter(DEFAULT_PROVIDER_ID));
+        }
+
+        return {
+            adapters,
+            defaultProviderId,
+        };
+    }
+
+    invalidateTenant(tenantId: string): void {
+        this.tenantBundles.delete(tenantId);
     }
 
     private instantiate(provider: KmsProviderConfigDto): KmsAdapter {
