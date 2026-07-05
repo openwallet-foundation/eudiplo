@@ -100,4 +100,30 @@ describe('IssuanceOfferComponent', () => {
       'eu.europa.ec.eudi.pid.1': { given_name: 'Ada' },
     });
   });
+
+  it('includes internal and external authorization server options for pre-authorized flow', () => {
+    component.availableManagedAuthorizationServers = [
+      { value: 'authorization-server:pid-auth', label: 'PID Auth Server' },
+    ];
+    component.availableAuthServers = ['https://auth.example.com'];
+    component.hasChainedAuthorizationServer = true;
+
+    expect(component.preAuthAuthorizationServerOptions).toEqual([
+      { value: 'authorization-server:pid-auth', label: 'PID Auth Server' },
+      { value: 'https://auth.example.com', label: 'https://auth.example.com' },
+      { value: 'chained-as', label: 'Chained Authorization Server' },
+      { value: 'built-in', label: 'Built-in Authorization Server' },
+    ]);
+  });
+
+  it('defaults pre-authorized flow authorization server to built-in', () => {
+    component.availableManagedAuthorizationServers = [
+      { value: 'authorization-server:pid-auth', label: 'PID Auth Server' },
+    ];
+    component.availableAuthServers = ['https://auth.example.com'];
+
+    const defaultServer = (component as any).getDefaultAuthServerForFlow('pre_authorized_code');
+
+    expect(defaultServer).toBe('built-in');
+  });
 });

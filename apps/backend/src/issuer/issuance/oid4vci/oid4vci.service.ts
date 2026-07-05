@@ -779,23 +779,9 @@ export class Oid4vciService {
                     tenantId,
                     body.authorization_server,
                 );
-
-            // Pre-authorized flow should only target external AS URLs when overridden.
-            if (selectedAuthorizationServer) {
-                const externalAuthorizationServers =
-                    await this.authorizationServersService.getExternalAuthorizationServerUrls(
-                        tenantId,
-                    );
-                if (
-                    !externalAuthorizationServers.includes(
-                        selectedAuthorizationServer,
-                    )
-                ) {
-                    throw new BadRequestException(
-                        "Pre-authorized code flow accepts only configured external authorization servers",
-                    );
-                }
-            }
+            const authServer =
+                selectedAuthorizationServer ??
+                this.authzService.getAuthzIssuer(tenantId);
 
             grants = {
                 [preAuthorizedCodeGrantIdentifier]: {
@@ -809,9 +795,7 @@ export class Oid4vciService {
                               description: body.tx_code_description,
                           }
                         : undefined,
-                    authorization_server:
-                        selectedAuthorizationServer ||
-                        this.authzService.getAuthzIssuer(tenantId),
+                    authorization_server: authServer,
                 } as CredentialOfferPreAuthorizedCodeGrant,
             };
         } else {
