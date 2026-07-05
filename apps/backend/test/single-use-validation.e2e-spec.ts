@@ -117,6 +117,38 @@ describe("Single-Use Validation (Issue #503) - OID4VCI", () => {
         // Covered in issuance e2e tests where credentials are requested with proofs.
         expect(true).toBe(true);
     });
+
+    test("should allow resolving credential_offer_uri only once", async () => {
+        const offerRes = await request(app.getHttpServer())
+            .post("/issuer/offer")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                response_type: "uri",
+                credentialConfigurationIds: ["pid-no-key"],
+                flow: "authorization_code",
+            })
+            .expect(201);
+
+        const offerUri = new URL(offerRes.body.uri);
+        const credentialOfferUri = offerUri.searchParams.get(
+            "credential_offer_uri",
+        );
+
+        expect(credentialOfferUri).toBeDefined();
+
+        const firstFetch = await request(app.getHttpServer())
+            .get(new URL(credentialOfferUri as string).pathname)
+            .trustLocalhost()
+            .expect(200);
+
+        expect(firstFetch.body.credential_issuer).toContain("/issuers/");
+
+        await request(app.getHttpServer())
+            .get(new URL(credentialOfferUri as string).pathname)
+            .trustLocalhost()
+            .expect(404);
+    });
 });
 
 describe("Single-Use Validation (Issue #503) - OID4VP", () => {

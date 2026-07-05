@@ -140,7 +140,7 @@ export class Session {
      * Encrypted at rest.
      */
     @Column("text", { nullable: true, transformer: EncryptedJsonTransformer })
-    offer?: CredentialOfferObject;
+    offer?: CredentialOfferObject | null;
 
     /**
      * Offer URL for the credential offer.

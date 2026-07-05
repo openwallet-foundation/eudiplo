@@ -165,6 +165,31 @@ export class SessionService implements OnApplicationBootstrap {
     }
 
     /**
+     * Consume a credential offer stored on a session by clearing the `offer`
+     * payload only if it is still present.
+     *
+     * Returns true when the offer was consumed, false when it was already
+     * consumed or the session did not match.
+     */
+    async consumeOfferByReference(
+        sessionId: string,
+        tenantId: string,
+    ): Promise<boolean> {
+        const result = await this.sessionRepository.update(
+            {
+                id: sessionId,
+                tenantId,
+                offer: Not(IsNull()),
+            },
+            {
+                offer: null,
+            },
+        );
+
+        return (result.affected ?? 0) > 0;
+    }
+
+    /**
      * Get sessions with pagination and optional filtering.
      * @param tenantId
      * @param query - Pagination and filter parameters
