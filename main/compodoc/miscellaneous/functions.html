@@ -156,6 +156,9 @@
                             <a href="#applyLeafSchema" title="src/issuer/configuration/credentials/utils/derive.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>applyLeafSchema</b>&nbsp;&nbsp;&nbsp;(src/.../derive.ts)</span></a>
                         </li>
                         <li>
+                            <a href="#applyTrustedAuthoritiesPolicy" title="src/verifier/oid4vp/dcql-trusted-authorities.util.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>applyTrustedAuthoritiesPolicy</b>&nbsp;&nbsp;&nbsp;(src/.../dcql-trusted-authorities.util.ts)</span></a>
+                        </li>
+                        <li>
                             <a href="#arrayBufferToHex" title="src/shared/trust/x509-validation.service.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>arrayBufferToHex</b>&nbsp;&nbsp;&nbsp;(src/.../x509-validation.service.ts)</span></a>
                         </li>
                         <li>
@@ -2778,6 +2781,108 @@ This is a type assertion helper since our types are derived from the SDK</p>
                         </div>
                             <div class="io-description">
                                 
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <h3>src/verifier/oid4vp/dcql-trusted-authorities.util.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="applyTrustedAuthoritiesPolicy"></a>
+                    <span class="name">
+                        <span ><b>applyTrustedAuthoritiesPolicy</b></span>
+                        <a href="#applyTrustedAuthoritiesPolicy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>applyTrustedAuthoritiesPolicy&lt;T extends { credentials: Array<Record<string, unknown>> }&gt;(dcqlQuery: T, removeTrustedAuthorities: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <b>Type parameters :</b>
+                            <ul class="type-parameters">
+                                    <li>T extends { credentials: Array&lt;Record&lt;string, unknown&gt;&gt; }</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Conditionally strips <code>trusted_authorities</code> from each credential query in a
+DCQL query object.</p>
+<p>Some wallets do not yet correctly handle <code>trusted_authorities</code> in the DCQL
+query of an OID4VP authorization request. <code>removeTrustedAuthorities</code> is an
+escape hatch (controlled by the <code>VP_REMOVE_TA</code> env flag) for deployments
+that need to work around such wallets; it is disabled by default so
+<code>trusted_authorities</code> is sent to wallets as configured.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>dcqlQuery</td>
+                                            <td>
+                                                        <code>T</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>the DCQL query to (optionally) strip trusted_authorities from</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>removeTrustedAuthorities</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>when true, strips trusted_authorities from every credential</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>T</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>a DCQL query with credentials stripped of trusted_authorities when removeTrustedAuthorities is true, otherwise the original query</p>
+
                             </div>
                 </td>
             </tr>

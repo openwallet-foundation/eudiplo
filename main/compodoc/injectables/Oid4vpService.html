@@ -262,7 +262,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:30</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:31</a></div>
                             </td>
                         </tr>
 
@@ -467,8 +467,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="121"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:121</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="122"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:122</a></div>
                         </td>
                     </tr>
 
@@ -572,8 +572,8 @@ It initializes the session logging context and logs the start of the flow.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="341"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:341</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="344"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:344</a></div>
                         </td>
                     </tr>
 
@@ -699,8 +699,8 @@ It initializes the session logging context and logs the start of the flow.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="70"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:70</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="71"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:71</a></div>
                         </td>
                     </tr>
 
@@ -814,8 +814,8 @@ session creation, which is essential for transaction_data hash validation.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="461"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:461</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="464"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:464</a></div>
                         </td>
                     </tr>
 
@@ -908,8 +908,8 @@ from the URL path (not the session ID).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="317"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:317</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="320"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:320</a></div>
                         </td>
                     </tr>
 
@@ -978,8 +978,8 @@ from the URL path (not the session ID).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="53"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:53</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="54"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:54</a></div>
                         </td>
                     </tr>
 
@@ -1058,7 +1058,7 @@ compatibility with sessions created before the walletNonce migration.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:36</a></div>
                         </td>
                     </tr>
 
@@ -1096,6 +1096,7 @@ import { WebhookService } from &quot;../../shared/utils/webhook/webhook.service&
 import { AuthResponse } from &quot;../presentations/dto/auth-response.dto&quot;;
 import { IncompletePresentationException } from &quot;../presentations/exceptions/incomplete-presentation.exception&quot;;
 import { PresentationsService } from &quot;../presentations/presentations.service&quot;;
+import { applyTrustedAuthoritiesPolicy } from &quot;./dcql-trusted-authorities.util&quot;;
 import { AuthorizationResponse } from &quot;./dto/authorization-response.dto&quot;;
 import { PresentationRequestOptions } from &quot;./dto/presentation-request.dto&quot;;
 
@@ -1237,18 +1238,20 @@ export class Oid4vpService {
                 );
             let regCert: string | undefined &#x3D; undefined;
 
-            const dcql_query &#x3D; JSON.parse(
+            let dcql_query &#x3D; JSON.parse(
                 JSON.stringify(presentationConfig.dcql_query).replaceAll(
                     &quot;&lt;TENANT_URL&gt;&quot;,
                     tenantHost,
                 ),
             );
 
-            //remove trusted_authorities from dcql
-            dcql_query.credentials &#x3D; dcql_query.credentials.map((cred: any) &#x3D;&gt; {
-                const { trusted_authorities, ...rest } &#x3D; cred;
-                return rest;
-            });
+            // Some wallets do not yet handle trusted_authorities correctly.
+            // VP_REMOVE_TA is an escape hatch to strip it from the DCQL query
+            // sent to wallets; disabled by default.
+            dcql_query &#x3D; applyTrustedAuthoritiesPolicy(
+                dcql_query,
+                !!this.configService.get&lt;boolean&gt;(&quot;VP_REMOVE_TA&quot;),
+            );
 
             if (
                 presentationConfig.registration_cert &amp;&amp;
