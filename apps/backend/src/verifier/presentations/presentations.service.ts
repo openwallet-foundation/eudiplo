@@ -1389,9 +1389,8 @@ export class PresentationsService {
                     dcqlCredential.claims,
                     type,
                 );
-                const claimSelections = this.getCredentialClaimSelections(
-                    dcqlCredential,
-                );
+                const claimSelections =
+                    this.getCredentialClaimSelections(dcqlCredential);
                 const hasClaimSets =
                     !!dcqlCredential.claim_sets &&
                     dcqlCredential.claim_sets.length > 0;
@@ -1656,8 +1655,9 @@ export class PresentationsService {
 
         const claimsById = new Map(
             claims
-                .filter((claim): claim is ClaimsQuery & { id: string } =>
-                    typeof claim.id === "string" && claim.id.trim() !== "",
+                .filter(
+                    (claim): claim is ClaimsQuery & { id: string } =>
+                        typeof claim.id === "string" && claim.id.trim() !== "",
                 )
                 .map((claim) => [claim.id, claim] as const),
         );
@@ -1706,7 +1706,9 @@ export class PresentationsService {
             return this.verifySdJwtCredentialValue(options);
         }
 
-        throw new ConflictException(`Unsupported credential type: ${options.type}`);
+        throw new ConflictException(
+            `Unsupported credential type: ${options.type}`,
+        );
     }
 
     private async verifyMdocCredentialValue(options: {
@@ -1741,9 +1743,7 @@ export class PresentationsService {
             protocol: "openid4vp" as const,
             responseMode:
                 options.requestObjectSessionData?.response_mode ??
-                (options.session.useDcApi
-                    ? "dc_api.jwt"
-                    : "direct_post.jwt"),
+                (options.session.useDcApi ? "dc_api.jwt" : "direct_post.jwt"),
             jwkThumbprint: options.requestObjectJwkThumbprint,
         };
 
@@ -1884,12 +1884,13 @@ export class PresentationsService {
         });
 
         if (options.hasClaimSets) {
-            const matchingSelection = options.claimSelections.find((selectedClaims) =>
-                this.matchesClaimSelection(
-                    (result.payload ?? {}) as Record<string, unknown>,
-                    options.dcqlCredential.claims,
-                    selectedClaims,
-                ),
+            const matchingSelection = options.claimSelections.find(
+                (selectedClaims) =>
+                    this.matchesClaimSelection(
+                        (result.payload ?? {}) as Record<string, unknown>,
+                        options.dcqlCredential.claims,
+                        selectedClaims,
+                    ),
             );
 
             if (!matchingSelection) {
@@ -1910,7 +1911,9 @@ export class PresentationsService {
         this.logger.debug(
             {
                 credentialId: options.attId,
-                requiredClaimKeys: options.hasClaimSets ? [] : options.requiredClaimKeys,
+                requiredClaimKeys: options.hasClaimSets
+                    ? []
+                    : options.requiredClaimKeys,
                 disclosedClaimKeys: Object.keys(result.payload ?? {}),
             },
             "SD-JWT-VC disclosed claims after verification",
@@ -1918,7 +1921,9 @@ export class PresentationsService {
         this.logger.trace(
             {
                 credentialId: options.attId,
-                requiredClaimKeys: options.hasClaimSets ? [] : options.requiredClaimKeys,
+                requiredClaimKeys: options.hasClaimSets
+                    ? []
+                    : options.requiredClaimKeys,
                 disclosedClaims: result.payload,
             },
             "[TRACE] SD-JWT-VC full disclosed claims payload",
@@ -1955,7 +1960,9 @@ export class PresentationsService {
         };
 
         const reason =
-            (result.failureType ? reasonByType[result.failureType] : undefined) ||
+            (result.failureType
+                ? reasonByType[result.failureType]
+                : undefined) ||
             result.failureReason ||
             "mDOC verification failed";
 

@@ -65,9 +65,7 @@ export class TrustedAuthorityQuery {
 }
 
 @ValidatorConstraint({ name: "claimSetsConsistency", async: false })
-class ClaimSetsConsistencyConstraint
-    implements ValidatorConstraintInterface
-{
+class ClaimSetsConsistencyConstraint implements ValidatorConstraintInterface {
     validate(claimSets: string[][] | undefined, args: ValidationArguments) {
         if (!claimSets || claimSets.length === 0) {
             return true;
@@ -80,9 +78,7 @@ class ClaimSetsConsistencyConstraint
         }
 
         const claimIds = claims.map((claim) => claim.id);
-        if (
-            claimIds.some((id) => typeof id !== "string" || id.trim() === "")
-        ) {
+        if (claimIds.some((id) => typeof id !== "string" || id.trim() === "")) {
             return false;
         }
 
@@ -98,8 +94,7 @@ class ClaimSetsConsistencyConstraint
                 new Set(claimSet).size === claimSet.length &&
                 claimSet.every(
                     (claimId) =>
-                        typeof claimId === "string" &&
-                        claimIdSet.has(claimId),
+                        typeof claimId === "string" && claimIdSet.has(claimId),
                 ),
         );
     }
