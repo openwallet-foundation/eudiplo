@@ -16,6 +16,9 @@ import {
     IsString,
     Validate,
     ValidateNested,
+    ValidationArguments,
+    ValidatorConstraint,
+    ValidatorConstraintInterface,
 } from "class-validator";
 import {
     Column,
@@ -61,6 +64,51 @@ export class TrustedAuthorityQuery {
     values!: string[];
 }
 
+@ValidatorConstraint({ name: "claimSetsConsistency", async: false })
+class ClaimSetsConsistencyConstraint
+    implements ValidatorConstraintInterface
+{
+    validate(claimSets: string[][] | undefined, args: ValidationArguments) {
+        if (!claimSets || claimSets.length === 0) {
+            return true;
+        }
+
+        const credentialQuery = args.object as CredentialQuery;
+        const claims = credentialQuery.claims;
+        if (!claims || claims.length === 0) {
+            return false;
+        }
+
+        const claimIds = claims.map((claim) => claim.id);
+        if (
+            claimIds.some((id) => typeof id !== "string" || id.trim() === "")
+        ) {
+            return false;
+        }
+
+        if (new Set(claimIds).size !== claimIds.length) {
+            return false;
+        }
+
+        const claimIdSet = new Set(claimIds);
+        return claimSets.every(
+            (claimSet) =>
+                Array.isArray(claimSet) &&
+                claimSet.length > 0 &&
+                new Set(claimSet).size === claimSet.length &&
+                claimSet.every(
+                    (claimId) =>
+                        typeof claimId === "string" &&
+                        claimIdSet.has(claimId),
+                ),
+        );
+    }
+
+    defaultMessage() {
+        return "claim_sets requires claims to be present, each claim to define a unique id, and every claim_set entry to reference ids from claims.";
+    }
+}
+
 //TODO: extend: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-credential-query
 export class CredentialQuery {
     @IsString()
@@ -81,6 +129,17 @@ export class CredentialQuery {
     @ValidateNested({ each: true })
     @Type(() => ClaimsQuery)
     claims?: ClaimsQuery[];
+
+    @IsOptional()
+    @IsArray()
+    @Validate(ClaimSetsConsistencyConstraint)
+    @ApiPropertyOptional({
+        type: "array",
+        items: { type: "array", items: { type: "string" } },
+        description:
+            "Ordered alternative claim combinations for this credential query.",
+    })
+    claim_sets?: string[][];
 
     @IsObject()
     meta!: any;

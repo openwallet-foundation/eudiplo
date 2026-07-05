@@ -150,6 +150,98 @@ describe("Presentation - SD-JWT Credential", () => {
         expect(submitRes.response.status).toBe(200);
     });
 
+    test("present sd jwt credential using claim_sets preference order", async () => {
+        await request(app.getHttpServer())
+            .post("/verifier/config")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                id: "pid-claim-sets",
+                description: "PID with alternative claim sets",
+                dcql_query: {
+                    credentials: [
+                        {
+                            id: "pid",
+                            format: "dc+sd-jwt",
+                            meta: {
+                                vct_values: [
+                                    "<TENANT_URL>/credentials-metadata/vct/pid",
+                                ],
+                            },
+                            claims: [
+                                { id: "birthdate", path: ["birthdate"] },
+                                {
+                                    id: "locality",
+                                    path: ["address", "locality"],
+                                },
+                                {
+                                    id: "postal_code",
+                                    path: ["address", "postal_code"],
+                                },
+                            ],
+                            claim_sets: [
+                                ["postal_code"],
+                                ["birthdate", "locality"],
+                            ],
+                        },
+                    ],
+                },
+            })
+            .expect(201);
+
+        const requestBody: PresentationRequest = {
+            response_type: ResponseType.URI,
+            requestId: "pid-claim-sets",
+        };
+
+        const res = await createPresentationRequest(
+            app,
+            authToken,
+            requestBody,
+        );
+
+        const authRequest = client.parseOpenid4vpAuthorizationRequest({
+            authorizationRequest: res.body.uri,
+        });
+
+        const resolved = await client.resolveOpenId4vpAuthorizationRequest({
+            authorizationRequestPayload: authRequest.params,
+            responseMode: { type: "direct_post" },
+        });
+
+        const vp_token = await preparePresentation(
+            {
+                iat: Math.floor(Date.now() / 1000),
+                aud: resolved.authorizationRequestPayload.client_id as string,
+                nonce: resolved.authorizationRequestPayload.nonce,
+            },
+            privateIssuerKey,
+            issuerCertChain,
+            statusListService,
+            credentialConfigId,
+        );
+
+        const jwt = await encryptVpToken(vp_token, "pid", resolved);
+
+        const authorizationResponse =
+            await client.createOpenid4vpAuthorizationResponse({
+                authorizationRequestPayload: authRequest.params,
+                authorizationResponsePayload: {
+                    response: jwt,
+                },
+                ...callbacks,
+            });
+
+        const submitRes = await client.submitOpenid4vpAuthorizationResponse({
+            authorizationResponsePayload:
+                authorizationResponse.authorizationResponsePayload,
+            authorizationRequestPayload:
+                resolved.authorizationRequestPayload as Openid4vpAuthorizationRequest,
+        });
+
+        expect(submitRes.response.status).toBe(200);
+    });
+
     test("present sd jwt credential with A256GCM encryption", async () => {
         const requestBody: PresentationRequest = {
             response_type: ResponseType.URI,

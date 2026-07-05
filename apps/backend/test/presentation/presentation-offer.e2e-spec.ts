@@ -84,6 +84,32 @@ describe("Presentation - Offer Creation", () => {
             });
     });
 
+    test("rejects presentation configs with claim_sets but no claim ids", async () => {
+        await request(app.getHttpServer())
+            .post("/verifier/config")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                id: "invalid-claim-sets",
+                description: "Invalid claim_sets config",
+                dcql_query: {
+                    credentials: [
+                        {
+                            id: "pid",
+                            format: "dc+sd-jwt",
+                            meta: {
+                                vct_values: [
+                                    "<TENANT_URL>/credentials-metadata/vct/pid",
+                                ],
+                            },
+                            claim_sets: [["birthdate"]],
+                        },
+                    ],
+                },
+            })
+            .expect(400);
+    });
+
     test("client_id in offer URI matches the accessKeyChainId certificate when multiple access keys exist", async () => {
         // A second access key chain with a distinct certificate (different from the fixture default)
         const secondKeyMaterial = {

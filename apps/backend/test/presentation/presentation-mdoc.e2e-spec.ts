@@ -32,7 +32,6 @@ describe("Presentation - mDOC Credential", () => {
     let privateIssuerKey: CryptoKey;
     let issuerCert: string;
     let ctx: PresentationTestContext;
-
     let client: Openid4vpClient;
 
     function computeJwkThumbprint(jwks?: {
@@ -176,6 +175,122 @@ describe("Presentation - mDOC Credential", () => {
         });
 
         expect(submitRes).toBeDefined();
+        expect(submitRes.response.status).toBe(200);
+    });
+
+    test("present mso mdoc credential using claim_sets preference order", async () => {
+        await request(app.getHttpServer())
+            .post("/verifier/config")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                id: "pid-mdoc-claim-sets",
+                description: "mDOC with alternative claim sets",
+                dcql_query: {
+                    credentials: [
+                        {
+                            id: "pid-mso-mdoc",
+                            format: "mso_mdoc",
+                            meta: {
+                                doctype_value: "eu.europa.ec.eudi.pid.1",
+                            },
+                            claims: [
+                                {
+                                    id: "given_name",
+                                    path: [
+                                        "eu.europa.ec.eudi.pid.1",
+                                        "given_name",
+                                    ],
+                                },
+                                {
+                                    id: "family_name",
+                                    path: [
+                                        "eu.europa.ec.eudi.pid.1",
+                                        "family_name",
+                                    ],
+                                },
+                                {
+                                    id: "first_name",
+                                    path: [
+                                        "eu.europa.ec.eudi.pid.1",
+                                        "first_name",
+                                    ],
+                                },
+                                {
+                                    id: "last_name",
+                                    path: [
+                                        "eu.europa.ec.eudi.pid.1",
+                                        "last_name",
+                                    ],
+                                },
+                                {
+                                    id: "postal_code",
+                                    path: [
+                                        "eu.europa.ec.eudi.pid.1",
+                                        "postal_code",
+                                    ],
+                                },
+                            ],
+                            claim_sets: [
+                                ["postal_code"],
+                                ["given_name", "family_name"],
+                            ],
+                        },
+                    ],
+                },
+            })
+            .expect(201);
+
+        const res = await request(app.getHttpServer())
+            .post("/verifier/offer")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                response_type: ResponseType.URI,
+                requestId: "pid-mdoc-claim-sets",
+            })
+            .expect(201);
+
+        const authRequest = client.parseOpenid4vpAuthorizationRequest({
+            authorizationRequest: res.body.uri,
+        });
+
+        const resolved = await client.resolveOpenId4vpAuthorizationRequest({
+            authorizationRequestPayload: authRequest.params,
+            responseMode: { type: "direct_post" },
+        });
+
+        const vp_token = await prepareMdocPresentation(
+            resolved.authorizationRequestPayload.nonce,
+            privateIssuerKey,
+            issuerCert,
+            resolved.authorizationRequestPayload.client_id!,
+            resolved.authorizationRequestPayload.response_uri as string,
+            resolved.authorizationRequestPayload.response_mode ??
+                "direct_post.jwt",
+            computeJwkThumbprint(
+                resolved.authorizationRequestPayload.client_metadata?.jwks,
+            ),
+        );
+
+        const jwt = await encryptVpToken(vp_token, "pid-mso-mdoc", resolved);
+
+        const authorizationResponse =
+            await client.createOpenid4vpAuthorizationResponse({
+                authorizationRequestPayload: authRequest.params,
+                authorizationResponsePayload: {
+                    response: jwt,
+                },
+                ...callbacks,
+            });
+
+        const submitRes = await client.submitOpenid4vpAuthorizationResponse({
+            authorizationResponsePayload:
+                authorizationResponse.authorizationResponsePayload,
+            authorizationRequestPayload:
+                resolved.authorizationRequestPayload as Openid4vpAuthorizationRequest,
+        });
+
         expect(submitRes.response.status).toBe(200);
     });
 

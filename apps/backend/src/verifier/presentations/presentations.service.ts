@@ -1389,119 +1389,28 @@ export class PresentationsService {
                     dcqlCredential.claims,
                     type,
                 );
+                const claimSelections = this.getCredentialClaimSelections(
+                    dcqlCredential,
+                );
+                const hasClaimSets =
+                    !!dcqlCredential.claim_sets &&
+                    dcqlCredential.claim_sets.length > 0;
 
                 const values = await Promise.all(
                     credentials.map(async (cred) => {
-                        if (type === "mso_mdoc") {
-                            const result =
-                                await this.mdocverifierService.verify(
-                                    cred,
-                                    {
-                                        nonce:
-                                            requestObjectSessionData?.nonce ??
-                                            (session.vp_nonce as string),
-                                        clientId:
-                                            requestObjectSessionData?.client_id ??
-                                            session.clientId!,
-                                        responseUri:
-                                            requestObjectSessionData?.response_uri ??
-                                            session.responseUri!,
-                                        protocol: "openid4vp",
-                                        responseMode:
-                                            requestObjectSessionData?.response_mode ??
-                                            (session.useDcApi
-                                                ? "dc_api.jwt"
-                                                : "direct_post.jwt"),
-                                        jwkThumbprint:
-                                            requestObjectJwkThumbprint,
-                                    },
-                                    verifyOptions,
-                                    dcqlCredential.claims?.map(
-                                        (claim) => claim.path,
-                                    ),
-                                );
-                            if (!result.verified) {
-                                const reasonByType: Record<string, string> = {
-                                    signature_invalid:
-                                        "mDOC signature is invalid",
-                                    no_trust_chain_to_root:
-                                        "no trust chain to a trusted root could be built",
-                                    trust_chain_not_trusted:
-                                        "certificate chain does not match any trusted entity",
-                                    x5c_missing:
-                                        "credential does not include an x5c chain but it is required",
-                                    verification_error:
-                                        "mDOC verification failed",
-                                };
-
-                                const reason =
-                                    (result.failureType
-                                        ? reasonByType[result.failureType]
-                                        : undefined) ||
-                                    result.failureReason ||
-                                    "mDOC verification failed";
-
-                                this.logger.warn(
-                                    {
-                                        credentialId: attId,
-                                        failureType: result.failureType,
-                                        failureReason: result.failureReason,
-                                    },
-                                    "mDOC verification failed",
-                                );
-
-                                throw new BadRequestException(
-                                    `mDOC verification failed for credential "${attId}": ${reason}`,
-                                );
-                            }
-
-                            // Validate all required claims are present in mDOC
-                            this.validateMdocClaims(
-                                attId,
-                                dcqlCredential.claims,
-                                result.claims,
-                            );
-
-                            return result.claims;
-                        } else if (type === "dc+sd-jwt") {
-                            const result =
-                                await this.sdjwtvcverifierService.verify(cred, {
-                                    requiredClaimKeys,
-                                    keyBindingNonce: session.vp_nonce!,
-                                    keyBindingAudience:
-                                        this.resolveSdJwtKeyBindingAudience(
-                                            session,
-                                            requestObjectSessionData,
-                                        ),
-                                    ...verifyOptions,
-                                });
-                            this.logger.debug(
-                                {
-                                    credentialId: attId,
-                                    requiredClaimKeys,
-                                    disclosedClaimKeys: Object.keys(
-                                        result.payload ?? {},
-                                    ),
-                                },
-                                "SD-JWT-VC disclosed claims after verification",
-                            );
-                            this.logger.trace(
-                                {
-                                    credentialId: attId,
-                                    requiredClaimKeys,
-                                    disclosedClaims: result.payload,
-                                },
-                                "[TRACE] SD-JWT-VC full disclosed claims payload",
-                            );
-                            return {
-                                ...result.payload,
-                                cnf: undefined,
-                                status: undefined,
-                            };
-                        }
-                        throw new ConflictException(
-                            `Unsupported credential type: ${type}`,
-                        );
+                        return this.verifyCredentialValue({
+                            cred,
+                            attId,
+                            type,
+                            session,
+                            requestObjectSessionData,
+                            requestObjectJwkThumbprint,
+                            verifyOptions,
+                            dcqlCredential,
+                            claimSelections,
+                            hasClaimSets,
+                            requiredClaimKeys,
+                        });
                     }),
                 );
 
@@ -1734,5 +1643,399 @@ export class PresentationsService {
                 { missingClaims: { [credentialId]: missingClaims } },
             );
         }
+    }
+
+    private getCredentialClaimSelections(
+        credential: CredentialQuery,
+    ): ClaimsQuery[][] {
+        const claims = credential.claims ?? [];
+
+        if (!credential.claim_sets || credential.claim_sets.length === 0) {
+            return [claims];
+        }
+
+        const claimsById = new Map(
+            claims
+                .filter((claim): claim is ClaimsQuery & { id: string } =>
+                    typeof claim.id === "string" && claim.id.trim() !== "",
+                )
+                .map((claim) => [claim.id, claim] as const),
+        );
+
+        return credential.claim_sets.map((claimSet) => {
+            const resolvedClaims = claimSet.map((claimId) => {
+                const claim = claimsById.get(claimId);
+                if (!claim) {
+                    throw new BadRequestException(
+                        `claim_sets references unknown claim id '${claimId}' for credential '${credential.id}'`,
+                    );
+                }
+                return claim;
+            });
+
+            return resolvedClaims;
+        });
+    }
+
+    private async verifyCredentialValue(options: {
+        cred: string;
+        attId: string;
+        type: CredentialType;
+        session: Session;
+        requestObjectSessionData:
+            | {
+                  nonce?: string;
+                  client_id?: string;
+                  response_uri?: string;
+                  response_mode?: string;
+                  expected_origins?: string[];
+              }
+            | undefined;
+        requestObjectJwkThumbprint: Uint8Array | undefined;
+        verifyOptions: VerifierOptions;
+        dcqlCredential: CredentialQuery;
+        claimSelections: ClaimsQuery[][];
+        hasClaimSets: boolean;
+        requiredClaimKeys: string[];
+    }): Promise<Record<string, unknown>> {
+        if (options.type === "mso_mdoc") {
+            return this.verifyMdocCredentialValue(options);
+        }
+
+        if (options.type === "dc+sd-jwt") {
+            return this.verifySdJwtCredentialValue(options);
+        }
+
+        throw new ConflictException(`Unsupported credential type: ${options.type}`);
+    }
+
+    private async verifyMdocCredentialValue(options: {
+        cred: string;
+        attId: string;
+        session: Session;
+        requestObjectSessionData:
+            | {
+                  nonce?: string;
+                  client_id?: string;
+                  response_uri?: string;
+                  response_mode?: string;
+                  expected_origins?: string[];
+              }
+            | undefined;
+        requestObjectJwkThumbprint: Uint8Array | undefined;
+        verifyOptions: VerifierOptions;
+        dcqlCredential: CredentialQuery;
+        claimSelections: ClaimsQuery[][];
+        hasClaimSets: boolean;
+    }): Promise<Record<string, unknown>> {
+        const sessionData = {
+            nonce:
+                options.requestObjectSessionData?.nonce ??
+                (options.session.vp_nonce as string),
+            clientId:
+                options.requestObjectSessionData?.client_id ??
+                options.session.clientId!,
+            responseUri:
+                options.requestObjectSessionData?.response_uri ??
+                options.session.responseUri!,
+            protocol: "openid4vp" as const,
+            responseMode:
+                options.requestObjectSessionData?.response_mode ??
+                (options.session.useDcApi
+                    ? "dc_api.jwt"
+                    : "direct_post.jwt"),
+            jwkThumbprint: options.requestObjectJwkThumbprint,
+        };
+
+        if (options.hasClaimSets) {
+            return this.verifyMdocCredentialWithClaimSets({
+                ...options,
+                sessionData,
+            });
+        }
+
+        const result = await this.mdocverifierService.verify(
+            options.cred,
+            sessionData,
+            options.verifyOptions,
+            options.dcqlCredential.claims?.map((claim) => claim.path),
+        );
+
+        if (!result.verified) {
+            this.throwMdocVerificationFailure(options.attId, result);
+        }
+
+        this.validateMdocClaims(
+            options.attId,
+            options.dcqlCredential.claims,
+            result.claims,
+        );
+
+        return result.claims;
+    }
+
+    private async verifyMdocCredentialWithClaimSets(options: {
+        cred: string;
+        attId: string;
+        sessionData: {
+            nonce: string;
+            clientId: string;
+            responseUri: string;
+            protocol: "openid4vp";
+            responseMode: string;
+            jwkThumbprint: Uint8Array | undefined;
+        };
+        verifyOptions: VerifierOptions;
+        dcqlCredential: CredentialQuery;
+        claimSelections: ClaimsQuery[][];
+    }): Promise<Record<string, unknown>> {
+        let lastVerificationFailure:
+            | {
+                  failureType?:
+                      | "signature_invalid"
+                      | "no_trust_chain_to_root"
+                      | "trust_chain_not_trusted"
+                      | "x5c_missing"
+                      | "verification_error";
+                  failureReason?: string;
+              }
+            | undefined;
+
+        for (const selectedClaims of options.claimSelections) {
+            let result;
+
+            try {
+                result = await this.mdocverifierService.verify(
+                    options.cred,
+                    options.sessionData,
+                    options.verifyOptions,
+                    selectedClaims.map((claim) => claim.path),
+                );
+            } catch (error) {
+                lastVerificationFailure = {
+                    failureType: "verification_error",
+                    failureReason:
+                        error instanceof Error ? error.message : undefined,
+                };
+
+                continue;
+            }
+
+            if (!result.verified) {
+                lastVerificationFailure = result;
+                continue;
+            }
+
+            if (this.matchesMdocClaimSelection(result.claims, selectedClaims)) {
+                return result.claims;
+            }
+        }
+
+        if (lastVerificationFailure) {
+            this.throwMdocVerificationFailure(
+                options.attId,
+                lastVerificationFailure,
+            );
+        }
+
+        throw new IncompletePresentationException(
+            `Credential "${options.attId}" does not satisfy any claim_set`,
+            {
+                missingClaims: {
+                    [options.attId]:
+                        options.dcqlCredential.claims?.map((claim) =>
+                            claim.path.join("."),
+                        ) ?? [],
+                },
+            },
+        );
+    }
+
+    private async verifySdJwtCredentialValue(options: {
+        cred: string;
+        attId: string;
+        session: Session;
+        requestObjectSessionData:
+            | {
+                  nonce?: string;
+                  client_id?: string;
+                  response_uri?: string;
+                  response_mode?: string;
+                  expected_origins?: string[];
+              }
+            | undefined;
+        requestObjectJwkThumbprint: Uint8Array | undefined;
+        verifyOptions: VerifierOptions;
+        dcqlCredential: CredentialQuery;
+        claimSelections: ClaimsQuery[][];
+        hasClaimSets: boolean;
+        requiredClaimKeys: string[];
+    }): Promise<Record<string, unknown>> {
+        const result = await this.sdjwtvcverifierService.verify(options.cred, {
+            requiredClaimKeys: options.hasClaimSets
+                ? []
+                : options.requiredClaimKeys,
+            keyBindingNonce: options.session.vp_nonce!,
+            keyBindingAudience: this.resolveSdJwtKeyBindingAudience(
+                options.session,
+                options.requestObjectSessionData,
+            ),
+            ...options.verifyOptions,
+        });
+
+        if (options.hasClaimSets) {
+            const matchingSelection = options.claimSelections.find((selectedClaims) =>
+                this.matchesClaimSelection(
+                    (result.payload ?? {}) as Record<string, unknown>,
+                    options.dcqlCredential.claims,
+                    selectedClaims,
+                ),
+            );
+
+            if (!matchingSelection) {
+                throw new IncompletePresentationException(
+                    `Credential "${options.attId}" does not satisfy any claim_set`,
+                    {
+                        missingClaims: {
+                            [options.attId]:
+                                options.dcqlCredential.claims?.map((claim) =>
+                                    claim.path.join("."),
+                                ) ?? [],
+                        },
+                    },
+                );
+            }
+        }
+
+        this.logger.debug(
+            {
+                credentialId: options.attId,
+                requiredClaimKeys: options.hasClaimSets ? [] : options.requiredClaimKeys,
+                disclosedClaimKeys: Object.keys(result.payload ?? {}),
+            },
+            "SD-JWT-VC disclosed claims after verification",
+        );
+        this.logger.trace(
+            {
+                credentialId: options.attId,
+                requiredClaimKeys: options.hasClaimSets ? [] : options.requiredClaimKeys,
+                disclosedClaims: result.payload,
+            },
+            "[TRACE] SD-JWT-VC full disclosed claims payload",
+        );
+
+        return {
+            ...result.payload,
+            cnf: undefined,
+            status: undefined,
+        };
+    }
+
+    private throwMdocVerificationFailure(
+        attId: string,
+        result: {
+            failureType?:
+                | "signature_invalid"
+                | "no_trust_chain_to_root"
+                | "trust_chain_not_trusted"
+                | "x5c_missing"
+                | "verification_error";
+            failureReason?: string;
+        },
+    ): never {
+        const reasonByType: Record<string, string> = {
+            signature_invalid: "mDOC signature is invalid",
+            no_trust_chain_to_root:
+                "no trust chain to a trusted root could be built",
+            trust_chain_not_trusted:
+                "certificate chain does not match any trusted entity",
+            x5c_missing:
+                "credential does not include an x5c chain but it is required",
+            verification_error: "mDOC verification failed",
+        };
+
+        const reason =
+            (result.failureType ? reasonByType[result.failureType] : undefined) ||
+            result.failureReason ||
+            "mDOC verification failed";
+
+        this.logger.warn(
+            {
+                credentialId: attId,
+                failureType: result.failureType,
+                failureReason: result.failureReason,
+            },
+            "mDOC verification failed",
+        );
+
+        throw new BadRequestException(
+            `mDOC verification failed for credential "${attId}": ${reason}`,
+        );
+    }
+
+    private matchesClaimSelection(
+        payload: Record<string, unknown>,
+        allClaims: ClaimsQuery[] | undefined,
+        selectedClaims: ClaimsQuery[],
+    ): boolean {
+        if (!allClaims || allClaims.length === 0) {
+            return selectedClaims.length === 0;
+        }
+
+        return selectedClaims.every((claim) =>
+            this.hasClaimPath(payload, claim.path),
+        );
+    }
+
+    private matchesMdocClaimSelection(
+        payload: Record<string, unknown>,
+        selectedClaims: ClaimsQuery[],
+    ): boolean {
+        return selectedClaims.every((claim) => {
+            const claimName =
+                claim.path.length > 1 ? claim.path[1] : claim.path[0];
+
+            return claimName in payload;
+        });
+    }
+
+    private areClaimPathsEqual(left: string[], right: string[]): boolean {
+        if (left.length !== right.length) {
+            return false;
+        }
+
+        return left.every((segment, index) => segment === right[index]);
+    }
+
+    private hasClaimPath(value: unknown, path: string[]): boolean {
+        let current: unknown = value;
+
+        for (const segment of path) {
+            if (current === null || current === undefined) {
+                return false;
+            }
+
+            if (Array.isArray(current)) {
+                const index = Number(segment);
+                if (!Number.isInteger(index) || index < 0) {
+                    return false;
+                }
+
+                current = current[index];
+                continue;
+            }
+
+            if (typeof current !== "object") {
+                return false;
+            }
+
+            if (!(segment in current)) {
+                return false;
+            }
+
+            current = (current as Record<string, unknown>)[segment];
+        }
+
+        return current !== undefined;
     }
 }
