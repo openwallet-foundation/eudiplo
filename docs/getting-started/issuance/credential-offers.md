@@ -87,6 +87,7 @@ Credential offers are single-use and non-replayable. Once a wallet completes
 issuance with an offer:
 
 - Token replay with the same authorization or pre-authorized code is rejected with an `invalid_grant` error
+- Offer-by-reference replay is rejected: a `credential_offer_uri` can be resolved only once, and later fetches return `404`.
 - The offer is marked as consumed at the credential endpoint and cannot be used again after successful credential processing
 - The `consumedAt` timestamp records when the offer was first used
 
