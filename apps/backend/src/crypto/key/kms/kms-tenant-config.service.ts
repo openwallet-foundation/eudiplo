@@ -1,6 +1,16 @@
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+    existsSync,
+    mkdirSync,
+    readFileSync,
+    rmSync,
+    writeFileSync,
+} from "node:fs";
 import { dirname, join } from "node:path";
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { plainToInstance } from "class-transformer";
 import { validateSync } from "class-validator";
@@ -37,7 +47,11 @@ export class KmsTenantConfigService {
         const validatedConfig = this.validateConfig(config);
 
         mkdirSync(dirname(path), { recursive: true });
-        writeFileSync(path, `${JSON.stringify(validatedConfig, null, 4)}\n`, "utf8");
+        writeFileSync(
+            path,
+            `${JSON.stringify(validatedConfig, null, 4)}\n`,
+            "utf8",
+        );
 
         this.refreshTenantConfig(tenantId);
         return this.getEffectiveConfig(tenantId);

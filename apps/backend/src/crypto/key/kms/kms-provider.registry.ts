@@ -147,7 +147,8 @@ export class KmsProviderRegistry implements OnModuleInit {
     } {
         const adapters = new Map<string, KmsAdapter>();
         const defaultProviderId =
-            this.kmsConfig.getDefaultProviderId(tenantId) || DEFAULT_PROVIDER_ID;
+            this.kmsConfig.getDefaultProviderId(tenantId) ||
+            DEFAULT_PROVIDER_ID;
 
         for (const provider of this.kmsConfig.getProviders(tenantId)) {
             adapters.set(provider.id, this.instantiate(provider));
@@ -155,7 +156,10 @@ export class KmsProviderRegistry implements OnModuleInit {
 
         // Always ensure a default db adapter exists.
         if (!adapters.has(DEFAULT_PROVIDER_ID)) {
-            adapters.set(DEFAULT_PROVIDER_ID, new DbKmsAdapter(DEFAULT_PROVIDER_ID));
+            adapters.set(
+                DEFAULT_PROVIDER_ID,
+                new DbKmsAdapter(DEFAULT_PROVIDER_ID),
+            );
         }
 
         return {

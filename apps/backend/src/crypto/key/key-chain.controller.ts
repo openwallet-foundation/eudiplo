@@ -86,9 +86,8 @@ export class KeyChainController {
         const tenantId = token.entity!.id;
         return {
             tenantConfig: this.kmsTenantConfigService.getTenantConfig(tenantId),
-            effectiveConfig: this.kmsTenantConfigService.getEffectiveConfig(
-                tenantId,
-            ),
+            effectiveConfig:
+                this.kmsTenantConfigService.getEffectiveConfig(tenantId),
         };
     }
 

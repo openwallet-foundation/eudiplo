@@ -51,7 +51,15 @@ interface KeyDisplayItem {
 export class KeyManagementListComponent implements OnInit {
   displayItems: KeyDisplayItem[] = [];
   filteredItems: KeyDisplayItem[] = [];
-  displayedColumns: string[] = ['usage', 'name', 'type', 'kmsProvider', 'rotation', 'id', 'actions'];
+  displayedColumns: string[] = [
+    'usage',
+    'name',
+    'type',
+    'kmsProvider',
+    'rotation',
+    'id',
+    'actions',
+  ];
 
   selectedUsageType = '';
   selectedKeyType = '';

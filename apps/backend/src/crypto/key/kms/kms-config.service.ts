@@ -121,7 +121,10 @@ function defaultConfig(): KmsConfigDto {
     };
 }
 
-function mergeConfigs(global: KmsConfigDto, tenant: KmsConfigDto): KmsConfigDto {
+function mergeConfigs(
+    global: KmsConfigDto,
+    tenant: KmsConfigDto,
+): KmsConfigDto {
     const mergedProviders = new Map<string, KmsProviderConfigDto>();
 
     for (const provider of global.providers ?? []) {

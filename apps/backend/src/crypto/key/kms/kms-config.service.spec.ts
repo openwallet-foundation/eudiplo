@@ -27,8 +27,8 @@ describe("KmsConfigService", () => {
     }
 
     it("returns global providers when no tenant kms.json exists", () => {
-        vi.mocked(existsSync).mockImplementation((path) =>
-            String(path) === "/config/kms.json",
+        vi.mocked(existsSync).mockImplementation(
+            (path) => String(path) === "/config/kms.json",
         );
         vi.mocked(readFileSync).mockImplementation((path) => {
             if (String(path) === "/config/kms.json") {
