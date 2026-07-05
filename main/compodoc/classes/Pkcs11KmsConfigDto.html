@@ -301,7 +301,7 @@ The native <code>pkcs11js</code> module is loaded lazily on first use.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="164" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:164</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="169" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:169</a></div>
                         </td>
                     </tr>
 
@@ -339,7 +339,7 @@ The native <code>pkcs11js</code> module is loaded lazily on first use.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="180" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:180</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="185" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:185</a></div>
                         </td>
                     </tr>
 
@@ -377,7 +377,7 @@ The native <code>pkcs11js</code> module is loaded lazily on first use.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="188" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:188</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="193" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:193</a></div>
                         </td>
                     </tr>
 
@@ -413,7 +413,7 @@ The native <code>pkcs11js</code> module is loaded lazily on first use.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="171" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:171</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="176" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:176</a></div>
                         </td>
                     </tr>
 
@@ -457,7 +457,7 @@ The native <code>pkcs11js</code> module is loaded lazily on first use.</p>
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:155</a></code>
+                                <div class="io-line">        <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:160</a></code>
 </div>
                         </td>
                     </tr>
@@ -503,7 +503,7 @@ The native <code>pkcs11js</code> module is loaded lazily on first use.</p>
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:56</a></code>
+                                <div class="io-line">        <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:61</a></code>
 </div>
                         </td>
                     </tr>
@@ -548,7 +548,7 @@ The native <code>pkcs11js</code> module is loaded lazily on first use.</p>
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:38</a></code>
+                                <div class="io-line">        <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:43</a></code>
 </div>
                         </td>
                     </tr>
@@ -568,7 +568,12 @@ The native <code>pkcs11js</code> module is loaded lazily on first use.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+    ApiExtraModels,
+    ApiProperty,
+    ApiPropertyOptional,
+    getSchemaPath,
+} from &quot;@nestjs/swagger&quot;;
 import { Type } from &quot;class-transformer&quot;;
 import {
     IsArray,
@@ -1132,6 +1137,14 @@ export type KmsProviderConfigDto &#x3D;
  * }
  * &#x60;&#x60;&#x60;
  */
+@ApiExtraModels(
+    DbKmsConfigDto,
+    VaultKmsConfigDto,
+    AwsKmsConfigDto,
+    Pkcs11KmsConfigDto,
+    HttpKmsConfigDto,
+    CscKmsConfigDto,
+)
 export class KmsConfigDto {
     @ApiPropertyOptional({
         description:
@@ -1145,7 +1158,28 @@ export class KmsConfigDto {
     @ApiProperty({
         description:
             &quot;List of KMS provider configurations. Each provider must have a unique id and a type.&quot;,
-        type: [BaseKmsProviderConfigDto],
+        type: &quot;array&quot;,
+        items: {
+            oneOf: [
+                { $ref: getSchemaPath(DbKmsConfigDto) },
+                { $ref: getSchemaPath(VaultKmsConfigDto) },
+                { $ref: getSchemaPath(AwsKmsConfigDto) },
+                { $ref: getSchemaPath(Pkcs11KmsConfigDto) },
+                { $ref: getSchemaPath(HttpKmsConfigDto) },
+                { $ref: getSchemaPath(CscKmsConfigDto) },
+            ],
+            discriminator: {
+                propertyName: &quot;type&quot;,
+                mapping: {
+                    db: getSchemaPath(DbKmsConfigDto),
+                    vault: getSchemaPath(VaultKmsConfigDto),
+                    &quot;aws-kms&quot;: getSchemaPath(AwsKmsConfigDto),
+                    pkcs11: getSchemaPath(Pkcs11KmsConfigDto),
+                    http: getSchemaPath(HttpKmsConfigDto),
+                    csc: getSchemaPath(CscKmsConfigDto),
+                },
+            },
+        },
         example: [
             { id: &quot;db&quot;, type: &quot;db&quot;, description: &quot;Default database provider&quot; },
             {

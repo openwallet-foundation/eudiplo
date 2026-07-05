@@ -121,12 +121,12 @@
 
 <ol class="breadcrumb">
   <li class="breadcrumb-item">Classes</li>
-  <li class="breadcrumb-item" >KeyModule</li>
+  <li class="breadcrumb-item" >KmsTenantConfigResponseDto</li>
 </ol>
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
     <span class="icon ion-ios-document" aria-hidden="true"></span>
-    <code>src/crypto/key/key.module.ts</code>
+    <code>src/crypto/key/dto/kms-tenant-config-response.dto.ts</code>
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -162,19 +162,24 @@
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-
         <table class="table table-sm table-bordered index-table">
             <tbody>
                 <tr>
                     <td class="col-md-3">
-                        <h6><b>Methods</b></h6>
+                        <h6><b>Properties</b></h6>
                     </td>
                     <td class="col-md-9">
                         <ul class="index-list">
                             <li>
-                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                    <span class="modifier">Static</span>
-                                <a href="#forRoot" >forRoot</a>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier"></span>
+                                <a href="#effectiveConfig" >effectiveConfig</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#tenantConfig" >tenantConfig</a>
                             </li>
                         </ul>
                     </td>
@@ -186,55 +191,90 @@
 
 
 
+
 </section>
 
 
-
-            <section data-compodoc="block-methods">
+            <section data-compodoc="block-properties">
     
-    <h3 id="methods">
-        Methods
+    <h3 id="inputs">
+        Properties
     </h3>
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="forRoot"></a>
+                    <a name="effectiveConfig"></a>
                     <span class="name">
-                            <span class="modifier">Static</span>
-                        <span ><b>forRoot</b></span>
-                        <a href="#forRoot"><span class="icon ion-ios-link"></span></a>
+                            <span class="modifier"></span>
+                        <span ><b>effectiveConfig</b></span>
+                        <a href="#effectiveConfig"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>forRoot()</code>
-                </td>
-            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/KmsConfigDto.html" target="_self" >KmsConfigDto</a></code>
 
-
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiProperty({description: &#x27;Effective configuration used at runtime for the tenant (global + tenant merge).&#x27;, type: KmsConfigDto})<br />
+                        </code>
+                    </td>
+                </tr>
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="22"
-                                    class="link-to-prism">src/crypto/key/key.module.ts:22</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/crypto/key/dto/kms-tenant-config-response.dto.ts:17</a></div>
                         </td>
                     </tr>
 
 
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
             <tr>
                 <td class="col-md-4">
-
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>DynamicModule</code>
-
-                        </div>
+                    <a name="tenantConfig"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>tenantConfig</b></span>
+                        <a href="#tenantConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
                 </td>
             </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/KmsConfigDto.html" target="_self" >KmsConfigDto | null</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiPropertyOptional({description: &#x27;Tenant-specific KMS configuration from &lt;CONFIG_FOLDER&gt;/&lt;tenantId&gt;/kms.json. Null when no tenant file exists.&#x27;, type: KmsConfigDto})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/crypto/key/dto/kms-tenant-config-response.dto.ts:10</a></div>
+                        </td>
+                    </tr>
+
+
         </tbody>
     </table>
 </section>
+
 
 
 
@@ -245,52 +285,23 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpModule } from &quot;@nestjs/axios&quot;;
-import { DynamicModule, Global } from &quot;@nestjs/common&quot;;
-import { ConfigModule } from &quot;@nestjs/config&quot;;
-import { TypeOrmModule } from &quot;@nestjs/typeorm&quot;;
-import { TenantEntity } from &quot;../../auth/tenant/entitites/tenant.entity&quot;;
-import { CertService } from &quot;./cert/cert.service&quot;;
-import { CertificateBuilderService } from &quot;./cert/certificate-builder.service&quot;;
-import { CrlValidationService } from &quot;./cert/crl-validation.service&quot;;
-import { CryptoImplementatationModule } from &quot;./crypto-implementation/crypto-implementation.module&quot;;
-import { KeyChainEntity } from &quot;./entities/key-chain.entity&quot;;
-import { KeyChainController } from &quot;./key-chain.controller&quot;;
-import { KeyChainImportService } from &quot;./key-chain-import.service&quot;;
-import { KeyChainService } from &quot;./key-chain.service&quot;;
-import { KeyChainSigningService } from &quot;./key-chain-signing.service&quot;;
-import { KeyRotationService } from &quot;./key-rotation.service&quot;;
-import { KmsConfigService } from &quot;./kms/kms-config.service&quot;;
-import { KmsProviderRegistry } from &quot;./kms/kms-provider.registry&quot;;
-import { KmsTenantConfigService } from &quot;./kms/kms-tenant-config.service&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
+import { KmsConfigDto } from &quot;./kms-config.dto&quot;;
 
-@Global()
-export class KeyModule {
-    static forRoot(): DynamicModule {
-        return {
-            module: KeyModule,
-            imports: [
-                HttpModule,
-                ConfigModule,
-                CryptoImplementatationModule,
-                TypeOrmModule.forFeature([KeyChainEntity, TenantEntity]),
-            ],
-            controllers: [KeyChainController],
-            providers: [
-                KmsConfigService,
-                KmsProviderRegistry,
-                KmsTenantConfigService,
-                CertificateBuilderService,
-                KeyChainSigningService,
-                KeyChainImportService,
-                KeyChainService,
-                KeyRotationService,
-                CertService,
-                CrlValidationService,
-            ],
-            exports: [KeyChainService, CertService, CrlValidationService],
-        };
-    }
+export class KmsTenantConfigResponseDto {
+    @ApiPropertyOptional({
+        description:
+            &quot;Tenant-specific KMS configuration from &lt;CONFIG_FOLDER&gt;/&lt;tenantId&gt;/kms.json. Null when no tenant file exists.&quot;,
+        type: KmsConfigDto,
+    })
+    tenantConfig?: KmsConfigDto | null;
+
+    @ApiProperty({
+        description:
+            &quot;Effective configuration used at runtime for the tenant (global + tenant merge).&quot;,
+        type: KmsConfigDto,
+    })
+    effectiveConfig!: KmsConfigDto;
 }
 </code></pre>
     </div>
@@ -330,7 +341,7 @@ export class KeyModule {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'KeyModule.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'KmsTenantConfigResponseDto.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

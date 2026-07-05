@@ -179,19 +179,19 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
-                                    <span class="modifier">Readonly</span>
-                                <a href="#adapters" >adapters</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier">Private</span>
-                                <a href="#defaultProviderId" >defaultProviderId</a>
+                                <a href="#globalBundle" >globalBundle</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#logger" >logger</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#tenantBundles" >tenantBundles</a>
                             </li>
                         </ul>
                     </td>
@@ -209,6 +209,16 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildBundle" >buildBundle</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#getBundle" >getBundle</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getDefault" >getDefault</a>
                             </li>
                             <li>
@@ -220,6 +230,10 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#instantiate" >instantiate</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                <a href="#invalidateTenant" >invalidateTenant</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
@@ -256,7 +270,7 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:38</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:50</a></div>
                             </td>
                         </tr>
 
@@ -315,6 +329,144 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="buildBundle"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildBundle</b></span>
+                        <a href="#buildBundle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildBundle(tenantId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="144"
+                                    class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:144</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/KmsAdapter.html" target="_self" >{ adapters: Map&lt;string, KmsAdapter&gt;; defaultProviderId: string }</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getBundle"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getBundle</b></span>
+                        <a href="#getBundle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getBundle(tenantId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="126"
+                                    class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:126</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/KmsAdapter.html" target="_self" >{ adapters: Map&lt;string, KmsAdapter&gt;; defaultProviderId: string }</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="getDefault"></a>
                     <span class="name">
                         <span ><b>getDefault</b></span>
@@ -324,7 +476,7 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getDefault()</code>
+<code>getDefault(tenantId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -340,10 +492,40 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
             <tr>
                 <td class="col-md-4">
 
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         <div class="io-description">
                             <b>Returns : </b>        <code><a href="../interfaces/KmsAdapter.html" target="_self" >KmsAdapter</a></code>
 
                         </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -363,15 +545,15 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>health()</code>
+                    <code>health(tenantId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="102"
-                                    class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:102</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="103"
+                                    class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:103</a></div>
                         </td>
                     </tr>
 
@@ -381,10 +563,40 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
                         <div class="io-description"><p>Run the health probe for every registered adapter in parallel.</p>
 </div>
 
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         <div class="io-description">
                             <b>Returns : </b>    <code>Promise&lt;Array&lt;{ providerId: string; type: string; ok: boolean; latencyMs?: number; error?: string }&gt;&gt;</code>
 
                         </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -411,8 +623,8 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="124"
-                                    class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:124</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="175"
+                                    class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:175</a></div>
                         </td>
                     </tr>
 
@@ -462,6 +674,73 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="invalidateTenant"></a>
+                    <span class="name">
+                        <span ><b>invalidateTenant</b></span>
+                        <a href="#invalidateTenant"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>invalidateTenant(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="171"
+                                    class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:171</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="list"></a>
                     <span class="name">
                         <span ><b>list</b></span>
@@ -471,7 +750,7 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>list()</code>
+<code>list(tenantId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -489,10 +768,40 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
                         <div class="io-description"><p>Return the public view of registered providers (for the API).</p>
 </div>
 
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         <div class="io-description">
                             <b>Returns : </b>        <code><a href="../classes/KmsProvidersResponseDto.html" target="_self" >KmsProvidersResponseDto</a></code>
 
                         </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -517,8 +826,8 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="45"
-                                    class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:45</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="57"
+                                    class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:57</a></div>
                         </td>
                     </tr>
 
@@ -547,15 +856,15 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>resolve(providerId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>resolve(providerId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="72"
-                                    class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:72</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="71"
+                                    class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:71</a></div>
                         </td>
                     </tr>
 
@@ -579,6 +888,18 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
                                     <tbody>
                                         <tr>
                                                 <td>providerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
                                             <td>
                                                             <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                             </td>
@@ -614,61 +935,31 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="adapters"></a>
+                    <a name="globalBundle"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
-                            <span class="modifier">Readonly</span>
-                        <span ><b>adapters</b></span>
-                        <a href="#adapters"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>globalBundle</b></span>
+                        <a href="#globalBundle"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>    <code>unknown</code>
+                        <i>Type : </i>        <code><a href="../interfaces/KmsAdapter.html" target="_self" >{ adapters: Map&lt;string, KmsAdapter&gt;; defaultProviderId: string }</a></code>
 
                     </td>
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>new Map&lt;string, KmsAdapter&gt;()</code>
+                        <i>Default value : </i><code>{
+        adapters: new Map&lt;string, KmsAdapter&gt;(),
+        defaultProviderId: DEFAULT_PROVIDER_ID,
+    }</code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
                                 <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:37</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="defaultProviderId"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>defaultProviderId</b></span>
-                        <a href="#defaultProviderId"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>DEFAULT_PROVIDER_ID</code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:38</a></div>
                         </td>
                     </tr>
 
@@ -702,6 +993,45 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
                     <tr>
                         <td class="col-md-4">
                                 <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tenantBundles"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>tenantBundles</b></span>
+                        <a href="#tenantBundles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Map&lt;
+        string,
+        {
+            adapters: Map&lt;string, KmsAdapter&gt;;
+            defaultProviderId: string;
+        }
+    &gt;()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/crypto/key/kms/kms-provider.registry.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -750,8 +1080,20 @@ const DEFAULT_PROVIDER_ID &#x3D; &quot;db&quot;;
 @Injectable()
 export class KmsProviderRegistry implements OnModuleInit {
     private readonly logger &#x3D; new Logger(KmsProviderRegistry.name);
-    private readonly adapters &#x3D; new Map&lt;string, KmsAdapter&gt;();
-    private defaultProviderId: string &#x3D; DEFAULT_PROVIDER_ID;
+    private globalBundle: {
+        adapters: Map&lt;string, KmsAdapter&gt;;
+        defaultProviderId: string;
+    } &#x3D; {
+        adapters: new Map&lt;string, KmsAdapter&gt;(),
+        defaultProviderId: DEFAULT_PROVIDER_ID,
+    };
+    private readonly tenantBundles &#x3D; new Map&lt;
+        string,
+        {
+            adapters: Map&lt;string, KmsAdapter&gt;;
+            defaultProviderId: string;
+        }
+    &gt;();
 
     constructor(
         private readonly kmsConfig: KmsConfigService,
@@ -759,23 +1101,10 @@ export class KmsProviderRegistry implements OnModuleInit {
     ) {}
 
     onModuleInit(): void {
-        this.defaultProviderId &#x3D;
-            this.kmsConfig.getDefaultProviderId() || DEFAULT_PROVIDER_ID;
-
-        for (const provider of this.kmsConfig.getProviders()) {
-            this.adapters.set(provider.id, this.instantiate(provider));
-        }
-
-        // Always ensure a default db adapter exists.
-        if (!this.adapters.has(DEFAULT_PROVIDER_ID)) {
-            this.adapters.set(
-                DEFAULT_PROVIDER_ID,
-                new DbKmsAdapter(DEFAULT_PROVIDER_ID),
-            );
-        }
+        this.globalBundle &#x3D; this.buildBundle();
 
         this.logger.log(
-            &#x60;Registered KMS providers: ${[...this.adapters.keys()].join(&quot;, &quot;)} (default: ${this.defaultProviderId})&#x60;,
+            &#x60;Registered global KMS providers: ${[...this.globalBundle.adapters.keys()].join(&quot;, &quot;)} (default: ${this.globalBundle.defaultProviderId})&#x60;,
         );
 
         // Install our KMS-aware crypto provider so @peculiar/x509 routes
@@ -785,37 +1114,39 @@ export class KmsProviderRegistry implements OnModuleInit {
     }
 
     /** Resolve an adapter by provider id. Throws if not registered. */
-    resolve(providerId?: string): KmsAdapter {
-        const id &#x3D; providerId || this.defaultProviderId;
-        const adapter &#x3D; this.adapters.get(id);
+    resolve(providerId?: string, tenantId?: string): KmsAdapter {
+        const bundle &#x3D; this.getBundle(tenantId);
+        const id &#x3D; providerId || bundle.defaultProviderId;
+        const adapter &#x3D; bundle.adapters.get(id);
         if (!adapter) {
             throw new BadRequestException(
-                &#x60;Unknown KMS provider &#x27;${id}&#x27;. Configured providers: ${[...this.adapters.keys()].join(&quot;, &quot;)}&#x60;,
+                &#x60;Unknown KMS provider &#x27;${id}&#x27;. Configured providers: ${[...bundle.adapters.keys()].join(&quot;, &quot;)}&#x60;,
             );
         }
         return adapter;
     }
 
-    getDefault(): KmsAdapter {
-        return this.resolve(this.defaultProviderId);
+    getDefault(tenantId?: string): KmsAdapter {
+        return this.resolve(undefined, tenantId);
     }
 
     /** Return the public view of registered providers (for the API). */
-    list(): KmsProvidersResponseDto {
-        const providers: KmsProviderInfoDto[] &#x3D; [...this.adapters.values()].map(
-            (a) &#x3D;&gt; ({
-                name: a.providerId,
-                type: a.type,
-                capabilities: a.capabilities,
-            }),
-        );
-        return { providers, default: this.defaultProviderId };
+    list(tenantId?: string): KmsProvidersResponseDto {
+        const bundle &#x3D; this.getBundle(tenantId);
+        const providers: KmsProviderInfoDto[] &#x3D; [
+            ...bundle.adapters.values(),
+        ].map((a) &#x3D;&gt; ({
+            name: a.providerId,
+            type: a.type,
+            capabilities: a.capabilities,
+        }));
+        return { providers, default: bundle.defaultProviderId };
     }
 
     /**
      * Run the health probe for every registered adapter in parallel.
      */
-    async health(): Promise&lt;
+    async health(tenantId?: string): Promise&lt;
         Array&lt;{
             providerId: string;
             type: string;
@@ -824,7 +1155,8 @@ export class KmsProviderRegistry implements OnModuleInit {
             error?: string;
         }&gt;
     &gt; {
-        const entries &#x3D; [...this.adapters.values()];
+        const bundle &#x3D; this.getBundle(tenantId);
+        const entries &#x3D; [...bundle.adapters.values()];
         return Promise.all(
             entries.map(async (a) &#x3D;&gt; {
                 const result &#x3D; await a.health();
@@ -835,6 +1167,55 @@ export class KmsProviderRegistry implements OnModuleInit {
                 };
             }),
         );
+    }
+
+    private getBundle(tenantId?: string): {
+        adapters: Map&lt;string, KmsAdapter&gt;;
+        defaultProviderId: string;
+    } {
+        if (!tenantId) {
+            return this.globalBundle;
+        }
+
+        const cached &#x3D; this.tenantBundles.get(tenantId);
+        if (cached) {
+            return cached;
+        }
+
+        const bundle &#x3D; this.buildBundle(tenantId);
+        this.tenantBundles.set(tenantId, bundle);
+        return bundle;
+    }
+
+    private buildBundle(tenantId?: string): {
+        adapters: Map&lt;string, KmsAdapter&gt;;
+        defaultProviderId: string;
+    } {
+        const adapters &#x3D; new Map&lt;string, KmsAdapter&gt;();
+        const defaultProviderId &#x3D;
+            this.kmsConfig.getDefaultProviderId(tenantId) ||
+            DEFAULT_PROVIDER_ID;
+
+        for (const provider of this.kmsConfig.getProviders(tenantId)) {
+            adapters.set(provider.id, this.instantiate(provider));
+        }
+
+        // Always ensure a default db adapter exists.
+        if (!adapters.has(DEFAULT_PROVIDER_ID)) {
+            adapters.set(
+                DEFAULT_PROVIDER_ID,
+                new DbKmsAdapter(DEFAULT_PROVIDER_ID),
+            );
+        }
+
+        return {
+            adapters,
+            defaultProviderId,
+        };
+    }
+
+    invalidateTenant(tenantId: string): void {
+        this.tenantBundles.delete(tenantId);
     }
 
     private instantiate(provider: KmsProviderConfigDto): KmsAdapter {

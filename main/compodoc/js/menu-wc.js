@@ -1392,6 +1392,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/KmsProvidersResponseDto.html" data-type="entity-link" >KmsProvidersResponseDto</a>
                             </li>
                             <li class="link">
+                                <a href="classes/KmsTenantConfigResponseDto.html" data-type="entity-link" >KmsTenantConfigResponseDto</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/LocalFileStorage.html" data-type="entity-link" >LocalFileStorage</a>
                             </li>
                             <li class="link">
@@ -1703,6 +1706,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 </li>
                                 <li class="link">
                                     <a href="injectables/KmsProviderRegistry.html" data-type="entity-link" >KmsProviderRegistry</a>
+                                </li>
+                                <li class="link">
+                                    <a href="injectables/KmsTenantConfigService.html" data-type="entity-link" >KmsTenantConfigService</a>
                                 </li>
                                 <li class="link">
                                     <a href="injectables/VaultEncryptionKeyProvider.html" data-type="entity-link" >VaultEncryptionKeyProvider</a>

@@ -299,7 +299,7 @@ Uses AWS SDK credential chain if credentials are not provided.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="132" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:132</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="137" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:137</a></div>
                         </td>
                     </tr>
 
@@ -337,7 +337,7 @@ Uses AWS SDK credential chain if credentials are not provided.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="123" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:123</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="128" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:128</a></div>
                         </td>
                     </tr>
 
@@ -376,7 +376,7 @@ Uses AWS SDK credential chain if credentials are not provided.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="141" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:141</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="146" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:146</a></div>
                         </td>
                     </tr>
 
@@ -420,7 +420,7 @@ Uses AWS SDK credential chain if credentials are not provided.</p>
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:115</a></code>
+                                <div class="io-line">        <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:120</a></code>
 </div>
                         </td>
                     </tr>
@@ -466,7 +466,7 @@ Uses AWS SDK credential chain if credentials are not provided.</p>
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:56</a></code>
+                                <div class="io-line">        <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:61</a></code>
 </div>
                         </td>
                     </tr>
@@ -511,7 +511,7 @@ Uses AWS SDK credential chain if credentials are not provided.</p>
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:38</a></code>
+                                <div class="io-line">        <code><a href="../classes/BaseKmsProviderConfigDto.html#source" target="_self" >BaseKmsProviderConfigDto:43</a></code>
 </div>
                         </td>
                     </tr>
@@ -531,7 +531,12 @@ Uses AWS SDK credential chain if credentials are not provided.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+    ApiExtraModels,
+    ApiProperty,
+    ApiPropertyOptional,
+    getSchemaPath,
+} from &quot;@nestjs/swagger&quot;;
 import { Type } from &quot;class-transformer&quot;;
 import {
     IsArray,
@@ -1095,6 +1100,14 @@ export type KmsProviderConfigDto &#x3D;
  * }
  * &#x60;&#x60;&#x60;
  */
+@ApiExtraModels(
+    DbKmsConfigDto,
+    VaultKmsConfigDto,
+    AwsKmsConfigDto,
+    Pkcs11KmsConfigDto,
+    HttpKmsConfigDto,
+    CscKmsConfigDto,
+)
 export class KmsConfigDto {
     @ApiPropertyOptional({
         description:
@@ -1108,7 +1121,28 @@ export class KmsConfigDto {
     @ApiProperty({
         description:
             &quot;List of KMS provider configurations. Each provider must have a unique id and a type.&quot;,
-        type: [BaseKmsProviderConfigDto],
+        type: &quot;array&quot;,
+        items: {
+            oneOf: [
+                { $ref: getSchemaPath(DbKmsConfigDto) },
+                { $ref: getSchemaPath(VaultKmsConfigDto) },
+                { $ref: getSchemaPath(AwsKmsConfigDto) },
+                { $ref: getSchemaPath(Pkcs11KmsConfigDto) },
+                { $ref: getSchemaPath(HttpKmsConfigDto) },
+                { $ref: getSchemaPath(CscKmsConfigDto) },
+            ],
+            discriminator: {
+                propertyName: &quot;type&quot;,
+                mapping: {
+                    db: getSchemaPath(DbKmsConfigDto),
+                    vault: getSchemaPath(VaultKmsConfigDto),
+                    &quot;aws-kms&quot;: getSchemaPath(AwsKmsConfigDto),
+                    pkcs11: getSchemaPath(Pkcs11KmsConfigDto),
+                    http: getSchemaPath(HttpKmsConfigDto),
+                    csc: getSchemaPath(CscKmsConfigDto),
+                },
+            },
+        },
         example: [
             { id: &quot;db&quot;, type: &quot;db&quot;, description: &quot;Default database provider&quot; },
             {

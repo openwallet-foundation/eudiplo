@@ -3938,6 +3938,16 @@ configured in a single <code>kms.json</code> file inside the config folder.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">¶</a></h2>
 <p>KMS providers are configured in <code>&lt;CONFIG_FOLDER&gt;/kms.json</code>. If no file is found,
 a single <code>db</code> provider is registered automatically.</p>
+<p>You can also define tenant-scoped providers in
+<code>&lt;CONFIG_FOLDER&gt;/&lt;tenantId&gt;/kms.json</code>.</p>
+<ul>
+<li>Providers defined in the root file are available to all tenants.</li>
+<li>Providers defined in a tenant file are only available for that tenant.</li>
+<li>If a tenant file defines a provider with the same <code>id</code> as the root file, the
+  tenant definition overrides the root one for that tenant.</li>
+<li>The tenant file can set its own <code>defaultProvider</code>; otherwise the root
+  <code>defaultProvider</code> is used.</li>
+</ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">"defaultProvider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"db"</span><span class="p">,</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">"providers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
