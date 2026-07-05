@@ -286,8 +286,9 @@ export class Session {
     consumed!: boolean;
 
     /**
-     * Timestamp when the session offer was consumed.
-     * Null if the offer has not yet been consumed.
+     * Timestamp of the first consumption event for the session offer.
+     * For OID4VCI this can be URI resolution or later flow completion.
+     * Null if no consumption event has happened yet.
      */
     @Column({ nullable: true })
     consumedAt?: Date;

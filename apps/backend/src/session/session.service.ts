@@ -183,6 +183,8 @@ export class SessionService implements OnApplicationBootstrap {
             },
             {
                 offer: null,
+                // Keep the first-consumption timestamp stable across the flow.
+                consumedAt: () => `COALESCE("consumedAt", CURRENT_TIMESTAMP)`,
             },
         );
 

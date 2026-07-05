@@ -1595,8 +1595,7 @@ export class Oid4vciService {
             });
             await this.sessionService.add(session.id, {
                 notifications: session.notifications,
-                status: SessionStatus.Fetched,
-                consumedAt: new Date(),
+                status: SessionStatus.Fetched                
             });
 
             this.auditLogger.logFlowComplete(logContext, {
