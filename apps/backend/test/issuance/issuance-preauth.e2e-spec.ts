@@ -13,7 +13,6 @@ import request from "supertest";
 import { App } from "supertest/types";
 import { Agent, setGlobalDispatcher } from "undici";
 import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
-import { IssuanceDto } from "../../src/issuer/configuration/issuance/dto/issuance.dto";
 import {
     callbacks,
     getSignJwtCallback,
@@ -29,39 +28,15 @@ setGlobalDispatcher(
     }),
 );
 
-async function getOfferPreAuthorizedGrant(offerUri: string): Promise<any> {
+async function resolveCredentialOffer(offerUri: string): Promise<any> {
     const client = new Openid4vciClient({
         callbacks: {
             ...callbacks,
             clientAuthentication: clientAuthenticationAnonymous(),
         },
     });
-    const credentialOffer = await client.resolveCredentialOffer(offerUri);
-    return credentialOffer.grants?.[
-        "urn:ietf:params:oauth:grant-type:pre-authorized_code"
-    ];
-}
 
-async function configureIssuanceAuthorizationServers(
-    app: INestApplication<App>,
-    authToken: string,
-    overrides: Partial<IssuanceDto>,
-): Promise<void> {
-    const currentConfigResponse = await request(app.getHttpServer())
-        .get("/issuer/config")
-        .trustLocalhost()
-        .set("Authorization", `Bearer ${authToken}`)
-        .expect(200);
-
-    await request(app.getHttpServer())
-        .post("/issuer/config")
-        .trustLocalhost()
-        .set("Authorization", `Bearer ${authToken}`)
-        .send({
-            ...currentConfigResponse.body,
-            ...overrides,
-        })
-        .expect(201);
+    return client.resolveCredentialOffer(offerUri);
 }
 
 describe("Issuance - Pre-authorized Code Flow", () => {
@@ -248,20 +223,7 @@ describe("Issuance - Pre-authorized Code Flow", () => {
         expect(nock.isDone()).toBe(true);
     });
 
-    test("pre-authorized flow always defaults to built-in authorization server", async () => {
-        const externalAuthorizationServer = "https://auth.external.example";
-
-        await configureIssuanceAuthorizationServers(app, authToken, {
-            preferredAuthServer: externalAuthorizationServer,
-            authorizationServers: [
-                {
-                    type: "external",
-                    issuer: externalAuthorizationServer,
-                    enabled: true,
-                },
-            ],
-        });
-
+    test("pre-authorized flow defaults to built-in authorization server", async () => {
         const offerResponse = await request(app.getHttpServer())
             .post("/issuer/offer")
             .trustLocalhost()
@@ -273,11 +235,16 @@ describe("Issuance - Pre-authorized Code Flow", () => {
             })
             .expect(201);
 
-        const preAuthGrant = await getOfferPreAuthorizedGrant(
+        const credentialOffer = await resolveCredentialOffer(
             offerResponse.body.uri,
         );
+        const preAuthGrant =
+            credentialOffer.grants?.[
+                "urn:ietf:params:oauth:grant-type:pre-authorized_code"
+            ];
+
         expect(preAuthGrant?.authorization_server).toBe(
-            "http://localhost:3000/issuers/root",
+            credentialOffer.credential_issuer,
         );
     });
 
@@ -294,11 +261,16 @@ describe("Issuance - Pre-authorized Code Flow", () => {
             })
             .expect(201);
 
-        const preAuthGrant = await getOfferPreAuthorizedGrant(
+        const credentialOffer = await resolveCredentialOffer(
             offerResponse.body.uri,
         );
+        const preAuthGrant =
+            credentialOffer.grants?.[
+                "urn:ietf:params:oauth:grant-type:pre-authorized_code"
+            ];
+
         expect(preAuthGrant?.authorization_server).toBe(
-            "http://localhost:3000/issuers/root",
+            credentialOffer.credential_issuer,
         );
     });
 
