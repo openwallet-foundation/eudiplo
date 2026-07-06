@@ -156,8 +156,8 @@
 
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">settings_applications</mat-icon>
-          Business Logic
+          <mat-icon class="tab-icon">manage_accounts</mat-icon>
+          Authorize User
         </ng-template>
 
         <ng-template matTabContent>
@@ -175,161 +175,6 @@
                 >
               </mat-card-header>
               <mat-card-content fxLayout="column" fxLayoutGap="16px">
-                <div class="locale-chips">
-                  <strong>External Authorization Servers</strong>
-                </div>
-                <div formArrayName="authServers">
-                  @for (server of authServers.controls; track $index; let i = $index) {
-                    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
-                      <mat-form-field fxFlex>
-                        <mat-label>External Authorization Server {{ i + 1 }}</mat-label>
-                        <input
-                          matInput
-                          [formControlName]="i"
-                          placeholder="https://auth.example.com"
-                          type="url"
-                        />
-                        <mat-icon matSuffix>link</mat-icon>
-                        @if (server.invalid && server.touched) {
-                          <mat-error>Please enter a valid URL</mat-error>
-                        }
-                      </mat-form-field>
-                      <button
-                        matIconButton
-                        type="button"
-                        color="warn"
-                        (click)="removeAuthServer(i)"
-                        matTooltip="Remove this authorization server"
-                      >
-                        <mat-icon>delete</mat-icon>
-                      </button>
-                    </div>
-                  }
-                </div>
-                <div fxLayout="row" fxLayoutAlign="center center">
-                  <button mat-raised-button type="button" (click)="addAuthServer()">
-                    <mat-icon>add</mat-icon> Add External Authorization Server
-                  </button>
-                </div>
-
-                <mat-divider></mat-divider>
-
-                <div class="locale-chips">
-                  <strong>Hosted Authorization Servers</strong>
-                </div>
-
-                <div formArrayName="authorizationServers" fxLayout="column" fxLayoutGap="16px">
-                  @for (server of authorizationServers.controls; track $index; let i = $index) {
-                    <div [formGroupName]="i" class="mat-elevation-z2 display-entry">
-                      <div
-                        fxLayout="row"
-                        fxLayoutAlign="space-between center"
-                        class="display-entry-header"
-                      >
-                        <h3>Hosted Authorization Server {{ i + 1 }}</h3>
-                        <button
-                          matIconButton
-                          type="button"
-                          color="warn"
-                          (click)="removeAuthorizationServer(i)"
-                          matTooltip="Remove this hosted authorization server"
-                        >
-                          <mat-icon>delete</mat-icon>
-                        </button>
-                      </div>
-
-                      <div fxLayout="column" fxLayoutGap="16px">
-                        <div fxLayout="row" fxLayoutGap="16px">
-                          <mat-form-field fxFlex>
-                            <mat-label>ID</mat-label>
-                            <input
-                              matInput
-                              id="managed-auth-server-id-{{ i }}"
-                              formControlName="id"
-                              placeholder="pid-auth"
-                            />
-                            <mat-hint>Used in the AS URL path</mat-hint>
-                          </mat-form-field>
-                          <mat-form-field fxFlex>
-                            <mat-label>Label</mat-label>
-                            <input
-                              matInput
-                              id="managed-auth-server-label-{{ i }}"
-                              formControlName="label"
-                              placeholder="PID Authorization Server"
-                            />
-                            <mat-hint>Shown in the UI offer selector</mat-hint>
-                          </mat-form-field>
-                        </div>
-
-                        <div fxLayout="row" fxLayoutGap="16px">
-                          <mat-form-field fxFlex>
-                            <mat-label>Type</mat-label>
-                            <mat-select formControlName="type">
-                              <mat-option value="oid4vp">OID4VP</mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                          <mat-slide-toggle formControlName="requireDPoP">
-                            Require DPoP
-                          </mat-slide-toggle>
-                        </div>
-
-                        <div formGroupName="oid4vp" fxLayout="column" fxLayoutGap="16px">
-                          <mat-form-field>
-                            <mat-label>Presentation Configuration ID</mat-label>
-                            <mat-select formControlName="presentationConfigId">
-                              @if (availablePresentationConfigIds.length === 0) {
-                                <mat-option disabled value="">
-                                  No presentation configurations found
-                                </mat-option>
-                              }
-                              @for (configId of availablePresentationConfigIds; track configId) {
-                                <mat-option [value]="configId">{{ configId }}</mat-option>
-                              }
-                            </mat-select>
-                            <mat-hint
-                              >Presentation request used before returning the OAuth code</mat-hint
-                            >
-                          </mat-form-field>
-
-                          <mat-slide-toggle formControlName="immediateWalletRedirect">
-                            Immediately redirect to wallet
-                          </mat-slide-toggle>
-                        </div>
-
-                        <div formGroupName="token" fxLayout="row" fxLayoutGap="16px">
-                          <mat-form-field fxFlex>
-                            <mat-label>Token Lifetime (seconds)</mat-label>
-                            <input
-                              matInput
-                              id="managed-auth-server-lifetime-{{ i }}"
-                              type="number"
-                              formControlName="lifetimeSeconds"
-                              min="60"
-                              placeholder="3600"
-                            />
-                          </mat-form-field>
-                          <mat-form-field fxFlex>
-                            <mat-label>Signing Key ID (optional)</mat-label>
-                            <input
-                              matInput
-                              id="managed-auth-server-signing-key-{{ i }}"
-                              formControlName="signingKeyId"
-                              placeholder="Leave empty for default"
-                            />
-                          </mat-form-field>
-                        </div>
-                      </div>
-                    </div>
-                  }
-                </div>
-
-                <div fxLayout="row" fxLayoutAlign="center center">
-                  <button mat-raised-button type="button" (click)="addAuthorizationServer()">
-                    <mat-icon>add</mat-icon> Add Hosted Authorization Server
-                  </button>
-                </div>
-
                 <!-- Preferred Authorization Server -->
                 <mat-form-field>
                   <mat-label>Preferred Authorization Server</mat-label>
@@ -343,143 +188,259 @@
                   <mat-hint
                     >The preferred AS is placed first in the issuer metadata. Wallets typically use
                     the first AS for wallet-initiated flows. Values are external URLs,
-                    authorization-server:SERVER_ID, chained-as, or built-in.</mat-hint
+                    authorization-server:SERVER_ID, or built-in.</mat-hint
                   >
                 </mat-form-field>
 
                 <mat-divider></mat-divider>
 
-                <div class="locale-chips">
-                  <strong>Chained Authorization Server</strong>
+                <div formArrayName="authorizationServers">
+                  <mat-accordion>
+                    @for (server of authorizationServers.controls; track $index; let i = $index) {
+                      <mat-expansion-panel [formGroupName]="i">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                            @if (server.get('type')?.value === 'external') {
+                              {{
+                                server.get('label')?.value ||
+                                  server.get('issuer')?.value ||
+                                  'External Authorization Server ' + (i + 1)
+                              }}
+                            } @else {
+                              {{
+                                server.get('label')?.value ||
+                                  server.get('id')?.value ||
+                                  'Authorization Server ' + (i + 1)
+                              }}
+                            }
+                          </mat-panel-title>
+                          <mat-panel-description>
+                            {{ server.get('type')?.value || 'oid4vp' }}
+                          </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        @if (server.get('type')?.value === 'external') {
+                          <div fxLayout="column" fxLayoutGap="16px">
+                            <mat-form-field>
+                              <mat-label>External Authorization Server URL</mat-label>
+                              <input
+                                matInput
+                                formControlName="issuer"
+                                placeholder="https://auth.example.com"
+                                type="url"
+                              />
+                              <mat-icon matSuffix>link</mat-icon>
+                              @if (server.get('issuer')?.invalid && server.get('issuer')?.touched) {
+                                <mat-error>Please enter a valid URL</mat-error>
+                              }
+                            </mat-form-field>
+
+                            <mat-form-field>
+                              <mat-label>Label (optional)</mat-label>
+                              <input
+                                matInput
+                                formControlName="label"
+                                placeholder="Friendly name for preferred selector"
+                              />
+                            </mat-form-field>
+
+                            <div fxLayout="row" fxLayoutAlign="end center">
+                              <button
+                                matIconButton
+                                type="button"
+                                color="warn"
+                                (click)="removeAuthorizationServer(i)"
+                                matTooltip="Remove this authorization server"
+                              >
+                                <mat-icon>delete</mat-icon>
+                              </button>
+                            </div>
+                          </div>
+                        } @else {
+                          <div fxLayout="column" fxLayoutGap="16px">
+                            <div fxLayout="row" fxLayoutGap="16px">
+                              <mat-form-field fxFlex>
+                                <mat-label>ID</mat-label>
+                                <input
+                                  matInput
+                                  id="managed-auth-server-id-{{ i }}"
+                                  formControlName="id"
+                                  placeholder="auth-server-id"
+                                />
+                                <mat-hint>Used in the AS URL path and preferred selector</mat-hint>
+                              </mat-form-field>
+                              <mat-form-field fxFlex>
+                                <mat-label>Label</mat-label>
+                                <input
+                                  matInput
+                                  id="managed-auth-server-label-{{ i }}"
+                                  formControlName="label"
+                                  placeholder="Authorization Server"
+                                />
+                              </mat-form-field>
+                            </div>
+
+                            <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+                              <mat-form-field fxFlex>
+                                <mat-label>Type</mat-label>
+                                <mat-select formControlName="type">
+                                  <mat-option value="oid4vp">OID4VP</mat-option>
+                                  <mat-option value="chained">Chained</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                              <mat-slide-toggle formControlName="enabled">Enabled</mat-slide-toggle>
+                              <mat-slide-toggle formControlName="requireDPoP"
+                                >Require DPoP</mat-slide-toggle
+                              >
+                            </div>
+
+                            @if (server.get('type')?.value === 'oid4vp') {
+                              <div formGroupName="oid4vp" fxLayout="column" fxLayoutGap="16px">
+                                <mat-form-field>
+                                  <mat-label>Presentation Configuration ID</mat-label>
+                                  <mat-select formControlName="presentationConfigId">
+                                    @if (availablePresentationConfigIds.length === 0) {
+                                      <mat-option disabled value="">
+                                        No presentation configurations found
+                                      </mat-option>
+                                    }
+                                    @for (
+                                      configId of availablePresentationConfigIds;
+                                      track configId
+                                    ) {
+                                      <mat-option [value]="configId">{{ configId }}</mat-option>
+                                    }
+                                  </mat-select>
+                                </mat-form-field>
+
+                                <mat-slide-toggle formControlName="immediateWalletRedirect">
+                                  Immediately redirect to wallet
+                                </mat-slide-toggle>
+                              </div>
+                            }
+
+                            @if (server.get('type')?.value === 'chained') {
+                              <div formGroupName="chained" fxLayout="column" fxLayoutGap="16px">
+                                <mat-form-field>
+                                  <mat-label>Upstream Issuer URL</mat-label>
+                                  <input
+                                    matInput
+                                    formControlName="issuer"
+                                    placeholder="https://keycloak.example.com/realms/my-realm"
+                                    type="url"
+                                  />
+                                </mat-form-field>
+
+                                <div fxLayout="row" fxLayoutGap="16px">
+                                  <mat-form-field fxFlex>
+                                    <mat-label>Client ID</mat-label>
+                                    <input
+                                      matInput
+                                      formControlName="clientId"
+                                      placeholder="eudiplo-client"
+                                    />
+                                  </mat-form-field>
+                                  <mat-form-field fxFlex>
+                                    <mat-label>Client Secret</mat-label>
+                                    <input
+                                      matInput
+                                      formControlName="clientSecret"
+                                      type="password"
+                                      placeholder="••••••••"
+                                    />
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                            }
+
+                            <div formGroupName="token" fxLayout="row" fxLayoutGap="16px">
+                              <mat-form-field fxFlex>
+                                <mat-label>Token Lifetime (seconds)</mat-label>
+                                <input
+                                  matInput
+                                  id="managed-auth-server-lifetime-{{ i }}"
+                                  type="number"
+                                  formControlName="lifetimeSeconds"
+                                  min="60"
+                                  placeholder="3600"
+                                />
+                              </mat-form-field>
+                              <mat-form-field fxFlex>
+                                <mat-label>Signing Key ID (optional)</mat-label>
+                                <input
+                                  matInput
+                                  id="managed-auth-server-signing-key-{{ i }}"
+                                  formControlName="signingKeyId"
+                                  placeholder="Leave empty for default"
+                                />
+                              </mat-form-field>
+                            </div>
+
+                            <div formGroupName="token" fxLayout="column" fxLayoutGap="16px">
+                              <mat-slide-toggle formControlName="refreshTokenEnabled">
+                                <div fxLayout="column">
+                                  <span><strong>Issue Refresh Tokens</strong></span>
+                                  <span class="toggle-description"
+                                    >Allow wallets to exchange refresh tokens for new access
+                                    tokens.</span
+                                  >
+                                </div>
+                              </mat-slide-toggle>
+
+                              @if (server.get('token.refreshTokenEnabled')?.value) {
+                                <mat-form-field>
+                                  <mat-label>Refresh Token Lifetime (seconds)</mat-label>
+                                  <input
+                                    matInput
+                                    type="number"
+                                    formControlName="refreshTokenExpiresInSeconds"
+                                    min="1"
+                                    placeholder="2592000"
+                                  />
+                                  <mat-icon matSuffix>timelapse</mat-icon>
+                                  <mat-hint>Default: 2592000 seconds (30 days)</mat-hint>
+                                </mat-form-field>
+                              }
+                            </div>
+
+                            <div fxLayout="row" fxLayoutAlign="end center">
+                              <button
+                                matIconButton
+                                type="button"
+                                color="warn"
+                                (click)="removeAuthorizationServer(i)"
+                                matTooltip="Remove this authorization server"
+                              >
+                                <mat-icon>delete</mat-icon>
+                              </button>
+                            </div>
+                          </div>
+                        }
+                      </mat-expansion-panel>
+                    }
+                  </mat-accordion>
                 </div>
 
-                <mat-card formGroupName="chainedAs">
-                  <mat-card-header>
-                    <mat-card-title>
-                      <mat-icon>account_tree</mat-icon>
-                      Chained Authorization Server
-                    </mat-card-title>
-                    <mat-card-subtitle
-                      >Delegate user authentication to an upstream OIDC provider while issuing
-                      EUDIPLO tokens</mat-card-subtitle
-                    >
-                  </mat-card-header>
-                  <mat-card-content fxLayout="column" fxLayoutGap="16px">
-                    <mat-slide-toggle formControlName="enabled">
-                      <div fxLayout="column">
-                        <span><strong>Enable Chained AS</strong></span>
-                        <span class="toggle-description"
-                          >When enabled, EUDIPLO acts as an OAuth AS facade, delegating
-                          authentication to an upstream OIDC provider (e.g., Keycloak)</span
-                        >
-                      </div>
-                    </mat-slide-toggle>
-
-                    @if (chainedAsEnabled) {
-                      <div
-                        formGroupName="upstream"
-                        fxLayout="column"
-                        fxLayoutGap="16px"
-                        class="chained-as-section"
-                      >
-                        <h4>
-                          <mat-icon>cloud</mat-icon>
-                          Upstream OIDC Provider
-                        </h4>
-                        <mat-form-field>
-                          <mat-label>Issuer URL</mat-label>
-                          <input
-                            matInput
-                            formControlName="issuer"
-                            placeholder="https://keycloak.example.com/realms/my-realm"
-                            type="url"
-                          />
-                          <mat-icon matSuffix>link</mat-icon>
-                          <mat-hint
-                            >The upstream OIDC provider URL (must support discovery)</mat-hint
-                          >
-                        </mat-form-field>
-
-                        <div fxLayout="row" fxLayoutGap="16px">
-                          <mat-form-field fxFlex>
-                            <mat-label>Client ID</mat-label>
-                            <input
-                              matInput
-                              id="chained-as-client-id"
-                              aria-label="Chained AS client ID"
-                              formControlName="clientId"
-                              placeholder="eudiplo-client"
-                            />
-                            <mat-icon matSuffix>fingerprint</mat-icon>
-                          </mat-form-field>
-                          <mat-form-field fxFlex>
-                            <mat-label>Client Secret</mat-label>
-                            <input
-                              matInput
-                              formControlName="clientSecret"
-                              type="password"
-                              placeholder="••••••••"
-                            />
-                            <mat-icon matSuffix>lock</mat-icon>
-                          </mat-form-field>
-                        </div>
-
-                        <p class="section-hint">
-                          <mat-icon>info</mat-icon>
-                          Configure your upstream OIDC provider with redirect URI:
-                          <code
-                            >https://your-eudiplo-url/&#123;tenant&#125;/chained-as/callback</code
-                          >
-                        </p>
-                      </div>
-
-                      <div
-                        formGroupName="token"
-                        fxLayout="column"
-                        fxLayoutGap="16px"
-                        class="chained-as-section"
-                      >
-                        <h4>
-                          <mat-icon>token</mat-icon>
-                          Token Configuration
-                        </h4>
-                        <div fxLayout="row" fxLayoutGap="16px">
-                          <mat-form-field fxFlex>
-                            <mat-label>Token Lifetime (seconds)</mat-label>
-                            <input
-                              matInput
-                              type="number"
-                              formControlName="lifetimeSeconds"
-                              placeholder="3600"
-                              min="60"
-                            />
-                            <mat-icon matSuffix>schedule</mat-icon>
-                            <mat-hint>Access token lifetime in seconds (default: 3600)</mat-hint>
-                          </mat-form-field>
-                          <mat-form-field fxFlex>
-                            <mat-label>Signing Key ID (optional)</mat-label>
-                            <input
-                              matInput
-                              formControlName="signingKeyId"
-                              placeholder="Leave empty for default"
-                            />
-                            <mat-icon matSuffix>key</mat-icon>
-                            <mat-hint>Key ID for token signing (uses default if empty)</mat-hint>
-                          </mat-form-field>
-                        </div>
-                      </div>
-
-                      <mat-slide-toggle formControlName="requireDPoP">
-                        <div fxLayout="column">
-                          <span><strong>Require DPoP</strong></span>
-                          <span class="toggle-description"
-                            >Require wallets to provide DPoP proof when requesting tokens</span
-                          >
-                        </div>
-                      </mat-slide-toggle>
-                    }
-                  </mat-card-content>
-                </mat-card>
+                <div fxLayout="row" fxLayoutGap="12px" fxLayoutAlign="start center">
+                  <button
+                    mat-raised-button
+                    type="button"
+                    (click)="addExternalAuthorizationServer()"
+                  >
+                    <mat-icon>add</mat-icon> Add External Authorization Server
+                  </button>
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    type="button"
+                    (click)="addAuthorizationServer()"
+                  >
+                    <mat-icon>add</mat-icon> Add OID4VP Authorization Server
+                  </button>
+                  <button mat-raised-button type="button" (click)="addChainedAuthorizationServer()">
+                    <mat-icon>add</mat-icon> Add Chained Authorization Server
+                  </button>
+                </div>
               </mat-card-content>
             </mat-card>
           </div>
@@ -494,54 +455,6 @@
 
         <ng-template matTabContent>
           <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
-            <mat-card>
-              <mat-card-header>
-                <mat-card-title>
-                  <mat-icon>refresh</mat-icon>
-                  Refresh Tokens
-                </mat-card-title>
-                <mat-card-subtitle
-                  >Configure whether wallets can refresh access tokens and for how long refresh
-                  tokens remain valid</mat-card-subtitle
-                >
-              </mat-card-header>
-              <mat-card-content fxLayout="column" fxLayoutGap="16px">
-                <mat-slide-toggle formControlName="refreshTokenEnabled">
-                  <div fxLayout="column">
-                    <span><strong>Issue Refresh Tokens</strong></span>
-                    <span class="toggle-description"
-                      >Allow wallets to exchange a refresh token for a new access token without
-                      restarting the issuance authorization flow.</span
-                    >
-                  </div>
-                </mat-slide-toggle>
-
-                @if (refreshTokenEnabled) {
-                  <mat-form-field>
-                    <mat-label>Refresh Token Lifetime (seconds)</mat-label>
-                    <input
-                      matInput
-                      type="number"
-                      formControlName="refreshTokenExpiresInSeconds"
-                      placeholder="2592000"
-                      min="1"
-                    />
-                    <mat-icon matSuffix>timelapse</mat-icon>
-                    <mat-hint>
-                      How long issued refresh tokens remain valid. Default: 2592000 seconds (30
-                      days).
-                    </mat-hint>
-                    @if (
-                      form.get('refreshTokenExpiresInSeconds')?.invalid &&
-                      form.get('refreshTokenExpiresInSeconds')?.touched
-                    ) {
-                      <mat-error>Refresh token lifetime must be at least 1 second</mat-error>
-                    }
-                  </mat-form-field>
-                }
-              </mat-card-content>
-            </mat-card>
-
             <!-- tx_code Brute-Force Protection Card -->
             <mat-card>
               <mat-card-header>
@@ -907,6 +820,8 @@
                       <input
                         matInput
                         type="url"
+                        id="registration-cert-privacy-policy"
+                        aria-label="Registration certificate privacy policy URL"
                         formControlName="privacyPolicy"
                         placeholder="https://issuer.example/privacy"
                       />

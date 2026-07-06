@@ -32,3 +32,4 @@ export { AddKmsExternalKeyIdCheck1764000000000 } from "./1764000000000-AddKmsExt
 export { RenameKeyChainActiveKeyToActiveJwk1765000000000 } from "./1765000000000-RenameKeyChainActiveKeyToActiveJwk";
 export { AddAuthorizationServersToIssuanceConfig1766000000000 } from "./1766000000000-AddAuthorizationServersToIssuanceConfig";
 export { AddIssuerRegistrationCertificateToIssuanceConfig1767000000000 } from "./1767000000000-AddIssuerRegistrationCertificateToIssuanceConfig";
+export { RemoveRefreshTokenFromIssuanceConfig1768000000000 } from "./1768000000000-RemoveRefreshTokenFromIssuanceConfig";

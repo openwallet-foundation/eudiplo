@@ -224,8 +224,6 @@ export class IssuanceService {
             registrationCertificateCache,
             credentialResponseEncryption: config.credentialResponseEncryption,
             credentialRequestEncryption: config.credentialRequestEncryption,
-            refreshTokenEnabled: config.refreshTokenEnabled,
-            refreshTokenExpiresInSeconds: config.refreshTokenExpiresInSeconds,
             txCodeMaxAttempts: config.txCodeMaxAttempts,
         };
     }

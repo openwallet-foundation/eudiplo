@@ -143,4 +143,96 @@ describe("config derive helpers", () => {
       required: ["nationalities"],
     });
   });
+
+  it("infers array item step for children when parent type is array", () => {
+    const fields: ClaimFieldDefinition[] = [
+      {
+        path: ["driving_privileges"],
+        type: "array",
+        defaultValue: [
+          {
+            vehicle_category_code: "B",
+            codes: [{ code: "B96" }],
+          },
+        ],
+        children: [
+          {
+            path: ["vehicle_category_code"],
+            type: "string",
+            mandatory: true,
+          },
+          {
+            path: ["codes"],
+            type: "array",
+            children: [
+              {
+                path: ["code"],
+                type: "string",
+                mandatory: true,
+              },
+            ],
+          },
+        ],
+      },
+    ];
+
+    expect(buildClaims(fields)).toEqual({
+      driving_privileges: [
+        {
+          vehicle_category_code: "B",
+          codes: [{ code: "B96" }],
+        },
+      ],
+    });
+
+    expect(buildJsonSchema(fields)).toEqual({
+      $schema: "https://json-schema.org/draft/2020-12/schema",
+      type: "object",
+      properties: {
+        driving_privileges: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              vehicle_category_code: {
+                type: "string",
+              },
+              codes: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    code: {
+                      type: "string",
+                    },
+                  },
+                  required: ["code"],
+                },
+              },
+            },
+            required: ["vehicle_category_code"],
+          },
+        },
+      },
+    });
+  });
+
+  it("rejects relative array child paths that start with null", () => {
+    const fields: ClaimFieldDefinition[] = [
+      {
+        path: ["driving_privileges"],
+        type: "array",
+        children: [
+          {
+            path: [null, "vehicle_category_code"],
+            type: "string",
+          },
+        ],
+      },
+    ];
+
+    expect(() => buildJsonSchema(fields)).toThrow(
+      "Relative child paths under array parents must not start with null"
+    );
+  });
 });

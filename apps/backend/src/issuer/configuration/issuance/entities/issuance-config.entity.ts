@@ -175,20 +175,6 @@ export class IssuanceConfig {
     display!: DisplayInfo[];
 
     /**
-     * Whether to issue refresh tokens for access token requests.
-     * Default: true
-     */
-    @ApiPropertyOptional({
-        description:
-            "Whether refresh tokens should be issued for OID4VCI token responses.",
-        default: true,
-    })
-    @IsBoolean()
-    @IsOptional()
-    @Column("boolean", { default: true })
-    refreshTokenEnabled?: boolean;
-
-    /**
      * Whether to advertise support for credential response encryption in the
      * credential issuer metadata (`credential_response_encryption`). When
      * enabled, wallets MAY request encrypted credential responses. Some
@@ -221,22 +207,6 @@ export class IssuanceConfig {
     @IsOptional()
     @Column("boolean", { default: false })
     credentialRequestEncryption?: boolean;
-
-    /**
-     * Lifetime of issued refresh tokens in seconds.
-     * Default: 2592000 (30 days)
-     * Set to null for non-expiring refresh tokens (not recommended for security).
-     */
-    @ApiPropertyOptional({
-        description:
-            "Refresh token lifetime in seconds. Defaults to 2592000 (30 days).",
-        default: 2592000,
-        nullable: true,
-    })
-    @IsNumber()
-    @IsOptional()
-    @Column("int", { default: 2592000, nullable: true })
-    refreshTokenExpiresInSeconds?: number;
 
     /**
      * Maximum number of failed tx_code (transaction code) validation attempts

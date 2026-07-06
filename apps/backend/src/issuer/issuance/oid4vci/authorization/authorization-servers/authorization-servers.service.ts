@@ -560,12 +560,9 @@ export class AuthorizationServersService {
 
         session.status = ChainedAsSessionStatus.TOKEN_ISSUED;
         session.accessTokenJti = jti;
-
-        const issuanceConfig =
-            await this.issuanceService.getIssuanceConfiguration(tenantId);
         const refreshToken = issueRefreshTokenIfEnabled(
             session,
-            issuanceConfig,
+            config.token ?? {},
         );
 
         await this.sessionRepository.save(session);
@@ -587,7 +584,7 @@ export class AuthorizationServersService {
         tenantId: string,
         authorizationServerId: string,
     ): Promise<Record<string, unknown>> {
-        await this.getAuthorizationServerConfig(
+        const config = await this.getAuthorizationServerConfig(
             tenantId,
             authorizationServerId,
         );
@@ -600,6 +597,7 @@ export class AuthorizationServersService {
             await this.issuanceService.getIssuanceConfiguration(tenantId);
         const walletAttestationRequired =
             issuanceConfig.walletAttestationRequired ?? false;
+        const refreshTokensEnabled = config.token?.refreshTokenEnabled ?? true;
 
         return buildAuthorizationServerMetadata({
             issuer: baseUrl,
@@ -607,7 +605,9 @@ export class AuthorizationServersService {
             tokenEndpoint: `${baseUrl}/token`,
             pushedAuthorizationRequestEndpoint: `${baseUrl}/par`,
             jwksUri: `${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/authorization-servers/${authorizationServerId}`,
-            grantTypesSupported: ["authorization_code", "refresh_token"],
+            grantTypesSupported: refreshTokensEnabled
+                ? ["authorization_code", "refresh_token"]
+                : ["authorization_code"],
             dpopSigningAlgValuesSupported:
                 DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
             ...buildWalletAttestationMetadata(walletAttestationRequired),
