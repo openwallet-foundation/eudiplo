@@ -701,9 +701,11 @@ export class CredentialConfigCreateComponent implements OnInit {
       (field?.display || []).map((entry) => this.createFieldDisplayGroup(entry))
     );
     const isMdoc = this.form.get('format')?.value === 'mso_mdoc';
+    const namespace = this.getFieldNamespaceForForm(field, isMdoc);
 
     return new FormGroup({
       path: new FormControl(this.normalizeFieldPathForForm(field, isMdoc), [Validators.required]),
+      namespace: new FormControl(namespace),
       type: new FormControl(field?.type || 'string', [Validators.required]),
       defaultValue: new FormControl(this.stringifyField(field?.defaultValue)),
       mandatory: new FormControl(!!field?.mandatory),
@@ -871,11 +873,7 @@ export class CredentialConfigCreateComponent implements OnInit {
       }),
     };
 
-    formValue.fields = this.buildFieldsPayload(
-      formValue.fields || [],
-      isMdoc,
-      formValue.docType || formValue.namespace
-    );
+    formValue.fields = this.buildFieldsPayload(formValue.fields || [], isMdoc);
 
     // Convert empty strings to null to clear optional fields (for PATCH semantics)
     formValue.keyChainId = formValue.keyChainId || null;
@@ -958,25 +956,19 @@ export class CredentialConfigCreateComponent implements OnInit {
     return mode === 'extract' ? extractSchema(value) : parsed;
   }
 
-  private buildFieldsPayload(
-    rawFields: any[],
-    isMdoc: boolean,
-    defaultNamespace?: string
-  ): ClaimFieldDefinitionDto[] {
+  private buildFieldsPayload(rawFields: any[], isMdoc: boolean): ClaimFieldDefinitionDto[] {
     return rawFields
       .map((rawField: any) => {
-        const path = this.parseFieldPath(rawField['path']);
+        const path = this.parseFieldPath(rawField['path'], isMdoc);
         const defaultValueRaw = rawField['defaultValue']?.trim();
-        const namespace = rawField['namespace']?.trim() || defaultNamespace?.trim() || undefined;
-        const normalizedPath =
-          isMdoc && namespace ? this.ensureNamespacedPath(path, namespace) : path;
+        const namespace = rawField['namespace']?.trim() || undefined;
 
         const field: ClaimFieldDefinitionDto = {
-          path: normalizedPath,
+          path,
           type: rawField['type'],
           mandatory: !!rawField['mandatory'],
           ...(isMdoc ? {} : { disclosable: !!rawField['disclosable'] }),
-          ...(!isMdoc && namespace ? { namespace } : {}),
+          ...(namespace ? { namespace } : {}),
         };
 
         if (defaultValueRaw) {
@@ -1000,15 +992,41 @@ export class CredentialConfigCreateComponent implements OnInit {
       .filter((field) => field.path.length > 0);
   }
 
-  private parseFieldPath(value: string): string[] {
+  private parseFieldPath(value: string, isMdoc: boolean): string[] {
     if (!value) {
       return [];
+    }
+
+    if (isMdoc) {
+      const trimmed = value.trim();
+      return trimmed ? [trimmed] : [];
     }
 
     return value
       .split('.')
       .map((segment) => segment.trim())
       .filter(Boolean);
+  }
+
+  private getFieldNamespaceForForm(
+    field: ClaimFieldDefinitionDto | undefined,
+    isMdoc: boolean
+  ): string {
+    const explicitNamespace = field?.namespace?.trim();
+    if (explicitNamespace) {
+      return explicitNamespace;
+    }
+
+    if (!isMdoc) {
+      return '';
+    }
+
+    const firstSegment = field?.path?.[0];
+    if (typeof firstSegment === 'string' && field?.path && field.path.length > 1) {
+      return firstSegment;
+    }
+
+    return '';
   }
 
   private normalizeFieldPathForForm(
@@ -1020,24 +1038,16 @@ export class CredentialConfigCreateComponent implements OnInit {
       return path.join('.') || '';
     }
 
-    const namespace = field?.namespace?.trim() || this.form.get('docType')?.value?.trim() || '';
+    const namespace = this.getFieldNamespaceForForm(field, isMdoc);
     if (namespace && path[0] === namespace) {
       return path.slice(1).join('.');
     }
 
+    if (!field?.namespace && path.length > 1) {
+      return path.slice(1).join('.');
+    }
+
     return path.join('.');
-  }
-
-  private ensureNamespacedPath(path: string[], namespace: string): string[] {
-    if (path.length === 0) {
-      return path;
-    }
-
-    if (path[0] === namespace) {
-      return path;
-    }
-
-    return [namespace, ...path];
   }
 
   /**
