@@ -199,7 +199,9 @@ export class IssuanceConfigCreateComponent implements OnInit {
                   presentationConfigId:
                     server.presentationConfigId ?? server.oid4vp?.presentationConfigId ?? '',
                   immediateWalletRedirect:
-                    server.immediateWalletRedirect ?? server.oid4vp?.immediateWalletRedirect ?? true,
+                    server.immediateWalletRedirect ??
+                    server.oid4vp?.immediateWalletRedirect ??
+                    true,
                 },
                 chained: {
                   issuer: server.upstream?.issuer ?? '',
@@ -710,7 +712,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
 
   /**
    * Build the list of available authorization server options for the preferred AS dropdown.
-  * Includes external auth servers, managed auth servers, and the built-in AS.
+   * Includes external auth servers, managed auth servers, and the built-in AS.
    */
   get availableAuthServerOptions(): { value: string; label: string }[] {
     const options: { value: string; label: string }[] = [];

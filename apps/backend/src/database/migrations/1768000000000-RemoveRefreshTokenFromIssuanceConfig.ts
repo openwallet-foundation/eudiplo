@@ -22,9 +22,10 @@ export class RemoveRefreshTokenFromIssuanceConfig1768000000000
             return;
         }
 
-        const hasRefreshTokenExpiresInSeconds = issuanceConfigTable.columns.some(
-            (col) => col.name === "refreshTokenExpiresInSeconds",
-        );
+        const hasRefreshTokenExpiresInSeconds =
+            issuanceConfigTable.columns.some(
+                (col) => col.name === "refreshTokenExpiresInSeconds",
+            );
         if (hasRefreshTokenExpiresInSeconds) {
             await queryRunner.dropColumn(
                 "issuance_config",
@@ -78,9 +79,10 @@ export class RemoveRefreshTokenFromIssuanceConfig1768000000000
             );
         }
 
-        const hasRefreshTokenExpiresInSeconds = issuanceConfigTable.columns.some(
-            (col) => col.name === "refreshTokenExpiresInSeconds",
-        );
+        const hasRefreshTokenExpiresInSeconds =
+            issuanceConfigTable.columns.some(
+                (col) => col.name === "refreshTokenExpiresInSeconds",
+            );
         if (!hasRefreshTokenExpiresInSeconds) {
             await queryRunner.addColumn(
                 "issuance_config",
