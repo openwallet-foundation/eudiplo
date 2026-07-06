@@ -1176,6 +1176,15 @@ export class Oid4vciService {
             throw new NotFoundException(&quot;Credential offer not found&quot;);
         }
 
+        const consumed &#x3D; await this.sessionService.consumeOfferByReference(
+            sessionId,
+            tenantId,
+        );
+
+        if (!consumed) {
+            throw new NotFoundException(&quot;Credential offer not found&quot;);
+        }
+
         return session.offer as CredentialOfferObject;
     }
 
@@ -1863,7 +1872,6 @@ export class Oid4vciService {
             await this.sessionService.add(session.id, {
                 notifications: session.notifications,
                 status: SessionStatus.Fetched,
-                consumedAt: new Date(),
             });
 
             this.auditLogger.logFlowComplete(logContext, {

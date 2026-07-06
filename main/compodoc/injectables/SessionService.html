@@ -218,6 +218,11 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
+                                <a href="#consumeOfferByReference" >consumeOfferByReference</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
                                 <a href="#create" >create</a>
                             </li>
                             <li>
@@ -477,6 +482,92 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="consumeOfferByReference"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>consumeOfferByReference</b></span>
+                        <a href="#consumeOfferByReference"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>consumeOfferByReference(sessionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="174"
+                                    class="link-to-prism">src/session/session.service.ts:174</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Consume a credential offer stored on a session by clearing the <code>offer</code>
+payload only if it is still present.</p>
+<p>Returns true when the offer was consumed, false when it was already
+consumed or the session did not match.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>sessionId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="create"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -564,8 +655,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="352"
-                                    class="link-to-prism">src/session/session.service.ts:352</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="379"
+                                    class="link-to-prism">src/session/session.service.ts:379</a></div>
                         </td>
                     </tr>
 
@@ -645,8 +736,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="231"
-                                    class="link-to-prism">src/session/session.service.ts:231</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="258"
+                                    class="link-to-prism">src/session/session.service.ts:258</a></div>
                         </td>
                     </tr>
 
@@ -717,8 +808,8 @@ Returns null if no session matches.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="364"
-                                    class="link-to-prism">src/session/session.service.ts:364</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="391"
+                                    class="link-to-prism">src/session/session.service.ts:391</a></div>
                         </td>
                     </tr>
 
@@ -825,8 +916,8 @@ Used for wallet-initiated flows where the wallet presents a token from an extern
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="223"
-                                    class="link-to-prism">src/session/session.service.ts:223</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="250"
+                                    class="link-to-prism">src/session/session.service.ts:250</a></div>
                         </td>
                     </tr>
 
@@ -896,8 +987,8 @@ Used for wallet-initiated flows where the wallet presents a token from an extern
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="173"
-                                    class="link-to-prism">src/session/session.service.ts:173</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="200"
+                                    class="link-to-prism">src/session/session.service.ts:200</a></div>
                         </td>
                     </tr>
 
@@ -987,8 +1078,8 @@ Used for wallet-initiated flows where the wallet presents a token from an extern
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="240"
-                                    class="link-to-prism">src/session/session.service.ts:240</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="267"
+                                    class="link-to-prism">src/session/session.service.ts:267</a></div>
                         </td>
                     </tr>
 
@@ -1058,8 +1149,8 @@ Used for wallet-initiated flows where the wallet presents a token from an extern
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="251"
-                                    class="link-to-prism">src/session/session.service.ts:251</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="278"
+                                    class="link-to-prism">src/session/session.service.ts:278</a></div>
                         </td>
                     </tr>
 
@@ -1266,8 +1357,8 @@ Emits a session status change event for SSE subscribers.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="269"
-                                    class="link-to-prism">src/session/session.service.ts:269</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="296"
+                                    class="link-to-prism">src/session/session.service.ts:296</a></div>
                         </td>
                     </tr>
 
@@ -1528,6 +1619,33 @@ export class SessionService implements OnApplicationBootstrap {
      */
     add(issuer_state: string, values: QueryDeepPartialEntity&lt;Session&gt;) {
         return this.sessionRepository.update({ id: issuer_state }, values);
+    }
+
+    /**
+     * Consume a credential offer stored on a session by clearing the &#x60;offer&#x60;
+     * payload only if it is still present.
+     *
+     * Returns true when the offer was consumed, false when it was already
+     * consumed or the session did not match.
+     */
+    async consumeOfferByReference(
+        sessionId: string,
+        tenantId: string,
+    ): Promise&lt;boolean&gt; {
+        const result &#x3D; await this.sessionRepository.update(
+            {
+                id: sessionId,
+                tenantId,
+                offer: Not(IsNull()),
+            },
+            {
+                offer: null,
+                // Keep the first-consumption timestamp stable across the flow.
+                consumedAt: () &#x3D;&gt; &#x60;COALESCE(&quot;consumedAt&quot;, CURRENT_TIMESTAMP)&#x60;,
+            },
+        );
+
+        return (result.affected ?? 0) &gt; 0;
     }
 
     /**

@@ -3113,6 +3113,7 @@ see the <a href="../">Issuance Overview</a>.</p>
 issuance with an offer:</p>
 <ul>
 <li>Token replay with the same authorization or pre-authorized code is rejected with an <code>invalid_grant</code> error</li>
+<li>Offer-by-reference replay is rejected: once the offer is resolved by <code>credential_offer_uri</code> from the server, it cannot be requested again (<code>404</code> on subsequent fetches).</li>
 <li>The offer is marked as consumed at the credential endpoint and cannot be used again after successful credential processing</li>
 <li>The <code>consumedAt</code> timestamp records when the offer was first used</li>
 </ul>
