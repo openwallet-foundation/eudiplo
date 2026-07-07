@@ -206,6 +206,19 @@
                         @if (server.get('type')?.value === 'external') {
                           <div fxLayout="column" fxLayoutGap="16px">
                             <mat-form-field>
+                              <mat-label>Type</mat-label>
+                              <mat-select
+                                formControlName="type"
+                                (selectionChange)="onAuthorizationServerTypeChange(i, $event.value)"
+                              >
+                                <mat-option value="external">External</mat-option>
+                                <mat-option value="oid4vp">OID4VP</mat-option>
+                                <mat-option value="chained">Chained</mat-option>
+                                <mat-option value="built-in">Built-in</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field>
                               <mat-label>External Authorization Server URL</mat-label>
                               <input
                                 matInput
@@ -283,7 +296,11 @@
                             <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
                               <mat-form-field fxFlex>
                                 <mat-label>Type</mat-label>
-                                <mat-select formControlName="type">
+                                <mat-select
+                                  formControlName="type"
+                                  (selectionChange)="onAuthorizationServerTypeChange(i, $event.value)"
+                                >
+                                  <mat-option value="external">External</mat-option>
                                   <mat-option value="oid4vp">OID4VP</mat-option>
                                   <mat-option value="chained">Chained</mat-option>
                                   <mat-option value="built-in">Built-in</mat-option>
@@ -451,26 +468,8 @@
                 </div>
 
                 <div fxLayout="row" fxLayoutGap="12px" fxLayoutAlign="start center">
-                  <button
-                    mat-raised-button
-                    type="button"
-                    (click)="addExternalAuthorizationServer()"
-                  >
-                    <mat-icon>add</mat-icon> Add External Authorization Server
-                  </button>
-                  <button
-                    mat-raised-button
-                    color="primary"
-                    type="button"
-                    (click)="addAuthorizationServer()"
-                  >
-                    <mat-icon>add</mat-icon> Add OID4VP Authorization Server
-                  </button>
-                  <button mat-raised-button type="button" (click)="addChainedAuthorizationServer()">
-                    <mat-icon>add</mat-icon> Add Chained Authorization Server
-                  </button>
-                  <button mat-raised-button type="button" (click)="addBuiltInAuthorizationServer()">
-                    <mat-icon>add</mat-icon> Add Built-in Authorization Server
+                  <button mat-raised-button color="primary" type="button" (click)="addAuthorizationServer()">
+                    <mat-icon>add</mat-icon> Add Authorization Server
                   </button>
                 </div>
               </mat-card-content>

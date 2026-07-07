@@ -695,11 +695,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
   }
 
   addExternalAuthorizationServer(): void {
-    this.authorizationServers.push(
-      this.createAuthorizationServerGroup({
-        type: 'external',
-      })
-    );
+    this.addAuthorizationServer();
   }
 
   addAuthorizationServer(): void {
@@ -707,21 +703,41 @@ export class IssuanceConfigCreateComponent implements OnInit {
   }
 
   addChainedAuthorizationServer(): void {
-    this.authorizationServers.push(
-      this.createAuthorizationServerGroup({
-        type: 'chained',
-        label: 'Chained Authorization Server',
-      })
-    );
+    this.addAuthorizationServer();
   }
 
   addBuiltInAuthorizationServer(): void {
-    this.authorizationServers.push(
-      this.createAuthorizationServerGroup({
-        type: 'built-in',
-        label: 'Built-in Authorization Server',
-      })
-    );
+    this.addAuthorizationServer();
+  }
+
+  onAuthorizationServerTypeChange(
+    index: number,
+    type: 'external' | 'oid4vp' | 'chained' | 'built-in'
+  ): void {
+    const current = this.authorizationServers.at(index)?.value;
+    if (!current || current.type === type) {
+      return;
+    }
+
+    const nextValue: any = {
+      ...current,
+      type,
+    };
+
+    if (type === 'external') {
+      nextValue.issuer = current.issuer ?? '';
+      nextValue.label = current.label ?? '';
+    }
+
+    if (type === 'chained' && !nextValue.label) {
+      nextValue.label = 'Chained Authorization Server';
+    }
+
+    if (type === 'built-in' && !nextValue.label) {
+      nextValue.label = 'Built-in Authorization Server';
+    }
+
+    this.authorizationServers.setControl(index, this.createAuthorizationServerGroup(nextValue));
   }
 
   removeAuthorizationServer(index: number): void {
