@@ -160,11 +160,11 @@ export class IssuanceService {
             Object.entries(value).filter(([, v]) => v !== undefined),
         );
 
-        const configuredAuthorizationServers = (
-            (filteredValue as Partial<IssuanceDto>).authorizationServers ??
+        const configuredAuthorizationServers = ((
+            filteredValue as Partial<IssuanceDto>
+        ).authorizationServers ??
             existingConfig.authorizationServers ??
-            []
-        ) as Array<{ type?: string }>;
+            []) as Array<{ type?: string }>;
 
         if (configuredAuthorizationServers.length < 1) {
             throw new BadRequestException(

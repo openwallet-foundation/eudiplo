@@ -364,9 +364,12 @@ export class Oid4vciService {
 
         for (const configuredServer of issuanceConfig.authorizationServers ??
             []) {
-            const externalServer = configuredServer as Partial<ExternalServerConfig>;
-            const oid4vpServer = configuredServer as Partial<Oid4vpServerConfig>;
-            const chainedServer = configuredServer as Partial<ChainedServerConfig>;
+            const externalServer =
+                configuredServer as Partial<ExternalServerConfig>;
+            const oid4vpServer =
+                configuredServer as Partial<Oid4vpServerConfig>;
+            const chainedServer =
+                configuredServer as Partial<ChainedServerConfig>;
 
             if (configuredServer.enabled === false) {
                 continue;

@@ -106,9 +106,7 @@ export class AuthorizationServersService {
             await this.issuanceService.getIssuanceConfiguration(tenantId);
 
         return (issuanceConfig.authorizationServers ?? []).filter(
-            (
-                config,
-            ): config is Oid4VpManagedAuthorizationServerConfig => {
+            (config): config is Oid4VpManagedAuthorizationServerConfig => {
                 const candidate =
                     config as Partial<Oid4VpManagedAuthorizationServerConfig>;
                 return (
