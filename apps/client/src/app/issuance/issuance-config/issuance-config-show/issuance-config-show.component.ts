@@ -182,8 +182,8 @@ export class IssuanceConfigShowComponent implements OnInit {
           details: isBuiltIn
             ? 'issuer-local authorization server'
             : isOid4vp
-            ? `presentation=${server.presentationConfigId || server.oid4vp?.presentationConfigId || 'n/a'}`
-            : `issuer=${server.upstream?.issuer || 'n/a'}, client=${server.upstream?.clientId || 'n/a'}`,
+              ? `presentation=${server.presentationConfigId || server.oid4vp?.presentationConfigId || 'n/a'}`
+              : `issuer=${server.upstream?.issuer || 'n/a'}, client=${server.upstream?.clientId || 'n/a'}`,
         };
       });
 

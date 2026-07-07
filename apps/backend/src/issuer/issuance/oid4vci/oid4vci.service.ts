@@ -434,7 +434,8 @@ export class Oid4vciService {
             }
 
             if (configuredServer.type === "built-in") {
-                const builtInIssuer = this.authzService.getAuthzIssuer(tenantId);
+                const builtInIssuer =
+                    this.authzService.getAuthzIssuer(tenantId);
                 if (seenAuthServers.has(builtInIssuer)) {
                     continue;
                 }
