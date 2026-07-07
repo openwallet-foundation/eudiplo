@@ -214,7 +214,15 @@
                                 <mat-option value="external">External</mat-option>
                                 <mat-option value="oid4vp">OID4VP</mat-option>
                                 <mat-option value="chained">Chained</mat-option>
-                                <mat-option value="built-in">Built-in</mat-option>
+                                <mat-option
+                                  value="built-in"
+                                  [disabled]="
+                                    server.get('type')?.value !== 'built-in' &&
+                                    hasBuiltInAuthorizationServer(i)
+                                  "
+                                >
+                                  Built-in
+                                </mat-option>
                               </mat-select>
                             </mat-form-field>
 
@@ -298,12 +306,22 @@
                                 <mat-label>Type</mat-label>
                                 <mat-select
                                   formControlName="type"
-                                  (selectionChange)="onAuthorizationServerTypeChange(i, $event.value)"
+                                  (selectionChange)="
+                                    onAuthorizationServerTypeChange(i, $event.value)
+                                  "
                                 >
                                   <mat-option value="external">External</mat-option>
                                   <mat-option value="oid4vp">OID4VP</mat-option>
                                   <mat-option value="chained">Chained</mat-option>
-                                  <mat-option value="built-in">Built-in</mat-option>
+                                  <mat-option
+                                    value="built-in"
+                                    [disabled]="
+                                      server.get('type')?.value !== 'built-in' &&
+                                      hasBuiltInAuthorizationServer(i)
+                                    "
+                                  >
+                                    Built-in
+                                  </mat-option>
                                 </mat-select>
                               </mat-form-field>
                               <mat-slide-toggle formControlName="enabled">Enabled</mat-slide-toggle>
@@ -468,7 +486,12 @@
                 </div>
 
                 <div fxLayout="row" fxLayoutGap="12px" fxLayoutAlign="start center">
-                  <button mat-raised-button color="primary" type="button" (click)="addAuthorizationServer()">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    type="button"
+                    (click)="addAuthorizationServer()"
+                  >
                     <mat-icon>add</mat-icon> Add Authorization Server
                   </button>
                 </div>

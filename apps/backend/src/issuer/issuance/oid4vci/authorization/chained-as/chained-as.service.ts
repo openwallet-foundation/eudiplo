@@ -111,14 +111,26 @@ export class ChainedAsService {
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
 
+        type ChainedServerConfig = {
+            enabled?: boolean;
+            type: "chained";
+            upstream: ChainedAsConfig["upstream"];
+            token?: ChainedAsConfig["token"];
+            requireDPoP?: ChainedAsConfig["requireDPoP"];
+        };
+
         const chainedServer = (issuanceConfig.authorizationServers ?? []).find(
-            (server) =>
-                server.enabled !== false &&
-                server.type === "chained" &&
-                server.upstream,
+            (server): server is ChainedServerConfig => {
+                const candidate = server as Partial<ChainedServerConfig>;
+                return (
+                    server.enabled !== false &&
+                    server.type === "chained" &&
+                    !!candidate.upstream
+                );
+            },
         );
 
-        if (chainedServer?.upstream) {
+        if (chainedServer) {
             return {
                 enabled: true,
                 upstream: chainedServer.upstream,

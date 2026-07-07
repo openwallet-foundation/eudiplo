@@ -6,7 +6,6 @@ import {
     IsOptional,
     IsString,
     IsUrl,
-    ValidateIf,
     ValidateNested,
 } from "class-validator";
 import {
@@ -14,14 +13,21 @@ import {
     UpstreamOidcConfig,
 } from "./chained-as-config.dto";
 
+export type AuthorizationServerType =
+    | "external"
+    | "oid4vp"
+    | "chained"
+    | "built-in";
+
 export class ManagedAuthorizationServerConfig {
     @ApiProperty({
-        description: "Stable identifier used in the AS URL path",
-        example: "pid-auth",
+        description: "Authorization server implementation type",
+        enum: ["external", "oid4vp", "chained", "built-in"],
+        example: "external",
     })
-    @ValidateIf((o) => o.type === "oid4vp")
     @IsString()
-    id?: string;
+    @IsIn(["external", "oid4vp", "chained", "built-in"])
+    type!: AuthorizationServerType;
 
     @ApiPropertyOptional({
         description: "Human-friendly label for the UI",
@@ -31,32 +37,6 @@ export class ManagedAuthorizationServerConfig {
     @IsString()
     label?: string;
 
-    @ApiProperty({
-        description: "Authorization server implementation type",
-        enum: ["external", "oid4vp", "chained", "built-in"],
-        example: "external",
-    })
-    @IsString()
-    @IsIn(["external", "oid4vp", "chained", "built-in"])
-    type!: "external" | "oid4vp" | "chained" | "built-in";
-
-    @ApiPropertyOptional({
-        description: "Issuer URL for external authorization servers",
-        example: "https://auth.example.com",
-    })
-    @ValidateIf((o) => o.type === "external")
-    @IsUrl({ require_tld: false })
-    issuer?: string;
-
-    @ApiPropertyOptional({
-        description: "Upstream OIDC provider configuration for chained mode",
-        type: () => UpstreamOidcConfig,
-    })
-    @ValidateIf((o) => o.type === "chained")
-    @ValidateNested()
-    @Type(() => UpstreamOidcConfig)
-    upstream?: UpstreamOidcConfig;
-
     @ApiPropertyOptional({
         description: "Whether this managed authorization server is enabled",
         default: true,
@@ -64,52 +44,146 @@ export class ManagedAuthorizationServerConfig {
     @IsOptional()
     @IsBoolean()
     enabled?: boolean;
+}
+
+export class ExternalAuthorizationServerConfig extends ManagedAuthorizationServerConfig {
+    @ApiProperty({
+        description: "Authorization server implementation type",
+        enum: ["external"],
+        example: "external",
+    })
+    @IsString()
+    @IsIn(["external"])
+    declare type: "external";
+
+    @ApiProperty({
+        description: "Issuer URL for external authorization servers",
+        example: "https://auth.example.com",
+    })
+    @IsUrl({ require_tld: false })
+    declare issuer: string;
+}
+
+export class Oid4VpAuthorizationServerConfig extends ManagedAuthorizationServerConfig {
+    @ApiProperty({
+        description: "Authorization server implementation type",
+        enum: ["oid4vp"],
+        example: "oid4vp",
+    })
+    @IsString()
+    @IsIn(["oid4vp"])
+    declare type: "oid4vp";
+
+    @ApiProperty({
+        description: "Stable identifier used in the AS URL path",
+        example: "pid-auth",
+    })
+    @IsString()
+    declare id: string;
 
     @ApiProperty({
         description: "Presentation configuration ID to use for OID4VP",
         example: "playground-pid",
     })
-    @ValidateIf((o) => o.type === "oid4vp")
     @IsString()
-    presentationConfigId?: string;
+    declare presentationConfigId: string;
 
     @ApiPropertyOptional({
         description:
             "Immediately redirect the browser into the wallet OID4VP request",
         default: true,
     })
-    @ValidateIf((o) => o.type === "oid4vp")
     @IsOptional()
     @IsBoolean()
-    immediateWalletRedirect?: boolean;
+    declare immediateWalletRedirect?: boolean;
 
     @ApiPropertyOptional({
         description: "Token configuration for this authorization server",
         type: () => ChainedAsTokenConfig,
     })
-    @ValidateIf(
-        (o) =>
-            o.type === "oid4vp" ||
-            o.type === "chained" ||
-            o.type === "built-in",
-    )
     @IsOptional()
     @ValidateNested()
     @Type(() => ChainedAsTokenConfig)
-    token?: ChainedAsTokenConfig;
+    declare token?: ChainedAsTokenConfig;
 
     @ApiPropertyOptional({
         description:
             "Require DPoP for token requests issued by this authorization server",
         default: false,
     })
-    @ValidateIf(
-        (o) =>
-            o.type === "oid4vp" ||
-            o.type === "chained" ||
-            o.type === "built-in",
-    )
     @IsOptional()
     @IsBoolean()
-    requireDPoP?: boolean;
+    declare requireDPoP?: boolean;
 }
+
+export class ChainedAuthorizationServerConfig extends ManagedAuthorizationServerConfig {
+    @ApiProperty({
+        description: "Authorization server implementation type",
+        enum: ["chained"],
+        example: "chained",
+    })
+    @IsString()
+    @IsIn(["chained"])
+    declare type: "chained";
+
+    @ApiProperty({
+        description: "Upstream OIDC provider configuration for chained mode",
+        type: () => UpstreamOidcConfig,
+    })
+    @ValidateNested()
+    @Type(() => UpstreamOidcConfig)
+    declare upstream: UpstreamOidcConfig;
+
+    @ApiPropertyOptional({
+        description: "Token configuration for this authorization server",
+        type: () => ChainedAsTokenConfig,
+    })
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => ChainedAsTokenConfig)
+    declare token?: ChainedAsTokenConfig;
+
+    @ApiPropertyOptional({
+        description:
+            "Require DPoP for token requests issued by this authorization server",
+        default: false,
+    })
+    @IsOptional()
+    @IsBoolean()
+    declare requireDPoP?: boolean;
+}
+
+export class BuiltInAuthorizationServerConfig extends ManagedAuthorizationServerConfig {
+    @ApiProperty({
+        description: "Authorization server implementation type",
+        enum: ["built-in"],
+        example: "built-in",
+    })
+    @IsString()
+    @IsIn(["built-in"])
+    declare type: "built-in";
+
+    @ApiPropertyOptional({
+        description: "Token configuration for this authorization server",
+        type: () => ChainedAsTokenConfig,
+    })
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => ChainedAsTokenConfig)
+    declare token?: ChainedAsTokenConfig;
+
+    @ApiPropertyOptional({
+        description:
+            "Require DPoP for token requests issued by this authorization server",
+        default: false,
+    })
+    @IsOptional()
+    @IsBoolean()
+    declare requireDPoP?: boolean;
+}
+
+export type ManagedAuthorizationServerConfigUnion =
+    | ExternalAuthorizationServerConfig
+    | Oid4VpAuthorizationServerConfig
+    | ChainedAuthorizationServerConfig
+    | BuiltInAuthorizationServerConfig;

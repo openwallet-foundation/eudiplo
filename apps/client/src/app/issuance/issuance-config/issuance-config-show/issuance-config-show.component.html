@@ -98,7 +98,10 @@
             </mat-card-header>
             <mat-card-content>
               @if (authorizationServerRows.length === 0) {
-                <p class="warning-text">No authorization servers configured.</p>
+                <p class="warning-text">
+                  No authorization servers configured. Add at least one external, oid4vp, chained,
+                  or built-in authorization server before using this issuer.
+                </p>
               } @else {
                 <div class="table-container">
                   <table

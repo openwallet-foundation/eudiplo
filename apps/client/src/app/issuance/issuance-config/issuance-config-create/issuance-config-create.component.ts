@@ -715,8 +715,16 @@ export class IssuanceConfigCreateComponent implements OnInit {
     type: 'external' | 'oid4vp' | 'chained' | 'built-in'
   ): void {
     const current = this.authorizationServers.at(index)?.value;
-    if (!current || current.type === type) {
+    if (!current) {
       return;
+    }
+
+    if (type === 'built-in' && this.hasBuiltInAuthorizationServer(index)) {
+      this.snackBar.open('Only one built-in authorization server can be configured', 'Close', {
+        duration: 3000,
+      });
+      this.authorizationServers.at(index).get('type')?.setValue('oid4vp', { emitEvent: false });
+      type = 'oid4vp';
     }
 
     const nextValue: any = {
@@ -738,6 +746,15 @@ export class IssuanceConfigCreateComponent implements OnInit {
     }
 
     this.authorizationServers.setControl(index, this.createAuthorizationServerGroup(nextValue));
+  }
+
+  hasBuiltInAuthorizationServer(excludeIndex?: number): boolean {
+    return this.authorizationServers.controls.some((control, index) => {
+      if (excludeIndex !== undefined && index === excludeIndex) {
+        return false;
+      }
+      return control.get('type')?.value === 'built-in';
+    });
   }
 
   removeAuthorizationServer(index: number): void {

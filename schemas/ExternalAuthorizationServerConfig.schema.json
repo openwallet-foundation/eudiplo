@@ -1,15 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ManagedAuthorizationServerConfig.schema.json",
-  "title": "ManagedAuthorizationServerConfig",
+  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ExternalAuthorizationServerConfig.schema.json",
+  "title": "ExternalAuthorizationServerConfig",
   "type": "object",
   "properties": {
     "type": {
       "enum": [
-        "external",
-        "oid4vp",
-        "chained",
-        "built-in"
+        "external"
       ],
       "type": "string",
       "description": "Authorization server implementation type",
@@ -24,10 +21,17 @@
       "type": "boolean",
       "description": "Whether this managed authorization server is enabled",
       "default": true
+    },
+    "issuer": {
+      "type": "string",
+      "format": "uri",
+      "description": "Issuer URL for external authorization servers",
+      "example": "https://auth.example.com"
     }
   },
   "required": [
-    "type"
+    "type",
+    "issuer"
   ],
   "additionalProperties": false
 }

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Request } from "express";
 import { Repository } from "typeorm";
@@ -159,6 +159,27 @@ export class IssuanceService {
         const filteredValue = Object.fromEntries(
             Object.entries(value).filter(([, v]) => v !== undefined),
         );
+
+        const configuredAuthorizationServers = (
+            (filteredValue as Partial<IssuanceDto>).authorizationServers ??
+            existingConfig.authorizationServers ??
+            []
+        ) as Array<{ type?: string }>;
+
+        if (configuredAuthorizationServers.length < 1) {
+            throw new BadRequestException(
+                "At least one authorization server must be configured",
+            );
+        }
+
+        const builtInCount = configuredAuthorizationServers.filter(
+            (server) => server?.type === "built-in",
+        ).length;
+        if (builtInCount > 1) {
+            throw new BadRequestException(
+                "Only one built-in authorization server can be configured",
+            );
+        }
 
         const before =
             "tenantId" in existingConfig

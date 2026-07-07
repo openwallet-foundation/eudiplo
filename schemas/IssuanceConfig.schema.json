@@ -9,11 +9,33 @@
       "description": "Key ID for signing access tokens. If unset, the default signing key is used."
     },
     "authorizationServers": {
-      "nullable": true,
-      "description": "Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.",
       "type": "array",
+      "description": "Dedicated managed authorization servers hosted by this issuer. At least one entry is required.",
+      "minItems": 1,
       "items": {
-        "$ref": "./ManagedAuthorizationServerConfig.schema.json"
+        "oneOf": [
+          {
+            "$ref": "./ExternalAuthorizationServerConfig.schema.json"
+          },
+          {
+            "$ref": "./Oid4VpAuthorizationServerConfig.schema.json"
+          },
+          {
+            "$ref": "./ChainedAuthorizationServerConfig.schema.json"
+          },
+          {
+            "$ref": "./BuiltInAuthorizationServerConfig.schema.json"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "external": "#/components/schemas/ExternalAuthorizationServerConfig",
+            "oid4vp": "#/components/schemas/Oid4VpAuthorizationServerConfig",
+            "chained": "#/components/schemas/ChainedAuthorizationServerConfig",
+            "built-in": "#/components/schemas/BuiltInAuthorizationServerConfig"
+          }
+        }
       }
     },
     "federation": {
@@ -108,6 +130,7 @@
     }
   },
   "required": [
+    "authorizationServers",
     "tenant",
     "display",
     "createdAt",

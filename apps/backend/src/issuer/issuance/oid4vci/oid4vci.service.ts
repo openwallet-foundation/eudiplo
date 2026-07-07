@@ -100,6 +100,23 @@ type OAuth2TokenPayload = {
     cnf?: { jwk?: Jwk };
 };
 
+type Oid4vpServerConfig = ManagedAuthorizationServerConfig & {
+    type: "oid4vp";
+    id: string;
+    presentationConfigId: string;
+};
+
+type ExternalServerConfig = ManagedAuthorizationServerConfig & {
+    type: "external";
+    issuer: string;
+};
+
+type ChainedServerConfig = ManagedAuthorizationServerConfig & {
+    type: "chained";
+    upstream?: unknown;
+    vp?: { enabled?: boolean };
+};
+
 interface IssuerInfo {
     format: string;
     data: string;
@@ -146,26 +163,30 @@ export class Oid4vciService {
         const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
 
         for (const server of issuanceConfig.authorizationServers ?? []) {
-            const serverWithVp = server as ManagedAuthorizationServerConfig & {
-                vp?: { enabled?: boolean };
-            };
+            const externalServer = server as Partial<ExternalServerConfig>;
+            const oid4vpServer = server as Partial<Oid4vpServerConfig>;
+            const chainedServer = server as Partial<ChainedServerConfig>;
 
             if (server.enabled === false) {
                 continue;
             }
 
-            if (server.type === "external" && server.issuer) {
-                return server.issuer;
+            if (
+                server.type === "external" &&
+                typeof externalServer.issuer === "string" &&
+                externalServer.issuer.length > 0
+            ) {
+                return externalServer.issuer;
             }
 
             if (
                 server.type === "oid4vp" &&
-                typeof server.id === "string" &&
-                server.id.length > 0
+                typeof oid4vpServer.id === "string" &&
+                oid4vpServer.id.length > 0
             ) {
                 return this.authorizationServersService.getAuthorizationServerBaseUrl(
                     tenantId,
-                    server.id,
+                    oid4vpServer.id,
                 );
             }
 
@@ -174,11 +195,11 @@ export class Oid4vciService {
             }
 
             if (server.type === "chained") {
-                if (server.upstream) {
+                if (chainedServer.upstream) {
                     return `${publicUrl}/issuers/${tenantId}/chained-as`;
                 }
 
-                if (serverWithVp.vp?.enabled) {
+                if (chainedServer.vp?.enabled) {
                     return `${publicUrl}/issuers/${tenantId}/chained-as-vp`;
                 }
             }
@@ -343,10 +364,9 @@ export class Oid4vciService {
 
         for (const configuredServer of issuanceConfig.authorizationServers ??
             []) {
-            const configuredServerWithVp =
-                configuredServer as ManagedAuthorizationServerConfig & {
-                    vp?: { enabled?: boolean };
-                };
+            const externalServer = configuredServer as Partial<ExternalServerConfig>;
+            const oid4vpServer = configuredServer as Partial<Oid4vpServerConfig>;
+            const chainedServer = configuredServer as Partial<ChainedServerConfig>;
 
             if (configuredServer.enabled === false) {
                 continue;
@@ -354,10 +374,10 @@ export class Oid4vciService {
 
             if (
                 configuredServer.type === "external" &&
-                typeof configuredServer.issuer === "string" &&
-                configuredServer.issuer.length > 0
+                typeof externalServer.issuer === "string" &&
+                externalServer.issuer.length > 0
             ) {
-                const authServerUrl = configuredServer.issuer;
+                const authServerUrl = externalServer.issuer;
                 if (seenAuthServers.has(authServerUrl)) {
                     continue;
                 }
@@ -377,13 +397,13 @@ export class Oid4vciService {
 
             if (
                 configuredServer.type === "oid4vp" &&
-                typeof configuredServer.id === "string" &&
-                configuredServer.id.length > 0
+                typeof oid4vpServer.id === "string" &&
+                oid4vpServer.id.length > 0
             ) {
                 const authServerUrl =
                     this.authorizationServersService.getAuthorizationServerBaseUrl(
                         tenantId,
-                        configuredServer.id,
+                        oid4vpServer.id,
                     );
                 if (seenAuthServers.has(authServerUrl)) {
                     continue;
@@ -394,14 +414,14 @@ export class Oid4vciService {
                 authorizationServers.push(
                     (await this.authorizationServersService.getMetadata(
                         tenantId,
-                        configuredServer.id,
+                        oid4vpServer.id,
                     )) as AuthorizationServerMetadata,
                 );
                 continue;
             }
 
             if (configuredServer.type === "chained") {
-                if (configuredServer.upstream) {
+                if (chainedServer.upstream) {
                     const chainedAsIssuer = `${credentialIssuer}/chained-as`;
                     if (seenAuthServers.has(chainedAsIssuer)) {
                         continue;
@@ -417,7 +437,7 @@ export class Oid4vciService {
                     continue;
                 }
 
-                if (configuredServerWithVp.vp?.enabled) {
+                if (chainedServer.vp?.enabled) {
                     const chainedAsVpIssuer = `${credentialIssuer}/chained-as-vp`;
                     if (seenAuthServers.has(chainedAsVpIssuer)) {
                         continue;

@@ -1,19 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ManagedAuthorizationServerConfig.schema.json",
-  "title": "ManagedAuthorizationServerConfig",
+  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/BuiltInAuthorizationServerConfig.schema.json",
+  "title": "BuiltInAuthorizationServerConfig",
   "type": "object",
   "properties": {
     "type": {
       "enum": [
-        "external",
-        "oid4vp",
-        "chained",
         "built-in"
       ],
       "type": "string",
       "description": "Authorization server implementation type",
-      "example": "external"
+      "example": "built-in"
     },
     "label": {
       "type": "string",
@@ -24,6 +21,19 @@
       "type": "boolean",
       "description": "Whether this managed authorization server is enabled",
       "default": true
+    },
+    "token": {
+      "description": "Token configuration for this authorization server",
+      "allOf": [
+        {
+          "$ref": "./ChainedAsTokenConfig.schema.json"
+        }
+      ]
+    },
+    "requireDPoP": {
+      "type": "boolean",
+      "description": "Require DPoP for token requests issued by this authorization server",
+      "default": false
     }
   },
   "required": [

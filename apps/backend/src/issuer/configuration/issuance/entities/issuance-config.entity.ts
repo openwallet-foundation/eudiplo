@@ -1,12 +1,15 @@
 import {
     ApiExtraModels,
     ApiHideProperty,
+    ApiProperty,
     ApiPropertyOptional,
+    getSchemaPath,
 } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
     IsArray,
     IsBoolean,
+    ArrayMinSize,
     IsNumber,
     IsOptional,
     IsString,
@@ -26,7 +29,13 @@ import {
     AuthenticationMethodNone,
     AuthenticationMethodPresentation,
 } from "../dto/authentication-config.dto";
-import { ManagedAuthorizationServerConfig } from "../dto/authorization-server-config.dto";
+import {
+    BuiltInAuthorizationServerConfig,
+    ChainedAuthorizationServerConfig,
+    ExternalAuthorizationServerConfig,
+    ManagedAuthorizationServerConfig,
+    Oid4VpAuthorizationServerConfig,
+} from "../dto/authorization-server-config.dto";
 import { DisplayInfo } from "../dto/display.dto";
 import { FederationConfig } from "../dto/federation-config.dto";
 import {
@@ -41,6 +50,11 @@ import {
     AuthenticationMethodNone,
     AuthenticationMethodAuth,
     AuthenticationMethodPresentation,
+    ManagedAuthorizationServerConfig,
+    ExternalAuthorizationServerConfig,
+    Oid4VpAuthorizationServerConfig,
+    ChainedAuthorizationServerConfig,
+    BuiltInAuthorizationServerConfig,
 )
 @Entity()
 export class IssuanceConfig {
@@ -113,15 +127,44 @@ export class IssuanceConfig {
      * Each entry creates a distinct AS endpoint and can be bound to a different
      * presentation configuration.
      */
-    @ApiPropertyOptional({
-        type: () => ManagedAuthorizationServerConfig,
-        isArray: true,
+    @ApiProperty({
+        description:
+            "Dedicated managed authorization servers hosted by this issuer. At least one entry is required.",
+        type: "array",
+        items: {
+            oneOf: [
+                { $ref: getSchemaPath(ExternalAuthorizationServerConfig) },
+                { $ref: getSchemaPath(Oid4VpAuthorizationServerConfig) },
+                { $ref: getSchemaPath(ChainedAuthorizationServerConfig) },
+                { $ref: getSchemaPath(BuiltInAuthorizationServerConfig) },
+            ],
+            discriminator: {
+                propertyName: "type",
+                mapping: {
+                    external: getSchemaPath(ExternalAuthorizationServerConfig),
+                    oid4vp: getSchemaPath(Oid4VpAuthorizationServerConfig),
+                    chained: getSchemaPath(ChainedAuthorizationServerConfig),
+                    "built-in": getSchemaPath(BuiltInAuthorizationServerConfig),
+                },
+            },
+        },
     })
+    @ArrayMinSize(1)
     @ValidateNested({ each: true })
-    @Type(() => ManagedAuthorizationServerConfig)
-    @IsOptional()
+    @Type(() => ManagedAuthorizationServerConfig, {
+        keepDiscriminatorProperty: true,
+        discriminator: {
+            property: "type",
+            subTypes: [
+                { name: "external", value: ExternalAuthorizationServerConfig },
+                { name: "oid4vp", value: Oid4VpAuthorizationServerConfig },
+                { name: "chained", value: ChainedAuthorizationServerConfig },
+                { name: "built-in", value: BuiltInAuthorizationServerConfig },
+            ],
+        },
+    })
     @Column({ type: "json", nullable: true })
-    authorizationServers?: ManagedAuthorizationServerConfig[] | null;
+    authorizationServers!: ManagedAuthorizationServerConfig[];
 
     /**
      * Optional OpenID Federation configuration used for trust evaluation.
