@@ -33,12 +33,12 @@ export class ManagedAuthorizationServerConfig {
 
     @ApiProperty({
         description: "Authorization server implementation type",
-        enum: ["external", "oid4vp", "chained"],
+        enum: ["external", "oid4vp", "chained", "built-in"],
         example: "external",
     })
     @IsString()
-    @IsIn(["external", "oid4vp", "chained"])
-    type!: "external" | "oid4vp" | "chained";
+    @IsIn(["external", "oid4vp", "chained", "built-in"])
+    type!: "external" | "oid4vp" | "chained" | "built-in";
 
     @ApiPropertyOptional({
         description: "Issuer URL for external authorization servers",
@@ -87,7 +87,12 @@ export class ManagedAuthorizationServerConfig {
         description: "Token configuration for this authorization server",
         type: () => ChainedAsTokenConfig,
     })
-    @ValidateIf((o) => o.type === "oid4vp" || o.type === "chained")
+    @ValidateIf(
+        (o) =>
+            o.type === "oid4vp" ||
+            o.type === "chained" ||
+            o.type === "built-in",
+    )
     @IsOptional()
     @ValidateNested()
     @Type(() => ChainedAsTokenConfig)
@@ -98,7 +103,12 @@ export class ManagedAuthorizationServerConfig {
             "Require DPoP for token requests issued by this authorization server",
         default: false,
     })
-    @ValidateIf((o) => o.type === "oid4vp" || o.type === "chained")
+    @ValidateIf(
+        (o) =>
+            o.type === "oid4vp" ||
+            o.type === "chained" ||
+            o.type === "built-in",
+    )
     @IsOptional()
     @IsBoolean()
     requireDPoP?: boolean;

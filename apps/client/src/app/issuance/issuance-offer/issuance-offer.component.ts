@@ -122,10 +122,6 @@ export class IssuanceOfferComponent implements OnInit {
     value: 'chained-as',
     label: 'Chained Authorization Server',
   };
-  private readonly builtInAuthorizationServerOption = {
-    value: 'built-in',
-    label: 'Built-in Authorization Server',
-  };
   availableAttributeProviders: AttributeProviderEntity[] = [];
 
   // IAE status tracking for selected credential configs
@@ -432,7 +428,7 @@ export class IssuanceOfferComponent implements OnInit {
   }
 
   get preAuthAuthorizationServerOptions(): { value: string; label: string }[] {
-    return [...this.authCodeAuthorizationServerOptions, this.builtInAuthorizationServerOption];
+    return this.authCodeAuthorizationServerOptions;
   }
 
   get authCodeAuthorizationServerOptions(): { value: string; label: string }[] {
@@ -457,6 +453,13 @@ export class IssuanceOfferComponent implements OnInit {
 
         if (server?.type === 'chained') {
           return this.chainedAuthorizationServerOption;
+        }
+
+        if (server?.type === 'built-in') {
+          return {
+            value: 'built-in',
+            label: server.label || 'Built-in Authorization Server',
+          };
         }
 
         return undefined;
@@ -485,12 +488,8 @@ export class IssuanceOfferComponent implements OnInit {
    * Returns the first configured authorization server for auth-code flow.
    */
   private getDefaultAuthServerForFlow(flow: string): string {
-    if (flow === 'pre_authorized_code') {
-      return this.builtInAuthorizationServerOption.value;
-    }
-
     let options: { value: string; label: string }[] = [];
-    if (flow === 'authorization_code_external') {
+    if (flow === 'authorization_code_external' || flow === 'pre_authorized_code') {
       options = this.authCodeAuthorizationServerOptions;
     }
 

@@ -101,29 +101,34 @@ describe('IssuanceOfferComponent', () => {
     });
   });
 
-  it('includes internal and external authorization server options for pre-authorized flow', () => {
-    component.availableManagedAuthorizationServers = [
-      { value: 'authorization-server:pid-auth', label: 'PID Auth Server' },
-    ];
-    component.availableAuthServers = ['https://auth.example.com'];
-    component.hasChainedAuthorizationServer = true;
+  it('includes configured authorization server options in order for pre-authorized flow', () => {
+    component.issuanceConfig = {
+      authorizationServers: [
+        { type: 'oid4vp', id: 'pid-auth', label: 'PID Auth Server', enabled: true },
+        { type: 'external', issuer: 'https://auth.example.com', enabled: true },
+        { type: 'chained', enabled: true, upstream: { issuer: 'https://upstream.example.com' } },
+        { type: 'built-in', enabled: true, label: 'Issuer Local AS' },
+      ],
+    } as any;
 
     expect(component.preAuthAuthorizationServerOptions).toEqual([
       { value: 'authorization-server:pid-auth', label: 'PID Auth Server' },
       { value: 'https://auth.example.com', label: 'https://auth.example.com' },
       { value: 'chained-as', label: 'Chained Authorization Server' },
-      { value: 'built-in', label: 'Built-in Authorization Server' },
+      { value: 'built-in', label: 'Issuer Local AS' },
     ]);
   });
 
-  it('defaults pre-authorized flow authorization server to built-in', () => {
-    component.availableManagedAuthorizationServers = [
-      { value: 'authorization-server:pid-auth', label: 'PID Auth Server' },
-    ];
-    component.availableAuthServers = ['https://auth.example.com'];
+  it('defaults pre-authorized flow authorization server to first configured server', () => {
+    component.issuanceConfig = {
+      authorizationServers: [
+        { type: 'external', issuer: 'https://auth.example.com', enabled: true },
+        { type: 'built-in', enabled: true },
+      ],
+    } as any;
 
     const defaultServer = (component as any).getDefaultAuthServerForFlow('pre_authorized_code');
 
-    expect(defaultServer).toBe('built-in');
+    expect(defaultServer).toBe('https://auth.example.com');
   });
 });

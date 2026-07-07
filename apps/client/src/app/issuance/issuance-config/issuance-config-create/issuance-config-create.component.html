@@ -170,9 +170,9 @@
                   Authorization Servers
                 </mat-card-title>
                 <mat-card-subtitle
-                  >Configure external, hosted, and chained authorization servers in one place. Leave
-                  external empty to use only hosted/built-in options. The first enabled server in
-                  this list is treated as the default (preferred) server.</mat-card-subtitle
+                  >Configure external, hosted, chained, and built-in authorization servers in one
+                  place. The first enabled server in this list is treated as the default
+                  (preferred) server.</mat-card-subtitle
                 >
               </mat-card-header>
               <mat-card-content fxLayout="column" fxLayoutGap="16px">
@@ -257,16 +257,18 @@
                         } @else {
                           <div fxLayout="column" fxLayoutGap="16px">
                             <div fxLayout="row" fxLayoutGap="16px">
-                              <mat-form-field fxFlex>
-                                <mat-label>ID</mat-label>
-                                <input
-                                  matInput
-                                  id="managed-auth-server-id-{{ i }}"
-                                  formControlName="id"
-                                  placeholder="auth-server-id"
-                                />
-                                <mat-hint>Used in the AS URL path</mat-hint>
-                              </mat-form-field>
+                              @if (server.get('type')?.value !== 'built-in') {
+                                <mat-form-field fxFlex>
+                                  <mat-label>ID</mat-label>
+                                  <input
+                                    matInput
+                                    id="managed-auth-server-id-{{ i }}"
+                                    formControlName="id"
+                                    placeholder="auth-server-id"
+                                  />
+                                  <mat-hint>Used in the AS URL path</mat-hint>
+                                </mat-form-field>
+                              }
                               <mat-form-field fxFlex>
                                 <mat-label>Label</mat-label>
                                 <input
@@ -284,6 +286,7 @@
                                 <mat-select formControlName="type">
                                   <mat-option value="oid4vp">OID4VP</mat-option>
                                   <mat-option value="chained">Chained</mat-option>
+                                  <mat-option value="built-in">Built-in</mat-option>
                                 </mat-select>
                               </mat-form-field>
                               <mat-slide-toggle formControlName="enabled">Enabled</mat-slide-toggle>
@@ -348,6 +351,16 @@
                                     />
                                   </mat-form-field>
                                 </div>
+                              </div>
+                            }
+
+                            @if (server.get('type')?.value === 'built-in') {
+                              <div class="m-doc-hint">
+                                <mat-icon>info</mat-icon>
+                                <span>
+                                  Built-in AS uses issuer-local authorization endpoints and is only
+                                  included when explicitly configured.
+                                </span>
                               </div>
                             }
 
@@ -455,6 +468,9 @@
                   </button>
                   <button mat-raised-button type="button" (click)="addChainedAuthorizationServer()">
                     <mat-icon>add</mat-icon> Add Chained Authorization Server
+                  </button>
+                  <button mat-raised-button type="button" (click)="addBuiltInAuthorizationServer()">
+                    <mat-icon>add</mat-icon> Add Built-in Authorization Server
                   </button>
                 </div>
               </mat-card-content>

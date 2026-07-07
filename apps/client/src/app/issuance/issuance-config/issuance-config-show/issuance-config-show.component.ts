@@ -147,7 +147,9 @@ export class IssuanceConfigShowComponent implements OnInit {
         if (server?.type === 'external') {
           return typeof server?.issuer === 'string' && server.issuer.length > 0;
         }
-        return server?.type === 'oid4vp' || server?.type === 'chained';
+        return (
+          server?.type === 'oid4vp' || server?.type === 'chained' || server?.type === 'built-in'
+        );
       })
       .map((server) => {
         if (server?.type === 'external') {
@@ -167,6 +169,7 @@ export class IssuanceConfigShowComponent implements OnInit {
         const refreshEnabled = server?.token?.refreshTokenEnabled ?? true;
         const refreshLifetime = server?.token?.refreshTokenExpiresInSeconds || 2592000;
         const isOid4vp = server?.type === 'oid4vp';
+        const isBuiltIn = server?.type === 'built-in';
         return {
           label: server.label || server.id || 'Authorization Server',
           id: server.id || '-',
@@ -176,7 +179,9 @@ export class IssuanceConfigShowComponent implements OnInit {
           dpop: server.requireDPoP ? 'required' : 'optional',
           tokenLifetime: server?.token?.lifetimeSeconds || 3600,
           refresh: refreshEnabled ? `${refreshLifetime}s` : 'disabled',
-          details: isOid4vp
+          details: isBuiltIn
+            ? 'issuer-local authorization server'
+            : isOid4vp
             ? `presentation=${server.presentationConfigId || server.oid4vp?.presentationConfigId || 'n/a'}`
             : `issuer=${server.upstream?.issuer || 'n/a'}, client=${server.upstream?.clientId || 'n/a'}`,
         };

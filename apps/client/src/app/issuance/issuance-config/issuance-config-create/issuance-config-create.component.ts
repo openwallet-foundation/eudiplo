@@ -216,6 +216,22 @@ export class IssuanceConfigCreateComponent implements OnInit {
                 },
               })
             );
+          } else if (server?.type === 'built-in') {
+            authorizationServersArray.push(
+              this.createAuthorizationServerGroup({
+                type: 'built-in',
+                label: server.label ?? 'Built-in Authorization Server',
+                enabled: server.enabled ?? true,
+                requireDPoP: server.requireDPoP ?? false,
+                token: {
+                  lifetimeSeconds: server.token?.lifetimeSeconds ?? 3600,
+                  signingKeyId: server.token?.signingKeyId ?? '',
+                  refreshTokenEnabled: server.token?.refreshTokenEnabled ?? true,
+                  refreshTokenExpiresInSeconds:
+                    server.token?.refreshTokenExpiresInSeconds ?? 2592000,
+                },
+              })
+            );
           }
 
           if (index > 0 && index % 5 === 0) {
@@ -337,6 +353,9 @@ export class IssuanceConfigCreateComponent implements OnInit {
             if (server?.type === 'external') {
               return typeof server?.issuer === 'string' && server.issuer.trim().length > 0;
             }
+            if (server?.type === 'built-in') {
+              return true;
+            }
             return typeof server?.id === 'string' && server.id.trim().length > 0;
           })
           .map((server: any) => {
@@ -346,6 +365,23 @@ export class IssuanceConfigCreateComponent implements OnInit {
                 type: 'external',
                 issuer,
                 label: server.label?.trim() || issuer,
+              };
+            }
+
+            if (server.type === 'built-in') {
+              return {
+                type: 'built-in',
+                label: server.label?.trim() || 'Built-in Authorization Server',
+                enabled: server.enabled ?? true,
+                requireDPoP: server.requireDPoP ?? false,
+                token: {
+                  lifetimeSeconds: server.token?.lifetimeSeconds || 3600,
+                  signingKeyId: server.token?.signingKeyId || undefined,
+                  refreshTokenEnabled: server.token?.refreshTokenEnabled ?? true,
+                  refreshTokenExpiresInSeconds: server.token?.refreshTokenEnabled
+                    ? server.token?.refreshTokenExpiresInSeconds || 2592000
+                    : undefined,
+                },
               };
             }
 
@@ -612,6 +648,24 @@ export class IssuanceConfigCreateComponent implements OnInit {
       });
     }
 
+    if (value?.type === 'built-in') {
+      return this.fb.group({
+        type: ['built-in', Validators.required],
+        label: [value?.label ?? 'Built-in Authorization Server', Validators.required],
+        enabled: [value?.enabled ?? true],
+        requireDPoP: [value?.requireDPoP ?? false],
+        token: this.fb.group({
+          lifetimeSeconds: [value?.token?.lifetimeSeconds ?? 3600, Validators.min(60)],
+          signingKeyId: [value?.token?.signingKeyId ?? ''],
+          refreshTokenEnabled: [value?.token?.refreshTokenEnabled ?? true],
+          refreshTokenExpiresInSeconds: [
+            value?.token?.refreshTokenExpiresInSeconds ?? 2592000,
+            Validators.min(1),
+          ],
+        }),
+      });
+    }
+
     return this.fb.group({
       id: [value?.id ?? '', Validators.required],
       label: [value?.label ?? '', Validators.required],
@@ -657,6 +711,15 @@ export class IssuanceConfigCreateComponent implements OnInit {
       this.createAuthorizationServerGroup({
         type: 'chained',
         label: 'Chained Authorization Server',
+      })
+    );
+  }
+
+  addBuiltInAuthorizationServer(): void {
+    this.authorizationServers.push(
+      this.createAuthorizationServerGroup({
+        type: 'built-in',
+        label: 'Built-in Authorization Server',
       })
     );
   }

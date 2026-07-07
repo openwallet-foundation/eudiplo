@@ -154,6 +154,10 @@ export class Oid4vciService {
                 continue;
             }
 
+            if (server.type === "external" && server.issuer) {
+                return server.issuer;
+            }
+
             if (
                 server.type === "oid4vp" &&
                 typeof server.id === "string" &&
@@ -163,6 +167,10 @@ export class Oid4vciService {
                     tenantId,
                     server.id,
                 );
+            }
+
+            if (server.type === "built-in") {
+                return this.authzService.getAuthzIssuer(tenantId);
             }
 
             if (server.type === "chained") {
@@ -176,7 +184,20 @@ export class Oid4vciService {
             }
         }
 
-        return this.authzService.getAuthzIssuer(tenantId);
+        throw new BadRequestException(
+            "No enabled authorization server configured",
+        );
+    }
+
+    private async isBuiltInAuthorizationServerConfigured(
+        tenantId: string,
+    ): Promise<boolean> {
+        const issuanceConfig =
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        return (issuanceConfig.authorizationServers ?? []).some(
+            (server) => server.enabled !== false && server.type === "built-in",
+        );
     }
 
     private async resolveAuthorizationServerSelection(
@@ -188,6 +209,13 @@ export class Oid4vciService {
         }
 
         if (selectedAuthorizationServer === "built-in") {
+            const builtInConfigured =
+                await this.isBuiltInAuthorizationServerConfigured(tenantId);
+            if (!builtInConfigured) {
+                throw new BadRequestException(
+                    "Built-in authorization server is not configured",
+                );
+            }
             return this.authzService.getAuthzIssuer(tenantId);
         }
 
@@ -403,6 +431,19 @@ export class Oid4vciService {
                         )) as AuthorizationServerMetadata,
                     );
                 }
+            }
+
+            if (configuredServer.type === "built-in") {
+                const builtInIssuer = this.authzService.getAuthzIssuer(tenantId);
+                if (seenAuthServers.has(builtInIssuer)) {
+                    continue;
+                }
+
+                seenAuthServers.add(builtInIssuer);
+                authServers.push(builtInIssuer);
+                authorizationServers.push(
+                    await this.authzService.authzMetadata(tenantId),
+                );
             }
         }
     }
@@ -711,12 +752,6 @@ export class Oid4vciService {
             authorizationServers,
         );
 
-        // The built-in authorization server is always available as fallback.
-        authServers.push(this.authzService.getAuthzIssuer(tenantId));
-        authorizationServers.push(
-            await this.authzService.authzMetadata(tenantId),
-        );
-
         const issuer_info: IssuerInfo[] = [];
         await this.appendIssuerRegistrationCertificateInfo(
             tenantId,
@@ -793,7 +828,7 @@ export class Oid4vciService {
                 );
             const authServer =
                 selectedAuthorizationServer ??
-                this.authzService.getAuthzIssuer(tenantId);
+                (await this.getAuthorizationServer(tenantId));
 
             grants = {
                 [preAuthorizedCodeGrantIdentifier]: {
