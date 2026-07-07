@@ -313,7 +313,8 @@ export class Oid4vciService {
     ): Promise<void> {
         const seenAuthServers = new Set<string>();
 
-        for (const configuredServer of issuanceConfig.authorizationServers ?? []) {
+        for (const configuredServer of issuanceConfig.authorizationServers ??
+            []) {
             const configuredServerWithVp =
                 configuredServer as ManagedAuthorizationServerConfig & {
                     vp?: { enabled?: boolean };
@@ -389,8 +390,7 @@ export class Oid4vciService {
                 }
 
                 if (configuredServerWithVp.vp?.enabled) {
-                    const chainedAsVpIssuer =
-                        `${credentialIssuer}/chained-as-vp`;
+                    const chainedAsVpIssuer = `${credentialIssuer}/chained-as-vp`;
                     if (seenAuthServers.has(chainedAsVpIssuer)) {
                         continue;
                     }

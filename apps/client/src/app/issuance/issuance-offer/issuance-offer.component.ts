@@ -432,10 +432,7 @@ export class IssuanceOfferComponent implements OnInit {
   }
 
   get preAuthAuthorizationServerOptions(): { value: string; label: string }[] {
-    return [
-      ...this.authCodeAuthorizationServerOptions,
-      this.builtInAuthorizationServerOption,
-    ];
+    return [...this.authCodeAuthorizationServerOptions, this.builtInAuthorizationServerOption];
   }
 
   get authCodeAuthorizationServerOptions(): { value: string; label: string }[] {
