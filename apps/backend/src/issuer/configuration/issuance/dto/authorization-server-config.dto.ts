@@ -181,9 +181,3 @@ export class BuiltInAuthorizationServerConfig extends ManagedAuthorizationServer
     @IsBoolean()
     declare requireDPoP?: boolean;
 }
-
-export type ManagedAuthorizationServerConfigUnion =
-    | ExternalAuthorizationServerConfig
-    | Oid4VpAuthorizationServerConfig
-    | ChainedAuthorizationServerConfig
-    | BuiltInAuthorizationServerConfig;
