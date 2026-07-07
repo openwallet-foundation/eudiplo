@@ -66,7 +66,6 @@ export class IssuanceConfigCreateComponent implements OnInit {
   public availablePresentationConfigIds: string[] = [];
   public availableSchemaMetadata: SchemaMetadataResponseDto[] = [];
   private readonly federationModes = ['federation-only', 'hybrid'] as const;
-  private readonly managedAuthorizationServerPrefix = 'authorization-server:';
 
   private asRecord(value: unknown): Record<string, unknown> {
     return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
@@ -90,7 +89,6 @@ export class IssuanceConfigCreateComponent implements OnInit {
     this.form = new FormGroup({
       display: this.fb.array([]),
       authorizationServers: this.fb.array([]),
-      preferredAuthServer: new FormControl(''),
       batchSize: new FormControl(1, [Validators.min(1)]),
       dPopRequired: new FormControl(false),
       txCodeMaxAttempts: new FormControl<number | null>(null, [Validators.min(1)]),
@@ -251,7 +249,6 @@ export class IssuanceConfigCreateComponent implements OnInit {
           (config as { credentialRequestEncryption?: boolean }).credentialRequestEncryption ??
           false,
         walletAttestationRequired: config.walletAttestationRequired ?? false,
-        preferredAuthServer: config.preferredAuthServer ?? '',
         txCodeMaxAttempts: config.txCodeMaxAttempts ?? null,
         registrationCertificate: {
           enabled: registrationCertificate?.enabled ?? false,
@@ -523,7 +520,6 @@ export class IssuanceConfigCreateComponent implements OnInit {
       txCodeMaxAttempts: formValue.txCodeMaxAttempts ?? undefined,
       authorizationServers:
         unifiedAuthorizationServers.length > 0 ? unifiedAuthorizationServers : undefined,
-      preferredAuthServer: formValue.preferredAuthServer || undefined,
       walletAttestationRequired: formValue.walletAttestationRequired,
       walletProviderTrustLists:
         formValue.walletProviderTrustLists?.length > 0
@@ -669,6 +665,18 @@ export class IssuanceConfigCreateComponent implements OnInit {
     this.authorizationServers.removeAt(index);
   }
 
+  moveAuthorizationServer(index: number, direction: 'up' | 'down'): void {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= this.authorizationServers.length) {
+      return;
+    }
+
+    const current = this.authorizationServers.at(index);
+    const target = this.authorizationServers.at(targetIndex);
+    this.authorizationServers.setControl(index, target);
+    this.authorizationServers.setControl(targetIndex, current);
+  }
+
   get walletProviderTrustLists(): FormArray {
     return this.form.get('walletProviderTrustLists') as FormArray;
   }
@@ -708,33 +716,6 @@ export class IssuanceConfigCreateComponent implements OnInit {
 
   removeTrustAnchor(index: number): void {
     this.trustAnchors.removeAt(index);
-  }
-
-  /**
-   * Build the list of available authorization server options for the preferred AS dropdown.
-   * Includes external auth servers, managed auth servers, and the built-in AS.
-   */
-  get availableAuthServerOptions(): { value: string; label: string }[] {
-    const options: { value: string; label: string }[] = [];
-    const servers = this.authorizationServers.value as any[];
-    for (const server of servers) {
-      if (server?.type === 'external' && typeof server?.issuer === 'string') {
-        const issuer = server.issuer.trim();
-        if (issuer) {
-          options.push({ value: issuer, label: server.label || issuer });
-        }
-      }
-    }
-    for (const server of servers) {
-      if (server?.type !== 'external' && server?.id && server?.enabled !== false) {
-        options.push({
-          value: `${this.managedAuthorizationServerPrefix}${server.id}`,
-          label: server.label || server.id,
-        });
-      }
-    }
-    options.push({ value: 'built-in', label: 'Built-in Authorization Server' });
-    return options;
   }
 
   addWalletProviderTrustList(): void {

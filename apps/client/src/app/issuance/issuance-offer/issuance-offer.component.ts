@@ -433,54 +433,59 @@ export class IssuanceOfferComponent implements OnInit {
 
   get preAuthAuthorizationServerOptions(): { value: string; label: string }[] {
     return [
-      ...this.availableManagedAuthorizationServers,
-      ...this.availableAuthServers.map((server) => ({ value: server, label: server })),
-      ...(this.hasChainedAuthorizationServer ? [this.chainedAuthorizationServerOption] : []),
+      ...this.authCodeAuthorizationServerOptions,
       this.builtInAuthorizationServerOption,
     ];
   }
 
   get authCodeAuthorizationServerOptions(): { value: string; label: string }[] {
-    return [
-      ...this.availableManagedAuthorizationServers,
-      ...this.availableAuthServers.map((server) => ({ value: server, label: server })),
-      ...(this.hasChainedAuthorizationServer ? [this.chainedAuthorizationServerOption] : []),
-    ];
+    const servers = ((this.issuanceConfig as any)?.authorizationServers ?? []) as any[];
+
+    return servers
+      .filter((server) => server?.enabled !== false)
+      .map((server) => {
+        if (server?.type === 'external' && typeof server?.issuer === 'string') {
+          return {
+            value: server.issuer,
+            label: server.label || server.issuer,
+          };
+        }
+
+        if (server?.type === 'oid4vp' && server?.id) {
+          return {
+            value: `authorization-server:${server.id}`,
+            label: server.label || server.id,
+          };
+        }
+
+        if (server?.type === 'chained') {
+          return this.chainedAuthorizationServerOption;
+        }
+
+        return undefined;
+      })
+      .filter((option): option is { value: string; label: string } => !!option);
   }
 
   get authCodeAuthorizationServerGroups(): {
     label: string;
     options: { value: string; label: string }[];
   }[] {
-    const groups: { label: string; options: { value: string; label: string }[] }[] = [];
-
-    if (this.availableManagedAuthorizationServers.length > 0) {
-      groups.push({
-        label: 'Hosted Authorization Servers',
-        options: this.availableManagedAuthorizationServers,
-      });
+    const options = this.authCodeAuthorizationServerOptions;
+    if (options.length === 0) {
+      return [];
     }
 
-    if (this.availableAuthServers.length > 0) {
-      groups.push({
-        label: 'External Authorization Servers',
-        options: this.availableAuthServers.map((server) => ({ value: server, label: server })),
-      });
-    }
-
-    if (this.hasChainedAuthorizationServer) {
-      groups.push({
-        label: 'Chained Authorization Server',
-        options: [this.chainedAuthorizationServerOption],
-      });
-    }
-
-    return groups;
+    return [
+      {
+        label: 'Configured Authorization Servers (in priority order)',
+        options,
+      },
+    ];
   }
 
   /**
-   * Returns the preferred auth server URL if it's in the available list,
-   * otherwise falls back to the first available auth server.
+   * Returns the first configured authorization server for auth-code flow.
    */
   private getDefaultAuthServerForFlow(flow: string): string {
     if (flow === 'pre_authorized_code') {
@@ -496,10 +501,6 @@ export class IssuanceOfferComponent implements OnInit {
       return '';
     }
 
-    const preferred = this.issuanceConfig?.preferredAuthServer;
-    if (preferred && options.some((option) => option.value === preferred)) {
-      return preferred;
-    }
     return options[0]?.value || '';
   }
 

@@ -47,11 +47,6 @@
         }
       ]
     },
-    "refreshTokenEnabled": {
-      "type": "boolean",
-      "description": "Whether refresh tokens should be issued for OID4VCI token responses.",
-      "default": true
-    },
     "credentialResponseEncryption": {
       "type": "boolean",
       "description": "Whether `credential_response_encryption` should be advertised in the credential issuer metadata.",
@@ -61,12 +56,6 @@
       "type": "boolean",
       "description": "Whether `credential_request_encryption` should be advertised in the credential issuer metadata.",
       "default": false
-    },
-    "refreshTokenExpiresInSeconds": {
-      "type": "number",
-      "description": "Refresh token lifetime in seconds. Defaults to 2592000 (30 days).",
-      "default": 2592000,
-      "nullable": true
     },
     "txCodeMaxAttempts": {
       "type": "number",
@@ -100,10 +89,6 @@
       "items": {
         "type": "string"
       }
-    },
-    "preferredAuthServer": {
-      "type": "string",
-      "description": "The URL of the preferred authorization server for wallet-initiated flows.\nWhen set, this AS is placed first in the `authorization_servers` array\nof the credential issuer metadata, signaling wallets to use it by default.\nMust match one of the configured auth servers, the chained AS URL, or \"built-in\"."
     },
     "display": {
       "type": "array",

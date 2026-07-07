@@ -171,27 +171,11 @@
                 </mat-card-title>
                 <mat-card-subtitle
                   >Configure external, hosted, and chained authorization servers in one place. Leave
-                  external empty to use only hosted/built-in options.</mat-card-subtitle
+                  external empty to use only hosted/built-in options. The first enabled server in
+                  this list is treated as the default (preferred) server.</mat-card-subtitle
                 >
               </mat-card-header>
               <mat-card-content fxLayout="column" fxLayoutGap="16px">
-                <!-- Preferred Authorization Server -->
-                <mat-form-field>
-                  <mat-label>Preferred Authorization Server</mat-label>
-                  <mat-select formControlName="preferredAuthServer">
-                    <mat-option value="">None (use default order)</mat-option>
-                    @for (option of availableAuthServerOptions; track option.value) {
-                      <mat-option [value]="option.value">{{ option.label }}</mat-option>
-                    }
-                  </mat-select>
-                  <mat-icon matSuffix>star</mat-icon>
-                  <mat-hint
-                    >The preferred AS is placed first in the issuer metadata. Wallets typically use
-                    the first AS for wallet-initiated flows. Values are external URLs,
-                    authorization-server:SERVER_ID, or built-in.</mat-hint
-                  >
-                </mat-form-field>
-
                 <mat-divider></mat-divider>
 
                 <div formArrayName="authorizationServers">
@@ -240,11 +224,29 @@
                               <input
                                 matInput
                                 formControlName="label"
-                                placeholder="Friendly name for preferred selector"
+                                placeholder="Friendly name"
                               />
                             </mat-form-field>
 
                             <div fxLayout="row" fxLayoutAlign="end center">
+                              <button
+                                matIconButton
+                                type="button"
+                                (click)="moveAuthorizationServer(i, 'up')"
+                                [disabled]="i === 0"
+                                matTooltip="Move up"
+                              >
+                                <mat-icon>arrow_upward</mat-icon>
+                              </button>
+                              <button
+                                matIconButton
+                                type="button"
+                                (click)="moveAuthorizationServer(i, 'down')"
+                                [disabled]="i === authorizationServers.length - 1"
+                                matTooltip="Move down"
+                              >
+                                <mat-icon>arrow_downward</mat-icon>
+                              </button>
                               <button
                                 matIconButton
                                 type="button"
@@ -267,7 +269,7 @@
                                   formControlName="id"
                                   placeholder="auth-server-id"
                                 />
-                                <mat-hint>Used in the AS URL path and preferred selector</mat-hint>
+                                <mat-hint>Used in the AS URL path</mat-hint>
                               </mat-form-field>
                               <mat-form-field fxFlex>
                                 <mat-label>Label</mat-label>
@@ -404,6 +406,24 @@
                             </div>
 
                             <div fxLayout="row" fxLayoutAlign="end center">
+                              <button
+                                matIconButton
+                                type="button"
+                                (click)="moveAuthorizationServer(i, 'up')"
+                                [disabled]="i === 0"
+                                matTooltip="Move up"
+                              >
+                                <mat-icon>arrow_upward</mat-icon>
+                              </button>
+                              <button
+                                matIconButton
+                                type="button"
+                                (click)="moveAuthorizationServer(i, 'down')"
+                                [disabled]="i === authorizationServers.length - 1"
+                                matTooltip="Move down"
+                              >
+                                <mat-icon>arrow_downward</mat-icon>
+                              </button>
                               <button
                                 matIconButton
                                 type="button"

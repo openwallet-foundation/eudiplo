@@ -142,25 +142,28 @@ export class IssuanceConfigShowComponent implements OnInit {
 
   get authorizationServerRows(): AuthorizationServerRow[] {
     const servers = ((this.config as any)?.authorizationServers ?? []) as any[];
-    const preferred = this.config?.preferredAuthServer;
-
-    const externalRows = servers
-      .filter((server) => server?.type === 'external' && typeof server?.issuer === 'string')
-      .map((server) => ({
-        label: server.label || server.issuer,
-        id: '-',
-        type: 'external',
-        preferred: preferred === server.issuer,
-        enabled: server.enabled !== false,
-        dpop: '-',
-        tokenLifetime: 0,
-        refresh: '-',
-        details: server.issuer,
-      }));
-
-    const managedRows = servers
-      .filter((server) => server?.type === 'oid4vp' || server?.type === 'chained')
+    const rows = servers
+      .filter((server) => {
+        if (server?.type === 'external') {
+          return typeof server?.issuer === 'string' && server.issuer.length > 0;
+        }
+        return server?.type === 'oid4vp' || server?.type === 'chained';
+      })
       .map((server) => {
+        if (server?.type === 'external') {
+          return {
+            label: server.label || server.issuer,
+            id: '-',
+            type: 'external',
+            preferred: false,
+            enabled: server.enabled !== false,
+            dpop: '-',
+            tokenLifetime: 0,
+            refresh: '-',
+            details: server.issuer,
+          };
+        }
+
         const refreshEnabled = server?.token?.refreshTokenEnabled ?? true;
         const refreshLifetime = server?.token?.refreshTokenExpiresInSeconds || 2592000;
         const isOid4vp = server?.type === 'oid4vp';
@@ -168,9 +171,7 @@ export class IssuanceConfigShowComponent implements OnInit {
           label: server.label || server.id || 'Authorization Server',
           id: server.id || '-',
           type: server.type,
-          preferred:
-            preferred === `authorization-server:${server.id}` ||
-            preferred === (server.id ? `authorization-server:${server.id}` : undefined),
+          preferred: false,
           enabled: server.enabled !== false,
           dpop: server.requireDPoP ? 'required' : 'optional',
           tokenLifetime: server?.token?.lifetimeSeconds || 3600,
@@ -181,7 +182,12 @@ export class IssuanceConfigShowComponent implements OnInit {
         };
       });
 
-    return [...externalRows, ...managedRows];
+    const preferredIndex = rows.findIndex((row) => row.enabled);
+    if (preferredIndex >= 0) {
+      rows[preferredIndex].preferred = true;
+    }
+
+    return rows;
   }
 
   copyToClipboard(value: string, label: string): void {

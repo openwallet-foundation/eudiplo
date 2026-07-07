@@ -52,8 +52,6 @@ interface ParsedAccessTokenRefreshTokenRequestGrant {
 @Injectable()
 export class AuthorizeService {
     private readonly logger = new Logger(AuthorizeService.name);
-    private static readonly AUTHORIZATION_SERVER_SELECTION_PREFIX =
-        "authorization-server:";
 
     constructor(
         private readonly configService: ConfigService,
@@ -210,8 +208,9 @@ export class AuthorizeService {
     }
 
     private resolveRefreshTokenConfig(issuanceConfig: {
-        preferredAuthServer?: string | null;
         authorizationServers?: Array<{
+            type?: string;
+            enabled?: boolean;
             id?: string;
             token?: {
                 refreshTokenEnabled?: boolean;
@@ -222,20 +221,17 @@ export class AuthorizeService {
         enabled: boolean;
         expiresInSeconds?: number;
     } {
-        const preferred = issuanceConfig.preferredAuthServer;
-        const prefix = AuthorizeService.AUTHORIZATION_SERVER_SELECTION_PREFIX;
-
-        if (typeof preferred === "string" && preferred.startsWith(prefix)) {
-            const serverId = preferred.slice(prefix.length);
-            const server = (issuanceConfig.authorizationServers ?? []).find(
-                (candidate) => candidate.id === serverId,
-            );
-            if (server?.token) {
-                return {
-                    enabled: server.token.refreshTokenEnabled ?? true,
-                    expiresInSeconds: server.token.refreshTokenExpiresInSeconds,
-                };
-            }
+        const server = (issuanceConfig.authorizationServers ?? []).find(
+            (candidate) =>
+                candidate.enabled !== false &&
+                candidate.type !== "external" &&
+                !!candidate.token,
+        );
+        if (server?.token) {
+            return {
+                enabled: server.token.refreshTokenEnabled ?? true,
+                expiresInSeconds: server.token.refreshTokenExpiresInSeconds,
+            };
         }
 
         // Built-in authorization server defaults.

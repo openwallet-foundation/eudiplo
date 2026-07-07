@@ -297,7 +297,6 @@ describe("Issuance - Chained AS Flow", () => {
             .send({
                 ...currentConfig,
                 refreshTokenEnabled,
-                preferredAuthServer: "chained-as-vp",
                 authorizationServers: [
                     {
                         type: "chained",

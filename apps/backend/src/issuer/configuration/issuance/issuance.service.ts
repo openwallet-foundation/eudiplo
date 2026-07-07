@@ -217,7 +217,6 @@ export class IssuanceService {
             walletAttestationRequired: config.walletAttestationRequired,
             walletProviderTrustLists: config.walletProviderTrustLists,
             signingKeyId: config.signingKeyId,
-            preferredAuthServer: config.preferredAuthServer,
             authorizationServers: config.authorizationServers,
             federation: config.federation,
             registrationCertificate,

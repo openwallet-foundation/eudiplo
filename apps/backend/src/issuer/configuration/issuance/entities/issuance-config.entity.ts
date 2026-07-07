@@ -109,17 +109,6 @@ export class IssuanceConfig {
     signingKeyId?: string;
 
     /**
-     * The URL of the preferred authorization server for wallet-initiated flows.
-     * When set, this AS is placed first in the `authorization_servers` array
-     * of the credential issuer metadata, signaling wallets to use it by default.
-     * Must match one of the configured auth servers, the chained AS URL, or "built-in".
-     */
-    @IsOptional()
-    @IsString()
-    @Column({ type: "varchar", nullable: true })
-    preferredAuthServer?: string;
-
-    /**
      * Dedicated managed authorization servers hosted by this issuer.
      * Each entry creates a distinct AS endpoint and can be bound to a different
      * presentation configuration.
