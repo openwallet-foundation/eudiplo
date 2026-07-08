@@ -160,10 +160,11 @@ export class IssuanceService {
             Object.entries(value).filter(([, v]) => v !== undefined),
         );
 
-        const hasIncomingAuthorizationServers = Object.prototype.hasOwnProperty.call(
-            filteredValue,
-            "authorizationServers",
-        );
+        const hasIncomingAuthorizationServers =
+            Object.prototype.hasOwnProperty.call(
+                filteredValue,
+                "authorizationServers",
+            );
         const effectiveAuthorizationServers = hasIncomingAuthorizationServers
             ? (filteredValue as Partial<IssuanceDto>).authorizationServers
             : existingConfig.authorizationServers;
@@ -174,9 +175,10 @@ export class IssuanceService {
             );
         }
 
-        const configuredAuthorizationServers = effectiveAuthorizationServers as Array<{
-            type?: string;
-        }>;
+        const configuredAuthorizationServers =
+            effectiveAuthorizationServers as Array<{
+                type?: string;
+            }>;
 
         if (configuredAuthorizationServers.length < 1) {
             throw new BadRequestException(

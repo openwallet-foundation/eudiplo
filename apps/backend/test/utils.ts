@@ -529,7 +529,7 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
             credentialRequestEncryption: false,
             walletAttestationRequired: false,
         } as IssuanceDto)
-        .expect(201);    
+        .expect(201);
 
     // Import the pid credential configuration
 
