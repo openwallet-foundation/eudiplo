@@ -33,9 +33,11 @@ const otelSDK = new NodeSDK({
         exporter: new OTLPMetricExporter(),
         exportIntervalMillis: 30_000,
     }),
-    logRecordProcessors: [new BatchLogRecordProcessor({
-        exporter: new OTLPLogExporter(),        
-    })],
+    logRecordProcessors: [
+        new BatchLogRecordProcessor({
+            exporter: new OTLPLogExporter(),
+        }),
+    ],
     instrumentations: [
         getNodeAutoInstrumentations({
             // fs instrumentation is very noisy and adds little value
