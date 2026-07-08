@@ -1299,6 +1299,7 @@
           ]
         },
         "offer": {
+          "nullable": true,
           "description": "Credential offer object containing details about the credential offer or presentation request.\nEncrypted at rest.",
           "type": "object"
         },
@@ -1405,7 +1406,7 @@
         "consumedAt": {
           "format": "date-time",
           "type": "string",
-          "description": "Timestamp when the session offer was consumed.\nNull if the offer has not yet been consumed."
+          "description": "Timestamp of the first consumption event for the session offer.\nFor OID4VCI this can be URI resolution or later flow completion.\nNull if no consumption event has happened yet."
         }
       },
       "required": [
@@ -1817,6 +1818,164 @@
     }
   },
   {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ManagedAuthorizationServerConfig.schema.json",
+    "fileMatch": ["a://b/ManagedAuthorizationServerConfig*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ManagedAuthorizationServerConfig.schema.json",
+      "title": "ManagedAuthorizationServerConfig",
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": ["external", "oid4vp", "chained", "built-in"],
+          "type": "string",
+          "description": "Authorization server implementation type",
+          "example": "external"
+        },
+        "label": {
+          "type": "string",
+          "description": "Human-friendly label for the UI",
+          "example": "PID Authorization Server"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether this managed authorization server is enabled",
+          "default": true
+        }
+      },
+      "required": ["type"],
+      "additionalProperties": false
+    }
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ExternalAuthorizationServerConfig.schema.json",
+    "fileMatch": ["a://b/ExternalAuthorizationServerConfig*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ExternalAuthorizationServerConfig.schema.json",
+      "title": "ExternalAuthorizationServerConfig",
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": ["external"],
+          "type": "string",
+          "description": "Authorization server implementation type",
+          "example": "external"
+        },
+        "label": {
+          "type": "string",
+          "description": "Human-friendly label for the UI",
+          "example": "PID Authorization Server"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether this managed authorization server is enabled",
+          "default": true
+        },
+        "issuer": {
+          "type": "string",
+          "format": "uri",
+          "description": "Issuer URL for external authorization servers",
+          "example": "https://auth.example.com"
+        }
+      },
+      "required": ["type", "issuer"],
+      "additionalProperties": false
+    }
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ChainedAsTokenConfig.schema.json",
+    "fileMatch": ["a://b/ChainedAsTokenConfig*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ChainedAsTokenConfig.schema.json",
+      "title": "ChainedAsTokenConfig",
+      "type": "object",
+      "properties": {
+        "lifetimeSeconds": {
+          "type": "number",
+          "description": "Access token lifetime in seconds",
+          "minimum": 60,
+          "default": 3600
+        },
+        "signingKeyId": {
+          "type": "string",
+          "description": "Key ID for token signing"
+        },
+        "refreshTokenEnabled": {
+          "type": "boolean",
+          "description": "Whether refresh tokens should be issued",
+          "default": true
+        },
+        "refreshTokenExpiresInSeconds": {
+          "type": "number",
+          "description": "Refresh token lifetime in seconds",
+          "minimum": 60,
+          "default": 2592000
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/Oid4VpAuthorizationServerConfig.schema.json",
+    "fileMatch": ["a://b/Oid4VpAuthorizationServerConfig*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/Oid4VpAuthorizationServerConfig.schema.json",
+      "title": "Oid4VpAuthorizationServerConfig",
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": ["oid4vp"],
+          "type": "string",
+          "description": "Authorization server implementation type",
+          "example": "oid4vp"
+        },
+        "label": {
+          "type": "string",
+          "description": "Human-friendly label for the UI",
+          "example": "PID Authorization Server"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether this managed authorization server is enabled",
+          "default": true
+        },
+        "id": {
+          "type": "string",
+          "description": "Stable identifier used in the AS URL path",
+          "example": "pid-auth"
+        },
+        "presentationConfigId": {
+          "type": "string",
+          "description": "Presentation configuration ID to use for OID4VP",
+          "example": "playground-pid"
+        },
+        "immediateWalletRedirect": {
+          "type": "boolean",
+          "description": "Immediately redirect the browser into the wallet OID4VP request",
+          "default": true
+        },
+        "token": {
+          "description": "Token configuration for this authorization server",
+          "allOf": [
+            {
+              "$ref": "./ChainedAsTokenConfig.schema.json"
+            }
+          ]
+        },
+        "requireDPoP": {
+          "type": "boolean",
+          "description": "Require DPoP for token requests issued by this authorization server",
+          "default": false
+        }
+      },
+      "required": ["type", "id", "presentationConfigId"],
+      "additionalProperties": false
+    }
+  },
+  {
     "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/UpstreamOidcConfig.schema.json",
     "fileMatch": ["a://b/UpstreamOidcConfig*.schema.json"],
     "schema": {
@@ -1854,58 +2013,29 @@
     }
   },
   {
-    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ChainedAsTokenConfig.schema.json",
-    "fileMatch": ["a://b/ChainedAsTokenConfig*.schema.json"],
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ChainedAuthorizationServerConfig.schema.json",
+    "fileMatch": ["a://b/ChainedAuthorizationServerConfig*.schema.json"],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ChainedAsTokenConfig.schema.json",
-      "title": "ChainedAsTokenConfig",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ChainedAuthorizationServerConfig.schema.json",
+      "title": "ChainedAuthorizationServerConfig",
       "type": "object",
       "properties": {
-        "lifetimeSeconds": {
-          "type": "number",
-          "description": "Access token lifetime in seconds",
-          "minimum": 60,
-          "default": 3600
-        },
-        "signingKeyId": {
+        "type": {
+          "enum": ["chained"],
           "type": "string",
-          "description": "Key ID for token signing"
-        }
-      },
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ManagedAuthorizationServerConfig.schema.json",
-    "fileMatch": ["a://b/ManagedAuthorizationServerConfig*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ManagedAuthorizationServerConfig.schema.json",
-      "title": "ManagedAuthorizationServerConfig",
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Stable identifier used in the AS URL path",
-          "example": "pid-auth"
+          "description": "Authorization server implementation type",
+          "example": "chained"
         },
         "label": {
           "type": "string",
           "description": "Human-friendly label for the UI",
           "example": "PID Authorization Server"
         },
-        "type": {
-          "enum": ["external", "oid4vp", "chained"],
-          "type": "string",
-          "description": "Authorization server implementation type",
-          "example": "external"
-        },
-        "issuer": {
-          "type": "string",
-          "format": "uri",
-          "description": "Issuer URL for external authorization servers",
-          "example": "https://auth.example.com"
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether this managed authorization server is enabled",
+          "default": true
         },
         "upstream": {
           "description": "Upstream OIDC provider configuration for chained mode",
@@ -1915,19 +2045,47 @@
             }
           ]
         },
+        "token": {
+          "description": "Token configuration for this authorization server",
+          "allOf": [
+            {
+              "$ref": "./ChainedAsTokenConfig.schema.json"
+            }
+          ]
+        },
+        "requireDPoP": {
+          "type": "boolean",
+          "description": "Require DPoP for token requests issued by this authorization server",
+          "default": false
+        }
+      },
+      "required": ["type", "upstream"],
+      "additionalProperties": false
+    }
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/BuiltInAuthorizationServerConfig.schema.json",
+    "fileMatch": ["a://b/BuiltInAuthorizationServerConfig*.schema.json"],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/BuiltInAuthorizationServerConfig.schema.json",
+      "title": "BuiltInAuthorizationServerConfig",
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": ["built-in"],
+          "type": "string",
+          "description": "Authorization server implementation type",
+          "example": "built-in"
+        },
+        "label": {
+          "type": "string",
+          "description": "Human-friendly label for the UI",
+          "example": "PID Authorization Server"
+        },
         "enabled": {
           "type": "boolean",
           "description": "Whether this managed authorization server is enabled",
-          "default": true
-        },
-        "presentationConfigId": {
-          "type": "string",
-          "description": "Presentation configuration ID to use for OID4VP",
-          "example": "playground-pid"
-        },
-        "immediateWalletRedirect": {
-          "type": "boolean",
-          "description": "Immediately redirect the browser into the wallet OID4VP request",
           "default": true
         },
         "token": {
@@ -2184,11 +2342,33 @@
           "description": "Key ID for signing access tokens. If unset, the default signing key is used."
         },
         "authorizationServers": {
-          "nullable": true,
-          "description": "Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.",
           "type": "array",
+          "description": "Dedicated managed authorization servers hosted by this issuer. At least one entry is required.",
+          "minItems": 1,
           "items": {
-            "$ref": "./ManagedAuthorizationServerConfig.schema.json"
+            "oneOf": [
+              {
+                "$ref": "./ExternalAuthorizationServerConfig.schema.json"
+              },
+              {
+                "$ref": "./Oid4VpAuthorizationServerConfig.schema.json"
+              },
+              {
+                "$ref": "./ChainedAuthorizationServerConfig.schema.json"
+              },
+              {
+                "$ref": "./BuiltInAuthorizationServerConfig.schema.json"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "external": "#/components/schemas/ExternalAuthorizationServerConfig",
+                "oid4vp": "#/components/schemas/Oid4VpAuthorizationServerConfig",
+                "chained": "#/components/schemas/ChainedAuthorizationServerConfig",
+                "built-in": "#/components/schemas/BuiltInAuthorizationServerConfig"
+              }
+            }
           }
         },
         "federation": {
@@ -2222,11 +2402,6 @@
             }
           ]
         },
-        "refreshTokenEnabled": {
-          "type": "boolean",
-          "description": "Whether refresh tokens should be issued for OID4VCI token responses.",
-          "default": true
-        },
         "credentialResponseEncryption": {
           "type": "boolean",
           "description": "Whether `credential_response_encryption` should be advertised in the credential issuer metadata.",
@@ -2236,12 +2411,6 @@
           "type": "boolean",
           "description": "Whether `credential_request_encryption` should be advertised in the credential issuer metadata.",
           "default": false
-        },
-        "refreshTokenExpiresInSeconds": {
-          "type": "number",
-          "description": "Refresh token lifetime in seconds. Defaults to 2592000 (30 days).",
-          "default": 2592000,
-          "nullable": true
         },
         "txCodeMaxAttempts": {
           "type": "number",
@@ -2276,10 +2445,6 @@
             "type": "string"
           }
         },
-        "preferredAuthServer": {
-          "type": "string",
-          "description": "The URL of the preferred authorization server for wallet-initiated flows.\nWhen set, this AS is placed first in the `authorization_servers` array\nof the credential issuer metadata, signaling wallets to use it by default.\nMust match one of the configured auth servers, the chained AS URL, or \"built-in\"."
-        },
         "display": {
           "type": "array",
           "items": {
@@ -2297,7 +2462,7 @@
           "description": "The timestamp when the VP request was last updated."
         }
       },
-      "required": ["tenant", "display", "createdAt", "updatedAt"],
+      "required": ["authorizationServers", "tenant", "display", "createdAt", "updatedAt"],
       "additionalProperties": false
     }
   },
@@ -2315,11 +2480,33 @@
           "description": "Key ID for signing access tokens. If unset, the default signing key is used."
         },
         "authorizationServers": {
-          "nullable": true,
-          "description": "Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.",
           "type": "array",
+          "description": "Dedicated managed authorization servers hosted by this issuer. At least one entry is required.",
+          "minItems": 1,
           "items": {
-            "$ref": "./ManagedAuthorizationServerConfig.schema.json"
+            "oneOf": [
+              {
+                "$ref": "./ExternalAuthorizationServerConfig.schema.json"
+              },
+              {
+                "$ref": "./Oid4VpAuthorizationServerConfig.schema.json"
+              },
+              {
+                "$ref": "./ChainedAuthorizationServerConfig.schema.json"
+              },
+              {
+                "$ref": "./BuiltInAuthorizationServerConfig.schema.json"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "external": "#/components/schemas/ExternalAuthorizationServerConfig",
+                "oid4vp": "#/components/schemas/Oid4VpAuthorizationServerConfig",
+                "chained": "#/components/schemas/ChainedAuthorizationServerConfig",
+                "built-in": "#/components/schemas/BuiltInAuthorizationServerConfig"
+              }
+            }
           }
         },
         "federation": {
@@ -2353,11 +2540,6 @@
             }
           ]
         },
-        "refreshTokenEnabled": {
-          "type": "boolean",
-          "description": "Whether refresh tokens should be issued for OID4VCI token responses.",
-          "default": true
-        },
         "credentialResponseEncryption": {
           "type": "boolean",
           "description": "Whether `credential_response_encryption` should be advertised in the credential issuer metadata.",
@@ -2367,12 +2549,6 @@
           "type": "boolean",
           "description": "Whether `credential_request_encryption` should be advertised in the credential issuer metadata.",
           "default": false
-        },
-        "refreshTokenExpiresInSeconds": {
-          "type": "number",
-          "description": "Refresh token lifetime in seconds. Defaults to 2592000 (30 days).",
-          "default": 2592000,
-          "nullable": true
         },
         "txCodeMaxAttempts": {
           "type": "number",
@@ -2399,10 +2575,6 @@
             "type": "string"
           }
         },
-        "preferredAuthServer": {
-          "type": "string",
-          "description": "The URL of the preferred authorization server for wallet-initiated flows.\nWhen set, this AS is placed first in the `authorization_servers` array\nof the credential issuer metadata, signaling wallets to use it by default.\nMust match one of the configured auth servers, the chained AS URL, or \"built-in\"."
-        },
         "display": {
           "type": "array",
           "items": {
@@ -2410,7 +2582,7 @@
           }
         }
       },
-      "required": ["display"],
+      "required": ["authorizationServers", "display"],
       "additionalProperties": false
     }
   },
@@ -2476,6 +2648,16 @@
       "title": "CredentialQuery",
       "type": "object",
       "properties": {
+        "claim_sets": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": "Ordered alternative claim combinations for this credential query."
+        },
         "id": {
           "type": "string",
           "pattern": "^[A-Za-z0-9_-]+$"

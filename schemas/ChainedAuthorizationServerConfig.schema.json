@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ChainedAuthorizationServerConfig.schema.json",
+  "title": "ChainedAuthorizationServerConfig",
+  "type": "object",
+  "properties": {
+    "type": {
+      "enum": [
+        "chained"
+      ],
+      "type": "string",
+      "description": "Authorization server implementation type",
+      "example": "chained"
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-friendly label for the UI",
+      "example": "PID Authorization Server"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Whether this managed authorization server is enabled",
+      "default": true
+    },
+    "upstream": {
+      "description": "Upstream OIDC provider configuration for chained mode",
+      "allOf": [
+        {
+          "$ref": "./UpstreamOidcConfig.schema.json"
+        }
+      ]
+    },
+    "token": {
+      "description": "Token configuration for this authorization server",
+      "allOf": [
+        {
+          "$ref": "./ChainedAsTokenConfig.schema.json"
+        }
+      ]
+    },
+    "requireDPoP": {
+      "type": "boolean",
+      "description": "Require DPoP for token requests issued by this authorization server",
+      "default": false
+    }
+  },
+  "required": [
+    "type",
+    "upstream"
+  ],
+  "additionalProperties": false
+}

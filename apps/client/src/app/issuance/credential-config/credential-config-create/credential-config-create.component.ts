@@ -516,8 +516,9 @@ export class CredentialConfigCreateComponent implements OnInit {
         (normalizedConfig.config as any)?.keyAttestationsRequired?.user_authentication || [],
     } as any);
 
+    const flatFields = this.flattenFieldDefinitionsForForm(normalizedConfig.fields || []);
     this.fields.clear();
-    for (const field of normalizedConfig.fields || []) {
+    for (const field of flatFields) {
       this.fields.push(this.createFieldGroup(field));
     }
 
@@ -700,11 +701,10 @@ export class CredentialConfigCreateComponent implements OnInit {
     const display = new FormArray(
       (field?.display || []).map((entry) => this.createFieldDisplayGroup(entry))
     );
-    const isMdoc = this.form.get('format')?.value === 'mso_mdoc';
-    const namespace = this.getFieldNamespaceForForm(field, isMdoc);
+    const namespace = this.getFieldNamespaceForForm(field);
 
     return new FormGroup({
-      path: new FormControl(this.normalizeFieldPathForForm(field, isMdoc), [Validators.required]),
+      path: new FormControl(this.normalizeFieldPathForForm(field), [Validators.required]),
       namespace: new FormControl(namespace),
       type: new FormControl(field?.type || 'string', [Validators.required]),
       defaultValue: new FormControl(this.stringifyField(field?.defaultValue)),
@@ -873,7 +873,7 @@ export class CredentialConfigCreateComponent implements OnInit {
       }),
     };
 
-    formValue.fields = this.buildFieldsPayload(formValue.fields || [], isMdoc);
+    formValue.fields = this.buildFieldsPayload(formValue.fields || []);
 
     // Convert empty strings to null to clear optional fields (for PATCH semantics)
     formValue.keyChainId = formValue.keyChainId || null;
@@ -956,10 +956,10 @@ export class CredentialConfigCreateComponent implements OnInit {
     return mode === 'extract' ? extractSchema(value) : parsed;
   }
 
-  private buildFieldsPayload(rawFields: any[], isMdoc: boolean): ClaimFieldDefinitionDto[] {
-    return rawFields
+  private buildFieldsPayload(rawFields: any[]): ClaimFieldDefinitionDto[] {
+    const flatFields = rawFields
       .map((rawField: any) => {
-        const path = this.parseFieldPath(rawField['path'], isMdoc);
+        const path = this.parseFieldPath(rawField['path']);
         const defaultValueRaw = rawField['defaultValue']?.trim();
         const namespace = rawField['namespace']?.trim() || undefined;
 
@@ -967,7 +967,7 @@ export class CredentialConfigCreateComponent implements OnInit {
           path,
           type: rawField['type'],
           mandatory: !!rawField['mandatory'],
-          ...(isMdoc ? {} : { disclosable: !!rawField['disclosable'] }),
+          disclosable: !!rawField['disclosable'],
           ...(namespace ? { namespace } : {}),
         };
 
@@ -990,64 +990,193 @@ export class CredentialConfigCreateComponent implements OnInit {
         return field;
       })
       .filter((field) => field.path.length > 0);
+
+    // Use one common nested field model for all formats.
+    return this.buildNestedFieldDefinitions(flatFields);
   }
 
-  private parseFieldPath(value: string, isMdoc: boolean): string[] {
+  private parseFieldPath(value: string): (string | number | null)[] {
     if (!value) {
       return [];
-    }
-
-    if (isMdoc) {
-      const trimmed = value.trim();
-      return trimmed ? [trimmed] : [];
     }
 
     return value
       .split('.')
       .map((segment) => segment.trim())
-      .filter(Boolean);
+      .filter((segment) => segment.length > 0)
+      .map((segment) => {
+        if (segment === '*') {
+          return null;
+        }
+
+        if (/^\d+$/.test(segment)) {
+          return Number(segment);
+        }
+
+        return segment;
+      });
   }
 
-  private getFieldNamespaceForForm(
-    field: ClaimFieldDefinitionDto | undefined,
-    isMdoc: boolean
-  ): string {
+  private getFieldNamespaceForForm(field: ClaimFieldDefinitionDto | undefined): string {
     const explicitNamespace = field?.namespace?.trim();
     if (explicitNamespace) {
       return explicitNamespace;
     }
 
-    if (!isMdoc) {
-      return '';
-    }
-
-    const firstSegment = field?.path?.[0];
-    if (typeof firstSegment === 'string' && field?.path && field.path.length > 1) {
-      return firstSegment;
-    }
-
     return '';
   }
 
-  private normalizeFieldPathForForm(
-    field: ClaimFieldDefinitionDto | undefined,
-    isMdoc: boolean
-  ): string {
+  private normalizeFieldPathForForm(field: ClaimFieldDefinitionDto | undefined): string {
     const path = field?.path || [];
-    if (!isMdoc || path.length === 0) {
-      return path.join('.') || '';
+    if (path.length === 0) {
+      return '';
     }
 
-    const namespace = this.getFieldNamespaceForForm(field, isMdoc);
-    if (namespace && path[0] === namespace) {
-      return path.slice(1).join('.');
+    return path
+      .map((segment) => {
+        if (segment === null) {
+          return '*';
+        }
+
+        return String(segment);
+      })
+      .join('.');
+  }
+
+  private resolveChildPathForForm(
+    parentPath: (string | number | null)[],
+    parentType: ClaimFieldDefinitionDto['type'],
+    childPath: (string | number | null)[]
+  ): (string | number | null)[] {
+    if (childPath.length >= parentPath.length) {
+      const startsWithParent = parentPath.every((seg, i) => seg === childPath[i]);
+      if (startsWithParent) {
+        return childPath;
+      }
     }
 
-    if (!field?.namespace && path.length > 1) {
-      return path.slice(1).join('.');
+    if (parentType === 'array' && childPath.length > 0) {
+      if (childPath[0] === null || typeof childPath[0] === 'number') {
+        return [...parentPath, ...childPath.slice(1)];
+      }
     }
 
-    return path.join('.');
+    return [...parentPath, ...childPath];
+  }
+
+  private flattenFieldDefinitionsForForm(
+    fields: ClaimFieldDefinitionDto[]
+  ): ClaimFieldDefinitionDto[] {
+    const result: ClaimFieldDefinitionDto[] = [];
+
+    const visit = (field: ClaimFieldDefinitionDto): void => {
+      const { children, ...fieldWithoutChildren } = field as ClaimFieldDefinitionDto & {
+        children?: ClaimFieldDefinitionDto[];
+      };
+
+      result.push(fieldWithoutChildren);
+
+      if (children?.length) {
+        const resolvedChildren = children.map((child) => ({
+          ...child,
+          path: this.resolveChildPathForForm(field.path, field.type, child.path),
+          namespace: child.namespace ?? field.namespace,
+        }));
+
+        resolvedChildren.forEach((child) => visit(child));
+      }
+    };
+
+    fields.forEach((field) => visit(field));
+    return result;
+  }
+
+  private buildNestedFieldDefinitions(
+    flatFields: ClaimFieldDefinitionDto[]
+  ): ClaimFieldDefinitionDto[] {
+    type MutableField = ClaimFieldDefinitionDto & { children?: MutableField[] };
+    interface IndexedNode {
+      absolutePath: (string | number | null)[];
+      node: MutableField;
+      namespace: string;
+    }
+
+    const byNamespace = new Map<string, MutableField[]>();
+
+    for (const field of flatFields) {
+      const key = field.namespace || '__global__';
+      const list = byNamespace.get(key) ?? [];
+      list.push({ ...field });
+      byNamespace.set(key, list);
+    }
+
+    const nested: MutableField[] = [];
+
+    for (const [, list] of byNamespace.entries()) {
+      list.sort((a, b) => a.path.length - b.path.length);
+
+      const roots: MutableField[] = [];
+      const inserted: IndexedNode[] = [];
+
+      for (const field of list) {
+        let parent: IndexedNode | undefined;
+
+        const absolutePath = [...field.path];
+        const namespace = field.namespace || '__global__';
+
+        for (const candidate of inserted) {
+          if (candidate.namespace !== namespace) {
+            continue;
+          }
+
+          if (candidate.absolutePath.length >= absolutePath.length) {
+            continue;
+          }
+
+          if (candidate.node.type !== 'object' && candidate.node.type !== 'array') {
+            continue;
+          }
+
+          const matchesPrefix = candidate.absolutePath.every(
+            (seg, idx) => seg === absolutePath[idx]
+          );
+          if (!matchesPrefix) {
+            continue;
+          }
+
+          if (!parent || candidate.absolutePath.length > parent.absolutePath.length) {
+            parent = candidate;
+          }
+        }
+
+        if (!parent) {
+          roots.push(field);
+          inserted.push({ absolutePath, node: field, namespace });
+          continue;
+        }
+
+        let relativePath = absolutePath.slice(parent.absolutePath.length);
+
+        // For array parents, child paths are stored relative without the wildcard
+        // marker. The derive layer will inject the item step when flattening.
+        if (parent.node.type === 'array' && relativePath[0] === null) {
+          relativePath = relativePath.slice(1);
+        }
+
+        const child: MutableField = {
+          ...field,
+          path: relativePath,
+        };
+
+        parent.node.children ??= [];
+        parent.node.children.push(child);
+        inserted.push({ absolutePath, node: child, namespace });
+      }
+
+      nested.push(...roots);
+    }
+
+    return nested;
   }
 
   /**

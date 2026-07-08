@@ -19,7 +19,7 @@ authorization, token behavior, and trust-related requirements.
 
 ## Configuration Fields
 
-- `authorizationServers` (array, optional): Managed authorization server definitions. Supports `external`, `oid4vp`, and `chained` types.
+- `authorizationServers` (array, required): Managed authorization server definitions. Must contain at least one entry and supports `external`, `oid4vp`, `chained`, and `built-in` types.
 - `batchSize` (number, optional): Value to determine the amount of credentials that are issued in a batch. Default is 1.
 - `dPopRequired` (boolean, optional): Indicates whether DPoP is required for the issuance process. Default value is true.
 - `signingKeyId` (string, optional): Key ID used for signing access tokens. If omitted, the default signing key for the tenant is used.
@@ -44,6 +44,7 @@ authorization, token behavior, and trust-related requirements.
 ## Authorization Servers (`authorizationServers`)
 
 Use `authorizationServers` to define wallet-facing AS behavior for OID4VCI auth-code flows.
+The array must contain at least one entry.
 
 ### Example
 
@@ -98,14 +99,14 @@ Use `authorizationServers` to define wallet-facing AS behavior for OID4VCI auth-
 
 ### Common Fields
 
-| Field                   | Type    | Required                | Description                                        |
-| ----------------------- | ------- | ----------------------- | -------------------------------------------------- |
-| `type`                  | string  | Yes                     | One of `external`, `oid4vp`, `chained`.            |
-| `label`                 | string  | No                      | Optional UI label.                                 |
-| `enabled`               | boolean | No                      | Enables/disables this entry. Default `true`.       |
-| `requireDPoP`           | boolean | No (`oid4vp`/`chained`) | Require DPoP proofs on token requests for this AS. |
-| `token.lifetimeSeconds` | number  | No (`oid4vp`/`chained`) | Access token lifetime for this AS.                 |
-| `token.signingKeyId`    | string  | No (`oid4vp`/`chained`) | Key used to sign AS-issued tokens.                 |
+| Field                   | Type    | Required                | Description                                         |
+| ----------------------- | ------- | ----------------------- | --------------------------------------------------- |
+| `type`                  | string  | Yes                     | One of `external`, `oid4vp`, `chained`, `built-in`. |
+| `label`                 | string  | No                      | Optional UI label.                                  |
+| `enabled`               | boolean | No                      | Enables/disables this entry. Default `true`.        |
+| `requireDPoP`           | boolean | No (`oid4vp`/`chained`) | Require DPoP proofs on token requests for this AS.  |
+| `token.lifetimeSeconds` | number  | No (`oid4vp`/`chained`) | Access token lifetime for this AS.                  |
+| `token.signingKeyId`    | string  | No (`oid4vp`/`chained`) | Key used to sign AS-issued tokens.                  |
 
 ### Type-Specific Fields
 

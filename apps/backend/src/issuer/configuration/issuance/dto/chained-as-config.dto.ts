@@ -87,6 +87,31 @@ export class ChainedAsTokenConfig {
     @IsOptional()
     @IsString()
     signingKeyId?: string;
+
+    /**
+     * Whether to issue refresh tokens.
+     * @default true
+     */
+    @ApiPropertyOptional({
+        description: "Whether refresh tokens should be issued",
+        default: true,
+    })
+    @IsOptional()
+    @IsBoolean()
+    refreshTokenEnabled?: boolean;
+
+    /**
+     * Refresh token lifetime in seconds.
+     * @default 2592000 (30 days)
+     */
+    @ApiPropertyOptional({
+        description: "Refresh token lifetime in seconds",
+        default: 2592000,
+    })
+    @IsOptional()
+    @IsNumber()
+    @Min(60)
+    refreshTokenExpiresInSeconds?: number;
 }
 
 /**

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Request } from "express";
 import { Repository } from "typeorm";
@@ -138,7 +138,7 @@ export class IssuanceService {
      */
     async storeIssuanceConfiguration(
         tenantId: string,
-        value: IssuanceDto,
+        value: Partial<IssuanceDto>,
         actorToken?: TokenPayload,
         req?: Request,
     ) {
@@ -159,6 +159,41 @@ export class IssuanceService {
         const filteredValue = Object.fromEntries(
             Object.entries(value).filter(([, v]) => v !== undefined),
         );
+
+        const hasIncomingAuthorizationServers =
+            Object.prototype.hasOwnProperty.call(
+                filteredValue,
+                "authorizationServers",
+            );
+        const effectiveAuthorizationServers = hasIncomingAuthorizationServers
+            ? (filteredValue as Partial<IssuanceDto>).authorizationServers
+            : existingConfig.authorizationServers;
+
+        if (!Array.isArray(effectiveAuthorizationServers)) {
+            throw new BadRequestException(
+                "At least one authorization server must be configured",
+            );
+        }
+
+        const configuredAuthorizationServers =
+            effectiveAuthorizationServers as Array<{
+                type?: string;
+            }>;
+
+        if (configuredAuthorizationServers.length < 1) {
+            throw new BadRequestException(
+                "At least one authorization server must be configured",
+            );
+        }
+
+        const builtInCount = configuredAuthorizationServers.filter(
+            (server) => server?.type === "built-in",
+        ).length;
+        if (builtInCount > 1) {
+            throw new BadRequestException(
+                "Only one built-in authorization server can be configured",
+            );
+        }
 
         const before =
             "tenantId" in existingConfig
@@ -217,15 +252,12 @@ export class IssuanceService {
             walletAttestationRequired: config.walletAttestationRequired,
             walletProviderTrustLists: config.walletProviderTrustLists,
             signingKeyId: config.signingKeyId,
-            preferredAuthServer: config.preferredAuthServer,
             authorizationServers: config.authorizationServers,
             federation: config.federation,
             registrationCertificate,
             registrationCertificateCache,
             credentialResponseEncryption: config.credentialResponseEncryption,
             credentialRequestEncryption: config.credentialRequestEncryption,
-            refreshTokenEnabled: config.refreshTokenEnabled,
-            refreshTokenExpiresInSeconds: config.refreshTokenExpiresInSeconds,
             txCodeMaxAttempts: config.txCodeMaxAttempts,
         };
     }

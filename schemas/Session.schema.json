@@ -75,6 +75,7 @@
       ]
     },
     "offer": {
+      "nullable": true,
       "description": "Credential offer object containing details about the credential offer or presentation request.\nEncrypted at rest.",
       "type": "object"
     },
@@ -181,7 +182,7 @@
     "consumedAt": {
       "format": "date-time",
       "type": "string",
-      "description": "Timestamp when the session offer was consumed.\nNull if the offer has not yet been consumed."
+      "description": "Timestamp of the first consumption event for the session offer.\nFor OID4VCI this can be URI resolution or later flow completion.\nNull if no consumption event has happened yet."
     }
   },
   "required": [

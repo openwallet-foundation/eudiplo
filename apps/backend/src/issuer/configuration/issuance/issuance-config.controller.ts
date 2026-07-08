@@ -5,6 +5,7 @@ import { Role } from "../../../auth/roles/role.enum";
 import { Secured } from "../../../auth/secure.decorator";
 import { Token, TokenPayload } from "../../../auth/token.decorator";
 import { IssuanceDto } from "./dto/issuance.dto";
+import { UpdateIssuanceDto } from "./dto/update-issuance.dto";
 import { IssuanceConfig } from "./entities/issuance-config.entity";
 import { IssuanceService } from "./issuance.service";
 
@@ -39,7 +40,7 @@ export class IssuanceConfigController {
      */
     @Post()
     storeIssuanceConfiguration(
-        @Body() config: IssuanceDto,
+        @Body() config: UpdateIssuanceDto,
         @Token() user: TokenPayload,
         @Req() req: Request,
     ) {

@@ -8,13 +8,37 @@ const JSON_SCHEMA_DRAFT_2020_12 = "https://json-schema.org/draft/2020-12/schema"
 
 type Segment = string | number | null;
 
-function resolveChildPath(parentPath: Segment[], childPath: Segment[]): Segment[] {
+function resolveChildPath(
+  parentPath: Segment[],
+  parentType: ClaimFieldDefinition["type"],
+  childPath: Segment[],
+): Segment[] {
   if (childPath.length >= parentPath.length) {
     const startsWithParent = parentPath.every((seg, i) => seg === childPath[i]);
     if (startsWithParent) {
       return childPath;
     }
   }
+
+  // For array parents, support relative child paths without an explicit
+  // array marker (null/number) by inserting the item step automatically.
+  // Breaking change: relative child paths using a leading null marker are rejected.
+  if (
+    parentType === "array" &&
+    childPath.length > 0
+  ) {
+    if (childPath[0] === null) {
+      throw new Error(
+        "Relative child paths under array parents must not start with null. " +
+          "Use ['field'] instead of [null, 'field']."
+      );
+    }
+
+    if (typeof childPath[0] !== "number") {
+      return [...parentPath, null, ...childPath];
+    }
+  }
+
   return [...parentPath, ...childPath];
 }
 
@@ -28,7 +52,7 @@ export function flattenFields(fields: ClaimFieldDefinition[]): ClaimFieldDefinit
     if (children && children.length > 0) {
       const resolvedChildren: ClaimFieldDefinition[] = children.map((child) => ({
         ...child,
-        path: resolveChildPath(field.path, child.path),
+        path: resolveChildPath(field.path, field.type, child.path),
       }));
       result.push(...flattenFields(resolvedChildren));
     }
