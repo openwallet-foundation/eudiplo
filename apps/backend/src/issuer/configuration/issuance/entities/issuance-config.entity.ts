@@ -1,12 +1,15 @@
 import {
     ApiExtraModels,
     ApiHideProperty,
+    ApiProperty,
     ApiPropertyOptional,
+    getSchemaPath,
 } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
     IsArray,
     IsBoolean,
+    ArrayMinSize,
     IsNumber,
     IsOptional,
     IsString,
@@ -26,7 +29,13 @@ import {
     AuthenticationMethodNone,
     AuthenticationMethodPresentation,
 } from "../dto/authentication-config.dto";
-import { ManagedAuthorizationServerConfig } from "../dto/authorization-server-config.dto";
+import {
+    BuiltInAuthorizationServerConfig,
+    ChainedAuthorizationServerConfig,
+    ExternalAuthorizationServerConfig,
+    ManagedAuthorizationServerConfig,
+    Oid4VpAuthorizationServerConfig,
+} from "../dto/authorization-server-config.dto";
 import { DisplayInfo } from "../dto/display.dto";
 import { FederationConfig } from "../dto/federation-config.dto";
 import {
@@ -41,6 +50,11 @@ import {
     AuthenticationMethodNone,
     AuthenticationMethodAuth,
     AuthenticationMethodPresentation,
+    ManagedAuthorizationServerConfig,
+    ExternalAuthorizationServerConfig,
+    Oid4VpAuthorizationServerConfig,
+    ChainedAuthorizationServerConfig,
+    BuiltInAuthorizationServerConfig,
 )
 @Entity()
 export class IssuanceConfig {
@@ -109,30 +123,48 @@ export class IssuanceConfig {
     signingKeyId?: string;
 
     /**
-     * The URL of the preferred authorization server for wallet-initiated flows.
-     * When set, this AS is placed first in the `authorization_servers` array
-     * of the credential issuer metadata, signaling wallets to use it by default.
-     * Must match one of the configured auth servers, the chained AS URL, or "built-in".
-     */
-    @IsOptional()
-    @IsString()
-    @Column({ type: "varchar", nullable: true })
-    preferredAuthServer?: string;
-
-    /**
      * Dedicated managed authorization servers hosted by this issuer.
      * Each entry creates a distinct AS endpoint and can be bound to a different
      * presentation configuration.
      */
-    @ApiPropertyOptional({
-        type: () => ManagedAuthorizationServerConfig,
-        isArray: true,
+    @ApiProperty({
+        description:
+            "Dedicated managed authorization servers hosted by this issuer. At least one entry is required.",
+        type: "array",
+        items: {
+            oneOf: [
+                { $ref: getSchemaPath(ExternalAuthorizationServerConfig) },
+                { $ref: getSchemaPath(Oid4VpAuthorizationServerConfig) },
+                { $ref: getSchemaPath(ChainedAuthorizationServerConfig) },
+                { $ref: getSchemaPath(BuiltInAuthorizationServerConfig) },
+            ],
+            discriminator: {
+                propertyName: "type",
+                mapping: {
+                    external: getSchemaPath(ExternalAuthorizationServerConfig),
+                    oid4vp: getSchemaPath(Oid4VpAuthorizationServerConfig),
+                    chained: getSchemaPath(ChainedAuthorizationServerConfig),
+                    "built-in": getSchemaPath(BuiltInAuthorizationServerConfig),
+                },
+            },
+        },
     })
+    @ArrayMinSize(1)
     @ValidateNested({ each: true })
-    @Type(() => ManagedAuthorizationServerConfig)
-    @IsOptional()
+    @Type(() => ManagedAuthorizationServerConfig, {
+        keepDiscriminatorProperty: true,
+        discriminator: {
+            property: "type",
+            subTypes: [
+                { name: "external", value: ExternalAuthorizationServerConfig },
+                { name: "oid4vp", value: Oid4VpAuthorizationServerConfig },
+                { name: "chained", value: ChainedAuthorizationServerConfig },
+                { name: "built-in", value: BuiltInAuthorizationServerConfig },
+            ],
+        },
+    })
     @Column({ type: "json", nullable: true })
-    authorizationServers?: ManagedAuthorizationServerConfig[] | null;
+    authorizationServers!: ManagedAuthorizationServerConfig[];
 
     /**
      * Optional OpenID Federation configuration used for trust evaluation.
@@ -175,20 +207,6 @@ export class IssuanceConfig {
     display!: DisplayInfo[];
 
     /**
-     * Whether to issue refresh tokens for access token requests.
-     * Default: true
-     */
-    @ApiPropertyOptional({
-        description:
-            "Whether refresh tokens should be issued for OID4VCI token responses.",
-        default: true,
-    })
-    @IsBoolean()
-    @IsOptional()
-    @Column("boolean", { default: true })
-    refreshTokenEnabled?: boolean;
-
-    /**
      * Whether to advertise support for credential response encryption in the
      * credential issuer metadata (`credential_response_encryption`). When
      * enabled, wallets MAY request encrypted credential responses. Some
@@ -221,22 +239,6 @@ export class IssuanceConfig {
     @IsOptional()
     @Column("boolean", { default: false })
     credentialRequestEncryption?: boolean;
-
-    /**
-     * Lifetime of issued refresh tokens in seconds.
-     * Default: 2592000 (30 days)
-     * Set to null for non-expiring refresh tokens (not recommended for security).
-     */
-    @ApiPropertyOptional({
-        description:
-            "Refresh token lifetime in seconds. Defaults to 2592000 (30 days).",
-        default: 2592000,
-        nullable: true,
-    })
-    @IsNumber()
-    @IsOptional()
-    @Column("int", { default: 2592000, nullable: true })
-    refreshTokenExpiresInSeconds?: number;
 
     /**
      * Maximum number of failed tx_code (transaction code) validation attempts

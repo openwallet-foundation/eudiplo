@@ -29,8 +29,33 @@ describe("Issuance - Configuration", () => {
         await app.close();
     });
 
+    const chainedAuthorizationServer = {
+        type: "chained",
+        enabled: true,
+        upstream: {
+            issuer: "https://auth.example.com/realms/test",
+            clientId: "test-client",
+            clientSecret: "test-secret",
+        },
+    };
+
+    async function ensureBaselineConfig() {
+        await request(app.getHttpServer())
+            .post("/issuer/config")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                batchSize: 1,
+                authorizationServers: [chainedAuthorizationServer],
+            })
+            .expect(201);
+    }
+
     test("partial update should preserve existing config values", async () => {
-        // Step 1: Get the current configuration
+        // Step 1: Ensure a valid baseline configuration exists
+        await ensureBaselineConfig();
+
+        // Step 2: Get the current configuration
         const initialRes = await request(app.getHttpServer())
             .get("/issuer/config")
             .trustLocalhost()
@@ -41,7 +66,7 @@ describe("Issuance - Configuration", () => {
         expect(initialConfig.dPopRequired).toBeDefined();
         expect(initialConfig.display).toBeDefined();
 
-        // Step 2: Update only one field (batchSize), leaving others undefined
+        // Step 3: Update only one field (batchSize), leaving others undefined
         const partialUpdate: Partial<IssuanceDto> = {
             batchSize: 5,
         };
@@ -53,7 +78,7 @@ describe("Issuance - Configuration", () => {
             .send(partialUpdate)
             .expect(201);
 
-        // Step 3: Verify that other fields were preserved
+        // Step 4: Verify that other fields were preserved
         const updatedRes = await request(app.getHttpServer())
             .get("/issuer/config")
             .trustLocalhost()
@@ -70,21 +95,11 @@ describe("Issuance - Configuration", () => {
         expect(updatedConfig.display).toEqual(initialConfig.display);
     });
 
-    test("null values should explicitly clear existing config fields", async () => {
+    test("null authorizationServers should be rejected", async () => {
         // Step 1: Set up a configuration with a chained authorization server
         const setupConfig: Partial<IssuanceDto> = {
             batchSize: 10,
-            authorizationServers: [
-                {
-                    type: "chained",
-                    enabled: true,
-                    upstream: {
-                        issuer: "https://auth.example.com/realms/test",
-                        clientId: "test-client",
-                        clientSecret: "test-secret",
-                    },
-                },
-            ],
+            authorizationServers: [chainedAuthorizationServer],
         };
 
         await request(app.getHttpServer())
@@ -116,37 +131,14 @@ describe("Issuance - Configuration", () => {
             .trustLocalhost()
             .set("Authorization", `Bearer ${authToken}`)
             .send(updateWithNull)
-            .expect(201);
-
-        // Step 3: Verify that authorizationServers was cleared
-        const finalRes = await request(app.getHttpServer())
-            .get("/issuer/config")
-            .trustLocalhost()
-            .set("Authorization", `Bearer ${authToken}`)
-            .expect(200);
-
-        // batchSize should be updated
-        expect(finalRes.body.batchSize).toBe(5);
-
-        // authorizationServers should be cleared (null)
-        expect(finalRes.body.authorizationServers).toBeNull();
+            .expect(400);
     });
 
     test("authorizationServers config should not be lost on partial update", async () => {
         // Step 1: Set up a configuration with authorizationServers
         const configWithChainedAs: Partial<IssuanceDto> = {
             batchSize: 1,
-            authorizationServers: [
-                {
-                    type: "chained",
-                    enabled: true,
-                    upstream: {
-                        issuer: "https://auth.example.com/realms/test",
-                        clientId: "test-client",
-                        clientSecret: "test-secret",
-                    },
-                },
-            ],
+            authorizationServers: [chainedAuthorizationServer],
         };
 
         await request(app.getHttpServer())
@@ -192,5 +184,17 @@ describe("Issuance - Configuration", () => {
         expect(finalRes.body.authorizationServers[0].upstream.issuer).toBe(
             "https://auth.example.com/realms/test",
         );
+    });
+
+    test("should reject creating or updating config when no authorization servers are configured", async () => {
+        await request(app.getHttpServer())
+            .post("/issuer/config")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                batchSize: 5,
+                authorizationServers: [],
+            })
+            .expect(400);
     });
 });

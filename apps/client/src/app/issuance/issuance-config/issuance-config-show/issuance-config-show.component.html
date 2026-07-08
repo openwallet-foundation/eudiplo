@@ -84,8 +84,8 @@
 
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">settings_applications</mat-icon>
-          Business Logic
+          <mat-icon class="tab-icon">manage_accounts</mat-icon>
+          Authorize User
         </ng-template>
 
         <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
@@ -93,151 +93,73 @@
             <mat-card-header>
               <mat-card-title>
                 <mat-icon>sync_alt</mat-icon>
-                Issuance Behavior
+                Authorization Servers
               </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-              <mat-list class="config-list">
-                <mat-list-item>
-                  <mat-icon matListItemIcon>dns</mat-icon>
-                  <span matListItemTitle>External Authorization Servers</span>
-                  <span matListItemLine>
-                    @if (externalAuthorizationServers.length > 0) {
-                      {{ externalAuthorizationServers.length }} configured
-                    } @else {
-                      None configured
-                    }
-                  </span>
-                </mat-list-item>
-                <mat-list-item>
-                  <mat-icon matListItemIcon>hub</mat-icon>
-                  <span matListItemTitle>Hosted Authorization Servers</span>
-                  <span matListItemLine>
-                    @if (hostedAuthorizationServers.length > 0) {
-                      {{ hostedAuthorizationServers.length }} configured
-                    } @else {
-                      None configured
-                    }
-                  </span>
-                </mat-list-item>
-                <mat-list-item>
-                  <mat-icon
-                    matListItemIcon
-                    [class]="chainedAuthorizationServer ? 'icon-chained-as' : 'icon-disabled'"
+              @if (authorizationServerRows.length === 0) {
+                <p class="warning-text">
+                  No authorization servers configured. Add at least one external, oid4vp, chained,
+                  or built-in authorization server before using this issuer.
+                </p>
+              } @else {
+                <div class="table-container">
+                  <table
+                    mat-table
+                    [dataSource]="authorizationServerRows"
+                    class="mat-elevation-z1 auth-server-table"
                   >
-                    {{ chainedAuthorizationServer ? 'account_tree' : 'link_off' }}
-                  </mat-icon>
-                  <span matListItemTitle>Chained Authorization Server</span>
-                  <span matListItemLine>{{
-                    chainedAuthorizationServer ? 'Enabled' : 'Disabled'
-                  }}</span>
-                </mat-list-item>
-              </mat-list>
+                    <ng-container matColumnDef="label">
+                      <th mat-header-cell *matHeaderCellDef>Label</th>
+                      <td mat-cell *matCellDef="let row">{{ row.label }}</td>
+                    </ng-container>
 
-              @if (externalAuthorizationServers.length > 0) {
-                <mat-divider></mat-divider>
-                <div class="locale-chips">
-                  <strong>External Authorization Server Details</strong>
-                </div>
-                <mat-list class="config-list">
-                  @for (server of externalAuthorizationServers; track server; let i = $index) {
-                    <mat-list-item>
-                      <mat-icon matListItemIcon>link</mat-icon>
-                      <span matListItemTitle>Server {{ i + 1 }}</span>
-                      <span matListItemLine>
-                        {{ server }}
-                        @if (config.preferredAuthServer === server) {
-                          (preferred)
-                        }
-                      </span>
-                    </mat-list-item>
-                  }
-                </mat-list>
-              }
+                    <ng-container matColumnDef="id">
+                      <th mat-header-cell *matHeaderCellDef>ID</th>
+                      <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+                    </ng-container>
 
-              @if (hostedAuthorizationServers.length > 0) {
-                <mat-divider></mat-divider>
-                <div class="locale-chips">
-                  <strong>Hosted Authorization Server Details</strong>
-                </div>
-                <mat-list class="config-list">
-                  @for (server of hostedAuthorizationServers; track server.id; let i = $index) {
-                    <mat-list-item>
-                      <mat-icon matListItemIcon>account_tree</mat-icon>
-                      <span matListItemTitle>
-                        {{ server.label || server.id || 'Server ' + (i + 1) }}
-                      </span>
-                      <span matListItemLine>
-                        ID: {{ server.id || 'n/a' }} | Type: {{ server.type || 'oid4vp' }} |
-                        Presentation ID:
-                        {{
-                          server.presentationConfigId ||
-                            server.oid4vp?.presentationConfigId ||
-                            'Not set'
-                        }}
-                        @if (config.preferredAuthServer === 'authorization-server:' + server.id) {
-                          | preferred
-                        }
-                      </span>
-                    </mat-list-item>
-                  }
-                </mat-list>
-              }
+                    <ng-container matColumnDef="type">
+                      <th mat-header-cell *matHeaderCellDef>Type</th>
+                      <td mat-cell *matCellDef="let row">{{ row.type }}</td>
+                    </ng-container>
 
-              @if (chainedAuthorizationServer) {
-                <mat-divider></mat-divider>
-                <div class="locale-chips">
-                  <strong>Chained Authorization Server Details</strong>
+                    <ng-container matColumnDef="preferred">
+                      <th mat-header-cell *matHeaderCellDef>Default</th>
+                      <td mat-cell *matCellDef="let row">{{ row.preferred ? 'yes' : 'no' }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="enabled">
+                      <th mat-header-cell *matHeaderCellDef>Enabled</th>
+                      <td mat-cell *matCellDef="let row">{{ row.enabled ? 'yes' : 'no' }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dpop">
+                      <th mat-header-cell *matHeaderCellDef>DPoP</th>
+                      <td mat-cell *matCellDef="let row">{{ row.dpop }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="token">
+                      <th mat-header-cell *matHeaderCellDef>Token</th>
+                      <td mat-cell *matCellDef="let row">
+                        {{ row.tokenLifetime > 0 ? row.tokenLifetime + 's' : '-' }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="refresh">
+                      <th mat-header-cell *matHeaderCellDef>Refresh</th>
+                      <td mat-cell *matCellDef="let row">{{ row.refresh }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="details">
+                      <th mat-header-cell *matHeaderCellDef>Details</th>
+                      <td mat-cell *matCellDef="let row">{{ row.details }}</td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="authServerDisplayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: authServerDisplayedColumns"></tr>
+                  </table>
                 </div>
-                <mat-list class="config-list">
-                  <mat-list-item>
-                    <mat-icon matListItemIcon>cloud</mat-icon>
-                    <span matListItemTitle>Upstream Issuer</span>
-                    <span matListItemLine
-                      >{{ chainedAuthorizationServer.upstream?.issuer || 'Not configured' }}
-                      @if (config.preferredAuthServer === 'chained-as') {
-                        | preferred
-                      }
-                    </span>
-                  </mat-list-item>
-                  <mat-list-item>
-                    <mat-icon matListItemIcon>fingerprint</mat-icon>
-                    <span matListItemTitle>Client ID</span>
-                    <span matListItemLine>{{
-                      chainedAuthorizationServer.upstream?.clientId || 'Not configured'
-                    }}</span>
-                  </mat-list-item>
-                  <mat-list-item>
-                    <mat-icon matListItemIcon>schedule</mat-icon>
-                    <span matListItemTitle>Token Lifetime</span>
-                    <span matListItemLine
-                      >{{ chainedAuthorizationServer.token?.lifetimeSeconds || 3600 }} seconds</span
-                    >
-                  </mat-list-item>
-                  <mat-list-item>
-                    <mat-icon
-                      matListItemIcon
-                      [class]="chainedAuthorizationServer.requireDPoP ? '' : 'icon-disabled'"
-                    >
-                      {{
-                        chainedAuthorizationServer.requireDPoP ? 'verified_user' : 'no_encryption'
-                      }}
-                    </mat-icon>
-                    <span matListItemTitle>DPoP Requirement</span>
-                    <span matListItemLine>{{
-                      chainedAuthorizationServer.requireDPoP ? 'Required' : 'Not required'
-                    }}</span>
-                  </mat-list-item>
-                  @if ((chainedAuthorizationServer.upstream?.scopes?.length ?? 0) > 0) {
-                    <mat-list-item>
-                      <mat-icon matListItemIcon>list</mat-icon>
-                      <span matListItemTitle>Requested Scopes</span>
-                      <span matListItemLine>{{
-                        chainedAuthorizationServer.upstream?.scopes?.join(', ') || 'Not configured'
-                      }}</span>
-                    </mat-list-item>
-                  }
-                </mat-list>
               }
             </mat-card-content>
           </mat-card>
@@ -251,40 +173,6 @@
         </ng-template>
 
         <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
-          <mat-card>
-            <mat-card-header>
-              <mat-card-title>
-                <mat-icon>refresh</mat-icon>
-                Refresh Tokens
-              </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <mat-list class="config-list">
-                <mat-list-item>
-                  <mat-icon
-                    matListItemIcon
-                    [class]="config.refreshTokenEnabled ? '' : 'icon-disabled'"
-                  >
-                    {{ config.refreshTokenEnabled ? 'refresh' : 'sync_disabled' }}
-                  </mat-icon>
-                  <span matListItemTitle>Status</span>
-                  <span matListItemLine>
-                    {{ config.refreshTokenEnabled ? 'Enabled' : 'Disabled' }}
-                  </span>
-                </mat-list-item>
-                @if (config.refreshTokenEnabled) {
-                  <mat-list-item>
-                    <mat-icon matListItemIcon>timelapse</mat-icon>
-                    <span matListItemTitle>Lifetime</span>
-                    <span matListItemLine>
-                      {{ config.refreshTokenExpiresInSeconds || 2592000 }} seconds
-                    </span>
-                  </mat-list-item>
-                }
-              </mat-list>
-            </mat-card-content>
-          </mat-card>
-
           <!-- tx_code Brute-Force Protection Card -->
           <mat-card>
             <mat-card-header>

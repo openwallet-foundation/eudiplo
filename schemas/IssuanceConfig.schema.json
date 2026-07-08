@@ -9,11 +9,33 @@
       "description": "Key ID for signing access tokens. If unset, the default signing key is used."
     },
     "authorizationServers": {
-      "nullable": true,
-      "description": "Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.",
       "type": "array",
+      "description": "Dedicated managed authorization servers hosted by this issuer. At least one entry is required.",
+      "minItems": 1,
       "items": {
-        "$ref": "./ManagedAuthorizationServerConfig.schema.json"
+        "oneOf": [
+          {
+            "$ref": "./ExternalAuthorizationServerConfig.schema.json"
+          },
+          {
+            "$ref": "./Oid4VpAuthorizationServerConfig.schema.json"
+          },
+          {
+            "$ref": "./ChainedAuthorizationServerConfig.schema.json"
+          },
+          {
+            "$ref": "./BuiltInAuthorizationServerConfig.schema.json"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "external": "#/components/schemas/ExternalAuthorizationServerConfig",
+            "oid4vp": "#/components/schemas/Oid4VpAuthorizationServerConfig",
+            "chained": "#/components/schemas/ChainedAuthorizationServerConfig",
+            "built-in": "#/components/schemas/BuiltInAuthorizationServerConfig"
+          }
+        }
       }
     },
     "federation": {
@@ -47,11 +69,6 @@
         }
       ]
     },
-    "refreshTokenEnabled": {
-      "type": "boolean",
-      "description": "Whether refresh tokens should be issued for OID4VCI token responses.",
-      "default": true
-    },
     "credentialResponseEncryption": {
       "type": "boolean",
       "description": "Whether `credential_response_encryption` should be advertised in the credential issuer metadata.",
@@ -61,12 +78,6 @@
       "type": "boolean",
       "description": "Whether `credential_request_encryption` should be advertised in the credential issuer metadata.",
       "default": false
-    },
-    "refreshTokenExpiresInSeconds": {
-      "type": "number",
-      "description": "Refresh token lifetime in seconds. Defaults to 2592000 (30 days).",
-      "default": 2592000,
-      "nullable": true
     },
     "txCodeMaxAttempts": {
       "type": "number",
@@ -101,10 +112,6 @@
         "type": "string"
       }
     },
-    "preferredAuthServer": {
-      "type": "string",
-      "description": "The URL of the preferred authorization server for wallet-initiated flows.\nWhen set, this AS is placed first in the `authorization_servers` array\nof the credential issuer metadata, signaling wallets to use it by default.\nMust match one of the configured auth servers, the chained AS URL, or \"built-in\"."
-    },
     "display": {
       "type": "array",
       "items": {
@@ -123,6 +130,7 @@
     }
   },
   "required": [
+    "authorizationServers",
     "tenant",
     "display",
     "createdAt",

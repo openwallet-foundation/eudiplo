@@ -8,6 +8,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
@@ -25,8 +26,22 @@ interface ChainedAuthorizationServerView {
   };
   token?: {
     lifetimeSeconds?: number;
+    refreshTokenEnabled?: boolean;
+    refreshTokenExpiresInSeconds?: number;
   };
   requireDPoP?: boolean;
+}
+
+interface AuthorizationServerRow {
+  label: string;
+  id: string;
+  type: string;
+  preferred: boolean;
+  enabled: boolean;
+  dpop: string;
+  tokenLifetime: number;
+  refresh: string;
+  details: string;
 }
 
 @Component({
@@ -41,6 +56,7 @@ interface ChainedAuthorizationServerView {
     MatDividerModule,
     MatListModule,
     MatTabsModule,
+    MatTableModule,
     FlexLayoutModule,
     RouterModule,
     ClipboardModule,
@@ -51,6 +67,17 @@ interface ChainedAuthorizationServerView {
 })
 export class IssuanceConfigShowComponent implements OnInit {
   config?: IssuanceConfig;
+  readonly authServerDisplayedColumns = [
+    'label',
+    'id',
+    'type',
+    'preferred',
+    'enabled',
+    'dpop',
+    'token',
+    'refresh',
+    'details',
+  ];
 
   constructor(
     private readonly issuanceConfigService: IssuanceConfigService,
@@ -98,6 +125,8 @@ export class IssuanceConfigShowComponent implements OnInit {
           },
           token: {
             lifetimeSeconds: chained.token?.lifetimeSeconds,
+            refreshTokenEnabled: chained.token?.refreshTokenEnabled,
+            refreshTokenExpiresInSeconds: chained.token?.refreshTokenExpiresInSeconds,
           },
           requireDPoP: chained.requireDPoP,
         };
@@ -109,6 +138,61 @@ export class IssuanceConfigShowComponent implements OnInit {
 
   get registrationCertificateConfig(): any {
     return (this.config as any)?.registrationCertificate;
+  }
+
+  get authorizationServerRows(): AuthorizationServerRow[] {
+    const servers = ((this.config as any)?.authorizationServers ?? []) as any[];
+    const rows = servers
+      .filter((server) => {
+        if (server?.type === 'external') {
+          return typeof server?.issuer === 'string' && server.issuer.length > 0;
+        }
+        return (
+          server?.type === 'oid4vp' || server?.type === 'chained' || server?.type === 'built-in'
+        );
+      })
+      .map((server) => {
+        if (server?.type === 'external') {
+          return {
+            label: server.label || server.issuer,
+            id: '-',
+            type: 'external',
+            preferred: false,
+            enabled: server.enabled !== false,
+            dpop: '-',
+            tokenLifetime: 0,
+            refresh: '-',
+            details: server.issuer,
+          };
+        }
+
+        const refreshEnabled = server?.token?.refreshTokenEnabled ?? true;
+        const refreshLifetime = server?.token?.refreshTokenExpiresInSeconds || 2592000;
+        const isOid4vp = server?.type === 'oid4vp';
+        const isBuiltIn = server?.type === 'built-in';
+        return {
+          label: server.label || server.id || 'Authorization Server',
+          id: server.id || '-',
+          type: server.type,
+          preferred: false,
+          enabled: server.enabled !== false,
+          dpop: server.requireDPoP ? 'required' : 'optional',
+          tokenLifetime: server?.token?.lifetimeSeconds || 3600,
+          refresh: refreshEnabled ? `${refreshLifetime}s` : 'disabled',
+          details: isBuiltIn
+            ? 'issuer-local authorization server'
+            : isOid4vp
+              ? `presentation=${server.presentationConfigId || server.oid4vp?.presentationConfigId || 'n/a'}`
+              : `issuer=${server.upstream?.issuer || 'n/a'}, client=${server.upstream?.clientId || 'n/a'}`,
+        };
+      });
+
+    const preferredIndex = rows.findIndex((row) => row.enabled);
+    if (preferredIndex >= 0) {
+      rows[preferredIndex].preferred = true;
+    }
+
+    return rows;
   }
 
   copyToClipboard(value: string, label: string): void {

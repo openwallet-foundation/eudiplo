@@ -13,6 +13,17 @@
     "signingKeyId": {
       "type": "string",
       "description": "Key ID for token signing"
+    },
+    "refreshTokenEnabled": {
+      "type": "boolean",
+      "description": "Whether refresh tokens should be issued",
+      "default": true
+    },
+    "refreshTokenExpiresInSeconds": {
+      "type": "number",
+      "description": "Refresh token lifetime in seconds",
+      "minimum": 60,
+      "default": 2592000
     }
   },
   "additionalProperties": false

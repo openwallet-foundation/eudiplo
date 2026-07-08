@@ -417,12 +417,9 @@ export class ChainedAsVpService {
 
         session.status = ChainedAsSessionStatus.TOKEN_ISSUED;
         session.accessTokenJti = jti;
-
-        const issuanceConfig =
-            await this.issuanceService.getIssuanceConfiguration(tenantId);
         const refreshToken = issueRefreshTokenIfEnabled(
             session,
-            issuanceConfig,
+            config.token ?? {},
         );
 
         await this.sessionRepository.save(session);
@@ -460,12 +457,14 @@ export class ChainedAsVpService {
     }
 
     async getMetadata(tenantId: string): Promise<Record<string, unknown>> {
+        const config = await this.getChainedAsVpConfig(tenantId);
         const baseUrl = this.getChainedAsVpBaseUrl(tenantId);
         const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
         const walletAttestationRequired =
             issuanceConfig.walletAttestationRequired ?? false;
+        const refreshTokensEnabled = config.token?.refreshTokenEnabled ?? true;
 
         return buildAuthorizationServerMetadata({
             issuer: baseUrl,
@@ -473,7 +472,9 @@ export class ChainedAsVpService {
             tokenEndpoint: `${baseUrl}/token`,
             pushedAuthorizationRequestEndpoint: `${baseUrl}/par`,
             jwksUri: `${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/chained-as-vp`,
-            grantTypesSupported: ["authorization_code", "refresh_token"],
+            grantTypesSupported: refreshTokensEnabled
+                ? ["authorization_code", "refresh_token"]
+                : ["authorization_code"],
             dpopSigningAlgValuesSupported:
                 DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
             ...buildWalletAttestationMetadata(walletAttestationRequired),

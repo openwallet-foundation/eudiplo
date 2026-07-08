@@ -1,4 +1,4 @@
-import { Component, type OnInit, type OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, type OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -7,7 +7,6 @@ import {
   Validators,
   FormBuilder,
 } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
@@ -61,14 +60,12 @@ import { PresentationManagementService } from '../../../presentation/presentatio
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './issuance-config-create.component.scss',
 })
-export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
+export class IssuanceConfigCreateComponent implements OnInit {
   public form: FormGroup;
   public loading = false;
   public availablePresentationConfigIds: string[] = [];
   public availableSchemaMetadata: SchemaMetadataResponseDto[] = [];
-  private chainedAsEnabledSub?: Subscription;
   private readonly federationModes = ['federation-only', 'hybrid'] as const;
-  private readonly managedAuthorizationServerPrefix = 'authorization-server:';
 
   private asRecord(value: unknown): Record<string, unknown> {
     return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
@@ -91,32 +88,14 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
   ) {
     this.form = new FormGroup({
       display: this.fb.array([]),
-      authServers: this.fb.array([]),
       authorizationServers: this.fb.array([]),
-      preferredAuthServer: new FormControl(''),
       batchSize: new FormControl(1, [Validators.min(1)]),
       dPopRequired: new FormControl(false),
-      refreshTokenEnabled: new FormControl(true),
-      refreshTokenExpiresInSeconds: new FormControl(2592000, [Validators.min(1)]),
       txCodeMaxAttempts: new FormControl<number | null>(null, [Validators.min(1)]),
       credentialResponseEncryption: new FormControl(false),
       credentialRequestEncryption: new FormControl(false),
       walletAttestationRequired: new FormControl(false),
       walletProviderTrustLists: this.fb.array([]),
-      chainedAs: this.fb.group({
-        enabled: [false],
-        upstream: this.fb.group({
-          issuer: [''],
-          clientId: [''],
-          clientSecret: [''],
-          scopes: [['openid', 'profile', 'email']],
-        }),
-        token: this.fb.group({
-          lifetimeSeconds: [3600],
-          signingKeyId: [''],
-        }),
-        requireDPoP: [false],
-      }),
       federation: this.fb.group({
         enabled: [false],
         role: ['leaf'],
@@ -138,49 +117,12 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.setupChainedAsValidation();
-
     // Defer network/config hydration so tab navigation is interactive immediately.
     setTimeout(() => {
       this.loadPresentationConfigs();
       this.loadSchemaMetadata();
       void this.loadConfigForEdit();
     }, 0);
-  }
-
-  ngOnDestroy(): void {
-    this.chainedAsEnabledSub?.unsubscribe();
-  }
-
-  /**
-   * Dynamically add/remove required validators on chained AS upstream fields
-   * based on the enabled toggle.
-   */
-  private setupChainedAsValidation(): void {
-    const enabledControl = this.chainedAs.get('enabled');
-    const upstreamGroup = this.chainedAs.get('upstream') as FormGroup;
-    const issuerControl = upstreamGroup.get('issuer')!;
-    const clientIdControl = upstreamGroup.get('clientId')!;
-
-    const updateValidators = (enabled: boolean) => {
-      if (enabled) {
-        issuerControl.setValidators([Validators.required]);
-        clientIdControl.setValidators([Validators.required]);
-      } else {
-        issuerControl.clearValidators();
-        clientIdControl.clearValidators();
-      }
-      issuerControl.updateValueAndValidity();
-      clientIdControl.updateValueAndValidity();
-    };
-
-    // Set initial state
-    updateValidators(enabledControl?.value ?? false);
-
-    // React to toggle changes
-    this.chainedAsEnabledSub = enabledControl?.valueChanges.subscribe((enabled: boolean) => {
-      updateValidators(enabled);
-    });
   }
 
   private async loadConfigForEdit(): Promise<void> {
@@ -225,51 +167,72 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
 
       await this.yieldToUi();
 
-      // Load auth servers
-      const authServersArray = this.form.get('authServers') as FormArray;
-      authServersArray.clear();
-      let externalServers: string[] = [];
-      if (Array.isArray((config as any).authorizationServers)) {
-        externalServers = (config as any).authorizationServers
-          .filter(
-            (server: any) => server?.type === 'external' && typeof server?.issuer === 'string'
-          )
-          .map((server: any) => server.issuer);
-      }
-      for (const server of externalServers) {
-        authServersArray.push(new FormControl(server, [Validators.required]));
-      }
-
-      await this.yieldToUi();
-
-      const managedAuthorizationServersArray = this.form.get('authorizationServers') as FormArray;
-      managedAuthorizationServersArray.clear();
+      const authorizationServersArray = this.form.get('authorizationServers') as FormArray;
+      authorizationServersArray.clear();
       if (
         (config as any).authorizationServers &&
         Array.isArray((config as any).authorizationServers)
       ) {
-        const hostedServers = (config as any).authorizationServers.filter(
-          (entry: any) => entry?.type === 'oid4vp'
-        );
-        for (const [index, server] of hostedServers.entries()) {
-          managedAuthorizationServersArray.push(
-            this.createManagedAuthorizationServerGroup({
-              id: server.id ?? '',
-              label: server.label ?? '',
-              type: server.type ?? 'oid4vp',
-              requireDPoP: server.requireDPoP ?? false,
-              oid4vp: {
-                presentationConfigId:
-                  server.presentationConfigId ?? server.oid4vp?.presentationConfigId ?? '',
-                immediateWalletRedirect:
-                  server.immediateWalletRedirect ?? server.oid4vp?.immediateWalletRedirect ?? true,
-              },
-              token: {
-                lifetimeSeconds: server.token?.lifetimeSeconds ?? 3600,
-                signingKeyId: server.token?.signingKeyId ?? '',
-              },
-            })
-          );
+        const allServers = (config as any).authorizationServers;
+        for (const [index, server] of allServers.entries()) {
+          if (server?.type === 'external') {
+            authorizationServersArray.push(
+              this.createAuthorizationServerGroup({
+                type: 'external',
+                issuer: server.issuer ?? '',
+                label: server.label ?? server.issuer ?? '',
+              })
+            );
+          } else if (server?.type === 'oid4vp' || server?.type === 'chained') {
+            authorizationServersArray.push(
+              this.createAuthorizationServerGroup({
+                id: server.id ?? `${server.type || 'auth'}-${index + 1}`,
+                label:
+                  server.label ??
+                  `${server.type === 'chained' ? 'Chained' : 'Hosted'} AS ${index + 1}`,
+                type: server.type ?? 'oid4vp',
+                enabled: server.enabled ?? true,
+                requireDPoP: server.requireDPoP ?? false,
+                oid4vp: {
+                  presentationConfigId:
+                    server.presentationConfigId ?? server.oid4vp?.presentationConfigId ?? '',
+                  immediateWalletRedirect:
+                    server.immediateWalletRedirect ??
+                    server.oid4vp?.immediateWalletRedirect ??
+                    true,
+                },
+                chained: {
+                  issuer: server.upstream?.issuer ?? '',
+                  clientId: server.upstream?.clientId ?? '',
+                  clientSecret: server.upstream?.clientSecret ?? '',
+                  scopes: server.upstream?.scopes ?? ['openid', 'profile', 'email'],
+                },
+                token: {
+                  lifetimeSeconds: server.token?.lifetimeSeconds ?? 3600,
+                  signingKeyId: server.token?.signingKeyId ?? '',
+                  refreshTokenEnabled: server.token?.refreshTokenEnabled ?? true,
+                  refreshTokenExpiresInSeconds:
+                    server.token?.refreshTokenExpiresInSeconds ?? 2592000,
+                },
+              })
+            );
+          } else if (server?.type === 'built-in') {
+            authorizationServersArray.push(
+              this.createAuthorizationServerGroup({
+                type: 'built-in',
+                label: server.label ?? 'Built-in Authorization Server',
+                enabled: server.enabled ?? true,
+                requireDPoP: server.requireDPoP ?? false,
+                token: {
+                  lifetimeSeconds: server.token?.lifetimeSeconds ?? 3600,
+                  signingKeyId: server.token?.signingKeyId ?? '',
+                  refreshTokenEnabled: server.token?.refreshTokenEnabled ?? true,
+                  refreshTokenExpiresInSeconds:
+                    server.token?.refreshTokenExpiresInSeconds ?? 2592000,
+                },
+              })
+            );
+          }
 
           if (index > 0 && index % 5 === 0) {
             await this.yieldToUi();
@@ -278,12 +241,6 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
       }
 
       await this.yieldToUi();
-
-      const unifiedChainedServer = Array.isArray((config as any).authorizationServers)
-        ? (config as any).authorizationServers.find(
-            (entry: any) => entry?.type === 'chained' && entry?.enabled !== false
-          )
-        : undefined;
 
       // Load wallet provider trust lists
       const walletTrustListsArray = this.form.get('walletProviderTrustLists') as FormArray;
@@ -301,8 +258,6 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
       this.form.patchValue({
         batchSize: config.batchSize,
         dPopRequired: config.dPopRequired,
-        refreshTokenEnabled: config.refreshTokenEnabled ?? true,
-        refreshTokenExpiresInSeconds: config.refreshTokenExpiresInSeconds ?? 2592000,
         credentialResponseEncryption:
           (config as { credentialResponseEncryption?: boolean }).credentialResponseEncryption ??
           false,
@@ -310,7 +265,6 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
           (config as { credentialRequestEncryption?: boolean }).credentialRequestEncryption ??
           false,
         walletAttestationRequired: config.walletAttestationRequired ?? false,
-        preferredAuthServer: config.preferredAuthServer ?? '',
         txCodeMaxAttempts: config.txCodeMaxAttempts ?? null,
         registrationCertificate: {
           enabled: registrationCertificate?.enabled ?? false,
@@ -321,26 +275,6 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
           supportUri: registrationCertificate?.supportUri ?? '',
         },
       });
-
-      // Load Chained AS config if present
-      if (unifiedChainedServer) {
-        this.form.patchValue({
-          chainedAs: {
-            enabled: true,
-            upstream: {
-              issuer: unifiedChainedServer.upstream?.issuer ?? '',
-              clientId: unifiedChainedServer.upstream?.clientId ?? '',
-              clientSecret: unifiedChainedServer.upstream?.clientSecret ?? '',
-              scopes: unifiedChainedServer.upstream?.scopes ?? ['openid', 'profile', 'email'],
-            },
-            token: {
-              lifetimeSeconds: unifiedChainedServer.token?.lifetimeSeconds ?? 3600,
-              signingKeyId: unifiedChainedServer.token?.signingKeyId ?? '',
-            },
-            requireDPoP: unifiedChainedServer.requireDPoP ?? false,
-          },
-        });
-      }
 
       // Load Federation config if present
       if (config && (config as any)['federation']) {
@@ -413,56 +347,81 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
   }
 
   private buildUnifiedAuthorizationServers(formValue: any): any[] {
-    let chainedAuthorizationServer: Record<string, unknown> | undefined;
-    if (formValue.chainedAs?.enabled) {
-      chainedAuthorizationServer = {
-        type: 'chained',
-        label: 'Chained Authorization Server',
-        enabled: true,
-        upstream: {
-          issuer: formValue.chainedAs.upstream.issuer,
-          clientId: formValue.chainedAs.upstream.clientId,
-          clientSecret: formValue.chainedAs.upstream.clientSecret,
-          scopes: formValue.chainedAs.upstream.scopes,
-        },
-        token: {
-          lifetimeSeconds: formValue.chainedAs.token.lifetimeSeconds || 3600,
-          signingKeyId: formValue.chainedAs.token.signingKeyId || undefined,
-        },
-        requireDPoP: formValue.chainedAs.requireDPoP,
-      };
-    }
+    const authorizationServers = formValue.authorizationServers?.length
+      ? formValue.authorizationServers
+          .filter((server: any) => {
+            if (server?.type === 'external') {
+              return typeof server?.issuer === 'string' && server.issuer.trim().length > 0;
+            }
+            if (server?.type === 'built-in') {
+              return true;
+            }
+            return typeof server?.id === 'string' && server.id.trim().length > 0;
+          })
+          .map((server: any) => {
+            if (server.type === 'external') {
+              const issuer = server.issuer.trim();
+              return {
+                type: 'external',
+                issuer,
+                label: server.label?.trim() || issuer,
+              };
+            }
 
-    const managedAuthorizationServers = formValue.authorizationServers?.length
-      ? formValue.authorizationServers.map((server: any) => ({
-          id: server.id,
-          label: server.label,
-          type: 'oid4vp',
-          requireDPoP: server.requireDPoP ?? false,
-          presentationConfigId: server.oid4vp.presentationConfigId,
-          immediateWalletRedirect: server.oid4vp.immediateWalletRedirect ?? true,
-          token: {
-            lifetimeSeconds: server.token?.lifetimeSeconds || 3600,
-            signingKeyId: server.token?.signingKeyId || undefined,
-          },
-        }))
+            if (server.type === 'built-in') {
+              return {
+                type: 'built-in',
+                label: server.label?.trim() || 'Built-in Authorization Server',
+                enabled: server.enabled ?? true,
+                requireDPoP: server.requireDPoP ?? false,
+                token: {
+                  lifetimeSeconds: server.token?.lifetimeSeconds || 3600,
+                  signingKeyId: server.token?.signingKeyId || undefined,
+                  refreshTokenEnabled: server.token?.refreshTokenEnabled ?? true,
+                  refreshTokenExpiresInSeconds: server.token?.refreshTokenEnabled
+                    ? server.token?.refreshTokenExpiresInSeconds || 2592000
+                    : undefined,
+                },
+              };
+            }
+
+            const base = {
+              id: server.id,
+              label: server.label,
+              type: server.type,
+              enabled: server.enabled ?? true,
+              requireDPoP: server.requireDPoP ?? false,
+              token: {
+                lifetimeSeconds: server.token?.lifetimeSeconds || 3600,
+                signingKeyId: server.token?.signingKeyId || undefined,
+                refreshTokenEnabled: server.token?.refreshTokenEnabled ?? true,
+                refreshTokenExpiresInSeconds: server.token?.refreshTokenEnabled
+                  ? server.token?.refreshTokenExpiresInSeconds || 2592000
+                  : undefined,
+              },
+            } as Record<string, unknown>;
+
+            if (server.type === 'chained') {
+              return {
+                ...base,
+                upstream: {
+                  issuer: server.chained?.issuer,
+                  clientId: server.chained?.clientId,
+                  clientSecret: server.chained?.clientSecret,
+                  scopes: server.chained?.scopes,
+                },
+              };
+            }
+
+            return {
+              ...base,
+              presentationConfigId: server.oid4vp?.presentationConfigId,
+              immediateWalletRedirect: server.oid4vp?.immediateWalletRedirect ?? true,
+            };
+          })
       : [];
 
-    const externalAuthorizationServers = formValue.authServers?.length
-      ? formValue.authServers
-          .filter((server: string) => typeof server === 'string' && server.trim().length > 0)
-          .map((server: string) => ({
-            type: 'external',
-            issuer: server.trim(),
-            label: server.trim(),
-          }))
-      : [];
-
-    return [
-      ...externalAuthorizationServers,
-      ...managedAuthorizationServers,
-      ...(chainedAuthorizationServer ? [chainedAuthorizationServer] : []),
-    ];
+    return authorizationServers;
   }
 
   private buildRegistrationCertificatePayload(
@@ -592,16 +551,11 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
       batchSize: formValue.batchSize,
       display: formValue.display,
       dPopRequired: formValue.dPopRequired,
-      refreshTokenEnabled: formValue.refreshTokenEnabled,
-      refreshTokenExpiresInSeconds: formValue.refreshTokenEnabled
-        ? formValue.refreshTokenExpiresInSeconds || 2592000
-        : undefined,
       credentialResponseEncryption: formValue.credentialResponseEncryption ?? false,
       credentialRequestEncryption: formValue.credentialRequestEncryption ?? false,
       txCodeMaxAttempts: formValue.txCodeMaxAttempts ?? undefined,
       authorizationServers:
         unifiedAuthorizationServers.length > 0 ? unifiedAuthorizationServers : undefined,
-      preferredAuthServer: formValue.preferredAuthServer || undefined,
       walletAttestationRequired: formValue.walletAttestationRequired,
       walletProviderTrustLists:
         formValue.walletProviderTrustLists?.length > 0
@@ -681,61 +635,146 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
     this.displays.removeAt(index);
   }
 
-  get authServers(): FormArray {
-    return this.form.get('authServers') as FormArray;
-  }
-
   get authorizationServers(): FormArray {
     return this.form.get('authorizationServers') as FormArray;
   }
 
-  private createManagedAuthorizationServerGroup(value?: any): FormGroup {
+  private createAuthorizationServerGroup(value?: any): FormGroup {
+    if (value?.type === 'external') {
+      return this.fb.group({
+        type: ['external', Validators.required],
+        issuer: [value?.issuer ?? '', Validators.required],
+        label: [value?.label ?? ''],
+      });
+    }
+
+    if (value?.type === 'built-in') {
+      return this.fb.group({
+        type: ['built-in', Validators.required],
+        label: [value?.label ?? 'Built-in Authorization Server', Validators.required],
+        enabled: [value?.enabled ?? true],
+        requireDPoP: [value?.requireDPoP ?? false],
+        token: this.fb.group({
+          lifetimeSeconds: [value?.token?.lifetimeSeconds ?? 3600, Validators.min(60)],
+          signingKeyId: [value?.token?.signingKeyId ?? ''],
+          refreshTokenEnabled: [value?.token?.refreshTokenEnabled ?? true],
+          refreshTokenExpiresInSeconds: [
+            value?.token?.refreshTokenExpiresInSeconds ?? 2592000,
+            Validators.min(1),
+          ],
+        }),
+      });
+    }
+
     return this.fb.group({
       id: [value?.id ?? '', Validators.required],
       label: [value?.label ?? '', Validators.required],
       type: [value?.type ?? 'oid4vp', Validators.required],
+      enabled: [value?.enabled ?? true],
       requireDPoP: [value?.requireDPoP ?? false],
       oid4vp: this.fb.group({
-        presentationConfigId: [value?.oid4vp?.presentationConfigId ?? '', Validators.required],
+        presentationConfigId: [value?.oid4vp?.presentationConfigId ?? ''],
         immediateWalletRedirect: [value?.oid4vp?.immediateWalletRedirect ?? true],
+      }),
+      chained: this.fb.group({
+        issuer: [value?.chained?.issuer ?? ''],
+        clientId: [value?.chained?.clientId ?? ''],
+        clientSecret: [value?.chained?.clientSecret ?? ''],
+        scopes: [value?.chained?.scopes ?? ['openid', 'profile', 'email']],
       }),
       token: this.fb.group({
         lifetimeSeconds: [value?.token?.lifetimeSeconds ?? 3600, Validators.min(60)],
         signingKeyId: [value?.token?.signingKeyId ?? ''],
+        refreshTokenEnabled: [value?.token?.refreshTokenEnabled ?? true],
+        refreshTokenExpiresInSeconds: [
+          value?.token?.refreshTokenExpiresInSeconds ?? 2592000,
+          Validators.min(1),
+        ],
       }),
     });
   }
 
-  addAuthServer(): void {
-    this.authServers.push(new FormControl('', [Validators.required]));
+  addExternalAuthorizationServer(): void {
+    this.addAuthorizationServer();
   }
 
   addAuthorizationServer(): void {
-    this.authorizationServers.push(this.createManagedAuthorizationServerGroup());
+    this.authorizationServers.push(this.createAuthorizationServerGroup());
   }
 
-  removeAuthServer(index: number): void {
-    this.authServers.removeAt(index);
+  addChainedAuthorizationServer(): void {
+    this.addAuthorizationServer();
+  }
+
+  addBuiltInAuthorizationServer(): void {
+    this.addAuthorizationServer();
+  }
+
+  onAuthorizationServerTypeChange(
+    index: number,
+    type: 'external' | 'oid4vp' | 'chained' | 'built-in'
+  ): void {
+    const current = this.authorizationServers.at(index)?.value;
+    if (!current) {
+      return;
+    }
+
+    if (type === 'built-in' && this.hasBuiltInAuthorizationServer(index)) {
+      this.snackBar.open('Only one built-in authorization server can be configured', 'Close', {
+        duration: 3000,
+      });
+      this.authorizationServers.at(index).get('type')?.setValue('oid4vp', { emitEvent: false });
+      type = 'oid4vp';
+    }
+
+    const nextValue: any = {
+      ...current,
+      type,
+    };
+
+    if (type === 'external') {
+      nextValue.issuer = current.issuer ?? '';
+      nextValue.label = current.label ?? '';
+    }
+
+    if (type === 'chained' && !nextValue.label) {
+      nextValue.label = 'Chained Authorization Server';
+    }
+
+    if (type === 'built-in' && !nextValue.label) {
+      nextValue.label = 'Built-in Authorization Server';
+    }
+
+    this.authorizationServers.setControl(index, this.createAuthorizationServerGroup(nextValue));
+  }
+
+  hasBuiltInAuthorizationServer(excludeIndex?: number): boolean {
+    return this.authorizationServers.controls.some((control, index) => {
+      if (excludeIndex !== undefined && index === excludeIndex) {
+        return false;
+      }
+      return control.get('type')?.value === 'built-in';
+    });
   }
 
   removeAuthorizationServer(index: number): void {
     this.authorizationServers.removeAt(index);
   }
 
+  moveAuthorizationServer(index: number, direction: 'up' | 'down'): void {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= this.authorizationServers.length) {
+      return;
+    }
+
+    const current = this.authorizationServers.at(index);
+    const target = this.authorizationServers.at(targetIndex);
+    this.authorizationServers.setControl(index, target);
+    this.authorizationServers.setControl(targetIndex, current);
+  }
+
   get walletProviderTrustLists(): FormArray {
     return this.form.get('walletProviderTrustLists') as FormArray;
-  }
-
-  get chainedAs(): FormGroup {
-    return this.form.get('chainedAs') as FormGroup;
-  }
-
-  get chainedAsEnabled(): boolean {
-    return this.chainedAs.get('enabled')?.value ?? false;
-  }
-
-  get refreshTokenEnabled(): boolean {
-    return this.form.get('refreshTokenEnabled')?.value ?? true;
   }
 
   get federation(): FormGroup {
@@ -773,34 +812,6 @@ export class IssuanceConfigCreateComponent implements OnInit, OnDestroy {
 
   removeTrustAnchor(index: number): void {
     this.trustAnchors.removeAt(index);
-  }
-
-  /**
-   * Build the list of available authorization server options for the preferred AS dropdown.
-   * Includes external auth servers, chained AS (if enabled), and the built-in AS.
-   */
-  get availableAuthServerOptions(): { value: string; label: string }[] {
-    const options: { value: string; label: string }[] = [];
-    const servers = this.authServers.value as string[];
-    for (const url of servers) {
-      if (url) {
-        options.push({ value: url, label: url });
-      }
-    }
-    const managedServers = this.authorizationServers.value as any[];
-    for (const server of managedServers) {
-      if (server?.id) {
-        options.push({
-          value: `${this.managedAuthorizationServerPrefix}${server.id}`,
-          label: server.label || server.id,
-        });
-      }
-    }
-    if (this.chainedAsEnabled) {
-      options.push({ value: 'chained-as', label: 'Chained Authorization Server' });
-    }
-    options.push({ value: 'built-in', label: 'Built-in Authorization Server' });
-    return options;
   }
 
   addWalletProviderTrustList(): void {

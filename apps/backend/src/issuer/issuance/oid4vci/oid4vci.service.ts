@@ -58,6 +58,8 @@ import {
     IssuerRegistrationCertificateConfig,
     IssuerRegistrationCertificateMode,
 } from "../../configuration/issuance/dto/issuer-registration-certificate.dto";
+import { ManagedAuthorizationServerConfig } from "../../configuration/issuance/dto/authorization-server-config.dto";
+import { IssuanceConfig } from "../../configuration/issuance/entities/issuance-config.entity";
 import { IssuanceService } from "../../configuration/issuance/issuance.service";
 import { WebhookEndpointEntity } from "../../configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { type RegistrationCertificateCreation } from "../../../registrar/generated";
@@ -96,6 +98,23 @@ type OAuth2TokenPayload = {
     nbf?: number;
     nonce?: string;
     cnf?: { jwk?: Jwk };
+};
+
+type Oid4vpServerConfig = ManagedAuthorizationServerConfig & {
+    type: "oid4vp";
+    id: string;
+    presentationConfigId: string;
+};
+
+type ExternalServerConfig = ManagedAuthorizationServerConfig & {
+    type: "external";
+    issuer: string;
+};
+
+type ChainedServerConfig = ManagedAuthorizationServerConfig & {
+    type: "chained";
+    upstream?: unknown;
+    vp?: { enabled?: boolean };
 };
 
 interface IssuerInfo {
@@ -141,27 +160,65 @@ export class Oid4vciService {
     private async getAuthorizationServer(tenantId: string): Promise<string> {
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
-
-        const managedAuthorizationServer =
-            await this.authorizationServersService.getDefaultAuthorizationServerUrl(
-                tenantId,
-                issuanceConfig.preferredAuthServer,
-            );
-        if (managedAuthorizationServer) {
-            return managedAuthorizationServer;
-        }
-
         const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
 
-        if (
-            await this.authorizationServersService.hasEnabledChainedAuthorizationServer(
-                tenantId,
-            )
-        ) {
-            return `${publicUrl}/issuers/${tenantId}/chained-as`;
+        for (const server of issuanceConfig.authorizationServers ?? []) {
+            const externalServer = server as Partial<ExternalServerConfig>;
+            const oid4vpServer = server as Partial<Oid4vpServerConfig>;
+            const chainedServer = server as Partial<ChainedServerConfig>;
+
+            if (server.enabled === false) {
+                continue;
+            }
+
+            if (
+                server.type === "external" &&
+                typeof externalServer.issuer === "string" &&
+                externalServer.issuer.length > 0
+            ) {
+                return externalServer.issuer;
+            }
+
+            if (
+                server.type === "oid4vp" &&
+                typeof oid4vpServer.id === "string" &&
+                oid4vpServer.id.length > 0
+            ) {
+                return this.authorizationServersService.getAuthorizationServerBaseUrl(
+                    tenantId,
+                    oid4vpServer.id,
+                );
+            }
+
+            if (server.type === "built-in") {
+                return this.authzService.getAuthzIssuer(tenantId);
+            }
+
+            if (server.type === "chained") {
+                if (chainedServer.upstream) {
+                    return `${publicUrl}/issuers/${tenantId}/chained-as`;
+                }
+
+                if (chainedServer.vp?.enabled) {
+                    return `${publicUrl}/issuers/${tenantId}/chained-as-vp`;
+                }
+            }
         }
 
-        return this.authzService.getAuthzIssuer(tenantId);
+        throw new BadRequestException(
+            "No enabled authorization server configured",
+        );
+    }
+
+    private async isBuiltInAuthorizationServerConfigured(
+        tenantId: string,
+    ): Promise<boolean> {
+        const issuanceConfig =
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        return (issuanceConfig.authorizationServers ?? []).some(
+            (server) => server.enabled !== false && server.type === "built-in",
+        );
     }
 
     private async resolveAuthorizationServerSelection(
@@ -173,6 +230,13 @@ export class Oid4vciService {
         }
 
         if (selectedAuthorizationServer === "built-in") {
+            const builtInConfigured =
+                await this.isBuiltInAuthorizationServerConfigured(tenantId);
+            if (!builtInConfigured) {
+                throw new BadRequestException(
+                    "Built-in authorization server is not configured",
+                );
+            }
             return this.authzService.getAuthzIssuer(tenantId);
         }
 
@@ -261,80 +325,151 @@ export class Oid4vciService {
         }
     }
 
-    private async appendInternalAuthorizationServers(
-        tenantId: string,
-        credentialIssuer: string,
-        authServers: string[],
-        authorizationServers: AuthorizationServerMetadata[],
-    ): Promise<void> {
-        if (
-            await this.authorizationServersService.hasEnabledChainedAuthorizationServer(
-                tenantId,
-            )
-        ) {
-            const chainedAsIssuer = `${credentialIssuer}/chained-as`;
-            authServers.push(chainedAsIssuer);
-            authorizationServers.push(
-                (await this.chainedAsService.getMetadata(
-                    tenantId,
-                )) as AuthorizationServerMetadata,
-            );
-        }
-
-        const managedAuthorizationServers =
-            await this.authorizationServersService.getEnabledAuthorizationServers(
-                tenantId,
-            );
-        for (const managedAuthorizationServer of managedAuthorizationServers) {
-            authServers.push(
-                this.authorizationServersService.getAuthorizationServerBaseUrl(
-                    tenantId,
-                    managedAuthorizationServer.id!,
-                ),
-            );
-            authorizationServers.push(
-                (await this.authorizationServersService.getMetadata(
-                    tenantId,
-                    managedAuthorizationServer.id!,
-                )) as AuthorizationServerMetadata,
-            );
-        }
-
-        authServers.push(this.authzService.getAuthzIssuer(tenantId));
-        authorizationServers.push(
-            await this.authzService.authzMetadata(tenantId),
+    private async fetchAuthorizationServerMetadata(
+        authServerUrl: string,
+    ): Promise<AuthorizationServerMetadata> {
+        return firstValueFrom(
+            this.httpService.get(
+                `${authServerUrl}/.well-known/oauth-authorization-server`,
+            ),
+        ).then(
+            (response) => response.data,
+            async () => {
+                // Retry fetching from OIDC metadata endpoint.
+                return await firstValueFrom(
+                    this.httpService.get(
+                        `${authServerUrl}/.well-known/openid-configuration`,
+                    ),
+                ).then(
+                    (response) => response.data,
+                    () => {
+                        throw new BadRequestException(
+                            "Failed to fetch authorization server metadata",
+                        );
+                    },
+                );
+            },
         );
     }
 
-    private resolvePreferredAuthorizationServer(
-        preferredAuthServer: string | undefined,
+    private async appendConfiguredAuthorizationServersInOrder(
         tenantId: string,
         credentialIssuer: string,
-    ): string | undefined {
-        if (!preferredAuthServer) {
-            return undefined;
-        }
+        issuanceConfig: IssuanceConfig,
+        federationTrustSource: FederationTrustSource | undefined,
+        authServers: string[],
+        authorizationServers: AuthorizationServerMetadata[],
+    ): Promise<void> {
+        const seenAuthServers = new Set<string>();
 
-        if (preferredAuthServer === "built-in") {
-            return this.authzService.getAuthzIssuer(tenantId);
-        }
+        for (const configuredServer of issuanceConfig.authorizationServers ??
+            []) {
+            const externalServer =
+                configuredServer as Partial<ExternalServerConfig>;
+            const oid4vpServer =
+                configuredServer as Partial<Oid4vpServerConfig>;
+            const chainedServer =
+                configuredServer as Partial<ChainedServerConfig>;
 
-        if (preferredAuthServer === "chained-as") {
-            return `${credentialIssuer}/chained-as`;
-        }
+            if (configuredServer.enabled === false) {
+                continue;
+            }
 
-        if (
-            this.authorizationServersService.isSelectionValue(
-                preferredAuthServer,
-            )
-        ) {
-            return this.authorizationServersService.resolveSelectionToIssuer(
-                tenantId,
-                preferredAuthServer,
-            ) as unknown as string;
-        }
+            if (
+                configuredServer.type === "external" &&
+                typeof externalServer.issuer === "string" &&
+                externalServer.issuer.length > 0
+            ) {
+                const authServerUrl = externalServer.issuer;
+                if (seenAuthServers.has(authServerUrl)) {
+                    continue;
+                }
 
-        return preferredAuthServer;
+                await this.assertFederationTrustForAuthorizationServer(
+                    authServerUrl,
+                    federationTrustSource,
+                );
+
+                seenAuthServers.add(authServerUrl);
+                authServers.push(authServerUrl);
+                authorizationServers.push(
+                    await this.fetchAuthorizationServerMetadata(authServerUrl),
+                );
+                continue;
+            }
+
+            if (
+                configuredServer.type === "oid4vp" &&
+                typeof oid4vpServer.id === "string" &&
+                oid4vpServer.id.length > 0
+            ) {
+                const authServerUrl =
+                    this.authorizationServersService.getAuthorizationServerBaseUrl(
+                        tenantId,
+                        oid4vpServer.id,
+                    );
+                if (seenAuthServers.has(authServerUrl)) {
+                    continue;
+                }
+
+                seenAuthServers.add(authServerUrl);
+                authServers.push(authServerUrl);
+                authorizationServers.push(
+                    (await this.authorizationServersService.getMetadata(
+                        tenantId,
+                        oid4vpServer.id,
+                    )) as AuthorizationServerMetadata,
+                );
+                continue;
+            }
+
+            if (configuredServer.type === "chained") {
+                if (chainedServer.upstream) {
+                    const chainedAsIssuer = `${credentialIssuer}/chained-as`;
+                    if (seenAuthServers.has(chainedAsIssuer)) {
+                        continue;
+                    }
+
+                    seenAuthServers.add(chainedAsIssuer);
+                    authServers.push(chainedAsIssuer);
+                    authorizationServers.push(
+                        (await this.chainedAsService.getMetadata(
+                            tenantId,
+                        )) as AuthorizationServerMetadata,
+                    );
+                    continue;
+                }
+
+                if (chainedServer.vp?.enabled) {
+                    const chainedAsVpIssuer = `${credentialIssuer}/chained-as-vp`;
+                    if (seenAuthServers.has(chainedAsVpIssuer)) {
+                        continue;
+                    }
+
+                    seenAuthServers.add(chainedAsVpIssuer);
+                    authServers.push(chainedAsVpIssuer);
+                    authorizationServers.push(
+                        (await this.chainedAsVpService.getMetadata(
+                            tenantId,
+                        )) as AuthorizationServerMetadata,
+                    );
+                }
+            }
+
+            if (configuredServer.type === "built-in") {
+                const builtInIssuer =
+                    this.authzService.getAuthzIssuer(tenantId);
+                if (seenAuthServers.has(builtInIssuer)) {
+                    continue;
+                }
+
+                seenAuthServers.add(builtInIssuer);
+                authServers.push(builtInIssuer);
+                authorizationServers.push(
+                    await this.authzService.authzMetadata(tenantId),
+                );
+            }
+        }
     }
 
     /**
@@ -567,20 +702,6 @@ export class Oid4vciService {
         return resolved.jwt;
     }
 
-    private reorderPreferredAuthorizationServer(
-        authServers: string[],
-        authorizationServers: AuthorizationServerMetadata[],
-        preferred: string,
-    ): void {
-        const idx = authServers.indexOf(preferred);
-        if (idx > 0) {
-            const [url] = authServers.splice(idx, 1);
-            const [meta] = authorizationServers.splice(idx, 1);
-            authServers.unshift(url);
-            authorizationServers.unshift(meta);
-        }
-    }
-
     private async appendIssuerRegistrationCertificateInfo(
         tenantId: string,
         registrationCertificateConfig:
@@ -646,64 +767,14 @@ export class Oid4vciService {
                   } as FederationTrustSource)
                 : undefined;
 
-        for (const authServerUrl of await this.authorizationServersService.getExternalAuthorizationServerUrls(
-            tenantId,
-        )) {
-            await this.assertFederationTrustForAuthorizationServer(
-                authServerUrl,
-                federationTrustSource,
-            );
-
-            authServers.push(authServerUrl);
-            //TODO: check where this is needed to reduce calls
-            authorizationServers.push(
-                await firstValueFrom(
-                    this.httpService.get(
-                        `${authServerUrl}/.well-known/oauth-authorization-server`,
-                    ),
-                ).then(
-                    (response) => response.data,
-                    async () => {
-                        // Retry fetching from OIDC metadata endpoint
-                        return await firstValueFrom(
-                            this.httpService.get(
-                                `${authServerUrl}/.well-known/openid-configuration`,
-                            ),
-                        ).then(
-                            (response) => response.data,
-                            () => {
-                                throw new BadRequestException(
-                                    "Failed to fetch authorization server metadata",
-                                );
-                            },
-                        );
-                    },
-                ),
-            );
-        }
-
-        await this.appendInternalAuthorizationServers(
+        await this.appendConfiguredAuthorizationServersInOrder(
             tenantId,
             credential_issuer,
+            issuanceConfig,
+            federationTrustSource,
             authServers,
             authorizationServers,
         );
-
-        // Reorder so the preferred authorization server is first
-        const preferred = await Promise.resolve(
-            this.resolvePreferredAuthorizationServer(
-                issuanceConfig.preferredAuthServer,
-                tenantId,
-                credential_issuer,
-            ),
-        );
-        if (preferred) {
-            this.reorderPreferredAuthorizationServer(
-                authServers,
-                authorizationServers,
-                preferred,
-            );
-        }
 
         const issuer_info: IssuerInfo[] = [];
         await this.appendIssuerRegistrationCertificateInfo(
@@ -781,7 +852,7 @@ export class Oid4vciService {
                 );
             const authServer =
                 selectedAuthorizationServer ??
-                this.authzService.getAuthzIssuer(tenantId);
+                (await this.getAuthorizationServer(tenantId));
 
             grants = {
                 [preAuthorizedCodeGrantIdentifier]: {

@@ -15,6 +15,7 @@ import { SessionStatus } from "../../../../../session/entities/session.entity";
 import { SessionService } from "../../../../../session/session.service";
 import { WalletAttestationService } from "../../../../../shared/trust/wallet-attestation.service";
 import { ManagedAuthorizationServerConfig } from "../../../../configuration/issuance/dto/authorization-server-config.dto";
+import { ChainedAsTokenConfig } from "../../../../configuration/issuance/dto/chained-as-config.dto";
 import { IssuanceService } from "../../../../configuration/issuance/issuance.service";
 import { Oid4vpService } from "../../../../../verifier/oid4vp/oid4vp.service";
 import {
@@ -33,6 +34,27 @@ import {
     resolveTokenBinding,
     DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
 } from "../shared";
+
+type Oid4VpManagedAuthorizationServerConfig =
+    ManagedAuthorizationServerConfig & {
+        type: "oid4vp";
+        id: string;
+        presentationConfigId: string;
+        token?: ChainedAsTokenConfig;
+        requireDPoP?: boolean;
+    };
+
+type ExternalManagedAuthorizationServerConfig =
+    ManagedAuthorizationServerConfig & {
+        type: "external";
+        issuer: string;
+    };
+
+type ChainedManagedAuthorizationServerConfig =
+    ManagedAuthorizationServerConfig & {
+        type: "chained";
+        upstream: unknown;
+    };
 
 @Injectable()
 export class AuthorizationServersService {
@@ -79,18 +101,23 @@ export class AuthorizationServersService {
 
     async getEnabledAuthorizationServers(
         tenantId: string,
-    ): Promise<ManagedAuthorizationServerConfig[]> {
+    ): Promise<Oid4VpManagedAuthorizationServerConfig[]> {
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
 
         return (issuanceConfig.authorizationServers ?? []).filter(
-            (config) =>
-                config.enabled !== false &&
-                config.type === "oid4vp" &&
-                typeof config.id === "string" &&
-                config.id.length > 0 &&
-                typeof config.presentationConfigId === "string" &&
-                config.presentationConfigId.length > 0,
+            (config): config is Oid4VpManagedAuthorizationServerConfig => {
+                const candidate =
+                    config as Partial<Oid4VpManagedAuthorizationServerConfig>;
+                return (
+                    config.enabled !== false &&
+                    config.type === "oid4vp" &&
+                    typeof candidate.id === "string" &&
+                    candidate.id.length > 0 &&
+                    typeof candidate.presentationConfigId === "string" &&
+                    candidate.presentationConfigId.length > 0
+                );
+            },
         );
     }
 
@@ -102,13 +129,20 @@ export class AuthorizationServersService {
 
         return (issuanceConfig.authorizationServers ?? [])
             .filter(
-                (config) =>
-                    config.enabled !== false &&
-                    config.type === "external" &&
-                    typeof config.issuer === "string" &&
-                    config.issuer.length > 0,
+                (
+                    config,
+                ): config is ExternalManagedAuthorizationServerConfig => {
+                    const candidate =
+                        config as Partial<ExternalManagedAuthorizationServerConfig>;
+                    return (
+                        config.enabled !== false &&
+                        config.type === "external" &&
+                        typeof candidate.issuer === "string" &&
+                        candidate.issuer.length > 0
+                    );
+                },
             )
-            .map((config) => config.issuer!)
+            .map((config) => config.issuer)
             .filter((url, index, arr) => arr.indexOf(url) === index);
     }
 
@@ -119,17 +153,22 @@ export class AuthorizationServersService {
             await this.issuanceService.getIssuanceConfiguration(tenantId);
 
         return (issuanceConfig.authorizationServers ?? []).some(
-            (config) =>
-                config.enabled !== false &&
-                config.type === "chained" &&
-                !!config.upstream,
+            (config): config is ChainedManagedAuthorizationServerConfig => {
+                const candidate =
+                    config as Partial<ChainedManagedAuthorizationServerConfig>;
+                return (
+                    config.enabled !== false &&
+                    config.type === "chained" &&
+                    !!candidate.upstream
+                );
+            },
         );
     }
 
     async getAuthorizationServerConfig(
         tenantId: string,
         authorizationServerId: string,
-    ): Promise<ManagedAuthorizationServerConfig> {
+    ): Promise<Oid4VpManagedAuthorizationServerConfig> {
         const config = (
             await this.getEnabledAuthorizationServers(tenantId)
         ).find((entry) => entry.id === authorizationServerId);
@@ -137,12 +176,6 @@ export class AuthorizationServersService {
         if (!config) {
             throw new NotFoundException(
                 `Authorization server '${authorizationServerId}' is not configured for this tenant`,
-            );
-        }
-
-        if (config.type !== "oid4vp") {
-            throw new BadRequestException(
-                `Unsupported authorization server type '${config.type}'`,
             );
         }
 
@@ -154,7 +187,7 @@ export class AuthorizationServersService {
     ): Promise<string[]> {
         const configs = await this.getEnabledAuthorizationServers(tenantId);
         return configs.map((config) =>
-            this.getAuthorizationServerBaseUrl(tenantId, config.id!),
+            this.getAuthorizationServerBaseUrl(tenantId, config.id),
         );
     }
 
@@ -192,7 +225,7 @@ export class AuthorizationServersService {
             return undefined;
         }
 
-        return this.getAuthorizationServerBaseUrl(tenantId, first.id!);
+        return this.getAuthorizationServerBaseUrl(tenantId, first.id);
     }
 
     async handlePar(
@@ -334,13 +367,13 @@ export class AuthorizationServersService {
         await this.sessionService.create({
             id: session.id,
             tenantId,
-            requestId: config.presentationConfigId!,
+            requestId: config.presentationConfigId,
             redirectUri: callbackUrl,
         });
 
         const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
         const offer = await this.oid4vpService.createRequest(
-            config.presentationConfigId!,
+            config.presentationConfigId,
             {
                 session: session.id,
                 redirectUri: callbackUrl,
@@ -560,12 +593,9 @@ export class AuthorizationServersService {
 
         session.status = ChainedAsSessionStatus.TOKEN_ISSUED;
         session.accessTokenJti = jti;
-
-        const issuanceConfig =
-            await this.issuanceService.getIssuanceConfiguration(tenantId);
         const refreshToken = issueRefreshTokenIfEnabled(
             session,
-            issuanceConfig,
+            config.token ?? {},
         );
 
         await this.sessionRepository.save(session);
@@ -587,7 +617,7 @@ export class AuthorizationServersService {
         tenantId: string,
         authorizationServerId: string,
     ): Promise<Record<string, unknown>> {
-        await this.getAuthorizationServerConfig(
+        const config = await this.getAuthorizationServerConfig(
             tenantId,
             authorizationServerId,
         );
@@ -600,6 +630,7 @@ export class AuthorizationServersService {
             await this.issuanceService.getIssuanceConfiguration(tenantId);
         const walletAttestationRequired =
             issuanceConfig.walletAttestationRequired ?? false;
+        const refreshTokensEnabled = config.token?.refreshTokenEnabled ?? true;
 
         return buildAuthorizationServerMetadata({
             issuer: baseUrl,
@@ -607,7 +638,9 @@ export class AuthorizationServersService {
             tokenEndpoint: `${baseUrl}/token`,
             pushedAuthorizationRequestEndpoint: `${baseUrl}/par`,
             jwksUri: `${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/authorization-servers/${authorizationServerId}`,
-            grantTypesSupported: ["authorization_code", "refresh_token"],
+            grantTypesSupported: refreshTokensEnabled
+                ? ["authorization_code", "refresh_token"]
+                : ["authorization_code"],
             dpopSigningAlgValuesSupported:
                 DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
             ...buildWalletAttestationMetadata(walletAttestationRequired),
