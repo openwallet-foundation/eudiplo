@@ -17,7 +17,7 @@ import {
 
 export interface ClientAttestation {
     clientAttestationJwt: string;
-    clientAttestationPopJwt: string;
+    clientAttestationPopJwt?: string;
 }
 
 /**
@@ -88,7 +88,7 @@ export class WalletAttestationService {
                 authorizationServer,
                 clientAttestationJwt: clientAttestation.clientAttestationJwt,
                 clientAttestationPopJwt:
-                    clientAttestation.clientAttestationPopJwt,
+                    clientAttestation.clientAttestationPopJwt!,
                 allowedSkewInSeconds:
                     this.configService.getOrThrow<number>("CRYPTO_TOLERANCE"),
             });
