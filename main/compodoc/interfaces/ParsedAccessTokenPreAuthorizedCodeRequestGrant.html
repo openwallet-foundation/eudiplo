@@ -533,6 +533,37 @@ export class AuthorizeService {
         return &#x60;${this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;)}/issuers/${tenantId}&#x60;;
     }
 
+    private resolveRefreshTokenConfig(issuanceConfig: {
+        authorizationServers?: Array&lt;{
+            type?: string;
+            enabled?: boolean;
+            id?: string;
+            token?: {
+                refreshTokenEnabled?: boolean;
+                refreshTokenExpiresInSeconds?: number;
+            };
+        }&gt; | null;
+    }): {
+        enabled: boolean;
+        expiresInSeconds?: number;
+    } {
+        const server &#x3D; (issuanceConfig.authorizationServers ?? []).find(
+            (candidate) &#x3D;&gt;
+                candidate.enabled !&#x3D;&#x3D; false &amp;&amp;
+                candidate.type !&#x3D;&#x3D; &quot;external&quot; &amp;&amp;
+                !!candidate.token,
+        );
+        if (server?.token) {
+            return {
+                enabled: server.token.refreshTokenEnabled ?? true,
+                expiresInSeconds: server.token.refreshTokenExpiresInSeconds,
+            };
+        }
+
+        // Built-in authorization server defaults.
+        return { enabled: true, expiresInSeconds: 2592000 };
+    }
+
     /**
      * Build the RFC 9396 &#x60;authorization_details&#x60; array that must be bound to the
      * issued access token, per OID4VCI Section 6 / 7. The list of authorized
@@ -615,6 +646,8 @@ export class AuthorizeService {
             await this.issuanceService.getIssuanceConfiguration(tenantId);
         const walletAttestationRequired &#x3D;
             issuanceConfig.walletAttestationRequired ?? false;
+        const refreshTokenConfig &#x3D;
+            this.resolveRefreshTokenConfig(issuanceConfig);
 
         const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
         const authServer &#x3D; this.getAuthzIssuer(tenantId);
@@ -632,11 +665,16 @@ export class AuthorizeService {
             tokenEndpoint: &#x60;${authServer}/authorize/token&#x60;,
             pushedAuthorizationRequestEndpoint: &#x60;${authServer}/authorize/par&#x60;,
             jwksUri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}&#x60;,
-            grantTypesSupported: [
-                &quot;authorization_code&quot;,
-                &quot;refresh_token&quot;,
-                &quot;urn:ietf:params:oauth:grant-type:pre-authorized_code&quot;,
-            ],
+            grantTypesSupported: refreshTokenConfig.enabled
+                ? [
+                      &quot;authorization_code&quot;,
+                      &quot;refresh_token&quot;,
+                      &quot;urn:ietf:params:oauth:grant-type:pre-authorized_code&quot;,
+                  ]
+                : [
+                      &quot;authorization_code&quot;,
+                      &quot;urn:ietf:params:oauth:grant-type:pre-authorized_code&quot;,
+                  ],
             dpopSigningAlgValuesSupported:
                 DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
             ...buildWalletAttestationMetadata(walletAttestationRequired),
@@ -865,6 +903,8 @@ export class AuthorizeService {
 
         const issuanceConfig &#x3D;
             await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const refreshTokenConfig &#x3D;
+            this.resolveRefreshTokenConfig(issuanceConfig);
 
         const authorizationServerMetadata &#x3D; await this.authzMetadata(tenantId);
 
@@ -1061,7 +1101,7 @@ export class AuthorizeService {
                 authorizationServer: authorizationServerMetadata.issuer,
                 clientId: req.body.client_id,
                 dpop: dpopValue,
-                refreshToken: issuanceConfig.refreshTokenEnabled ? true : false,
+                refreshToken: refreshTokenConfig.enabled,
                 additionalAccessTokenPayload: authorizationDetails
                     ? { authorization_details: authorizationDetails }
                     : undefined,
@@ -1082,12 +1122,11 @@ export class AuthorizeService {
         if (tokenResponse.refresh_token) {
             // Calculate refresh token expiration based on configured lifetime
             let refreshTokenExpiresAt: Date | undefined;
-            if (issuanceConfig.refreshTokenExpiresInSeconds) {
+            if (refreshTokenConfig.expiresInSeconds) {
                 const now &#x3D; new Date();
                 refreshTokenExpiresAt &#x3D; new Date(
                     now.getTime() +
-                        (issuanceConfig.refreshTokenExpiresInSeconds || 0) *
-                            1000,
+                        (refreshTokenConfig.expiresInSeconds || 0) * 1000,
                 );
             }
 

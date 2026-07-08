@@ -222,7 +222,7 @@
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
-                                <a href="#appendInternalAuthorizationServers" >appendInternalAuthorizationServers</a>
+                                <a href="#appendConfiguredAuthorizationServersInOrder" >appendConfiguredAuthorizationServersInOrder</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
@@ -271,6 +271,12 @@
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
+                                <a href="#fetchAuthorizationServerMetadata" >fetchAuthorizationServerMetadata</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
                                 <a href="#getAuthorizationServer" >getAuthorizationServer</a>
                             </li>
                             <li>
@@ -313,6 +319,12 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#isBuiltInAuthorizationServerConfigured" >isBuiltInAuthorizationServerConfigured</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
                                 <a href="#isJwtActive" >isJwtActive</a>
                             </li>
                             <li>
@@ -344,11 +356,6 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
-                                <a href="#reorderPreferredAuthorizationServer" >reorderPreferredAuthorizationServer</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                    <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#resolveAuthorizationServerSelection" >resolveAuthorizationServerSelection</a>
                             </li>
@@ -357,11 +364,6 @@
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#resolveIssuerRegistrationCertificateJwt" >resolveIssuerRegistrationCertificateJwt</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                    <span class="modifier">Private</span>
-                                <a href="#resolvePreferredAuthorizationServer" >resolvePreferredAuthorizationServer</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
@@ -409,7 +411,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="111" class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:111</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:130</a></div>
                             </td>
                         </tr>
 
@@ -672,27 +674,27 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="appendInternalAuthorizationServers"></a>
+                    <a name="appendConfiguredAuthorizationServersInOrder"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
                             <span class="modifier">Async</span>
-                        <span ><b>appendInternalAuthorizationServers</b></span>
-                        <a href="#appendInternalAuthorizationServers"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>appendConfiguredAuthorizationServersInOrder</b></span>
+                        <a href="#appendConfiguredAuthorizationServersInOrder"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>appendInternalAuthorizationServers(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, credentialIssuer: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authServers: string[], authorizationServers: AuthorizationServerMetadata[])</code>
+                    <code>appendConfiguredAuthorizationServersInOrder(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, credentialIssuer: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, issuanceConfig: <a href="../classes/IssuanceConfig.html" target="_self">IssuanceConfig</a>, federationTrustSource: <a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self">FederationTrustSource | undefined</a>, authServers: string[], authorizationServers: AuthorizationServerMetadata[])</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="264"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:264</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="355"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:355</a></div>
                         </td>
                     </tr>
 
@@ -728,6 +730,30 @@
                                                 <td>credentialIssuer</td>
                                             <td>
                                                             <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>issuanceConfig</td>
+                                            <td>
+                                                            <code><a href="../classes/IssuanceConfig.html" target="_self" >IssuanceConfig</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>federationTrustSource</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#FederationTrustSource" target="_self" >FederationTrustSource | undefined</a></code>
                                             </td>
 
                                             <td>
@@ -797,8 +823,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="584"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:584</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="705"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:705</a></div>
                         </td>
                     </tr>
 
@@ -891,8 +917,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="238"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:238</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="302"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:302</a></div>
                         </td>
                     </tr>
 
@@ -972,8 +998,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="432"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:432</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="567"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:567</a></div>
                         </td>
                     </tr>
 
@@ -1041,8 +1067,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1771"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1771</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1842"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1842</a></div>
                         </td>
                     </tr>
 
@@ -1150,8 +1176,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="370"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:370</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="505"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:505</a></div>
                         </td>
                     </tr>
 
@@ -1227,8 +1253,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="764"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:764</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="835"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:835</a></div>
                         </td>
                     </tr>
 
@@ -1336,8 +1362,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="989"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:989</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1060"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1060</a></div>
                         </td>
                     </tr>
 
@@ -1431,8 +1457,8 @@ when the requested credential is not authorized by the token.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1790"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1790</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1861"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1861</a></div>
                         </td>
                     </tr>
 
@@ -1522,6 +1548,76 @@ when the requested credential is not authorized by the token.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="fetchAuthorizationServerMetadata"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>fetchAuthorizationServerMetadata</b></span>
+                        <a href="#fetchAuthorizationServerMetadata"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fetchAuthorizationServerMetadata(authServerUrl: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="328"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:328</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authServerUrl</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;AuthorizationServerMetadata&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="getAuthorizationServer"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -1541,8 +1637,8 @@ when the requested credential is not authorized by the token.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="141"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:141</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="160"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:160</a></div>
                         </td>
                     </tr>
 
@@ -1621,8 +1717,8 @@ Uses Chained AS if configured, otherwise falls back to the default AS.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1316"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1316</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1387"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1387</a></div>
                         </td>
                     </tr>
 
@@ -1714,8 +1810,8 @@ Uses Chained AS if configured, otherwise falls back to the default AS.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="889"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:889</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="960"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:960</a></div>
                         </td>
                     </tr>
 
@@ -1798,8 +1894,8 @@ Uses Chained AS if configured, otherwise falls back to the default AS.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="345"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:345</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="480"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:480</a></div>
                         </td>
                     </tr>
 
@@ -1891,8 +1987,8 @@ advertising that the issuer can receive encrypted credential requests.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1742"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1742</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1813"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1813</a></div>
                         </td>
                     </tr>
 
@@ -1999,8 +2095,8 @@ Called when wallet polls with transaction_id.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="213"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:213</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="277"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:277</a></div>
                         </td>
                     </tr>
 
@@ -2088,8 +2184,8 @@ Called when wallet polls with transaction_id.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="228"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:228</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="292"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:292</a></div>
                         </td>
                     </tr>
 
@@ -2187,8 +2283,8 @@ Called when wallet polls with transaction_id.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1628"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1628</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1699"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1699</a></div>
                         </td>
                     </tr>
 
@@ -2264,6 +2360,76 @@ Called when wallet polls with transaction_id.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="isBuiltInAuthorizationServerConfigured"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>isBuiltInAuthorizationServerConfigured</b></span>
+                        <a href="#isBuiltInAuthorizationServerConfigured"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isBuiltInAuthorizationServerConfigured(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="213"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:213</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="isJwtActive"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -2282,8 +2448,8 @@ Called when wallet polls with transaction_id.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="390"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:390</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="525"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:525</a></div>
                         </td>
                     </tr>
 
@@ -2352,8 +2518,8 @@ Called when wallet polls with transaction_id.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1227"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1227</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1298"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1298</a></div>
                         </td>
                     </tr>
 
@@ -2483,8 +2649,8 @@ Called when wallet polls with transaction_id.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="621"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:621</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="742"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:742</a></div>
                         </td>
                     </tr>
 
@@ -2567,8 +2733,8 @@ Called when wallet polls with transaction_id.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1273"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1273</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1344"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1344</a></div>
                         </td>
                     </tr>
 
@@ -2645,8 +2811,8 @@ Called when wallet polls with transaction_id.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="934"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:934</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1005"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1005</a></div>
                         </td>
                     </tr>
 
@@ -2686,8 +2852,8 @@ Called when wallet polls with transaction_id.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="920"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:920</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="991"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:991</a></div>
                         </td>
                     </tr>
 
@@ -2739,99 +2905,6 @@ Called when wallet polls with transaction_id.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="reorderPreferredAuthorizationServer"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>reorderPreferredAuthorizationServer</b></span>
-                        <a href="#reorderPreferredAuthorizationServer"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>reorderPreferredAuthorizationServer(authServers: string[], authorizationServers: AuthorizationServerMetadata[], preferred: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="570"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:570</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>authServers</td>
-                                            <td>
-                                                        <code>string[]</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>authorizationServers</td>
-                                            <td>
-                                                        <code>AuthorizationServerMetadata[]</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>preferred</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="resolveAuthorizationServerSelection"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -2851,8 +2924,8 @@ Called when wallet polls with transaction_id.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="167"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:167</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="224"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:224</a></div>
                         </td>
                     </tr>
 
@@ -2933,8 +3006,8 @@ Called when wallet polls with transaction_id.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="452"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:452</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="587"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:587</a></div>
                         </td>
                     </tr>
 
@@ -2996,99 +3069,6 @@ Called when wallet polls with transaction_id.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="resolvePreferredAuthorizationServer"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>resolvePreferredAuthorizationServer</b></span>
-                        <a href="#resolvePreferredAuthorizationServer"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>resolvePreferredAuthorizationServer(preferredAuthServer: string | undefined, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, credentialIssuer: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="309"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:309</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>preferredAuthServer</td>
-                                            <td>
-                                                        <code>string | undefined</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>credentialIssuer</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>string | undefined</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="resolveSessionAndClaims"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -3108,8 +3088,8 @@ Called when wallet polls with transaction_id.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1032"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1032</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1103"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1103</a></div>
                         </td>
                     </tr>
 
@@ -3216,8 +3196,8 @@ Handles Local AS, Chained AS, and External AS flows.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="416"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:416</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="551"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:551</a></div>
                         </td>
                     </tr>
 
@@ -3286,8 +3266,8 @@ Handles Local AS, Chained AS, and External AS flows.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="1170"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1170</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1241"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1241</a></div>
                         </td>
                     </tr>
 
@@ -3395,8 +3375,8 @@ Ensures all proofs contain valid, non-expired nonces and consumes them.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="945"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:945</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1016"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:1016</a></div>
                         </td>
                     </tr>
 
@@ -3509,7 +3489,7 @@ Supports both DPoP and Bearer authentication schemes based on configuration.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="116" class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:116</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="135" class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:135</a></div>
                         </td>
                     </tr>
 
@@ -3542,7 +3522,7 @@ Supports both DPoP and Bearer authentication schemes based on configuration.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="111" class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:111</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:130</a></div>
                         </td>
                     </tr>
 
@@ -3615,6 +3595,8 @@ import {
     IssuerRegistrationCertificateConfig,
     IssuerRegistrationCertificateMode,
 } from &quot;../../configuration/issuance/dto/issuer-registration-certificate.dto&quot;;
+import { ManagedAuthorizationServerConfig } from &quot;../../configuration/issuance/dto/authorization-server-config.dto&quot;;
+import { IssuanceConfig } from &quot;../../configuration/issuance/entities/issuance-config.entity&quot;;
 import { IssuanceService } from &quot;../../configuration/issuance/issuance.service&quot;;
 import { WebhookEndpointEntity } from &quot;../../configuration/webhook-endpoint/entities/webhook-endpoint.entity&quot;;
 import { type RegistrationCertificateCreation } from &quot;../../../registrar/generated&quot;;
@@ -3653,6 +3635,23 @@ type OAuth2TokenPayload &#x3D; {
     nbf?: number;
     nonce?: string;
     cnf?: { jwk?: Jwk };
+};
+
+type Oid4vpServerConfig &#x3D; ManagedAuthorizationServerConfig &amp; {
+    type: &quot;oid4vp&quot;;
+    id: string;
+    presentationConfigId: string;
+};
+
+type ExternalServerConfig &#x3D; ManagedAuthorizationServerConfig &amp; {
+    type: &quot;external&quot;;
+    issuer: string;
+};
+
+type ChainedServerConfig &#x3D; ManagedAuthorizationServerConfig &amp; {
+    type: &quot;chained&quot;;
+    upstream?: unknown;
+    vp?: { enabled?: boolean };
 };
 
 interface IssuerInfo {
@@ -3698,27 +3697,65 @@ export class Oid4vciService {
     private async getAuthorizationServer(tenantId: string): Promise&lt;string&gt; {
         const issuanceConfig &#x3D;
             await this.issuanceService.getIssuanceConfiguration(tenantId);
-
-        const managedAuthorizationServer &#x3D;
-            await this.authorizationServersService.getDefaultAuthorizationServerUrl(
-                tenantId,
-                issuanceConfig.preferredAuthServer,
-            );
-        if (managedAuthorizationServer) {
-            return managedAuthorizationServer;
-        }
-
         const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
 
-        if (
-            await this.authorizationServersService.hasEnabledChainedAuthorizationServer(
-                tenantId,
-            )
-        ) {
-            return &#x60;${publicUrl}/issuers/${tenantId}/chained-as&#x60;;
+        for (const server of issuanceConfig.authorizationServers ?? []) {
+            const externalServer &#x3D; server as Partial&lt;ExternalServerConfig&gt;;
+            const oid4vpServer &#x3D; server as Partial&lt;Oid4vpServerConfig&gt;;
+            const chainedServer &#x3D; server as Partial&lt;ChainedServerConfig&gt;;
+
+            if (server.enabled &#x3D;&#x3D;&#x3D; false) {
+                continue;
+            }
+
+            if (
+                server.type &#x3D;&#x3D;&#x3D; &quot;external&quot; &amp;&amp;
+                typeof externalServer.issuer &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                externalServer.issuer.length &gt; 0
+            ) {
+                return externalServer.issuer;
+            }
+
+            if (
+                server.type &#x3D;&#x3D;&#x3D; &quot;oid4vp&quot; &amp;&amp;
+                typeof oid4vpServer.id &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                oid4vpServer.id.length &gt; 0
+            ) {
+                return this.authorizationServersService.getAuthorizationServerBaseUrl(
+                    tenantId,
+                    oid4vpServer.id,
+                );
+            }
+
+            if (server.type &#x3D;&#x3D;&#x3D; &quot;built-in&quot;) {
+                return this.authzService.getAuthzIssuer(tenantId);
+            }
+
+            if (server.type &#x3D;&#x3D;&#x3D; &quot;chained&quot;) {
+                if (chainedServer.upstream) {
+                    return &#x60;${publicUrl}/issuers/${tenantId}/chained-as&#x60;;
+                }
+
+                if (chainedServer.vp?.enabled) {
+                    return &#x60;${publicUrl}/issuers/${tenantId}/chained-as-vp&#x60;;
+                }
+            }
         }
 
-        return this.authzService.getAuthzIssuer(tenantId);
+        throw new BadRequestException(
+            &quot;No enabled authorization server configured&quot;,
+        );
+    }
+
+    private async isBuiltInAuthorizationServerConfigured(
+        tenantId: string,
+    ): Promise&lt;boolean&gt; {
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        return (issuanceConfig.authorizationServers ?? []).some(
+            (server) &#x3D;&gt; server.enabled !&#x3D;&#x3D; false &amp;&amp; server.type &#x3D;&#x3D;&#x3D; &quot;built-in&quot;,
+        );
     }
 
     private async resolveAuthorizationServerSelection(
@@ -3730,6 +3767,13 @@ export class Oid4vciService {
         }
 
         if (selectedAuthorizationServer &#x3D;&#x3D;&#x3D; &quot;built-in&quot;) {
+            const builtInConfigured &#x3D;
+                await this.isBuiltInAuthorizationServerConfigured(tenantId);
+            if (!builtInConfigured) {
+                throw new BadRequestException(
+                    &quot;Built-in authorization server is not configured&quot;,
+                );
+            }
             return this.authzService.getAuthzIssuer(tenantId);
         }
 
@@ -3818,80 +3862,151 @@ export class Oid4vciService {
         }
     }
 
-    private async appendInternalAuthorizationServers(
-        tenantId: string,
-        credentialIssuer: string,
-        authServers: string[],
-        authorizationServers: AuthorizationServerMetadata[],
-    ): Promise&lt;void&gt; {
-        if (
-            await this.authorizationServersService.hasEnabledChainedAuthorizationServer(
-                tenantId,
-            )
-        ) {
-            const chainedAsIssuer &#x3D; &#x60;${credentialIssuer}/chained-as&#x60;;
-            authServers.push(chainedAsIssuer);
-            authorizationServers.push(
-                (await this.chainedAsService.getMetadata(
-                    tenantId,
-                )) as AuthorizationServerMetadata,
-            );
-        }
-
-        const managedAuthorizationServers &#x3D;
-            await this.authorizationServersService.getEnabledAuthorizationServers(
-                tenantId,
-            );
-        for (const managedAuthorizationServer of managedAuthorizationServers) {
-            authServers.push(
-                this.authorizationServersService.getAuthorizationServerBaseUrl(
-                    tenantId,
-                    managedAuthorizationServer.id!,
-                ),
-            );
-            authorizationServers.push(
-                (await this.authorizationServersService.getMetadata(
-                    tenantId,
-                    managedAuthorizationServer.id!,
-                )) as AuthorizationServerMetadata,
-            );
-        }
-
-        authServers.push(this.authzService.getAuthzIssuer(tenantId));
-        authorizationServers.push(
-            await this.authzService.authzMetadata(tenantId),
+    private async fetchAuthorizationServerMetadata(
+        authServerUrl: string,
+    ): Promise&lt;AuthorizationServerMetadata&gt; {
+        return firstValueFrom(
+            this.httpService.get(
+                &#x60;${authServerUrl}/.well-known/oauth-authorization-server&#x60;,
+            ),
+        ).then(
+            (response) &#x3D;&gt; response.data,
+            async () &#x3D;&gt; {
+                // Retry fetching from OIDC metadata endpoint.
+                return await firstValueFrom(
+                    this.httpService.get(
+                        &#x60;${authServerUrl}/.well-known/openid-configuration&#x60;,
+                    ),
+                ).then(
+                    (response) &#x3D;&gt; response.data,
+                    () &#x3D;&gt; {
+                        throw new BadRequestException(
+                            &quot;Failed to fetch authorization server metadata&quot;,
+                        );
+                    },
+                );
+            },
         );
     }
 
-    private resolvePreferredAuthorizationServer(
-        preferredAuthServer: string | undefined,
+    private async appendConfiguredAuthorizationServersInOrder(
         tenantId: string,
         credentialIssuer: string,
-    ): string | undefined {
-        if (!preferredAuthServer) {
-            return undefined;
-        }
+        issuanceConfig: IssuanceConfig,
+        federationTrustSource: FederationTrustSource | undefined,
+        authServers: string[],
+        authorizationServers: AuthorizationServerMetadata[],
+    ): Promise&lt;void&gt; {
+        const seenAuthServers &#x3D; new Set&lt;string&gt;();
 
-        if (preferredAuthServer &#x3D;&#x3D;&#x3D; &quot;built-in&quot;) {
-            return this.authzService.getAuthzIssuer(tenantId);
-        }
+        for (const configuredServer of issuanceConfig.authorizationServers ??
+            []) {
+            const externalServer &#x3D;
+                configuredServer as Partial&lt;ExternalServerConfig&gt;;
+            const oid4vpServer &#x3D;
+                configuredServer as Partial&lt;Oid4vpServerConfig&gt;;
+            const chainedServer &#x3D;
+                configuredServer as Partial&lt;ChainedServerConfig&gt;;
 
-        if (preferredAuthServer &#x3D;&#x3D;&#x3D; &quot;chained-as&quot;) {
-            return &#x60;${credentialIssuer}/chained-as&#x60;;
-        }
+            if (configuredServer.enabled &#x3D;&#x3D;&#x3D; false) {
+                continue;
+            }
 
-        if (
-            this.authorizationServersService.isSelectionValue(
-                preferredAuthServer,
-            )
-        ) {
-            return this.authorizationServersService.resolveSelectionToIssuer(
-                tenantId,
-                preferredAuthServer,
-            ) as unknown as string;
-        }
+            if (
+                configuredServer.type &#x3D;&#x3D;&#x3D; &quot;external&quot; &amp;&amp;
+                typeof externalServer.issuer &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                externalServer.issuer.length &gt; 0
+            ) {
+                const authServerUrl &#x3D; externalServer.issuer;
+                if (seenAuthServers.has(authServerUrl)) {
+                    continue;
+                }
 
-        return preferredAuthServer;
+                await this.assertFederationTrustForAuthorizationServer(
+                    authServerUrl,
+                    federationTrustSource,
+                );
+
+                seenAuthServers.add(authServerUrl);
+                authServers.push(authServerUrl);
+                authorizationServers.push(
+                    await this.fetchAuthorizationServerMetadata(authServerUrl),
+                );
+                continue;
+            }
+
+            if (
+                configuredServer.type &#x3D;&#x3D;&#x3D; &quot;oid4vp&quot; &amp;&amp;
+                typeof oid4vpServer.id &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                oid4vpServer.id.length &gt; 0
+            ) {
+                const authServerUrl &#x3D;
+                    this.authorizationServersService.getAuthorizationServerBaseUrl(
+                        tenantId,
+                        oid4vpServer.id,
+                    );
+                if (seenAuthServers.has(authServerUrl)) {
+                    continue;
+                }
+
+                seenAuthServers.add(authServerUrl);
+                authServers.push(authServerUrl);
+                authorizationServers.push(
+                    (await this.authorizationServersService.getMetadata(
+                        tenantId,
+                        oid4vpServer.id,
+                    )) as AuthorizationServerMetadata,
+                );
+                continue;
+            }
+
+            if (configuredServer.type &#x3D;&#x3D;&#x3D; &quot;chained&quot;) {
+                if (chainedServer.upstream) {
+                    const chainedAsIssuer &#x3D; &#x60;${credentialIssuer}/chained-as&#x60;;
+                    if (seenAuthServers.has(chainedAsIssuer)) {
+                        continue;
+                    }
+
+                    seenAuthServers.add(chainedAsIssuer);
+                    authServers.push(chainedAsIssuer);
+                    authorizationServers.push(
+                        (await this.chainedAsService.getMetadata(
+                            tenantId,
+                        )) as AuthorizationServerMetadata,
+                    );
+                    continue;
+                }
+
+                if (chainedServer.vp?.enabled) {
+                    const chainedAsVpIssuer &#x3D; &#x60;${credentialIssuer}/chained-as-vp&#x60;;
+                    if (seenAuthServers.has(chainedAsVpIssuer)) {
+                        continue;
+                    }
+
+                    seenAuthServers.add(chainedAsVpIssuer);
+                    authServers.push(chainedAsVpIssuer);
+                    authorizationServers.push(
+                        (await this.chainedAsVpService.getMetadata(
+                            tenantId,
+                        )) as AuthorizationServerMetadata,
+                    );
+                }
+            }
+
+            if (configuredServer.type &#x3D;&#x3D;&#x3D; &quot;built-in&quot;) {
+                const builtInIssuer &#x3D;
+                    this.authzService.getAuthzIssuer(tenantId);
+                if (seenAuthServers.has(builtInIssuer)) {
+                    continue;
+                }
+
+                seenAuthServers.add(builtInIssuer);
+                authServers.push(builtInIssuer);
+                authorizationServers.push(
+                    await this.authzService.authzMetadata(tenantId),
+                );
+            }
+        }
     }
 
     /**
@@ -4124,20 +4239,6 @@ export class Oid4vciService {
         return resolved.jwt;
     }
 
-    private reorderPreferredAuthorizationServer(
-        authServers: string[],
-        authorizationServers: AuthorizationServerMetadata[],
-        preferred: string,
-    ): void {
-        const idx &#x3D; authServers.indexOf(preferred);
-        if (idx &gt; 0) {
-            const [url] &#x3D; authServers.splice(idx, 1);
-            const [meta] &#x3D; authorizationServers.splice(idx, 1);
-            authServers.unshift(url);
-            authorizationServers.unshift(meta);
-        }
-    }
-
     private async appendIssuerRegistrationCertificateInfo(
         tenantId: string,
         registrationCertificateConfig:
@@ -4203,64 +4304,14 @@ export class Oid4vciService {
                   } as FederationTrustSource)
                 : undefined;
 
-        for (const authServerUrl of await this.authorizationServersService.getExternalAuthorizationServerUrls(
-            tenantId,
-        )) {
-            await this.assertFederationTrustForAuthorizationServer(
-                authServerUrl,
-                federationTrustSource,
-            );
-
-            authServers.push(authServerUrl);
-            //TODO: check where this is needed to reduce calls
-            authorizationServers.push(
-                await firstValueFrom(
-                    this.httpService.get(
-                        &#x60;${authServerUrl}/.well-known/oauth-authorization-server&#x60;,
-                    ),
-                ).then(
-                    (response) &#x3D;&gt; response.data,
-                    async () &#x3D;&gt; {
-                        // Retry fetching from OIDC metadata endpoint
-                        return await firstValueFrom(
-                            this.httpService.get(
-                                &#x60;${authServerUrl}/.well-known/openid-configuration&#x60;,
-                            ),
-                        ).then(
-                            (response) &#x3D;&gt; response.data,
-                            () &#x3D;&gt; {
-                                throw new BadRequestException(
-                                    &quot;Failed to fetch authorization server metadata&quot;,
-                                );
-                            },
-                        );
-                    },
-                ),
-            );
-        }
-
-        await this.appendInternalAuthorizationServers(
+        await this.appendConfiguredAuthorizationServersInOrder(
             tenantId,
             credential_issuer,
+            issuanceConfig,
+            federationTrustSource,
             authServers,
             authorizationServers,
         );
-
-        // Reorder so the preferred authorization server is first
-        const preferred &#x3D; await Promise.resolve(
-            this.resolvePreferredAuthorizationServer(
-                issuanceConfig.preferredAuthServer,
-                tenantId,
-                credential_issuer,
-            ),
-        );
-        if (preferred) {
-            this.reorderPreferredAuthorizationServer(
-                authServers,
-                authorizationServers,
-                preferred,
-            );
-        }
 
         const issuer_info: IssuerInfo[] &#x3D; [];
         await this.appendIssuerRegistrationCertificateInfo(
@@ -4338,7 +4389,7 @@ export class Oid4vciService {
                 );
             const authServer &#x3D;
                 selectedAuthorizationServer ??
-                this.authzService.getAuthzIssuer(tenantId);
+                (await this.getAuthorizationServer(tenantId));
 
             grants &#x3D; {
                 [preAuthorizedCodeGrantIdentifier]: {

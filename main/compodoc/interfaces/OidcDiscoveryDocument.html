@@ -682,14 +682,26 @@ export class ChainedAsService {
         const issuanceConfig &#x3D;
             await this.issuanceService.getIssuanceConfiguration(tenantId);
 
+        type ChainedServerConfig &#x3D; {
+            enabled?: boolean;
+            type: &quot;chained&quot;;
+            upstream: ChainedAsConfig[&quot;upstream&quot;];
+            token?: ChainedAsConfig[&quot;token&quot;];
+            requireDPoP?: ChainedAsConfig[&quot;requireDPoP&quot;];
+        };
+
         const chainedServer &#x3D; (issuanceConfig.authorizationServers ?? []).find(
-            (server) &#x3D;&gt;
-                server.enabled !&#x3D;&#x3D; false &amp;&amp;
-                server.type &#x3D;&#x3D;&#x3D; &quot;chained&quot; &amp;&amp;
-                server.upstream,
+            (server): server is ChainedServerConfig &#x3D;&gt; {
+                const candidate &#x3D; server as Partial&lt;ChainedServerConfig&gt;;
+                return (
+                    server.enabled !&#x3D;&#x3D; false &amp;&amp;
+                    server.type &#x3D;&#x3D;&#x3D; &quot;chained&quot; &amp;&amp;
+                    !!candidate.upstream
+                );
+            },
         );
 
-        if (chainedServer?.upstream) {
+        if (chainedServer) {
             return {
                 enabled: true,
                 upstream: chainedServer.upstream,
@@ -1291,12 +1303,9 @@ export class ChainedAsService {
 
         session.status &#x3D; ChainedAsSessionStatus.TOKEN_ISSUED;
         session.accessTokenJti &#x3D; jti;
-
-        const issuanceConfig &#x3D;
-            await this.issuanceService.getIssuanceConfiguration(tenantId);
         const refreshToken &#x3D; issueRefreshTokenIfEnabled(
             session,
-            issuanceConfig,
+            config.token ?? {},
         );
 
         await this.sessionRepository.save(session);
@@ -1344,12 +1353,14 @@ export class ChainedAsService {
      * Get authorization server metadata for the Chained AS.
      */
     async getMetadata(tenantId: string): Promise&lt;Record&lt;string, unknown&gt;&gt; {
+        const config &#x3D; await this.getChainedAsConfig(tenantId);
         const baseUrl &#x3D; this.getChainedAsBaseUrl(tenantId);
         const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
         const issuanceConfig &#x3D;
             await this.issuanceService.getIssuanceConfiguration(tenantId);
         const walletAttestationRequired &#x3D;
             issuanceConfig.walletAttestationRequired ?? false;
+        const refreshTokensEnabled &#x3D; config.token?.refreshTokenEnabled ?? true;
 
         return buildAuthorizationServerMetadata({
             issuer: baseUrl,
@@ -1357,7 +1368,9 @@ export class ChainedAsService {
             tokenEndpoint: &#x60;${baseUrl}/token&#x60;,
             pushedAuthorizationRequestEndpoint: &#x60;${baseUrl}/par&#x60;,
             jwksUri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/chained-as&#x60;,
-            grantTypesSupported: [&quot;authorization_code&quot;, &quot;refresh_token&quot;],
+            grantTypesSupported: refreshTokensEnabled
+                ? [&quot;authorization_code&quot;, &quot;refresh_token&quot;]
+                : [&quot;authorization_code&quot;],
             dpopSigningAlgValuesSupported:
                 DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
             ...buildWalletAttestationMetadata(walletAttestationRequired),

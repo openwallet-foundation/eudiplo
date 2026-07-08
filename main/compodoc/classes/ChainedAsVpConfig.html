@@ -242,7 +242,7 @@ a successful presentation callback.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="109" class="link-to-prism">src/issuer/configuration/issuance/dto/chained-as-config.dto.ts:109</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="134" class="link-to-prism">src/issuer/configuration/issuance/dto/chained-as-config.dto.ts:134</a></div>
                         </td>
                     </tr>
 
@@ -285,7 +285,7 @@ a successful presentation callback.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="119" class="link-to-prism">src/issuer/configuration/issuance/dto/chained-as-config.dto.ts:119</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="144" class="link-to-prism">src/issuer/configuration/issuance/dto/chained-as-config.dto.ts:144</a></div>
                         </td>
                     </tr>
 
@@ -399,6 +399,31 @@ export class ChainedAsTokenConfig {
     @IsOptional()
     @IsString()
     signingKeyId?: string;
+
+    /**
+     * Whether to issue refresh tokens.
+     * @default true
+     */
+    @ApiPropertyOptional({
+        description: &quot;Whether refresh tokens should be issued&quot;,
+        default: true,
+    })
+    @IsOptional()
+    @IsBoolean()
+    refreshTokenEnabled?: boolean;
+
+    /**
+     * Refresh token lifetime in seconds.
+     * @default 2592000 (30 days)
+     */
+    @ApiPropertyOptional({
+        description: &quot;Refresh token lifetime in seconds&quot;,
+        default: 2592000,
+    })
+    @IsOptional()
+    @IsNumber()
+    @Min(60)
+    refreshTokenExpiresInSeconds?: number;
 }
 
 /**

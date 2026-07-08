@@ -606,8 +606,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="194"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:194</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="229"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:229</a></div>
                         </td>
                     </tr>
 
@@ -668,7 +668,7 @@ It provides methods to get, store, and delete issuance configurations.</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>storeIssuanceConfiguration(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, value: <a href="../classes/IssuanceDto.html" target="_self">IssuanceDto</a>, actorToken?: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>, req?: Request)</code>
+                    <code>storeIssuanceConfiguration(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, value: <a href="../classes/IssuanceDto.html" target="_self">Partial&lt;IssuanceDto&gt;</a>, actorToken?: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>, req?: Request)</code>
                 </td>
             </tr>
 
@@ -717,7 +717,7 @@ It provides methods to get, store, and delete issuance configurations.</p>
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="../classes/IssuanceDto.html" target="_self" >IssuanceDto</a></code>
+                                                            <code><a href="../classes/IssuanceDto.html" target="_self" >Partial&lt;IssuanceDto&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -893,7 +893,7 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, Logger } from &quot;@nestjs/common&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { BadRequestException, Injectable, Logger } from &quot;@nestjs/common&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
 import { Request } from &quot;express&quot;;
 import { Repository } from &quot;typeorm&quot;;
@@ -1033,7 +1033,7 @@ export class IssuanceService {
      */
     async storeIssuanceConfiguration(
         tenantId: string,
-        value: IssuanceDto,
+        value: Partial&lt;IssuanceDto&gt;,
         actorToken?: TokenPayload,
         req?: Request,
     ) {
@@ -1054,6 +1054,41 @@ export class IssuanceService {
         const filteredValue &#x3D; Object.fromEntries(
             Object.entries(value).filter(([, v]) &#x3D;&gt; v !&#x3D;&#x3D; undefined),
         );
+
+        const hasIncomingAuthorizationServers &#x3D;
+            Object.prototype.hasOwnProperty.call(
+                filteredValue,
+                &quot;authorizationServers&quot;,
+            );
+        const effectiveAuthorizationServers &#x3D; hasIncomingAuthorizationServers
+            ? (filteredValue as Partial&lt;IssuanceDto&gt;).authorizationServers
+            : existingConfig.authorizationServers;
+
+        if (!Array.isArray(effectiveAuthorizationServers)) {
+            throw new BadRequestException(
+                &quot;At least one authorization server must be configured&quot;,
+            );
+        }
+
+        const configuredAuthorizationServers &#x3D;
+            effectiveAuthorizationServers as Array&lt;{
+                type?: string;
+            }&gt;;
+
+        if (configuredAuthorizationServers.length &lt; 1) {
+            throw new BadRequestException(
+                &quot;At least one authorization server must be configured&quot;,
+            );
+        }
+
+        const builtInCount &#x3D; configuredAuthorizationServers.filter(
+            (server) &#x3D;&gt; server?.type &#x3D;&#x3D;&#x3D; &quot;built-in&quot;,
+        ).length;
+        if (builtInCount &gt; 1) {
+            throw new BadRequestException(
+                &quot;Only one built-in authorization server can be configured&quot;,
+            );
+        }
 
         const before &#x3D;
             &quot;tenantId&quot; in existingConfig
@@ -1112,15 +1147,12 @@ export class IssuanceService {
             walletAttestationRequired: config.walletAttestationRequired,
             walletProviderTrustLists: config.walletProviderTrustLists,
             signingKeyId: config.signingKeyId,
-            preferredAuthServer: config.preferredAuthServer,
             authorizationServers: config.authorizationServers,
             federation: config.federation,
             registrationCertificate,
             registrationCertificateCache,
             credentialResponseEncryption: config.credentialResponseEncryption,
             credentialRequestEncryption: config.credentialRequestEncryption,
-            refreshTokenEnabled: config.refreshTokenEnabled,
-            refreshTokenExpiresInSeconds: config.refreshTokenExpiresInSeconds,
             txCodeMaxAttempts: config.txCodeMaxAttempts,
         };
     }

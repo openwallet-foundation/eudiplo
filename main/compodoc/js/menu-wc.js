@@ -1089,6 +1089,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/BaselineMigration1740000000000.html" data-type="entity-link" >BaselineMigration1740000000000</a>
                             </li>
                             <li class="link">
+                                <a href="classes/BuiltInAuthorizationServerConfig.html" data-type="entity-link" >BuiltInAuthorizationServerConfig</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/CertificateInfoDto.html" data-type="entity-link" >CertificateInfoDto</a>
                             </li>
                             <li class="link">
@@ -1117,6 +1120,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/ChainedAsVpConfig.html" data-type="entity-link" >ChainedAsVpConfig</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ChainedAuthorizationServerConfig.html" data-type="entity-link" >ChainedAuthorizationServerConfig</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ClaimFieldDefinitionDto.html" data-type="entity-link" >ClaimFieldDefinitionDto</a>
@@ -1243,6 +1249,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/ExportRotationPolicyDto.html" data-type="entity-link" >ExportRotationPolicyDto</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ExternalAuthorizationServerConfig.html" data-type="entity-link" >ExternalAuthorizationServerConfig</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ExternalTrustListEntity.html" data-type="entity-link" >ExternalTrustListEntity</a>
@@ -1425,6 +1434,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/OfferResponse.html" data-type="entity-link" >OfferResponse</a>
                             </li>
                             <li class="link">
+                                <a href="classes/Oid4VpAuthorizationServerConfig.html" data-type="entity-link" >Oid4VpAuthorizationServerConfig</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/Openid4vpRequestDto.html" data-type="entity-link" >Openid4vpRequestDto</a>
                             </li>
                             <li class="link">
@@ -1477,6 +1489,12 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/RegistrationCertificateRequest.html" data-type="entity-link" >RegistrationCertificateRequest</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/RemovePreferredAuthServerFromIssuanceConfig1769000000000.html" data-type="entity-link" >RemovePreferredAuthServerFromIssuanceConfig1769000000000</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/RemoveRefreshTokenFromIssuanceConfig1768000000000.html" data-type="entity-link" >RemoveRefreshTokenFromIssuanceConfig1768000000000</a>
                             </li>
                             <li class="link">
                                 <a href="classes/RenameKeyChainActiveKeyToActiveJwk1765000000000.html" data-type="entity-link" >RenameKeyChainActiveKeyToActiveJwk1765000000000</a>
@@ -1582,6 +1600,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/UpdateClientDto.html" data-type="entity-link" >UpdateClientDto</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/UpdateIssuanceDto.html" data-type="entity-link" >UpdateIssuanceDto</a>
                             </li>
                             <li class="link">
                                 <a href="classes/UpdateRegistrarConfigDto.html" data-type="entity-link" >UpdateRegistrarConfigDto</a>

@@ -805,8 +805,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="443"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:443</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="440"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:440</a></div>
                         </td>
                     </tr>
 
@@ -874,8 +874,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="462"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:462</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="459"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.service.ts:459</a></div>
                         </td>
                     </tr>
 
@@ -1905,12 +1905,9 @@ export class ChainedAsVpService {
 
         session.status &#x3D; ChainedAsSessionStatus.TOKEN_ISSUED;
         session.accessTokenJti &#x3D; jti;
-
-        const issuanceConfig &#x3D;
-            await this.issuanceService.getIssuanceConfiguration(tenantId);
         const refreshToken &#x3D; issueRefreshTokenIfEnabled(
             session,
-            issuanceConfig,
+            config.token ?? {},
         );
 
         await this.sessionRepository.save(session);
@@ -1948,12 +1945,14 @@ export class ChainedAsVpService {
     }
 
     async getMetadata(tenantId: string): Promise&lt;Record&lt;string, unknown&gt;&gt; {
+        const config &#x3D; await this.getChainedAsVpConfig(tenantId);
         const baseUrl &#x3D; this.getChainedAsVpBaseUrl(tenantId);
         const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
         const issuanceConfig &#x3D;
             await this.issuanceService.getIssuanceConfiguration(tenantId);
         const walletAttestationRequired &#x3D;
             issuanceConfig.walletAttestationRequired ?? false;
+        const refreshTokensEnabled &#x3D; config.token?.refreshTokenEnabled ?? true;
 
         return buildAuthorizationServerMetadata({
             issuer: baseUrl,
@@ -1961,7 +1960,9 @@ export class ChainedAsVpService {
             tokenEndpoint: &#x60;${baseUrl}/token&#x60;,
             pushedAuthorizationRequestEndpoint: &#x60;${baseUrl}/par&#x60;,
             jwksUri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/chained-as-vp&#x60;,
-            grantTypesSupported: [&quot;authorization_code&quot;, &quot;refresh_token&quot;],
+            grantTypesSupported: refreshTokensEnabled
+                ? [&quot;authorization_code&quot;, &quot;refresh_token&quot;]
+                : [&quot;authorization_code&quot;],
             dpopSigningAlgValuesSupported:
                 DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
             ...buildWalletAttestationMetadata(walletAttestationRequired),
