@@ -138,7 +138,7 @@ export class IssuanceService {
      */
     async storeIssuanceConfiguration(
         tenantId: string,
-        value: IssuanceDto,
+        value: Partial<IssuanceDto>,
         actorToken?: TokenPayload,
         req?: Request,
     ) {
@@ -160,11 +160,23 @@ export class IssuanceService {
             Object.entries(value).filter(([, v]) => v !== undefined),
         );
 
-        const configuredAuthorizationServers = ((
-            filteredValue as Partial<IssuanceDto>
-        ).authorizationServers ??
-            existingConfig.authorizationServers ??
-            []) as Array<{ type?: string }>;
+        const hasIncomingAuthorizationServers = Object.prototype.hasOwnProperty.call(
+            filteredValue,
+            "authorizationServers",
+        );
+        const effectiveAuthorizationServers = hasIncomingAuthorizationServers
+            ? (filteredValue as Partial<IssuanceDto>).authorizationServers
+            : existingConfig.authorizationServers;
+
+        if (!Array.isArray(effectiveAuthorizationServers)) {
+            throw new BadRequestException(
+                "At least one authorization server must be configured",
+            );
+        }
+
+        const configuredAuthorizationServers = effectiveAuthorizationServers as Array<{
+            type?: string;
+        }>;
 
         if (configuredAuthorizationServers.length < 1) {
             throw new BadRequestException(

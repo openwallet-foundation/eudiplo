@@ -258,7 +258,6 @@ describe("Issuance - Chained AS Flow", () => {
             .set("Authorization", `Bearer ${authToken}`)
             .send({
                 ...currentConfig,
-                refreshTokenEnabled,
                 authorizationServers: [
                     {
                         type: "chained",
@@ -271,6 +270,7 @@ describe("Issuance - Chained AS Flow", () => {
                         },
                         token: {
                             lifetimeSeconds: 3600,
+                            refreshTokenEnabled,
                         },
                         requireDPoP: false,
                     },
@@ -296,7 +296,6 @@ describe("Issuance - Chained AS Flow", () => {
             .set("Authorization", `Bearer ${authToken}`)
             .send({
                 ...currentConfig,
-                refreshTokenEnabled,
                 authorizationServers: [
                     {
                         type: "chained",
@@ -307,6 +306,7 @@ describe("Issuance - Chained AS Flow", () => {
                         },
                         token: {
                             lifetimeSeconds: 3600,
+                            refreshTokenEnabled,
                         },
                         requireDPoP: false,
                     },
