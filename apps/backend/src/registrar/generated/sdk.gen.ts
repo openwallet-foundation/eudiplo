@@ -39,6 +39,9 @@ import type {
   RelyingPartyControllerFindOneResponses,
   RelyingPartyControllerRegisterData,
   RelyingPartyControllerRegisterResponses,
+  SchemaMetadataControllerCreateSchemaMetadataData,
+  SchemaMetadataControllerCreateSchemaMetadataErrors,
+  SchemaMetadataControllerCreateSchemaMetadataResponses,
   SchemaMetadataControllerExportData,
   SchemaMetadataControllerExportErrors,
   SchemaMetadataControllerExportResponses,
@@ -55,9 +58,6 @@ import type {
   SchemaMetadataControllerGetLatestVersionInfoData,
   SchemaMetadataControllerGetLatestVersionInfoErrors,
   SchemaMetadataControllerGetLatestVersionInfoResponses,
-  SchemaMetadataControllerGetSchemaData,
-  SchemaMetadataControllerGetSchemaErrors,
-  SchemaMetadataControllerGetSchemaResponses,
   SchemaMetadataControllerGetSignedJwtData,
   SchemaMetadataControllerGetSignedJwtErrors,
   SchemaMetadataControllerGetSignedJwtResponses,
@@ -72,21 +72,12 @@ import type {
   SchemaMetadataControllerRemoveData,
   SchemaMetadataControllerRemoveErrors,
   SchemaMetadataControllerRemoveResponses,
-  SchemaMetadataControllerReserveSchemaIdData,
-  SchemaMetadataControllerReserveSchemaIdErrors,
-  SchemaMetadataControllerReserveSchemaIdResponses,
   SchemaMetadataControllerSetVersionDeprecationData,
   SchemaMetadataControllerSetVersionDeprecationErrors,
   SchemaMetadataControllerSetVersionDeprecationResponses,
-  SchemaMetadataControllerSubmitSchemaMetadataData,
-  SchemaMetadataControllerSubmitSchemaMetadataErrors,
-  SchemaMetadataControllerSubmitSchemaMetadataResponses,
   SchemaMetadataControllerUpdateMetadataData,
   SchemaMetadataControllerUpdateMetadataErrors,
   SchemaMetadataControllerUpdateMetadataResponses,
-  SchemaMetadataControllerUploadAssetData,
-  SchemaMetadataControllerUploadAssetErrors,
-  SchemaMetadataControllerUploadAssetResponses,
   StatusListControllerCrlFileData,
   StatusListControllerCrlFileResponses,
   StatusListControllerGetListData,
@@ -431,34 +422,6 @@ export const schemaMetadataControllerGetVocabularies = <
   >({ url: "/schema-metadata/vocabularies", ...options });
 
 /**
- * Reserve a schema ID
- *
- * Reserve a unique schema ID (catalog URL) before signing and submitting schema metadata. The returned ID must be used as the attestationId in the signed JWT. Reservation expires in 24 hours.
- */
-export const schemaMetadataControllerReserveSchemaId = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<SchemaMetadataControllerReserveSchemaIdData, ThrowOnError>,
-): RequestResult<
-  SchemaMetadataControllerReserveSchemaIdResponses,
-  SchemaMetadataControllerReserveSchemaIdErrors,
-  ThrowOnError
-> =>
-  (options.client ?? client).post<
-    SchemaMetadataControllerReserveSchemaIdResponses,
-    SchemaMetadataControllerReserveSchemaIdErrors,
-    ThrowOnError
-  >({
-    security: [{ scheme: "bearer", type: "http" }],
-    url: "/schema-metadata/reserve",
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-  });
-
-/**
  * Get all schema metadata
  */
 export const schemaMetadataControllerFindAll = <
@@ -477,58 +440,30 @@ export const schemaMetadataControllerFindAll = <
   >({ url: "/schema-metadata", ...options });
 
 /**
- * Submit signed schema metadata
+ * Create schema metadata in one multipart request
  *
- * Submit schema metadata signed with an access certificate. The JWT must have type "attestation-schema+jwt" and contain x5c certificate chain.
+ * Uploads rulebook/schema files and schema metadata in one request. The registrar stores files, computes integrity, composes schema URLs with vct/doctype_value, and signs metadata.
  */
-export const schemaMetadataControllerSubmitSchemaMetadata = <
+export const schemaMetadataControllerCreateSchemaMetadata = <
   ThrowOnError extends boolean = false,
 >(
   options: Options<
-    SchemaMetadataControllerSubmitSchemaMetadataData,
+    SchemaMetadataControllerCreateSchemaMetadataData,
     ThrowOnError
   >,
 ): RequestResult<
-  SchemaMetadataControllerSubmitSchemaMetadataResponses,
-  SchemaMetadataControllerSubmitSchemaMetadataErrors,
+  SchemaMetadataControllerCreateSchemaMetadataResponses,
+  SchemaMetadataControllerCreateSchemaMetadataErrors,
   ThrowOnError
 > =>
   (options.client ?? client).post<
-    SchemaMetadataControllerSubmitSchemaMetadataResponses,
-    SchemaMetadataControllerSubmitSchemaMetadataErrors,
-    ThrowOnError
-  >({
-    security: [{ scheme: "bearer", type: "http" }],
-    url: "/schema-metadata",
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-  });
-
-/**
- * Upload trustlist, rulebook, or JSON schema asset
- *
- * Upload an artifact and receive a stable URL that can be embedded into signed schema metadata JWT payloads.
- */
-export const schemaMetadataControllerUploadAsset = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<SchemaMetadataControllerUploadAssetData, ThrowOnError>,
-): RequestResult<
-  SchemaMetadataControllerUploadAssetResponses,
-  SchemaMetadataControllerUploadAssetErrors,
-  ThrowOnError
-> =>
-  (options.client ?? client).post<
-    SchemaMetadataControllerUploadAssetResponses,
-    SchemaMetadataControllerUploadAssetErrors,
+    SchemaMetadataControllerCreateSchemaMetadataResponses,
+    SchemaMetadataControllerCreateSchemaMetadataErrors,
     ThrowOnError
   >({
     ...formDataBodySerializer,
     security: [{ scheme: "bearer", type: "http" }],
-    url: "/schema-metadata/assets/{type}",
+    url: "/schema-metadata",
     ...options,
     headers: {
       "Content-Type": null,
@@ -771,24 +706,3 @@ export const schemaMetadataControllerExport = <
     SchemaMetadataControllerExportErrors,
     ThrowOnError
   >({ url: "/schema-metadata/{id}/versions/{version}/export", ...options });
-
-/**
- * Get schema content for a specific credential format
- */
-export const schemaMetadataControllerGetSchema = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<SchemaMetadataControllerGetSchemaData, ThrowOnError>,
-): RequestResult<
-  SchemaMetadataControllerGetSchemaResponses,
-  SchemaMetadataControllerGetSchemaErrors,
-  ThrowOnError
-> =>
-  (options.client ?? client).get<
-    SchemaMetadataControllerGetSchemaResponses,
-    SchemaMetadataControllerGetSchemaErrors,
-    ThrowOnError
-  >({
-    url: "/schema-metadata/{id}/versions/{version}/schemas/{format}",
-    ...options,
-  });
