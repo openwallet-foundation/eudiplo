@@ -11,6 +11,7 @@ using EUDIPLO in your project, we'd love to hear about it!
 | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
 | [EUDI Wallet Playground](https://playground.eudi-wallet.org/)  | The official playground of the German EUDI ecosystem for testing wallets and verifying interoperability. | Wallet testing and interoperability verification |
 | [EUDI Web Client Demo](https://eudi-web-client.h.aioblak.com/) | A public demo instance showcasing the EUDIPLO web client for credential issuance and presentation flows. | Demo and testing                                 |
+| [espuni](https://www.espuni.com/) | Multi-tenant Age Verification as a Service layer targeting online platforms subject to DSA Article 28. | EU Age Verification Blueprint |
 
 ---
 
