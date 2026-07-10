@@ -22,7 +22,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
-import { IssuanceConfig, UpdateIssuanceDto, type SchemaMetadataResponseDto } from '@eudiplo/sdk-core';
+import {
+  IssuanceConfig,
+  UpdateIssuanceDto,
+  type SchemaMetadataResponseDto,
+} from '@eudiplo/sdk-core';
 import { IssuanceConfigService } from '../issuance-config.service';
 import { issuanceConfigSchema } from '../../../utils/schemas';
 import { JsonViewDialogComponent } from '../../credential-config/credential-config-create/json-view-dialog/json-view-dialog.component';

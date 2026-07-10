@@ -324,8 +324,6 @@ export class SchemaMetadataSigningService {
         schemaEntries: Array<{ format: string; meta: SchemaURIMeta }>,
         trustedAuthorities: Array<Record<string, unknown>>,
     ): Record<string, unknown> {
-        
-
         const metadata: Record<string, unknown> = {
             ...(config.id ? { id: config.id } : {}),
             version: config.version,
@@ -340,7 +338,10 @@ export class SchemaMetadataSigningService {
         }
 
         const tags = (config as { tags?: unknown }).tags;
-        if (Array.isArray(tags) && tags.every((tag) => typeof tag === "string")) {
+        if (
+            Array.isArray(tags) &&
+            tags.every((tag) => typeof tag === "string")
+        ) {
             metadata.tags = tags;
         }
 
@@ -354,7 +355,8 @@ export class SchemaMetadataSigningService {
                 }
             } else if (entry.format === "mso_mdoc") {
                 const docType =
-                    (entry.meta as { doctype_value?: unknown })?.doctype_value ??
+                    (entry.meta as { doctype_value?: unknown })
+                        ?.doctype_value ??
                     (entry.meta as { doctype?: unknown })?.doctype;
                 if (typeof docType === "string" && docType.length > 0) {
                     schemaTypeIdentifier = docType;
@@ -401,15 +403,18 @@ export class SchemaMetadataSigningService {
                 ),
             ]);
 
-        const result = await this.registrarService.createSchemaMetadata(tenantId, {
-            metadata: this.buildRegistrarMetadata(
-                normalizedConfig,
-                schemaEntries,
-                trustedAuthorities,
-            ),
-            rulebookFile,
-            schemaFiles: schemaEntries.map((entry) => entry.file),
-        });
+        const result = await this.registrarService.createSchemaMetadata(
+            tenantId,
+            {
+                metadata: this.buildRegistrarMetadata(
+                    normalizedConfig,
+                    schemaEntries,
+                    trustedAuthorities,
+                ),
+                rulebookFile,
+                schemaFiles: schemaEntries.map((entry) => entry.file),
+            },
+        );
 
         if (body.credentialConfigId) {
             const existing = await this.credentialsService.getById(

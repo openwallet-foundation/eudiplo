@@ -61,7 +61,11 @@ export class SchemaMetadataService {
         });
 
         if (res.error) {
-            this.throwUpstreamError(tenantId, "create schema metadata", res.error);
+            this.throwUpstreamError(
+                tenantId,
+                "create schema metadata",
+                res.error,
+            );
         }
 
         return res.data!;
