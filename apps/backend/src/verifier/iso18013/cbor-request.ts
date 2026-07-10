@@ -1,17 +1,25 @@
 /**
- * CBOR builders for ISO 18013-7 Annex C (org.iso.mdoc DC API flow).
+ * CBOR builders for ISO 18013-7 Annex C (org-iso-mdoc DC API flow).
  *
- * Builds DeviceRequest, encryptionInfo, and SessionTranscript CBORs
- * using @owf/mdoc primitives.
+ * Builds DeviceRequest, EncryptionInfo, and the DCAPIHandover SessionTranscript
+ * following ISO/IEC TS 18013-7:2025 Annex C:
+ *
+ *   EncryptionInfo      = ["dcapi", {"nonce": bstr, "recipientPublicKey": COSE_Key}]
+ *   EncryptedResponse   = ["dcapi", {"enc": bstr, "cipherText": bstr}]
+ *   SessionTranscript   = [null, null, ["dcapi", SHA-256(CBOR([encInfoB64u, origin]))]]
  */
-import { cborEncode, DataItem } from "@owf/cose";
-import { DeviceRequest, DocRequest, ItemsRequest } from "@owf/mdoc";
+import { cborDecode, cborEncode } from "@owf/cose";
+import {
+    DeviceRequest,
+    DocRequest,
+    ItemsRequest,
+    SessionTranscript,
+} from "@owf/mdoc";
+import { mdocContext } from "../presentations/mdoc-context";
 
 // COSE Key type / curve constants (RFC 8152)
 const KTY_EC = 2;
 const CRV_P256 = 1;
-// Cipher suite 1 = HPKE-Base-P256-SHA256-AES128GCM (ISO 18013-7 Annex C §C.1.1)
-const CIPHER_SUITE_ID = 1;
 
 /**
  * Build a COSE_Key map (integer-keyed) for a P-256 public key from JWK base64url components.
@@ -26,31 +34,27 @@ function buildCoseKeyMap(xB64: string, yB64: string): Map<number, unknown> {
 }
 
 /**
- * Build the CBOR-encoded encryptionInfo for ISO 18013-7 Annex C §C.1.3.
+ * Build the CBOR-encoded EncryptionInfo per ISO/IEC TS 18013-7:2025 Annex C:
  *
- * Format (positional CBOR array):
- *   [cipherSuiteId, nonce, COSE_Key]
- *
- * ISO 18013-7 defines EncryptionInfo as a CBOR array, not a map.
- * COSE_Key (element 2) is still an integer-keyed CBOR map per RFC 8152.
+ *   EncryptionInfo = ["dcapi", EncryptionParameters]
+ *   EncryptionParameters = {"nonce": bstr, "recipientPublicKey": COSE_Key}
  */
 export function buildEncryptionInfo(
     xB64: string,
     yB64: string,
     nonce: Buffer,
 ): Buffer {
-    const encInfo = [
-        CIPHER_SUITE_ID,
-        new Uint8Array(nonce),
-        buildCoseKeyMap(xB64, yB64),
-    ];
-    return Buffer.from(cborEncode(encInfo));
+    const encryptionParameters = new Map<string, unknown>([
+        ["nonce", new Uint8Array(nonce)],
+        ["recipientPublicKey", buildCoseKeyMap(xB64, yB64)],
+    ]);
+    return Buffer.from(cborEncode(["dcapi", encryptionParameters]));
 }
 
 /**
- * Build the CBOR DeviceRequest for ISO 18013-7 Annex C §C.1.2.
+ * Build the CBOR DeviceRequest per ISO 18013-5 §8.3.2.1.2.1.
  *
- * @param docType   mDOC document type (e.g. "eu.europa.ec.av.1")
+ * @param docType   mDOC document type (e.g. "org.iso.18013.5.1.mDL")
  * @param namespaces  Map of namespace → { claimName: intentToRetain }
  */
 export function buildDeviceRequestCbor(
@@ -68,36 +72,74 @@ export function buildDeviceRequestCbor(
 }
 
 /**
- * Return both HPKE-info bytes and verifyDeviceResponse bytes for the BrowserHandover.
+ * Build the DCAPIHandover SessionTranscript per ISO/IEC TS 18013-7:2025 Annex C:
  *
- * BrowserHandover SessionTranscript = [null, null, DataItem(["BrowserHandover", nonce, origin, COSE_Key])]
+ *   SessionTranscript = [null, null, ["dcapi", SHA-256(CBOR([encInfoB64u, origin]))]]
  *
- * - `hpkeInfo`    = cborEncode(sessionTranscriptArray)           — used as HPKE RFC 9180 info
- * - `verifyBytes` = tag24(cborEncode(sessionTranscriptArray))    — passed to Verifier.verifyDeviceResponse
+ * The transcript is used in two places:
+ * - `hpkeInfo`: plain CBOR encoding — the HPKE RFC 9180 `info` parameter used by
+ *   the wallet when encrypting and by the verifier when decrypting.
+ * - `sessionTranscript`: the structure passed to Verifier.verifyDeviceResponse
+ *   for DeviceAuth verification.
+ *
+ * @param encryptionInfoB64u base64url (no padding) encoding of the EncryptionInfo
+ *                           CBOR exactly as sent in the DC API request
+ * @param origin             browser origin, e.g. "https://example.com"
  */
-export function buildBrowserHandoverTranscript(
-    nonce: Buffer,
+export async function buildIsoMdocDcApiTranscript(
+    encryptionInfoB64u: string,
     origin: string,
-    xB64: string,
-    yB64: string,
-): { hpkeInfo: Buffer; verifyBytes: Uint8Array } {
-    const coseKey = buildCoseKeyMap(xB64, yB64);
-    const handoverArray = [
-        "BrowserHandover",
-        new Uint8Array(nonce),
-        origin,
-        coseKey,
-    ];
-    const sessionTranscriptArray = [
-        null,
-        null,
-        DataItem.fromData(handoverArray),
-    ];
-
+): Promise<{ hpkeInfo: Buffer; sessionTranscript: SessionTranscript }> {
+    const sessionTranscript = await SessionTranscript.forIsoMdocDcApi(
+        { encryptionInfoBase64Url: encryptionInfoB64u, origin },
+        mdocContext,
+    );
     return {
-        // Plain CBOR encoding — what the wallet uses as HPKE info when encrypting.
-        hpkeInfo: Buffer.from(cborEncode(sessionTranscriptArray)),
-        // DataItem-wrapped CBOR — equivalent to SessionTranscript.encode({ asDataItem: true }).
-        verifyBytes: cborEncode(DataItem.fromData(sessionTranscriptArray)),
+        hpkeInfo: Buffer.from(sessionTranscript.encode()),
+        sessionTranscript,
     };
+}
+
+/**
+ * Parse the wallet's EncryptedResponse per ISO/IEC TS 18013-7:2025 Annex C:
+ *
+ *   EncryptedResponse = ["dcapi", {"enc": bstr, "cipherText": bstr}]
+ *
+ * `enc` is the wallet's ephemeral P-256 public key (uncompressed, 65 bytes) and
+ * `cipherText` the HPKE AES-128-GCM output (GCM tag in the last 16 bytes).
+ */
+export function parseEncryptedResponse(encryptedResponse: Buffer): {
+    enc: Buffer;
+    cipherText: Buffer;
+} {
+    let decoded: unknown;
+    try {
+        decoded = cborDecode(new Uint8Array(encryptedResponse));
+    } catch {
+        throw new Error("EncryptedResponse is not valid CBOR");
+    }
+
+    if (
+        !Array.isArray(decoded) ||
+        decoded.length !== 2 ||
+        decoded[0] !== "dcapi"
+    ) {
+        throw new Error(
+            'EncryptedResponse must be ["dcapi", EncryptedResponseData]',
+        );
+    }
+
+    const data = decoded[1];
+    const get = (key: string): unknown =>
+        data instanceof Map ? data.get(key) : (data as any)?.[key];
+
+    const enc = get("enc");
+    const cipherText = get("cipherText");
+    if (!(enc instanceof Uint8Array) || !(cipherText instanceof Uint8Array)) {
+        throw new Error(
+            "EncryptedResponseData must contain bstr enc and cipherText",
+        );
+    }
+
+    return { enc: Buffer.from(enc), cipherText: Buffer.from(cipherText) };
 }

@@ -24,9 +24,10 @@ import { MdocverifierService } from "../presentations/credential/mdocverifier/md
 import { TrustedAuthorityType } from "../presentations/entities/presentation-config.entity";
 import { PresentationsService } from "../presentations/presentations.service";
 import {
-    buildBrowserHandoverTranscript,
     buildDeviceRequestCbor,
     buildEncryptionInfo,
+    buildIsoMdocDcApiTranscript,
+    parseEncryptedResponse,
 } from "./cbor-request";
 import { hpkeOpen } from "./hpke";
 
@@ -184,21 +185,32 @@ export class Iso18013Service {
         const nonce = Buffer.from(session.vp_nonce!, "hex");
         const origin = session.browserOrigin!;
 
-        // Reconstruct BrowserHandover session transcript from stored session data
-        const transcript = buildBrowserHandoverTranscript(
-            nonce,
-            origin,
+        // Reconstruct the DCAPIHandover SessionTranscript from stored session data.
+        // The handover hashes the base64url EncryptionInfo exactly as sent in the
+        // offer; buildEncryptionInfo is deterministic, so re-encoding the stored
+        // nonce with the tenant key reproduces the identical string.
+        const encryptionInfoB64u = buildEncryptionInfo(
             privJwk.x!,
             privJwk.y!,
+            nonce,
+        ).toString("base64url");
+        const transcript = await buildIsoMdocDcApiTranscript(
+            encryptionInfoB64u,
+            origin,
         );
 
-        // Decrypt the HPKE ciphertext: first 65 bytes = enc (ephemeral P-256 key)
+        // Parse EncryptedResponse = ["dcapi", {"enc": bstr, "cipherText": bstr}]
         const encryptedBytes = Buffer.from(encryptedB64, "base64url");
-        if (encryptedBytes.length < 65 + 16) {
-            throw new BadRequestException("Encrypted data too short");
+        let encKey: Buffer;
+        let ciphertext: Buffer;
+        try {
+            ({ enc: encKey, cipherText: ciphertext } =
+                parseEncryptedResponse(encryptedBytes));
+        } catch (err: any) {
+            throw new BadRequestException(
+                `Invalid EncryptedResponse: ${err?.message ?? err}`,
+            );
         }
-        const encKey = encryptedBytes.subarray(0, 65);
-        const ciphertext = encryptedBytes.subarray(65);
 
         let deviceResponseCbor: Buffer;
         try {
@@ -274,12 +286,12 @@ export class Iso18013Service {
 
         const deviceResponseB64 = deviceResponseCbor.toString("base64url");
 
-        // Verify the mDOC using the pre-built BrowserHandover transcript
+        // Verify the mDOC using the pre-built DCAPIHandover transcript
         const verifyResult = await this.mdocverifierService.verify(
             deviceResponseB64,
             {
                 protocol: "iso-18013-7",
-                transcriptBytes: transcript.verifyBytes,
+                sessionTranscript: transcript.sessionTranscript,
             },
             verifyOptions,
             mdocCred.claims?.map((c) => c.path),

@@ -15,7 +15,7 @@ The two protocols differ fundamentally:
 | DC API protocol | `openid4vp-v1-unsigned` | `org-iso-mdoc` |
 | Request format | JSON (OID4VP request object) | CBOR (`DeviceRequest`) |
 | Response encryption | JWE/JOSE (ECDH-ES) | HPKE (RFC 9180) |
-| Session transcript | `OID4VPDCAPIHandover` | `BrowserHandover` |
+| Session transcript | `OID4VPDCAPIHandover` | `DCAPIHandover` |
 | Encryption key | JWK in `client_metadata.jwks` | COSE_Key in `encryptionInfo` |
 
 ---
@@ -52,12 +52,12 @@ Portal                    EUDIPLO                         Wallet (browser)
   |                          |                    with HPKE using the key
   |                          |                    from encryptionInfo
   |                          |                                  |
-  |  <-- { protocol: "org-iso-mdoc", data: enc||ciphertext } --
+  |  <-- { protocol: "org-iso-mdoc", data: EncryptedResponse } --
   |                          |                                  |
   |  POST /presentations/    |                                  |
   |    :id/iso-18013-7  ---> |                                  |
   |  { data: base64url }     | 9.  getEncryptionPrivateJwk()   |
-  |                          | 10. buildBrowserHandoverTranscript()
+  |                          | 10. buildIsoMdocDcApiTranscript()
   |                          | 11. hpkeOpen()                  |
   |                          | 12. mdocverifier.verify()       |
   |                          | 13. sessionService.add(Completed)|
@@ -96,39 +96,46 @@ The current implementation processes the first `mso_mdoc` credential from the DC
 query in the presentation configuration. Support for multiple `DocRequest` entries
 is listed as future work (see §12).
 
-### 3.2 `encryptionInfo` (ISO 18013-7 Annex C §C.1.3)
-
-Positional CBOR array (not a map — wallets reject map encoding):
+### 3.2 `EncryptionInfo` (ISO/IEC TS 18013-7:2025 Annex C)
 
 ```
-[
-  1,                          ← cipherSuiteId = HPKE-Base-P256-SHA256-AES128GCM
-  <16 random bytes>,          ← nonce (used to reconstruct BrowserHandover)
-  {                           ← COSE_Key (verifier P-256 public key)
-     1: 2,    ← kty = EC
-    -1: 1,    ← crv = P-256
-    -2: <32B>, ← x
-    -3: <32B>  ← y
-  }
+EncryptionInfo = [
+  "dcapi",
+  EncryptionParameters
 ]
+
+EncryptionParameters = {
+  "nonce" : bstr,                 ← 16 random bytes
+  "recipientPublicKey" : COSE_Key ← verifier P-256 public key
+}
+
+COSE_Key = {                      ← integer-keyed map per RFC 8152
+   1: 2,    ← kty = EC2
+  -1: 1,    ← crv = P-256
+  -2: <32B>, ← x
+  -3: <32B>  ← y
+}
 ```
 
-### 3.3 `BrowserHandover` (SessionTranscript — ISO 18013-7 §C.2.3)
+The request carries `base64url(CBOR(EncryptionInfo))` without padding.
+
+### 3.3 `DCAPIHandover` (SessionTranscript — ISO/IEC TS 18013-7:2025 Annex C)
 
 ```
 SessionTranscript = [
   null,             ← DeviceEngagementBytes (not used in DC API)
   null,             ← EReaderKeyBytes (not used in DC API)
-  #6.24(            ← CBOR tag 24 (DataItem)
-    bstr .cbor [
-      "BrowserHandover",
-      <nonce bytes>,     ← same nonce as in encryptionInfo
-      <origin string>,   ← "https://example.com"
-      <COSE_Key map>     ← same key as in encryptionInfo
-    ]
-  )
+  [
+    "dcapi",
+    <32B hash>      ← SHA-256(CBOR([encryptionInfoB64u, origin]))
+  ]
 ]
 ```
+
+Where `encryptionInfoB64u` is the base64url string of the `EncryptionInfo` exactly
+as sent in the DC API request and `origin` is the browser origin
+(e.g. `"https://example.com"`). Built via `SessionTranscript.forIsoMdocDcApi()`
+from `@owf/mdoc`.
 
 This transcript is used in two places:
 - As the `info` parameter for HPKE when **encrypting** (wallet) and **decrypting** (verifier)
@@ -158,10 +165,17 @@ this cipher suite. No new dependencies are added to the project.
 ### Encrypted response format
 
 ```
-wallet_response = enc (65 bytes) || ciphertext+tag (N+16 bytes)
+EncryptedResponse = [
+  "dcapi",
+  EncryptedResponseData
+]
+EncryptedResponseData = {
+  "enc" : bstr,       ← wallet's ephemeral P-256 public key, uncompressed (0x04 || x || y, 65 bytes)
+  "cipherText" : bstr ← AES-128-GCM output (GCM tag in the last 16 bytes)
+}
 ```
-- `enc`: wallet's ephemeral P-256 public key, uncompressed (0x04 || x || y)
-- `ciphertext+tag`: AES-128-GCM output (GCM tag in the last 16 bytes)
+
+The wallet returns `base64url(CBOR(EncryptedResponse))` without padding.
 
 ### HPKE call signature
 
@@ -213,12 +227,12 @@ And `mdocverifierService.verify()` uses `SessionTranscript.forOid4VpDcApi()` whe
 
 ```typescript
 dcApiProtocol?: string  // "oid4vp" | "iso-18013-7"
-browserOrigin?: string  // stored at offer time to reconstruct BrowserHandover on response
+browserOrigin?: string  // stored at offer time to reconstruct the DCAPIHandover on response
 ```
 
 The existing `vp_nonce` field stores the 16-byte nonce as a hex string.
 
-These fields allow the `BrowserHandover` transcript to be reconstructed at response
+These fields allow the `DCAPIHandover` transcript to be reconstructed at response
 time without storing the full CBOR bytes in the session.
 
 ---
@@ -262,17 +276,19 @@ decryption.
 DeviceResponse bytes as base64url. This avoids bending `parseResponse()` to a
 format outside its domain.
 
-### 8.2 Transcript passed as pre-built bytes
+### 8.2 Transcript built with the library's native handover
 
-`Verifier.verifyDeviceResponse()` accepts `SessionTranscript | Uint8Array`.
-For ISO 18013-7, we pass a `Uint8Array` of the already-built transcript, avoiding
-the need to create a `BrowserHandover` subclass that does not exist in
-`@owf/mdoc` v0.6.
+`@owf/mdoc` v0.7 ships `SessionTranscript.forIsoMdocDcApi()`, which implements
+the `DCAPIHandover` structure of the published ISO/IEC TS 18013-7:2025 Annex C.
+`Iso18013Service` builds the transcript once per response and uses it for both
+HPKE decryption (`sessionTranscript.encode()` as the `info` parameter) and
+DeviceAuth verification (the `SessionTranscript` instance passed through
+`MdocSessionDataIso18013` to `Verifier.verifyDeviceResponse()`).
 
-The bytes are equivalent to
-`tag(24, cborEncode([null, null, DataItem(["BrowserHandover", ...])]))`,
-which is the same encoding that `SessionTranscript.encode({ asDataItem: true })`
-produces for the other handover types.
+Because the handover hashes the base64url `EncryptionInfo` exactly as sent in the
+offer, and `buildEncryptionInfo()` is deterministic, the transcript can be
+reconstructed at response time from the stored nonce and tenant key without
+persisting the CBOR bytes.
 
 ### 8.3 Encryption key: reuse of the existing ECDH-ES key
 
@@ -288,8 +304,9 @@ the backend.
 
 The 16-byte nonce is generated in `createOffer()` via `randomBytes(16)`, stored in
 `session.vp_nonce` as a hex string, and consumed in two places:
-1. `encryptionInfo` — the wallet reads it to build the BrowserHandover before encrypting
-2. `buildBrowserHandoverTranscript()` — reconstructed on the server at response time
+1. `EncryptionInfo` — sent to the wallet inside the DC API request
+2. `buildIsoMdocDcApiTranscript()` — the `EncryptionInfo` is re-encoded from the
+   stored nonce at response time to rebuild the `DCAPIHandover` transcript
 
 This nonce is **distinct** from the `walletNonce` used in the OID4VP flow. ISO 18013-7
 has no `request_uri` or nonce/sessionId split, so the portal uses the session UUID
@@ -391,16 +408,17 @@ end-to-end testing. Browser requirements:
 
 ```typescript
 import { hpkeOpen } from './hpke';
-import { buildBrowserHandoverTranscript, buildEncryptionInfo } from './cbor-request';
+import { buildIsoMdocDcApiTranscript, buildEncryptionInfo } from './cbor-request';
 
 // 1. Generate recipient key pair
 const { privateKey, publicKey } = await generateKeyPair('ECDH-ES', { crv: 'P-256' });
 
-// 2. Build nonce and transcript
+// 2. Build nonce, EncryptionInfo, and transcript
 const nonce = Buffer.alloc(16, 0x42); // fixed for deterministic test
 const origin = 'https://example.com';
 const jwk = await exportJWK(publicKey);
-const { hpkeInfo } = buildBrowserHandoverTranscript(nonce, origin, jwk.x!, jwk.y!);
+const encInfoB64u = buildEncryptionInfo(jwk.x!, jwk.y!, nonce).toString('base64url');
+const { hpkeInfo } = await buildIsoMdocDcApiTranscript(encInfoB64u, origin);
 
 // 3. Encrypt with a reference HPKE library (e.g. @hpke/core)
 // 4. Decrypt with hpkeOpen() and assert plaintext matches
@@ -412,7 +430,8 @@ const { hpkeInfo } = buildBrowserHandoverTranscript(nonce, origin, jwk.x!, jwk.y
 
 **None.** The entire implementation uses only:
 - `node:crypto` — ECDH P-256, HMAC-SHA256, AES-128-GCM
-- `@owf/mdoc` — already a project dependency (DeviceRequest, DataItem, cborEncode)
+- `@owf/mdoc` — already a project dependency (DeviceRequest, SessionTranscript.forIsoMdocDcApi)
+- `@owf/cose` — already a project dependency (cborEncode, cborDecode)
 
 ---
 
@@ -420,7 +439,7 @@ const { hpkeInfo } = buildBrowserHandoverTranscript(nonce, origin, jwk.x!, jwk.y
 
 | # | Status | Limitation | Impact | Notes |
 |---|---|---|---|---|
-| 1 | Open | `encryptionInfo` format not yet validated against a real wallet | Wallet may reject unexpected CBOR key encoding | Test with a wallet that supports `org-iso-mdoc` (e.g. Paradym, OpenWallet) |
+| 1 | **Resolved** | ~~`encryptionInfo` format not yet validated against a real wallet~~ | — | All CBOR structures (`EncryptionInfo`, `EncryptedResponse`, `DCAPIHandover` SessionTranscript) now follow the published ISO/IEC TS 18013-7:2025 Annex C, matching the EU Age Verification profile and `@owf/mdoc` v0.7's `SessionTranscript.forIsoMdocDcApi()` |
 | 2 | **Resolved** | ~~Trust list not applied during verification (`requireX5c=false`)~~ | — | `VerifierOptions` now built from `dcql_query.credentials[].trusted_authorities`, mirroring `presentations.service.ts` |
 | 3 | Open | Only the first `mso_mdoc` credential from the DCQL query is processed | Configs with multiple credentials generate only one `DocRequest` | Extend to iterate all `mso_mdoc` credentials and build multiple `DocRequest` entries |
 | 4 | **Resolved** | ~~`redirect_uri` not supported after ISO 18013-7 verification~~ | — | `processResponse()` now generates a `responseCode` and returns `redirect_uri` when the session or webhook provides one, matching the OID4VP behavior |

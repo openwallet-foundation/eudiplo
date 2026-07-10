@@ -43,13 +43,13 @@ export type MdocSessionDataDcApi = {
 };
 
 /**
- * Session data for ISO 18013-7 Annex C (org.iso.mdoc via DC API).
- * The BrowserHandover session transcript is pre-built by the caller.
+ * Session data for ISO 18013-7 Annex C (org-iso-mdoc via DC API).
+ * The DCAPIHandover session transcript is pre-built by the caller.
  */
 export type MdocSessionDataIso18013 = {
     protocol: "iso-18013-7";
-    /** Pre-built session transcript bytes (DataItem-wrapped CBOR) for verifyDeviceResponse. */
-    transcriptBytes: Uint8Array;
+    /** Pre-built DCAPIHandover SessionTranscript for verifyDeviceResponse. */
+    sessionTranscript: SessionTranscript;
 };
 
 export type MdocSessionData =
@@ -143,8 +143,8 @@ export class MdocverifierService {
             // 3) Build the session transcript for verification
             let sessionTranscript: SessionTranscript | Uint8Array;
             if (sessionData.protocol === "iso-18013-7") {
-                // BrowserHandover: pre-built by Iso18013Service, passed as raw bytes
-                sessionTranscript = sessionData.transcriptBytes;
+                // DCAPIHandover: pre-built by Iso18013Service
+                sessionTranscript = sessionData.sessionTranscript;
             } else if (sessionData.protocol === "dc_api") {
                 // OID4VP DC API: SHA256 hash of CBOR([origin, nonce, jwkThumbprint?])
                 sessionTranscript = await SessionTranscript.forOid4VpDcApi(
