@@ -123,14 +123,16 @@ function dhkemDecap(
     const kemContext = Buffer.concat([encKey, pk_r]);
 
     // ExtractAndExpand: RFC 9180 §4.1
-    // Zero-length salt → zeros(Nh) = zeros(32)
-    const prk = labeledExtract(
+    //   eae_prk       = LabeledExtract("", "eae_prk", dh)
+    //   shared_secret = LabeledExpand(eae_prk, "shared_secret", kem_context, Nsecret)
+    const eaePrk = labeledExtract(kemSuiteId, null, "eae_prk", dhOutput);
+    return labeledExpand(
         kemSuiteId,
-        Buffer.alloc(SHA256_LEN, 0),
+        eaePrk,
         "shared_secret",
-        dhOutput,
+        kemContext,
+        Nsecret,
     );
-    return labeledExpand(kemSuiteId, prk, "shared_secret", kemContext, Nsecret);
 }
 
 /**
