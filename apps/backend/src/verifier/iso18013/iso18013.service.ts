@@ -4,13 +4,14 @@
  * Handles offer creation (DeviceRequest + encryptionInfo) and
  * encrypted device response processing (HPKE decrypt → verify → webhook).
  */
+
+import { randomBytes, randomUUID } from "node:crypto";
 import {
     BadRequestException,
     Injectable,
     NotFoundException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { randomBytes, randomUUID } from "node:crypto";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { EncryptionService } from "../../crypto/encryption/encryption.service";
 import { ServiceTypeIdentifier } from "../../issuer/trust-list/trustlist.service";
@@ -19,8 +20,8 @@ import { SessionService } from "../../session/session.service";
 import { VerifierOptions } from "../../shared/trust/types";
 import { AuditLogService } from "../../shared/utils/logger/audit-log.service";
 import { WebhookService } from "../../shared/utils/webhook/webhook.service";
-import { TrustedAuthorityType } from "../presentations/entities/presentation-config.entity";
 import { MdocverifierService } from "../presentations/credential/mdocverifier/mdocverifier.service";
+import { TrustedAuthorityType } from "../presentations/entities/presentation-config.entity";
 import { PresentationsService } from "../presentations/presentations.service";
 import {
     buildBrowserHandoverTranscript,

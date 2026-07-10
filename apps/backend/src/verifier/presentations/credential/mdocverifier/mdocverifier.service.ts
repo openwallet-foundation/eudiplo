@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { hex } from "@owf/identity-common";
 import {
     DeviceRequest,
     DeviceResponse,
@@ -16,7 +17,6 @@ import {
     ChainValidationResult,
     CredentialChainValidationService,
 } from "../credential-chain-validation.service";
-import { hex } from "@owf/identity-common";
 
 /**
  * Session data for the standard OID4VP flow (direct_post or direct_post.jwt).

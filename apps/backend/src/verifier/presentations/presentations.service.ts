@@ -1,4 +1,4 @@
-import { X509Certificate, createHash, createVerify } from "node:crypto";
+import { createHash, createVerify, X509Certificate } from "node:crypto";
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
 import {
@@ -8,10 +8,10 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
-import { plainToClass } from "class-transformer";
-import { Request } from "express";
 import * as eudiAttestationSchema from "@owf/eudi-attestation-schema";
 import { type AttestationFormat } from "@owf/eudi-attestation-schema";
+import { plainToClass } from "class-transformer";
+import { Request } from "express";
 import { base64url, decodeJwt, decodeProtectedHeader } from "jose";
 import { Span, TraceService } from "nestjs-otel";
 import { PinoLogger } from "nestjs-pino";

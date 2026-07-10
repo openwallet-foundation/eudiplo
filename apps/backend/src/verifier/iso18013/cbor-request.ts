@@ -4,13 +4,8 @@
  * Builds DeviceRequest, encryptionInfo, and SessionTranscript CBORs
  * using @owf/mdoc primitives.
  */
-import {
-    cborEncode,
-    DataItem,
-    DeviceRequest,
-    DocRequest,
-    ItemsRequest,
-} from "@owf/mdoc";
+import { cborEncode, DataItem } from "@owf/cose";
+import { DeviceRequest, DocRequest, ItemsRequest } from "@owf/mdoc";
 
 // COSE Key type / curve constants (RFC 8152)
 const KTY_EC = 2;
