@@ -183,6 +183,16 @@ The wallet returns `base64url(CBOR(EncryptedResponse))` without padding.
 hpkeOpen(encKey, ciphertext, recipientPrivJwk, info=SessionTranscript, aad=b"")
 ```
 
+### Correctness validation
+
+`hpke.spec.ts` validates `hpkeOpen()` against the **official RFC 9180
+Appendix A.3 test vector** for this exact suite (Base mode, DHKEM(P-256,
+HKDF-SHA256), HKDF-SHA256, AES-128-GCM), including negative cases (tampered
+ciphertext, wrong `info`). This caught a real interop bug: the DHKEM
+`ExtractAndExpand` step (RFC 9180 §4.1) must use the label `"eae_prk"` in
+`LabeledExtract` — using any other label derives a different shared secret
+than a compliant sender, and every wallet-encrypted response fails to decrypt.
+
 ---
 
 ## 5. Bug fix included: incorrect OID4VP DC API transcript
@@ -262,6 +272,22 @@ enum ResponseType {
 }
 ```
 
+### Response endpoint routing
+
+The browser posts the encrypted response directly to
+`POST /presentations/:sessionId/iso-18013-7` (no `/api` prefix). Like the
+sibling `oid4vp` wallet-facing routes, the path is listed in
+`GLOBAL_PREFIX_EXCLUSIONS` (`main.helpers.ts`) so the global `/api` prefix
+does not apply — otherwise the endpoint only exists under
+`/api/presentations/...` and the DC API response POST fails with 404.
+
+### Module wiring note
+
+`Iso18013Module` provides `WebhookService`, which injects
+`OutboundUrlPolicyService` (outbound webhook hardening). Both must be
+registered as providers together — mirroring `Oid4vpModule` — or the
+application fails to bootstrap with an `UnknownDependenciesException`.
+
 ---
 
 ## 8. Design decisions
@@ -311,6 +337,39 @@ The 16-byte nonce is generated in `createOffer()` via `randomBytes(16)`, stored 
 This nonce is **distinct** from the `walletNonce` used in the OID4VP flow. ISO 18013-7
 has no `request_uri` or nonce/sessionId split, so the portal uses the session UUID
 directly as the response endpoint identifier.
+
+### 8.5 Compatibility workaround: tolerant `issuerAltName` parsing
+
+**Status: workaround for an external defect — revisit when the AV pilot re-issues
+its certificates.**
+
+The EU Age Verification reference-implementation IACA/DS certificates
+("Age Verification Issuer CA 01") carry a malformed `issuerAltName`: the
+extension value wraps a full nested `Extension` structure around the
+`GeneralNames` (RFC 5280 §4.2.1.7 violation), and encodes a URL under the
+`dNSName` choice. `@peculiar/x509`'s typed extension throws while parsing it,
+and since `X509Certificate.extensions` parses every extension, this breaks
+`X509ChainBuilder` and `getExtension()` — making every credential issued under
+that IACA unverifiable.
+
+`registerTolerantX509Extensions()` (`shared/utils/x509-tolerant-extensions.ts`,
+called at bootstrap in `main.ts`) re-registers the `2.5.29.18` parser with a
+subclass that unwraps the nested-Extension variant on a best-effort basis and
+falls back to the raw extension bytes instead of throwing.
+
+Two independent halves of this workaround:
+
+1. **Graceful degradation (keep permanently):** a verifier should not fail an
+   entire presentation because one non-critical extension of one certificate
+   is unparseable. The fallback-to-raw behaviour is sound defensive design.
+2. **Nested-Extension unwrapping (removable):** exists only to interoperate
+   with the current AV pilot certificates. Once
+   `eu-digital-identity-wallet/av-srv-web-issuing-avw-py` fixes its certificate
+   generation and re-issues the IACA/DS, this branch becomes dead code and can
+   be dropped.
+
+Full analysis and reproduction:
+`docs/findings/bug-reports/2026-07-09-av-reference-iaca-malformed-issuer-alt-name.md`.
 
 ---
 
@@ -444,3 +503,4 @@ const { hpkeInfo } = await buildIsoMdocDcApiTranscript(encInfoB64u, origin);
 | 3 | Open | Only the first `mso_mdoc` credential from the DCQL query is processed | Configs with multiple credentials generate only one `DocRequest` | Extend to iterate all `mso_mdoc` credentials and build multiple `DocRequest` entries |
 | 4 | **Resolved** | ~~`redirect_uri` not supported after ISO 18013-7 verification~~ | — | `processResponse()` now generates a `responseCode` and returns `redirect_uri` when the session or webhook provides one, matching the OID4VP behavior |
 | 5 | **Resolved** | ~~Session audit logging not implemented~~ | — | `AuditLogService` injected; `logFlowStart`, `logCredentialVerification`, `logFlowComplete`, and `logFlowError` calls added to `processResponse()` |
+| 6 | **Temporary** | Tolerant `issuerAltName` parsing (§8.5) works around malformed EU AV reference certificates | Without it, AV-pilot credentials fail verification with "Data does not match to GeneralName ASN1 schema" | Remove the nested-Extension unwrapping once the AV pilot re-issues compliant certificates; keep the raw-bytes fallback as defensive design |
