@@ -62,7 +62,8 @@ Portal                    EUDIPLO                         Wallet (browser)
   |                          | 12. mdocverifier.verify()       |
   |                          | 13. sessionService.add(Completed)|
   |                          | 14. webhookService.sendWebhook() |
-  |  <--- { ok: true }       |                                  |
+  |  <--- {} or             |                                  |
+  |  { redirect_uri: "..." } |                                  |
 ```
 
 ---
@@ -351,10 +352,16 @@ const protocol = result.protocol;   // "org-iso-mdoc" | "openid4vp-v1-unsigned"
 const data = result.data instanceof Uint8Array ? toBase64url(result.data) : result.data;
 
 if (protocol === 'org-iso-mdoc') {
-  await fetch(`/presentations/${offer.session}/iso-18013-7`, {
+  const response = await fetch(`/presentations/${offer.session}/iso-18013-7`, {
     method: 'POST',
     body: JSON.stringify({ data }),
-  });
+  }).then(r => r.json());
+
+  // If a redirect_uri was configured, the response contains it with a response_code:
+  // { redirect_uri: "https://example.com/callback?response_code=<uuid>" }
+  if (response.redirect_uri) {
+    window.location.href = response.redirect_uri;
+  }
 } else {
   // existing OID4VP DC API path
 }

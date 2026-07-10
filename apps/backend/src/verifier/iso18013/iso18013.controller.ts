@@ -1,6 +1,6 @@
 /**
  * ISO 18013-7 Annex C response endpoint.
- * Receives the HPKE-encrypted DeviceResponse from the browser (via espuni-av.js)
+ * Receives the HPKE-encrypted DeviceResponse from the browser (via DC API)
  * and forwards to Iso18013Service for decryption and verification.
  */
 import {
