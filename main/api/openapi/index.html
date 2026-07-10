@@ -22161,127 +22161,128 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-123-14" name="__codelineno-123-14" href="#__codelineno-123-14"></a><span class="w">            </span><span class="p">],</span>
 <a id="__codelineno-123-15" name="__codelineno-123-15" href="#__codelineno-123-15"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The type of response expected for the offer request."</span>
 <a id="__codelineno-123-16" name="__codelineno-123-16" href="#__codelineno-123-16"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-123-17" name="__codelineno-123-17" href="#__codelineno-123-17"></a><span class="w">        </span><span class="nt">"credentialClaims"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-18" name="__codelineno-123-18" href="#__codelineno-123-18"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
-<a id="__codelineno-123-19" name="__codelineno-123-19" href="#__codelineno-123-19"></a><span class="w">            </span><span class="nt">"additionalProperties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-20" name="__codelineno-123-20" href="#__codelineno-123-20"></a><span class="w">                </span><span class="nt">"oneOf"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-123-21" name="__codelineno-123-21" href="#__codelineno-123-21"></a><span class="w">                    </span><span class="p">{</span>
-<a id="__codelineno-123-22" name="__codelineno-123-22" href="#__codelineno-123-22"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
-<a id="__codelineno-123-23" name="__codelineno-123-23" href="#__codelineno-123-23"></a><span class="w">                        </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-24" name="__codelineno-123-24" href="#__codelineno-123-24"></a><span class="w">                            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-25" name="__codelineno-123-25" href="#__codelineno-123-25"></a><span class="w">                                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-123-26" name="__codelineno-123-26" href="#__codelineno-123-26"></a><span class="w">                                </span><span class="nt">"enum"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-123-27" name="__codelineno-123-27" href="#__codelineno-123-27"></a><span class="w">                                    </span><span class="s2">"inline"</span>
-<a id="__codelineno-123-28" name="__codelineno-123-28" href="#__codelineno-123-28"></a><span class="w">                                </span><span class="p">]</span>
-<a id="__codelineno-123-29" name="__codelineno-123-29" href="#__codelineno-123-29"></a><span class="w">                            </span><span class="p">},</span>
-<a id="__codelineno-123-30" name="__codelineno-123-30" href="#__codelineno-123-30"></a><span class="w">                            </span><span class="nt">"claims"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-31" name="__codelineno-123-31" href="#__codelineno-123-31"></a><span class="w">                                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
-<a id="__codelineno-123-32" name="__codelineno-123-32" href="#__codelineno-123-32"></a><span class="w">                                </span><span class="nt">"additionalProperties"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<a id="__codelineno-123-33" name="__codelineno-123-33" href="#__codelineno-123-33"></a><span class="w">                            </span><span class="p">}</span>
-<a id="__codelineno-123-34" name="__codelineno-123-34" href="#__codelineno-123-34"></a><span class="w">                        </span><span class="p">},</span>
-<a id="__codelineno-123-35" name="__codelineno-123-35" href="#__codelineno-123-35"></a><span class="w">                        </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-123-36" name="__codelineno-123-36" href="#__codelineno-123-36"></a><span class="w">                            </span><span class="s2">"type"</span><span class="p">,</span>
-<a id="__codelineno-123-37" name="__codelineno-123-37" href="#__codelineno-123-37"></a><span class="w">                            </span><span class="s2">"claims"</span>
-<a id="__codelineno-123-38" name="__codelineno-123-38" href="#__codelineno-123-38"></a><span class="w">                        </span><span class="p">]</span>
-<a id="__codelineno-123-39" name="__codelineno-123-39" href="#__codelineno-123-39"></a><span class="w">                    </span><span class="p">},</span>
-<a id="__codelineno-123-40" name="__codelineno-123-40" href="#__codelineno-123-40"></a><span class="w">                    </span><span class="p">{</span>
-<a id="__codelineno-123-41" name="__codelineno-123-41" href="#__codelineno-123-41"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
-<a id="__codelineno-123-42" name="__codelineno-123-42" href="#__codelineno-123-42"></a><span class="w">                        </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-43" name="__codelineno-123-43" href="#__codelineno-123-43"></a><span class="w">                            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-44" name="__codelineno-123-44" href="#__codelineno-123-44"></a><span class="w">                                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-123-45" name="__codelineno-123-45" href="#__codelineno-123-45"></a><span class="w">                                </span><span class="nt">"enum"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-123-46" name="__codelineno-123-46" href="#__codelineno-123-46"></a><span class="w">                                    </span><span class="s2">"attributeProvider"</span>
-<a id="__codelineno-123-47" name="__codelineno-123-47" href="#__codelineno-123-47"></a><span class="w">                                </span><span class="p">]</span>
-<a id="__codelineno-123-48" name="__codelineno-123-48" href="#__codelineno-123-48"></a><span class="w">                            </span><span class="p">},</span>
-<a id="__codelineno-123-49" name="__codelineno-123-49" href="#__codelineno-123-49"></a><span class="w">                            </span><span class="nt">"attributeProviderId"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-50" name="__codelineno-123-50" href="#__codelineno-123-50"></a><span class="w">                                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
-<a id="__codelineno-123-51" name="__codelineno-123-51" href="#__codelineno-123-51"></a><span class="w">                            </span><span class="p">}</span>
-<a id="__codelineno-123-52" name="__codelineno-123-52" href="#__codelineno-123-52"></a><span class="w">                        </span><span class="p">},</span>
-<a id="__codelineno-123-53" name="__codelineno-123-53" href="#__codelineno-123-53"></a><span class="w">                        </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-123-54" name="__codelineno-123-54" href="#__codelineno-123-54"></a><span class="w">                            </span><span class="s2">"type"</span><span class="p">,</span>
-<a id="__codelineno-123-55" name="__codelineno-123-55" href="#__codelineno-123-55"></a><span class="w">                            </span><span class="s2">"attributeProviderId"</span>
-<a id="__codelineno-123-56" name="__codelineno-123-56" href="#__codelineno-123-56"></a><span class="w">                        </span><span class="p">]</span>
-<a id="__codelineno-123-57" name="__codelineno-123-57" href="#__codelineno-123-57"></a><span class="w">                    </span><span class="p">},</span>
-<a id="__codelineno-123-58" name="__codelineno-123-58" href="#__codelineno-123-58"></a><span class="w">                    </span><span class="p">{</span>
-<a id="__codelineno-123-59" name="__codelineno-123-59" href="#__codelineno-123-59"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
-<a id="__codelineno-123-60" name="__codelineno-123-60" href="#__codelineno-123-60"></a><span class="w">                        </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-61" name="__codelineno-123-61" href="#__codelineno-123-61"></a><span class="w">                            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-62" name="__codelineno-123-62" href="#__codelineno-123-62"></a><span class="w">                                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-123-63" name="__codelineno-123-63" href="#__codelineno-123-63"></a><span class="w">                                </span><span class="nt">"enum"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-123-64" name="__codelineno-123-64" href="#__codelineno-123-64"></a><span class="w">                                    </span><span class="s2">"webhook"</span>
-<a id="__codelineno-123-65" name="__codelineno-123-65" href="#__codelineno-123-65"></a><span class="w">                                </span><span class="p">]</span>
-<a id="__codelineno-123-66" name="__codelineno-123-66" href="#__codelineno-123-66"></a><span class="w">                            </span><span class="p">},</span>
-<a id="__codelineno-123-67" name="__codelineno-123-67" href="#__codelineno-123-67"></a><span class="w">                            </span><span class="nt">"webhook"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-68" name="__codelineno-123-68" href="#__codelineno-123-68"></a><span class="w">                                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
-<a id="__codelineno-123-69" name="__codelineno-123-69" href="#__codelineno-123-69"></a><span class="w">                                </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-70" name="__codelineno-123-70" href="#__codelineno-123-70"></a><span class="w">                                    </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-71" name="__codelineno-123-71" href="#__codelineno-123-71"></a><span class="w">                                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
-<a id="__codelineno-123-72" name="__codelineno-123-72" href="#__codelineno-123-72"></a><span class="w">                                    </span><span class="p">},</span>
-<a id="__codelineno-123-73" name="__codelineno-123-73" href="#__codelineno-123-73"></a><span class="w">                                    </span><span class="nt">"auth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-74" name="__codelineno-123-74" href="#__codelineno-123-74"></a><span class="w">                                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span>
-<a id="__codelineno-123-75" name="__codelineno-123-75" href="#__codelineno-123-75"></a><span class="w">                                    </span><span class="p">}</span>
-<a id="__codelineno-123-76" name="__codelineno-123-76" href="#__codelineno-123-76"></a><span class="w">                                </span><span class="p">},</span>
-<a id="__codelineno-123-77" name="__codelineno-123-77" href="#__codelineno-123-77"></a><span class="w">                                </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-123-78" name="__codelineno-123-78" href="#__codelineno-123-78"></a><span class="w">                                    </span><span class="s2">"url"</span>
-<a id="__codelineno-123-79" name="__codelineno-123-79" href="#__codelineno-123-79"></a><span class="w">                                </span><span class="p">]</span>
-<a id="__codelineno-123-80" name="__codelineno-123-80" href="#__codelineno-123-80"></a><span class="w">                            </span><span class="p">}</span>
-<a id="__codelineno-123-81" name="__codelineno-123-81" href="#__codelineno-123-81"></a><span class="w">                        </span><span class="p">},</span>
-<a id="__codelineno-123-82" name="__codelineno-123-82" href="#__codelineno-123-82"></a><span class="w">                        </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-123-83" name="__codelineno-123-83" href="#__codelineno-123-83"></a><span class="w">                            </span><span class="s2">"type"</span><span class="p">,</span>
-<a id="__codelineno-123-84" name="__codelineno-123-84" href="#__codelineno-123-84"></a><span class="w">                            </span><span class="s2">"webhook"</span>
-<a id="__codelineno-123-85" name="__codelineno-123-85" href="#__codelineno-123-85"></a><span class="w">                        </span><span class="p">]</span>
-<a id="__codelineno-123-86" name="__codelineno-123-86" href="#__codelineno-123-86"></a><span class="w">                    </span><span class="p">}</span>
-<a id="__codelineno-123-87" name="__codelineno-123-87" href="#__codelineno-123-87"></a><span class="w">                </span><span class="p">]</span>
-<a id="__codelineno-123-88" name="__codelineno-123-88" href="#__codelineno-123-88"></a><span class="w">            </span><span class="p">},</span>
-<a id="__codelineno-123-89" name="__codelineno-123-89" href="#__codelineno-123-89"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Credential claims configuration per credential. Keys must match credentialConfigurationIds."</span><span class="p">,</span>
-<a id="__codelineno-123-90" name="__codelineno-123-90" href="#__codelineno-123-90"></a><span class="w">            </span><span class="nt">"example"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-91" name="__codelineno-123-91" href="#__codelineno-123-91"></a><span class="w">                </span><span class="nt">"citizen"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-92" name="__codelineno-123-92" href="#__codelineno-123-92"></a><span class="w">                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"inline"</span><span class="p">,</span>
-<a id="__codelineno-123-93" name="__codelineno-123-93" href="#__codelineno-123-93"></a><span class="w">                    </span><span class="nt">"claims"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-94" name="__codelineno-123-94" href="#__codelineno-123-94"></a><span class="w">                        </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="p">,</span>
-<a id="__codelineno-123-95" name="__codelineno-123-95" href="#__codelineno-123-95"></a><span class="w">                        </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span>
-<a id="__codelineno-123-96" name="__codelineno-123-96" href="#__codelineno-123-96"></a><span class="w">                    </span><span class="p">}</span>
-<a id="__codelineno-123-97" name="__codelineno-123-97" href="#__codelineno-123-97"></a><span class="w">                </span><span class="p">}</span>
-<a id="__codelineno-123-98" name="__codelineno-123-98" href="#__codelineno-123-98"></a><span class="w">            </span><span class="p">}</span>
-<a id="__codelineno-123-99" name="__codelineno-123-99" href="#__codelineno-123-99"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-123-100" name="__codelineno-123-100" href="#__codelineno-123-100"></a><span class="w">        </span><span class="nt">"flow"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-101" name="__codelineno-123-101" href="#__codelineno-123-101"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The flow type for the offer request."</span><span class="p">,</span>
-<a id="__codelineno-123-102" name="__codelineno-123-102" href="#__codelineno-123-102"></a><span class="w">            </span><span class="nt">"enum"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-123-103" name="__codelineno-123-103" href="#__codelineno-123-103"></a><span class="w">                </span><span class="s2">"authorization_code"</span><span class="p">,</span>
-<a id="__codelineno-123-104" name="__codelineno-123-104" href="#__codelineno-123-104"></a><span class="w">                </span><span class="s2">"pre_authorized_code"</span>
-<a id="__codelineno-123-105" name="__codelineno-123-105" href="#__codelineno-123-105"></a><span class="w">            </span><span class="p">],</span>
-<a id="__codelineno-123-106" name="__codelineno-123-106" href="#__codelineno-123-106"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
-<a id="__codelineno-123-107" name="__codelineno-123-107" href="#__codelineno-123-107"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-123-108" name="__codelineno-123-108" href="#__codelineno-123-108"></a><span class="w">        </span><span class="nt">"tx_code"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-109" name="__codelineno-123-109" href="#__codelineno-123-109"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-123-110" name="__codelineno-123-110" href="#__codelineno-123-110"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Transaction code for pre-authorized code flow."</span>
-<a id="__codelineno-123-111" name="__codelineno-123-111" href="#__codelineno-123-111"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-123-112" name="__codelineno-123-112" href="#__codelineno-123-112"></a><span class="w">        </span><span class="nt">"tx_code_description"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-113" name="__codelineno-123-113" href="#__codelineno-123-113"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-123-114" name="__codelineno-123-114" href="#__codelineno-123-114"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Description for the transaction code (e.g., \"Please enter the PIN sent to your email\")."</span>
-<a id="__codelineno-123-115" name="__codelineno-123-115" href="#__codelineno-123-115"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-123-116" name="__codelineno-123-116" href="#__codelineno-123-116"></a><span class="w">        </span><span class="nt">"credentialConfigurationIds"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-117" name="__codelineno-123-117" href="#__codelineno-123-117"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"List of credential configuration ids to be included in the offer."</span><span class="p">,</span>
-<a id="__codelineno-123-118" name="__codelineno-123-118" href="#__codelineno-123-118"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span>
-<a id="__codelineno-123-119" name="__codelineno-123-119" href="#__codelineno-123-119"></a><span class="w">            </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-120" name="__codelineno-123-120" href="#__codelineno-123-120"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
-<a id="__codelineno-123-121" name="__codelineno-123-121" href="#__codelineno-123-121"></a><span class="w">            </span><span class="p">}</span>
-<a id="__codelineno-123-122" name="__codelineno-123-122" href="#__codelineno-123-122"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-123-123" name="__codelineno-123-123" href="#__codelineno-123-123"></a><span class="w">        </span><span class="nt">"authorization_server"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-124" name="__codelineno-123-124" href="#__codelineno-123-124"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-123-125" name="__codelineno-123-125" href="#__codelineno-123-125"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Optional authorization server to be used for this issuance flow."</span>
-<a id="__codelineno-123-126" name="__codelineno-123-126" href="#__codelineno-123-126"></a><span class="w">        </span><span class="p">},</span>
-<a id="__codelineno-123-127" name="__codelineno-123-127" href="#__codelineno-123-127"></a><span class="w">        </span><span class="nt">"webhookEndpointId"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-123-128" name="__codelineno-123-128" href="#__codelineno-123-128"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-123-129" name="__codelineno-123-129" href="#__codelineno-123-129"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ID of the webhook endpoint to notify about the status of the issuance process."</span>
-<a id="__codelineno-123-130" name="__codelineno-123-130" href="#__codelineno-123-130"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-123-131" name="__codelineno-123-131" href="#__codelineno-123-131"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-123-132" name="__codelineno-123-132" href="#__codelineno-123-132"></a><span class="w">    </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-123-133" name="__codelineno-123-133" href="#__codelineno-123-133"></a><span class="w">        </span><span class="s2">"response_type"</span><span class="p">,</span>
-<a id="__codelineno-123-134" name="__codelineno-123-134" href="#__codelineno-123-134"></a><span class="w">        </span><span class="s2">"flow"</span><span class="p">,</span>
-<a id="__codelineno-123-135" name="__codelineno-123-135" href="#__codelineno-123-135"></a><span class="w">        </span><span class="s2">"credentialConfigurationIds"</span>
-<a id="__codelineno-123-136" name="__codelineno-123-136" href="#__codelineno-123-136"></a><span class="w">    </span><span class="p">]</span>
-<a id="__codelineno-123-137" name="__codelineno-123-137" href="#__codelineno-123-137"></a><span class="p">}</span>
+<a id="__codelineno-123-17" name="__codelineno-123-17" href="#__codelineno-123-17"></a><span class="w">        </span><span class="nt">"authorization_server"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-18" name="__codelineno-123-18" href="#__codelineno-123-18"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-123-19" name="__codelineno-123-19" href="#__codelineno-123-19"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Authorization server id from issuer configuration. If omitted, the first enabled server is used."</span><span class="p">,</span>
+<a id="__codelineno-123-20" name="__codelineno-123-20" href="#__codelineno-123-20"></a><span class="w">            </span><span class="nt">"example"</span><span class="p">:</span><span class="w"> </span><span class="s2">"issuer-built-in"</span>
+<a id="__codelineno-123-21" name="__codelineno-123-21" href="#__codelineno-123-21"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-123-22" name="__codelineno-123-22" href="#__codelineno-123-22"></a><span class="w">        </span><span class="nt">"credentialClaims"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-23" name="__codelineno-123-23" href="#__codelineno-123-23"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<a id="__codelineno-123-24" name="__codelineno-123-24" href="#__codelineno-123-24"></a><span class="w">            </span><span class="nt">"additionalProperties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-25" name="__codelineno-123-25" href="#__codelineno-123-25"></a><span class="w">                </span><span class="nt">"oneOf"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-123-26" name="__codelineno-123-26" href="#__codelineno-123-26"></a><span class="w">                    </span><span class="p">{</span>
+<a id="__codelineno-123-27" name="__codelineno-123-27" href="#__codelineno-123-27"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<a id="__codelineno-123-28" name="__codelineno-123-28" href="#__codelineno-123-28"></a><span class="w">                        </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-29" name="__codelineno-123-29" href="#__codelineno-123-29"></a><span class="w">                            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-30" name="__codelineno-123-30" href="#__codelineno-123-30"></a><span class="w">                                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-123-31" name="__codelineno-123-31" href="#__codelineno-123-31"></a><span class="w">                                </span><span class="nt">"enum"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-123-32" name="__codelineno-123-32" href="#__codelineno-123-32"></a><span class="w">                                    </span><span class="s2">"inline"</span>
+<a id="__codelineno-123-33" name="__codelineno-123-33" href="#__codelineno-123-33"></a><span class="w">                                </span><span class="p">]</span>
+<a id="__codelineno-123-34" name="__codelineno-123-34" href="#__codelineno-123-34"></a><span class="w">                            </span><span class="p">},</span>
+<a id="__codelineno-123-35" name="__codelineno-123-35" href="#__codelineno-123-35"></a><span class="w">                            </span><span class="nt">"claims"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-36" name="__codelineno-123-36" href="#__codelineno-123-36"></a><span class="w">                                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<a id="__codelineno-123-37" name="__codelineno-123-37" href="#__codelineno-123-37"></a><span class="w">                                </span><span class="nt">"additionalProperties"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-123-38" name="__codelineno-123-38" href="#__codelineno-123-38"></a><span class="w">                            </span><span class="p">}</span>
+<a id="__codelineno-123-39" name="__codelineno-123-39" href="#__codelineno-123-39"></a><span class="w">                        </span><span class="p">},</span>
+<a id="__codelineno-123-40" name="__codelineno-123-40" href="#__codelineno-123-40"></a><span class="w">                        </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-123-41" name="__codelineno-123-41" href="#__codelineno-123-41"></a><span class="w">                            </span><span class="s2">"type"</span><span class="p">,</span>
+<a id="__codelineno-123-42" name="__codelineno-123-42" href="#__codelineno-123-42"></a><span class="w">                            </span><span class="s2">"claims"</span>
+<a id="__codelineno-123-43" name="__codelineno-123-43" href="#__codelineno-123-43"></a><span class="w">                        </span><span class="p">]</span>
+<a id="__codelineno-123-44" name="__codelineno-123-44" href="#__codelineno-123-44"></a><span class="w">                    </span><span class="p">},</span>
+<a id="__codelineno-123-45" name="__codelineno-123-45" href="#__codelineno-123-45"></a><span class="w">                    </span><span class="p">{</span>
+<a id="__codelineno-123-46" name="__codelineno-123-46" href="#__codelineno-123-46"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<a id="__codelineno-123-47" name="__codelineno-123-47" href="#__codelineno-123-47"></a><span class="w">                        </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-48" name="__codelineno-123-48" href="#__codelineno-123-48"></a><span class="w">                            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-49" name="__codelineno-123-49" href="#__codelineno-123-49"></a><span class="w">                                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-123-50" name="__codelineno-123-50" href="#__codelineno-123-50"></a><span class="w">                                </span><span class="nt">"enum"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-123-51" name="__codelineno-123-51" href="#__codelineno-123-51"></a><span class="w">                                    </span><span class="s2">"attributeProvider"</span>
+<a id="__codelineno-123-52" name="__codelineno-123-52" href="#__codelineno-123-52"></a><span class="w">                                </span><span class="p">]</span>
+<a id="__codelineno-123-53" name="__codelineno-123-53" href="#__codelineno-123-53"></a><span class="w">                            </span><span class="p">},</span>
+<a id="__codelineno-123-54" name="__codelineno-123-54" href="#__codelineno-123-54"></a><span class="w">                            </span><span class="nt">"attributeProviderId"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-55" name="__codelineno-123-55" href="#__codelineno-123-55"></a><span class="w">                                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
+<a id="__codelineno-123-56" name="__codelineno-123-56" href="#__codelineno-123-56"></a><span class="w">                            </span><span class="p">}</span>
+<a id="__codelineno-123-57" name="__codelineno-123-57" href="#__codelineno-123-57"></a><span class="w">                        </span><span class="p">},</span>
+<a id="__codelineno-123-58" name="__codelineno-123-58" href="#__codelineno-123-58"></a><span class="w">                        </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-123-59" name="__codelineno-123-59" href="#__codelineno-123-59"></a><span class="w">                            </span><span class="s2">"type"</span><span class="p">,</span>
+<a id="__codelineno-123-60" name="__codelineno-123-60" href="#__codelineno-123-60"></a><span class="w">                            </span><span class="s2">"attributeProviderId"</span>
+<a id="__codelineno-123-61" name="__codelineno-123-61" href="#__codelineno-123-61"></a><span class="w">                        </span><span class="p">]</span>
+<a id="__codelineno-123-62" name="__codelineno-123-62" href="#__codelineno-123-62"></a><span class="w">                    </span><span class="p">},</span>
+<a id="__codelineno-123-63" name="__codelineno-123-63" href="#__codelineno-123-63"></a><span class="w">                    </span><span class="p">{</span>
+<a id="__codelineno-123-64" name="__codelineno-123-64" href="#__codelineno-123-64"></a><span class="w">                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<a id="__codelineno-123-65" name="__codelineno-123-65" href="#__codelineno-123-65"></a><span class="w">                        </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-66" name="__codelineno-123-66" href="#__codelineno-123-66"></a><span class="w">                            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-67" name="__codelineno-123-67" href="#__codelineno-123-67"></a><span class="w">                                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-123-68" name="__codelineno-123-68" href="#__codelineno-123-68"></a><span class="w">                                </span><span class="nt">"enum"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-123-69" name="__codelineno-123-69" href="#__codelineno-123-69"></a><span class="w">                                    </span><span class="s2">"webhook"</span>
+<a id="__codelineno-123-70" name="__codelineno-123-70" href="#__codelineno-123-70"></a><span class="w">                                </span><span class="p">]</span>
+<a id="__codelineno-123-71" name="__codelineno-123-71" href="#__codelineno-123-71"></a><span class="w">                            </span><span class="p">},</span>
+<a id="__codelineno-123-72" name="__codelineno-123-72" href="#__codelineno-123-72"></a><span class="w">                            </span><span class="nt">"webhook"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-73" name="__codelineno-123-73" href="#__codelineno-123-73"></a><span class="w">                                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<a id="__codelineno-123-74" name="__codelineno-123-74" href="#__codelineno-123-74"></a><span class="w">                                </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-75" name="__codelineno-123-75" href="#__codelineno-123-75"></a><span class="w">                                    </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-76" name="__codelineno-123-76" href="#__codelineno-123-76"></a><span class="w">                                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
+<a id="__codelineno-123-77" name="__codelineno-123-77" href="#__codelineno-123-77"></a><span class="w">                                    </span><span class="p">},</span>
+<a id="__codelineno-123-78" name="__codelineno-123-78" href="#__codelineno-123-78"></a><span class="w">                                    </span><span class="nt">"auth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-79" name="__codelineno-123-79" href="#__codelineno-123-79"></a><span class="w">                                        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span>
+<a id="__codelineno-123-80" name="__codelineno-123-80" href="#__codelineno-123-80"></a><span class="w">                                    </span><span class="p">}</span>
+<a id="__codelineno-123-81" name="__codelineno-123-81" href="#__codelineno-123-81"></a><span class="w">                                </span><span class="p">},</span>
+<a id="__codelineno-123-82" name="__codelineno-123-82" href="#__codelineno-123-82"></a><span class="w">                                </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-123-83" name="__codelineno-123-83" href="#__codelineno-123-83"></a><span class="w">                                    </span><span class="s2">"url"</span>
+<a id="__codelineno-123-84" name="__codelineno-123-84" href="#__codelineno-123-84"></a><span class="w">                                </span><span class="p">]</span>
+<a id="__codelineno-123-85" name="__codelineno-123-85" href="#__codelineno-123-85"></a><span class="w">                            </span><span class="p">}</span>
+<a id="__codelineno-123-86" name="__codelineno-123-86" href="#__codelineno-123-86"></a><span class="w">                        </span><span class="p">},</span>
+<a id="__codelineno-123-87" name="__codelineno-123-87" href="#__codelineno-123-87"></a><span class="w">                        </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-123-88" name="__codelineno-123-88" href="#__codelineno-123-88"></a><span class="w">                            </span><span class="s2">"type"</span><span class="p">,</span>
+<a id="__codelineno-123-89" name="__codelineno-123-89" href="#__codelineno-123-89"></a><span class="w">                            </span><span class="s2">"webhook"</span>
+<a id="__codelineno-123-90" name="__codelineno-123-90" href="#__codelineno-123-90"></a><span class="w">                        </span><span class="p">]</span>
+<a id="__codelineno-123-91" name="__codelineno-123-91" href="#__codelineno-123-91"></a><span class="w">                    </span><span class="p">}</span>
+<a id="__codelineno-123-92" name="__codelineno-123-92" href="#__codelineno-123-92"></a><span class="w">                </span><span class="p">]</span>
+<a id="__codelineno-123-93" name="__codelineno-123-93" href="#__codelineno-123-93"></a><span class="w">            </span><span class="p">},</span>
+<a id="__codelineno-123-94" name="__codelineno-123-94" href="#__codelineno-123-94"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Credential claims configuration per credential. Keys must match credentialConfigurationIds."</span><span class="p">,</span>
+<a id="__codelineno-123-95" name="__codelineno-123-95" href="#__codelineno-123-95"></a><span class="w">            </span><span class="nt">"example"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-96" name="__codelineno-123-96" href="#__codelineno-123-96"></a><span class="w">                </span><span class="nt">"citizen"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-97" name="__codelineno-123-97" href="#__codelineno-123-97"></a><span class="w">                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"inline"</span><span class="p">,</span>
+<a id="__codelineno-123-98" name="__codelineno-123-98" href="#__codelineno-123-98"></a><span class="w">                    </span><span class="nt">"claims"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-99" name="__codelineno-123-99" href="#__codelineno-123-99"></a><span class="w">                        </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="p">,</span>
+<a id="__codelineno-123-100" name="__codelineno-123-100" href="#__codelineno-123-100"></a><span class="w">                        </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span>
+<a id="__codelineno-123-101" name="__codelineno-123-101" href="#__codelineno-123-101"></a><span class="w">                    </span><span class="p">}</span>
+<a id="__codelineno-123-102" name="__codelineno-123-102" href="#__codelineno-123-102"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-123-103" name="__codelineno-123-103" href="#__codelineno-123-103"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-123-104" name="__codelineno-123-104" href="#__codelineno-123-104"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-123-105" name="__codelineno-123-105" href="#__codelineno-123-105"></a><span class="w">        </span><span class="nt">"flow"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-106" name="__codelineno-123-106" href="#__codelineno-123-106"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The flow type for the offer request."</span><span class="p">,</span>
+<a id="__codelineno-123-107" name="__codelineno-123-107" href="#__codelineno-123-107"></a><span class="w">            </span><span class="nt">"enum"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-123-108" name="__codelineno-123-108" href="#__codelineno-123-108"></a><span class="w">                </span><span class="s2">"authorization_code"</span><span class="p">,</span>
+<a id="__codelineno-123-109" name="__codelineno-123-109" href="#__codelineno-123-109"></a><span class="w">                </span><span class="s2">"pre_authorized_code"</span>
+<a id="__codelineno-123-110" name="__codelineno-123-110" href="#__codelineno-123-110"></a><span class="w">            </span><span class="p">],</span>
+<a id="__codelineno-123-111" name="__codelineno-123-111" href="#__codelineno-123-111"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
+<a id="__codelineno-123-112" name="__codelineno-123-112" href="#__codelineno-123-112"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-123-113" name="__codelineno-123-113" href="#__codelineno-123-113"></a><span class="w">        </span><span class="nt">"tx_code"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-114" name="__codelineno-123-114" href="#__codelineno-123-114"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-123-115" name="__codelineno-123-115" href="#__codelineno-123-115"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Transaction code for pre-authorized code flow."</span>
+<a id="__codelineno-123-116" name="__codelineno-123-116" href="#__codelineno-123-116"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-123-117" name="__codelineno-123-117" href="#__codelineno-123-117"></a><span class="w">        </span><span class="nt">"tx_code_description"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-118" name="__codelineno-123-118" href="#__codelineno-123-118"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-123-119" name="__codelineno-123-119" href="#__codelineno-123-119"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Description for the transaction code (e.g., \"Please enter the PIN sent to your email\")."</span>
+<a id="__codelineno-123-120" name="__codelineno-123-120" href="#__codelineno-123-120"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-123-121" name="__codelineno-123-121" href="#__codelineno-123-121"></a><span class="w">        </span><span class="nt">"credentialConfigurationIds"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-122" name="__codelineno-123-122" href="#__codelineno-123-122"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"List of credential configuration ids to be included in the offer."</span><span class="p">,</span>
+<a id="__codelineno-123-123" name="__codelineno-123-123" href="#__codelineno-123-123"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span>
+<a id="__codelineno-123-124" name="__codelineno-123-124" href="#__codelineno-123-124"></a><span class="w">            </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-125" name="__codelineno-123-125" href="#__codelineno-123-125"></a><span class="w">                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
+<a id="__codelineno-123-126" name="__codelineno-123-126" href="#__codelineno-123-126"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-123-127" name="__codelineno-123-127" href="#__codelineno-123-127"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-123-128" name="__codelineno-123-128" href="#__codelineno-123-128"></a><span class="w">        </span><span class="nt">"webhookEndpointId"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-123-129" name="__codelineno-123-129" href="#__codelineno-123-129"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-123-130" name="__codelineno-123-130" href="#__codelineno-123-130"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ID of the webhook endpoint to notify about the status of the issuance process."</span>
+<a id="__codelineno-123-131" name="__codelineno-123-131" href="#__codelineno-123-131"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-123-132" name="__codelineno-123-132" href="#__codelineno-123-132"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-123-133" name="__codelineno-123-133" href="#__codelineno-123-133"></a><span class="w">    </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-123-134" name="__codelineno-123-134" href="#__codelineno-123-134"></a><span class="w">        </span><span class="s2">"response_type"</span><span class="p">,</span>
+<a id="__codelineno-123-135" name="__codelineno-123-135" href="#__codelineno-123-135"></a><span class="w">        </span><span class="s2">"flow"</span><span class="p">,</span>
+<a id="__codelineno-123-136" name="__codelineno-123-136" href="#__codelineno-123-136"></a><span class="w">        </span><span class="s2">"credentialConfigurationIds"</span>
+<a id="__codelineno-123-137" name="__codelineno-123-137" href="#__codelineno-123-137"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-123-138" name="__codelineno-123-138" href="#__codelineno-123-138"></a><span class="p">}</span>
 </code></pre></div>
 </details>
 </div>
@@ -29199,6 +29200,11 @@ passed inside a signed request object it can already be an array.</td>
             <td>Whether this managed authorization server is enabled</td>
         </tr>
         <tr>
+            <td><code>id</code></td>
+            <td><span class="string-type">string</span></td>
+            <td>Unique identifier for this authorization server</td>
+        </tr>
+        <tr>
             <td><code>label</code></td>
             <td><span class="string-type">string</span></td>
             <td>Human-friendly label for the UI</td>
@@ -29453,6 +29459,11 @@ passed inside a signed request object it can already be an array.</td>
             <td><code>enabled</code></td>
             <td><span class="boolean-type">boolean</span></td>
             <td>Whether this managed authorization server is enabled</td>
+        </tr>
+        <tr>
+            <td><code>id</code></td>
+            <td><span class="string-type">string</span></td>
+            <td>Unique identifier for this authorization server</td>
         </tr>
         <tr>
             <td><code>label</code></td>
@@ -30924,6 +30935,11 @@ Optional: if set, notifications will be sent to this endpoint.</td>
             <td>Whether this managed authorization server is enabled</td>
         </tr>
         <tr>
+            <td><code>id</code></td>
+            <td><span class="string-type">string</span></td>
+            <td>Unique identifier for this authorization server</td>
+        </tr>
+        <tr>
             <td><code>issuer</code></td>
             <td><span class="string-type">string</span>(<span class="uri-format format">uri</span>)</td>
             <td>Issuer URL for external authorization servers</td>
@@ -32288,6 +32304,11 @@ Self-signed certificate for the root CA key.</td>
             <td>Whether this managed authorization server is enabled</td>
         </tr>
         <tr>
+            <td><code>id</code></td>
+            <td><span class="string-type">string</span></td>
+            <td>Unique identifier for this authorization server</td>
+        </tr>
+        <tr>
             <td><code>label</code></td>
             <td><span class="string-type">string</span></td>
             <td>Human-friendly label for the UI</td>
@@ -32441,7 +32462,7 @@ Self-signed certificate for the root CA key.</td>
         <tr>
             <td><code>authorization_server</code></td>
             <td><span class="string-type">string</span></td>
-            <td>Optional authorization server to be used for this issuance flow.</td>
+            <td>Authorization server id from issuer configuration. If omitted, the first enabled server is used.</td>
         </tr>
         <tr>
             <td><code>credentialClaims</code></td>
@@ -39159,6 +39180,11 @@ passed inside a signed request object it can already be an array.</td>
             <td>Whether this managed authorization server is enabled</td>
         </tr>
         <tr>
+            <td><code>id</code></td>
+            <td><span class="string-type">string</span></td>
+            <td>Unique identifier for this authorization server</td>
+        </tr>
+        <tr>
             <td><code>label</code></td>
             <td><span class="string-type">string</span></td>
             <td>Human-friendly label for the UI</td>
@@ -39413,6 +39439,11 @@ passed inside a signed request object it can already be an array.</td>
             <td><code>enabled</code></td>
             <td><span class="boolean-type">boolean</span></td>
             <td>Whether this managed authorization server is enabled</td>
+        </tr>
+        <tr>
+            <td><code>id</code></td>
+            <td><span class="string-type">string</span></td>
+            <td>Unique identifier for this authorization server</td>
         </tr>
         <tr>
             <td><code>label</code></td>
@@ -40884,6 +40915,11 @@ Optional: if set, notifications will be sent to this endpoint.</td>
             <td>Whether this managed authorization server is enabled</td>
         </tr>
         <tr>
+            <td><code>id</code></td>
+            <td><span class="string-type">string</span></td>
+            <td>Unique identifier for this authorization server</td>
+        </tr>
+        <tr>
             <td><code>issuer</code></td>
             <td><span class="string-type">string</span>(<span class="uri-format format">uri</span>)</td>
             <td>Issuer URL for external authorization servers</td>
@@ -42248,6 +42284,11 @@ Self-signed certificate for the root CA key.</td>
             <td>Whether this managed authorization server is enabled</td>
         </tr>
         <tr>
+            <td><code>id</code></td>
+            <td><span class="string-type">string</span></td>
+            <td>Unique identifier for this authorization server</td>
+        </tr>
+        <tr>
             <td><code>label</code></td>
             <td><span class="string-type">string</span></td>
             <td>Human-friendly label for the UI</td>
@@ -42401,7 +42442,7 @@ Self-signed certificate for the root CA key.</td>
         <tr>
             <td><code>authorization_server</code></td>
             <td><span class="string-type">string</span></td>
-            <td>Optional authorization server to be used for this issuance flow.</td>
+            <td>Authorization server id from issuer configuration. If omitted, the first enabled server is used.</td>
         </tr>
         <tr>
             <td><code>credentialClaims</code></td>

@@ -309,9 +309,16 @@
                         </code>
                     </td>
                 </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/ManagedAuthorizationServerConfig.html" target="_self" >ManagedAuthorizationServerConfig</a></code>
+</div>
+                            </td>
+                        </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:82</a></div>
+                                <div class="io-line">        <code><a href="../classes/ManagedAuthorizationServerConfig.html#source" target="_self" >ManagedAuthorizationServerConfig:96</a></code>
+</div>
                         </td>
                     </tr>
 
@@ -351,7 +358,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="98" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:98</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="112" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:112</a></div>
                         </td>
                     </tr>
 
@@ -389,7 +396,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="89" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:89</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="103" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:103</a></div>
                         </td>
                     </tr>
 
@@ -429,7 +436,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="116" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:116</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:130</a></div>
                         </td>
                     </tr>
 
@@ -470,7 +477,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="107" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:107</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="121" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:121</a></div>
                         </td>
                     </tr>
 
@@ -515,7 +522,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/ManagedAuthorizationServerConfig.html#source" target="_self" >ManagedAuthorizationServerConfig:75</a></code>
+                                <div class="io-line">        <code><a href="../classes/ManagedAuthorizationServerConfig.html#source" target="_self" >ManagedAuthorizationServerConfig:89</a></code>
 </div>
                         </td>
                     </tr>
@@ -561,7 +568,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/ManagedAuthorizationServerConfig.html#source" target="_self" >ManagedAuthorizationServerConfig:46</a></code>
+                                <div class="io-line">        <code><a href="../classes/ManagedAuthorizationServerConfig.html#source" target="_self" >ManagedAuthorizationServerConfig:53</a></code>
 </div>
                         </td>
                     </tr>
@@ -607,7 +614,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/ManagedAuthorizationServerConfig.html#source" target="_self" >ManagedAuthorizationServerConfig:38</a></code>
+                                <div class="io-line">        <code><a href="../classes/ManagedAuthorizationServerConfig.html#source" target="_self" >ManagedAuthorizationServerConfig:45</a></code>
 </div>
                         </td>
                     </tr>
@@ -658,6 +665,13 @@ export class ManagedAuthorizationServerConfig {
     @IsIn([&quot;external&quot;, &quot;oid4vp&quot;, &quot;chained&quot;, &quot;built-in&quot;])
     type!: AuthorizationServerType;
 
+    @ApiProperty({
+        description: &quot;Unique identifier for this authorization server&quot;,
+        example: &quot;pid-auth&quot;,
+    })
+    @IsString()
+    id!: string;
+
     @ApiPropertyOptional({
         description: &quot;Human-friendly label for the UI&quot;,
         example: &quot;PID Authorization Server&quot;,
@@ -684,6 +698,13 @@ export class ExternalAuthorizationServerConfig extends ManagedAuthorizationServe
     @IsString()
     @IsIn([&quot;external&quot;])
     declare type: &quot;external&quot;;
+
+    @ApiProperty({
+        description: &quot;Unique identifier for this authorization server&quot;,
+        example: &quot;external-auth&quot;,
+    })
+    @IsString()
+    declare id: string;
 
     @ApiProperty({
         description: &quot;Issuer URL for external authorization servers&quot;,
@@ -756,6 +777,13 @@ export class ChainedAuthorizationServerConfig extends ManagedAuthorizationServer
     declare type: &quot;chained&quot;;
 
     @ApiProperty({
+        description: &quot;Unique identifier for this authorization server&quot;,
+        example: &quot;chained-auth&quot;,
+    })
+    @IsString()
+    declare id: string;
+
+    @ApiProperty({
         description: &quot;Upstream OIDC provider configuration for chained mode&quot;,
         type: () &#x3D;&gt; UpstreamOidcConfig,
     })
@@ -791,6 +819,13 @@ export class BuiltInAuthorizationServerConfig extends ManagedAuthorizationServer
     @IsString()
     @IsIn([&quot;built-in&quot;])
     declare type: &quot;built-in&quot;;
+
+    @ApiProperty({
+        description: &quot;Unique identifier for this authorization server&quot;,
+        example: &quot;issuer-built-in&quot;,
+    })
+    @IsString()
+    declare id: string;
 
     @ApiPropertyOptional({
         description: &quot;Token configuration for this authorization server&quot;,

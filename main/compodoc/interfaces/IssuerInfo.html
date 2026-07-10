@@ -224,7 +224,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="122" class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:122</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="124" class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:124</a></div>
                                 </td>
                             </tr>
 
@@ -263,7 +263,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="121" class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:121</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="123" class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:123</a></div>
                                 </td>
                             </tr>
 
@@ -384,11 +384,13 @@ type Oid4vpServerConfig &#x3D; ManagedAuthorizationServerConfig &amp; {
 
 type ExternalServerConfig &#x3D; ManagedAuthorizationServerConfig &amp; {
     type: &quot;external&quot;;
+    id: string;
     issuer: string;
 };
 
 type ChainedServerConfig &#x3D; ManagedAuthorizationServerConfig &amp; {
     type: &quot;chained&quot;;
+    id: string;
     upstream?: unknown;
     vp?: { enabled?: boolean };
 };
@@ -431,7 +433,7 @@ export class Oid4vciService {
 
     /**
      * Get the authorization server URL for credential offers.
-     * Uses Chained AS if configured, otherwise falls back to the default AS.
+     * Uses the first enabled authorization server in configured order.
      */
     private async getAuthorizationServer(tenantId: string): Promise&lt;string&gt; {
         const issuanceConfig &#x3D;
@@ -486,17 +488,6 @@ export class Oid4vciService {
         );
     }
 
-    private async isBuiltInAuthorizationServerConfigured(
-        tenantId: string,
-    ): Promise&lt;boolean&gt; {
-        const issuanceConfig &#x3D;
-            await this.issuanceService.getIssuanceConfiguration(tenantId);
-
-        return (issuanceConfig.authorizationServers ?? []).some(
-            (server) &#x3D;&gt; server.enabled !&#x3D;&#x3D; false &amp;&amp; server.type &#x3D;&#x3D;&#x3D; &quot;built-in&quot;,
-        );
-    }
-
     private async resolveAuthorizationServerSelection(
         tenantId: string,
         selectedAuthorizationServer?: string,
@@ -505,44 +496,60 @@ export class Oid4vciService {
             return undefined;
         }
 
-        if (selectedAuthorizationServer &#x3D;&#x3D;&#x3D; &quot;built-in&quot;) {
-            const builtInConfigured &#x3D;
-                await this.isBuiltInAuthorizationServerConfigured(tenantId);
-            if (!builtInConfigured) {
-                throw new BadRequestException(
-                    &quot;Built-in authorization server is not configured&quot;,
-                );
-            }
-            return this.authzService.getAuthzIssuer(tenantId);
-        }
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
 
-        if (selectedAuthorizationServer &#x3D;&#x3D;&#x3D; &quot;chained-as&quot;) {
-            const hasChainedAuthorizationServer &#x3D;
-                await this.authorizationServersService.hasEnabledChainedAuthorizationServer(
+        for (const server of issuanceConfig.authorizationServers ?? []) {
+            const externalServer &#x3D; server as Partial&lt;ExternalServerConfig&gt;;
+            const oid4vpServer &#x3D; server as Partial&lt;Oid4vpServerConfig&gt;;
+            const chainedServer &#x3D; server as Partial&lt;ChainedServerConfig&gt;;
+
+            if (
+                server.enabled &#x3D;&#x3D;&#x3D; false ||
+                typeof server.id !&#x3D;&#x3D; &quot;string&quot; ||
+                server.id !&#x3D;&#x3D; selectedAuthorizationServer
+            ) {
+                continue;
+            }
+
+            if (
+                server.type &#x3D;&#x3D;&#x3D; &quot;external&quot; &amp;&amp;
+                typeof externalServer.issuer &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                externalServer.issuer.length &gt; 0
+            ) {
+                return externalServer.issuer;
+            }
+
+            if (
+                server.type &#x3D;&#x3D;&#x3D; &quot;oid4vp&quot; &amp;&amp;
+                typeof oid4vpServer.id &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                oid4vpServer.id.length &gt; 0
+            ) {
+                return this.authorizationServersService.getAuthorizationServerBaseUrl(
                     tenantId,
-                );
-            if (!hasChainedAuthorizationServer) {
-                throw new BadRequestException(
-                    &quot;Chained authorization server is not configured&quot;,
+                    oid4vpServer.id,
                 );
             }
-            const publicUrl &#x3D;
-                this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
-            return &#x60;${publicUrl}/issuers/${tenantId}/chained-as&#x60;;
+
+            if (server.type &#x3D;&#x3D;&#x3D; &quot;built-in&quot;) {
+                return this.authzService.getAuthzIssuer(tenantId);
+            }
+
+            if (server.type &#x3D;&#x3D;&#x3D; &quot;chained&quot;) {
+                if (chainedServer.upstream) {
+                    return &#x60;${publicUrl}/issuers/${tenantId}/chained-as&#x60;;
+                }
+
+                if (chainedServer.vp?.enabled) {
+                    return &#x60;${publicUrl}/issuers/${tenantId}/chained-as-vp&#x60;;
+                }
+            }
         }
 
-        if (
-            this.authorizationServersService.isSelectionValue(
-                selectedAuthorizationServer,
-            )
-        ) {
-            return this.authorizationServersService.resolveSelectionToIssuer(
-                tenantId,
-                selectedAuthorizationServer,
-            );
-        }
-
-        return selectedAuthorizationServer;
+        throw new BadRequestException(
+            &#x60;Authorization server &#x27;${selectedAuthorizationServer}&#x27; is not configured or enabled&#x60;,
+        );
     }
 
     /**
@@ -937,8 +944,8 @@ export class Oid4vciService {
         }
 
         const creationBody: Partial&lt;RegistrationCertificateCreation&gt; &#x3D; {
-            provided_attestations:
-                registrationCertificateConfig.providedAttestations as RegistrationCertificateCreation[&quot;provided_attestations&quot;],
+            provides_attestations:
+                registrationCertificateConfig.providedAttestations as RegistrationCertificateCreation[&quot;provides_attestations&quot;],
             credentials,
             ...(registrationCertificateConfig.privacyPolicy
                 ? {

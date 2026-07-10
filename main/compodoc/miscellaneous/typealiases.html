@@ -183,6 +183,9 @@
                             <a href="#CoseAlgorithm" title="src/crypto/key/crypto-implementation/crypto-implementation.service.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>CoseAlgorithm</b>&nbsp;&nbsp;&nbsp;(src/.../crypto-implementation.service.ts)</span></a>
                         </li>
                         <li>
+                            <a href="#CreateSchemaMetadataRequest" title="src/registrar/schema-metadata.service.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>CreateSchemaMetadataRequest</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.service.ts)</span></a>
+                        </li>
+                        <li>
                             <a href="#CredentialFormatId" title="src/registrar/dto/schema-metadata.dto.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>CredentialFormatId</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</span></a>
                         </li>
                         <li>
@@ -382,9 +385,6 @@
                         </li>
                         <li>
                             <a href="#TypedCredentialConfig" title="src/issuer/configuration/credentials/types/credential-config-types.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>TypedCredentialConfig</b>&nbsp;&nbsp;&nbsp;(src/.../credential-config-types.ts)</span></a>
-                        </li>
-                        <li>
-                            <a href="#UploadAssetType" title="src/registrar/schema-metadata.service.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>UploadAssetType</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.service.ts)</span></a>
                         </li>
                         <li>
                             <a href="#Verifier" title="src/crypto/key/crypto-implementation/crypto-implementation.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>Verifier</b>&nbsp;&nbsp;&nbsp;(src/.../crypto-implementation.ts)</span></a>
@@ -1089,6 +1089,41 @@ Uses RFC 9864 fully-specified algorithm identifiers</p>
             <tr>
                 <td class="col-md-4">
                     <code>    <code>&quot;ES256&quot; | &quot;ES384&quot; | &quot;ES512&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <h3>src/registrar/schema-metadata.service.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CreateSchemaMetadataRequest"></a>
+                    <span class="name "><b>CreateSchemaMetadataRequest</b><a href="#CreateSchemaMetadataRequest"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>{ metadata: Record&lt;string, unknown&gt;; rulebookFile: Blob | File; schemaFiles: Array&lt;Blob | File&gt; }</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SchemaMetadataFilters"></a>
+                    <span class="name "><b>SchemaMetadataFilters</b><a href="#SchemaMetadataFilters"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>{ attestationId?: string; version?: string }</code>
 </code>
                 </td>
             </tr>
@@ -1849,41 +1884,6 @@ from the same entity.</p>
             <tr>
                 <td class="col-md-4">
                     <code>    <code>{ key: string; etag?: string; size?: number; url?: string; contentType?: string; metadata?: Record&lt;string, string&gt; }</code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</section>
-    <h3>src/registrar/schema-metadata.service.ts</h3>
-    <section data-compodoc="block-typealias">
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="SchemaMetadataFilters"></a>
-                    <span class="name "><b>SchemaMetadataFilters</b><a href="#SchemaMetadataFilters"><span class="icon ion-ios-link"></span></a></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>    <code>{ attestationId?: string; version?: string }</code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="UploadAssetType"></a>
-                    <span class="name "><b>UploadAssetType</b><a href="#UploadAssetType"><span class="icon ion-ios-link"></span></a></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>    <code>&quot;trustlists&quot; | &quot;rulebooks&quot; | &quot;schemas&quot;</code>
 </code>
                 </td>
             </tr>

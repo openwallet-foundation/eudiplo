@@ -606,8 +606,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="229"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:229</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="256"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:256</a></div>
                         </td>
                     </tr>
 
@@ -1072,6 +1072,7 @@ export class IssuanceService {
 
         const configuredAuthorizationServers &#x3D;
             effectiveAuthorizationServers as Array&lt;{
+                id?: string;
                 type?: string;
             }&gt;;
 
@@ -1088,6 +1089,32 @@ export class IssuanceService {
             throw new BadRequestException(
                 &quot;Only one built-in authorization server can be configured&quot;,
             );
+        }
+
+        const reservedIds &#x3D; new Set([&quot;built-in&quot;, &quot;chained-as&quot;]);
+        const seenIds &#x3D; new Set&lt;string&gt;();
+        for (const server of configuredAuthorizationServers) {
+            if (typeof server.id !&#x3D;&#x3D; &quot;string&quot; || server.id.trim().length &lt; 1) {
+                throw new BadRequestException(
+                    &quot;Each authorization server must define a non-empty id&quot;,
+                );
+            }
+
+            const normalizedId &#x3D; server.id.trim();
+            if (reservedIds.has(normalizedId)) {
+                throw new BadRequestException(
+                    &#x60;Authorization server id &#x27;${normalizedId}&#x27; is reserved&#x60;,
+                );
+            }
+
+            if (seenIds.has(normalizedId)) {
+                throw new BadRequestException(
+                    &#x60;Authorization server id &#x27;${normalizedId}&#x27; is duplicated&#x60;,
+                );
+            }
+
+            seenIds.add(normalizedId);
+            server.id &#x3D; normalizedId;
         }
 
         const before &#x3D;

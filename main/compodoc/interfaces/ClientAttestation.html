@@ -176,6 +176,7 @@
                                 </a>
                         </li>
                         <li>
+                                    <span class="modifier">Optional</span>
                                 <a href="#clientAttestationPopJwt" class="reference-link ">
                                     <span class="reference-badge reference-badge--property" aria-hidden="true">P</span><span class="reference-link-label">clientAttestationPopJwt</span>
                                 </a>
@@ -258,6 +259,11 @@
                             </tr>
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Optional</i>
+                                </td>
+                            </tr>
 
 
 
@@ -293,7 +299,7 @@ import {
 
 export interface ClientAttestation {
     clientAttestationJwt: string;
-    clientAttestationPopJwt: string;
+    clientAttestationPopJwt?: string;
 }
 
 /**
@@ -364,7 +370,7 @@ export class WalletAttestationService {
                 authorizationServer,
                 clientAttestationJwt: clientAttestation.clientAttestationJwt,
                 clientAttestationPopJwt:
-                    clientAttestation.clientAttestationPopJwt,
+                    clientAttestation.clientAttestationPopJwt!,
                 allowedSkewInSeconds:
                     this.configService.getOrThrow&lt;number&gt;(&quot;CRYPTO_TOLERANCE&quot;),
             });

@@ -683,6 +683,7 @@ export class ChainedAsService {
             await this.issuanceService.getIssuanceConfiguration(tenantId);
 
         type ChainedServerConfig &#x3D; {
+            id: string;
             enabled?: boolean;
             type: &quot;chained&quot;;
             upstream: ChainedAsConfig[&quot;upstream&quot;];
@@ -696,6 +697,8 @@ export class ChainedAsService {
                 return (
                     server.enabled !&#x3D;&#x3D; false &amp;&amp;
                     server.type &#x3D;&#x3D;&#x3D; &quot;chained&quot; &amp;&amp;
+                    typeof candidate.id &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                    candidate.id.length &gt; 0 &amp;&amp;
                     !!candidate.upstream
                 );
             },

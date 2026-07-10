@@ -221,6 +221,11 @@ into a TS11 SchemaMeta object using the @owf/eudi-attestation-schema library.</p
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
+                                <a href="#resolveTrustedAuthoritiesForRegistrar" >resolveTrustedAuthoritiesForRegistrar</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
                                 <a href="#signRawSchemaMetaConfig" >signRawSchemaMetaConfig</a>
                             </li>
                             <li>
@@ -441,8 +446,8 @@ into a TS11 SchemaMeta object using the @owf/eudi-attestation-schema library.</p
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="189"
-                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-meta-adapter.service.ts:189</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="196"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-meta-adapter.service.ts:196</a></div>
                         </td>
                     </tr>
 
@@ -660,6 +665,87 @@ sidesteps browser CORS limitations the UI would otherwise hit.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="resolveTrustedAuthoritiesForRegistrar"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>resolveTrustedAuthoritiesForRegistrar</b></span>
+                        <a href="#resolveTrustedAuthoritiesForRegistrar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resolveTrustedAuthoritiesForRegistrar(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorities: <a href="../classes/SchemaMetaConfig.html" target="_self">SchemaMetaConfig</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="183"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-meta-adapter.service.ts:183</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorities</td>
+                                            <td>
+                                                            <code><a href="../classes/SchemaMetaConfig.html" target="_self" >SchemaMetaConfig</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Array&lt;Record&lt;string, unknown&gt;&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="signRawSchemaMetaConfig"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -678,8 +764,8 @@ sidesteps browser CORS limitations the UI would otherwise hit.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="283"
-                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-meta-adapter.service.ts:283</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="290"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-meta-adapter.service.ts:290</a></div>
                         </td>
                     </tr>
 
@@ -776,8 +862,8 @@ independent of any stored credential configuration.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="218"
-                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-meta-adapter.service.ts:218</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="225"
+                                    class="link-to-prism">src/issuer/configuration/credentials/schema-meta/schema-meta-adapter.service.ts:225</a></div>
                         </td>
                     </tr>
 
@@ -1108,6 +1194,13 @@ export class SchemaMetaAdapterService {
             result.push(built);
         }
         return result;
+    }
+
+    async resolveTrustedAuthoritiesForRegistrar(
+        tenantId: string,
+        authorities: SchemaMetaConfig[&quot;trustedAuthorities&quot;],
+    ): Promise&lt;Array&lt;Record&lt;string, unknown&gt;&gt;&gt; {
+        return this.buildTrustedAuthorities(tenantId, authorities);
     }
 
     /**

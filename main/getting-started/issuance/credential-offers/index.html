@@ -3062,7 +3062,7 @@ see the <a href="../">Issuance Overview</a>.</p>
 <ol>
 <li>Define the flow with <code>flow</code></li>
 <li>Select the credentials with <code>credentialConfigurationIds</code></li>
-<li>Optionally select an external authorization server with <code>authorization_server</code></li>
+<li>Optionally select a configured authorization server by <code>id</code> with <code>authorization_server</code></li>
 <li>Optionally override claims with <code>credentialClaims</code></li>
 <li>Optionally enable a transaction code with <code>tx_code</code> and <code>tx_code_description</code></li>
 <li>Optionally configure notifications with <code>webhookEndpointId</code></li>
@@ -3072,7 +3072,7 @@ see the <a href="../">Issuance Overview</a>.</p>
 <li><code>response_type</code> - how the offer is returned to the caller</li>
 <li><code>flow</code> - <code>pre_authorized_code</code> or <code>authorization_code</code></li>
 <li><code>credentialConfigurationIds</code> - list of credential configuration IDs to include in the offer</li>
-<li><code>authorization_server</code> - optional authorization server identifier for flows using an external AS</li>
+<li><code>authorization_server</code> - optional authorization server <code>id</code> from issuance configuration</li>
 <li><code>credentialClaims</code> - optional per-credential claims source override</li>
 <li><code>tx_code</code> - optional transaction code for pre-authorized flows</li>
 <li><code>tx_code_description</code> - optional prompt shown with the transaction code</li>
@@ -3103,10 +3103,11 @@ see the <a href="../">Issuance Overview</a>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="nt">"response_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uri"</span><span class="p">,</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">"flow"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authorization_code"</span><span class="p">,</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">"authorization_server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://keycloak.example.com/realms/myrealm"</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">"authorization_server"</span><span class="p">:</span><span class="w"> </span><span class="s2">"external-corp-idp"</span><span class="p">,</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">"credentialConfigurationIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"employee_badge"</span><span class="p">]</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">}</span>
 </code></pre></div>
+<p><code>authorization_server</code> must match the <code>id</code> of an enabled entry in <code>authorizationServers</code>.</p>
 <hr>
 <h2 id="single-use-offers">Single-Use Offers<a class="headerlink" href="#single-use-offers" title="Permanent link">¶</a></h2>
 <p>Credential offers are single-use and non-replayable. Once a wallet completes
