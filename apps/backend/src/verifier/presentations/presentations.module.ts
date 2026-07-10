@@ -28,6 +28,6 @@ import { PresentationsService } from "./presentations.service";
         MdocverifierService,
         CredentialChainValidationService,
     ],
-    exports: [PresentationsService, CredentialChainValidationService],
+    exports: [PresentationsService, CredentialChainValidationService, MdocverifierService],
 })
 export class PresentationsModule {}

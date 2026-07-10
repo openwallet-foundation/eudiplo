@@ -33,7 +33,11 @@ import {
     ConfigImportOrchestratorService,
     ImportPhase,
 } from "../../shared/utils/config-import/config-import-orchestrator.service";
-import { MdocverifierService } from "./credential/mdocverifier/mdocverifier.service";
+import {
+    MdocSessionDataDcApi,
+    MdocSessionDataOid4vp,
+    MdocverifierService,
+} from "./credential/mdocverifier/mdocverifier.service";
 import { SdjwtvcverifierService } from "./credential/sdjwtvcverifier/sdjwtvcverifier.service";
 import { AuthResponse } from "./dto/auth-response.dto";
 import { PresentationConfigCreateDto } from "./dto/presentation-config-create.dto";
@@ -1862,22 +1866,37 @@ export class PresentationsService {
         claimSelections: ClaimsQuery[][];
         hasClaimSets: boolean;
     }): Promise<Record<string, unknown>> {
-        const sessionData = {
-            nonce:
-                options.requestObjectSessionData?.nonce ??
-                (options.session.vp_nonce as string),
-            clientId:
-                options.requestObjectSessionData?.client_id ??
-                options.session.clientId!,
-            responseUri:
-                options.requestObjectSessionData?.response_uri ??
-                options.session.responseUri!,
-            protocol: "openid4vp" as const,
-            responseMode:
-                options.requestObjectSessionData?.response_mode ??
-                (options.session.useDcApi ? "dc_api.jwt" : "direct_post.jwt"),
-            jwkThumbprint: options.requestObjectJwkThumbprint,
-        };
+        // DC API flows use the OID4VPDCAPIHandover transcript (origin + nonce),
+        // while classic OID4VP uses OpenID4VPHandover (clientId + responseUri + nonce).
+        // Passing the wrong protocol makes DeviceAuth verification fail.
+        const sessionData: MdocSessionDataOid4vp | MdocSessionDataDcApi =
+            options.session.useDcApi
+                ? {
+                      protocol: "dc_api" as const,
+                      nonce:
+                          options.requestObjectSessionData?.nonce ??
+                          (options.session.vp_nonce as string),
+                      origin:
+                          options.requestObjectSessionData
+                              ?.expected_origins?.[0] ?? "",
+                      jwkThumbprint: options.requestObjectJwkThumbprint,
+                  }
+                : {
+                      protocol: "openid4vp" as const,
+                      nonce:
+                          options.requestObjectSessionData?.nonce ??
+                          (options.session.vp_nonce as string),
+                      clientId:
+                          options.requestObjectSessionData?.client_id ??
+                          options.session.clientId!,
+                      responseUri:
+                          options.requestObjectSessionData?.response_uri ??
+                          options.session.responseUri!,
+                      responseMode:
+                          options.requestObjectSessionData?.response_mode ??
+                          "direct_post.jwt",
+                      jwkThumbprint: options.requestObjectJwkThumbprint,
+                  };
 
         if (options.hasClaimSets) {
             return this.verifyMdocCredentialWithClaimSets({
@@ -1909,14 +1928,7 @@ export class PresentationsService {
     private async verifyMdocCredentialWithClaimSets(options: {
         cred: string;
         attId: string;
-        sessionData: {
-            nonce: string;
-            clientId: string;
-            responseUri: string;
-            protocol: "openid4vp";
-            responseMode: string;
-            jwkThumbprint: Uint8Array | undefined;
-        };
+        sessionData: MdocSessionDataOid4vp | MdocSessionDataDcApi;
         verifyOptions: VerifierOptions;
         dcqlCredential: CredentialQuery;
         claimSelections: ClaimsQuery[][];

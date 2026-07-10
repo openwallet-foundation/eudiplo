@@ -19,9 +19,14 @@ export enum ResponseType {
      */
     URI = "uri",
     /**
-     * Response type indicating a DC API response will be used.
+     * Response type indicating a DC API response will be used (OID4VP via DC API).
      */
     DC_API = "dc-api",
+    /**
+     * Response type for ISO 18013-7 Annex C: org.iso.mdoc protocol via DC API.
+     * Returns a CBOR DeviceRequest + encryptionInfo (HPKE recipient key).
+     */
+    ISO_18013_7 = "iso-18013-7",
 }
 
 /**
