@@ -33,19 +33,22 @@ function buildCoseKeyMap(xB64: string, yB64: string): Map<number, unknown> {
 /**
  * Build the CBOR-encoded encryptionInfo for ISO 18013-7 Annex C §C.1.3.
  *
- * Format (integer-keyed CBOR map):
- *   { 1: cipherSuiteId, 2: nonce, 3: COSE_Key }
+ * Format (positional CBOR array):
+ *   [cipherSuiteId, nonce, COSE_Key]
+ *
+ * ISO 18013-7 defines EncryptionInfo as a CBOR array, not a map.
+ * COSE_Key (element 2) is still an integer-keyed CBOR map per RFC 8152.
  */
 export function buildEncryptionInfo(
     xB64: string,
     yB64: string,
     nonce: Buffer,
 ): Buffer {
-    const encInfo = new Map<number, unknown>([
-        [1, CIPHER_SUITE_ID],
-        [2, new Uint8Array(nonce)],
-        [3, buildCoseKeyMap(xB64, yB64)],
-    ]);
+    const encInfo = [
+        CIPHER_SUITE_ID,
+        new Uint8Array(nonce),
+        buildCoseKeyMap(xB64, yB64),
+    ];
     return Buffer.from(cborEncode(encInfo));
 }
 
