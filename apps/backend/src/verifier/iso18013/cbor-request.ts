@@ -93,7 +93,11 @@ export function buildBrowserHandoverTranscript(
         origin,
         coseKey,
     ];
-    const sessionTranscriptArray = [null, null, DataItem.fromData(handoverArray)];
+    const sessionTranscriptArray = [
+        null,
+        null,
+        DataItem.fromData(handoverArray),
+    ];
 
     return {
         // Plain CBOR encoding — what the wallet uses as HPKE info when encrypting.

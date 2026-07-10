@@ -8,9 +8,7 @@ export class AddDcApiProtocolToSession1770000000000
     public async up(queryRunner: QueryRunner): Promise<void> {
         const sessionTable = await queryRunner.getTable("session");
         if (!sessionTable) {
-            console.log(
-                "[Migration] session table not found — skipping.",
-            );
+            console.log("[Migration] session table not found — skipping.");
             return;
         }
 

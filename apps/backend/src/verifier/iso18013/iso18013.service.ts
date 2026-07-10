@@ -9,12 +9,17 @@ import {
     Injectable,
     NotFoundException,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { randomBytes, randomUUID } from "node:crypto";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { EncryptionService } from "../../crypto/encryption/encryption.service";
+import { ServiceTypeIdentifier } from "../../issuer/trust-list/trustlist.service";
 import { SessionStatus } from "../../session/entities/session.entity";
 import { SessionService } from "../../session/session.service";
+import { VerifierOptions } from "../../shared/trust/types";
+import { AuditLogService } from "../../shared/utils/logger/audit-log.service";
 import { WebhookService } from "../../shared/utils/webhook/webhook.service";
+import { TrustedAuthorityType } from "../presentations/entities/presentation-config.entity";
 import { MdocverifierService } from "../presentations/credential/mdocverifier/mdocverifier.service";
 import { PresentationsService } from "../presentations/presentations.service";
 import {
@@ -42,6 +47,8 @@ export class Iso18013Service {
         private readonly encryptionService: EncryptionService,
         private readonly mdocverifierService: MdocverifierService,
         private readonly webhookService: WebhookService,
+        private readonly auditLogService: AuditLogService,
+        private readonly configService: ConfigService,
         @InjectPinoLogger(Iso18013Service.name)
         private readonly logger: PinoLogger,
     ) {}
@@ -60,9 +67,8 @@ export class Iso18013Service {
             tenantId,
         );
 
-        const pubJwk = await this.encryptionService.getEncryptionPublicKey(
-            tenantId,
-        );
+        const pubJwk =
+            await this.encryptionService.getEncryptionPublicKey(tenantId);
         const nonce = randomBytes(16);
         const sessionId = randomUUID();
 
@@ -87,8 +93,7 @@ export class Iso18013Service {
         const namespaces: Record<string, Record<string, boolean>> = {};
         for (const claim of mdocCred.claims ?? []) {
             if (claim.path.length === 0) continue;
-            const ns =
-                claim.path.length > 1 ? claim.path[0] : docType;
+            const ns = claim.path.length > 1 ? claim.path[0] : docType;
             const claimName =
                 claim.path.length > 1 ? claim.path[1] : claim.path[0];
             if (!namespaces[ns]) namespaces[ns] = {};
@@ -160,10 +165,20 @@ export class Iso18013Service {
             );
         }
 
-        const privJwk =
-            await this.encryptionService.getEncryptionPrivateJwk(
-                session.tenantId,
-            );
+        const logContext = {
+            sessionId: session.id,
+            tenantId: session.tenantId,
+            flowType: "ISO18013" as const,
+            stage: "response_processing",
+        };
+
+        this.auditLogService.logFlowStart(logContext, {
+            action: "process_iso18013_response",
+        });
+
+        const privJwk = await this.encryptionService.getEncryptionPrivateJwk(
+            session.tenantId,
+        );
 
         const nonce = Buffer.from(session.vp_nonce!, "hex");
         const origin = session.browserOrigin!;
@@ -199,6 +214,9 @@ export class Iso18013Service {
                 status: SessionStatus.Failed,
                 errorReason: reason,
             });
+            this.auditLogService.logFlowError(logContext, err as Error, {
+                stage: "hpke_decryption",
+            });
             throw new BadRequestException("HPKE decryption failed");
         }
 
@@ -214,6 +232,45 @@ export class Iso18013Service {
             throw new BadRequestException("No mso_mdoc credential in config");
         }
 
+        // Build VerifierOptions from the credential's trusted_authorities config,
+        // mirroring the trust validation applied in the OID4VP flow.
+        const host = this.configService.getOrThrow<string>("PUBLIC_URL");
+        const tenantHost = `${host}/issuers/${session.tenantId}`;
+
+        const loteAuthorities = mdocCred.trusted_authorities?.find(
+            (auth) => auth.type === TrustedAuthorityType.ETSI_TL,
+        );
+        const federationAuthorities = mdocCred.trusted_authorities?.find(
+            (auth) => auth.type === TrustedAuthorityType.OPENID_FEDERATION,
+        );
+
+        const verifyOptions: VerifierOptions = {
+            trustListSource: {
+                lotes:
+                    loteAuthorities?.values.map((url) => ({
+                        url: url.replaceAll("<TENANT_URL>", tenantHost),
+                    })) ?? [],
+                acceptedServiceTypes: [
+                    ServiceTypeIdentifier.EaaIssuance,
+                    ServiceTypeIdentifier.PIDIssuance,
+                ],
+            },
+            federationTrustSource: federationAuthorities?.values.length
+                ? {
+                      mode: "hybrid",
+                      trustAnchors: federationAuthorities.values.map(
+                          (value) => ({
+                              entityId: value,
+                              entityConfigurationUri: `${value.replace(/\/$/, "")}/.well-known/openid-federation`,
+                          }),
+                      ),
+                  }
+                : undefined,
+            policy: {
+                requireX5c: true,
+            },
+        };
+
         const deviceResponseB64 = deviceResponseCbor.toString("base64url");
 
         // Verify the mDOC using the pre-built BrowserHandover transcript
@@ -223,8 +280,14 @@ export class Iso18013Service {
                 protocol: "iso-18013-7",
                 transcriptBytes: transcript.verifyBytes,
             },
-            { policy: { requireX5c: false } },
+            verifyOptions,
             mdocCred.claims?.map((c) => c.path),
+        );
+
+        this.auditLogService.logCredentialVerification(
+            logContext,
+            verifyResult.verified,
+            { docType: verifyResult.docType },
         );
 
         if (!verifyResult.verified) {
@@ -233,6 +296,9 @@ export class Iso18013Service {
             await this.sessionService.add(session.id, {
                 status: SessionStatus.Failed,
                 errorReason: reason,
+            });
+            this.auditLogService.logFlowError(logContext, new Error(reason), {
+                stage: "mdoc_verification",
             });
             throw new BadRequestException(reason);
         }
@@ -246,16 +312,19 @@ export class Iso18013Service {
             },
         ];
 
+        const responseCode = randomUUID();
+
         await this.sessionService.add(session.id, {
             credentials: credentials as any,
             status: SessionStatus.Completed,
+            responseCode,
             consumed: true,
             consumedAt: new Date(),
         });
 
         const webhook = session.parsedWebhook ?? config.webhook;
         if (webhook) {
-            await this.webhookService
+            const webhookResponse = await this.webhookService
                 .sendWebhook({
                     webhook,
                     session,
@@ -267,7 +336,27 @@ export class Iso18013Service {
                         { sessionId },
                         `Webhook delivery failed: ${err?.message ?? err}`,
                     );
+                    return undefined;
                 });
+
+            if (webhookResponse?.redirectUri) {
+                session.redirectUri = webhookResponse.redirectUri;
+            }
+        }
+
+        this.auditLogService.logFlowComplete(logContext, {
+            credentialCount: credentials.length,
+            webhookSent: !!webhook,
+        });
+
+        if (session.redirectUri) {
+            const processedUri = decodeURIComponent(
+                session.redirectUri,
+            ).replaceAll("{sessionId}", session.id);
+            const sep = processedUri.includes("?") ? "&" : "?";
+            return {
+                redirect_uri: `${processedUri}${sep}response_code=${responseCode}`,
+            };
         }
 
         return {};

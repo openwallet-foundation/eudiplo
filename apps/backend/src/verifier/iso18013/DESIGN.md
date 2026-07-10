@@ -411,10 +411,10 @@ const { hpkeInfo } = buildBrowserHandoverTranscript(nonce, origin, jwk.x!, jwk.y
 
 ## 12. Known limitations and future work
 
-| # | Limitation | Impact | Future work |
-|---|---|---|---|
-| 1 | `encryptionInfo` format not yet validated against a real wallet | Wallet may reject unexpected CBOR key encoding | Test with a wallet that supports `org-iso-mdoc` (e.g. Paradym, OpenWallet) |
-| 2 | Trust list not applied during verification (`requireX5c=false`) | Issuer certificate chain is not validated | Pass `VerifierOptions` the same way `presentations.service.ts` does |
-| 3 | Only the first `mso_mdoc` credential from the DCQL query is processed | Configs with multiple credentials generate only one `DocRequest` | Extend to iterate all `mso_mdoc` credentials and build multiple `DocRequest` entries |
-| 4 | `redirect_uri` not supported after ISO 18013-7 verification | Response is always an empty JSON `{}` | Add redirect logic mirroring `oid4vp.service.ts` |
-| 5 | Session audit logging not implemented | No traceability in Loki/Tempo | Add `AuditLogContext` the same way `oid4vp.service.ts` does |
+| # | Status | Limitation | Impact | Notes |
+|---|---|---|---|---|
+| 1 | Open | `encryptionInfo` format not yet validated against a real wallet | Wallet may reject unexpected CBOR key encoding | Test with a wallet that supports `org-iso-mdoc` (e.g. Paradym, OpenWallet) |
+| 2 | **Resolved** | ~~Trust list not applied during verification (`requireX5c=false`)~~ | — | `VerifierOptions` now built from `dcql_query.credentials[].trusted_authorities`, mirroring `presentations.service.ts` |
+| 3 | Open | Only the first `mso_mdoc` credential from the DCQL query is processed | Configs with multiple credentials generate only one `DocRequest` | Extend to iterate all `mso_mdoc` credentials and build multiple `DocRequest` entries |
+| 4 | **Resolved** | ~~`redirect_uri` not supported after ISO 18013-7 verification~~ | — | `processResponse()` now generates a `responseCode` and returns `redirect_uri` when the session or webhook provides one, matching the OID4VP behavior |
+| 5 | **Resolved** | ~~Session audit logging not implemented~~ | — | `AuditLogService` injected; `logFlowStart`, `logCredentialVerification`, `logFlowComplete`, and `logFlowError` calls added to `processResponse()` |
