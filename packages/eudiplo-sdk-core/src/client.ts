@@ -177,7 +177,7 @@ export interface IssuanceOfferOptions {
   txCode?: string;
   /** Flow type (default: 'pre_authorized_code') */
   flow?: 'authorization_code' | 'pre_authorized_code';
-  /** Optional authorization server URL */
+  /** Optional authorization server id from issuer configuration */
   authorizationServer?: string;
 }
 

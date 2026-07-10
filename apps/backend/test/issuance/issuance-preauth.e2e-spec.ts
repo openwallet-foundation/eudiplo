@@ -257,7 +257,7 @@ describe("Issuance - Pre-authorized Code Flow", () => {
                 response_type: "uri",
                 credentialConfigurationIds: ["pid-no-key"],
                 flow: "pre_authorized_code",
-                authorization_server: "built-in",
+                authorization_server: "issuer-built-in",
             })
             .expect(201);
 

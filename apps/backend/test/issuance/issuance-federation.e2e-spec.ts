@@ -103,6 +103,7 @@ describe("Issuance - OpenID Federation", () => {
         await updateIssuanceConfig({
             authorizationServers: [
                 {
+                    id: "external-fed-auth",
                     type: "external",
                     issuer: authServer,
                     label: authServer,
@@ -159,6 +160,7 @@ describe("Issuance - OpenID Federation", () => {
         await updateIssuanceConfig({
             authorizationServers: [
                 {
+                    id: "external-fed-auth",
                     type: "external",
                     issuer: authServer,
                     label: authServer,
@@ -200,6 +202,7 @@ describe("Issuance - OpenID Federation", () => {
         await updateIssuanceConfig({
             authorizationServers: [
                 {
+                    id: "external-fed-auth",
                     type: "external",
                     issuer: authServer,
                     label: authServer,

@@ -17,6 +17,11 @@
       ],
       "description": "The type of response expected for the offer request."
     },
+    "authorization_server": {
+      "type": "string",
+      "description": "Authorization server id from issuer configuration. If omitted, the first enabled server is used.",
+      "example": "issuer-built-in"
+    },
     "credentialClaims": {
       "type": "object",
       "additionalProperties": {
@@ -126,10 +131,6 @@
       "items": {
         "type": "string"
       }
-    },
-    "authorization_server": {
-      "type": "string",
-      "description": "Optional authorization server to be used for this issuance flow."
     },
     "webhookEndpointId": {
       "type": "string",

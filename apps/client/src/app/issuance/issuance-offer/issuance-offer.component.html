@@ -390,7 +390,7 @@
               <!-- Info about claims in auth code flow -->
               <div class="info-box">
                 <mat-icon>info</mat-icon>
-                @if (configStepForm.get('authorization_server')?.value === 'chained-as') {
+                @if (isSelectedAuthorizationServerChained()) {
                   <p>
                     The chained AS will authenticate the user via the upstream OIDC provider. Your
                     webhook will receive the user's identity (iss, sub) and token claims to resolve

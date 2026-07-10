@@ -118,10 +118,6 @@ export class IssuanceOfferComponent implements OnInit {
   availableAuthServers: string[] = [];
   availableManagedAuthorizationServers: { value: string; label: string }[] = [];
   hasChainedAuthorizationServer = false;
-  private readonly chainedAuthorizationServerOption = {
-    value: 'chained-as',
-    label: 'Chained Authorization Server',
-  };
   availableAttributeProviders: AttributeProviderEntity[] = [];
 
   // IAE status tracking for selected credential configs
@@ -270,7 +266,7 @@ export class IssuanceOfferComponent implements OnInit {
     )
       .filter((server: any) => server?.type === 'oid4vp' && !!server?.id)
       .map((server: any) => ({
-        value: `authorization-server:${server.id}`,
+        value: server.id,
         label: server.label || server.id,
       }));
     this.hasChainedAuthorizationServer = ((issuanceConfig as any)?.authorizationServers || []).some(
@@ -439,26 +435,29 @@ export class IssuanceOfferComponent implements OnInit {
       .map((server) => {
         if (server?.type === 'external' && typeof server?.issuer === 'string') {
           return {
-            value: server.issuer,
-            label: server.label || server.issuer,
+            value: server.id,
+            label: server.label || server.id,
           };
         }
 
         if (server?.type === 'oid4vp' && server?.id) {
           return {
-            value: `authorization-server:${server.id}`,
+            value: server.id,
             label: server.label || server.id,
           };
         }
 
-        if (server?.type === 'chained') {
-          return this.chainedAuthorizationServerOption;
+        if (server?.type === 'chained' && server?.id) {
+          return {
+            value: server.id,
+            label: server.label || 'Chained Authorization Server',
+          };
         }
 
-        if (server?.type === 'built-in') {
+        if (server?.type === 'built-in' && server?.id) {
           return {
-            value: 'built-in',
-            label: server.label || 'Built-in Authorization Server',
+            value: server.id,
+            label: server.label || server.id,
           };
         }
 
@@ -498,6 +497,17 @@ export class IssuanceOfferComponent implements OnInit {
     }
 
     return options[0]?.value || '';
+  }
+
+  isSelectedAuthorizationServerChained(): boolean {
+    const selectedAuthorizationServerId = this.configStepForm.get('authorization_server')?.value;
+    if (!selectedAuthorizationServerId) {
+      return false;
+    }
+
+    const servers = ((this.issuanceConfig as any)?.authorizationServers ?? []) as any[];
+    const selectedServer = servers.find((server) => server?.id === selectedAuthorizationServerId);
+    return selectedServer?.type === 'chained';
   }
 
   getForm(id: string) {

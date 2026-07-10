@@ -15,6 +15,11 @@
       "description": "Authorization server implementation type",
       "example": "external"
     },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this authorization server",
+      "example": "pid-auth"
+    },
     "label": {
       "type": "string",
       "description": "Human-friendly label for the UI",
@@ -27,7 +32,8 @@
     }
   },
   "required": [
-    "type"
+    "type",
+    "id"
   ],
   "additionalProperties": false
 }

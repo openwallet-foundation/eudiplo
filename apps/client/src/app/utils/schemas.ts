@@ -2,7 +2,7 @@ import embeddedDisclosurePolicySchemaObj from '../../../../../schemas/EmbeddedDi
 import vctSchemaObj from '../../../../../schemas/VCT.schema.json';
 import webhookSchemaObj from '../../../../../schemas/WebhookConfig.schema.json';
 import credentialConfigSchemaObj from '../../../../../schemas/CredentialConfigCreate.schema.json';
-import issuanceConfigSchemaObj from '../../../../../schemas/IssuanceDto.schema.json';
+import issuanceConfigSchemaObj from '../../../../../schemas/IssuanceConfig.schema.json';
 import DCQLObj from '../../../../../schemas/DCQL.schema.json';
 import presnetationConfigCreateSchemaObj from '../../../../../schemas/PresentationConfigCreateDto.schema.json';
 import transactionDataSchemaObj from '../../../../../schemas/TransactionData.schema.json';

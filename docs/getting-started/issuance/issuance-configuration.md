@@ -20,10 +20,12 @@ authorization, token behavior, and trust-related requirements.
 ## Configuration Fields
 
 - `authorizationServers` (array, required): Managed authorization server definitions. Must contain at least one entry and supports `external`, `oid4vp`, `chained`, and `built-in` types.
+    - Each entry must define a non-empty `id`.
+    - `id` values must be unique within the array.
+    - `id` values `built-in` and `chained-as` are reserved and cannot be used.
 - `batchSize` (number, optional): Value to determine the amount of credentials that are issued in a batch. Default is 1.
 - `dPopRequired` (boolean, optional): Indicates whether DPoP is required for the issuance process. Default value is true.
 - `signingKeyId` (string, optional): Key ID used for signing access tokens. If omitted, the default signing key for the tenant is used.
-- `preferredAuthServer` (string, optional): Preferred authorization server shown first in issuer metadata (`authorization_servers`). Supports `built-in`, `chained-as`, an explicit issuer URL, or a managed AS selection value in the form `authorization-server:<id>`.
 - `refreshTokenEnabled` (boolean, optional): Controls whether the token endpoint returns a refresh token in OID4VCI token responses. Default is `true`.
 - `refreshTokenExpiresInSeconds` (number, optional): Lifetime of issued refresh tokens in seconds. Default is `2592000` (30 days).
 - `txCodeMaxAttempts` (number, optional): Maximum failed `tx_code` attempts before invalidating pre-authorized code flow.
@@ -53,6 +55,7 @@ The array must contain at least one entry.
     "authorizationServers": [
         {
             "type": "external",
+            "id": "external-corp-idp",
             "label": "Corporate IdP",
             "issuer": "https://auth.example.com"
         },
@@ -71,6 +74,7 @@ The array must contain at least one entry.
         },
         {
             "type": "chained",
+            "id": "chained-auth",
             "enabled": true,
             "upstream": {
                 "issuer": "https://keycloak.example.com/realms/eudiplo",
@@ -84,8 +88,7 @@ The array must contain at least one entry.
                 "signingKeyId": "default"
             }
         }
-    ],
-    "preferredAuthServer": "authorization-server:pid-auth"
+    ]
 }
 ```
 
@@ -96,24 +99,25 @@ The array must contain at least one entry.
 | `external` | Uses a remote OAuth/OIDC AS via issuer URL discovery.                                         |
 | `oid4vp`   | Creates a tenant-local AS facade at `/issuers/{tenant}/authorization-servers/{id}`.           |
 | `chained`  | Creates a tenant-local chained AS facade at `/issuers/{tenant}/chained-as` via upstream OIDC. |
+| `built-in` | Uses issuer-local authorization endpoints provided by EUDIPLO.                                |
 
 ### Common Fields
 
-| Field                   | Type    | Required                | Description                                         |
-| ----------------------- | ------- | ----------------------- | --------------------------------------------------- |
-| `type`                  | string  | Yes                     | One of `external`, `oid4vp`, `chained`, `built-in`. |
-| `label`                 | string  | No                      | Optional UI label.                                  |
-| `enabled`               | boolean | No                      | Enables/disables this entry. Default `true`.        |
-| `requireDPoP`           | boolean | No (`oid4vp`/`chained`) | Require DPoP proofs on token requests for this AS.  |
-| `token.lifetimeSeconds` | number  | No (`oid4vp`/`chained`) | Access token lifetime for this AS.                  |
-| `token.signingKeyId`    | string  | No (`oid4vp`/`chained`) | Key used to sign AS-issued tokens.                  |
+| Field                   | Type    | Required                | Description                                                                             |
+| ----------------------- | ------- | ----------------------- | --------------------------------------------------------------------------------------- |
+| `id`                    | string  | Yes                     | Unique identifier used to reference this AS in offer requests (`authorization_server`). |
+| `type`                  | string  | Yes                     | One of `external`, `oid4vp`, `chained`, `built-in`.                                     |
+| `label`                 | string  | No                      | Optional UI label.                                                                      |
+| `enabled`               | boolean | No                      | Enables/disables this entry. Default `true`.                                            |
+| `requireDPoP`           | boolean | No (`oid4vp`/`chained`) | Require DPoP proofs on token requests for this AS.                                      |
+| `token.lifetimeSeconds` | number  | No (`oid4vp`/`chained`) | Access token lifetime for this AS.                                                      |
+| `token.signingKeyId`    | string  | No (`oid4vp`/`chained`) | Key used to sign AS-issued tokens.                                                      |
 
 ### Type-Specific Fields
 
 - `external`
     - `issuer` (required): External AS issuer URL.
 - `oid4vp`
-    - `id` (required): Stable identifier used in the AS URL path.
     - `presentationConfigId` (required): Presentation config used for the VP flow.
     - `immediateWalletRedirect` (optional): Redirect browser immediately to wallet request.
 - `chained`
@@ -122,16 +126,20 @@ The array must contain at least one entry.
     - `upstream.clientSecret` (optional): Client secret for confidential clients.
     - `upstream.scopes` (optional): Scopes requested upstream.
 
-### Preferred Authorization Server
+### Selecting Authorization Server for Offers
 
-`preferredAuthServer` controls ordering in the published `authorization_servers` metadata array.
+At offer creation time, set `authorization_server` to an enabled authorization server `id`.
 
-Supported values:
+Example:
 
-- `built-in`
-- `chained-as`
-- `authorization-server:<id>` (managed `oid4vp` AS)
-- Explicit issuer URL
+```json
+{
+    "response_type": "uri",
+    "flow": "authorization_code",
+    "credentialConfigurationIds": ["pid"],
+    "authorization_server": "pid-auth"
+}
+```
 
 ---
 
@@ -310,6 +318,7 @@ Example:
     "authorizationServers": [
         {
             "type": "chained",
+            "id": "chained-auth",
             "enabled": true,
             "upstream": {
                 "issuer": "https://keycloak.example.com/realms/eudiplo",
@@ -323,8 +332,7 @@ Example:
             },
             "requireDPoP": true
         }
-    ],
-    "preferredAuthServer": "chained-as"
+    ]
 }
 ```
 

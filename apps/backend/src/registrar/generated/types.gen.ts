@@ -57,9 +57,7 @@ export type IntendedUse = {
 export type Credential = {
   id: string;
   value: string;
-  format: {
-    [key: string]: unknown;
-  };
+  format: "dc+sd-jwt" | "mso_mdoc";
   createdAt: string;
 };
 
@@ -71,7 +69,8 @@ export type RegistrationCertificate = {
   id: string;
   jwt: string;
   cwt: string;
-  intendedUse: IntendedUse;
+  intendedUse?: IntendedUse;
+  providesAttestations?: Array<string>;
   relyingPartyId: string;
   revoked: string;
   credentialToRegistrationCertificates: Array<CredentialToRegistrationCertificate>;
@@ -80,9 +79,7 @@ export type RegistrationCertificate = {
 
 export type CredentialToRegistrationCertificate = {
   id: string;
-  action: {
-    [key: string]: unknown;
-  };
+  action: "provider" | "relying_party";
   credentialId: string;
   credential: Credential;
   claims?: Array<Claim>;
@@ -94,13 +91,6 @@ export type CredentialToRegistrationCertificate = {
 export type CredentialDef = {
   format: "dc+sd-jwt" | "mso_mdoc";
   claims?: Array<Claim>;
-  meta: {
-    [key: string]: unknown;
-  };
-};
-
-export type ProvidedAttestation = {
-  format: "dc+sd-jwt" | "mso_mdoc";
   meta: {
     [key: string]: unknown;
   };
@@ -121,13 +111,10 @@ export type RegistrationCertificateCreation = {
    */
   credentials?: Array<CredentialDef>;
   /**
-   * The list of provided attestations
-   */
-  provided_attestations?: Array<ProvidedAttestation>;
-  /**
    * The relying party id of the intermediary
    */
   intermediary?: string;
+  provides_attestations?: Array<string>;
   /**
    * The relying party id
    */
@@ -146,7 +133,8 @@ export type OmitTypeClass = {
   id: string;
   jwt: string;
   cwt: string;
-  intendedUse: IntendedUse;
+  intendedUse?: IntendedUse;
+  providesAttestations?: Array<string>;
   relyingPartyId: string;
   credentialToRegistrationCertificates: Array<CredentialToRegistrationCertificate>;
   createdAt: string;
@@ -186,31 +174,6 @@ export type SchemaMetadataVocabulariesDto = {
   tags: Array<VocabularyEntryDto>;
 };
 
-export type ReserveSchemaIdDto = {
-  /**
-   * Optional human-readable name hint for the schema (used in documentation only)
-   */
-  nameHint?: string;
-};
-
-export type ReservationResponseDto = {
-  /**
-   * The full reserved schema ID URL that should be used in the JWT
-   */
-  reservedId: string;
-  /**
-   * When this reservation expires (ISO 8601)
-   */
-  expiresAt: string;
-};
-
-export type SubmitSchemaMetadataDto = {
-  /**
-   * The signed schema metadata JWT
-   */
-  jwt: string;
-};
-
 export type TrustAuthority = {
   /**
    * Unique identifier for this trust authority entry.
@@ -224,6 +187,10 @@ export type TrustAuthority = {
    * URI or identifier for the trust list/authority.
    */
   value: string;
+  /**
+   * Whether this trust authority is part of the Large-Scale Pilot (LOTE).
+   */
+  isLOTE?: boolean;
   /**
    * Verification method for trust list signature (e.g., JWK).
    */
@@ -349,47 +316,16 @@ export type MetadataSchema = {
    */
   uri?: string;
   /**
-   * Inline schema content (JSON Schema).
-   */
-  schemaContent?: {
-    [key: string]: unknown;
-  };
-  /**
    * Subresource Integrity hash for the schema.
    */
   integrity?: string;
+  /**
+   * Format-specific metadata for the schema entry.
+   */
+  meta?: {
+    [key: string]: unknown;
+  };
   schemaMetadata: SchemaMetadata;
-};
-
-export type UploadAssetResponseDto = {
-  /**
-   * Asset type bucket.
-   */
-  type: "trustlists" | "rulebooks" | "schemas";
-  /**
-   * Stable URL that can be embedded into the signed JWT.
-   */
-  url: string;
-  /**
-   * Generated identifier for the uploaded asset.
-   */
-  assetId: string;
-  /**
-   * Stored file name in the catalog.
-   */
-  fileName: string;
-  /**
-   * Detected or declared content type of the uploaded file.
-   */
-  contentType: string;
-  /**
-   * Uploaded file size in bytes.
-   */
-  size: number;
-  /**
-   * Server-calculated Subresource Integrity value for the uploaded content.
-   */
-  integrity: string;
 };
 
 export type SetVersionDeprecationDto = {
@@ -744,33 +680,6 @@ export type SchemaMetadataControllerGetVocabulariesResponses = {
 export type SchemaMetadataControllerGetVocabulariesResponse =
   SchemaMetadataControllerGetVocabulariesResponses[keyof SchemaMetadataControllerGetVocabulariesResponses];
 
-export type SchemaMetadataControllerReserveSchemaIdData = {
-  /**
-   * Optional name hint for the generated ID
-   */
-  body: ReserveSchemaIdDto;
-  path?: never;
-  query?: never;
-  url: "/schema-metadata/reserve";
-};
-
-export type SchemaMetadataControllerReserveSchemaIdErrors = {
-  /**
-   * Authentication required.
-   */
-  401: unknown;
-};
-
-export type SchemaMetadataControllerReserveSchemaIdResponses = {
-  /**
-   * Schema ID reserved successfully.
-   */
-  201: ReservationResponseDto;
-};
-
-export type SchemaMetadataControllerReserveSchemaIdResponse =
-  SchemaMetadataControllerReserveSchemaIdResponses[keyof SchemaMetadataControllerReserveSchemaIdResponses];
-
 export type SchemaMetadataControllerFindAllData = {
   body?: never;
   path?: never;
@@ -797,25 +706,25 @@ export type SchemaMetadataControllerFindAllResponses = {
 export type SchemaMetadataControllerFindAllResponse =
   SchemaMetadataControllerFindAllResponses[keyof SchemaMetadataControllerFindAllResponses];
 
-export type SchemaMetadataControllerSubmitSchemaMetadataData = {
-  /**
-   * JSON payload containing the signed schema metadata JWT
-   */
-  body: SubmitSchemaMetadataDto;
+export type SchemaMetadataControllerCreateSchemaMetadataData = {
+  body: {
+    /**
+     * JSON string matching CreateSchemaMetadataMultipartDto, including schema file index mappings.
+     */
+    metadata: string;
+    rulebookFile: Blob | File;
+    schemaFiles: Array<Blob | File>;
+  };
   path?: never;
   query?: never;
   url: "/schema-metadata";
 };
 
-export type SchemaMetadataControllerSubmitSchemaMetadataErrors = {
+export type SchemaMetadataControllerCreateSchemaMetadataErrors = {
   /**
-   * Invalid JWT format or missing required fields.
+   * Invalid multipart payload, metadata JSON, or file mapping.
    */
   400: unknown;
-  /**
-   * Invalid signature or unauthorized access certificate.
-   */
-  401: unknown;
   /**
    * Only the relying party that published the initial version can publish new versions for the same schema ID.
    */
@@ -826,46 +735,15 @@ export type SchemaMetadataControllerSubmitSchemaMetadataErrors = {
   409: unknown;
 };
 
-export type SchemaMetadataControllerSubmitSchemaMetadataResponses = {
+export type SchemaMetadataControllerCreateSchemaMetadataResponses = {
   /**
-   * The schema metadata has been successfully submitted.
+   * The schema metadata has been successfully created.
    */
   201: SchemaMetadata;
 };
 
-export type SchemaMetadataControllerSubmitSchemaMetadataResponse =
-  SchemaMetadataControllerSubmitSchemaMetadataResponses[keyof SchemaMetadataControllerSubmitSchemaMetadataResponses];
-
-export type SchemaMetadataControllerUploadAssetData = {
-  body: {
-    file: Blob | File;
-  };
-  path: {
-    /**
-     * Asset bucket to upload into.
-     */
-    type: "trustlists" | "rulebooks" | "schemas";
-  };
-  query?: never;
-  url: "/schema-metadata/assets/{type}";
-};
-
-export type SchemaMetadataControllerUploadAssetErrors = {
-  /**
-   * Invalid upload payload, type, or file format.
-   */
-  400: unknown;
-};
-
-export type SchemaMetadataControllerUploadAssetResponses = {
-  /**
-   * Asset uploaded successfully.
-   */
-  201: UploadAssetResponseDto;
-};
-
-export type SchemaMetadataControllerUploadAssetResponse =
-  SchemaMetadataControllerUploadAssetResponses[keyof SchemaMetadataControllerUploadAssetResponses];
+export type SchemaMetadataControllerCreateSchemaMetadataResponse =
+  SchemaMetadataControllerCreateSchemaMetadataResponses[keyof SchemaMetadataControllerCreateSchemaMetadataResponses];
 
 export type SchemaMetadataControllerGetUploadedAssetData = {
   body?: never;
@@ -1200,40 +1078,6 @@ export type SchemaMetadataControllerExportErrors = {
 export type SchemaMetadataControllerExportResponses = {
   /**
    * The schema metadata in catalog-of-attestations JSON format.
-   */
-  200: unknown;
-};
-
-export type SchemaMetadataControllerGetSchemaData = {
-  body?: never;
-  path: {
-    /**
-     * Normalized schema identifier (reserved short ID)
-     */
-    id: string;
-    /**
-     * Schema metadata version (SemVer)
-     */
-    version: string;
-    /**
-     * Credential format identifier
-     */
-    format: string;
-  };
-  query?: never;
-  url: "/schema-metadata/{id}/versions/{version}/schemas/{format}";
-};
-
-export type SchemaMetadataControllerGetSchemaErrors = {
-  /**
-   * Schema not found.
-   */
-  404: unknown;
-};
-
-export type SchemaMetadataControllerGetSchemaResponses = {
-  /**
-   * The JSON Schema for the specified format.
    */
   200: unknown;
 };

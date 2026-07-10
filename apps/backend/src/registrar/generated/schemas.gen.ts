@@ -141,7 +141,8 @@ export const CredentialSchema = {
       type: "string",
     },
     format: {
-      type: "object",
+      type: "string",
+      enum: ["dc+sd-jwt", "mso_mdoc"],
     },
     createdAt: {
       format: "date-time",
@@ -180,6 +181,12 @@ export const RegistrationCertificateSchema = {
     intendedUse: {
       $ref: "#/components/schemas/IntendedUse",
     },
+    providesAttestations: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
     relyingPartyId: {
       type: "string",
     },
@@ -202,7 +209,6 @@ export const RegistrationCertificateSchema = {
     "id",
     "jwt",
     "cwt",
-    "intendedUse",
     "relyingPartyId",
     "revoked",
     "credentialToRegistrationCertificates",
@@ -217,7 +223,8 @@ export const CredentialToRegistrationCertificateSchema = {
       type: "string",
     },
     action: {
-      type: "object",
+      type: "string",
+      enum: ["provider", "relying_party"],
     },
     credentialId: {
       type: "string",
@@ -257,9 +264,9 @@ export const CredentialDefSchema = {
   type: "object",
   properties: {
     format: {
+      enum: ["dc+sd-jwt", "mso_mdoc"],
       type: "string",
       example: "dc+sd-jwt",
-      enum: ["dc+sd-jwt", "mso_mdoc"],
     },
     claims: {
       example: [
@@ -274,21 +281,6 @@ export const CredentialDefSchema = {
       items: {
         $ref: "#/components/schemas/Claim",
       },
-    },
-    meta: {
-      type: "object",
-    },
-  },
-  required: ["format", "meta"],
-} as const;
-
-export const ProvidedAttestationSchema = {
-  type: "object",
-  properties: {
-    format: {
-      type: "string",
-      example: "dc+sd-jwt",
-      enum: ["dc+sd-jwt", "mso_mdoc"],
     },
     meta: {
       type: "object",
@@ -342,26 +334,23 @@ export const RegistrationCertificateCreationSchema = {
         $ref: "#/components/schemas/CredentialDef",
       },
     },
-    provided_attestations: {
-      description: "The list of provided attestations",
-      example: [
-        {
-          format: "mso_mdoc",
-          meta: {
-            doctype_value: "eu.europa.ec.eudi.pid.1",
-          },
-        },
-      ],
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/ProvidedAttestation",
-      },
-    },
     intermediary: {
       type: "string",
       description: "The relying party id of the intermediary",
       maxLength: 200,
       example: "",
+    },
+    provides_attestations: {
+      default: [],
+      example: [
+        "https://example.com/attestation1",
+        "https://example.com/attestation2",
+      ],
+      type: "array",
+      items: {
+        type: "string",
+        maxLength: 2000,
+      },
     },
     rpId: {
       type: "string",
@@ -400,6 +389,12 @@ export const OmitTypeClassSchema = {
     intendedUse: {
       $ref: "#/components/schemas/IntendedUse",
     },
+    providesAttestations: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
     relyingPartyId: {
       type: "string",
     },
@@ -418,7 +413,6 @@ export const OmitTypeClassSchema = {
     "id",
     "jwt",
     "cwt",
-    "intendedUse",
     "relyingPartyId",
     "credentialToRegistrationCertificates",
     "createdAt",
@@ -440,9 +434,9 @@ export const VocabularyEntryDtoSchema = {
       example: "Identity",
     },
     status: {
+      enum: ["active", "deprecated"],
       type: "string",
       description: "Vocabulary lifecycle status.",
-      enum: ["active", "deprecated"],
       example: "active",
     },
     replacedBy: {
@@ -482,50 +476,6 @@ export const SchemaMetadataVocabulariesDtoSchema = {
   required: ["version", "categories", "tags"],
 } as const;
 
-export const ReserveSchemaIdDtoSchema = {
-  type: "object",
-  properties: {
-    nameHint: {
-      type: "string",
-      maxLength: 100,
-      description:
-        "Optional human-readable name hint for the schema (used in documentation only)",
-      example: "university-diploma",
-    },
-  },
-} as const;
-
-export const ReservationResponseDtoSchema = {
-  type: "object",
-  properties: {
-    reservedId: {
-      type: "string",
-      description:
-        "The full reserved schema ID URL that should be used in the JWT",
-      example: "https://catalog.example.com/api/schema-metadata/a1b2c3d4",
-    },
-    expiresAt: {
-      type: "string",
-      description: "When this reservation expires (ISO 8601)",
-      example: "2026-03-25T12:00:00.000Z",
-    },
-  },
-  required: ["reservedId", "expiresAt"],
-} as const;
-
-export const SubmitSchemaMetadataDtoSchema = {
-  type: "object",
-  properties: {
-    jwt: {
-      type: "string",
-      description: "The signed schema metadata JWT",
-      example:
-        "eyJhbGciOiJFUzI1NiIsInR5cCI6ImF0dGVzdGF0aW9uLXNjaGVtYStqd3QiLCJ4NWMiOlsiLi4uIl19...",
-    },
-  },
-  required: ["jwt"],
-} as const;
-
 export const TrustAuthoritySchema = {
   type: "object",
   properties: {
@@ -544,8 +494,16 @@ export const TrustAuthoritySchema = {
       description: "URI or identifier for the trust list/authority.",
       example: "https://example.org/trust-lists/gym-members.jws",
     },
+    isLOTE: {
+      type: "boolean",
+      description:
+        "Whether this trust authority is part of the Large-Scale Pilot (LOTE).",
+      example: true,
+      default: false,
+    },
     verificationMethod: {
       type: "object",
+      additionalProperties: true,
       description: "Verification method for trust list signature (e.g., JWK).",
       example: {
         type: "JsonWebKey2020",
@@ -750,73 +708,24 @@ export const MetadataSchemaSchema = {
       description: "URI to the schema definition.",
       example: "https://example.org/schemas/gym-membership.dc+sd-jwt.json",
     },
-    schemaContent: {
-      type: "object",
-      description: "Inline schema content (JSON Schema).",
-    },
     integrity: {
       type: "string",
       description: "Subresource Integrity hash for the schema.",
       example: "sha384-abc123...",
+    },
+    meta: {
+      type: "object",
+      additionalProperties: true,
+      description: "Format-specific metadata for the schema entry.",
+      example: {
+        vct: "urn:eudi:eaa:loyalty-card:1",
+      },
     },
     schemaMetadata: {
       $ref: "#/components/schemas/SchemaMetadata",
     },
   },
   required: ["id", "formatIdentifier", "schemaMetadata"],
-} as const;
-
-export const UploadAssetResponseDtoSchema = {
-  type: "object",
-  properties: {
-    type: {
-      type: "string",
-      description: "Asset type bucket.",
-      enum: ["trustlists", "rulebooks", "schemas"],
-      example: "schemas",
-    },
-    url: {
-      type: "string",
-      description: "Stable URL that can be embedded into the signed JWT.",
-      example:
-        "http://localhost:3001/schema-metadata/assets/schemas/w12xYzABcdEfgH1I.json",
-    },
-    assetId: {
-      type: "string",
-      description: "Generated identifier for the uploaded asset.",
-      example: "w12xYzABcdEfgH1I",
-    },
-    fileName: {
-      type: "string",
-      description: "Stored file name in the catalog.",
-      example: "w12xYzABcdEfgH1I.json",
-    },
-    contentType: {
-      type: "string",
-      description: "Detected or declared content type of the uploaded file.",
-      example: "application/schema+json",
-    },
-    size: {
-      type: "number",
-      description: "Uploaded file size in bytes.",
-      example: 19842,
-    },
-    integrity: {
-      type: "string",
-      description:
-        "Server-calculated Subresource Integrity value for the uploaded content.",
-      example: "sha256-u2x9pQ6M6Kx1W+9Yb4O2v2Ekr1m2X8xFq9f9d4G3k8A=",
-    },
-  },
-  required: [
-    "type",
-    "url",
-    "assetId",
-    "fileName",
-    "contentType",
-    "size",
-    "integrity",
-  ],
 } as const;
 
 export const SetVersionDeprecationDtoSchema = {

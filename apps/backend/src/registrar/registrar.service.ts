@@ -134,10 +134,6 @@ export class RegistrarService {
     // Schema metadata delegation → SchemaMetadataService
     // -------------------------------------------------------------------------
 
-    reserveSchemaId(tenantId: string, nameHint?: string) {
-        return this.schemaMetadataSvc.reserveSchemaId(tenantId, nameHint);
-    }
-
     findAllSchemaMetadata(
         tenantId: string,
         filters: { attestationId?: string; version?: string },
@@ -145,32 +141,14 @@ export class RegistrarService {
         return this.schemaMetadataSvc.findAll(tenantId, filters);
     }
 
-    submitSchemaMetadata(tenantId: string, signedJwt: string) {
-        return this.schemaMetadataSvc.submitSignedSchemaMetadata(
-            tenantId,
-            signedJwt,
-        );
-    }
-
-    uploadSchemaMetadataAssetFromUrl(
+    createSchemaMetadata(
         tenantId: string,
-        type: "trustlists" | "rulebooks" | "schemas",
-        sourceUrl: string,
-        fallbackFileName: string,
+        request: {
+            metadata: Record<string, unknown>;
+            rulebookFile: Blob | File;
+            schemaFiles: Array<Blob | File>;
+        },
     ) {
-        return this.schemaMetadataSvc.uploadAssetFromUrl(
-            tenantId,
-            type,
-            sourceUrl,
-            fallbackFileName,
-        );
-    }
-
-    uploadSchemaMetadataAsset(
-        tenantId: string,
-        type: "trustlists" | "rulebooks" | "schemas",
-        file: Blob | File,
-    ) {
-        return this.schemaMetadataSvc.uploadAsset(tenantId, type, file);
+        return this.schemaMetadataSvc.createSchemaMetadata(tenantId, request);
     }
 }

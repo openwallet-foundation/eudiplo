@@ -12,6 +12,11 @@
       "description": "Authorization server implementation type",
       "example": "built-in"
     },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this authorization server",
+      "example": "issuer-built-in"
+    },
     "label": {
       "type": "string",
       "description": "Human-friendly label for the UI",
@@ -37,7 +42,8 @@
     }
   },
   "required": [
-    "type"
+    "type",
+    "id"
   ],
   "additionalProperties": false
 }

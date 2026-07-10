@@ -11,24 +11,20 @@ import {
     UpdateSchemaMetadataDto,
 } from "./dto/schema-metadata.dto";
 import {
-    type ReservationResponseDto,
     type SchemaMetadata,
     type SchemaMetadataVocabulariesDto,
+    schemaMetadataControllerCreateSchemaMetadata,
     schemaMetadataControllerExport,
     schemaMetadataControllerFindAll,
     schemaMetadataControllerFindOne,
+    schemaMetadataControllerGetInternalMetadata,
     schemaMetadataControllerGetLatestVersionInfo,
-    schemaMetadataControllerGetSchema,
     schemaMetadataControllerGetSignedJwt,
     schemaMetadataControllerGetVocabularies,
     schemaMetadataControllerListVersions,
     schemaMetadataControllerRemove,
-    schemaMetadataControllerReserveSchemaId,
     schemaMetadataControllerSetVersionDeprecation,
-    schemaMetadataControllerSubmitSchemaMetadata,
     schemaMetadataControllerUpdateMetadata,
-    schemaMetadataControllerUploadAsset,
-    type UploadAssetResponseDto,
     schemaMetadataControllerFindAllByRelyingParty,
 } from "./generated";
 import { RegistrarAuthService } from "./registrar-auth.service";
@@ -38,7 +34,11 @@ type SchemaMetadataFilters = {
     version?: string;
 };
 
-type UploadAssetType = "trustlists" | "rulebooks" | "schemas";
+type CreateSchemaMetadataRequest = {
+    metadata: Record<string, unknown>;
+    rulebookFile: Blob | File;
+    schemaFiles: Array<Blob | File>;
+};
 
 @Injectable()
 export class SchemaMetadataService {
@@ -46,88 +46,26 @@ export class SchemaMetadataService {
 
     constructor(private readonly authService: RegistrarAuthService) {}
 
-    async uploadAsset(
+    async createSchemaMetadata(
         tenantId: string,
-        type: UploadAssetType,
-        file: Blob | File,
-    ): Promise<UploadAssetResponseDto> {
+        request: CreateSchemaMetadataRequest,
+    ): Promise<SchemaMetadata> {
         const client = await this.authService.getClient(tenantId);
-        const res = await schemaMetadataControllerUploadAsset({
+        const res = await schemaMetadataControllerCreateSchemaMetadata({
             client,
-            path: { type },
-            body: { file },
+            body: {
+                metadata: JSON.stringify(request.metadata),
+                rulebookFile: request.rulebookFile,
+                schemaFiles: request.schemaFiles,
+            },
         });
 
         if (res.error) {
             this.throwUpstreamError(
                 tenantId,
-                `upload ${type} asset`,
+                "create schema metadata",
                 res.error,
             );
-        }
-
-        return res.data!;
-    }
-
-    async uploadAssetFromUrl(
-        tenantId: string,
-        type: UploadAssetType,
-        sourceUrl: string,
-        fallbackFileName: string,
-    ): Promise<UploadAssetResponseDto> {
-        let response: Response;
-        try {
-            response = await fetch(sourceUrl);
-        } catch (error) {
-            throw new BadRequestException(
-                `Failed to fetch ${type} source (${sourceUrl}) for registrar upload: ${
-                    error instanceof Error ? error.message : String(error)
-                }`,
-            );
-        }
-
-        if (!response.ok) {
-            throw new BadRequestException(
-                `Failed to fetch ${type} source (${sourceUrl}) for registrar upload: HTTP ${response.status}`,
-            );
-        }
-
-        const contentType =
-            response.headers.get("content-type") || "application/octet-stream";
-        const bytes = await response.arrayBuffer();
-
-        const parsedName = (() => {
-            try {
-                const pathname = new URL(sourceUrl).pathname;
-                const last = pathname.split("/").filter(Boolean).pop();
-                return last || fallbackFileName;
-            } catch {
-                return fallbackFileName;
-            }
-        })();
-
-        const file =
-            typeof File === "function"
-                ? new File([bytes], parsedName, { type: contentType })
-                : (new Blob([bytes], {
-                      type: contentType,
-                  }) as Blob | File);
-
-        return this.uploadAsset(tenantId, type, file);
-    }
-
-    async reserveSchemaId(
-        tenantId: string,
-        nameHint?: string,
-    ): Promise<ReservationResponseDto> {
-        const client = await this.authService.getClient(tenantId);
-        const res = await schemaMetadataControllerReserveSchemaId({
-            client,
-            body: nameHint ? { nameHint } : {},
-        });
-
-        if (res.error) {
-            this.throwUpstreamError(tenantId, "reserve schema id", res.error);
         }
 
         return res.data!;
@@ -192,27 +130,6 @@ export class SchemaMetadataService {
         }
 
         return res.data ?? [];
-    }
-
-    async submitSignedSchemaMetadata(
-        tenantId: string,
-        signedJwt: string,
-    ): Promise<SchemaMetadata> {
-        const client = await this.authService.getClient(tenantId);
-        const res = await schemaMetadataControllerSubmitSchemaMetadata({
-            client,
-            body: { jwt: signedJwt },
-        });
-
-        if (res.error) {
-            this.throwUpstreamError(
-                tenantId,
-                "submit schema metadata",
-                res.error,
-            );
-        }
-
-        return res.data!;
     }
 
     async findOne(tenantId: string, id: string): Promise<SchemaMetadata> {
@@ -321,9 +238,9 @@ export class SchemaMetadataService {
         format: string,
     ): Promise<unknown> {
         const client = await this.authService.getClient(tenantId);
-        const res = await schemaMetadataControllerGetSchema({
+        const res = await schemaMetadataControllerGetInternalMetadata({
             client,
-            path: { id, version, format },
+            path: { id, version },
         });
 
         if (res.error) {
@@ -334,7 +251,34 @@ export class SchemaMetadataService {
             );
         }
 
-        return res.data;
+        const internal = res.data as
+            | {
+                  schemaFiles?: Array<{
+                      formatIdentifier?: string;
+                      schemaContent?: unknown;
+                  }>;
+                  schemaURIs?: Array<{
+                      formatIdentifier?: string;
+                      schemaContent?: unknown;
+                  }>;
+              }
+            | undefined;
+
+        const fromSchemaFiles = internal?.schemaFiles?.find(
+            (entry) => entry.formatIdentifier === format,
+        )?.schemaContent;
+        if (fromSchemaFiles !== undefined) {
+            return fromSchemaFiles;
+        }
+
+        const fromSchemaUris = internal?.schemaURIs?.find(
+            (entry) => entry.formatIdentifier === format,
+        )?.schemaContent;
+        if (fromSchemaUris !== undefined) {
+            return fromSchemaUris;
+        }
+
+        return internal ?? res.data;
     }
 
     async getLatest(tenantId: string, id: string): Promise<SchemaMetadata> {

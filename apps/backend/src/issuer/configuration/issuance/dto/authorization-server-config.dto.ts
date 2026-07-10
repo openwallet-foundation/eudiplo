@@ -29,6 +29,13 @@ export class ManagedAuthorizationServerConfig {
     @IsIn(["external", "oid4vp", "chained", "built-in"])
     type!: AuthorizationServerType;
 
+    @ApiProperty({
+        description: "Unique identifier for this authorization server",
+        example: "pid-auth",
+    })
+    @IsString()
+    id!: string;
+
     @ApiPropertyOptional({
         description: "Human-friendly label for the UI",
         example: "PID Authorization Server",
@@ -55,6 +62,13 @@ export class ExternalAuthorizationServerConfig extends ManagedAuthorizationServe
     @IsString()
     @IsIn(["external"])
     declare type: "external";
+
+    @ApiProperty({
+        description: "Unique identifier for this authorization server",
+        example: "external-auth",
+    })
+    @IsString()
+    declare id: string;
 
     @ApiProperty({
         description: "Issuer URL for external authorization servers",
@@ -127,6 +141,13 @@ export class ChainedAuthorizationServerConfig extends ManagedAuthorizationServer
     declare type: "chained";
 
     @ApiProperty({
+        description: "Unique identifier for this authorization server",
+        example: "chained-auth",
+    })
+    @IsString()
+    declare id: string;
+
+    @ApiProperty({
         description: "Upstream OIDC provider configuration for chained mode",
         type: () => UpstreamOidcConfig,
     })
@@ -162,6 +183,13 @@ export class BuiltInAuthorizationServerConfig extends ManagedAuthorizationServer
     @IsString()
     @IsIn(["built-in"])
     declare type: "built-in";
+
+    @ApiProperty({
+        description: "Unique identifier for this authorization server",
+        example: "issuer-built-in",
+    })
+    @IsString()
+    declare id: string;
 
     @ApiPropertyOptional({
         description: "Token configuration for this authorization server",

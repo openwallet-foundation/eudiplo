@@ -206,6 +206,17 @@
                         @if (server.get('type')?.value === 'external') {
                           <div fxLayout="column" fxLayoutGap="16px">
                             <mat-form-field>
+                              <mat-label>ID</mat-label>
+                              <input
+                                matInput
+                                id="external-auth-server-id-{{ i }}"
+                                formControlName="id"
+                                placeholder="external-auth"
+                              />
+                              <mat-hint>Unique identifier for this authorization server</mat-hint>
+                            </mat-form-field>
+
+                            <mat-form-field>
                               <mat-label>Type</mat-label>
                               <mat-select
                                 formControlName="type"
@@ -278,18 +289,16 @@
                         } @else {
                           <div fxLayout="column" fxLayoutGap="16px">
                             <div fxLayout="row" fxLayoutGap="16px">
-                              @if (server.get('type')?.value !== 'built-in') {
-                                <mat-form-field fxFlex>
-                                  <mat-label>ID</mat-label>
-                                  <input
-                                    matInput
-                                    id="managed-auth-server-id-{{ i }}"
-                                    formControlName="id"
-                                    placeholder="auth-server-id"
-                                  />
-                                  <mat-hint>Used in the AS URL path</mat-hint>
-                                </mat-form-field>
-                              }
+                              <mat-form-field fxFlex>
+                                <mat-label>ID</mat-label>
+                                <input
+                                  matInput
+                                  id="managed-auth-server-id-{{ i }}"
+                                  formControlName="id"
+                                  placeholder="auth-server-id"
+                                />
+                                <mat-hint>Unique identifier for this authorization server</mat-hint>
+                              </mat-form-field>
                               <mat-form-field fxFlex>
                                 <mat-label>Label</mat-label>
                                 <input
