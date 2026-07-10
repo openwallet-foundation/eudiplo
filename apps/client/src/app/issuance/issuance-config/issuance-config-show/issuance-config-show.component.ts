@@ -155,7 +155,7 @@ export class IssuanceConfigShowComponent implements OnInit {
         if (server?.type === 'external') {
           return {
             label: server.label || server.issuer,
-            id: '-',
+            id: server.id || '-',
             type: 'external',
             preferred: false,
             enabled: server.enabled !== false,

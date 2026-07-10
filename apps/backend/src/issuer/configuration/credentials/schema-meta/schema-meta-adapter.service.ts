@@ -180,6 +180,13 @@ export class SchemaMetaAdapterService {
         return result;
     }
 
+    async resolveTrustedAuthoritiesForRegistrar(
+        tenantId: string,
+        authorities: SchemaMetaConfig["trustedAuthorities"],
+    ): Promise<Array<Record<string, unknown>>> {
+        return this.buildTrustedAuthorities(tenantId, authorities);
+    }
+
     /**
      * Fetches the resource at `url` and returns its W3C Subresource Integrity
      * hash in `sha256-<base64>` form. Computing this server-side prevents

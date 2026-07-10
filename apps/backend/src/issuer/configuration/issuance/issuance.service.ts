@@ -177,6 +177,7 @@ export class IssuanceService {
 
         const configuredAuthorizationServers =
             effectiveAuthorizationServers as Array<{
+                id?: string;
                 type?: string;
             }>;
 
@@ -193,6 +194,32 @@ export class IssuanceService {
             throw new BadRequestException(
                 "Only one built-in authorization server can be configured",
             );
+        }
+
+        const reservedIds = new Set(["built-in", "chained-as"]);
+        const seenIds = new Set<string>();
+        for (const server of configuredAuthorizationServers) {
+            if (typeof server.id !== "string" || server.id.trim().length < 1) {
+                throw new BadRequestException(
+                    "Each authorization server must define a non-empty id",
+                );
+            }
+
+            const normalizedId = server.id.trim();
+            if (reservedIds.has(normalizedId)) {
+                throw new BadRequestException(
+                    `Authorization server id '${normalizedId}' is reserved`,
+                );
+            }
+
+            if (seenIds.has(normalizedId)) {
+                throw new BadRequestException(
+                    `Authorization server id '${normalizedId}' is duplicated`,
+                );
+            }
+
+            seenIds.add(normalizedId);
+            server.id = normalizedId;
         }
 
         const before =

@@ -58,8 +58,6 @@ type ChainedManagedAuthorizationServerConfig =
 
 @Injectable()
 export class AuthorizationServersService {
-    static readonly selectionPrefix = "authorization-server:";
-
     private readonly logger = new Logger(AuthorizationServersService.name);
     private readonly requestUriPrefix = "urn:ietf:params:oauth:request_uri:";
     private readonly sessionLifetimeSeconds = 600;
@@ -76,20 +74,6 @@ export class AuthorizationServersService {
         @InjectRepository(ChainedAsSessionEntity)
         private readonly sessionRepository: Repository<ChainedAsSessionEntity>,
     ) {}
-
-    getSelectionValue(id: string): string {
-        return `${AuthorizationServersService.selectionPrefix}${id}`;
-    }
-
-    isSelectionValue(value: string | undefined): boolean {
-        return !!value?.startsWith(AuthorizationServersService.selectionPrefix);
-    }
-
-    extractAuthorizationServerId(selection: string): string {
-        return selection.slice(
-            AuthorizationServersService.selectionPrefix.length,
-        );
-    }
 
     getAuthorizationServerBaseUrl(
         tenantId: string,
@@ -191,32 +175,19 @@ export class AuthorizationServersService {
         );
     }
 
-    async resolveSelectionToIssuer(
-        tenantId: string,
-        selection: string | undefined,
-    ): Promise<string | undefined> {
-        if (!selection || !this.isSelectionValue(selection)) {
-            return selection;
-        }
-
-        const authorizationServerId =
-            this.extractAuthorizationServerId(selection);
-        await this.getAuthorizationServerConfig(
-            tenantId,
-            authorizationServerId,
-        );
-        return this.getAuthorizationServerBaseUrl(
-            tenantId,
-            authorizationServerId,
-        );
-    }
-
     async getDefaultAuthorizationServerUrl(
         tenantId: string,
-        preferredSelection?: string,
+        preferredAuthorizationServerId?: string,
     ): Promise<string | undefined> {
-        if (preferredSelection && this.isSelectionValue(preferredSelection)) {
-            return this.resolveSelectionToIssuer(tenantId, preferredSelection);
+        if (preferredAuthorizationServerId) {
+            await this.getAuthorizationServerConfig(
+                tenantId,
+                preferredAuthorizationServerId,
+            );
+            return this.getAuthorizationServerBaseUrl(
+                tenantId,
+                preferredAuthorizationServerId,
+            );
         }
 
         const configs = await this.getEnabledAuthorizationServers(tenantId);

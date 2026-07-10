@@ -22,7 +22,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
-import { IssuanceDto, type SchemaMetadataResponseDto } from '@eudiplo/sdk-core';
+import { IssuanceConfig, UpdateIssuanceDto, type SchemaMetadataResponseDto } from '@eudiplo/sdk-core';
 import { IssuanceConfigService } from '../issuance-config.service';
 import { issuanceConfigSchema } from '../../../utils/schemas';
 import { JsonViewDialogComponent } from '../../credential-config/credential-config-create/json-view-dialog/json-view-dialog.component';
@@ -113,7 +113,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
         privacyPolicy: [''],
         supportUri: [''],
       }),
-    } as { [k in keyof IssuanceDto]: any });
+    } as { [k in keyof IssuanceConfig]: any });
   }
 
   ngOnInit(): void {
@@ -179,6 +179,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
             authorizationServersArray.push(
               this.createAuthorizationServerGroup({
                 type: 'external',
+                id: server.id ?? `external-${index + 1}`,
                 issuer: server.issuer ?? '',
                 label: server.label ?? server.issuer ?? '',
               })
@@ -220,6 +221,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
             authorizationServersArray.push(
               this.createAuthorizationServerGroup({
                 type: 'built-in',
+                id: server.id ?? 'issuer-built-in',
                 label: server.label ?? 'Built-in Authorization Server',
                 enabled: server.enabled ?? true,
                 requireDPoP: server.requireDPoP ?? false,
@@ -351,10 +353,12 @@ export class IssuanceConfigCreateComponent implements OnInit {
       ? formValue.authorizationServers
           .filter((server: any) => {
             if (server?.type === 'external') {
-              return typeof server?.issuer === 'string' && server.issuer.trim().length > 0;
-            }
-            if (server?.type === 'built-in') {
-              return true;
+              return (
+                typeof server?.id === 'string' &&
+                server.id.trim().length > 0 &&
+                typeof server?.issuer === 'string' &&
+                server.issuer.trim().length > 0
+              );
             }
             return typeof server?.id === 'string' && server.id.trim().length > 0;
           })
@@ -362,6 +366,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
             if (server.type === 'external') {
               const issuer = server.issuer.trim();
               return {
+                id: server.id.trim(),
                 type: 'external',
                 issuer,
                 label: server.label?.trim() || issuer,
@@ -370,6 +375,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
 
             if (server.type === 'built-in') {
               return {
+                id: server.id.trim(),
                 type: 'built-in',
                 label: server.label?.trim() || 'Built-in Authorization Server',
                 enabled: server.enabled ?? true,
@@ -547,7 +553,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
       parseResult.value
     );
 
-    const issuanceDto = {
+    const issuanceDto: UpdateIssuanceDto = {
       batchSize: formValue.batchSize,
       display: formValue.display,
       dPopRequired: formValue.dPopRequired,
@@ -555,15 +561,15 @@ export class IssuanceConfigCreateComponent implements OnInit {
       credentialRequestEncryption: formValue.credentialRequestEncryption ?? false,
       txCodeMaxAttempts: formValue.txCodeMaxAttempts ?? undefined,
       authorizationServers:
-        unifiedAuthorizationServers.length > 0 ? unifiedAuthorizationServers : undefined,
+        unifiedAuthorizationServers.length > 0 ? unifiedAuthorizationServers : [],
       walletAttestationRequired: formValue.walletAttestationRequired,
       walletProviderTrustLists:
         formValue.walletProviderTrustLists?.length > 0
           ? formValue.walletProviderTrustLists
           : undefined,
-      federation: this.buildFederationConfig(formValue.federation),
+      federation: this.buildFederationConfig(formValue.federation) ?? undefined,
       registrationCertificate,
-    } as IssuanceDto;
+    };
 
     this.issuanceConfigService
       .saveConfiguration(issuanceDto)
@@ -583,7 +589,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
       });
   }
 
-  private buildFederationConfig(federationFormValue: unknown): IssuanceDto['federation'] | null {
+  private buildFederationConfig(federationFormValue: unknown): IssuanceConfig['federation'] | null {
     if (!federationFormValue || typeof federationFormValue !== 'object') {
       return null;
     }
@@ -643,6 +649,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
     if (value?.type === 'external') {
       return this.fb.group({
         type: ['external', Validators.required],
+        id: [value?.id ?? '', Validators.required],
         issuer: [value?.issuer ?? '', Validators.required],
         label: [value?.label ?? ''],
       });
@@ -651,6 +658,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
     if (value?.type === 'built-in') {
       return this.fb.group({
         type: ['built-in', Validators.required],
+        id: [value?.id ?? 'issuer-built-in', Validators.required],
         label: [value?.label ?? 'Built-in Authorization Server', Validators.required],
         enabled: [value?.enabled ?? true],
         requireDPoP: [value?.requireDPoP ?? false],

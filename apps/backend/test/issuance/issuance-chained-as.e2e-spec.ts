@@ -260,6 +260,7 @@ describe("Issuance - Chained AS Flow", () => {
                 ...currentConfig,
                 authorizationServers: [
                     {
+                        id: "chained-auth",
                         type: "chained",
                         enabled: true,
                         upstream: {
@@ -298,6 +299,7 @@ describe("Issuance - Chained AS Flow", () => {
                 ...currentConfig,
                 authorizationServers: [
                     {
+                        id: "chained-auth",
                         type: "chained",
                         enabled: true,
                         vp: {

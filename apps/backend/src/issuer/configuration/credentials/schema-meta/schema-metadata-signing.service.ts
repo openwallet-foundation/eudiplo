@@ -147,14 +147,58 @@ export class SchemaMetadataSigningService {
         };
     }
 
-    private async uploadSchemaAssetFromCredentialConfig(
+    private async fetchRemoteFile(
+        sourceUrl: string,
+        fallbackFileName: string,
+        label: string,
+    ): Promise<Blob | File> {
+        let response: Response;
+        try {
+            response = await fetch(sourceUrl);
+        } catch (error) {
+            throw new BadRequestException(
+                `Failed to fetch ${label} (${sourceUrl}): ${
+                    error instanceof Error ? error.message : String(error)
+                }`,
+            );
+        }
+
+        if (!response.ok) {
+            throw new BadRequestException(
+                `Failed to fetch ${label} (${sourceUrl}): HTTP ${response.status}`,
+            );
+        }
+
+        const contentType =
+            response.headers.get("content-type") || "application/octet-stream";
+        const bytes = await response.arrayBuffer();
+
+        const parsedName = (() => {
+            try {
+                const pathname = new URL(sourceUrl).pathname;
+                const segments = pathname.split("/");
+                const last = segments.findLast((segment) => segment.length > 0);
+                return last || fallbackFileName;
+            } catch {
+                return fallbackFileName;
+            }
+        })();
+
+        return typeof File === "function"
+            ? new File([bytes], parsedName, { type: contentType })
+            : (new Blob([bytes], {
+                  type: contentType,
+              }) as Blob | File);
+    }
+
+    private async buildSchemaFileFromCredentialConfig(
         tenantId: string,
         credentialConfigId: string,
         fallbackFormat?: string,
     ): Promise<{
         format: string;
-        uri: string;
         meta: SchemaURIMeta;
+        file: Blob | File;
     }> {
         const existing = await this.credentialsService.getById(
             tenantId,
@@ -171,7 +215,7 @@ export class SchemaMetadataSigningService {
 
         const fileName = `schema-${credentialConfigId}-${format}.json`;
         const schemaContent = JSON.stringify(schema, null, 2);
-        const schemaAsset =
+        const schemaFile =
             typeof File === "function"
                 ? new File([schemaContent], fileName, {
                       type: "application/schema+json",
@@ -180,76 +224,76 @@ export class SchemaMetadataSigningService {
                       type: "application/schema+json",
                   });
 
-        const uploadedSchema =
-            await this.registrarService.uploadSchemaMetadataAsset(
-                tenantId,
-                "schemas",
-                schemaAsset,
-            );
-
         return {
             format,
-            uri: uploadedSchema.url,
             meta: this.deriveSchemaUriMetadata(existing, format),
+            file: schemaFile,
         };
     }
 
-    private async uploadSchemaMetaAssetsToRegistrar(
+    private async resolveSchemaEntries(
         tenantId: string,
         config: SignSchemaMetaConfigDto["config"],
-        options?: { schemaUrisAlreadyHosted?: boolean },
-    ): Promise<SignSchemaMetaConfigDto["config"]> {
-        const uploadedRulebook =
-            await this.registrarService.uploadSchemaMetadataAssetFromUrl(
-                tenantId,
-                "rulebooks",
-                config.rulebookURI,
-                `rulebook-${config.version}.md`,
+        credentialConfigId?: string,
+    ): Promise<
+        Array<{
+            format: string;
+            meta: SchemaURIMeta;
+            file: Blob | File;
+        }>
+    > {
+        let requestedEntries = config.schemaURIs ?? [];
+        if (requestedEntries.length === 0 && credentialConfigId) {
+            requestedEntries = [{ credentialConfigId }];
+        }
+
+        if (requestedEntries.length === 0) {
+            throw new BadRequestException(
+                "At least one schemaURIs entry is required. Provide schemaURIs or credentialConfigId.",
             );
+        }
 
-        const uploadedSchemaURIs = options?.schemaUrisAlreadyHosted
-            ? (config.schemaURIs ?? [])
-            : await Promise.all(
-                  (config.schemaURIs ?? []).map(async (entry) => {
-                      if (entry.credentialConfigId) {
-                          return this.uploadSchemaAssetFromCredentialConfig(
-                              tenantId,
-                              entry.credentialConfigId,
-                              entry.format,
-                          );
-                      }
+        return Promise.all(
+            requestedEntries.map(async (entry, index) => {
+                if (entry.credentialConfigId) {
+                    return this.buildSchemaFileFromCredentialConfig(
+                        tenantId,
+                        entry.credentialConfigId,
+                        entry.format,
+                    );
+                }
 
-                      if (!entry.uri) {
-                          throw new BadRequestException(
-                              "schemaURIs entry requires either credentialConfigId or uri",
-                          );
-                      }
+                if (!entry.uri) {
+                    throw new BadRequestException(
+                        `schemaURIs[${index}] requires either credentialConfigId or uri`,
+                    );
+                }
 
-                      if (!entry.meta) {
-                          throw new BadRequestException(
-                              "schemaURIs metadata is required for manual schema URI entries.",
-                          );
-                      }
+                if (!entry.format) {
+                    throw new BadRequestException(
+                        `schemaURIs[${index}].format is required for manual schema URI entries`,
+                    );
+                }
 
-                      const uploadedSchema =
-                          await this.registrarService.uploadSchemaMetadataAssetFromUrl(
-                              tenantId,
-                              "schemas",
-                              entry.uri,
-                              `schema-${entry.format}.json`,
-                          );
-                      return {
-                          ...entry,
-                          uri: uploadedSchema.url,
-                      };
-                  }),
-              );
+                if (!entry.meta) {
+                    throw new BadRequestException(
+                        `schemaURIs[${index}].meta is required for manual schema URI entries`,
+                    );
+                }
 
-        return {
-            ...config,
-            rulebookURI: uploadedRulebook.url,
-            schemaURIs: uploadedSchemaURIs,
-        };
+                const file = await this.fetchRemoteFile(
+                    entry.uri,
+                    `schema-${entry.format}.json`,
+                    "schema",
+                );
+
+                return {
+                    format: entry.format,
+                    meta: entry.meta,
+                    file,
+                };
+            }),
+        );
     }
 
     private normalizeConfigFromFormInput(
@@ -275,42 +319,62 @@ export class SchemaMetadataSigningService {
         };
     }
 
-    private async ensureSchemaUrisFromCredentialConfig(
-        tenantId: string,
+    private buildRegistrarMetadata(
         config: SignSchemaMetaConfigDto["config"],
-        credentialConfigId?: string,
-    ): Promise<{
-        config: SignSchemaMetaConfigDto["config"];
-        alreadyHosted: boolean;
-    }> {
-        if (config.schemaURIs?.length || !credentialConfigId) {
-            return { config, alreadyHosted: false };
+        schemaEntries: Array<{ format: string; meta: SchemaURIMeta }>,
+        trustedAuthorities: Array<Record<string, unknown>>,
+    ): Record<string, unknown> {
+        
+
+        const metadata: Record<string, unknown> = {
+            ...(config.id ? { id: config.id } : {}),
+            version: config.version,
+            attestationLoS: config.attestationLoS,
+            bindingType: config.bindingType,
+            trustedAuthorities,
+        };
+
+        const category = (config as { category?: unknown }).category;
+        if (typeof category === "string") {
+            metadata.category = category;
         }
 
-        const existing = await this.credentialsService.getById(
-            tenantId,
-            credentialConfigId,
-        );
-        const format = existing.config?.format ?? "dc+sd-jwt";
-        const uploadedSchema = await this.uploadSchemaAssetFromCredentialConfig(
-            tenantId,
-            credentialConfigId,
-            format,
-        );
+        const tags = (config as { tags?: unknown }).tags;
+        if (Array.isArray(tags) && tags.every((tag) => typeof tag === "string")) {
+            metadata.tags = tags;
+        }
 
-        return {
-            config: {
-                ...config,
-                schemaURIs: [
-                    {
-                        format: uploadedSchema.format,
-                        uri: uploadedSchema.uri,
-                        meta: uploadedSchema.meta,
-                    },
-                ],
-            },
-            alreadyHosted: true,
-        };
+        metadata.schemas = schemaEntries.map((entry, fileIndex) => {
+            let schemaTypeIdentifier: string | undefined;
+
+            if (entry.format === "dc+sd-jwt") {
+                const vct = (entry.meta as { vct?: unknown })?.vct;
+                if (typeof vct === "string" && vct.length > 0) {
+                    schemaTypeIdentifier = vct;
+                }
+            } else if (entry.format === "mso_mdoc") {
+                const docType =
+                    (entry.meta as { doctype_value?: unknown })?.doctype_value ??
+                    (entry.meta as { doctype?: unknown })?.doctype;
+                if (typeof docType === "string" && docType.length > 0) {
+                    schemaTypeIdentifier = docType;
+                }
+            }
+
+            if (!schemaTypeIdentifier) {
+                throw new BadRequestException(
+                    `Unable to derive schemaTypeIdentifier for format '${entry.format}'.`,
+                );
+            }
+
+            return {
+                formatIdentifier: entry.format,
+                fileIndex,
+                schemaTypeIdentifier,
+            };
+        });
+
+        return metadata;
     }
 
     async signSchemaMetaConfig(
@@ -319,35 +383,33 @@ export class SchemaMetadataSigningService {
     ) {
         const normalizedConfig = this.normalizeConfigFromFormInput(body.config);
 
-        const { config: derivedConfig, alreadyHosted } =
-            await this.ensureSchemaUrisFromCredentialConfig(
-                tenantId,
+        const [rulebookFile, schemaEntries, trustedAuthorities] =
+            await Promise.all([
+                this.fetchRemoteFile(
+                    normalizedConfig.rulebookURI,
+                    `rulebook-${normalizedConfig.version}.md`,
+                    "rulebook",
+                ),
+                this.resolveSchemaEntries(
+                    tenantId,
+                    normalizedConfig,
+                    body.credentialConfigId,
+                ),
+                this.schemaMetaAdapterService.resolveTrustedAuthoritiesForRegistrar(
+                    tenantId,
+                    normalizedConfig.trustedAuthorities,
+                ),
+            ]);
+
+        const result = await this.registrarService.createSchemaMetadata(tenantId, {
+            metadata: this.buildRegistrarMetadata(
                 normalizedConfig,
-                body.credentialConfigId,
-            );
-
-        let configToSign = derivedConfig;
-
-        configToSign = await this.uploadSchemaMetaAssetsToRegistrar(
-            tenantId,
-            configToSign,
-            { schemaUrisAlreadyHosted: alreadyHosted },
-        );
-
-        const { reservedId } =
-            await this.registrarService.reserveSchemaId(tenantId);
-
-        const signed =
-            await this.schemaMetaAdapterService.signRawSchemaMetaConfig(
-                tenantId,
-                { ...configToSign, id: reservedId },
-                body.keyChainId,
-            );
-
-        const result = await this.registrarService.submitSchemaMetadata(
-            tenantId,
-            signed.jws,
-        );
+                schemaEntries,
+                trustedAuthorities,
+            ),
+            rulebookFile,
+            schemaFiles: schemaEntries.map((entry) => entry.file),
+        });
 
         if (body.credentialConfigId) {
             const existing = await this.credentialsService.getById(
@@ -356,8 +418,8 @@ export class SchemaMetadataSigningService {
             );
             const schemaMetaForLink = {
                 ...existing.schemaMeta,
-                ...configToSign,
-                id: reservedId,
+                ...normalizedConfig,
+                id: result.id,
             };
             await this.credentialsService.update(
                 tenantId,
@@ -383,18 +445,28 @@ export class SchemaMetadataSigningService {
             );
         }
 
-        const configToSign = await this.uploadSchemaMetaAssetsToRegistrar(
-            tenantId,
-            normalizedConfig,
-        );
+        const [rulebookFile, schemaEntries, trustedAuthorities] =
+            await Promise.all([
+                this.fetchRemoteFile(
+                    normalizedConfig.rulebookURI,
+                    `rulebook-${normalizedConfig.version}.md`,
+                    "rulebook",
+                ),
+                this.resolveSchemaEntries(tenantId, normalizedConfig),
+                this.schemaMetaAdapterService.resolveTrustedAuthoritiesForRegistrar(
+                    tenantId,
+                    normalizedConfig.trustedAuthorities,
+                ),
+            ]);
 
-        const signed =
-            await this.schemaMetaAdapterService.signRawSchemaMetaConfig(
-                tenantId,
-                configToSign,
-                body.keyChainId,
-            );
-
-        return this.registrarService.submitSchemaMetadata(tenantId, signed.jws);
+        return this.registrarService.createSchemaMetadata(tenantId, {
+            metadata: this.buildRegistrarMetadata(
+                normalizedConfig,
+                schemaEntries,
+                trustedAuthorities,
+            ),
+            rulebookFile,
+            schemaFiles: schemaEntries.map((entry) => entry.file),
+        });
     }
 }

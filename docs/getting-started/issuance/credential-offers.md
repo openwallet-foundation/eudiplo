@@ -27,7 +27,7 @@ When creating an offer, you can:
 
 1. Define the flow with `flow`
 2. Select the credentials with `credentialConfigurationIds`
-3. Optionally select an external authorization server with `authorization_server`
+3. Optionally select a configured authorization server by `id` with `authorization_server`
 4. Optionally override claims with `credentialClaims`
 5. Optionally enable a transaction code with `tx_code` and `tx_code_description`
 6. Optionally configure notifications with `webhookEndpointId`
@@ -37,7 +37,7 @@ When creating an offer, you can:
 - `response_type` - how the offer is returned to the caller
 - `flow` - `pre_authorized_code` or `authorization_code`
 - `credentialConfigurationIds` - list of credential configuration IDs to include in the offer
-- `authorization_server` - optional authorization server identifier for flows using an external AS
+- `authorization_server` - optional authorization server `id` from issuance configuration
 - `credentialClaims` - optional per-credential claims source override
 - `tx_code` - optional transaction code for pre-authorized flows
 - `tx_code_description` - optional prompt shown with the transaction code
@@ -74,10 +74,12 @@ When creating an offer, you can:
 {
     "response_type": "uri",
     "flow": "authorization_code",
-    "authorization_server": "https://keycloak.example.com/realms/myrealm",
+    "authorization_server": "external-corp-idp",
     "credentialConfigurationIds": ["employee_badge"]
 }
 ```
+
+`authorization_server` must match the `id` of an enabled entry in `authorizationServers`.
 
 ---
 

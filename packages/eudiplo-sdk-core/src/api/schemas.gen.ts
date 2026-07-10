@@ -1233,6 +1233,7 @@ export const SessionSchema = {
             ]
         },
         offer: {
+            nullable: true,
             description: 'Credential offer object containing details about the credential offer or presentation request.\nEncrypted at rest.',
             type: 'object'
         },
@@ -1339,7 +1340,7 @@ export const SessionSchema = {
         consumedAt: {
             format: 'date-time',
             type: 'string',
-            description: 'Timestamp when the session offer was consumed.\nNull if the offer has not yet been consumed.'
+            description: 'Timestamp of the first consumption event for the session offer.\nFor OID4VCI this can be URI resolution or later flow completion.\nNull if no consumption event has happened yet.'
         }
     },
     required: [
@@ -1713,6 +1714,154 @@ export const AuthenticationMethodPresentationSchema = {
     ]
 } as const;
 
+export const ManagedAuthorizationServerConfigSchema = {
+    type: 'object',
+    properties: {
+        type: {
+            enum: [
+                'external',
+                'oid4vp',
+                'chained',
+                'built-in'
+            ],
+            type: 'string',
+            description: 'Authorization server implementation type',
+            example: 'external'
+        },
+        label: {
+            type: 'string',
+            description: 'Human-friendly label for the UI',
+            example: 'PID Authorization Server'
+        },
+        enabled: {
+            type: 'boolean',
+            description: 'Whether this managed authorization server is enabled',
+            default: true
+        }
+    },
+    required: [
+        'type'
+    ]
+} as const;
+
+export const ExternalAuthorizationServerConfigSchema = {
+    type: 'object',
+    properties: {
+        type: {
+            enum: [
+                'external'
+            ],
+            type: 'string',
+            description: 'Authorization server implementation type',
+            example: 'external'
+        },
+        label: {
+            type: 'string',
+            description: 'Human-friendly label for the UI',
+            example: 'PID Authorization Server'
+        },
+        enabled: {
+            type: 'boolean',
+            description: 'Whether this managed authorization server is enabled',
+            default: true
+        },
+        issuer: {
+            type: 'string',
+            format: 'uri',
+            description: 'Issuer URL for external authorization servers',
+            example: 'https://auth.example.com'
+        }
+    },
+    required: [
+        'type',
+        'issuer'
+    ]
+} as const;
+
+export const ChainedAsTokenConfigSchema = {
+    type: 'object',
+    properties: {
+        lifetimeSeconds: {
+            type: 'number',
+            description: 'Access token lifetime in seconds',
+            minimum: 60,
+            default: 3600
+        },
+        signingKeyId: {
+            type: 'string',
+            description: 'Key ID for token signing'
+        },
+        refreshTokenEnabled: {
+            type: 'boolean',
+            description: 'Whether refresh tokens should be issued',
+            default: true
+        },
+        refreshTokenExpiresInSeconds: {
+            type: 'number',
+            description: 'Refresh token lifetime in seconds',
+            minimum: 60,
+            default: 2592000
+        }
+    }
+} as const;
+
+export const Oid4VpAuthorizationServerConfigSchema = {
+    type: 'object',
+    properties: {
+        type: {
+            enum: [
+                'oid4vp'
+            ],
+            type: 'string',
+            description: 'Authorization server implementation type',
+            example: 'oid4vp'
+        },
+        label: {
+            type: 'string',
+            description: 'Human-friendly label for the UI',
+            example: 'PID Authorization Server'
+        },
+        enabled: {
+            type: 'boolean',
+            description: 'Whether this managed authorization server is enabled',
+            default: true
+        },
+        id: {
+            type: 'string',
+            description: 'Stable identifier used in the AS URL path',
+            example: 'pid-auth'
+        },
+        presentationConfigId: {
+            type: 'string',
+            description: 'Presentation configuration ID to use for OID4VP',
+            example: 'playground-pid'
+        },
+        immediateWalletRedirect: {
+            type: 'boolean',
+            description: 'Immediately redirect the browser into the wallet OID4VP request',
+            default: true
+        },
+        token: {
+            description: 'Token configuration for this authorization server',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/ChainedAsTokenConfig'
+                }
+            ]
+        },
+        requireDPoP: {
+            type: 'boolean',
+            description: 'Require DPoP for token requests issued by this authorization server',
+            default: false
+        }
+    },
+    required: [
+        'type',
+        'id',
+        'presentationConfigId'
+    ]
+} as const;
+
 export const UpstreamOidcConfigSchema = {
     type: 'object',
     properties: {
@@ -1749,50 +1898,26 @@ export const UpstreamOidcConfigSchema = {
     ]
 } as const;
 
-export const ChainedAsTokenConfigSchema = {
+export const ChainedAuthorizationServerConfigSchema = {
     type: 'object',
     properties: {
-        lifetimeSeconds: {
-            type: 'number',
-            description: 'Access token lifetime in seconds',
-            minimum: 60,
-            default: 3600
-        },
-        signingKeyId: {
+        type: {
+            enum: [
+                'chained'
+            ],
             type: 'string',
-            description: 'Key ID for token signing'
-        }
-    }
-} as const;
-
-export const ManagedAuthorizationServerConfigSchema = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'string',
-            description: 'Stable identifier used in the AS URL path',
-            example: 'pid-auth'
+            description: 'Authorization server implementation type',
+            example: 'chained'
         },
         label: {
             type: 'string',
             description: 'Human-friendly label for the UI',
             example: 'PID Authorization Server'
         },
-        type: {
-            enum: [
-                'external',
-                'oid4vp',
-                'chained'
-            ],
-            type: 'string',
-            description: 'Authorization server implementation type',
-            example: 'external'
-        },
-        issuer: {
-            type: 'string',
-            format: 'uri',
-            description: 'Issuer URL for external authorization servers',
-            example: 'https://auth.example.com'
+        enabled: {
+            type: 'boolean',
+            description: 'Whether this managed authorization server is enabled',
+            default: true
         },
         upstream: {
             description: 'Upstream OIDC provider configuration for chained mode',
@@ -1802,19 +1927,45 @@ export const ManagedAuthorizationServerConfigSchema = {
                 }
             ]
         },
+        token: {
+            description: 'Token configuration for this authorization server',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/ChainedAsTokenConfig'
+                }
+            ]
+        },
+        requireDPoP: {
+            type: 'boolean',
+            description: 'Require DPoP for token requests issued by this authorization server',
+            default: false
+        }
+    },
+    required: [
+        'type',
+        'upstream'
+    ]
+} as const;
+
+export const BuiltInAuthorizationServerConfigSchema = {
+    type: 'object',
+    properties: {
+        type: {
+            enum: [
+                'built-in'
+            ],
+            type: 'string',
+            description: 'Authorization server implementation type',
+            example: 'built-in'
+        },
+        label: {
+            type: 'string',
+            description: 'Human-friendly label for the UI',
+            example: 'PID Authorization Server'
+        },
         enabled: {
             type: 'boolean',
             description: 'Whether this managed authorization server is enabled',
-            default: true
-        },
-        presentationConfigId: {
-            type: 'string',
-            description: 'Presentation configuration ID to use for OID4VP',
-            example: 'playground-pid'
-        },
-        immediateWalletRedirect: {
-            type: 'boolean',
-            description: 'Immediately redirect the browser into the wallet OID4VP request',
             default: true
         },
         token: {
@@ -2034,11 +2185,33 @@ export const IssuanceConfigSchema = {
             description: 'Key ID for signing access tokens. If unset, the default signing key is used.'
         },
         authorizationServers: {
-            nullable: true,
-            description: 'Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.',
             type: 'array',
+            description: 'Dedicated managed authorization servers hosted by this issuer. At least one entry is required.',
+            minItems: 1,
             items: {
-                $ref: '#/components/schemas/ManagedAuthorizationServerConfig'
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/ExternalAuthorizationServerConfig'
+                    },
+                    {
+                        $ref: '#/components/schemas/Oid4VpAuthorizationServerConfig'
+                    },
+                    {
+                        $ref: '#/components/schemas/ChainedAuthorizationServerConfig'
+                    },
+                    {
+                        $ref: '#/components/schemas/BuiltInAuthorizationServerConfig'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'type',
+                    mapping: {
+                        external: '#/components/schemas/ExternalAuthorizationServerConfig',
+                        oid4vp: '#/components/schemas/Oid4VpAuthorizationServerConfig',
+                        chained: '#/components/schemas/ChainedAuthorizationServerConfig',
+                        'built-in': '#/components/schemas/BuiltInAuthorizationServerConfig'
+                    }
+                }
             }
         },
         federation: {
@@ -2072,11 +2245,6 @@ export const IssuanceConfigSchema = {
                 }
             ]
         },
-        refreshTokenEnabled: {
-            type: 'boolean',
-            description: 'Whether refresh tokens should be issued for OID4VCI token responses.',
-            default: true
-        },
         credentialResponseEncryption: {
             type: 'boolean',
             description: 'Whether `credential_response_encryption` should be advertised in the credential issuer metadata.',
@@ -2086,12 +2254,6 @@ export const IssuanceConfigSchema = {
             type: 'boolean',
             description: 'Whether `credential_request_encryption` should be advertised in the credential issuer metadata.',
             default: false
-        },
-        refreshTokenExpiresInSeconds: {
-            type: 'number',
-            description: 'Refresh token lifetime in seconds. Defaults to 2592000 (30 days).',
-            default: 2592000,
-            nullable: true
         },
         txCodeMaxAttempts: {
             type: 'number',
@@ -2126,10 +2288,6 @@ export const IssuanceConfigSchema = {
                 type: 'string'
             }
         },
-        preferredAuthServer: {
-            type: 'string',
-            description: 'The URL of the preferred authorization server for wallet-initiated flows.\nWhen set, this AS is placed first in the `authorization_servers` array\nof the credential issuer metadata, signaling wallets to use it by default.\nMust match one of the configured auth servers, the chained AS URL, or "built-in".'
-        },
         display: {
             type: 'array',
             items: {
@@ -2148,6 +2306,7 @@ export const IssuanceConfigSchema = {
         }
     },
     required: [
+        'authorizationServers',
         'tenant',
         'display',
         'createdAt',
@@ -2155,7 +2314,7 @@ export const IssuanceConfigSchema = {
     ]
 } as const;
 
-export const IssuanceDtoSchema = {
+export const UpdateIssuanceDtoSchema = {
     type: 'object',
     properties: {
         signingKeyId: {
@@ -2163,11 +2322,33 @@ export const IssuanceDtoSchema = {
             description: 'Key ID for signing access tokens. If unset, the default signing key is used.'
         },
         authorizationServers: {
-            nullable: true,
-            description: 'Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.',
             type: 'array',
+            description: 'Dedicated managed authorization servers hosted by this issuer. At least one entry is required.',
+            minItems: 1,
             items: {
-                $ref: '#/components/schemas/ManagedAuthorizationServerConfig'
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/ExternalAuthorizationServerConfig'
+                    },
+                    {
+                        $ref: '#/components/schemas/Oid4VpAuthorizationServerConfig'
+                    },
+                    {
+                        $ref: '#/components/schemas/ChainedAuthorizationServerConfig'
+                    },
+                    {
+                        $ref: '#/components/schemas/BuiltInAuthorizationServerConfig'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'type',
+                    mapping: {
+                        external: '#/components/schemas/ExternalAuthorizationServerConfig',
+                        oid4vp: '#/components/schemas/Oid4VpAuthorizationServerConfig',
+                        chained: '#/components/schemas/ChainedAuthorizationServerConfig',
+                        'built-in': '#/components/schemas/BuiltInAuthorizationServerConfig'
+                    }
+                }
             }
         },
         federation: {
@@ -2201,11 +2382,6 @@ export const IssuanceDtoSchema = {
                 }
             ]
         },
-        refreshTokenEnabled: {
-            type: 'boolean',
-            description: 'Whether refresh tokens should be issued for OID4VCI token responses.',
-            default: true
-        },
         credentialResponseEncryption: {
             type: 'boolean',
             description: 'Whether `credential_response_encryption` should be advertised in the credential issuer metadata.',
@@ -2215,12 +2391,6 @@ export const IssuanceDtoSchema = {
             type: 'boolean',
             description: 'Whether `credential_request_encryption` should be advertised in the credential issuer metadata.',
             default: false
-        },
-        refreshTokenExpiresInSeconds: {
-            type: 'number',
-            description: 'Refresh token lifetime in seconds. Defaults to 2592000 (30 days).',
-            default: 2592000,
-            nullable: true
         },
         txCodeMaxAttempts: {
             type: 'number',
@@ -2247,20 +2417,13 @@ export const IssuanceDtoSchema = {
                 type: 'string'
             }
         },
-        preferredAuthServer: {
-            type: 'string',
-            description: 'The URL of the preferred authorization server for wallet-initiated flows.\nWhen set, this AS is placed first in the `authorization_servers` array\nof the credential issuer metadata, signaling wallets to use it by default.\nMust match one of the configured auth servers, the chained AS URL, or "built-in".'
-        },
         display: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/DisplayInfo'
             }
         }
-    },
-    required: [
-        'display'
-    ]
+    }
 } as const;
 
 export const ClaimsQuerySchema = {
@@ -2313,6 +2476,16 @@ export const TrustedAuthorityQuerySchema = {
 export const CredentialQuerySchema = {
     type: 'object',
     properties: {
+        claim_sets: {
+            type: 'array',
+            items: {
+                type: 'array',
+                items: {
+                    type: 'string'
+                }
+            },
+            description: 'Ordered alternative claim combinations for this credential query.'
+        },
         id: {
             type: 'string',
             pattern: '^[A-Za-z0-9_-]+$'
@@ -5437,7 +5610,7 @@ export const KmsProvidersResponseDtoSchema = {
     ]
 } as const;
 
-export const BaseKmsProviderConfigDtoSchema = {
+export const DbKmsConfigDtoSchema = {
     type: 'object',
     properties: {
         id: {
@@ -5447,16 +5620,11 @@ export const BaseKmsProviderConfigDtoSchema = {
         },
         type: {
             enum: [
-                'db',
-                'vault',
-                'aws-kms',
-                'pkcs11',
-                'http',
-                'csc'
+                'db'
             ],
             type: 'string',
-            description: 'Type of the KMS provider. Must match a supported adapter type.',
-            example: 'vault'
+            description: 'Type of the KMS provider.',
+            example: 'db'
         },
         description: {
             type: 'string',
@@ -5470,6 +5638,336 @@ export const BaseKmsProviderConfigDtoSchema = {
     ]
 } as const;
 
+export const VaultKmsConfigDtoSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
+            example: 'main-vault'
+        },
+        type: {
+            enum: [
+                'vault'
+            ],
+            type: 'string',
+            description: 'Type of the KMS provider.',
+            example: 'vault'
+        },
+        description: {
+            type: 'string',
+            description: 'Human-readable description of this provider instance.',
+            example: 'Production HashiCorp Vault for signing keys'
+        },
+        vaultUrl: {
+            type: 'string',
+            description: 'URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.',
+            example: '${VAULT_URL}'
+        },
+        vaultToken: {
+            type: 'string',
+            description: 'Authentication token for HashiCorp Vault. Supports ${ENV_VAR} placeholders.',
+            example: '${VAULT_TOKEN}'
+        }
+    },
+    required: [
+        'id',
+        'type',
+        'vaultUrl',
+        'vaultToken'
+    ]
+} as const;
+
+export const AwsKmsConfigDtoSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
+            example: 'main-vault'
+        },
+        type: {
+            enum: [
+                'aws-kms'
+            ],
+            type: 'string',
+            description: 'Type of the KMS provider.',
+            example: 'aws-kms'
+        },
+        description: {
+            type: 'string',
+            description: 'Human-readable description of this provider instance.',
+            example: 'Production HashiCorp Vault for signing keys'
+        },
+        region: {
+            type: 'string',
+            description: 'AWS region for KMS. Supports ${ENV_VAR} placeholders.',
+            example: '${AWS_REGION}'
+        },
+        accessKeyId: {
+            type: 'string',
+            description: 'AWS access key ID. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.',
+            example: '${AWS_ACCESS_KEY_ID}'
+        },
+        secretAccessKey: {
+            type: 'string',
+            description: 'AWS secret access key. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.',
+            example: '${AWS_SECRET_ACCESS_KEY}'
+        }
+    },
+    required: [
+        'id',
+        'type',
+        'region'
+    ]
+} as const;
+
+export const Pkcs11KmsConfigDtoSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
+            example: 'main-vault'
+        },
+        type: {
+            enum: [
+                'pkcs11'
+            ],
+            type: 'string',
+            description: 'Type of the KMS provider.',
+            example: 'pkcs11'
+        },
+        description: {
+            type: 'string',
+            description: 'Human-readable description of this provider instance.',
+            example: 'Production HashiCorp Vault for signing keys'
+        },
+        library: {
+            type: 'string',
+            description: 'Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.',
+            example: '${PKCS11_LIBRARY}'
+        },
+        slot: {
+            type: 'object',
+            description: 'Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.',
+            example: '${PKCS11_SLOT}'
+        },
+        pin: {
+            type: 'string',
+            description: 'User PIN used for C_Login. Supports ${ENV_VAR} placeholders.',
+            example: '${PKCS11_PIN}'
+        },
+        readOnly: {
+            type: 'boolean',
+            description: 'Open the PKCS#11 session in read-only mode. Defaults to false.',
+            example: false
+        }
+    },
+    required: [
+        'id',
+        'type',
+        'library',
+        'slot',
+        'pin'
+    ]
+} as const;
+
+export const HttpAuthBaseConfigDtoSchema = {
+    type: 'object',
+    properties: {
+        type: {
+            enum: [
+                'none',
+                'bearer',
+                'oauth2-client-credentials',
+                'mtls'
+            ],
+            type: 'string',
+            description: 'Authentication method for the remote KMS service.'
+        }
+    },
+    required: [
+        'type'
+    ]
+} as const;
+
+export const HttpKmsConfigDtoSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
+            example: 'main-vault'
+        },
+        type: {
+            enum: [
+                'http'
+            ],
+            type: 'string',
+            description: 'Type of the KMS provider.',
+            example: 'http'
+        },
+        description: {
+            type: 'string',
+            description: 'Human-readable description of this provider instance.',
+            example: 'Production HashiCorp Vault for signing keys'
+        },
+        baseUrl: {
+            type: 'string',
+            description: 'Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.',
+            example: '${KMS_SERVICE_URL}'
+        },
+        auth: {
+            description: 'Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to "none") for unauthenticated services.',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/HttpAuthBaseConfigDto'
+                }
+            ]
+        },
+        keysPath: {
+            type: 'string',
+            description: 'Path prefix for key endpoints on the remote service. Defaults to /keys.',
+            example: '/v1/keys'
+        },
+        healthPath: {
+            type: 'string',
+            description: 'Path for the health check endpoint on the remote service. Defaults to /health.',
+            example: '/health'
+        },
+        canImport: {
+            type: 'boolean',
+            description: 'Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.',
+            example: false
+        }
+    },
+    required: [
+        'id',
+        'type',
+        'baseUrl'
+    ]
+} as const;
+
+export const CscAuthorizeAuthDataDtoSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: 'Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).',
+            example: 'PIN'
+        },
+        value: {
+            type: 'string',
+            description: 'Authentication factor value sent to CSC credentials/authorize.',
+            example: '123456'
+        }
+    },
+    required: [
+        'id',
+        'value'
+    ]
+} as const;
+
+export const CscKmsConfigDtoSchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string',
+            description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
+            example: 'main-vault'
+        },
+        type: {
+            enum: [
+                'csc'
+            ],
+            type: 'string',
+            description: 'Type of the KMS provider.',
+            example: 'csc'
+        },
+        description: {
+            type: 'string',
+            description: 'Human-readable description of this provider instance.',
+            example: 'Production HashiCorp Vault for signing keys'
+        },
+        baseUrl: {
+            type: 'string',
+            description: 'Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.',
+            example: '${CSC_URL}'
+        },
+        tokenUrl: {
+            type: 'string',
+            format: 'uri',
+            description: 'OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.',
+            example: '${CSC_TOKEN_URL}'
+        },
+        clientId: {
+            type: 'string',
+            description: 'OAuth2 client ID. Supports ${ENV_VAR} placeholders.',
+            example: '${CSC_CLIENT_ID}'
+        },
+        clientSecret: {
+            type: 'string',
+            description: 'OAuth2 client secret. Supports ${ENV_VAR} placeholders.',
+            example: '${CSC_CLIENT_SECRET}'
+        },
+        scope: {
+            type: 'string',
+            description: 'OAuth2 scope to request during token acquisition.',
+            example: 'service'
+        },
+        credentialId: {
+            type: 'string',
+            description: 'Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.',
+            example: '[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758'
+        },
+        userId: {
+            type: 'string',
+            description: 'Optional CSC user ID used in credentials/list requests.',
+            example: 'eudiplo_user'
+        },
+        apiPath: {
+            type: 'string',
+            description: 'CSC API path prefix appended to baseUrl. Defaults to /csc/v2.',
+            example: '/csc/v2'
+        },
+        hashAlgorithmOid: {
+            type: 'string',
+            description: 'Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.',
+            example: '2.16.840.1.101.3.4.2.1'
+        },
+        signAlgorithmOid: {
+            type: 'string',
+            description: 'Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.',
+            example: '1.2.840.10045.4.3.2'
+        },
+        sad: {
+            type: 'string',
+            description: 'Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.'
+        },
+        useAuthorizeEndpoint: {
+            type: 'boolean',
+            description: 'When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.',
+            example: false
+        },
+        authorizeAuthData: {
+            description: 'Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/CscAuthorizeAuthDataDto'
+            }
+        }
+    },
+    required: [
+        'id',
+        'type',
+        'baseUrl',
+        'tokenUrl',
+        'clientId',
+        'clientSecret'
+    ]
+} as const;
+
 export const KmsConfigDtoSchema = {
     type: 'object',
     properties: {
@@ -5479,7 +5977,41 @@ export const KmsConfigDtoSchema = {
             example: 'main-vault'
         },
         providers: {
+            type: 'array',
             description: 'List of KMS provider configurations. Each provider must have a unique id and a type.',
+            items: {
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/DbKmsConfigDto'
+                    },
+                    {
+                        $ref: '#/components/schemas/VaultKmsConfigDto'
+                    },
+                    {
+                        $ref: '#/components/schemas/AwsKmsConfigDto'
+                    },
+                    {
+                        $ref: '#/components/schemas/Pkcs11KmsConfigDto'
+                    },
+                    {
+                        $ref: '#/components/schemas/HttpKmsConfigDto'
+                    },
+                    {
+                        $ref: '#/components/schemas/CscKmsConfigDto'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'type',
+                    mapping: {
+                        db: '#/components/schemas/DbKmsConfigDto',
+                        vault: '#/components/schemas/VaultKmsConfigDto',
+                        'aws-kms': '#/components/schemas/AwsKmsConfigDto',
+                        pkcs11: '#/components/schemas/Pkcs11KmsConfigDto',
+                        http: '#/components/schemas/HttpKmsConfigDto',
+                        csc: '#/components/schemas/CscKmsConfigDto'
+                    }
+                }
+            },
             example: [
                 {
                     id: 'db',
@@ -5499,11 +6031,7 @@ export const KmsConfigDtoSchema = {
                     description: 'AWS KMS',
                     region: '${AWS_REGION}'
                 }
-            ],
-            type: 'array',
-            items: {
-                $ref: '#/components/schemas/BaseKmsProviderConfigDto'
-            }
+            ]
         }
     },
     required: [
@@ -6165,11 +6693,33 @@ export const IssuanceConfigWritableSchema = {
             description: 'Key ID for signing access tokens. If unset, the default signing key is used.'
         },
         authorizationServers: {
-            nullable: true,
-            description: 'Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.',
             type: 'array',
+            description: 'Dedicated managed authorization servers hosted by this issuer. At least one entry is required.',
+            minItems: 1,
             items: {
-                $ref: '#/components/schemas/ManagedAuthorizationServerConfig'
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/ExternalAuthorizationServerConfig'
+                    },
+                    {
+                        $ref: '#/components/schemas/Oid4VpAuthorizationServerConfig'
+                    },
+                    {
+                        $ref: '#/components/schemas/ChainedAuthorizationServerConfig'
+                    },
+                    {
+                        $ref: '#/components/schemas/BuiltInAuthorizationServerConfig'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'type',
+                    mapping: {
+                        external: '#/components/schemas/ExternalAuthorizationServerConfig',
+                        oid4vp: '#/components/schemas/Oid4VpAuthorizationServerConfig',
+                        chained: '#/components/schemas/ChainedAuthorizationServerConfig',
+                        'built-in': '#/components/schemas/BuiltInAuthorizationServerConfig'
+                    }
+                }
             }
         },
         federation: {
@@ -6192,11 +6742,6 @@ export const IssuanceConfigWritableSchema = {
                 }
             ]
         },
-        refreshTokenEnabled: {
-            type: 'boolean',
-            description: 'Whether refresh tokens should be issued for OID4VCI token responses.',
-            default: true
-        },
         credentialResponseEncryption: {
             type: 'boolean',
             description: 'Whether `credential_response_encryption` should be advertised in the credential issuer metadata.',
@@ -6206,12 +6751,6 @@ export const IssuanceConfigWritableSchema = {
             type: 'boolean',
             description: 'Whether `credential_request_encryption` should be advertised in the credential issuer metadata.',
             default: false
-        },
-        refreshTokenExpiresInSeconds: {
-            type: 'number',
-            description: 'Refresh token lifetime in seconds. Defaults to 2592000 (30 days).',
-            default: 2592000,
-            nullable: true
         },
         txCodeMaxAttempts: {
             type: 'number',
@@ -6246,10 +6785,6 @@ export const IssuanceConfigWritableSchema = {
                 type: 'string'
             }
         },
-        preferredAuthServer: {
-            type: 'string',
-            description: 'The URL of the preferred authorization server for wallet-initiated flows.\nWhen set, this AS is placed first in the `authorization_servers` array\nof the credential issuer metadata, signaling wallets to use it by default.\nMust match one of the configured auth servers, the chained AS URL, or "built-in".'
-        },
         display: {
             type: 'array',
             items: {
@@ -6268,6 +6803,7 @@ export const IssuanceConfigWritableSchema = {
         }
     },
     required: [
+        'authorizationServers',
         'tenant',
         'display',
         'createdAt',
@@ -6275,7 +6811,7 @@ export const IssuanceConfigWritableSchema = {
     ]
 } as const;
 
-export const IssuanceDtoWritableSchema = {
+export const UpdateIssuanceDtoWritableSchema = {
     type: 'object',
     properties: {
         signingKeyId: {
@@ -6283,11 +6819,33 @@ export const IssuanceDtoWritableSchema = {
             description: 'Key ID for signing access tokens. If unset, the default signing key is used.'
         },
         authorizationServers: {
-            nullable: true,
-            description: 'Dedicated managed authorization servers hosted by this issuer.\nEach entry creates a distinct AS endpoint and can be bound to a different\npresentation configuration.',
             type: 'array',
+            description: 'Dedicated managed authorization servers hosted by this issuer. At least one entry is required.',
+            minItems: 1,
             items: {
-                $ref: '#/components/schemas/ManagedAuthorizationServerConfig'
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/ExternalAuthorizationServerConfig'
+                    },
+                    {
+                        $ref: '#/components/schemas/Oid4VpAuthorizationServerConfig'
+                    },
+                    {
+                        $ref: '#/components/schemas/ChainedAuthorizationServerConfig'
+                    },
+                    {
+                        $ref: '#/components/schemas/BuiltInAuthorizationServerConfig'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'type',
+                    mapping: {
+                        external: '#/components/schemas/ExternalAuthorizationServerConfig',
+                        oid4vp: '#/components/schemas/Oid4VpAuthorizationServerConfig',
+                        chained: '#/components/schemas/ChainedAuthorizationServerConfig',
+                        'built-in': '#/components/schemas/BuiltInAuthorizationServerConfig'
+                    }
+                }
             }
         },
         federation: {
@@ -6310,11 +6868,6 @@ export const IssuanceDtoWritableSchema = {
                 }
             ]
         },
-        refreshTokenEnabled: {
-            type: 'boolean',
-            description: 'Whether refresh tokens should be issued for OID4VCI token responses.',
-            default: true
-        },
         credentialResponseEncryption: {
             type: 'boolean',
             description: 'Whether `credential_response_encryption` should be advertised in the credential issuer metadata.',
@@ -6324,12 +6877,6 @@ export const IssuanceDtoWritableSchema = {
             type: 'boolean',
             description: 'Whether `credential_request_encryption` should be advertised in the credential issuer metadata.',
             default: false
-        },
-        refreshTokenExpiresInSeconds: {
-            type: 'number',
-            description: 'Refresh token lifetime in seconds. Defaults to 2592000 (30 days).',
-            default: 2592000,
-            nullable: true
         },
         txCodeMaxAttempts: {
             type: 'number',
@@ -6356,20 +6903,13 @@ export const IssuanceDtoWritableSchema = {
                 type: 'string'
             }
         },
-        preferredAuthServer: {
-            type: 'string',
-            description: 'The URL of the preferred authorization server for wallet-initiated flows.\nWhen set, this AS is placed first in the `authorization_servers` array\nof the credential issuer metadata, signaling wallets to use it by default.\nMust match one of the configured auth servers, the chained AS URL, or "built-in".'
-        },
         display: {
             type: 'array',
             items: {
                 $ref: '#/components/schemas/DisplayInfo'
             }
         }
-    },
-    required: [
-        'display'
-    ]
+    }
 } as const;
 
 export const PresentationConfigWritableSchema = {

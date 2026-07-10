@@ -683,8 +683,9 @@ export type Session = {
      */
     consumed: boolean;
     /**
-     * Timestamp when the session offer was consumed.
-     * Null if the offer has not yet been consumed.
+     * Timestamp of the first consumption event for the session offer.
+     * For OID4VCI this can be URI resolution or later flow completion.
+     * Null if no consumption event has happened yet.
      */
     consumedAt?: string;
 };
@@ -842,6 +843,94 @@ export type AuthenticationMethodPresentation = {
     config: PresentationDuringIssuanceConfig;
 };
 
+export type ManagedAuthorizationServerConfig = {
+    /**
+     * Authorization server implementation type
+     */
+    type: 'external' | 'oid4vp' | 'chained' | 'built-in';
+    /**
+     * Human-friendly label for the UI
+     */
+    label?: string;
+    /**
+     * Whether this managed authorization server is enabled
+     */
+    enabled?: boolean;
+};
+
+export type ExternalAuthorizationServerConfig = {
+    /**
+     * Authorization server implementation type
+     */
+    type: 'external';
+    /**
+     * Human-friendly label for the UI
+     */
+    label?: string;
+    /**
+     * Whether this managed authorization server is enabled
+     */
+    enabled?: boolean;
+    /**
+     * Issuer URL for external authorization servers
+     */
+    issuer: string;
+};
+
+export type ChainedAsTokenConfig = {
+    /**
+     * Access token lifetime in seconds
+     */
+    lifetimeSeconds?: number;
+    /**
+     * Key ID for token signing
+     */
+    signingKeyId?: string;
+    /**
+     * Whether refresh tokens should be issued
+     */
+    refreshTokenEnabled?: boolean;
+    /**
+     * Refresh token lifetime in seconds
+     */
+    refreshTokenExpiresInSeconds?: number;
+};
+
+export type Oid4VpAuthorizationServerConfig = {
+    /**
+     * Authorization server implementation type
+     */
+    type: 'oid4vp';
+    /**
+     * Human-friendly label for the UI
+     */
+    label?: string;
+    /**
+     * Whether this managed authorization server is enabled
+     */
+    enabled?: boolean;
+    /**
+     * Stable identifier used in the AS URL path
+     */
+    id: string;
+    /**
+     * Presentation configuration ID to use for OID4VP
+     */
+    presentationConfigId: string;
+    /**
+     * Immediately redirect the browser into the wallet OID4VP request
+     */
+    immediateWalletRedirect?: boolean;
+    /**
+     * Token configuration for this authorization server
+     */
+    token?: ChainedAsTokenConfig;
+    /**
+     * Require DPoP for token requests issued by this authorization server
+     */
+    requireDPoP?: boolean;
+};
+
 export type UpstreamOidcConfig = {
     /**
      * The OIDC issuer URL of the upstream provider
@@ -861,50 +950,46 @@ export type UpstreamOidcConfig = {
     scopes?: Array<string>;
 };
 
-export type ChainedAsTokenConfig = {
+export type ChainedAuthorizationServerConfig = {
     /**
-     * Access token lifetime in seconds
+     * Authorization server implementation type
      */
-    lifetimeSeconds?: number;
-    /**
-     * Key ID for token signing
-     */
-    signingKeyId?: string;
-};
-
-export type ManagedAuthorizationServerConfig = {
-    /**
-     * Stable identifier used in the AS URL path
-     */
-    id?: string;
+    type: 'chained';
     /**
      * Human-friendly label for the UI
      */
     label?: string;
     /**
-     * Authorization server implementation type
-     */
-    type: 'external' | 'oid4vp' | 'chained';
-    /**
-     * Issuer URL for external authorization servers
-     */
-    issuer?: string;
-    /**
-     * Upstream OIDC provider configuration for chained mode
-     */
-    upstream?: UpstreamOidcConfig;
-    /**
      * Whether this managed authorization server is enabled
      */
     enabled?: boolean;
     /**
-     * Presentation configuration ID to use for OID4VP
+     * Upstream OIDC provider configuration for chained mode
      */
-    presentationConfigId?: string;
+    upstream: UpstreamOidcConfig;
     /**
-     * Immediately redirect the browser into the wallet OID4VP request
+     * Token configuration for this authorization server
      */
-    immediateWalletRedirect?: boolean;
+    token?: ChainedAsTokenConfig;
+    /**
+     * Require DPoP for token requests issued by this authorization server
+     */
+    requireDPoP?: boolean;
+};
+
+export type BuiltInAuthorizationServerConfig = {
+    /**
+     * Authorization server implementation type
+     */
+    type: 'built-in';
+    /**
+     * Human-friendly label for the UI
+     */
+    label?: string;
+    /**
+     * Whether this managed authorization server is enabled
+     */
+    enabled?: boolean;
     /**
      * Token configuration for this authorization server
      */
@@ -1033,11 +1118,9 @@ export type IssuanceConfig = {
      */
     signingKeyId?: string;
     /**
-     * Dedicated managed authorization servers hosted by this issuer.
-     * Each entry creates a distinct AS endpoint and can be bound to a different
-     * presentation configuration.
+     * Dedicated managed authorization servers hosted by this issuer. At least one entry is required.
      */
-    authorizationServers?: Array<ManagedAuthorizationServerConfig>;
+    authorizationServers: Array<ExternalAuthorizationServerConfig | Oid4VpAuthorizationServerConfig | ChainedAuthorizationServerConfig | BuiltInAuthorizationServerConfig>;
     /**
      * Optional OpenID Federation configuration used for trust evaluation.
      * When omitted, trust checks rely on existing LoTE trust-list behavior.
@@ -1053,10 +1136,6 @@ export type IssuanceConfig = {
      */
     readonly registrationCertificateCache?: IssuerRegistrationCertificateCache;
     /**
-     * Whether refresh tokens should be issued for OID4VCI token responses.
-     */
-    refreshTokenEnabled?: boolean;
-    /**
      * Whether `credential_response_encryption` should be advertised in the credential issuer metadata.
      */
     credentialResponseEncryption?: boolean;
@@ -1064,10 +1143,6 @@ export type IssuanceConfig = {
      * Whether `credential_request_encryption` should be advertised in the credential issuer metadata.
      */
     credentialRequestEncryption?: boolean;
-    /**
-     * Refresh token lifetime in seconds. Defaults to 2592000 (30 days).
-     */
-    refreshTokenExpiresInSeconds?: number;
     /**
      * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
      */
@@ -1097,13 +1172,6 @@ export type IssuanceConfig = {
      * If empty and walletAttestationRequired is true, all wallet providers are rejected.
      */
     walletProviderTrustLists?: Array<string>;
-    /**
-     * The URL of the preferred authorization server for wallet-initiated flows.
-     * When set, this AS is placed first in the `authorization_servers` array
-     * of the credential issuer metadata, signaling wallets to use it by default.
-     * Must match one of the configured auth servers, the chained AS URL, or "built-in".
-     */
-    preferredAuthServer?: string;
     display: Array<DisplayInfo>;
     /**
      * The timestamp when the VP request was created.
@@ -1115,17 +1183,15 @@ export type IssuanceConfig = {
     updatedAt: string;
 };
 
-export type IssuanceDto = {
+export type UpdateIssuanceDto = {
     /**
      * Key ID for signing access tokens. If unset, the default signing key is used.
      */
     signingKeyId?: string;
     /**
-     * Dedicated managed authorization servers hosted by this issuer.
-     * Each entry creates a distinct AS endpoint and can be bound to a different
-     * presentation configuration.
+     * Dedicated managed authorization servers hosted by this issuer. At least one entry is required.
      */
-    authorizationServers?: Array<ManagedAuthorizationServerConfig>;
+    authorizationServers?: Array<ExternalAuthorizationServerConfig | Oid4VpAuthorizationServerConfig | ChainedAuthorizationServerConfig | BuiltInAuthorizationServerConfig>;
     /**
      * Optional OpenID Federation configuration used for trust evaluation.
      * When omitted, trust checks rely on existing LoTE trust-list behavior.
@@ -1141,10 +1207,6 @@ export type IssuanceDto = {
      */
     readonly registrationCertificateCache?: IssuerRegistrationCertificateCache;
     /**
-     * Whether refresh tokens should be issued for OID4VCI token responses.
-     */
-    refreshTokenEnabled?: boolean;
-    /**
      * Whether `credential_response_encryption` should be advertised in the credential issuer metadata.
      */
     credentialResponseEncryption?: boolean;
@@ -1152,10 +1214,6 @@ export type IssuanceDto = {
      * Whether `credential_request_encryption` should be advertised in the credential issuer metadata.
      */
     credentialRequestEncryption?: boolean;
-    /**
-     * Refresh token lifetime in seconds. Defaults to 2592000 (30 days).
-     */
-    refreshTokenExpiresInSeconds?: number;
     /**
      * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
      */
@@ -1181,14 +1239,7 @@ export type IssuanceDto = {
      * If empty and walletAttestationRequired is true, all wallet providers are rejected.
      */
     walletProviderTrustLists?: Array<string>;
-    /**
-     * The URL of the preferred authorization server for wallet-initiated flows.
-     * When set, this AS is placed first in the `authorization_servers` array
-     * of the credential issuer metadata, signaling wallets to use it by default.
-     * Must match one of the configured auth servers, the chained AS URL, or "built-in".
-     */
-    preferredAuthServer?: string;
-    display: Array<DisplayInfo>;
+    display?: Array<DisplayInfo>;
 };
 
 export type ClaimsQuery = {
@@ -1203,6 +1254,10 @@ export type TrustedAuthorityQuery = {
 };
 
 export type CredentialQuery = {
+    /**
+     * Ordered alternative claim combinations for this credential query.
+     */
+    claim_sets?: Array<Array<string>>;
     id: string;
     format: string;
     multiple?: boolean;
@@ -2818,19 +2873,222 @@ export type KmsProvidersResponseDto = {
     default: string;
 };
 
-export type BaseKmsProviderConfigDto = {
+export type DbKmsConfigDto = {
     /**
      * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
      */
     id: string;
     /**
-     * Type of the KMS provider. Must match a supported adapter type.
+     * Type of the KMS provider.
      */
-    type: 'db' | 'vault' | 'aws-kms' | 'pkcs11' | 'http' | 'csc';
+    type: 'db';
     /**
      * Human-readable description of this provider instance.
      */
     description?: string;
+};
+
+export type VaultKmsConfigDto = {
+    /**
+     * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
+     */
+    id: string;
+    /**
+     * Type of the KMS provider.
+     */
+    type: 'vault';
+    /**
+     * Human-readable description of this provider instance.
+     */
+    description?: string;
+    /**
+     * URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.
+     */
+    vaultUrl: string;
+    /**
+     * Authentication token for HashiCorp Vault. Supports ${ENV_VAR} placeholders.
+     */
+    vaultToken: string;
+};
+
+export type AwsKmsConfigDto = {
+    /**
+     * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
+     */
+    id: string;
+    /**
+     * Type of the KMS provider.
+     */
+    type: 'aws-kms';
+    /**
+     * Human-readable description of this provider instance.
+     */
+    description?: string;
+    /**
+     * AWS region for KMS. Supports ${ENV_VAR} placeholders.
+     */
+    region: string;
+    /**
+     * AWS access key ID. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.
+     */
+    accessKeyId?: string;
+    /**
+     * AWS secret access key. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.
+     */
+    secretAccessKey?: string;
+};
+
+export type Pkcs11KmsConfigDto = {
+    /**
+     * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
+     */
+    id: string;
+    /**
+     * Type of the KMS provider.
+     */
+    type: 'pkcs11';
+    /**
+     * Human-readable description of this provider instance.
+     */
+    description?: string;
+    /**
+     * Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.
+     */
+    library: string;
+    /**
+     * Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.
+     */
+    slot: {
+        [key: string]: unknown;
+    };
+    /**
+     * User PIN used for C_Login. Supports ${ENV_VAR} placeholders.
+     */
+    pin: string;
+    /**
+     * Open the PKCS#11 session in read-only mode. Defaults to false.
+     */
+    readOnly?: boolean;
+};
+
+export type HttpAuthBaseConfigDto = {
+    /**
+     * Authentication method for the remote KMS service.
+     */
+    type: 'none' | 'bearer' | 'oauth2-client-credentials' | 'mtls';
+};
+
+export type HttpKmsConfigDto = {
+    /**
+     * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
+     */
+    id: string;
+    /**
+     * Type of the KMS provider.
+     */
+    type: 'http';
+    /**
+     * Human-readable description of this provider instance.
+     */
+    description?: string;
+    /**
+     * Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.
+     */
+    baseUrl: string;
+    /**
+     * Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to "none") for unauthenticated services.
+     */
+    auth?: HttpAuthBaseConfigDto;
+    /**
+     * Path prefix for key endpoints on the remote service. Defaults to /keys.
+     */
+    keysPath?: string;
+    /**
+     * Path for the health check endpoint on the remote service. Defaults to /health.
+     */
+    healthPath?: string;
+    /**
+     * Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.
+     */
+    canImport?: boolean;
+};
+
+export type CscAuthorizeAuthDataDto = {
+    /**
+     * Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).
+     */
+    id: string;
+    /**
+     * Authentication factor value sent to CSC credentials/authorize.
+     */
+    value: string;
+};
+
+export type CscKmsConfigDto = {
+    /**
+     * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
+     */
+    id: string;
+    /**
+     * Type of the KMS provider.
+     */
+    type: 'csc';
+    /**
+     * Human-readable description of this provider instance.
+     */
+    description?: string;
+    /**
+     * Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.
+     */
+    baseUrl: string;
+    /**
+     * OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.
+     */
+    tokenUrl: string;
+    /**
+     * OAuth2 client ID. Supports ${ENV_VAR} placeholders.
+     */
+    clientId: string;
+    /**
+     * OAuth2 client secret. Supports ${ENV_VAR} placeholders.
+     */
+    clientSecret: string;
+    /**
+     * OAuth2 scope to request during token acquisition.
+     */
+    scope?: string;
+    /**
+     * Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.
+     */
+    credentialId?: string;
+    /**
+     * Optional CSC user ID used in credentials/list requests.
+     */
+    userId?: string;
+    /**
+     * CSC API path prefix appended to baseUrl. Defaults to /csc/v2.
+     */
+    apiPath?: string;
+    /**
+     * Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.
+     */
+    hashAlgorithmOid?: string;
+    /**
+     * Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.
+     */
+    signAlgorithmOid?: string;
+    /**
+     * Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.
+     */
+    sad?: string;
+    /**
+     * When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.
+     */
+    useAuthorizeEndpoint?: boolean;
+    /**
+     * Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).
+     */
+    authorizeAuthData?: Array<CscAuthorizeAuthDataDto>;
 };
 
 export type KmsConfigDto = {
@@ -2841,7 +3099,7 @@ export type KmsConfigDto = {
     /**
      * List of KMS provider configurations. Each provider must have a unique id and a type.
      */
-    providers: Array<BaseKmsProviderConfigDto>;
+    providers: Array<DbKmsConfigDto | VaultKmsConfigDto | AwsKmsConfigDto | Pkcs11KmsConfigDto | HttpKmsConfigDto | CscKmsConfigDto>;
 };
 
 export type KmsTenantConfigResponseDto = {
@@ -3221,11 +3479,9 @@ export type IssuanceConfigWritable = {
      */
     signingKeyId?: string;
     /**
-     * Dedicated managed authorization servers hosted by this issuer.
-     * Each entry creates a distinct AS endpoint and can be bound to a different
-     * presentation configuration.
+     * Dedicated managed authorization servers hosted by this issuer. At least one entry is required.
      */
-    authorizationServers?: Array<ManagedAuthorizationServerConfig>;
+    authorizationServers: Array<ExternalAuthorizationServerConfig | Oid4VpAuthorizationServerConfig | ChainedAuthorizationServerConfig | BuiltInAuthorizationServerConfig>;
     /**
      * Optional OpenID Federation configuration used for trust evaluation.
      * When omitted, trust checks rely on existing LoTE trust-list behavior.
@@ -3237,10 +3493,6 @@ export type IssuanceConfigWritable = {
      */
     registrationCertificate?: IssuerRegistrationCertificateConfig;
     /**
-     * Whether refresh tokens should be issued for OID4VCI token responses.
-     */
-    refreshTokenEnabled?: boolean;
-    /**
      * Whether `credential_response_encryption` should be advertised in the credential issuer metadata.
      */
     credentialResponseEncryption?: boolean;
@@ -3248,10 +3500,6 @@ export type IssuanceConfigWritable = {
      * Whether `credential_request_encryption` should be advertised in the credential issuer metadata.
      */
     credentialRequestEncryption?: boolean;
-    /**
-     * Refresh token lifetime in seconds. Defaults to 2592000 (30 days).
-     */
-    refreshTokenExpiresInSeconds?: number;
     /**
      * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
      */
@@ -3281,13 +3529,6 @@ export type IssuanceConfigWritable = {
      * If empty and walletAttestationRequired is true, all wallet providers are rejected.
      */
     walletProviderTrustLists?: Array<string>;
-    /**
-     * The URL of the preferred authorization server for wallet-initiated flows.
-     * When set, this AS is placed first in the `authorization_servers` array
-     * of the credential issuer metadata, signaling wallets to use it by default.
-     * Must match one of the configured auth servers, the chained AS URL, or "built-in".
-     */
-    preferredAuthServer?: string;
     display: Array<DisplayInfo>;
     /**
      * The timestamp when the VP request was created.
@@ -3299,17 +3540,15 @@ export type IssuanceConfigWritable = {
     updatedAt: string;
 };
 
-export type IssuanceDtoWritable = {
+export type UpdateIssuanceDtoWritable = {
     /**
      * Key ID for signing access tokens. If unset, the default signing key is used.
      */
     signingKeyId?: string;
     /**
-     * Dedicated managed authorization servers hosted by this issuer.
-     * Each entry creates a distinct AS endpoint and can be bound to a different
-     * presentation configuration.
+     * Dedicated managed authorization servers hosted by this issuer. At least one entry is required.
      */
-    authorizationServers?: Array<ManagedAuthorizationServerConfig>;
+    authorizationServers?: Array<ExternalAuthorizationServerConfig | Oid4VpAuthorizationServerConfig | ChainedAuthorizationServerConfig | BuiltInAuthorizationServerConfig>;
     /**
      * Optional OpenID Federation configuration used for trust evaluation.
      * When omitted, trust checks rely on existing LoTE trust-list behavior.
@@ -3321,10 +3560,6 @@ export type IssuanceDtoWritable = {
      */
     registrationCertificate?: IssuerRegistrationCertificateConfig;
     /**
-     * Whether refresh tokens should be issued for OID4VCI token responses.
-     */
-    refreshTokenEnabled?: boolean;
-    /**
      * Whether `credential_response_encryption` should be advertised in the credential issuer metadata.
      */
     credentialResponseEncryption?: boolean;
@@ -3332,10 +3567,6 @@ export type IssuanceDtoWritable = {
      * Whether `credential_request_encryption` should be advertised in the credential issuer metadata.
      */
     credentialRequestEncryption?: boolean;
-    /**
-     * Refresh token lifetime in seconds. Defaults to 2592000 (30 days).
-     */
-    refreshTokenExpiresInSeconds?: number;
     /**
      * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
      */
@@ -3361,14 +3592,7 @@ export type IssuanceDtoWritable = {
      * If empty and walletAttestationRequired is true, all wallet providers are rejected.
      */
     walletProviderTrustLists?: Array<string>;
-    /**
-     * The URL of the preferred authorization server for wallet-initiated flows.
-     * When set, this AS is placed first in the `authorization_servers` array
-     * of the credential issuer metadata, signaling wallets to use it by default.
-     * Must match one of the configured auth servers, the chained AS URL, or "built-in".
-     */
-    preferredAuthServer?: string;
-    display: Array<DisplayInfo>;
+    display?: Array<DisplayInfo>;
 };
 
 export type PresentationConfigWritable = {
@@ -4076,7 +4300,7 @@ export type IssuanceConfigControllerGetIssuanceConfigurationsResponses = {
 export type IssuanceConfigControllerGetIssuanceConfigurationsResponse = IssuanceConfigControllerGetIssuanceConfigurationsResponses[keyof IssuanceConfigControllerGetIssuanceConfigurationsResponses];
 
 export type IssuanceConfigControllerStoreIssuanceConfigurationData = {
-    body: IssuanceDtoWritable;
+    body: UpdateIssuanceDtoWritable;
     path?: never;
     query?: never;
     url: '/api/issuer/config';

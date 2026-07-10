@@ -30,6 +30,7 @@ describe("Issuance - Configuration", () => {
     });
 
     const chainedAuthorizationServer = {
+        id: "chained-auth",
         type: "chained",
         enabled: true,
         upstream: {

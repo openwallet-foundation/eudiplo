@@ -12,6 +12,11 @@
       "description": "Authorization server implementation type",
       "example": "chained"
     },
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for this authorization server",
+      "example": "chained-auth"
+    },
     "label": {
       "type": "string",
       "description": "Human-friendly label for the UI",
@@ -46,6 +51,7 @@
   },
   "required": [
     "type",
+    "id",
     "upstream"
   ],
   "additionalProperties": false

@@ -230,6 +230,7 @@ sequenceDiagram
     "authorizationServers": [
         {
             "type": "external",
+            "id": "external-corp-idp",
             "issuer": "https://keycloak.example.com/realms/myrealm"
         }
     ],
@@ -311,8 +312,7 @@ sequenceDiagram
             "immediateWalletRedirect": true,
             "requireDPoP": false
         }
-    ],
-    "preferredAuthServer": "authorization-server:pid-auth"
+    ]
 }
 ```
 

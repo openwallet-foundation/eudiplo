@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { plainToClass, Transform, Type } from "class-transformer";
 import {
     IsArray,
@@ -147,8 +147,13 @@ export class OfferRequestDto {
     credentialConfigurationIds!: string[];
 
     /**
-     * Optional authorization server to be used for this issuance flow.
+     * Optional authorization server id to be used for this issuance flow.
      */
+    @ApiPropertyOptional({
+        description:
+            "Authorization server id from issuer configuration. If omitted, the first enabled server is used.",
+        example: "issuer-built-in",
+    })
     @IsString()
     @IsOptional()
     authorization_server?: string;

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
-  type IssuanceDto,
   type SchemaMetadataResponseDto,
   issuanceConfigControllerGetIssuanceConfigurations,
   issuanceConfigControllerStoreIssuanceConfiguration,
   credentialOfferControllerGetOffer,
   schemaMetadataControllerFindAll,
   type OfferRequestDto,
+  UpdateIssuanceDto,
 } from '@eudiplo/sdk-core';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class IssuanceConfigService {
   /**
    * Save or update an issuance configuration
    */
-  saveConfiguration(config: IssuanceDto) {
+  saveConfiguration(config: UpdateIssuanceDto) {
     return issuanceConfigControllerStoreIssuanceConfiguration({ body: config }).then(
       (response) => response.data
     );
