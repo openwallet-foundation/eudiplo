@@ -51,7 +51,11 @@ function hkdfExpand(prk: Buffer, info: Buffer, len: number): Buffer {
     const out = Buffer.alloc(len);
     let t = Buffer.alloc(0);
     let written = 0;
-    for (let n = 1; written < len; n++) {
+    // RFC 5869 block counter: T(n) = HMAC(PRK, T(n-1) | info | n), n = 1..N.
+    // It must be fed into each HMAC round, so it cannot be dropped even
+    // though HPKE output lengths (<= 32 bytes) only ever need one round.
+    let n = 1;
+    while (written < len) {
         const h = createHmac("sha256", prk);
         h.update(t);
         h.update(info);
@@ -60,6 +64,7 @@ function hkdfExpand(prk: Buffer, info: Buffer, len: number): Buffer {
         const take = Math.min(t.length, len - written);
         t.copy(out, written, 0, take);
         written += take;
+        n++;
     }
     return out;
 }
