@@ -54,7 +54,6 @@ ENV BOOTSTRAP_DEMO=true
 
 # Bundle demo configuration so users can run without downloading repo config files.
 COPY assets/config/demo /app/demo-config/demo
-COPY assets/config/kms.json /app/demo-config/kms.json
 
 # Seed demo config only when the target config folder is empty.
 COPY apps/backend/docker-entrypoint.sh /docker-entrypoint.sh
