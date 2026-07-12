@@ -9,14 +9,14 @@ import {
     Query,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Role } from "../auth/roles/role.enum";
-import { Secured } from "../auth/secure.decorator";
-import { Token, TokenPayload } from "../auth/token.decorator";
+import { Role } from "../../auth/roles/role.enum";
+import { Secured } from "../../auth/secure.decorator";
+import { Token, TokenPayload } from "../../auth/token.decorator";
 import {
     SignSchemaMetaConfigDto,
     SignVersionSchemaMetaConfigDto,
-} from "../issuer/configuration/credentials/dto/schema-meta-config.dto";
-import { SchemaMetadataSigningService } from "../issuer/configuration/credentials/schema-meta/schema-metadata-signing.service";
+} from "../../issuer/configuration/credentials/dto/schema-meta-config.dto";
+import { SchemaMetadataSubmissionService } from "./schema-metadata-submission.service";
 import {
     DeprecateSchemaMetadataDto,
     SchemaMetadataResponseDto,
@@ -39,14 +39,12 @@ import { SchemaMetadataService } from "./schema-metadata.service";
 export class SchemaMetadataController {
     constructor(
         private readonly schemaMetadataService: SchemaMetadataService,
-        private readonly schemaMetadataSigningService: SchemaMetadataSigningService,
+        private readonly schemaMetadataSubmissionService: SchemaMetadataSubmissionService,
     ) {}
 
     /**
-     * Reserves an attestation ID at the registrar, signs the supplied
-     * SchemaMetaConfig (with the reserved ID baked in as id) and submits
-     * the resulting JWS to the registrar in a single call. Returns the
-     * registrar SchemaMetadataResponseDto for the freshly created entry.
+     * Submits schema metadata input values to the registrar, which builds and
+     * signs the final schema metadata for storage and retrieval.
      *
      * If an optional credentialConfigId is provided, the reservedId is
      * written back into that credential config schemaMeta.id field so the
@@ -54,13 +52,12 @@ export class SchemaMetadataController {
      *
      * @experimental The TS11 specification is not yet finalized.
      */
-    @Post("sign")
+    @Post("publish")
     @Secured([Role.Issuances])
     @ApiOperation({
-        summary:
-            "Reserve, sign and submit a TS11 SchemaMetaConfig to the registrar",
+        summary: "Publish TS11 schema metadata via registrar",
         description:
-            "Reserves an attestation ID at the configured registrar, injects it as id, signs the SchemaMetaConfig with the tenant key chain and submits the JWS to the registrar. Optionally pass credentialConfigId to link the created entry back to a credential config.",
+            "Builds multipart schema metadata input (metadata JSON + rulebook + schema files) and submits it to the registrar, which builds and signs the final schema metadata.",
     })
     @ApiResponse({
         status: 201,
@@ -69,36 +66,54 @@ export class SchemaMetadataController {
     })
     @ApiResponse({
         status: 400,
+        description: "Invalid schema metadata input or file mapping",
+    })
+    @ApiBody({ type: SignSchemaMetaConfigDto })
+    async publishSchemaMetadata(
+        @Token() user: TokenPayload,
+        @Body() body: SignSchemaMetaConfigDto,
+    ) {
+        return this.schemaMetadataSubmissionService.submitSchemaMetadata(
+            user.entity!.id,
+            body,
+        );
+    }
+
+    @Post("sign")
+    @Secured([Role.Issuances])
+    @ApiOperation({
+        summary: "Deprecated alias for publish endpoint",
+        description: "Deprecated. Use POST /schema-metadata/publish instead.",
+        deprecated: true,
+    })
+    @ApiResponse({
+        status: 201,
         description:
-            "Invalid schema metadata or missing certificate for signing",
+            "Registrar metadata entry for the freshly submitted schema metadata.",
     })
     @ApiBody({ type: SignSchemaMetaConfigDto })
     async signSchemaMetaConfig(
         @Token() user: TokenPayload,
         @Body() body: SignSchemaMetaConfigDto,
     ) {
-        return this.schemaMetadataSigningService.signSchemaMetaConfig(
+        return this.schemaMetadataSubmissionService.submitSchemaMetadata(
             user.entity!.id,
             body,
         );
     }
 
     /**
-     * Signs a new version of an existing SchemaMetaConfig and submits it to
-     * the registrar. Unlike POST schema-metadata/sign, this endpoint does
-     * NOT reserve a new attestation ID — the caller must supply the existing
-     * id in the config so the registrar records the JWT as a new version
-     * under the same schema.
+     * Submits new-version schema metadata input values for an existing schema.
+     * The registrar builds and signs the new version.
      *
      * @experimental The TS11 specification is not yet finalized.
      */
-    @Post("sign-version")
+    @Post("publish-version")
     @Secured([Role.Issuances])
     @ApiOperation({
-        summary:
-            "Sign and submit a new version of an existing schema metadata entry",
+        summary: "Publish a new version of an existing schema metadata entry",
         description:
-            "Signs the supplied SchemaMetaConfig (which must include the existing id) with the tenant key chain and submits the JWS to the registrar as a new version under the same schema ID.",
+            "Submits schema metadata input values for a new version under an existing schema ID. Registrar builds and signs the resulting schema metadata.",
     })
     @ApiResponse({
         status: 201,
@@ -110,11 +125,35 @@ export class SchemaMetadataController {
         description: "config.id is required; or invalid schema metadata",
     })
     @ApiBody({ type: SignVersionSchemaMetaConfigDto })
+    async publishSchemaMetadataVersion(
+        @Token() user: TokenPayload,
+        @Body() body: SignVersionSchemaMetaConfigDto,
+    ) {
+        return this.schemaMetadataSubmissionService.submitSchemaMetadataVersion(
+            user.entity!.id,
+            body,
+        );
+    }
+
+    @Post("sign-version")
+    @Secured([Role.Issuances])
+    @ApiOperation({
+        summary: "Deprecated alias for publish-version endpoint",
+        description:
+            "Deprecated. Use POST /schema-metadata/publish-version instead.",
+        deprecated: true,
+    })
+    @ApiResponse({
+        status: 201,
+        description:
+            "Registrar metadata entry for the newly submitted version.",
+    })
+    @ApiBody({ type: SignVersionSchemaMetaConfigDto })
     async signVersionSchemaMetaConfig(
         @Token() user: TokenPayload,
         @Body() body: SignVersionSchemaMetaConfigDto,
     ) {
-        return this.schemaMetadataSigningService.signVersionSchemaMetaConfig(
+        return this.schemaMetadataSubmissionService.submitSchemaMetadataVersion(
             user.entity!.id,
             body,
         );
@@ -224,25 +263,6 @@ export class SchemaMetadataController {
         @Param("version") version: string,
     ): Promise<string> {
         return this.schemaMetadataService.getSignedJwt(
-            token.entity!.id,
-            id,
-            version,
-        );
-    }
-
-    @Get(":id/versions/:version/export")
-    @ApiOperation({ summary: "Export schema metadata in catalog format" })
-    @ApiResponse({
-        status: 200,
-        description: "Registrar-defined catalog document",
-        schema: { type: "object", additionalProperties: true },
-    })
-    export(
-        @Token() token: TokenPayload,
-        @Param("id") id: string,
-        @Param("version") version: string,
-    ): Promise<unknown> {
-        return this.schemaMetadataService.exportCatalogFormat(
             token.entity!.id,
             id,
             version,

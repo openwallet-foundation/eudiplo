@@ -5,16 +5,12 @@
   "type": "object",
   "properties": {
     "config": {
-      "description": "The schema metadata configuration to sign and submit",
+      "description": "The schema metadata configuration to submit. Registrar builds and signs the final schema metadata.",
       "allOf": [
         {
           "$ref": "./SchemaMetaConfig.schema.json"
         }
       ]
-    },
-    "keyChainId": {
-      "type": "string",
-      "description": "ID of the key chain to use for signing. Defaults to the tenant's default key chain."
     },
     "credentialConfigId": {
       "type": "string",

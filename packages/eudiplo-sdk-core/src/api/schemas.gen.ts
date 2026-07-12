@@ -927,6 +927,11 @@ export const OfferRequestDtoSchema = {
             ],
             description: 'The type of response expected for the offer request.'
         },
+        authorization_server: {
+            type: 'string',
+            description: 'Authorization server id from issuer configuration. If omitted, the first enabled server is used.',
+            example: 'issuer-built-in'
+        },
         credentialClaims: {
             type: 'object',
             additionalProperties: {
@@ -1032,10 +1037,6 @@ export const OfferRequestDtoSchema = {
             items: {
                 type: 'string'
             }
-        },
-        authorization_server: {
-            type: 'string',
-            description: 'Optional authorization server to be used for this issuance flow.'
         },
         webhookEndpointId: {
             type: 'string',
@@ -1728,6 +1729,11 @@ export const ManagedAuthorizationServerConfigSchema = {
             description: 'Authorization server implementation type',
             example: 'external'
         },
+        id: {
+            type: 'string',
+            description: 'Unique identifier for this authorization server',
+            example: 'pid-auth'
+        },
         label: {
             type: 'string',
             description: 'Human-friendly label for the UI',
@@ -1740,7 +1746,8 @@ export const ManagedAuthorizationServerConfigSchema = {
         }
     },
     required: [
-        'type'
+        'type',
+        'id'
     ]
 } as const;
 
@@ -1754,6 +1761,11 @@ export const ExternalAuthorizationServerConfigSchema = {
             type: 'string',
             description: 'Authorization server implementation type',
             example: 'external'
+        },
+        id: {
+            type: 'string',
+            description: 'Unique identifier for this authorization server',
+            example: 'external-auth'
         },
         label: {
             type: 'string',
@@ -1774,6 +1786,7 @@ export const ExternalAuthorizationServerConfigSchema = {
     },
     required: [
         'type',
+        'id',
         'issuer'
     ]
 } as const;
@@ -1816,6 +1829,11 @@ export const Oid4VpAuthorizationServerConfigSchema = {
             description: 'Authorization server implementation type',
             example: 'oid4vp'
         },
+        id: {
+            type: 'string',
+            description: 'Stable identifier used in the AS URL path',
+            example: 'pid-auth'
+        },
         label: {
             type: 'string',
             description: 'Human-friendly label for the UI',
@@ -1825,11 +1843,6 @@ export const Oid4VpAuthorizationServerConfigSchema = {
             type: 'boolean',
             description: 'Whether this managed authorization server is enabled',
             default: true
-        },
-        id: {
-            type: 'string',
-            description: 'Stable identifier used in the AS URL path',
-            example: 'pid-auth'
         },
         presentationConfigId: {
             type: 'string',
@@ -1909,6 +1922,11 @@ export const ChainedAuthorizationServerConfigSchema = {
             description: 'Authorization server implementation type',
             example: 'chained'
         },
+        id: {
+            type: 'string',
+            description: 'Unique identifier for this authorization server',
+            example: 'chained-auth'
+        },
         label: {
             type: 'string',
             description: 'Human-friendly label for the UI',
@@ -1943,6 +1961,7 @@ export const ChainedAuthorizationServerConfigSchema = {
     },
     required: [
         'type',
+        'id',
         'upstream'
     ]
 } as const;
@@ -1957,6 +1976,11 @@ export const BuiltInAuthorizationServerConfigSchema = {
             type: 'string',
             description: 'Authorization server implementation type',
             example: 'built-in'
+        },
+        id: {
+            type: 'string',
+            description: 'Unique identifier for this authorization server',
+            example: 'issuer-built-in'
         },
         label: {
             type: 'string',
@@ -1983,7 +2007,8 @@ export const BuiltInAuthorizationServerConfigSchema = {
         }
     },
     required: [
-        'type'
+        'type',
+        'id'
     ]
 } as const;
 
@@ -2828,10 +2853,6 @@ export const TrustAuthorityEntrySchema = {
         value: {
             type: 'string',
             description: 'URI of the trust list or trust anchor (ignored when trustListId is set)'
-        },
-        isLoTE: {
-            type: 'boolean',
-            description: 'Whether this trust authority is a List of Trusted Entities (LoTE)'
         },
         verificationMethod: {
             description: 'Optional verification material for external trusted authorities (for example a JWK). For internal trust-list URLs, EUDIPLO resolves verification material from the database.',
@@ -3696,16 +3717,12 @@ export const SignSchemaMetaConfigDtoSchema = {
     type: 'object',
     properties: {
         config: {
-            description: 'The schema metadata configuration to sign and submit',
+            description: 'The schema metadata configuration to submit. Registrar builds and signs the final schema metadata.',
             allOf: [
                 {
                     $ref: '#/components/schemas/SchemaMetaConfig'
                 }
             ]
-        },
-        keyChainId: {
-            type: 'string',
-            description: 'ID of the key chain to use for signing. Defaults to the tenant\'s default key chain.'
         },
         credentialConfigId: {
             type: 'string',
@@ -3721,16 +3738,12 @@ export const SignVersionSchemaMetaConfigDtoSchema = {
     type: 'object',
     properties: {
         config: {
-            description: 'The schema metadata configuration to sign and submit as a new version. Must include the existing id.',
+            description: 'The schema metadata configuration to submit as a new version. Must include the existing id.',
             allOf: [
                 {
                     $ref: '#/components/schemas/SchemaMetaConfig'
                 }
             ]
-        },
-        keyChainId: {
-            type: 'string',
-            description: 'ID of the key chain to use for signing. Defaults to the tenant\'s default key chain.'
         }
     },
     required: [
@@ -3817,10 +3830,10 @@ export const MetadataSchemaDtoSchema = {
             type: 'string',
             description: 'URI to the schema definition'
         },
-        schemaContent: {
+        meta: {
             type: 'object',
             additionalProperties: true,
-            description: 'Inline schema content (JSON Schema)'
+            description: 'Format-specific metadata for the schema entry'
         },
         integrity: {
             type: 'string',
@@ -3984,10 +3997,6 @@ export const SchemaMetadataResponseDtoSchema = {
             type: 'string',
             description: 'Issuer from the JWT (`iss` claim)'
         },
-        signerCertificateSerial: {
-            type: 'string',
-            description: 'Serial number of the access certificate that signed this schema metadata'
-        },
         signerCertificate: {
             description: 'The access certificate used to sign this schema metadata',
             allOf: [
@@ -4019,6 +4028,10 @@ export const SchemaMetadataResponseDtoSchema = {
         supersededByVersion: {
             type: 'string',
             description: 'The version that supersedes this one'
+        },
+        deprecatedAt: {
+            type: 'string',
+            description: 'Timestamp when this version was marked as deprecated'
         }
     },
     required: [
@@ -4031,10 +4044,10 @@ export const SchemaMetadataResponseDtoSchema = {
         'trustedAuthorities',
         'signedJwt',
         'issuer',
-        'signerCertificateSerial',
         'issuedAt',
         'createdAt',
-        'updatedAt'
+        'updatedAt',
+        'deprecated'
     ]
 } as const;
 

@@ -8,7 +8,7 @@ import { RegistrarService } from "./registrar.service";
 import { RegistrarAuthService } from "./registrar-auth.service";
 import { RegistrarConfigService } from "./registrar-config.service";
 import { RegistrationCertificateService } from "./registration-certificate.service";
-import { SchemaMetadataService } from "./schema-metadata.service";
+import { SchemaMetadataService } from "./schema-metadata/schema-metadata.service";
 
 /**
  * RegistrarModule is responsible for managing the registrar service.

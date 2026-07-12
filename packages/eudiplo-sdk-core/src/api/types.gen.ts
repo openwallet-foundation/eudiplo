@@ -429,6 +429,10 @@ export type OfferRequestDto = {
      */
     response_type: 'uri' | 'dc-api';
     /**
+     * Authorization server id from issuer configuration. If omitted, the first enabled server is used.
+     */
+    authorization_server?: string;
+    /**
      * Credential claims configuration per credential. Keys must match credentialConfigurationIds.
      */
     credentialClaims?: {
@@ -466,10 +470,6 @@ export type OfferRequestDto = {
      * List of credential configuration ids to be included in the offer.
      */
     credentialConfigurationIds: Array<string>;
-    /**
-     * Optional authorization server to be used for this issuance flow.
-     */
-    authorization_server?: string;
     /**
      * ID of the webhook endpoint to notify about the status of the issuance process.
      */
@@ -849,6 +849,10 @@ export type ManagedAuthorizationServerConfig = {
      */
     type: 'external' | 'oid4vp' | 'chained' | 'built-in';
     /**
+     * Unique identifier for this authorization server
+     */
+    id: string;
+    /**
      * Human-friendly label for the UI
      */
     label?: string;
@@ -863,6 +867,10 @@ export type ExternalAuthorizationServerConfig = {
      * Authorization server implementation type
      */
     type: 'external';
+    /**
+     * Unique identifier for this authorization server
+     */
+    id: string;
     /**
      * Human-friendly label for the UI
      */
@@ -902,6 +910,10 @@ export type Oid4VpAuthorizationServerConfig = {
      */
     type: 'oid4vp';
     /**
+     * Stable identifier used in the AS URL path
+     */
+    id: string;
+    /**
      * Human-friendly label for the UI
      */
     label?: string;
@@ -909,10 +921,6 @@ export type Oid4VpAuthorizationServerConfig = {
      * Whether this managed authorization server is enabled
      */
     enabled?: boolean;
-    /**
-     * Stable identifier used in the AS URL path
-     */
-    id: string;
     /**
      * Presentation configuration ID to use for OID4VP
      */
@@ -956,6 +964,10 @@ export type ChainedAuthorizationServerConfig = {
      */
     type: 'chained';
     /**
+     * Unique identifier for this authorization server
+     */
+    id: string;
+    /**
      * Human-friendly label for the UI
      */
     label?: string;
@@ -982,6 +994,10 @@ export type BuiltInAuthorizationServerConfig = {
      * Authorization server implementation type
      */
     type: 'built-in';
+    /**
+     * Unique identifier for this authorization server
+     */
+    id: string;
     /**
      * Human-friendly label for the UI
      */
@@ -1394,10 +1410,6 @@ export type TrustAuthorityEntry = {
      */
     value?: string;
     /**
-     * Whether this trust authority is a List of Trusted Entities (LoTE)
-     */
-    isLoTE?: boolean;
-    /**
      * Optional verification material for external trusted authorities (for example a JWK). For internal trust-list URLs, EUDIPLO resolves verification material from the database.
      */
     verificationMethod?: {
@@ -1802,13 +1814,9 @@ export type CredentialConfigUpdate = {
 
 export type SignSchemaMetaConfigDto = {
     /**
-     * The schema metadata configuration to sign and submit
+     * The schema metadata configuration to submit. Registrar builds and signs the final schema metadata.
      */
     config: SchemaMetaConfig;
-    /**
-     * ID of the key chain to use for signing. Defaults to the tenant's default key chain.
-     */
-    keyChainId?: string;
     /**
      * ID of the credential config to link back after submission. When provided, schemaMeta.id on the credential config is updated with the reserved attestation ID.
      */
@@ -1817,13 +1825,9 @@ export type SignSchemaMetaConfigDto = {
 
 export type SignVersionSchemaMetaConfigDto = {
     /**
-     * The schema metadata configuration to sign and submit as a new version. Must include the existing id.
+     * The schema metadata configuration to submit as a new version. Must include the existing id.
      */
     config: SchemaMetaConfig;
-    /**
-     * ID of the key chain to use for signing. Defaults to the tenant's default key chain.
-     */
-    keyChainId?: string;
 };
 
 export type VocabularyEntryDto = {
@@ -1874,9 +1878,9 @@ export type MetadataSchemaDto = {
      */
     uri?: string;
     /**
-     * Inline schema content (JSON Schema)
+     * Format-specific metadata for the schema entry
      */
-    schemaContent?: {
+    meta?: {
         [key: string]: unknown;
     };
     /**
@@ -1968,10 +1972,6 @@ export type SchemaMetadataResponseDto = {
      */
     issuer: string;
     /**
-     * Serial number of the access certificate that signed this schema metadata
-     */
-    signerCertificateSerial: string;
-    /**
      * The access certificate used to sign this schema metadata
      */
     signerCertificate?: AccessCertificateRefDto;
@@ -1990,7 +1990,7 @@ export type SchemaMetadataResponseDto = {
     /**
      * Whether this version is deprecated
      */
-    deprecated?: boolean;
+    deprecated: boolean;
     /**
      * Deprecation message shown to consumers
      */
@@ -1999,6 +1999,10 @@ export type SchemaMetadataResponseDto = {
      * The version that supersedes this one
      */
     supersededByVersion?: string;
+    /**
+     * Timestamp when this version was marked as deprecated
+     */
+    deprecatedAt?: string;
 };
 
 export type UpdateSchemaMetadataDto = {
@@ -4391,18 +4395,32 @@ export type CredentialConfigControllerUpdateCredentialConfigurationResponses = {
 
 export type CredentialConfigControllerUpdateCredentialConfigurationResponse = CredentialConfigControllerUpdateCredentialConfigurationResponses[keyof CredentialConfigControllerUpdateCredentialConfigurationResponses];
 
+export type SchemaMetadataControllerPublishSchemaMetadataData = {
+    body: SignSchemaMetaConfigDto;
+    path?: never;
+    query?: never;
+    url: '/api/schema-metadata/publish';
+};
+
+export type SchemaMetadataControllerPublishSchemaMetadataErrors = {
+    /**
+     * Invalid schema metadata input or file mapping
+     */
+    400: unknown;
+};
+
+export type SchemaMetadataControllerPublishSchemaMetadataResponses = {
+    /**
+     * Registrar metadata entry for the freshly submitted schema metadata.
+     */
+    201: unknown;
+};
+
 export type SchemaMetadataControllerSignSchemaMetaConfigData = {
     body: SignSchemaMetaConfigDto;
     path?: never;
     query?: never;
     url: '/api/schema-metadata/sign';
-};
-
-export type SchemaMetadataControllerSignSchemaMetaConfigErrors = {
-    /**
-     * Invalid schema metadata or missing certificate for signing
-     */
-    400: unknown;
 };
 
 export type SchemaMetadataControllerSignSchemaMetaConfigResponses = {
@@ -4412,18 +4430,32 @@ export type SchemaMetadataControllerSignSchemaMetaConfigResponses = {
     201: unknown;
 };
 
+export type SchemaMetadataControllerPublishSchemaMetadataVersionData = {
+    body: SignVersionSchemaMetaConfigDto;
+    path?: never;
+    query?: never;
+    url: '/api/schema-metadata/publish-version';
+};
+
+export type SchemaMetadataControllerPublishSchemaMetadataVersionErrors = {
+    /**
+     * config.id is required; or invalid schema metadata
+     */
+    400: unknown;
+};
+
+export type SchemaMetadataControllerPublishSchemaMetadataVersionResponses = {
+    /**
+     * Registrar metadata entry for the newly submitted version.
+     */
+    201: unknown;
+};
+
 export type SchemaMetadataControllerSignVersionSchemaMetaConfigData = {
     body: SignVersionSchemaMetaConfigDto;
     path?: never;
     query?: never;
     url: '/api/schema-metadata/sign-version';
-};
-
-export type SchemaMetadataControllerSignVersionSchemaMetaConfigErrors = {
-    /**
-     * config.id is required; or invalid schema metadata
-     */
-    400: unknown;
 };
 
 export type SchemaMetadataControllerSignVersionSchemaMetaConfigResponses = {
@@ -4571,27 +4603,6 @@ export type SchemaMetadataControllerGetJwtResponses = {
 };
 
 export type SchemaMetadataControllerGetJwtResponse = SchemaMetadataControllerGetJwtResponses[keyof SchemaMetadataControllerGetJwtResponses];
-
-export type SchemaMetadataControllerExportData = {
-    body?: never;
-    path: {
-        id: string;
-        version: string;
-    };
-    query?: never;
-    url: '/api/schema-metadata/{id}/versions/{version}/export';
-};
-
-export type SchemaMetadataControllerExportResponses = {
-    /**
-     * Registrar-defined catalog document
-     */
-    200: {
-        [key: string]: unknown;
-    };
-};
-
-export type SchemaMetadataControllerExportResponse = SchemaMetadataControllerExportResponses[keyof SchemaMetadataControllerExportResponses];
 
 export type SchemaMetadataControllerGetSchemaData = {
     body?: never;

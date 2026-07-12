@@ -17,6 +17,7 @@ import { PresentationConfigCreateDto } from "./dto/presentation-config-create.dt
 import { PresentationConfigUpdateDto } from "./dto/presentation-config-update.dto";
 import { ResolveIssuerMetadataDto } from "./dto/resolve-issuer-metadata.dto";
 import { ResolveSchemaMetadataDto } from "./dto/resolve-schema-metadata.dto";
+import { ResolveSchemaMetadataJwtDto } from "./dto/resolve-schema-metadata-jwt.dto";
 import { PresentationsService } from "./presentations.service";
 
 @ApiTags("Verifier")
@@ -87,6 +88,33 @@ export class PresentationManagementController {
     async resolveSchemaMetadata(@Body() body: ResolveSchemaMetadataDto) {
         return this.presentationsService.resolveSchemaMetadata(
             body.schemaMetadataUrl,
+        );
+    }
+
+    /**
+     * Resolve schema metadata JWT directly.
+     * This endpoint accepts a signed JWT and resolves it into DCQL and references
+     * without requiring a URL fetch. Useful for resolving catalog entries.
+     */
+    @Secured([Role.Presentations, Role.PresentationRequest])
+    @Post("schema-metadata/resolve-jwt")
+    @ApiOperation({
+        summary: "Resolve schema metadata JWT",
+        description:
+            "Validates and resolves a signed schema metadata JWT directly, building DCQL and resolving schema references. Useful for resolving catalog entries without requiring external URL accessibility.",
+    })
+    @ApiBody({ type: ResolveSchemaMetadataJwtDto })
+    @ApiResponse({
+        status: 200,
+        description: "Resolved schema metadata import payload",
+    })
+    @ApiResponse({
+        status: 400,
+        description: "Invalid JWT or invalid schema metadata",
+    })
+    async resolveSchemaMetadataJwt(@Body() body: ResolveSchemaMetadataJwtDto) {
+        return this.presentationsService.resolveSchemaMetadataJwt(
+            body.signedJwt,
         );
     }
 

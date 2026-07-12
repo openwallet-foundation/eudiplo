@@ -138,13 +138,24 @@ export class SchemaMetadataBrowserComponent implements OnInit {
     );
   }
 
-  selectFromCatalog(entry: CatalogEntry): void {
-    this.resolved = this.schemaMetadataService.catalogEntryToResolved(entry);
-    this.selectedFormats.clear();
-    for (const format of this.resolved.schema.supportedFormats) {
-      this.selectedFormats.set(format, true);
-    }
+  async selectFromCatalog(entry: CatalogEntry): Promise<void> {
+    this.loading = true;
     this.error = null;
+    this.resolved = null;
+    this.selectedFormats.clear();
+
+    try {
+      // Fetch and resolve the full metadata via the catalog entry
+      this.resolved = await this.schemaMetadataService.resolveCatalogEntry(entry);
+      for (const format of this.resolved.schema.supportedFormats) {
+        this.selectedFormats.set(format, true);
+      }
+    } catch (err: any) {
+      console.error('Failed to load catalog entry:', err);
+      this.error = err.message || 'Failed to load schema metadata from catalog.';
+    } finally {
+      this.loading = false;
+    }
   }
 
   toggleFormat(format: string, selected: boolean): void {

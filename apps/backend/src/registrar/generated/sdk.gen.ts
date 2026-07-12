@@ -42,9 +42,6 @@ import type {
   SchemaMetadataControllerCreateSchemaMetadataData,
   SchemaMetadataControllerCreateSchemaMetadataErrors,
   SchemaMetadataControllerCreateSchemaMetadataResponses,
-  SchemaMetadataControllerExportData,
-  SchemaMetadataControllerExportErrors,
-  SchemaMetadataControllerExportResponses,
   SchemaMetadataControllerFindAllByRelyingPartyData,
   SchemaMetadataControllerFindAllByRelyingPartyResponses,
   SchemaMetadataControllerFindAllData,
@@ -688,21 +685,3 @@ export const schemaMetadataControllerGetInternalMetadata = <
     url: "/schema-metadata/{id}/versions/{version}/internal",
     ...options,
   });
-
-/**
- * Export schema metadata in catalog format
- */
-export const schemaMetadataControllerExport = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<SchemaMetadataControllerExportData, ThrowOnError>,
-): RequestResult<
-  SchemaMetadataControllerExportResponses,
-  SchemaMetadataControllerExportErrors,
-  ThrowOnError
-> =>
-  (options.client ?? client).get<
-    SchemaMetadataControllerExportResponses,
-    SchemaMetadataControllerExportErrors,
-    ThrowOnError
-  >({ url: "/schema-metadata/{id}/versions/{version}/export", ...options });

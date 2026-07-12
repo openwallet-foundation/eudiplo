@@ -99,6 +99,19 @@ export class SchemaMetadataBrowserService {
     };
   }
 
+  async resolveCatalogEntry(entry: CatalogEntry): Promise<ResolvedSchemaMetadata> {
+    const baseUrl = this.apiService.getBaseUrl();
+    if (!baseUrl) {
+      throw new Error('API base URL is not configured. Please log in again.');
+    }
+
+    // Use the new resolve-jwt endpoint to resolve the catalog entry's JWT directly
+    const endpoint = `${baseUrl}/api/verifier/config/schema-metadata/resolve-jwt`;
+    return firstValueFrom(
+      this.http.post<ResolvedSchemaMetadata>(endpoint, { signedJwt: entry.signedJwt })
+    );
+  }
+
   generateImportResult(
     resolved: ResolvedSchemaMetadata,
     selectedFormats: string[]

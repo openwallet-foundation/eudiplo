@@ -8,7 +8,7 @@ import { RegistrarConfigEntity } from "./entities/registrar-config.entity";
 import { type RegistrationCertificateCreation } from "./generated";
 import { RegistrarConfigService } from "./registrar-config.service";
 import { RegistrationCertificateService } from "./registration-certificate.service";
-import { SchemaMetadataService } from "./schema-metadata.service";
+import { SchemaMetadataService } from "./schema-metadata/schema-metadata.service";
 
 /**
  * Facade that preserves the original public API of the registrar domain.
@@ -131,7 +131,7 @@ export class RegistrarService {
     }
 
     // -------------------------------------------------------------------------
-    // Schema metadata delegation → SchemaMetadataService
+    // Schema metadata list lookup used by verifier/catalog flows.
     // -------------------------------------------------------------------------
 
     findAllSchemaMetadata(
@@ -139,16 +139,5 @@ export class RegistrarService {
         filters: { attestationId?: string; version?: string },
     ) {
         return this.schemaMetadataSvc.findAll(tenantId, filters);
-    }
-
-    createSchemaMetadata(
-        tenantId: string,
-        request: {
-            metadata: Record<string, unknown>;
-            rulebookFile: Blob | File;
-            schemaFiles: Array<Blob | File>;
-        },
-    ) {
-        return this.schemaMetadataSvc.createSchemaMetadata(tenantId, request);
     }
 }

@@ -3057,10 +3057,6 @@
           "type": "string",
           "description": "URI of the trust list or trust anchor (ignored when trustListId is set)"
         },
-        "isLoTE": {
-          "type": "boolean",
-          "description": "Whether this trust authority is a List of Trusted Entities (LoTE)"
-        },
         "verificationMethod": {
           "description": "Optional verification material for external trusted authorities (for example a JWK). For internal trust-list URLs, EUDIPLO resolves verification material from the database.",
           "oneOf": [
@@ -3947,16 +3943,12 @@
       "type": "object",
       "properties": {
         "config": {
-          "description": "The schema metadata configuration to sign and submit",
+          "description": "The schema metadata configuration to submit. Registrar builds and signs the final schema metadata.",
           "allOf": [
             {
               "$ref": "./SchemaMetaConfig.schema.json"
             }
           ]
-        },
-        "keyChainId": {
-          "type": "string",
-          "description": "ID of the key chain to use for signing. Defaults to the tenant's default key chain."
         },
         "credentialConfigId": {
           "type": "string",
@@ -3977,16 +3969,12 @@
       "type": "object",
       "properties": {
         "config": {
-          "description": "The schema metadata configuration to sign and submit as a new version. Must include the existing id.",
+          "description": "The schema metadata configuration to submit as a new version. Must include the existing id.",
           "allOf": [
             {
               "$ref": "./SchemaMetaConfig.schema.json"
             }
           ]
-        },
-        "keyChainId": {
-          "type": "string",
-          "description": "ID of the key chain to use for signing. Defaults to the tenant's default key chain."
         }
       },
       "required": ["config"],
@@ -4078,10 +4066,10 @@
           "type": "string",
           "description": "URI to the schema definition"
         },
-        "schemaContent": {
+        "meta": {
           "type": "object",
           "additionalProperties": true,
-          "description": "Inline schema content (JSON Schema)"
+          "description": "Format-specific metadata for the schema entry"
         },
         "integrity": {
           "type": "string",
@@ -4235,10 +4223,6 @@
           "type": "string",
           "description": "Issuer from the JWT (`iss` claim)"
         },
-        "signerCertificateSerial": {
-          "type": "string",
-          "description": "Serial number of the access certificate that signed this schema metadata"
-        },
         "signerCertificate": {
           "description": "The access certificate used to sign this schema metadata",
           "allOf": [
@@ -4270,6 +4254,10 @@
         "supersededByVersion": {
           "type": "string",
           "description": "The version that supersedes this one"
+        },
+        "deprecatedAt": {
+          "type": "string",
+          "description": "Timestamp when this version was marked as deprecated"
         }
       },
       "required": [
@@ -4282,10 +4270,10 @@
         "trustedAuthorities",
         "signedJwt",
         "issuer",
-        "signerCertificateSerial",
         "issuedAt",
         "createdAt",
-        "updatedAt"
+        "updatedAt",
+        "deprecated"
       ],
       "additionalProperties": false
     }

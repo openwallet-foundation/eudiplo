@@ -144,11 +144,11 @@ export class MetadataSchemaDto {
     uri?: string;
 
     @ApiPropertyOptional({
-        description: "Inline schema content (JSON Schema)",
+        description: "Format-specific metadata for the schema entry",
         type: "object",
         additionalProperties: true,
     })
-    schemaContent?: Record<string, unknown>;
+    meta?: Record<string, unknown>;
 
     @ApiPropertyOptional({
         description: "Subresource Integrity hash for the schema",
@@ -280,12 +280,6 @@ export class SchemaMetadataResponseDto {
     @ApiProperty({ description: "Issuer from the JWT (`iss` claim)" })
     issuer!: string;
 
-    @ApiProperty({
-        description:
-            "Serial number of the access certificate that signed this schema metadata",
-    })
-    signerCertificateSerial!: string;
-
     @ApiPropertyOptional({
         description: "The access certificate used to sign this schema metadata",
         type: AccessCertificateRefDto,
@@ -305,8 +299,8 @@ export class SchemaMetadataResponseDto {
     @ApiProperty({ description: "Last update timestamp" })
     updatedAt!: string;
 
-    @ApiPropertyOptional({ description: "Whether this version is deprecated" })
-    deprecated?: boolean;
+    @ApiProperty({ description: "Whether this version is deprecated" })
+    deprecated!: boolean;
 
     @ApiPropertyOptional({
         description: "Deprecation message shown to consumers",
@@ -317,6 +311,11 @@ export class SchemaMetadataResponseDto {
         description: "The version that supersedes this one",
     })
     supersededByVersion?: string;
+
+    @ApiPropertyOptional({
+        description: "Timestamp when this version was marked as deprecated",
+    })
+    deprecatedAt?: string;
 }
 
 /**

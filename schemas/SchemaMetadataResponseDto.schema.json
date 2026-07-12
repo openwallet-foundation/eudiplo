@@ -93,10 +93,6 @@
       "type": "string",
       "description": "Issuer from the JWT (`iss` claim)"
     },
-    "signerCertificateSerial": {
-      "type": "string",
-      "description": "Serial number of the access certificate that signed this schema metadata"
-    },
     "signerCertificate": {
       "description": "The access certificate used to sign this schema metadata",
       "allOf": [
@@ -128,6 +124,10 @@
     "supersededByVersion": {
       "type": "string",
       "description": "The version that supersedes this one"
+    },
+    "deprecatedAt": {
+      "type": "string",
+      "description": "Timestamp when this version was marked as deprecated"
     }
   },
   "required": [
@@ -140,10 +140,10 @@
     "trustedAuthorities",
     "signedJwt",
     "issuer",
-    "signerCertificateSerial",
     "issuedAt",
     "createdAt",
-    "updatedAt"
+    "updatedAt",
+    "deprecated"
   ],
   "additionalProperties": false
 }

@@ -266,21 +266,18 @@ export class SchemaMetadataShowComponent implements OnInit {
   async downloadExport(): Promise<void> {
     if (!this.id) return;
     try {
-      const exported = await this.schemaMetadataService.exportCatalog(
-        this.id,
-        this.item?.version ?? ''
-      );
-      const data = JSON.stringify(exported, null, 2);
-      const blob = new Blob([data], { type: 'application/json' });
+      const jwt = await this.schemaMetadataService.getSignedJwt(this.id, this.item?.version ?? '');
+      const blob = new Blob([jwt], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `schema-metadata-${this.id}.json`;
+      a.download = `schema-metadata-${this.id}-${this.item?.version ?? 'latest'}.jwt`;
       a.click();
       URL.revokeObjectURL(url);
+      this.snackBar.open('Signed JWT downloaded', 'Close', { duration: 3000 });
     } catch (error) {
-      console.error('Failed to export schema metadata:', error);
-      this.snackBar.open('Failed to export schema metadata', 'Close', { duration: 3000 });
+      console.error('Failed to download JWT:', error);
+      this.snackBar.open('Failed to download JWT', 'Close', { duration: 3000 });
     }
   }
 
