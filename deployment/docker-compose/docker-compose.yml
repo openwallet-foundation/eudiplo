@@ -14,7 +14,7 @@ services:
   # =============================================================================
 
   eudiplo:
-    image: ghcr.io/openwallet-foundation/eudiplo:latest
+    image: ${EUDIPLO_IMAGE:-ghcr.io/openwallet-foundation/eudiplo:latest}
     restart: always
     env_file:
       - ${EUDIPLO_ENV_FILE:-.env}

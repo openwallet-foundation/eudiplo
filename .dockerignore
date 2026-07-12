@@ -92,4 +92,8 @@ monitor/
 docker-compose.yml
 
 # Asset sources (if not needed at runtime)
-assets/config/
+# Keep most config assets out of the image context, but allow demo bootstrap assets.
+assets/config/*
+!assets/config/demo/
+!assets/config/demo/**
+!assets/config/kms.json

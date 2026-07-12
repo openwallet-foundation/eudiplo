@@ -71,6 +71,33 @@ docker compose down
 
     This deployment uses default in-memory storage. **All data is lost when containers stop.** Use Minimal or Full deployment for persistent storage.
 
+## Demo Backend Image (Embedded Config)
+
+If you want a very simple demo experience without downloading config folders, use the demo backend image.
+
+From `deployment/docker-compose` (pull from GHCR):
+
+```bash
+cp .env.minimal.example .env
+echo "EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo-demo:main" >> .env
+docker compose up -d
+```
+
+Or build locally:
+
+```bash
+docker build --target eudiplo-demo -t eudiplo-demo:local ../..
+cp .env.minimal.example .env
+echo "EUDIPLO_IMAGE=eudiplo-demo:local" >> .env
+docker compose up -d
+```
+
+Behavior:
+
+- The demo image includes demo config files inside the container.
+- On startup, it seeds demo config only when the config folder is empty.
+- If you keep existing config/data in the volume, bootstrap is skipped.
+
 ## Minimal Deployment
 
 Ideal for development and testing with persistent storage but without production dependencies.
