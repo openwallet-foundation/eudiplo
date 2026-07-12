@@ -165,7 +165,9 @@ export class StatusListVerifierService {
             statusList = statusListCwt.payload.statusList;
             ttl = statusListCwt.payload.timeToLive;
             exp = statusListCwt.payload.expirationTime
-                ? Math.floor(statusListCwt.payload.expirationTime.getTime() / 1000)
+                ? Math.floor(
+                      statusListCwt.payload.expirationTime.getTime() / 1000,
+                  )
                 : undefined;
         }
 
