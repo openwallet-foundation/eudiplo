@@ -981,6 +981,138 @@ export class PresentationsService {
         };
     }
 
+    async resolveSchemaMetadataJwt(signedJwt: string): Promise<{
+        signedJwt: string;
+        schema: ResolvedSchemaMetadataPayload;
+    }> {
+        if (!signedJwt || typeof signedJwt !== "string") {
+            throw new BadRequestException(
+                "signedJwt must be a non-empty string",
+            );
+        }
+
+        const allFormats = this.deriveSchemaMetadataFormatsFromJwt(signedJwt);
+
+        if (allFormats.length === 0) {
+            throw new BadRequestException(
+                "Schema metadata JWT payload does not contain any supported formats",
+            );
+        }
+
+        const verifier = await this.buildSchemaMetadataVerifier(signedJwt);
+        const schemaMetaSdk =
+            eudiAttestationSchema as unknown as SchemaMetaSdkCompat;
+        const resolved =
+            typeof schemaMetaSdk.verifyResolveAndBuildDcql === "function"
+                ? await schemaMetaSdk.verifyResolveAndBuildDcql({
+                      jws: signedJwt,
+                      verifier,
+                      selectedFormats: allFormats as AttestationFormat[],
+                      resolve: async (uri: string) => ({
+                          content:
+                              await this.fetchCredentialIssuerMetadata(uri),
+                      }),
+                      includeTrustedAuthorities: true,
+                  })
+                : await (async () => {
+                      if (
+                          typeof schemaMetaSdk.verifySchemaMeta !==
+                              "function" ||
+                          typeof schemaMetaSdk.resolveSchemaReferences !==
+                              "function" ||
+                          typeof schemaMetaSdk.buildDcqlFromSchemaMeta !==
+                              "function"
+                      ) {
+                          throw new BadRequestException(
+                              "Installed @owf/eudi-attestation-schema version does not support schema metadata resolution APIs",
+                          );
+                      }
+
+                      const verified = await schemaMetaSdk.verifySchemaMeta({
+                          jws: signedJwt,
+                          verifier,
+                      });
+                      const resolvedReferences =
+                          await schemaMetaSdk.resolveSchemaReferences({
+                              schemaMeta: verified.payload,
+                              selectedFormats:
+                                  allFormats as AttestationFormat[],
+                              resolve: async (uri: string) => ({
+                                  content:
+                                      await this.fetchCredentialIssuerMetadata(
+                                          uri,
+                                      ),
+                              }),
+                          });
+                      const dcql = schemaMetaSdk.buildDcqlFromSchemaMeta({
+                          schemaMeta: verified.payload,
+                          selectedFormats: allFormats as AttestationFormat[],
+                          resolvedReferences,
+                          includeTrustedAuthorities: true,
+                      });
+
+                      return {
+                          verified,
+                          resolvedReferences,
+                          dcql,
+                      };
+                  })();
+
+        const payload = resolved.verified.payload;
+        const id = typeof payload.id === "string" ? payload.id : undefined;
+        if (!id) {
+            throw new BadRequestException(
+                "Schema metadata JWT payload is missing a valid id",
+            );
+        }
+
+        return {
+            signedJwt,
+            schema: {
+                id,
+                version: payload.version,
+                supportedFormats: allFormats,
+                schemaURIs: payload.schemaURIs.map(
+                    (entry: { formatIdentifier?: string; uri: string }) => ({
+                        formatIdentifier: entry.formatIdentifier,
+                        uri: entry.uri,
+                    }),
+                ),
+                trustedAuthorities:
+                    payload.trustedAuthorities?.map(
+                        (authority: {
+                            frameworkType?: string;
+                            value?: string;
+                            isLOTE?: boolean;
+                        }) => ({
+                            frameworkType: authority.frameworkType,
+                            value: authority.value,
+                            isLoTE: authority.isLOTE,
+                        }),
+                    ) ?? [],
+                resolvedReferences: resolved.resolvedReferences.map(
+                    (ref: {
+                        format: string;
+                        uri: string;
+                        integrity?: string;
+                        meta?: unknown;
+                        parsedSchema?: Record<string, unknown>;
+                    }) => ({
+                        format: ref.format,
+                        uri: ref.uri,
+                        integrity: ref.integrity,
+                        meta:
+                            ref.meta && typeof ref.meta === "object"
+                                ? (ref.meta as Record<string, unknown>)
+                                : undefined,
+                        parsedSchema: ref.parsedSchema,
+                    }),
+                ),
+                dcqlQuery: resolved.dcql,
+            },
+        };
+    }
+
     private async fetchCredentialIssuerMetadata(metadataUrl: string) {
         let currentUrl = metadataUrl;
 

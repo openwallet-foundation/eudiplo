@@ -3,7 +3,6 @@ import { SchemaURIMeta } from "@owf/eudi-attestation-schema";
 import { Type } from "class-transformer";
 import {
     IsArray,
-    IsBoolean,
     IsEnum,
     IsObject,
     IsOptional,
@@ -112,14 +111,6 @@ export class TrustAuthorityEntry {
 
     @ApiPropertyOptional({
         description:
-            "Whether this trust authority is a List of Trusted Entities (LoTE)",
-    })
-    @IsOptional()
-    @IsBoolean()
-    isLoTE?: boolean;
-
-    @ApiPropertyOptional({
-        description:
             "Optional verification material for external trusted authorities (for example a JWK). " +
             "For internal trust-list URLs, EUDIPLO resolves verification material from the database.",
         oneOf: [
@@ -211,24 +202,20 @@ export class SchemaMetaConfig {
 }
 
 /**
- * Request body for the sign-and-submit schema metadata endpoint.
+ * Request body for schema metadata submission.
+ *
+ * The registrar builds and signs schema metadata from the submitted values.
+ * EUDIPLO no longer performs local SchemaMetadata JWT signing for this flow.
  */
 export class SignSchemaMetaConfigDto {
     @ApiProperty({
         type: () => SchemaMetaConfig,
-        description: "The schema metadata configuration to sign and submit",
+        description:
+            "The schema metadata configuration to submit. Registrar builds and signs the final schema metadata.",
     })
     @ValidateNested()
     @Type(() => SchemaMetaConfig)
     config!: SchemaMetaConfig;
-
-    @ApiPropertyOptional({
-        description:
-            "ID of the key chain to use for signing. Defaults to the tenant's default key chain.",
-    })
-    @IsOptional()
-    @IsString()
-    keyChainId?: string;
 
     @ApiPropertyOptional({
         description:
@@ -241,23 +228,17 @@ export class SignSchemaMetaConfigDto {
 }
 
 /**
- * Request body for the sign-and-submit new version endpoint.
+ * Request body for new schema metadata version submission.
+ *
+ * The registrar builds and signs the new version.
  */
 export class SignVersionSchemaMetaConfigDto {
     @ApiProperty({
         type: () => SchemaMetaConfig,
         description:
-            "The schema metadata configuration to sign and submit as a new version. Must include the existing id.",
+            "The schema metadata configuration to submit as a new version. Must include the existing id.",
     })
     @ValidateNested()
     @Type(() => SchemaMetaConfig)
     config!: SchemaMetaConfig;
-
-    @ApiPropertyOptional({
-        description:
-            "ID of the key chain to use for signing. Defaults to the tenant's default key chain.",
-    })
-    @IsOptional()
-    @IsString()
-    keyChainId?: string;
 }

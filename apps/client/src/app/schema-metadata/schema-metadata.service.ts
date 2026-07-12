@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   schemaMetadataControllerDeprecateVersion,
-  schemaMetadataControllerExport,
   schemaMetadataControllerFindAll,
   schemaMetadataControllerGetMine,
   schemaMetadataControllerFindOne,
@@ -86,14 +85,6 @@ export class SchemaMetadataService {
     });
 
     return response.data as string;
-  }
-
-  async exportCatalog(id: string, version: string): Promise<unknown> {
-    const response = await schemaMetadataControllerExport({
-      path: { id, version },
-    });
-
-    return response.data;
   }
 
   async getLatest(id: string): Promise<SchemaMetadata> {

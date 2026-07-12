@@ -494,13 +494,6 @@ export const TrustAuthoritySchema = {
       description: "URI or identifier for the trust list/authority.",
       example: "https://example.org/trust-lists/gym-members.jws",
     },
-    isLOTE: {
-      type: "boolean",
-      description:
-        "Whether this trust authority is part of the Large-Scale Pilot (LOTE).",
-      example: true,
-      default: false,
-    },
     verificationMethod: {
       type: "object",
       additionalProperties: true,
@@ -642,12 +635,6 @@ export const SchemaMetadataSchema = {
       description: "Issuer from the JWT (iss claim).",
       example: "Gym Association",
     },
-    signerCertificateSerial: {
-      type: "string",
-      description:
-        "Serial number of the access certificate that signed this schema metadata.",
-      example: "01",
-    },
     signerCertificate: {
       description: "The access certificate used to sign this schema metadata.",
       allOf: [
@@ -683,7 +670,6 @@ export const SchemaMetadataSchema = {
     "deprecated",
     "signedJwt",
     "issuer",
-    "signerCertificateSerial",
     "issuedAt",
     "createdAt",
     "updatedAt",
@@ -790,4 +776,41 @@ export const UpdateSchemaMetadataDtoSchema = {
       example: ["pid", "eudi"],
     },
   },
+} as const;
+
+export const InternalSchemaMetadataDtoSchema = {
+  type: "object",
+  properties: {
+    id: {
+      type: "string",
+      description: "Normalized schema identifier (reserved short ID)",
+      example: "feded2b8-4205-480e-b498-8033f0491d55",
+    },
+    version: {
+      type: "string",
+      description: "Schema metadata version (SemVer)",
+      example: "1.0.0",
+    },
+    issuer: {
+      type: "string",
+      description: "Issuer from the JWT (iss claim).",
+      example: "Example RP GmbH",
+    },
+    issuedAt: {
+      type: "string",
+      description: "Timestamp when the JWT was issued (from iat claim).",
+      example: "2026-07-09T10:33:22.000Z",
+    },
+    createdAt: {
+      type: "string",
+      description: "Server creation timestamp.",
+      example: "2026-07-09T10:33:22.000Z",
+    },
+    updatedAt: {
+      type: "string",
+      description: "Last update timestamp.",
+      example: "2026-07-09T10:33:22.000Z",
+    },
+  },
+  required: ["id", "version", "issuer", "issuedAt", "createdAt", "updatedAt"],
 } as const;

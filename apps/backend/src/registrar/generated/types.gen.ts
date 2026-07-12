@@ -188,10 +188,6 @@ export type TrustAuthority = {
    */
   value: string;
   /**
-   * Whether this trust authority is part of the Large-Scale Pilot (LOTE).
-   */
-  isLOTE?: boolean;
-  /**
    * Verification method for trust list signature (e.g., JWK).
    */
   verificationMethod?: {
@@ -281,10 +277,6 @@ export type SchemaMetadata = {
    */
   issuer: string;
   /**
-   * Serial number of the access certificate that signed this schema metadata.
-   */
-  signerCertificateSerial: string;
-  /**
    * The access certificate used to sign this schema metadata.
    */
   signerCertificate?: AccessCertificate;
@@ -370,6 +362,33 @@ export type UpdateSchemaMetadataDto = {
     | "employment"
     | "mobility"
   >;
+};
+
+export type InternalSchemaMetadataDto = {
+  /**
+   * Normalized schema identifier (reserved short ID)
+   */
+  id: string;
+  /**
+   * Schema metadata version (SemVer)
+   */
+  version: string;
+  /**
+   * Issuer from the JWT (iss claim).
+   */
+  issuer: string;
+  /**
+   * Timestamp when the JWT was issued (from iat claim).
+   */
+  issuedAt: string;
+  /**
+   * Server creation timestamp.
+   */
+  createdAt: string;
+  /**
+   * Last update timestamp.
+   */
+  updatedAt: string;
 };
 
 export type HealthControllerCheckData = {
@@ -1049,35 +1068,8 @@ export type SchemaMetadataControllerGetInternalMetadataResponses = {
   /**
    * Internal metadata for the authenticated author.
    */
-  200: unknown;
+  200: InternalSchemaMetadataDto;
 };
 
-export type SchemaMetadataControllerExportData = {
-  body?: never;
-  path: {
-    /**
-     * Normalized schema identifier (reserved short ID)
-     */
-    id: string;
-    /**
-     * Schema metadata version (SemVer)
-     */
-    version: string;
-  };
-  query?: never;
-  url: "/schema-metadata/{id}/versions/{version}/export";
-};
-
-export type SchemaMetadataControllerExportErrors = {
-  /**
-   * Schema metadata not found.
-   */
-  404: unknown;
-};
-
-export type SchemaMetadataControllerExportResponses = {
-  /**
-   * The schema metadata in catalog-of-attestations JSON format.
-   */
-  200: unknown;
-};
+export type SchemaMetadataControllerGetInternalMetadataResponse =
+  SchemaMetadataControllerGetInternalMetadataResponses[keyof SchemaMetadataControllerGetInternalMetadataResponses];

@@ -1,24 +1,28 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { SchemaURIMeta } from "@owf/eudi-attestation-schema";
-import { RegistrarService } from "../../../../registrar/registrar.service";
-import { CredentialConfigService } from "../credential-config/credential-config.service";
+import { KeyChainService } from "../../crypto/key/key-chain.service";
+import { SchemaMetadataService } from "./schema-metadata.service";
+import { CredentialConfigService } from "../../issuer/configuration/credentials/credential-config/credential-config.service";
 import {
     SignSchemaMetaConfigDto,
     SignVersionSchemaMetaConfigDto,
-} from "../dto/schema-meta-config.dto";
-import { buildJsonSchema } from "../utils";
-import { SchemaMetaAdapterService } from "./schema-meta-adapter.service";
+} from "../../issuer/configuration/credentials/dto/schema-meta-config.dto";
+import { buildJsonSchema } from "../../issuer/configuration/credentials/utils";
+import { TrustListService } from "../../issuer/trust-list/trustlist.service";
 
 type TrustedAuthorityInput = NonNullable<
     SignSchemaMetaConfigDto["config"]["trustedAuthorities"]
 >[number];
 
 @Injectable()
-export class SchemaMetadataSigningService {
+export class SchemaMetadataSubmissionService {
     constructor(
         private readonly credentialsService: CredentialConfigService,
-        private readonly schemaMetaAdapterService: SchemaMetaAdapterService,
-        private readonly registrarService: RegistrarService,
+        private readonly schemaMetadataService: SchemaMetadataService,
+        private readonly trustListService: TrustListService,
+        private readonly keyChainService: KeyChainService,
+        private readonly configService: ConfigService,
     ) {}
 
     private extractConfiguredVct(credentialConfig: {
@@ -78,6 +82,78 @@ export class SchemaMetadataSigningService {
         );
     }
 
+    private toPublicJwk(
+        jwk?: Record<string, unknown>,
+    ): Record<string, unknown> | undefined {
+        if (!jwk || typeof jwk !== "object") {
+            return undefined;
+        }
+        const { d, p, q, dp, dq, qi, oth, k, ...publicJwk } = jwk as Record<
+            string,
+            unknown
+        >;
+        void d;
+        void p;
+        void q;
+        void dp;
+        void dq;
+        void qi;
+        void oth;
+        void k;
+        return publicJwk;
+    }
+
+    private parseInternalTrustListRef(
+        value: string,
+    ): { tenantId: string; trustListId: string } | undefined {
+        const match = /\/issuers\/([^/]+)\/trust-list\/([^/?#]+)/.exec(value);
+        if (!match) {
+            return undefined;
+        }
+        return {
+            tenantId: decodeURIComponent(match[1] ?? ""),
+            trustListId: decodeURIComponent(match[2] ?? ""),
+        };
+    }
+
+    private async resolveInternalVerificationMethod(
+        tenantId: string,
+        value: string,
+    ): Promise<Record<string, unknown> | undefined> {
+        const ref = this.parseInternalTrustListRef(value);
+        if (ref?.tenantId !== tenantId) {
+            return undefined;
+        }
+
+        try {
+            const trustList = await this.trustListService.findOne(
+                ref.tenantId,
+                ref.trustListId,
+            );
+            if (!trustList.keyChainId) {
+                return undefined;
+            }
+
+            const keyChain = await this.keyChainService.getEntity(
+                ref.tenantId,
+                trustList.keyChainId,
+            );
+            const publicKeyJwk = this.toPublicJwk(
+                keyChain.activeJwk as Record<string, unknown> | undefined,
+            );
+            if (!publicKeyJwk) {
+                return undefined;
+            }
+
+            return {
+                type: "JsonWebKey2020",
+                publicKeyJwk,
+            };
+        } catch {
+            return undefined;
+        }
+    }
+
     private parseVerificationMethod(
         verificationMethod: string | Record<string, unknown> | undefined,
         index: number,
@@ -121,30 +197,82 @@ export class SchemaMetadataSigningService {
         return verificationMethod;
     }
 
-    private normalizeTrustedAuthority(
+    private async normalizeTrustedAuthority(
+        tenantId: string,
         entry: TrustedAuthorityInput,
         index: number,
-    ) {
+    ): Promise<Record<string, unknown>> {
         if (entry.trustListId) {
+            const trustList = await this.trustListService.findOne(
+                tenantId,
+                entry.trustListId,
+            );
+            if (!trustList.keyChainId) {
+                throw new BadRequestException(
+                    `Trust list ${entry.trustListId} has no key chain configured.`,
+                );
+            }
+
+            const keyChain = await this.keyChainService.getEntity(
+                tenantId,
+                trustList.keyChainId,
+            );
+            const publicKeyJwk = this.toPublicJwk(
+                keyChain.activeJwk as Record<string, unknown> | undefined,
+            );
+            if (!publicKeyJwk) {
+                throw new BadRequestException(
+                    `Trust list ${entry.trustListId} key chain has no active key.`,
+                );
+            }
+
+            const publicUrl = this.configService
+                .getOrThrow<string>("PUBLIC_URL")
+                .replace(/\/$/, "");
+
             return {
-                trustListId: entry.trustListId,
-                ...(entry.isLoTE === undefined ? {} : { isLoTE: entry.isLoTE }),
+                frameworkType: "etsi_tl",
+                value: `${publicUrl}/issuers/${tenantId}/trust-list/${trustList.id}`,
+                verificationMethod: {
+                    type: "JsonWebKey2020",
+                    publicKeyJwk,
+                },
             };
         }
 
-        const verificationMethod = this.parseVerificationMethod(
-            entry.verificationMethod,
-            index,
-        );
+        const verificationMethod =
+            this.parseVerificationMethod(entry.verificationMethod, index) ??
+            (entry.value
+                ? await this.resolveInternalVerificationMethod(
+                      tenantId,
+                      entry.value,
+                  )
+                : undefined);
+
+        if (!verificationMethod) {
+            throw new BadRequestException(
+                `trustedAuthorities[${index}] requires verificationMethod for external authorities.`,
+            );
+        }
 
         return {
             ...(entry.frameworkType
                 ? { frameworkType: entry.frameworkType }
                 : {}),
             ...(entry.value ? { value: entry.value } : {}),
-            ...(entry.isLoTE === undefined ? {} : { isLoTE: entry.isLoTE }),
-            ...(verificationMethod ? { verificationMethod } : {}),
+            verificationMethod,
         };
+    }
+
+    private async resolveTrustedAuthoritiesForRegistrar(
+        tenantId: string,
+        authorities: SignSchemaMetaConfigDto["config"]["trustedAuthorities"],
+    ): Promise<Array<Record<string, unknown>>> {
+        return Promise.all(
+            (authorities ?? []).map((entry, index) =>
+                this.normalizeTrustedAuthority(tenantId, entry, index),
+            ),
+        );
     }
 
     private async fetchRemoteFile(
@@ -310,7 +438,16 @@ export class SchemaMetadataSigningService {
 
         const normalizedTrustedAuthorities = (
             config.trustedAuthorities ?? []
-        ).map((entry, index) => this.normalizeTrustedAuthority(entry, index));
+        ).map((entry) => ({
+            ...(entry.trustListId ? { trustListId: entry.trustListId } : {}),
+            ...(entry.frameworkType
+                ? { frameworkType: entry.frameworkType }
+                : {}),
+            ...(entry.value ? { value: entry.value } : {}),
+            ...(entry.verificationMethod
+                ? { verificationMethod: entry.verificationMethod }
+                : {}),
+        }));
 
         return {
             ...config,
@@ -379,7 +516,7 @@ export class SchemaMetadataSigningService {
         return metadata;
     }
 
-    async signSchemaMetaConfig(
+    async submitSchemaMetadata(
         tenantId: string,
         body: SignSchemaMetaConfigDto,
     ) {
@@ -397,13 +534,13 @@ export class SchemaMetadataSigningService {
                     normalizedConfig,
                     body.credentialConfigId,
                 ),
-                this.schemaMetaAdapterService.resolveTrustedAuthoritiesForRegistrar(
+                this.resolveTrustedAuthoritiesForRegistrar(
                     tenantId,
                     normalizedConfig.trustedAuthorities,
                 ),
             ]);
 
-        const result = await this.registrarService.createSchemaMetadata(
+        const result = await this.schemaMetadataService.createSchemaMetadata(
             tenantId,
             {
                 metadata: this.buildRegistrarMetadata(
@@ -438,7 +575,7 @@ export class SchemaMetadataSigningService {
         return result;
     }
 
-    async signVersionSchemaMetaConfig(
+    async submitSchemaMetadataVersion(
         tenantId: string,
         body: SignVersionSchemaMetaConfigDto,
     ) {
@@ -458,13 +595,13 @@ export class SchemaMetadataSigningService {
                     "rulebook",
                 ),
                 this.resolveSchemaEntries(tenantId, normalizedConfig),
-                this.schemaMetaAdapterService.resolveTrustedAuthoritiesForRegistrar(
+                this.resolveTrustedAuthoritiesForRegistrar(
                     tenantId,
                     normalizedConfig.trustedAuthorities,
                 ),
             ]);
 
-        return this.registrarService.createSchemaMetadata(tenantId, {
+        return this.schemaMetadataService.createSchemaMetadata(tenantId, {
             metadata: this.buildRegistrarMetadata(
                 normalizedConfig,
                 schemaEntries,

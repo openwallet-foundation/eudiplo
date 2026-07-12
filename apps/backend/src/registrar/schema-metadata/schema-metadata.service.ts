@@ -14,7 +14,6 @@ import {
     type SchemaMetadata,
     type SchemaMetadataVocabulariesDto,
     schemaMetadataControllerCreateSchemaMetadata,
-    schemaMetadataControllerExport,
     schemaMetadataControllerFindAll,
     schemaMetadataControllerFindOne,
     schemaMetadataControllerGetInternalMetadata,
@@ -26,8 +25,8 @@ import {
     schemaMetadataControllerSetVersionDeprecation,
     schemaMetadataControllerUpdateMetadata,
     schemaMetadataControllerFindAllByRelyingParty,
-} from "./generated";
-import { RegistrarAuthService } from "./registrar-auth.service";
+} from "../generated";
+import { RegistrarAuthService } from "../registrar-auth.service";
 
 type SchemaMetadataFilters = {
     attestationId?: string;
@@ -207,28 +206,6 @@ export class SchemaMetadataService {
         }
 
         return res.data as string;
-    }
-
-    async exportCatalogFormat(
-        tenantId: string,
-        id: string,
-        version: string,
-    ): Promise<unknown> {
-        const client = await this.authService.getClient(tenantId);
-        const res = await schemaMetadataControllerExport({
-            client,
-            path: { id, version },
-        });
-
-        if (res.error) {
-            this.throwUpstreamError(
-                tenantId,
-                "export schema metadata",
-                res.error,
-            );
-        }
-
-        return res.data;
     }
 
     async getSchemaByFormat(
