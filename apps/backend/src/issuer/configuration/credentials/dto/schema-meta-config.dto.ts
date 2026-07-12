@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { SchemaURIMeta } from "@owf/eudi-attestation-schema";
 import { Type } from "class-transformer";
 import {
-    IsArray,    
+    IsArray,
     IsEnum,
     IsObject,
     IsOptional,
