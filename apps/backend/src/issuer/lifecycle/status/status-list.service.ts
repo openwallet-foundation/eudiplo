@@ -13,10 +13,15 @@ import {
     BitsPerStatus,
     createHeaderAndPayload,
     JWTwithStatusListPayload,
+    getListFromStatusListJWT,
     StatusList,
+    StatusListCwt,
     StatusListJWTHeaderParameters,
 } from "@owf/token-status-list";
 import { JwtPayload } from "@sd-jwt/core";
+import { SignatureAlgorithm } from "@owf/cose";
+import { X509Certificate } from "@peculiar/x509";
+import { decodeJwt } from "jose";
 import { IsNull, Repository } from "typeorm";
 import { v4 } from "uuid";
 import { TenantEntity } from "../../../auth/tenant/entitites/tenant.entity";
@@ -59,6 +64,31 @@ export class StatusListService {
             ImportPhase.FINAL,
             (tenantId) => this.importForTenant(tenantId),
         );
+    }
+
+    private async getSigningCert(entry: StatusListEntity) {
+        // Use the pinned key chain if specified, otherwise use the tenant's default status list key chain.
+        // Falls back to attestation key chains when no dedicated status list key exists.
+        const cert = entry.keyChainId
+            ? await this.certService.find({
+                  tenantId: entry.tenantId,
+                  type: KeyUsageType.StatusList,
+                  fallbackType: KeyUsageType.Attestation,
+                  keyId: entry.keyChainId,
+              })
+            : await this.certService.find({
+                  tenantId: entry.tenantId,
+                  type: KeyUsageType.StatusList,
+                  fallbackType: KeyUsageType.Attestation,
+              });
+
+        if (!cert) {
+            throw new NotFoundException(
+                `Key chain ${entry.keyChainId} not found for tenant ${entry.tenantId}`,
+            );
+        }
+
+        return cert;
     }
 
     /**
@@ -200,26 +230,7 @@ export class StatusListService {
             ttl, // Maximum cache time in seconds for verifiers
         };
 
-        // Use the pinned key chain if specified, otherwise use the tenant's default status list key chain.
-        // Falls back to attestation key chains when no dedicated status list key exists.
-        const cert = entry.keyChainId
-            ? await this.certService.find({
-                  tenantId: entry.tenantId,
-                  type: KeyUsageType.StatusList,
-                  fallbackType: KeyUsageType.Attestation,
-                  keyId: entry.keyChainId,
-              })
-            : await this.certService.find({
-                  tenantId: entry.tenantId,
-                  type: KeyUsageType.StatusList,
-                  fallbackType: KeyUsageType.Attestation,
-              });
-
-        if (!cert) {
-            throw new NotFoundException(
-                `Key chain ${entry.keyChainId} not found for tenant ${entry.tenantId}`,
-            );
-        }
+        const cert = await this.getSigningCert(entry);
 
         const preHeader: StatusListJWTHeaderParameters = {
             alg: "ES256",
@@ -317,6 +328,76 @@ export class StatusListService {
         }
 
         return list.jwt!;
+    }
+
+    /**
+     * Get the CWT for a specific status list.
+     * The CWT content follows the same freshness policy as JWT status list tokens.
+     */
+    async getListCwt(tenantId: string, listId: string): Promise<Uint8Array> {
+        let list = await this.getListById(tenantId, listId);
+
+        const needsRegeneration =
+            !list.jwt || !list.expiresAt || list.expiresAt <= new Date();
+
+        if (needsRegeneration) {
+            await this.createListJWT(list);
+            list = await this.getListById(tenantId, listId);
+        }
+
+        const jwt = list.jwt!;
+        const jwtPayload = decodeJwt(jwt);
+        const statusList = getListFromStatusListJWT(jwt);
+        const cert = await this.getSigningCert(list);
+
+        const subject =
+            typeof jwtPayload.sub === "string"
+                ? jwtPayload.sub
+                : this.buildStatusListUri(tenantId, listId);
+        const issuedAt =
+            typeof jwtPayload.iat === "number"
+                ? new Date(jwtPayload.iat * 1000)
+                : new Date();
+        const expirationTime =
+            typeof jwtPayload.exp === "number"
+                ? new Date(jwtPayload.exp * 1000)
+                : undefined;
+        const ttl =
+            typeof jwtPayload.ttl === "number" ? jwtPayload.ttl : undefined;
+
+        const x5chain = cert.crt.map(
+            (pem) => new Uint8Array(new X509Certificate(pem).rawData),
+        );
+
+        const cwt = new StatusListCwt({
+            payload: {
+                subject,
+                issuedAt,
+                expirationTime,
+                timeToLive: ttl,
+                statusList,
+            },
+            protectedHeaders: new Map<number, unknown>([
+                [1, SignatureAlgorithm.ES256],
+                [4, new TextEncoder().encode(cert.keyId)],
+            ]),
+            unprotectedHeaders: new Map<number, unknown>([[33, x5chain]]),
+        });
+
+        return cwt.signAndEncode(
+            {
+                signingKey: { algorithm: SignatureAlgorithm.ES256 } as never,
+                algorithm: SignatureAlgorithm.ES256,
+            },
+            {
+                sign: async ({ toBeSigned }) =>
+                    this.keyChainService.signBytes(
+                        toBeSigned,
+                        tenantId,
+                        cert.keyId,
+                    ),
+            },
+        );
     }
 
     /**

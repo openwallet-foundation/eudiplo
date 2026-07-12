@@ -31,7 +31,7 @@ sequenceDiagram
 
     Wallet->>Verifier: Present credential
     Verifier->>StatusList: GET /status-list/{id}
-    StatusList-->>Verifier: JWT with status bits
+    StatusList-->>Verifier: Status List Token (JWT or CWT)
     Note over Verifier: Check bit at index 42
 
     Issuer->>StatusList: Revoke credential (set bit)
@@ -93,9 +93,12 @@ The capacity determines how many credentials can use a single status list:
 
 Larger capacities mean larger JWT payloads but fewer status lists to manage.
 
-## JWT Caching and TTL
+## Status List Token Caching and TTL
 
-Per RFC 9528, status list JWTs include time-based claims for caching:
+Per RFC 9528, status list tokens include time-based claims for caching.
+EUDIPLO can serve JWT or CWT representations from the same endpoint.
+
+Example JWT payload:
 
 ```json
 {
@@ -114,36 +117,43 @@ Per RFC 9528, status list JWTs include time-based claims for caching:
 | `exp` | Expiration timestamp (RECOMMENDED)         |
 | `ttl` | Time-to-live hint in seconds (RECOMMENDED) |
 
+For CWT responses, the same semantics are exposed as CWT claims:
+
+- Subject (`sub`) maps to CWT claim key `2`
+- Issued At (`iat`) maps to CWT claim key `6`
+- Expiration (`exp`) maps to CWT claim key `4`
+- Time-To-Live (`ttl`) maps to CWT claim key `65534`
+
 ### Regeneration Modes
 
-EUDIPLO supports two JWT regeneration strategies:
+EUDIPLO supports two token regeneration strategies:
 
 #### Lazy Mode (Default)
 
-The JWT is regenerated only when:
+The token is regenerated only when:
 
 1. A verifier requests the status list AND
-2. The current JWT has expired (`exp` < now)
+2. The current token has expired (`exp` < now)
 
 This minimizes computation but means status changes may not be immediately
 visible to verifiers until the TTL expires.
 
 ```
 TTL = 1 hour
-├─ 10:00 - Credential revoked (JWT not regenerated)
-├─ 10:30 - Verifier checks (gets cached JWT, sees valid)
-├─ 11:00 - JWT expires
-└─ 11:05 - Verifier checks (new JWT generated, sees revoked)
+├─ 10:00 - Credential revoked (token not regenerated)
+├─ 10:30 - Verifier checks (gets cached token, sees valid)
+├─ 11:00 - Token expires
+└─ 11:05 - Verifier checks (new token generated, sees revoked)
 ```
 
 #### Immediate Mode
 
-When `immediateUpdate` is enabled, the JWT is regenerated immediately whenever
+When `immediateUpdate` is enabled, the token is regenerated immediately whenever
 a status entry changes. This ensures verifiers always see the latest status but
 increases computational overhead.
 
 ```
-├─ 10:00 - Credential revoked (JWT regenerated immediately)
+├─ 10:00 - Credential revoked (token regenerated immediately)
 └─ 10:01 - Verifier checks (sees revoked)
 ```
 
@@ -205,7 +215,7 @@ Binding is useful when:
 
 ### Certificate Pinning
 
-By default, status list JWTs are signed with the tenant's default signing
+By default, status list tokens are signed with the tenant's default signing
 certificate. You can pin a specific certificate to a status list for:
 
 - Key rotation scenarios
@@ -214,7 +224,7 @@ certificate. You can pin a specific certificate to a status list for:
 
 ### Signing Key Resolution
 
-When signing a status list JWT, EUDIPLO looks for a key chain with usage type
+When signing a status list token, EUDIPLO looks for a key chain with usage type
 `statusList`. If no dedicated status list key chain exists for the tenant, it
 automatically falls back to the `attestation` key chain. This ensures that
 status lists share the same trust anchor as the issued credentials, which is
@@ -249,14 +259,23 @@ Key operations include:
 
 ### Public Status List Endpoint
 
-The status list JWT is served at a public endpoint for verifiers:
+The status list token is served at a public endpoint for verifiers:
 
 ```
 GET /{tenant}/status-management/status-list/{listId}
 ```
 
-This endpoint requires no authentication and returns the cached status list JWT.
-Verifiers should respect the `exp` and `ttl` claims for caching.
+This endpoint requires no authentication.
+
+Response format negotiation:
+
+| Request Header            | Value                        | Response Content-Type        |
+| ------------------------- | ---------------------------- | ---------------------------- |
+| `Accept`                  | `application/statuslist+cwt` | `application/statuslist+cwt` |
+| `Content-Type` (fallback) | `application/statuslist+cwt` | `application/statuslist+cwt` |
+| Otherwise                 | Any/none                     | `application/statuslist+jwt` |
+
+Verifiers should respect `exp` and `ttl` for caching regardless of JWT/CWT format.
 
 ## Web Client
 

@@ -87,6 +87,26 @@ export class KeyChainSigningService {
         return `${signingInput}.${sigB64}`;
     }
 
+    @Span("keychain.signBytes")
+    async signBytes(
+        data: Uint8Array,
+        tenantId: string,
+        keyId?: string,
+        alg?: KmsSigningAlg,
+    ): Promise<Uint8Array> {
+        const keyChain = keyId
+            ? await this.getKeyChain(tenantId, keyId)
+            : await this.getFirstKeyChain(tenantId);
+
+        const adapter = this.kmsRegistry.resolve(
+            keyChain.kmsProvider,
+            keyChain.tenantId,
+        );
+        const ref = this.refFromEntity(keyChain);
+
+        return adapter.sign(ref, data, alg);
+    }
+
     getPublicKey(type: "jwk", tenantId: string, keyId?: string): Promise<JWK>;
     getPublicKey(
         type: "pem",

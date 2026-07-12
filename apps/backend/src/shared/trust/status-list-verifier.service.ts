@@ -4,6 +4,7 @@ import {
     getListFromStatusListJWT,
     getStatusListFromJWT,
     StatusList,
+    StatusListCwt,
     StatusListEntry,
     StatusType,
 } from "@owf/token-status-list";
@@ -148,13 +149,25 @@ export class StatusListVerifierService {
 
         // Fetch and cache
         this.logger.debug(`Fetching status list from ${uri}`);
-        const statusListJwt = await this.fetchStatusListJwt(uri);
-        const statusList = getListFromStatusListJWT(statusListJwt);
+        const statusListToken = await this.fetchStatusListToken(uri);
 
-        // Extract TTL and exp from the JWT payload
-        const payload = decodeJwt(statusListJwt);
-        const ttl = typeof payload.ttl === "number" ? payload.ttl : undefined;
-        const exp = typeof payload.exp === "number" ? payload.exp : undefined;
+        let statusList: StatusList;
+        let ttl: number | undefined;
+        let exp: number | undefined;
+
+        if (typeof statusListToken === "string") {
+            statusList = getListFromStatusListJWT(statusListToken);
+            const payload = decodeJwt(statusListToken);
+            ttl = typeof payload.ttl === "number" ? payload.ttl : undefined;
+            exp = typeof payload.exp === "number" ? payload.exp : undefined;
+        } else {
+            const statusListCwt = StatusListCwt.fromToken(statusListToken);
+            statusList = statusListCwt.payload.statusList;
+            ttl = statusListCwt.payload.timeToLive;
+            exp = statusListCwt.payload.expirationTime
+                ? Math.floor(statusListCwt.payload.expirationTime.getTime() / 1000)
+                : undefined;
+        }
 
         this.cache.set(uri, {
             statusList,
@@ -173,10 +186,10 @@ export class StatusListVerifierService {
      * @param timeoutMs Timeout in milliseconds
      * @returns The raw JWT string
      */
-    private async fetchStatusListJwt(
+    private async fetchStatusListToken(
         uri: string,
         timeoutMs = 10000,
-    ): Promise<string> {
+    ): Promise<string | Uint8Array> {
         const ctrl = new AbortController();
         const timeout = setTimeout(() => ctrl.abort(), timeoutMs);
 
@@ -184,13 +197,22 @@ export class StatusListVerifierService {
             const response = await firstValueFrom(
                 this.httpService.get(uri, {
                     signal: ctrl.signal,
-                    responseType: "text",
+                    responseType: "arraybuffer",
                     headers: {
-                        Accept: "application/statuslist+jwt, application/jwt",
+                        Accept: "application/statuslist+jwt, application/statuslist+cwt, application/jwt",
                     },
                 }),
             );
-            return response.data;
+
+            const contentType = String(
+                response.headers?.["content-type"] || "",
+            ).toLowerCase();
+
+            if (contentType.includes("application/statuslist+cwt")) {
+                return new Uint8Array(response.data);
+            }
+
+            return Buffer.from(response.data).toString("utf8").trim();
         } catch (error: any) {
             if (
                 error?.name === "CanceledError" ||
@@ -212,6 +234,17 @@ export class StatusListVerifierService {
      * Check if a cache entry is expired.
      */
     private isCacheExpired(cached: CachedStatusList): boolean {
+        return this.isTimedCacheExpired(cached);
+    }
+
+    /**
+     * Shared expiration logic for parsed-list and raw-token caches.
+     */
+    private isTimedCacheExpired(cached: {
+        fetchedAt: number;
+        ttl?: number;
+        exp?: number;
+    }): boolean {
         const now = Date.now();
 
         // Check if JWT has expired (exp claim)
@@ -291,7 +324,13 @@ export class StatusListVerifierService {
 
         // Fetch and cache
         this.logger.debug(`Fetching status list JWT from ${uri}`);
-        const jwt = await this.fetchStatusListJwt(uri);
+        const token = await this.fetchStatusListToken(uri);
+        if (typeof token !== "string") {
+            throw new TypeError(
+                `Status list at ${uri} returned CWT while JWT was requested`,
+            );
+        }
+        const jwt = token;
 
         // Extract TTL and exp from the JWT payload
         const payload = decodeJwt(jwt);
@@ -312,20 +351,6 @@ export class StatusListVerifierService {
      * Check if a JWT cache entry is expired.
      */
     private isJwtCacheExpired(cached: CachedJwt): boolean {
-        const now = Date.now();
-
-        // Check if JWT has expired (exp claim)
-        if (cached.exp && now >= cached.exp * 1000) {
-            return true;
-        }
-
-        // Check TTL from JWT payload
-        if (cached.ttl) {
-            const expiresAt = cached.fetchedAt + cached.ttl * 1000;
-            return now >= expiresAt;
-        }
-
-        // Fall back to default cache TTL
-        return now >= cached.fetchedAt + this.defaultCacheTtlMs;
+        return this.isTimedCacheExpired(cached);
     }
 }

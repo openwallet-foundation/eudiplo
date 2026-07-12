@@ -517,6 +517,14 @@ export class KeyChainService {
         return this.signingService.signJWT(payload, header, tenantId, keyId);
     }
 
+    async signBytes(
+        data: Uint8Array,
+        tenantId: string,
+        keyId?: string,
+    ): Promise<Uint8Array> {
+        return this.signingService.signBytes(data, tenantId, keyId);
+    }
+
     getPublicKey(type: "jwk", tenantId: string, keyId?: string): Promise<JWK>;
     getPublicKey(
         type: "pem",

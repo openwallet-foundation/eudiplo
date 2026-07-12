@@ -1,10 +1,12 @@
-import { Controller, Get, Header, Param } from "@nestjs/common";
+import { Controller, Get, Header, Headers, Param, Res } from "@nestjs/common";
 import {
     ApiExtraModels,
     ApiOkResponse,
     ApiOperation,
+    ApiProduces,
     ApiTags,
 } from "@nestjs/swagger";
+import { Response } from "express";
 import { StatusListAggregationDto } from "./dto/status-list-aggregation.dto";
 import { StatusListImportDto } from "./dto/status-list-import.dto";
 import { StatusListService } from "./status-list.service";
@@ -19,15 +21,38 @@ export class StatusListController {
      * Get the JWT for a specific status list.
      * @param tenantId The tenant ID.
      * @param listId The status list ID.
-     * @returns The status list JWT.
+     * @returns The status list token (JWT or CWT).
      */
     @Get("status-list/:listId")
-    @Header("Content-Type", "application/statuslist+jwt")
-    getList(
+    @ApiProduces("application/statuslist+jwt", "application/statuslist+cwt")
+    async getList(
+        @Res({ passthrough: true }) res: Response,
         @Param("tenantId") tenantId: string,
         @Param("listId") listId: string,
+        @Headers("accept") acceptHeader?: string,
+        @Headers("content-type") contentTypeHeader?: string,
     ) {
+        const wantsCwt = this.prefersCwt(acceptHeader, contentTypeHeader);
+
+        if (wantsCwt) {
+            res.setHeader("Content-Type", "application/statuslist+cwt");
+            const cwt = await this.statusListService.getListCwt(
+                tenantId,
+                listId,
+            );
+            res.send(Buffer.from(cwt));
+            return;
+        }
+
+        res.setHeader("Content-Type", "application/statuslist+jwt");
         return this.statusListService.getListJwt(tenantId, listId);
+    }
+
+    private prefersCwt(acceptHeader?: string, contentTypeHeader?: string) {
+        const headers = `${acceptHeader ?? ""},${contentTypeHeader ?? ""}`
+            .toLowerCase()
+            .replace(/\s+/g, "");
+        return headers.includes("application/statuslist+cwt");
     }
 
     /**
