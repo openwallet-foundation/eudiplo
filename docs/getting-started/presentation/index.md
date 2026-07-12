@@ -40,6 +40,14 @@ EUDIPLO supports multiple presentation scenarios:
     - Supports multi-step workflows combining presentations with web-based verification
     - See [Interactive Authorization Endpoint](../../architecture/iae.md) for details
 
+- ISO 18013-7 Presentation (Digital Credentials API)
+    - Requests an mdoc credential through the browser using the `org-iso-mdoc`
+      protocol (ISO/IEC TS 18013-7:2025 Annex C)
+    - Covers browsers that do not implement the OpenID4VP profile of the
+      Digital Credentials API (e.g. Safari on iOS/macOS)
+    - See [Presentation Requests](presentation-requests.md#iso-18013-7-requests)
+      for the request payload
+
 ### DCQL (Digital Credentials Query Language)
 
 EUDIPLO uses
@@ -192,6 +200,40 @@ sequenceDiagram
 ```
 
 For multi-step flows and configuration details, see [Interactive Authorization Endpoint](../../architecture/iae.md).
+
+### ISO 18013-7 Presentation Flow (Digital Credentials API)
+
+Requests an mdoc credential through the browser using the `org-iso-mdoc`
+protocol of the Digital Credentials API (ISO/IEC TS 18013-7:2025 Annex C).
+The wallet returns the `DeviceResponse` encrypted with HPKE (RFC 9180), bound
+to the browser origin through the session transcript. Verification applies
+the same trust validation (`trusted_authorities`) as the OpenID4VP flow.
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Wallet
+    participant Verifier
+    participant EUDIPLO
+
+    Verifier->>EUDIPLO: Create presentation request (response_type iso-18013-7)
+    EUDIPLO-->>Verifier: DeviceRequest + EncryptionInfo (CBOR)
+    Verifier->>Wallet: navigator.credentials.get (org-iso-mdoc)
+    Wallet->>User: Request consent for data sharing
+    User->>Wallet: Approve presentation
+    Wallet-->>Verifier: HPKE-encrypted DeviceResponse
+    Verifier->>EUDIPLO: POST /presentations/{session}/iso-18013-7
+    EUDIPLO->>EUDIPLO: Decrypt + verify mdoc + trust validation
+    EUDIPLO-->>Verifier: {} or redirect_uri (webhook fires)
+```
+
+!!! warning "Known gap: verifier authentication (`readerAuth`)"
+
+    The `DeviceRequest` is currently sent without `readerAuth`, so the wallet
+    cannot cryptographically authenticate the verifier — unlike the OpenID4VP
+    flow, where the request object is signed with the tenant's access
+    certificate. For a complete EUDI deployment this is a gap; support is
+    planned as a follow-up.
 
 ---
 

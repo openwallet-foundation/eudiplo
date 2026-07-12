@@ -34,6 +34,7 @@ EUDIPLO:
 | EU Reference Implementation | [EC](https://github.com/eu-digital-identity-wallet/eudi-app-android-wallet-ui) | [Android](https://github.com/eu-digital-identity-wallet/eudi-app-android-wallet-ui/releases)                                                          | [Details](#reference-implementation) |
 | Paradym Wallet              | [Animo](https://animo.id)                                                      | [Android](https://play.google.com/store/apps/details?id=id.paradym.wallet) / [iOS](https://apps.apple.com/nl/app/paradym-wallet/id6449846111?l=en-GB) | [Details](#paradym-wallet)           |
 | Multipaz                    | [Multipaz](https://multipaz.com)                                               | [Android](https://apps.multipaz.org/)                                                                                                                 | [Details](#multipaz)                 |
+| AV Reference Implementation         | [EC](https://github.com/eu-digital-identity-wallet/av-app-android-wallet-ui)   | [Android](https://github.com/eu-digital-identity-wallet/av-app-android-wallet-ui/releases)                                                            | [Details](#av-reference-implementation)      |
 
 ### Feature Support Details
 
@@ -47,6 +48,8 @@ EUDIPLO:
     - **Att**: Wallet attestation support
 - **Presentation (OID4VP)**
     - **DC API**: Digital Credentials API support
+- **Presentation (ISO 18013-7)**
+    - **Annex C**: `org-iso-mdoc` protocol via the Digital Credentials API
 - **Credential Format**
     - **SD-JWT**: SD-JWT VC support
 
@@ -56,11 +59,14 @@ EUDIPLO:
 
 #### Feature Matrix
 
-| Wallet                   | Auth | Pre | IAE | DPoP | Att | DC API | SD-JWT | Mdocs |
-| ------------------------ | ---- | --- | --- | ---- | --- | ------ | ------ | ----- |
-| Reference Implementation | ✅   | ✅  | n/a | ✅   | ✅  | n/a    | ✅     | ✅    |
-| Paradym Wallet           | ✅   | ✅  | n/a | ✅   | n/a | ✅     | ✅     | ✅    |
-| Multipaz                 | ✅   | ✅  | n/a | ✅   | n/a | ✅     | ✅     | ✅    |
+| Wallet                   | Auth | Pre | IAE | DPoP | Att | DC API | Annex C | SD-JWT | Mdocs |
+| ------------------------ | ---- | --- | --- | ---- | --- | ------ | ------- | ------ | ----- |
+| Reference Implementation | ✅   | ✅  | n/a | ✅   | ✅  | n/a    | —       | ✅     | ✅    |
+| Paradym Wallet           | ✅   | ✅  | n/a | ✅   | n/a | ✅     | —       | ✅     | ✅    |
+| Multipaz                 | ✅   | ✅  | n/a | ✅   | n/a | ✅     | —       | ✅     | ✅    |
+| AV Reference Implementation      | —    | ✅  | n/a | —    | —   | —      | ✅      | n/a    | ✅    |
+
+("—" means not yet tested against EUDIPLO.)
 
 #### Individual Wallet Details
 
@@ -90,6 +96,19 @@ EUDIPLO:
 - **Last verified**: June 17, 2026
 - **Notes**:
     - Using the logo for the card of a credential
+
+##### AV Reference Implementation
+
+- **Version tested**: July 2026 demo build (Android, via Chrome DC API)
+- **Last verified**: July 9, 2026
+- **Notes**:
+    - Tested for the ISO 18013-7 Annex C flow: mdoc issuance (pre-authorized
+      code flow) and `org-iso-mdoc` presentation via the Digital Credentials
+      API, including HPKE response decryption and DeviceAuth verification.
+    - mdoc-only wallet; SD-JWT VC is not applicable.
+    - Its reference IACA/DS certificates carry a malformed `issuerAltName`
+      extension; EUDIPLO parses them through a tolerant X.509 extension
+      parser registered at startup (reported upstream).
 
 ---
 
