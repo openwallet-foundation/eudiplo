@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { hex } from "@owf/identity-common";
 import {
     DeviceRequest,
     DeviceResponse,
@@ -16,9 +17,11 @@ import {
     ChainValidationResult,
     CredentialChainValidationService,
 } from "../credential-chain-validation.service";
-import { hex } from "@owf/identity-common";
 
-export type MdocSessionData = {
+/**
+ * Session data for the standard OID4VP flow (direct_post or direct_post.jwt).
+ */
+export type MdocSessionDataOid4vp = {
     protocol: "openid4vp";
     nonce: string;
     responseMode: string;
@@ -27,6 +30,32 @@ export type MdocSessionData = {
     /** SHA-256 JWK thumbprint (raw bytes) of the verifier's JAR signing key. */
     jwkThumbprint?: Uint8Array;
 };
+
+/**
+ * Session data for OID4VP via DC API (openid4vp-v1-unsigned, response_mode=dc_api.jwt).
+ * Uses OID4VPDCAPIHandover transcript: SHA256(CBOR([origin, nonce, jwkThumbprint?])).
+ */
+export type MdocSessionDataDcApi = {
+    protocol: "dc_api";
+    nonce: string;
+    origin: string;
+    jwkThumbprint?: Uint8Array;
+};
+
+/**
+ * Session data for ISO 18013-7 Annex C (org-iso-mdoc via DC API).
+ * The DCAPIHandover session transcript is pre-built by the caller.
+ */
+type MdocSessionDataIso18013 = {
+    protocol: "iso-18013-7";
+    /** Pre-built DCAPIHandover SessionTranscript for verifyDeviceResponse. */
+    sessionTranscript: SessionTranscript;
+};
+
+export type MdocSessionData =
+    | MdocSessionDataOid4vp
+    | MdocSessionDataDcApi
+    | MdocSessionDataIso18013;
 
 export type RequestedMdocClaimPath = string[];
 
@@ -112,10 +141,27 @@ export class MdocverifierService {
             }
 
             // 3) Build the session transcript for verification
-            const sessionTranscript = await SessionTranscript.forOid4Vp(
-                sessionData,
-                mdocContext,
-            );
+            let sessionTranscript: SessionTranscript | Uint8Array;
+            if (sessionData.protocol === "iso-18013-7") {
+                // DCAPIHandover: pre-built by Iso18013Service
+                sessionTranscript = sessionData.sessionTranscript;
+            } else if (sessionData.protocol === "dc_api") {
+                // OID4VP DC API: SHA256 hash of CBOR([origin, nonce, jwkThumbprint?])
+                sessionTranscript = await SessionTranscript.forOid4VpDcApi(
+                    {
+                        origin: sessionData.origin,
+                        nonce: sessionData.nonce,
+                        jwkThumbprint: sessionData.jwkThumbprint,
+                    },
+                    mdocContext,
+                );
+            } else {
+                // Standard OID4VP: OpenID4VPHandover
+                sessionTranscript = await SessionTranscript.forOid4Vp(
+                    sessionData,
+                    mdocContext,
+                );
+            }
 
             // 4) Build a device request (currently requesting all claims that were received)
             const deviceRequest = this.buildDeviceRequest(

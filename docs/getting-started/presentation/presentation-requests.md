@@ -20,11 +20,12 @@ to request (DCQL, webhook defaults, registration certificate), see
 
 | Field              | Required | Description                                                           |
 | ------------------ | -------- | --------------------------------------------------------------------- |
-| `response_type`    | Yes      | Response mode. Supported values: `uri`, `dc-api`.                     |
+| `response_type`    | Yes      | Response mode. Supported values: `uri`, `dc-api`, `iso-18013-7`.       |
 | `requestId`        | Yes      | ID of the presentation configuration to use.                          |
 | `webhook`          | No       | Inline webhook override for this request.                             |
 | `redirectUri`      | No       | Redirect target after completion. Supports `{sessionId}` placeholder. |
 | `transaction_data` | No       | Transaction data override for this request.                           |
+| `expected_origin`  | No       | Browser origin for DC API flows. Falls back to the `Origin` header.   |
 
 ---
 
@@ -72,6 +73,43 @@ from the presentation configuration for that session:
 - `transaction_data` overrides configuration `transaction_data`
 
 These values are not merged.
+
+---
+
+## ISO 18013-7 Requests
+
+With `response_type: "iso-18013-7"` the offer targets the `org-iso-mdoc`
+protocol of the Digital Credentials API (ISO/IEC TS 18013-7:2025 Annex C).
+The referenced presentation configuration must contain an `mso_mdoc`
+credential with `meta.doctype_value` set, and `expected_origin` must match
+the origin of the page calling `navigator.credentials.get()`.
+
+```json
+{
+    "response_type": "iso-18013-7",
+    "requestId": "pid-verification",
+    "expected_origin": "https://verifier.example.com"
+}
+```
+
+The offer response contains the CBOR structures for the browser instead of a
+`request_uri`:
+
+```json
+{
+    "session": "<uuid>",
+    "org_iso_mdoc": {
+        "device_request": "<base64url CBOR DeviceRequest>",
+        "encryption_info": "<base64url CBOR EncryptionInfo>"
+    }
+}
+```
+
+The browser forwards both values to the wallet via
+`navigator.credentials.get()` and posts the encrypted wallet response as
+`{ "data": "<base64url>" }` to `POST /presentations/{session}/iso-18013-7`.
+Webhook delivery, `redirectUri`, and single-use semantics behave exactly as
+in the other flows.
 
 ---
 

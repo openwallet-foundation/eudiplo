@@ -12,6 +12,7 @@ import { Role } from "../../auth/roles/role.enum";
 import { Secured } from "../../auth/secure.decorator";
 import { Token, TokenPayload } from "../../auth/token.decorator";
 import { OfferResponse } from "../../issuer/issuance/oid4vci/dto/offer-request.dto";
+import { Iso18013Service } from "../iso18013/iso18013.service";
 import {
     PresentationRequest,
     ResponseType,
@@ -22,11 +23,10 @@ import { Oid4vpService } from "../oid4vp/oid4vp.service";
 @Secured([Role.PresentationRequest, Role.Presentations])
 @Controller("verifier/offer")
 export class VerifierOfferController {
-    /**
-     * Constructor for the Oid4vpController.
-     * @param oid4vpService - Instance of Oid4vpService for handling OID4VP operations.
-     */
-    constructor(private readonly oid4vpService: Oid4vpService) {}
+    constructor(
+        private readonly oid4vpService: Oid4vpService,
+        private readonly iso18013Service: Iso18013Service,
+    ) {}
 
     /**
      * Create an presentation request that can be sent to the user
@@ -80,6 +80,21 @@ export class VerifierOfferController {
                     `Client is not authorized to use presentation config: ${body.requestId}`,
                 );
             }
+        }
+
+        // ISO 18013-7 Annex C: org.iso.mdoc via DC API
+        if (body.response_type === ResponseType.ISO_18013_7) {
+            const origin =
+                body.expected_origin ??
+                req.get("origin") ??
+                req.get("host") ??
+                "";
+            const offer = await this.iso18013Service.createOffer(
+                body.requestId,
+                user.entity!.id,
+                origin,
+            );
+            return res.status(201).json(offer);
         }
 
         const values = await this.oid4vpService.createRequest(

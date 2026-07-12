@@ -84,6 +84,20 @@ export class Session {
     useDcApi!: boolean;
 
     /**
+     * DC API sub-protocol: "oid4vp" (OpenID4VP via DC API) or "iso-18013-7" (org.iso.mdoc).
+     * Null/undefined means the standard OID4VP flow (useDcApi=false).
+     */
+    @Column("varchar", { nullable: true })
+    dcApiProtocol?: string;
+
+    /**
+     * Browser page origin recorded at offer time for BrowserHandover session transcript.
+     * Used exclusively by the ISO 18013-7 Annex C flow.
+     */
+    @Column("varchar", { nullable: true })
+    browserOrigin?: string;
+
+    /**
      * Tenant ID for multi-tenancy support.
      */
     @Column("varchar")

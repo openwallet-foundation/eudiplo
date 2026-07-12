@@ -60,6 +60,18 @@ export class EncryptionService {
     }
 
     /**
+     * Retrieves the full (private) encryption JWK for a tenant.
+     * Used by ISO 18013-7 HPKE decryption — never expose this JWK externally.
+     */
+    async getEncryptionPrivateJwk(tenantId: string): Promise<JWK> {
+        const keyChain = await this.keyChainService.findByUsageType(
+            tenantId,
+            KeyUsageType.Encrypt,
+        );
+        return keyChain.activeJwk;
+    }
+
+    /**
      * Retrieves the public encryption key for a given tenant.
      * @param tenantId - The ID of the tenant for which to retrieve the public key.
      * @returns The public encryption key as a JWK.

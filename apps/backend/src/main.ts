@@ -13,6 +13,7 @@ import { AllExceptionsFilter } from "./all-exceptions.filter";
 import { AppModule } from "./app.module";
 import { filterOpenApiPaths, GLOBAL_PREFIX_EXCLUSIONS } from "./main.helpers";
 import { ValidationErrorFilter } from "./shared/common/filters/validation-error.filter";
+import { registerTolerantX509Extensions } from "./shared/utils/x509-tolerant-extensions";
 import { NextFunction, Request, Response } from "express";
 
 /**
@@ -83,6 +84,11 @@ function loadTlsOptions(): TlsOptions | undefined {
  * Bootstrap function to initialize the NestJS application.
  */
 async function bootstrap() {
+    // Tolerate malformed X.509 extensions (e.g. the nested-Extension
+    // issuerAltName in the EU AV reference certificates) before any
+    // certificate is parsed.
+    registerTolerantX509Extensions();
+
     // Start OpenTelemetry SDK before NestJS initializes —
     // instrumentations must be registered before any framework code runs.
     // During DOC_GENERATE we skip OTel bootstrap entirely.

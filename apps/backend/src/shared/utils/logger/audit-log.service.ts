@@ -12,7 +12,7 @@ import {
 export interface AuditLogContext {
     sessionId: string;
     tenantId?: string;
-    flowType: "OID4VCI" | "OID4VP";
+    flowType: "OID4VCI" | "OID4VP" | "ISO18013";
     stage?: string;
 }
 
