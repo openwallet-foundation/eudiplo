@@ -251,6 +251,17 @@
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#resolveSchemaMetadataJwt" >resolveSchemaMetadataJwt</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#storePresentationConfig" >storePresentationConfig</a>
                             </li>
                             <li>
@@ -306,8 +317,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="33"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:33</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="34"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -385,8 +396,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="180"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:180</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="208"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:208</a></div>
                         </td>
                     </tr>
 
@@ -488,8 +499,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="142"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:142</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="170"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:170</a></div>
                         </td>
                     </tr>
 
@@ -581,8 +592,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="108"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:108</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="136"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:136</a></div>
                         </td>
                     </tr>
 
@@ -664,8 +675,8 @@ Returns an empty array when the registrar is not enabled for this tenant.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="213"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:213</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="241"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:241</a></div>
                         </td>
                     </tr>
 
@@ -761,8 +772,8 @@ configuration. Bypasses and refreshes the embedded cache.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="59"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:59</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="60"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:60</a></div>
                         </td>
                     </tr>
 
@@ -846,8 +857,8 @@ This avoids browser CORS limitations when browsing issuer metadata.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="87"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:87</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="88"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:88</a></div>
                         </td>
                     </tr>
 
@@ -901,6 +912,92 @@ directly from registrar URLs.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="resolveSchemaMetadataJwt"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>resolveSchemaMetadataJwt</b></span>
+                        <a href="#resolveSchemaMetadataJwt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resolveSchemaMetadataJwt(body: <a href="../classes/ResolveSchemaMetadataJwtDto.html" target="_self">ResolveSchemaMetadataJwtDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Secured([&#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Post(&#x27;schema-metadata/resolve-jwt&#x27;)<br />@ApiOperation({summary: &#x27;Resolve schema metadata JWT&#x27;, description: &#x27;Validates and resolves a signed schema metadata JWT directly, building DCQL and resolving schema references. Useful for resolving catalog entries without requiring external URL accessibility.&#x27;})<br />@ApiBody({type: ResolveSchemaMetadataJwtDto})<br />@ApiResponse({status: 200, description: &#x27;Resolved schema metadata import payload&#x27;})<br />@ApiResponse({status: 400, description: &#x27;Invalid JWT or invalid schema metadata&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="115"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:115</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Resolve schema metadata JWT directly.
+This endpoint accepts a signed JWT and resolves it into DCQL and references
+without requiring a URL fetch. Useful for resolving catalog entries.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/ResolveSchemaMetadataJwtDto.html" target="_self" >ResolveSchemaMetadataJwtDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="storePresentationConfig"></a>
                     <span class="name">
                             <span class="modifier"></span>
@@ -927,8 +1024,8 @@ directly from registrar URLs.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="121"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:121</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="149"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:149</a></div>
                         </td>
                     </tr>
 
@@ -1030,8 +1127,8 @@ directly from registrar URLs.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="158"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:158</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="186"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:186</a></div>
                         </td>
                     </tr>
 
@@ -1139,6 +1236,7 @@ import { PresentationConfigCreateDto } from &quot;./dto/presentation-config-crea
 import { PresentationConfigUpdateDto } from &quot;./dto/presentation-config-update.dto&quot;;
 import { ResolveIssuerMetadataDto } from &quot;./dto/resolve-issuer-metadata.dto&quot;;
 import { ResolveSchemaMetadataDto } from &quot;./dto/resolve-schema-metadata.dto&quot;;
+import { ResolveSchemaMetadataJwtDto } from &quot;./dto/resolve-schema-metadata-jwt.dto&quot;;
 import { PresentationsService } from &quot;./presentations.service&quot;;
 
 @ApiTags(&quot;Verifier&quot;)
@@ -1209,6 +1307,33 @@ export class PresentationManagementController {
     async resolveSchemaMetadata(@Body() body: ResolveSchemaMetadataDto) {
         return this.presentationsService.resolveSchemaMetadata(
             body.schemaMetadataUrl,
+        );
+    }
+
+    /**
+     * Resolve schema metadata JWT directly.
+     * This endpoint accepts a signed JWT and resolves it into DCQL and references
+     * without requiring a URL fetch. Useful for resolving catalog entries.
+     */
+    @Secured([Role.Presentations, Role.PresentationRequest])
+    @Post(&quot;schema-metadata/resolve-jwt&quot;)
+    @ApiOperation({
+        summary: &quot;Resolve schema metadata JWT&quot;,
+        description:
+            &quot;Validates and resolves a signed schema metadata JWT directly, building DCQL and resolving schema references. Useful for resolving catalog entries without requiring external URL accessibility.&quot;,
+    })
+    @ApiBody({ type: ResolveSchemaMetadataJwtDto })
+    @ApiResponse({
+        status: 200,
+        description: &quot;Resolved schema metadata import payload&quot;,
+    })
+    @ApiResponse({
+        status: 400,
+        description: &quot;Invalid JWT or invalid schema metadata&quot;,
+    })
+    async resolveSchemaMetadataJwt(@Body() body: ResolveSchemaMetadataJwtDto) {
+        return this.presentationsService.resolveSchemaMetadataJwt(
+            body.signedJwt,
         );
     }
 

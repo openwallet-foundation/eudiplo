@@ -126,7 +126,7 @@
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
     <span class="icon ion-ios-document" aria-hidden="true"></span>
-    <code>src/registrar/dto/schema-metadata.dto.ts</code>
+    <code>src/registrar/schema-metadata/dto/schema-metadata.dto.ts</code>
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -190,7 +190,7 @@
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
-                                <a href="#schemaContent" >schemaContent</a>
+                                <a href="#meta" >meta</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
@@ -246,7 +246,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="141" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:141</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="141" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:141</a></div>
                         </td>
                     </tr>
 
@@ -282,7 +282,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="135" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:135</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="135" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:135</a></div>
                         </td>
                     </tr>
 
@@ -319,7 +319,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="156" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:156</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="156" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:156</a></div>
                         </td>
                     </tr>
 
@@ -330,12 +330,12 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="schemaContent"></a>
+                    <a name="meta"></a>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
-                        <span ><b>schemaContent</b></span>
-                        <a href="#schemaContent"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>meta</b></span>
+                        <a href="#meta"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -350,13 +350,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Inline schema content (JSON Schema)&#x27;, type: &#x27;object&#x27;, additionalProperties: true})<br />
+                            @ApiPropertyOptional({description: &#x27;Format-specific metadata for the schema entry&#x27;, type: &#x27;object&#x27;, additionalProperties: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="151" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:151</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="151" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:151</a></div>
                         </td>
                     </tr>
 
@@ -393,7 +393,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="144" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:144</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="144" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:144</a></div>
                         </td>
                     </tr>
 
@@ -558,11 +558,11 @@ export class MetadataSchemaDto {
     uri?: string;
 
     @ApiPropertyOptional({
-        description: &quot;Inline schema content (JSON Schema)&quot;,
+        description: &quot;Format-specific metadata for the schema entry&quot;,
         type: &quot;object&quot;,
         additionalProperties: true,
     })
-    schemaContent?: Record&lt;string, unknown&gt;;
+    meta?: Record&lt;string, unknown&gt;;
 
     @ApiPropertyOptional({
         description: &quot;Subresource Integrity hash for the schema&quot;,
@@ -694,12 +694,6 @@ export class SchemaMetadataResponseDto {
     @ApiProperty({ description: &quot;Issuer from the JWT (&#x60;iss&#x60; claim)&quot; })
     issuer!: string;
 
-    @ApiProperty({
-        description:
-            &quot;Serial number of the access certificate that signed this schema metadata&quot;,
-    })
-    signerCertificateSerial!: string;
-
     @ApiPropertyOptional({
         description: &quot;The access certificate used to sign this schema metadata&quot;,
         type: AccessCertificateRefDto,
@@ -719,8 +713,8 @@ export class SchemaMetadataResponseDto {
     @ApiProperty({ description: &quot;Last update timestamp&quot; })
     updatedAt!: string;
 
-    @ApiPropertyOptional({ description: &quot;Whether this version is deprecated&quot; })
-    deprecated?: boolean;
+    @ApiProperty({ description: &quot;Whether this version is deprecated&quot; })
+    deprecated!: boolean;
 
     @ApiPropertyOptional({
         description: &quot;Deprecation message shown to consumers&quot;,
@@ -731,6 +725,11 @@ export class SchemaMetadataResponseDto {
         description: &quot;The version that supersedes this one&quot;,
     })
     supersededByVersion?: string;
+
+    @ApiPropertyOptional({
+        description: &quot;Timestamp when this version was marked as deprecated&quot;,
+    })
+    deprecatedAt?: string;
 }
 
 /**

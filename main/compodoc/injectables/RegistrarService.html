@@ -222,10 +222,6 @@ Actual logic lives in the focused sub-services:</p>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                <a href="#createSchemaMetadata" >createSchemaMetadata</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#deleteConfig" >deleteConfig</a>
                             </li>
                             <li>
@@ -732,85 +728,6 @@ Actual logic lives in the focused sub-services:</p>
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>    <code>Promise&lt;{ id: string; certId: string; crt: string }&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="createSchemaMetadata"></a>
-                    <span class="name">
-                        <span ><b>createSchemaMetadata</b></span>
-                        <a href="#createSchemaMetadata"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>createSchemaMetadata(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, request: { metadata: Record<string, unknown>; rulebookFile: Blob | File; schemaFiles: Array<Blob | File> })</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="144"
-                                    class="link-to-prism">src/registrar/registrar.service.ts:144</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>request</td>
-                                            <td>
-                                                        <code>{ metadata: Record&lt;string, unknown&gt;; rulebookFile: Blob | File; schemaFiles: Array&lt;Blob | File&gt; }</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1445,7 +1362,7 @@ import { RegistrarConfigEntity } from &quot;./entities/registrar-config.entity&q
 import { type RegistrationCertificateCreation } from &quot;./generated&quot;;
 import { RegistrarConfigService } from &quot;./registrar-config.service&quot;;
 import { RegistrationCertificateService } from &quot;./registration-certificate.service&quot;;
-import { SchemaMetadataService } from &quot;./schema-metadata.service&quot;;
+import { SchemaMetadataService } from &quot;./schema-metadata/schema-metadata.service&quot;;
 
 /**
  * Facade that preserves the original public API of the registrar domain.
@@ -1568,7 +1485,7 @@ export class RegistrarService {
     }
 
     // -------------------------------------------------------------------------
-    // Schema metadata delegation → SchemaMetadataService
+    // Schema metadata list lookup used by verifier/catalog flows.
     // -------------------------------------------------------------------------
 
     findAllSchemaMetadata(
@@ -1576,17 +1493,6 @@ export class RegistrarService {
         filters: { attestationId?: string; version?: string },
     ) {
         return this.schemaMetadataSvc.findAll(tenantId, filters);
-    }
-
-    createSchemaMetadata(
-        tenantId: string,
-        request: {
-            metadata: Record&lt;string, unknown&gt;;
-            rulebookFile: Blob | File;
-            schemaFiles: Array&lt;Blob | File&gt;;
-        },
-    ) {
-        return this.schemaMetadataSvc.createSchemaMetadata(tenantId, request);
     }
 }
 </code></pre>

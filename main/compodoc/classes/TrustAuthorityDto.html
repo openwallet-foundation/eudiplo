@@ -126,7 +126,7 @@
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
     <span class="icon ion-ios-document" aria-hidden="true"></span>
-    <code>src/registrar/dto/schema-metadata.dto.ts</code>
+    <code>src/registrar/schema-metadata/dto/schema-metadata.dto.ts</code>
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -239,7 +239,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="169" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:169</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="169" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:169</a></div>
                         </td>
                     </tr>
 
@@ -275,7 +275,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="163" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:163</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="163" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:163</a></div>
                         </td>
                     </tr>
 
@@ -311,7 +311,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="174" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:174</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="174" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:174</a></div>
                         </td>
                     </tr>
 
@@ -348,7 +348,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="182" class="link-to-prism">src/registrar/dto/schema-metadata.dto.ts:182</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="182" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:182</a></div>
                         </td>
                     </tr>
 
@@ -513,11 +513,11 @@ export class MetadataSchemaDto {
     uri?: string;
 
     @ApiPropertyOptional({
-        description: &quot;Inline schema content (JSON Schema)&quot;,
+        description: &quot;Format-specific metadata for the schema entry&quot;,
         type: &quot;object&quot;,
         additionalProperties: true,
     })
-    schemaContent?: Record&lt;string, unknown&gt;;
+    meta?: Record&lt;string, unknown&gt;;
 
     @ApiPropertyOptional({
         description: &quot;Subresource Integrity hash for the schema&quot;,
@@ -649,12 +649,6 @@ export class SchemaMetadataResponseDto {
     @ApiProperty({ description: &quot;Issuer from the JWT (&#x60;iss&#x60; claim)&quot; })
     issuer!: string;
 
-    @ApiProperty({
-        description:
-            &quot;Serial number of the access certificate that signed this schema metadata&quot;,
-    })
-    signerCertificateSerial!: string;
-
     @ApiPropertyOptional({
         description: &quot;The access certificate used to sign this schema metadata&quot;,
         type: AccessCertificateRefDto,
@@ -674,8 +668,8 @@ export class SchemaMetadataResponseDto {
     @ApiProperty({ description: &quot;Last update timestamp&quot; })
     updatedAt!: string;
 
-    @ApiPropertyOptional({ description: &quot;Whether this version is deprecated&quot; })
-    deprecated?: boolean;
+    @ApiProperty({ description: &quot;Whether this version is deprecated&quot; })
+    deprecated!: boolean;
 
     @ApiPropertyOptional({
         description: &quot;Deprecation message shown to consumers&quot;,
@@ -686,6 +680,11 @@ export class SchemaMetadataResponseDto {
         description: &quot;The version that supersedes this one&quot;,
     })
     supersededByVersion?: string;
+
+    @ApiPropertyOptional({
+        description: &quot;Timestamp when this version was marked as deprecated&quot;,
+    })
+    deprecatedAt?: string;
 }
 
 /**

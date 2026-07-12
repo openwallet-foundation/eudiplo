@@ -282,7 +282,7 @@ object per the EUDI Catalogue of Attestations specification (TS11).</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="181" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:181</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="172" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:172</a></div>
                         </td>
                     </tr>
 
@@ -319,7 +319,7 @@ object per the EUDI Catalogue of Attestations specification (TS11).</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="188" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:188</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="179" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:179</a></div>
                         </td>
                     </tr>
 
@@ -358,7 +358,7 @@ object per the EUDI Catalogue of Attestations specification (TS11).</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="160" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:160</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="151" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:151</a></div>
                         </td>
                     </tr>
 
@@ -395,7 +395,7 @@ object per the EUDI Catalogue of Attestations specification (TS11).</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="174" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:174</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="165" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:165</a></div>
                         </td>
                     </tr>
 
@@ -436,7 +436,7 @@ object per the EUDI Catalogue of Attestations specification (TS11).</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="200" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:200</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="191" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:191</a></div>
                         </td>
                     </tr>
 
@@ -477,7 +477,7 @@ object per the EUDI Catalogue of Attestations specification (TS11).</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="210" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:210</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="201" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:201</a></div>
                         </td>
                     </tr>
 
@@ -514,7 +514,7 @@ object per the EUDI Catalogue of Attestations specification (TS11).</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="167" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:167</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="158" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:158</a></div>
                         </td>
                     </tr>
 
@@ -538,7 +538,6 @@ import { SchemaURIMeta } from &quot;@owf/eudi-attestation-schema&quot;;
 import { Type } from &quot;class-transformer&quot;;
 import {
     IsArray,
-    IsBoolean,
     IsEnum,
     IsObject,
     IsOptional,
@@ -647,14 +646,6 @@ export class TrustAuthorityEntry {
 
     @ApiPropertyOptional({
         description:
-            &quot;Whether this trust authority is a List of Trusted Entities (LoTE)&quot;,
-    })
-    @IsOptional()
-    @IsBoolean()
-    isLoTE?: boolean;
-
-    @ApiPropertyOptional({
-        description:
             &quot;Optional verification material for external trusted authorities (for example a JWK). &quot; +
             &quot;For internal trust-list URLs, EUDIPLO resolves verification material from the database.&quot;,
         oneOf: [
@@ -746,24 +737,20 @@ export class SchemaMetaConfig {
 }
 
 /**
- * Request body for the sign-and-submit schema metadata endpoint.
+ * Request body for schema metadata submission.
+ *
+ * The registrar builds and signs schema metadata from the submitted values.
+ * EUDIPLO no longer performs local SchemaMetadata JWT signing for this flow.
  */
 export class SignSchemaMetaConfigDto {
     @ApiProperty({
         type: () &#x3D;&gt; SchemaMetaConfig,
-        description: &quot;The schema metadata configuration to sign and submit&quot;,
+        description:
+            &quot;The schema metadata configuration to submit. Registrar builds and signs the final schema metadata.&quot;,
     })
     @ValidateNested()
     @Type(() &#x3D;&gt; SchemaMetaConfig)
     config!: SchemaMetaConfig;
-
-    @ApiPropertyOptional({
-        description:
-            &quot;ID of the key chain to use for signing. Defaults to the tenant&#x27;s default key chain.&quot;,
-    })
-    @IsOptional()
-    @IsString()
-    keyChainId?: string;
 
     @ApiPropertyOptional({
         description:
@@ -776,25 +763,19 @@ export class SignSchemaMetaConfigDto {
 }
 
 /**
- * Request body for the sign-and-submit new version endpoint.
+ * Request body for new schema metadata version submission.
+ *
+ * The registrar builds and signs the new version.
  */
 export class SignVersionSchemaMetaConfigDto {
     @ApiProperty({
         type: () &#x3D;&gt; SchemaMetaConfig,
         description:
-            &quot;The schema metadata configuration to sign and submit as a new version. Must include the existing id.&quot;,
+            &quot;The schema metadata configuration to submit as a new version. Must include the existing id.&quot;,
     })
     @ValidateNested()
     @Type(() &#x3D;&gt; SchemaMetaConfig)
     config!: SchemaMetaConfig;
-
-    @ApiPropertyOptional({
-        description:
-            &quot;ID of the key chain to use for signing. Defaults to the tenant&#x27;s default key chain.&quot;,
-    })
-    @IsOptional()
-    @IsString()
-    keyChainId?: string;
 }
 </code></pre>
     </div>

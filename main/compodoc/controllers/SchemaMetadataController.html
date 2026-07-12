@@ -119,7 +119,7 @@
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
     <span class="icon ion-ios-document" aria-hidden="true"></span>
-    <code>src/registrar/schema-metadata.controller.ts</code>
+    <code>src/registrar/schema-metadata/schema-metadata.controller.ts</code>
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -214,13 +214,6 @@ not yet finalized.</p>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                <a href="#export" >export</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#findAll" >findAll</a>
                             </li>
                             <li>
@@ -277,7 +270,11 @@ not yet finalized.</p>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                <a href="#remove" >remove</a>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#publishSchemaMetadata" >publishSchemaMetadata</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
@@ -288,11 +285,27 @@ not yet finalized.</p>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Async</span>
-                                <a href="#signSchemaMetaConfig" >signSchemaMetaConfig</a>
+                                <a href="#publishSchemaMetadataVersion" >publishSchemaMetadataVersion</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                <a href="#remove" >remove</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#signSchemaMetaConfig" >signSchemaMetaConfig</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
@@ -358,8 +371,8 @@ not yet finalized.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="277"
-                                    class="link-to-prism">src/registrar/schema-metadata.controller.ts:277</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="297"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:297</a></div>
                         </td>
                     </tr>
 
@@ -445,108 +458,6 @@ not yet finalized.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="export"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                        <span ><b>export</b></span>
-                        <a href="#export"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>export(token: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>, id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, version: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Decorators : </b>
-                    <br />
-                    <code>@Get(&#x27;:id/versions/:version/export&#x27;)<br />@ApiOperation({summary: &#x27;Export schema metadata in catalog format&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Registrar-defined catalog document&#x27;, schema: undefined})<br /></code>
-                </td>
-            </tr>
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="240"
-                                    class="link-to-prism">src/registrar/schema-metadata.controller.ts:240</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>token</td>
-                                            <td>
-                                                            <code><a href="../interfaces/TokenPayload.html" target="_self" >TokenPayload</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>id</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>version</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;unknown&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="findAll"></a>
                     <span class="name">
                             <span class="modifier"></span>
@@ -574,8 +485,8 @@ not yet finalized.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="135"
-                                    class="link-to-prism">src/registrar/schema-metadata.controller.ts:135</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="174"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:174</a></div>
                         </td>
                     </tr>
 
@@ -676,8 +587,8 @@ not yet finalized.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="158"
-                                    class="link-to-prism">src/registrar/schema-metadata.controller.ts:158</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="197"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:197</a></div>
                         </td>
                     </tr>
 
@@ -766,8 +677,8 @@ not yet finalized.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="221"
-                                    class="link-to-prism">src/registrar/schema-metadata.controller.ts:221</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="260"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:260</a></div>
                         </td>
                     </tr>
 
@@ -868,8 +779,8 @@ not yet finalized.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="197"
-                                    class="link-to-prism">src/registrar/schema-metadata.controller.ts:197</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="236"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:236</a></div>
                         </td>
                     </tr>
 
@@ -958,8 +869,8 @@ not yet finalized.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="149"
-                                    class="link-to-prism">src/registrar/schema-metadata.controller.ts:149</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="188"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:188</a></div>
                         </td>
                     </tr>
 
@@ -1036,8 +947,8 @@ not yet finalized.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="259"
-                                    class="link-to-prism">src/registrar/schema-metadata.controller.ts:259</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="279"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:279</a></div>
                         </td>
                     </tr>
 
@@ -1150,8 +1061,8 @@ not yet finalized.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="207"
-                                    class="link-to-prism">src/registrar/schema-metadata.controller.ts:207</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="246"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:246</a></div>
                         </td>
                     </tr>
 
@@ -1240,8 +1151,8 @@ not yet finalized.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="126"
-                                    class="link-to-prism">src/registrar/schema-metadata.controller.ts:126</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="165"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:165</a></div>
                         </td>
                     </tr>
 
@@ -1291,6 +1202,205 @@ not yet finalized.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="publishSchemaMetadata"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>publishSchemaMetadata</b></span>
+                        <a href="#publishSchemaMetadata"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>publishSchemaMetadata(user: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>, body: <a href="../classes/SignSchemaMetaConfigDto.html" target="_self">SignSchemaMetaConfigDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Post(&#x27;publish&#x27;)<br />@Secured([&#x27;undefined&#x27;])<br />@ApiOperation({summary: &#x27;Publish TS11 schema metadata via registrar&#x27;, description: &#x27;Builds multipart schema metadata input (metadata JSON + rulebook + schema files) and submits it to the registrar, which builds and signs the final schema metadata.&#x27;})<br />@ApiResponse({status: 201, description: &#x27;Registrar metadata entry for the freshly submitted schema metadata.&#x27;})<br />@ApiResponse({status: 400, description: &#x27;Invalid schema metadata input or file mapping&#x27;})<br />@ApiBody({type: SignSchemaMetaConfigDto})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="72"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:72</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Submits schema metadata input values to the registrar, which builds and
+signs the final schema metadata for storage and retrieval.</p>
+<p>If an optional credentialConfigId is provided, the reservedId is
+written back into that credential config schemaMeta.id field so the
+link between the two entities is queryable.</p>
+<p>The TS11 specification is not yet finalized.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/TokenPayload.html" target="_self" >TokenPayload</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/SignSchemaMetaConfigDto.html" target="_self" >SignSchemaMetaConfigDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="publishSchemaMetadataVersion"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>publishSchemaMetadataVersion</b></span>
+                        <a href="#publishSchemaMetadataVersion"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>publishSchemaMetadataVersion(user: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>, body: <a href="../classes/SignVersionSchemaMetaConfigDto.html" target="_self">SignVersionSchemaMetaConfigDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Post(&#x27;publish-version&#x27;)<br />@Secured([&#x27;undefined&#x27;])<br />@ApiOperation({summary: &#x27;Publish a new version of an existing schema metadata entry&#x27;, description: &#x27;Submits schema metadata input values for a new version under an existing schema ID. Registrar builds and signs the resulting schema metadata.&#x27;})<br />@ApiResponse({status: 201, description: &#x27;Registrar metadata entry for the newly submitted version.&#x27;})<br />@ApiResponse({status: 400, description: &#x27;config.id is required; or invalid schema metadata&#x27;})<br />@ApiBody({type: SignVersionSchemaMetaConfigDto})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:128</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Submits new-version schema metadata input values for an existing schema.
+The registrar builds and signs the new version.</p>
+<p>The TS11 specification is not yet finalized.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/TokenPayload.html" target="_self" >TokenPayload</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/SignVersionSchemaMetaConfigDto.html" target="_self" >SignVersionSchemaMetaConfigDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="remove"></a>
                     <span class="name">
                             <span class="modifier"></span>
@@ -1318,8 +1428,8 @@ not yet finalized.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="186"
-                                    class="link-to-prism">src/registrar/schema-metadata.controller.ts:186</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="225"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:225</a></div>
                         </td>
                     </tr>
 
@@ -1400,7 +1510,6 @@ not yet finalized.</p>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Async</span>
                         <span ><b>signSchemaMetaConfig</b></span>
                         <a href="#signSchemaMetaConfig"><span class="icon ion-ios-link"></span></a>
@@ -1418,29 +1527,20 @@ not yet finalized.</p>
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post(&#x27;sign&#x27;)<br />@Secured([&#x27;undefined&#x27;])<br />@ApiOperation({summary: &#x27;Reserve, sign and submit a TS11 SchemaMetaConfig to the registrar&#x27;, description: &#x27;Reserves an attestation ID at the configured registrar, injects it as id, signs the SchemaMetaConfig with the tenant key chain and submits the JWS to the registrar. Optionally pass credentialConfigId to link the created entry back to a credential config.&#x27;})<br />@ApiResponse({status: 201, description: &#x27;Registrar metadata entry for the freshly submitted schema metadata.&#x27;})<br />@ApiResponse({status: 400, description: &#x27;Invalid schema metadata or missing certificate for signing&#x27;})<br />@ApiBody({type: SignSchemaMetaConfigDto})<br /></code>
+                    <code>@Post(&#x27;sign&#x27;)<br />@Secured([&#x27;undefined&#x27;])<br />@ApiOperation({summary: &#x27;Deprecated alias for publish endpoint&#x27;, description: &#x27;Deprecated. Use POST /schema-metadata/publish instead.&#x27;, deprecated: true})<br />@ApiResponse({status: 201, description: &#x27;Registrar metadata entry for the freshly submitted schema metadata.&#x27;})<br />@ApiBody({type: SignSchemaMetaConfigDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="76"
-                                    class="link-to-prism">src/registrar/schema-metadata.controller.ts:76</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="95"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:95</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Reserves an attestation ID at the registrar, signs the supplied
-SchemaMetaConfig (with the reserved ID baked in as id) and submits
-the resulting JWS to the registrar in a single call. Returns the
-registrar SchemaMetadataResponseDto for the freshly created entry.</p>
-<p>If an optional credentialConfigId is provided, the reservedId is
-written back into that credential config schemaMeta.id field so the
-link between the two entities is queryable.</p>
-<p>The TS11 specification is not yet finalized.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -1503,7 +1603,6 @@ link between the two entities is queryable.</p>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Async</span>
                         <span ><b>signVersionSchemaMetaConfig</b></span>
                         <a href="#signVersionSchemaMetaConfig"><span class="icon ion-ios-link"></span></a>
@@ -1521,27 +1620,20 @@ link between the two entities is queryable.</p>
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post(&#x27;sign-version&#x27;)<br />@Secured([&#x27;undefined&#x27;])<br />@ApiOperation({summary: &#x27;Sign and submit a new version of an existing schema metadata entry&#x27;, description: &#x27;Signs the supplied SchemaMetaConfig (which must include the existing id) with the tenant key chain and submits the JWS to the registrar as a new version under the same schema ID.&#x27;})<br />@ApiResponse({status: 201, description: &#x27;Registrar metadata entry for the newly submitted version.&#x27;})<br />@ApiResponse({status: 400, description: &#x27;config.id is required; or invalid schema metadata&#x27;})<br />@ApiBody({type: SignVersionSchemaMetaConfigDto})<br /></code>
+                    <code>@Post(&#x27;sign-version&#x27;)<br />@Secured([&#x27;undefined&#x27;])<br />@ApiOperation({summary: &#x27;Deprecated alias for publish-version endpoint&#x27;, description: &#x27;Deprecated. Use POST /schema-metadata/publish-version instead.&#x27;, deprecated: true})<br />@ApiResponse({status: 201, description: &#x27;Registrar metadata entry for the newly submitted version.&#x27;})<br />@ApiBody({type: SignVersionSchemaMetaConfigDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="113"
-                                    class="link-to-prism">src/registrar/schema-metadata.controller.ts:113</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="152"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:152</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Signs a new version of an existing SchemaMetaConfig and submits it to
-the registrar. Unlike POST schema-metadata/sign, this endpoint does
-NOT reserve a new attestation ID — the caller must supply the existing
-id in the config so the registrar records the JWT as a new version
-under the same schema.</p>
-<p>The TS11 specification is not yet finalized.</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -1625,8 +1717,8 @@ under the same schema.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="169"
-                                    class="link-to-prism">src/registrar/schema-metadata.controller.ts:169</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="208"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.controller.ts:208</a></div>
                         </td>
                     </tr>
 
@@ -1724,14 +1816,14 @@ under the same schema.</p>
     Query,
 } from &quot;@nestjs/common&quot;;
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from &quot;@nestjs/swagger&quot;;
-import { Role } from &quot;../auth/roles/role.enum&quot;;
-import { Secured } from &quot;../auth/secure.decorator&quot;;
-import { Token, TokenPayload } from &quot;../auth/token.decorator&quot;;
+import { Role } from &quot;../../auth/roles/role.enum&quot;;
+import { Secured } from &quot;../../auth/secure.decorator&quot;;
+import { Token, TokenPayload } from &quot;../../auth/token.decorator&quot;;
 import {
     SignSchemaMetaConfigDto,
     SignVersionSchemaMetaConfigDto,
-} from &quot;../issuer/configuration/credentials/dto/schema-meta-config.dto&quot;;
-import { SchemaMetadataSigningService } from &quot;../issuer/configuration/credentials/schema-meta/schema-metadata-signing.service&quot;;
+} from &quot;../../issuer/configuration/credentials/dto/schema-meta-config.dto&quot;;
+import { SchemaMetadataSubmissionService } from &quot;./schema-metadata-submission.service&quot;;
 import {
     DeprecateSchemaMetadataDto,
     SchemaMetadataResponseDto,
@@ -1754,14 +1846,12 @@ import { SchemaMetadataService } from &quot;./schema-metadata.service&quot;;
 export class SchemaMetadataController {
     constructor(
         private readonly schemaMetadataService: SchemaMetadataService,
-        private readonly schemaMetadataSigningService: SchemaMetadataSigningService,
+        private readonly schemaMetadataSubmissionService: SchemaMetadataSubmissionService,
     ) {}
 
     /**
-     * Reserves an attestation ID at the registrar, signs the supplied
-     * SchemaMetaConfig (with the reserved ID baked in as id) and submits
-     * the resulting JWS to the registrar in a single call. Returns the
-     * registrar SchemaMetadataResponseDto for the freshly created entry.
+     * Submits schema metadata input values to the registrar, which builds and
+     * signs the final schema metadata for storage and retrieval.
      *
      * If an optional credentialConfigId is provided, the reservedId is
      * written back into that credential config schemaMeta.id field so the
@@ -1769,13 +1859,12 @@ export class SchemaMetadataController {
      *
      * @experimental The TS11 specification is not yet finalized.
      */
-    @Post(&quot;sign&quot;)
+    @Post(&quot;publish&quot;)
     @Secured([Role.Issuances])
     @ApiOperation({
-        summary:
-            &quot;Reserve, sign and submit a TS11 SchemaMetaConfig to the registrar&quot;,
+        summary: &quot;Publish TS11 schema metadata via registrar&quot;,
         description:
-            &quot;Reserves an attestation ID at the configured registrar, injects it as id, signs the SchemaMetaConfig with the tenant key chain and submits the JWS to the registrar. Optionally pass credentialConfigId to link the created entry back to a credential config.&quot;,
+            &quot;Builds multipart schema metadata input (metadata JSON + rulebook + schema files) and submits it to the registrar, which builds and signs the final schema metadata.&quot;,
     })
     @ApiResponse({
         status: 201,
@@ -1784,36 +1873,54 @@ export class SchemaMetadataController {
     })
     @ApiResponse({
         status: 400,
+        description: &quot;Invalid schema metadata input or file mapping&quot;,
+    })
+    @ApiBody({ type: SignSchemaMetaConfigDto })
+    async publishSchemaMetadata(
+        @Token() user: TokenPayload,
+        @Body() body: SignSchemaMetaConfigDto,
+    ) {
+        return this.schemaMetadataSubmissionService.submitSchemaMetadata(
+            user.entity!.id,
+            body,
+        );
+    }
+
+    @Post(&quot;sign&quot;)
+    @Secured([Role.Issuances])
+    @ApiOperation({
+        summary: &quot;Deprecated alias for publish endpoint&quot;,
+        description: &quot;Deprecated. Use POST /schema-metadata/publish instead.&quot;,
+        deprecated: true,
+    })
+    @ApiResponse({
+        status: 201,
         description:
-            &quot;Invalid schema metadata or missing certificate for signing&quot;,
+            &quot;Registrar metadata entry for the freshly submitted schema metadata.&quot;,
     })
     @ApiBody({ type: SignSchemaMetaConfigDto })
     async signSchemaMetaConfig(
         @Token() user: TokenPayload,
         @Body() body: SignSchemaMetaConfigDto,
     ) {
-        return this.schemaMetadataSigningService.signSchemaMetaConfig(
+        return this.schemaMetadataSubmissionService.submitSchemaMetadata(
             user.entity!.id,
             body,
         );
     }
 
     /**
-     * Signs a new version of an existing SchemaMetaConfig and submits it to
-     * the registrar. Unlike POST schema-metadata/sign, this endpoint does
-     * NOT reserve a new attestation ID — the caller must supply the existing
-     * id in the config so the registrar records the JWT as a new version
-     * under the same schema.
+     * Submits new-version schema metadata input values for an existing schema.
+     * The registrar builds and signs the new version.
      *
      * @experimental The TS11 specification is not yet finalized.
      */
-    @Post(&quot;sign-version&quot;)
+    @Post(&quot;publish-version&quot;)
     @Secured([Role.Issuances])
     @ApiOperation({
-        summary:
-            &quot;Sign and submit a new version of an existing schema metadata entry&quot;,
+        summary: &quot;Publish a new version of an existing schema metadata entry&quot;,
         description:
-            &quot;Signs the supplied SchemaMetaConfig (which must include the existing id) with the tenant key chain and submits the JWS to the registrar as a new version under the same schema ID.&quot;,
+            &quot;Submits schema metadata input values for a new version under an existing schema ID. Registrar builds and signs the resulting schema metadata.&quot;,
     })
     @ApiResponse({
         status: 201,
@@ -1825,11 +1932,35 @@ export class SchemaMetadataController {
         description: &quot;config.id is required; or invalid schema metadata&quot;,
     })
     @ApiBody({ type: SignVersionSchemaMetaConfigDto })
+    async publishSchemaMetadataVersion(
+        @Token() user: TokenPayload,
+        @Body() body: SignVersionSchemaMetaConfigDto,
+    ) {
+        return this.schemaMetadataSubmissionService.submitSchemaMetadataVersion(
+            user.entity!.id,
+            body,
+        );
+    }
+
+    @Post(&quot;sign-version&quot;)
+    @Secured([Role.Issuances])
+    @ApiOperation({
+        summary: &quot;Deprecated alias for publish-version endpoint&quot;,
+        description:
+            &quot;Deprecated. Use POST /schema-metadata/publish-version instead.&quot;,
+        deprecated: true,
+    })
+    @ApiResponse({
+        status: 201,
+        description:
+            &quot;Registrar metadata entry for the newly submitted version.&quot;,
+    })
+    @ApiBody({ type: SignVersionSchemaMetaConfigDto })
     async signVersionSchemaMetaConfig(
         @Token() user: TokenPayload,
         @Body() body: SignVersionSchemaMetaConfigDto,
     ) {
-        return this.schemaMetadataSigningService.signVersionSchemaMetaConfig(
+        return this.schemaMetadataSubmissionService.submitSchemaMetadataVersion(
             user.entity!.id,
             body,
         );
@@ -1939,25 +2070,6 @@ export class SchemaMetadataController {
         @Param(&quot;version&quot;) version: string,
     ): Promise&lt;string&gt; {
         return this.schemaMetadataService.getSignedJwt(
-            token.entity!.id,
-            id,
-            version,
-        );
-    }
-
-    @Get(&quot;:id/versions/:version/export&quot;)
-    @ApiOperation({ summary: &quot;Export schema metadata in catalog format&quot; })
-    @ApiResponse({
-        status: 200,
-        description: &quot;Registrar-defined catalog document&quot;,
-        schema: { type: &quot;object&quot;, additionalProperties: true },
-    })
-    export(
-        @Token() token: TokenPayload,
-        @Param(&quot;id&quot;) id: string,
-        @Param(&quot;version&quot;) version: string,
-    ): Promise&lt;unknown&gt; {
-        return this.schemaMetadataService.exportCatalogFormat(
             token.entity!.id,
             id,
             version,
