@@ -101,7 +101,7 @@
                    <compodoc-menu mode="normal"></compodoc-menu>
                </div>
                <!-- START CONTENT -->
-               <div class="content controller">
+               <div class="content class">
                    <div class="content-data">
 
 
@@ -112,14 +112,21 @@
 
 
 
+
+
+
+
+
+
+
 <ol class="breadcrumb">
-  <li class="breadcrumb-item">Controllers</li>
-  <li class="breadcrumb-item" >VerifierOfferController</li>
+  <li class="breadcrumb-item">Classes</li>
+  <li class="breadcrumb-item" >AddDcApiProtocolToSession1770000000000</li>
 </ol>
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
     <span class="icon ion-ios-document" aria-hidden="true"></span>
-    <code>src/verifier/verifier-offer/verifier-offer.controller.ts</code>
+    <code>src/database/migrations/1770000000000-AddDcApiProtocolToSession.ts</code>
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -145,16 +152,15 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
+
+
+
             <p class="comment">
-                <h3>Prefix</h3>
+                <h3>Implements</h3>
             </p>
             <p class="comment">
-                <code>verifier/offer</code>
+                        <code>MigrationInterface</code>
             </p>
-
-
-
-
 
 
                 <section data-compodoc="block-relationships">
@@ -163,16 +169,16 @@
             <div class="row pt-3">
                 <div class="col-sm-6">
                     <h4>Used by</h4>
-                        <ul class="list-unstyled relationships-list">
-                                <li>
-                                            <code><a href="../modules/VerifierModule.html" target="_self" >VerifierModule</a></code>
-                                </li>
-                        </ul>
+                        <p class="comment"><i>No results matching.</i></p>
                 </div>
 
                 <div class="col-sm-6">
                     <h4>Depends on</h4>
-                        <p class="comment"><i>No results matching.</i></p>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                        <code>MigrationInterface</code>
+                                </li>
+                        </ul>
                 </div>
             </div>
         </section>
@@ -181,6 +187,23 @@
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
+                <tr>
+                    <td class="col-md-3">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                    <td class="col-md-9">
+                        <ul class="index-list">
+                            <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                <a href="#name" >name</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
         <table class="table table-sm table-bordered index-table">
             <tbody>
@@ -192,12 +215,15 @@
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
+                                    <span class="modifier">Public</span>
                                     <span class="modifier">Async</span>
-                                <a href="#getOffer" >getOffer</a>
+                                <a href="#down" >down</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#up" >up</a>
                             </li>
                         </ul>
                     </td>
@@ -211,6 +237,45 @@
 
 </section>
 
+
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="name"></a>
+                    <span class="name">
+                        <span ><b>name</b></span>
+                        <a href="#name"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;AddDcApiProtocolToSession1770000000000&quot;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">src/database/migrations/1770000000000-AddDcApiProtocolToSession.ts:6</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
             <section data-compodoc="block-methods">
     
     <h3 id="methods">
@@ -220,45 +285,33 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getOffer"></a>
+                    <a name="down"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
+                            <span class="modifier">Public</span>
                             <span class="modifier">Async</span>
-                        <span ><b>getOffer</b></span>
-                        <a href="#getOffer"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>down</b></span>
+                        <a href="#down"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getOffer(req: Request, res: Response, body: <a href="../classes/PresentationRequest.html" target="_self">PresentationRequest</a>, user: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>)</code>
+                    <code>down(queryRunner: QueryRunner)</code>
                 </td>
             </tr>
 
-            <tr>
-                <td class="col-md-4">
-                    <b>Decorators : </b>
-                    <br />
-                    <code>@ApiResponse({description: &#x27;JSON response&#x27;, status: 201, type: OfferResponse, content: undefined})<br />@ApiProduces(&#x27;application/json&#x27;, &#x27;image/png&#x27;)<br />@ApiBody({type: PresentationRequest, examples: undefined})<br />@Post()<br /></code>
-                </td>
-            </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="68"
-                                    class="link-to-prism">src/verifier/verifier-offer/verifier-offer.controller.ts:68</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">src/database/migrations/1770000000000-AddDcApiProtocolToSession.ts:40</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Create an presentation request that can be sent to the user</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -273,45 +326,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>req</td>
+                                                <td>queryRunner</td>
                                             <td>
-                                                        <code>Request</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>res</td>
-                                            <td>
-                                                        <code>Response</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>body</td>
-                                            <td>
-                                                            <code><a href="../classes/PresentationRequest.html" target="_self" >PresentationRequest</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>user</td>
-                                            <td>
-                                                            <code><a href="../interfaces/TokenPayload.html" target="_self" >TokenPayload</a></code>
+                                                        <code>QueryRunner</code>
                                             </td>
 
                                             <td>
@@ -324,7 +341,77 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>unknown</code>
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="up"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>up</b></span>
+                        <a href="#up"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>up(queryRunner: QueryRunner)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="8"
+                                    class="link-to-prism">src/database/migrations/1770000000000-AddDcApiProtocolToSession.ts:8</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>queryRunner</td>
+                                            <td>
+                                                        <code>QueryRunner</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -335,135 +422,70 @@
         </tbody>
     </table>
 </section>
+
+
+
+
+
+
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
-    Body,
-    Controller,
-    ForbiddenException,
-    Post,
-    Req,
-    Res,
-} from &quot;@nestjs/common&quot;;
-import { ApiBody, ApiProduces, ApiResponse, ApiTags } from &quot;@nestjs/swagger&quot;;
-import { Request, Response } from &quot;express&quot;;
-import { Role } from &quot;../../auth/roles/role.enum&quot;;
-import { Secured } from &quot;../../auth/secure.decorator&quot;;
-import { Token, TokenPayload } from &quot;../../auth/token.decorator&quot;;
-import { OfferResponse } from &quot;../../issuer/issuance/oid4vci/dto/offer-request.dto&quot;;
-import { Iso18013Service } from &quot;../iso18013/iso18013.service&quot;;
-import {
-    PresentationRequest,
-    ResponseType,
-} from &quot;../oid4vp/dto/presentation-request.dto&quot;;
-import { Oid4vpService } from &quot;../oid4vp/oid4vp.service&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { MigrationInterface, QueryRunner, TableColumn } from &quot;typeorm&quot;;
 
-@ApiTags(&quot;Verifier&quot;)
-@Secured([Role.PresentationRequest, Role.Presentations])
-@Controller(&quot;verifier/offer&quot;)
-export class VerifierOfferController {
-    constructor(
-        private readonly oid4vpService: Oid4vpService,
-        private readonly iso18013Service: Iso18013Service,
-    ) {}
+export class AddDcApiProtocolToSession1770000000000
+    implements MigrationInterface
+{
+    name &#x3D; &quot;AddDcApiProtocolToSession1770000000000&quot;;
 
-    /**
-     * Create an presentation request that can be sent to the user
-     * @param res
-     * @param body
-     */
-    @ApiResponse({
-        description: &quot;JSON response&quot;,
-        status: 201,
-        //TODO: do not use type, otherwhise the response can not deal with both JSON and PNG.
-        type: OfferResponse,
-        content: {
-            &quot;application/json&quot;: { schema: { type: &quot;object&quot; } },
-            &quot;image/png&quot;: { schema: { type: &quot;string&quot;, format: &quot;binary&quot; } },
-        },
-    })
-    @ApiProduces(&quot;application/json&quot;, &quot;image/png&quot;)
-    @ApiBody({
-        type: PresentationRequest,
-        examples: {
-            uri: {
-                summary: &quot;URI&quot;,
-                value: {
-                    response_type: ResponseType.URI,
-                    requestId: &quot;pid&quot;,
-                },
-            },
-            &quot;dc-api&quot;: {
-                summary: &quot;DC API&quot;,
-                value: {
-                    response_type: ResponseType.DC_API,
-                    requestId: &quot;pid&quot;,
-                    expected_origin: &quot;http://localhost:8080&quot;,
-                },
-            },
-        },
-    })
-    @Post()
-    async getOffer(
-        @Req() req: Request,
-        @Res() res: Response,
-        @Body() body: PresentationRequest,
-        @Token() user: TokenPayload,
-    ) {
-        // Check resource-level authorization
-        if (user.client?.allowedPresentationConfigs?.length) {
-            if (
-                !user.client.allowedPresentationConfigs.includes(body.requestId)
-            ) {
-                throw new ForbiddenException(
-                    &#x60;Client is not authorized to use presentation config: ${body.requestId}&#x60;,
-                );
-            }
+    public async up(queryRunner: QueryRunner): Promise&lt;void&gt; {
+        const sessionTable &#x3D; await queryRunner.getTable(&quot;session&quot;);
+        if (!sessionTable) {
+            console.log(&quot;[Migration] session table not found — skipping.&quot;);
+            return;
         }
 
-        // ISO 18013-7 Annex C: org.iso.mdoc via DC API
-        if (body.response_type &#x3D;&#x3D;&#x3D; ResponseType.ISO_18013_7) {
-            const origin &#x3D;
-                body.expected_origin ??
-                req.get(&quot;origin&quot;) ??
-                req.get(&quot;host&quot;) ??
-                &quot;&quot;;
-            const offer &#x3D; await this.iso18013Service.createOffer(
-                body.requestId,
-                user.entity!.id,
-                origin,
+        if (!sessionTable.columns.some((c) &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; &quot;dcApiProtocol&quot;)) {
+            await queryRunner.addColumn(
+                &quot;session&quot;,
+                new TableColumn({
+                    name: &quot;dcApiProtocol&quot;,
+                    type: &quot;varchar&quot;,
+                    isNullable: true,
+                }),
             );
-            return res.status(201).json(offer);
+            console.log(&quot;[Migration] Added dcApiProtocol column to session.&quot;);
         }
 
-        const values &#x3D; await this.oid4vpService.createRequest(
-            body.requestId,
-            {
-                webhook: body.webhook,
-                redirectUri: body.redirectUri,
-                transaction_data: body.transaction_data,
-            },
-            user.entity!.id,
-            body.response_type &#x3D;&#x3D;&#x3D; ResponseType.DC_API,
-            body.expected_origin ?? req.get(&quot;origin&quot;) ?? req.get(&quot;host&quot;) ?? &quot;&quot;,
-        );
-        values.uri &#x3D; &#x60;openid4vp://?${values.uri}&#x60;;
-        values.crossDeviceUri &#x3D; &#x60;openid4vp://?${values.crossDeviceUri}&#x60;;
-        res.status(201).json(values);
+        if (!sessionTable.columns.some((c) &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; &quot;browserOrigin&quot;)) {
+            await queryRunner.addColumn(
+                &quot;session&quot;,
+                new TableColumn({
+                    name: &quot;browserOrigin&quot;,
+                    type: &quot;varchar&quot;,
+                    isNullable: true,
+                }),
+            );
+            console.log(&quot;[Migration] Added browserOrigin column to session.&quot;);
+        }
+    }
+
+    public async down(queryRunner: QueryRunner): Promise&lt;void&gt; {
+        const sessionTable &#x3D; await queryRunner.getTable(&quot;session&quot;);
+        if (!sessionTable) return;
+
+        if (sessionTable.columns.some((c) &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; &quot;browserOrigin&quot;)) {
+            await queryRunner.dropColumn(&quot;session&quot;, &quot;browserOrigin&quot;);
+        }
+        if (sessionTable.columns.some((c) &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; &quot;dcApiProtocol&quot;)) {
+            await queryRunner.dropColumn(&quot;session&quot;, &quot;dcApiProtocol&quot;);
+        }
     }
 }
 </code></pre>
     </div>
 </div>
-
-
-
-
-
-
-
 
 
 
@@ -498,8 +520,8 @@ export class VerifierOfferController {
 
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
-            var COMPODOC_CURRENT_PAGE_CONTEXT = 'controller';
-            var COMPODOC_CURRENT_PAGE_URL = 'VerifierOfferController.html';
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'AddDcApiProtocolToSession1770000000000.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

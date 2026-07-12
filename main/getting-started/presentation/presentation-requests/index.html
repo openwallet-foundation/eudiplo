@@ -1120,6 +1120,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#iso-18013-7-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ISO 18013-7 Requests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#session-and-result-retrieval" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2844,6 +2855,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#iso-18013-7-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ISO 18013-7 Requests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#session-and-result-retrieval" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2999,7 +3021,7 @@ to request (DCQL, webhook defaults, registration certificate), see
 <tr>
 <td><code>response_type</code></td>
 <td>Yes</td>
-<td>Response mode. Supported values: <code>uri</code>, <code>dc-api</code>.</td>
+<td>Response mode. Supported values: <code>uri</code>, <code>dc-api</code>, <code>iso-18013-7</code>.</td>
 </tr>
 <tr>
 <td><code>requestId</code></td>
@@ -3020,6 +3042,11 @@ to request (DCQL, webhook defaults, registration certificate), see
 <td><code>transaction_data</code></td>
 <td>No</td>
 <td>Transaction data override for this request.</td>
+</tr>
+<tr>
+<td><code>expected_origin</code></td>
+<td>No</td>
+<td>Browser origin for DC API flows. Falls back to the <code>Origin</code> header.</td>
 </tr>
 </tbody>
 </table>
@@ -3060,6 +3087,34 @@ from the presentation configuration for that session:</p>
 <li><code>transaction_data</code> overrides configuration <code>transaction_data</code></li>
 </ul>
 <p>These values are not merged.</p>
+<hr>
+<h2 id="iso-18013-7-requests">ISO 18013-7 Requests<a class="headerlink" href="#iso-18013-7-requests" title="Permanent link">¶</a></h2>
+<p>With <code>response_type: "iso-18013-7"</code> the offer targets the <code>org-iso-mdoc</code>
+protocol of the Digital Credentials API (ISO/IEC TS 18013-7:2025 Annex C).
+The referenced presentation configuration must contain an <code>mso_mdoc</code>
+credential with <code>meta.doctype_value</code> set, and <code>expected_origin</code> must match
+the origin of the page calling <code>navigator.credentials.get()</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">"response_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"iso-18013-7"</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pid-verification"</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">"expected_origin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://verifier.example.com"</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">}</span>
+</code></pre></div>
+<p>The offer response contains the CBOR structures for the browser instead of a
+<code>request_uri</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">"session"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;uuid&gt;"</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">"org_iso_mdoc"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">        </span><span class="nt">"device_request"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;base64url CBOR DeviceRequest&gt;"</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">        </span><span class="nt">"encryption_info"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;base64url CBOR EncryptionInfo&gt;"</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>The browser forwards both values to the wallet via
+<code>navigator.credentials.get()</code> and posts the encrypted wallet response as
+<code>{ "data": "&lt;base64url&gt;" }</code> to <code>POST /presentations/{session}/iso-18013-7</code>.
+Webhook delivery, <code>redirectUri</code>, and single-use semantics behave exactly as
+in the other flows.</p>
 <hr>
 <h2 id="session-and-result-retrieval">Session and Result Retrieval<a class="headerlink" href="#session-and-result-retrieval" title="Permanent link">¶</a></h2>
 <p>If no webhook is configured, retrieve the result via the <code>/session</code> endpoint

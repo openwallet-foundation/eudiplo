@@ -248,7 +248,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/main.ts:24</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/main.ts:25</a></div>
                                 </td>
                             </tr>
 
@@ -287,7 +287,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/main.ts:22</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/main.ts:23</a></div>
                                 </td>
                             </tr>
 
@@ -326,7 +326,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/main.ts:23</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/main.ts:24</a></div>
                                 </td>
                             </tr>
 
@@ -370,7 +370,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/main.ts:25</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/main.ts:26</a></div>
                                 </td>
                             </tr>
 
@@ -393,6 +393,7 @@ import { AllExceptionsFilter } from &quot;./all-exceptions.filter&quot;;
 import { AppModule } from &quot;./app.module&quot;;
 import { filterOpenApiPaths, GLOBAL_PREFIX_EXCLUSIONS } from &quot;./main.helpers&quot;;
 import { ValidationErrorFilter } from &quot;./shared/common/filters/validation-error.filter&quot;;
+import { registerTolerantX509Extensions } from &quot;./shared/utils/x509-tolerant-extensions&quot;;
 import { NextFunction, Request, Response } from &quot;express&quot;;
 
 /**
@@ -463,6 +464,11 @@ function loadTlsOptions(): TlsOptions | undefined {
  * Bootstrap function to initialize the NestJS application.
  */
 async function bootstrap() {
+    // Tolerate malformed X.509 extensions (e.g. the nested-Extension
+    // issuerAltName in the EU AV reference certificates) before any
+    // certificate is parsed.
+    registerTolerantX509Extensions();
+
     // Start OpenTelemetry SDK before NestJS initializes —
     // instrumentations must be registered before any framework code runs.
     // During DOC_GENERATE we skip OTel bootstrap entirely.

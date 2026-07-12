@@ -6,28 +6,24 @@
       
       
       
-        <link rel="prev" href="../issuance/issuance-configuration/">
-      
-      
-        <link rel="next" href="presentation-requests/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Overview - EUDIPLO</title>
+        <title>Bug Report: EU AV Reference IACA/DS Certificates Carry a Malformed issuerAltName — Breaks peculiar/x509 Verifiers - EUDIPLO</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -41,18 +37,18 @@
         
         
         
-        <link rel="stylesheet" href="../../assets/external/fonts.googleapis.com/css.49ea35f2.css">
+        <link rel="stylesheet" href="../../../assets/external/fonts.googleapis.com/css.49ea35f2.css">
         <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
     
     
-  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
             html.glightbox-open { overflow: initial; height: 100%; }
             .gslide-title { margin-top: 0px; user-select: text; }
             .gslide-desc { color: #666; user-select: text; }
@@ -81,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#credential-presentation" class="md-skip">
+        <a href="#bug-report-eu-av-reference-iacads-certificates-carry-a-malformed-issueraltname-breaks-peculiarx509-verifiers" class="md-skip">
           Skip to content
         </a>
       
@@ -101,7 +97,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="EUDIPLO" class="md-header__button md-logo" aria-label="EUDIPLO" data-md-component="logo">
+    <a href="../../.." title="EUDIPLO" class="md-header__button md-logo" aria-label="EUDIPLO" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
@@ -121,7 +117,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Overview
+              Bug Report: EU AV Reference IACA/DS Certificates Carry a Malformed issuerAltName — Breaks peculiar/x509 Verifiers
             
           </span>
         </div>
@@ -226,13 +222,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../.." class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../.." class="md-tabs__link">
           
   
   
@@ -254,7 +248,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../deployment/" class="md-tabs__link">
+        <a href="../../../deployment/" class="md-tabs__link">
           
   
   
@@ -276,7 +270,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../migration/" class="md-tabs__link">
+        <a href="../../../migration/" class="md-tabs__link">
           
   
   
@@ -298,7 +292,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../architecture/" class="md-tabs__link">
+        <a href="../../../architecture/" class="md-tabs__link">
           
   
   
@@ -320,7 +314,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../api/" class="md-tabs__link">
+        <a href="../../../api/" class="md-tabs__link">
           
   
   
@@ -342,7 +336,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../development/" class="md-tabs__link">
+        <a href="../../../development/" class="md-tabs__link">
           
   
   
@@ -384,7 +378,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="EUDIPLO" class="md-nav__button md-logo" aria-label="EUDIPLO" data-md-component="logo">
+    <a href="../../.." title="EUDIPLO" class="md-nav__button md-logo" aria-label="EUDIPLO" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
@@ -411,8 +405,6 @@
       
   
   
-    
-  
   
   
     
@@ -440,23 +432,22 @@
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked="">
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1">
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../.." class="md-nav__link ">
+            <a href="../../.." class="md-nav__link ">
               
   
   
@@ -474,13 +465,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="">
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
             
@@ -500,7 +491,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quick-start/" class="md-nav__link">
+      <a href="../../../getting-started/quick-start/" class="md-nav__link">
         
   
   
@@ -528,7 +519,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../first-steps/" class="md-nav__link">
+      <a href="../../../getting-started/first-steps/" class="md-nav__link">
         
   
   
@@ -556,7 +547,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../wallet-compatibility/" class="md-nav__link">
+      <a href="../../../getting-started/wallet-compatibility/" class="md-nav__link">
         
   
   
@@ -584,7 +575,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/" class="md-nav__link">
+      <a href="../../../getting-started/usage/" class="md-nav__link">
         
   
   
@@ -612,7 +603,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../web-client/" class="md-nav__link">
+      <a href="../../../getting-started/web-client/" class="md-nav__link">
         
   
   
@@ -637,10 +628,8 @@
                 
   
   
-    
   
   
-  
     
     
       
@@ -653,21 +642,20 @@
     
       
       
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
         
           
-          
         
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_7" checked="">
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1_7">
         
           
-          <label class="md-nav__link" for="__nav_1_7" id="__nav_1_7_label" tabindex="">
+          <label class="md-nav__link" for="__nav_1_7" id="__nav_1_7_label" tabindex="0">
             
   
   
@@ -685,7 +673,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_7_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -738,7 +726,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../issuance/" class="md-nav__link ">
+            <a href="../../../getting-started/issuance/" class="md-nav__link ">
               
   
   
@@ -782,7 +770,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../issuance/credential-offers/" class="md-nav__link">
+      <a href="../../../getting-started/issuance/credential-offers/" class="md-nav__link">
         
   
   
@@ -810,7 +798,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../issuance/credential-configuration/" class="md-nav__link">
+      <a href="../../../getting-started/issuance/credential-configuration/" class="md-nav__link">
         
   
   
@@ -838,7 +826,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../issuance/attribute-provider/" class="md-nav__link">
+      <a href="../../../getting-started/issuance/attribute-provider/" class="md-nav__link">
         
   
   
@@ -866,7 +854,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../issuance/schema-metadata/" class="md-nav__link">
+      <a href="../../../getting-started/issuance/schema-metadata/" class="md-nav__link">
         
   
   
@@ -894,7 +882,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../issuance/issuance-configuration/" class="md-nav__link">
+      <a href="../../../getting-started/issuance/issuance-configuration/" class="md-nav__link">
         
   
   
@@ -927,8 +915,6 @@
                 
   
   
-    
-  
   
   
     
@@ -953,15 +939,17 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_7_2" checked="">
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1_7_2">
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../../../getting-started/presentation/" class="md-nav__link ">
               
   
   
@@ -979,13 +967,13 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_1_7_2" id="__nav_1_7_2_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_1_7_2" id="__nav_1_7_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_7_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_7_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_7_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1005,7 +993,7 @@
   
   
     <li class="md-nav__item">
-      <a href="presentation-requests/" class="md-nav__link">
+      <a href="../../../getting-started/presentation/presentation-requests/" class="md-nav__link">
         
   
   
@@ -1033,7 +1021,7 @@
   
   
     <li class="md-nav__item">
-      <a href="presentation-configuration/" class="md-nav__link">
+      <a href="../../../getting-started/presentation/presentation-configuration/" class="md-nav__link">
         
   
   
@@ -1061,7 +1049,7 @@
   
   
     <li class="md-nav__item">
-      <a href="transaction-data/" class="md-nav__link">
+      <a href="../../../getting-started/presentation/transaction-data/" class="md-nav__link">
         
   
   
@@ -1119,13 +1107,10 @@
       
       
         
-          
-          
-        
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
@@ -1134,7 +1119,7 @@
         <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1_8">
         
           
-          <label class="md-nav__link" for="__nav_1_8" id="__nav_1_8_label" tabindex="">
+          <label class="md-nav__link" for="__nav_1_8" id="__nav_1_8_label" tabindex="0">
             
   
   
@@ -1170,7 +1155,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../keycloak/" class="md-nav__link">
+      <a href="../../../getting-started/keycloak/" class="md-nav__link">
         
   
   
@@ -1198,7 +1183,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../registrar/" class="md-nav__link">
+      <a href="../../../getting-started/registrar/" class="md-nav__link">
         
   
   
@@ -1226,7 +1211,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../monitor/" class="md-nav__link">
+      <a href="../../../getting-started/monitor/" class="md-nav__link">
         
   
   
@@ -1300,7 +1285,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../deployment/" class="md-nav__link ">
+            <a href="../../../deployment/" class="md-nav__link ">
               
   
   
@@ -1344,7 +1329,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/docker-compose/" class="md-nav__link">
+      <a href="../../../deployment/docker-compose/" class="md-nav__link">
         
   
   
@@ -1372,7 +1357,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/kubernetes/" class="md-nav__link">
+      <a href="../../../deployment/kubernetes/" class="md-nav__link">
         
   
   
@@ -1400,7 +1385,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../deployment/tls/" class="md-nav__link">
+      <a href="../../../deployment/tls/" class="md-nav__link">
         
   
   
@@ -1466,7 +1451,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../migration/" class="md-nav__link ">
+            <a href="../../../migration/" class="md-nav__link ">
               
   
   
@@ -1510,7 +1495,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../migration/5.x-to-6.0/" class="md-nav__link">
+      <a href="../../../migration/5.x-to-6.0/" class="md-nav__link">
         
   
   
@@ -1538,7 +1523,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../migration/4.x-to-5.0/" class="md-nav__link">
+      <a href="../../../migration/4.x-to-5.0/" class="md-nav__link">
         
   
   
@@ -1566,7 +1551,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../migration/3.x-to-4.0/" class="md-nav__link">
+      <a href="../../../migration/3.x-to-4.0/" class="md-nav__link">
         
   
   
@@ -1648,7 +1633,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../architecture/" class="md-nav__link ">
+            <a href="../../../architecture/" class="md-nav__link ">
               
   
   
@@ -1692,7 +1677,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/supported-protocols/" class="md-nav__link">
+      <a href="../../../architecture/supported-protocols/" class="md-nav__link">
         
   
   
@@ -1720,7 +1705,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/trust-framework/" class="md-nav__link">
+      <a href="../../../architecture/trust-framework/" class="md-nav__link">
         
   
   
@@ -1748,7 +1733,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/tenant/" class="md-nav__link">
+      <a href="../../../architecture/tenant/" class="md-nav__link">
         
   
   
@@ -1776,7 +1761,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/sessions/" class="md-nav__link">
+      <a href="../../../architecture/sessions/" class="md-nav__link">
         
   
   
@@ -1804,7 +1789,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/status-management/" class="md-nav__link">
+      <a href="../../../architecture/status-management/" class="md-nav__link">
         
   
   
@@ -1896,7 +1881,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/webhooks/" class="md-nav__link">
+      <a href="../../../architecture/webhooks/" class="md-nav__link">
         
   
   
@@ -1924,7 +1909,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/attribute-providers/" class="md-nav__link">
+      <a href="../../../architecture/attribute-providers/" class="md-nav__link">
         
   
   
@@ -1952,7 +1937,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/iae/" class="md-nav__link">
+      <a href="../../../architecture/iae/" class="md-nav__link">
         
   
   
@@ -1980,7 +1965,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/federation/" class="md-nav__link">
+      <a href="../../../architecture/federation/" class="md-nav__link">
         
   
   
@@ -2016,7 +2001,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/chained-as/" class="md-nav__link">
+      <a href="../../../architecture/chained-as/" class="md-nav__link">
         
   
   
@@ -2044,7 +2029,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/configuration-import/" class="md-nav__link">
+      <a href="../../../architecture/configuration-import/" class="md-nav__link">
         
   
   
@@ -2072,7 +2057,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/key-management/" class="md-nav__link">
+      <a href="../../../architecture/key-management/" class="md-nav__link">
         
   
   
@@ -2100,7 +2085,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/database/" class="md-nav__link">
+      <a href="../../../architecture/database/" class="md-nav__link">
         
   
   
@@ -2128,7 +2113,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/storage/" class="md-nav__link">
+      <a href="../../../architecture/storage/" class="md-nav__link">
         
   
   
@@ -2194,7 +2179,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../api/" class="md-nav__link ">
+            <a href="../../../api/" class="md-nav__link ">
               
   
   
@@ -2238,7 +2223,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/authentication/" class="md-nav__link">
+      <a href="../../../api/authentication/" class="md-nav__link">
         
   
   
@@ -2266,7 +2251,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/session-events/" class="md-nav__link">
+      <a href="../../../api/session-events/" class="md-nav__link">
         
   
   
@@ -2294,7 +2279,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../api/openapi/" class="md-nav__link">
+      <a href="../../../api/openapi/" class="md-nav__link">
         
   
   
@@ -2370,7 +2355,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../development/" class="md-nav__link ">
+            <a href="../../../development/" class="md-nav__link ">
               
   
   
@@ -2414,7 +2399,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/workspace-structure/" class="md-nav__link">
+      <a href="../../../development/workspace-structure/" class="md-nav__link">
         
   
   
@@ -2442,7 +2427,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/running-locally/" class="md-nav__link">
+      <a href="../../../development/running-locally/" class="md-nav__link">
         
   
   
@@ -2470,7 +2455,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/code-quality/" class="md-nav__link">
+      <a href="../../../development/code-quality/" class="md-nav__link">
         
   
   
@@ -2498,7 +2483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/versioning/" class="md-nav__link">
+      <a href="../../../development/versioning/" class="md-nav__link">
         
   
   
@@ -2526,7 +2511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/contributing/" class="md-nav__link">
+      <a href="../../../development/contributing/" class="md-nav__link">
         
   
   
@@ -2554,7 +2539,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/testing/" class="md-nav__link">
+      <a href="../../../development/testing/" class="md-nav__link">
         
   
   
@@ -2582,7 +2567,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/logging-configuration/" class="md-nav__link">
+      <a href="../../../development/logging-configuration/" class="md-nav__link">
         
   
   
@@ -2610,7 +2595,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/documentation-versioning/" class="md-nav__link">
+      <a href="../../../development/documentation-versioning/" class="md-nav__link">
         
   
   
@@ -2665,10 +2650,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#the-defect" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        The defect
       
     </span>
   </a>
@@ -2676,110 +2661,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#key-concepts" class="md-nav__link">
+  <a href="#impact" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Key Concepts
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Key Concepts">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#presentation-flows" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Presentation Flows
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dcql-digital-credentials-query-language" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DCQL (Digital Credentials Query Language)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#registration-certificates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Registration Certificates
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#single-use-requests-replay-prevention" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Single-Use Requests (Replay Prevention)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Architecture">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tenant-based-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tenant-Based Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#session-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Session Management
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Start
+        Impact
       
     </span>
   </a>
@@ -2787,124 +2672,35 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#flow-diagrams" class="md-nav__link">
+  <a href="#workaround-applied-in-eudiplo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Flow Diagrams
+        Workaround applied in EUDIPLO
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Flow Diagrams">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#standard-presentation-flow-same-device" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Standard Presentation Flow (Same-Device)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#standard-presentation-flow-cross-device" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Standard Presentation Flow (Cross-Device)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#presentation-via-interactive-authorization-iae" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Presentation via Interactive Authorization (IAE)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#iso-18013-7-presentation-flow-digital-credentials-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ISO 18013-7 Presentation Flow (Digital Credentials API)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#security-considerations" class="md-nav__link">
+  <a href="#reproduction" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Security Considerations
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Security Considerations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#direct-post-security-model-oid4vp-133" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Direct Post Security Model (OID4VP §13.3)
+        Reproduction
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#data-minimization" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#recommended-upstream-actions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data Minimization
+        Recommended upstream actions
       
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Authentication
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#trust-verification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Trust Verification
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2924,75 +2720,6 @@
 
 
 
-  <nav class="md-path" aria-label="Navigation">
-    <ol class="md-path__list">
-      
-      
-        
-  
-  
-    
-    
-      <li class="md-path__item">
-        <a href="../.." class="md-path__link">
-          
-  <span class="md-ellipsis">
-    Getting Started
-  </span>
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-    
-    
-      
-  
-  
-    
-    
-      <li class="md-path__item">
-        <a href="../issuance/" class="md-path__link">
-          
-  <span class="md-ellipsis">
-    Flows
-  </span>
-
-        </a>
-      </li>
-    
-  
-
-    
-  
-
-      
-        
-  
-  
-    
-    
-      <li class="md-path__item">
-        <a href="./" class="md-path__link">
-          
-  <span class="md-ellipsis">
-    Presentation
-  </span>
-
-        </a>
-      </li>
-    
-  
-
-      
-    </ol>
-  </nav>
-
               
               <article class="md-content__inner md-typeset">
                 
@@ -3000,7 +2727,7 @@
 
 
   
-    <a href="https://github.com/openwallet-foundation/eudiplo/edit/main/docs/getting-started/presentation/index.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/openwallet-foundation/eudiplo/edit/main/docs/findings/bug-reports/2026-07-09-av-reference-iaca-malformed-issuer-alt-name.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"></path></svg>
     </a>
@@ -3009,287 +2736,72 @@
     
       
     
-    <a href="https://github.com/openwallet-foundation/eudiplo/raw/main/docs/getting-started/presentation/index.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/openwallet-foundation/eudiplo/raw/main/docs/findings/bug-reports/2026-07-09-av-reference-iaca-malformed-issuer-alt-name.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"></path></svg>
     </a>
   
 
 
-<h1 id="credential-presentation">Credential Presentation<a class="headerlink" href="#credential-presentation" title="Permanent link">¶</a></h1>
-<p>EUDIPLO provides comprehensive credential presentation capabilities using
-OpenID4VP (OpenID for Verifiable Presentations). This system allows verifiers to
-request specific credentials and claims from users, enabling secure identity
-verification and attribute validation.</p>
+<h1 id="bug-report-eu-av-reference-iacads-certificates-carry-a-malformed-issueraltname-breaks-peculiarx509-verifiers">Bug Report: EU AV Reference IACA/DS Certificates Carry a Malformed <code>issuerAltName</code> — Breaks <a class="magiclink magiclink-github magiclink-repository" href="https://github.com/peculiar/x509" title="GitHub Repository: peculiar/x509">peculiar/x509</a> Verifiers<a class="headerlink" href="#bug-report-eu-av-reference-iacads-certificates-carry-a-malformed-issueraltname-breaks-peculiarx509-verifiers" title="Permanent link">¶</a></h1>
+<p><strong>Affected certificates:</strong> "Age Verification Issuer CA 01" / "Age Verification DS - 001" (Age Verification Reference Implementation, <code>eu-digital-identity-wallet/av-srv-web-issuing-avw-py</code>)
+<strong>Affected verifiers:</strong> any stack using <code>@peculiar/x509</code> (EUDIPLO's mdoc verification, X509ChainBuilder, <code>cert.getExtension()</code>)
+<strong>Severity:</strong> High for AV-pilot interop — credentials issued under this IACA cannot be verified without a workaround</p>
 <hr>
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">¶</a></h2>
-<p>Credential presentation enables verifiers to:</p>
+<h2 id="the-defect">The defect<a class="headerlink" href="#the-defect" title="Permanent link">¶</a></h2>
+<p>The <code>issuerAltName</code> (OID 2.5.29.18) extension value does not contain
+<code>GeneralNames</code> directly, as required by RFC 5280 §4.2.1.7. Instead it wraps a
+<strong>full nested <code>Extension</code> structure</strong> around them:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>X509v3 Issuer Alternative Name:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  OCTET STRING:
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    30 30                     SEQUENCE                     ← spurious Extension wrapper
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>      06 03 55 1D 12          OID 2.5.29.18 (issuerAltName, again)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>      04 29                   OCTET STRING
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        30 27                 SEQUENCE (GeneralNames)      ← this is where the value should start
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>          82 25 68747470...   [2] dNSName = "https://commission.europa.eu/index_en"
+</code></pre></div>
+<p>(<code>openssl x509 -text</code> also fails to pretty-print it, showing raw bytes.)</p>
+<p>Secondary defect: the URL is encoded under the <code>dNSName</code> choice (<code>[2]</code>) instead
+of <code>uniformResourceIdentifier</code> (<code>[6]</code>).</p>
+<h2 id="impact">Impact<a class="headerlink" href="#impact" title="Permanent link">¶</a></h2>
+<p><code>@peculiar/x509</code>'s typed <code>IssuerAlternativeNameExtension</code> throws
+<code>Data does not match to GeneralName ASN1 schema. Wrong values for Choice type</code>
+while parsing the extension. Because <code>X509Certificate.extensions</code> parses every
+extension, this breaks:</p>
 <ul>
-<li><strong>Request specific credentials</strong> from users' wallets</li>
-<li><strong>Verify authenticity</strong> of presented credentials</li>
-<li><strong>Extract required claims</strong> for authorization or validation</li>
-<li><strong>Maintain privacy</strong> by requesting only necessary information</li>
-<li><strong>Support multiple presentation flows</strong> for different use cases</li>
+<li><code>X509ChainBuilder.build()</code> — certificate chain construction fails</li>
+<li><code>cert.getExtension(...)</code> — any typed extension lookup fails</li>
 </ul>
-<p>EUDIPLO supports both standalone presentation flows and
-presentation as part of credential issuance via the <a href="../../architecture/iae/">Interactive Authorization Endpoint (IAE)</a>,
-providing flexibility for various business requirements.</p>
-<hr>
-<h2 id="key-concepts">Key Concepts<a class="headerlink" href="#key-concepts" title="Permanent link">¶</a></h2>
-<h3 id="presentation-flows">Presentation Flows<a class="headerlink" href="#presentation-flows" title="Permanent link">¶</a></h3>
-<p>EUDIPLO supports multiple presentation scenarios:</p>
-<ul>
-<li>
-<p>Standard Presentation Flow</p>
-<ul>
-<li>Direct credential verification requests</li>
-<li>Used for access control and identity verification</li>
-<li>Returns verified claims to the requesting service</li>
-</ul>
-</li>
-<li>
-<p>Presentation via Interactive Authorization (IAE)</p>
-<ul>
-<li>Credentials presented as part of the issuance authorization flow</li>
-<li>Enables qualification-based credential issuance</li>
-<li>Supports multi-step workflows combining presentations with web-based verification</li>
-<li>See <a href="../../architecture/iae/">Interactive Authorization Endpoint</a> for details</li>
-</ul>
-</li>
-<li>
-<p>ISO 18013-7 Presentation (Digital Credentials API)</p>
-<ul>
-<li>Requests an mdoc credential through the browser using the <code>org-iso-mdoc</code>
-  protocol (ISO/IEC TS 18013-7:2025 Annex C)</li>
-<li>Covers browsers that do not implement the OpenID4VP profile of the
-  Digital Credentials API (e.g. Safari on iOS/macOS)</li>
-<li>See <a href="presentation-requests/#iso-18013-7-requests">Presentation Requests</a>
-  for the request payload</li>
-</ul>
-</li>
-</ul>
-<h3 id="dcql-digital-credentials-query-language">DCQL (Digital Credentials Query Language)<a class="headerlink" href="#dcql-digital-credentials-query-language" title="Permanent link">¶</a></h3>
-<p>EUDIPLO uses
-<a href="https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-digital-credentials-query-l">DCQL</a>
-to define presentation requests:</p>
-<ul>
-<li><strong>Structured queries</strong> for specific credentials and claims</li>
-<li><strong>Format specification</strong> (e.g., <code>dc+sd-jwt</code>)</li>
-<li><strong>Selective disclosure</strong> of only required attributes</li>
-<li><strong>VCT (Verifiable Credential Type) targeting</strong> for precise credential matching</li>
-</ul>
-<h3 id="registration-certificates">Registration Certificates<a class="headerlink" href="#registration-certificates" title="Permanent link">¶</a></h3>
-<p>All presentation requests include registration certificates that provide:</p>
-<ul>
-<li><strong>Legal basis</strong> for data processing</li>
-<li><strong>Privacy policy</strong> information</li>
-<li><strong>Contact details</strong> for data protection inquiries</li>
-<li><strong>Purpose statements</strong> explaining why data is requested</li>
-</ul>
-<h3 id="single-use-requests-replay-prevention">Single-Use Requests (Replay Prevention)<a class="headerlink" href="#single-use-requests-replay-prevention" title="Permanent link">¶</a></h3>
-<p>All presentation requests are <strong>single-use and non-replayable</strong>. Once a wallet submits a presentation response to a request:</p>
-<ul>
-<li>The request is marked as consumed and cannot be used again</li>
-<li>Any subsequent attempts to submit presentations for the same request will be rejected with a <code>400 Bad Request</code> error</li>
-<li>The <code>consumedAt</code> timestamp records when the request was first used</li>
-</ul>
-<p><strong>Important Considerations:</strong></p>
-<ul>
-<li><strong>Create a new request for each presentation</strong>: If you need to verify credentials multiple times, create a fresh presentation request via the API</li>
-<li><strong>Request expiration</strong>: Combine single-use enforcement with TTL-based session cleanup (configured per-tenant) to ensure expired requests don't accumulate</li>
-<li><strong>Security benefit</strong>: This prevents presentation request replay attacks where an attacker could reuse an intercepted request to submit fraudulent credentials</li>
-</ul>
-<p>This design is consistent with OAuth 2.0 security best practices and protects against presentation replay attacks.</p>
-<hr>
-<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">¶</a></h2>
-<h3 id="tenant-based-configuration">Tenant-Based Configuration<a class="headerlink" href="#tenant-based-configuration" title="Permanent link">¶</a></h3>
-<p>EUDIPLO uses a tenant-based architecture where:</p>
-<ul>
-<li>Each tenant has isolated presentation configurations</li>
-<li>Configurations are stored securely in the database</li>
-<li>API access is scoped to the authenticated tenant</li>
-<li>Multi-tenant deployments maintain strict data isolation</li>
-</ul>
-<h3 id="session-management">Session Management<a class="headerlink" href="#session-management" title="Permanent link">¶</a></h3>
-<p>Presentation flows create sessions that:</p>
-<ul>
-<li>Track the presentation request lifecycle</li>
-<li>Store temporary data during the exchange</li>
-<li>Enable asynchronous processing via webhooks</li>
-<li>Maintain audit trails for compliance</li>
-</ul>
-<hr>
-<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">¶</a></h2>
-<p>Use the verifier section in the <a href="../../api/openapi/">API Documentation</a> to
-manage presentation configurations and create presentation requests.</p>
-<p>For request payloads, examples, and runtime override behavior, see
-<a href="presentation-requests/">Presentation Requests</a>.</p>
-<hr>
-<h2 id="flow-diagrams">Flow Diagrams<a class="headerlink" href="#flow-diagrams" title="Permanent link">¶</a></h2>
-<h3 id="standard-presentation-flow-same-device">Standard Presentation Flow (Same-Device)<a class="headerlink" href="#standard-presentation-flow-same-device" title="Permanent link">¶</a></h3>
-<p>In a same-device flow, the user's browser and wallet are on the same device.
-EUDIPLO implements the security model from
-<a href="https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#section-13.3">OID4VP §13.3</a>
-to protect against session fixation and identifier correlation.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    actor User
-    participant Wallet
-    participant Verifier
-    participant EUDIPLO
-
-    Verifier-&gt;&gt;EUDIPLO: Create presentation request
-    EUDIPLO--&gt;&gt;Verifier: Return presentation URI (with walletNonce)
-    Verifier-&gt;&gt;User: Redirect to wallet (same device)
-    User-&gt;&gt;Wallet: Open wallet link
-    Wallet-&gt;&gt;EUDIPLO: Fetch request (state = walletNonce)
-    EUDIPLO-&gt;&gt;Wallet: Send presentation request (nonce for VP binding)
-    Wallet-&gt;&gt;User: Request consent for data sharing
-    User-&gt;&gt;Wallet: Approve presentation
-    Wallet-&gt;&gt;EUDIPLO: Submit VP Token via direct_post.jwt
-    EUDIPLO--&gt;&gt;Wallet: Redirect URI with one-time response_code
-    Wallet-&gt;&gt;Verifier: Redirect user (redirect_uri?response_code=…)
-    Verifier-&gt;&gt;EUDIPLO: Retrieve session result using response_code</code></pre>
-<h3 id="standard-presentation-flow-cross-device">Standard Presentation Flow (Cross-Device)<a class="headerlink" href="#standard-presentation-flow-cross-device" title="Permanent link">¶</a></h3>
-<p>In a cross-device flow, the user scans a QR code — the browser and wallet are
-on different devices. No redirect occurs; the verifier polls for session
-completion.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    actor User
-    participant Wallet
-    participant Verifier
-    participant EUDIPLO
-
-    Verifier-&gt;&gt;EUDIPLO: Create presentation request
-    EUDIPLO--&gt;&gt;Verifier: Return presentation URI
-    Verifier-&gt;&gt;User: Display QR code
-    User-&gt;&gt;Wallet: Scan QR code
-    Wallet-&gt;&gt;EUDIPLO: Fetch request (state = walletNonce)
-    EUDIPLO-&gt;&gt;Wallet: Send presentation request
-    Wallet-&gt;&gt;User: Request consent for data sharing
-    User-&gt;&gt;Wallet: Approve presentation
-    Wallet-&gt;&gt;EUDIPLO: Submit VP Token via direct_post.jwt
-    EUDIPLO-&gt;&gt;Verifier: Send verified claims (webhook)</code></pre>
-<h3 id="presentation-via-interactive-authorization-iae">Presentation via Interactive Authorization (IAE)<a class="headerlink" href="#presentation-via-interactive-authorization-iae" title="Permanent link">¶</a></h3>
-<p>The Interactive Authorization Endpoint enables presentation requests as part of credential issuance.
-This flow uses OID4VCI 1.1's authorization code flow with interactive authorization.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    actor User
-    participant Wallet
-    participant EUDIPLO
-    participant Backend as Your Backend
-
-    Wallet-&gt;&gt;EUDIPLO: Authorization Request (interaction_types_supported)
-    EUDIPLO--&gt;&gt;Wallet: IAE Response (openid4vp)
-    Wallet-&gt;&gt;User: Request presentation consent
-    User-&gt;&gt;Wallet: Approve presentation
-    Wallet-&gt;&gt;EUDIPLO: Submit OpenID4VP presentation
-    EUDIPLO-&gt;&gt;Backend: Attribute Provider call (verified claims context)
-    Backend--&gt;&gt;EUDIPLO: Return issuance claims
-    EUDIPLO--&gt;&gt;Wallet: Authorization Code
-    Wallet-&gt;&gt;EUDIPLO: Token Request
-    EUDIPLO--&gt;&gt;Wallet: Access Token
-    Wallet-&gt;&gt;EUDIPLO: Credential Request
-    EUDIPLO--&gt;&gt;Wallet: Issued Credential</code></pre>
-<p>For multi-step flows and configuration details, see <a href="../../architecture/iae/">Interactive Authorization Endpoint</a>.</p>
-<h3 id="iso-18013-7-presentation-flow-digital-credentials-api">ISO 18013-7 Presentation Flow (Digital Credentials API)<a class="headerlink" href="#iso-18013-7-presentation-flow-digital-credentials-api" title="Permanent link">¶</a></h3>
-<p>Requests an mdoc credential through the browser using the <code>org-iso-mdoc</code>
-protocol of the Digital Credentials API (ISO/IEC TS 18013-7:2025 Annex C).
-The wallet returns the <code>DeviceResponse</code> encrypted with HPKE (RFC 9180), bound
-to the browser origin through the session transcript. Verification applies
-the same trust validation (<code>trusted_authorities</code>) as the OpenID4VP flow.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    actor User
-    participant Wallet
-    participant Verifier
-    participant EUDIPLO
-
-    Verifier-&gt;&gt;EUDIPLO: Create presentation request (response_type iso-18013-7)
-    EUDIPLO--&gt;&gt;Verifier: DeviceRequest + EncryptionInfo (CBOR)
-    Verifier-&gt;&gt;Wallet: navigator.credentials.get (org-iso-mdoc)
-    Wallet-&gt;&gt;User: Request consent for data sharing
-    User-&gt;&gt;Wallet: Approve presentation
-    Wallet--&gt;&gt;Verifier: HPKE-encrypted DeviceResponse
-    Verifier-&gt;&gt;EUDIPLO: POST /presentations/{session}/iso-18013-7
-    EUDIPLO-&gt;&gt;EUDIPLO: Decrypt + verify mdoc + trust validation
-    EUDIPLO--&gt;&gt;Verifier: {} or redirect_uri (webhook fires)</code></pre>
-<div class="admonition warning">
-<p class="admonition-title">Known gap: verifier authentication (<code>readerAuth</code>)</p>
-<p>The <code>DeviceRequest</code> is currently sent without <code>readerAuth</code>, so the wallet
-cannot cryptographically authenticate the verifier — unlike the OpenID4VP
-flow, where the request object is signed with the tenant's access
-certificate. For a complete EUDI deployment this is a gap; support is
-planned as a follow-up.</p>
-</div>
-<hr>
-<h2 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">¶</a></h2>
-<h3 id="direct-post-security-model-oid4vp-133">Direct Post Security Model (OID4VP §13.3)<a class="headerlink" href="#direct-post-security-model-oid4vp-133" title="Permanent link">¶</a></h3>
-<p>EUDIPLO implements the <code>direct_post.jwt</code> response mode with the full security
-model defined in
-<a href="https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#section-13.3">OID4VP Section 13.3</a>.
-This model separates identifiers across different actors to prevent session
-fixation and cross-reference attacks.</p>
-<p><strong>Key security properties:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Identifier</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>session.id</code></td>
-<td>Internal (backend / verifier) session identifier — never exposed to the wallet</td>
-</tr>
-<tr>
-<td><code>walletNonce</code></td>
-<td>Wallet-facing identifier used as <code>state</code> in the authorization request — cannot be linked to <code>session.id</code></td>
-</tr>
-<tr>
-<td><code>nonce</code></td>
-<td>Binds the VP Token to this specific request — prevents replay attacks</td>
-</tr>
-<tr>
-<td><code>response_code</code></td>
-<td>One-time code appended to <code>redirect_uri</code> during same-device redirect — prevents session fixation</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Same-device redirect flow:</strong></p>
-<p>When a <code>redirect_uri</code> is configured, EUDIPLO generates a one-time
-<code>response_code</code> and appends it to the redirect URI after the wallet submits its
-response. The verifier's frontend receives this code via the redirect and uses
-it to retrieve the session result. This ensures the browser that initiated the
-flow is the same one that receives the result — an attacker who observes the
-<code>walletNonce</code> in the QR code cannot hijack the redirect.</p>
-<div class="admonition warning">
-<p class="admonition-title">Same-device flows with redirect</p>
-</div>
-<p>For same-device flows that use a <code>redirect_uri</code>, the <code>response_code</code> is
-the <strong>only safe way</strong> to retrieve the session result. The verifier must
-extract it from the redirect URL and use it to look up the completed
-session.</p>
-<h3 id="data-minimization">Data Minimization<a class="headerlink" href="#data-minimization" title="Permanent link">¶</a></h3>
-<ul>
-<li><strong>Request only necessary claims</strong> to protect user privacy</li>
-<li><strong>Use selective disclosure</strong> to limit exposed information</li>
-<li><strong>Implement purpose limitation</strong> through clear registration certificates</li>
-</ul>
-<h3 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">¶</a></h3>
-<ul>
-<li><strong>OAuth 2.0 bearer tokens</strong> for API authentication</li>
-<li><strong>Tenant isolation</strong> prevents cross-tenant data access</li>
-<li><strong>Session-based security</strong> with automatic cleanup</li>
-</ul>
-<h3 id="trust-verification">Trust Verification<a class="headerlink" href="#trust-verification" title="Permanent link">¶</a></h3>
-<ul>
-<li><strong>Cryptographic validation</strong> of presented credentials</li>
-<li><strong>Issuer verification</strong> against trusted entities in trust lists</li>
-<li><strong>Revocation status checking</strong> using the correct revocation certificate from
-  the same trusted entity</li>
-</ul>
-<p>For detailed information on how trust verification works, see
-<a href="../../architecture/trust-framework/">Trust Framework</a>.</p>
+<p>In EUDIPLO this surfaced as a 400 during ISO 18013-7 DC API verification of a
+wallet-presented AV credential:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>MdlError: Data does not match to GeneralName ASN1 schema. Wrong values for Choice type
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    at IssuerAuth.verify (@owf/mdoc) → ctx.x509.verifyCertificateChain (mdoc-context)
+</code></pre></div>
+<h2 id="workaround-applied-in-eudiplo">Workaround applied in EUDIPLO<a class="headerlink" href="#workaround-applied-in-eudiplo" title="Permanent link">¶</a></h2>
+<p><code>registerTolerantX509Extensions()</code> (called at bootstrap) re-registers the
+<code>2.5.29.18</code> parser in <a class="magiclink magiclink-github magiclink-mention" href="https://github.com/peculiar" title="GitHub User: peculiar">@peculiar</a>'s <code>ExtensionFactory</code> with a tolerant subclass
+that unwraps the nested-Extension variant on a best-effort basis and falls back
+to the raw extension bytes instead of throwing. See
+<code>apps/backend/src/shared/utils/x509-tolerant-extensions.ts</code> and its spec, which
+uses the official published IACA certificate as fixture.</p>
+<h2 id="reproduction">Reproduction<a class="headerlink" href="#reproduction" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-O<span class="w"> </span>https://raw.githubusercontent.com/eu-digital-identity-wallet/av-srv-web-issuing-avw-py/main/api_docs/test_tokens/IACA-token/AgeVerificationIssuer.IACA.01.EU.pem
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>node<span class="w"> </span>-e<span class="w"> </span><span class="s2">"</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s2">  require('reflect-metadata');</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s2">  const x509 = require('@peculiar/x509');</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s2">  const cert = new x509.X509Certificate(require('fs').readFileSync('AgeVerificationIssuer.IACA.01.EU.pem','utf8'));</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">  cert.extensions; // throws: Data does not match to GeneralName ASN1 schema</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">"</span>
+</code></pre></div>
+<h2 id="recommended-upstream-actions">Recommended upstream actions<a class="headerlink" href="#recommended-upstream-actions" title="Permanent link">¶</a></h2>
+<ol>
+<li><strong>eu-digital-identity-wallet/av-srv-web-issuing-avw-py</strong>: fix the certificate
+   generation so <code>issuerAltName</code> contains <code>GeneralNames</code> directly (and use the
+   <code>uniformResourceIdentifier</code> choice for URLs); re-issue the reference IACA/DS.</li>
+<li><strong>openwallet-foundation/eudiplo</strong>: keep the tolerant parser — real-world PKI
+   contains such certificates and a verifier should degrade gracefully instead
+   of failing the whole presentation.</li>
+</ol>
 
 
 
@@ -3320,44 +2832,6 @@ session.</p>
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer">
-        
-          
-          <a href="../issuance/issuance-configuration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Issuance Configuration">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                Issuance Configuration
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="presentation-requests/" class="md-footer__link md-footer__link--next" aria-label="Next: Presentation Requests">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Presentation Requests
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">
@@ -3416,12 +2890,12 @@ session.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.action.view", "content.action.edit", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.instant", "navigation.instant.prefetch", "navigation.path", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.code.copy", "content.action.view", "content.action.edit", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.instant", "navigation.instant.prefetch", "navigation.path", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
-        <script src="../../assets/external/unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+        <script src="../../../assets/external/unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
       
     
   

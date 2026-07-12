@@ -246,7 +246,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:51</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:80</a></div>
                                 </td>
                             </tr>
 
@@ -285,7 +285,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:52</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:81</a></div>
                                 </td>
                             </tr>
 
@@ -324,7 +324,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:53</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:82</a></div>
                                 </td>
                             </tr>
 
@@ -363,7 +363,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:54</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="83" class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:83</a></div>
                                 </td>
                             </tr>
 
@@ -402,7 +402,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:55</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="84" class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:84</a></div>
                                 </td>
                             </tr>
 
@@ -414,6 +414,7 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &quot;@nestjs/common&quot;;
+import { hex } from &quot;@owf/identity-common&quot;;
 import {
     DeviceRequest,
     DeviceResponse,
@@ -431,9 +432,11 @@ import {
     ChainValidationResult,
     CredentialChainValidationService,
 } from &quot;../credential-chain-validation.service&quot;;
-import { hex } from &quot;@owf/identity-common&quot;;
 
-export type MdocSessionData &#x3D; {
+/**
+ * Session data for the standard OID4VP flow (direct_post or direct_post.jwt).
+ */
+export type MdocSessionDataOid4vp &#x3D; {
     protocol: &quot;openid4vp&quot;;
     nonce: string;
     responseMode: string;
@@ -442,6 +445,32 @@ export type MdocSessionData &#x3D; {
     /** SHA-256 JWK thumbprint (raw bytes) of the verifier&#x27;s JAR signing key. */
     jwkThumbprint?: Uint8Array;
 };
+
+/**
+ * Session data for OID4VP via DC API (openid4vp-v1-unsigned, response_mode&#x3D;dc_api.jwt).
+ * Uses OID4VPDCAPIHandover transcript: SHA256(CBOR([origin, nonce, jwkThumbprint?])).
+ */
+export type MdocSessionDataDcApi &#x3D; {
+    protocol: &quot;dc_api&quot;;
+    nonce: string;
+    origin: string;
+    jwkThumbprint?: Uint8Array;
+};
+
+/**
+ * Session data for ISO 18013-7 Annex C (org-iso-mdoc via DC API).
+ * The DCAPIHandover session transcript is pre-built by the caller.
+ */
+type MdocSessionDataIso18013 &#x3D; {
+    protocol: &quot;iso-18013-7&quot;;
+    /** Pre-built DCAPIHandover SessionTranscript for verifyDeviceResponse. */
+    sessionTranscript: SessionTranscript;
+};
+
+export type MdocSessionData &#x3D;
+    | MdocSessionDataOid4vp
+    | MdocSessionDataDcApi
+    | MdocSessionDataIso18013;
 
 export type RequestedMdocClaimPath &#x3D; string[];
 
@@ -527,10 +556,27 @@ export class MdocverifierService {
             }
 
             // 3) Build the session transcript for verification
-            const sessionTranscript &#x3D; await SessionTranscript.forOid4Vp(
-                sessionData,
-                mdocContext,
-            );
+            let sessionTranscript: SessionTranscript | Uint8Array;
+            if (sessionData.protocol &#x3D;&#x3D;&#x3D; &quot;iso-18013-7&quot;) {
+                // DCAPIHandover: pre-built by Iso18013Service
+                sessionTranscript &#x3D; sessionData.sessionTranscript;
+            } else if (sessionData.protocol &#x3D;&#x3D;&#x3D; &quot;dc_api&quot;) {
+                // OID4VP DC API: SHA256 hash of CBOR([origin, nonce, jwkThumbprint?])
+                sessionTranscript &#x3D; await SessionTranscript.forOid4VpDcApi(
+                    {
+                        origin: sessionData.origin,
+                        nonce: sessionData.nonce,
+                        jwkThumbprint: sessionData.jwkThumbprint,
+                    },
+                    mdocContext,
+                );
+            } else {
+                // Standard OID4VP: OpenID4VPHandover
+                sessionTranscript &#x3D; await SessionTranscript.forOid4Vp(
+                    sessionData,
+                    mdocContext,
+                );
+            }
 
             // 4) Build a device request (currently requesting all claims that were received)
             const deviceRequest &#x3D; this.buildDeviceRequest(

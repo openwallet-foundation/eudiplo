@@ -114,12 +114,12 @@
 
 <ol class="breadcrumb">
   <li class="breadcrumb-item">Controllers</li>
-  <li class="breadcrumb-item" >VerifierOfferController</li>
+  <li class="breadcrumb-item" >Iso18013Controller</li>
 </ol>
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
     <span class="icon ion-ios-document" aria-hidden="true"></span>
-    <code>src/verifier/verifier-offer/verifier-offer.controller.ts</code>
+    <code>src/verifier/iso18013/iso18013.controller.ts</code>
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -149,7 +149,7 @@
                 <h3>Prefix</h3>
             </p>
             <p class="comment">
-                <code>verifier/offer</code>
+                <code>presentations/:sessionId/iso-18013-7</code>
             </p>
 
 
@@ -165,7 +165,7 @@
                     <h4>Used by</h4>
                         <ul class="list-unstyled relationships-list">
                                 <li>
-                                            <code><a href="../modules/VerifierModule.html" target="_self" >VerifierModule</a></code>
+                                            <code><a href="../modules/Iso18013Module.html" target="_self" >Iso18013Module</a></code>
                                 </li>
                         </ul>
                 </div>
@@ -194,10 +194,8 @@
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Async</span>
-                                <a href="#getOffer" >getOffer</a>
+                                <a href="#handleResponse" >handleResponse</a>
                             </li>
                         </ul>
                     </td>
@@ -220,22 +218,20 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getOffer"></a>
+                    <a name="handleResponse"></a>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Async</span>
-                        <span ><b>getOffer</b></span>
-                        <a href="#getOffer"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>handleResponse</b></span>
+                        <a href="#handleResponse"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getOffer(req: Request, res: Response, body: <a href="../classes/PresentationRequest.html" target="_self">PresentationRequest</a>, user: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>)</code>
+                    <code>handleResponse(sessionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, body: { data?: string })</code>
                 </td>
             </tr>
 
@@ -243,21 +239,22 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@ApiResponse({description: &#x27;JSON response&#x27;, status: 201, type: OfferResponse, content: undefined})<br />@ApiProduces(&#x27;application/json&#x27;, &#x27;image/png&#x27;)<br />@ApiBody({type: PresentationRequest, examples: undefined})<br />@Post()<br /></code>
+                    <code>@Post()<br />@HttpCode(HttpStatus.OK)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="68"
-                                    class="link-to-prism">src/verifier/verifier-offer/verifier-offer.controller.ts:68</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="30"
+                                    class="link-to-prism">src/verifier/iso18013/iso18013.controller.ts:30</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Create an presentation request that can be sent to the user</p>
+                        <div class="io-description"><p>Accept the HPKE-encrypted DeviceResponse from the wallet (via DC API + browser JS).
+Body: { data: string }  — base64url-encoded HPKE output (enc || ciphertext)</p>
 </div>
 
                             <div class="io-description">
@@ -273,21 +270,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>req</td>
+                                                <td>sessionId</td>
                                             <td>
-                                                        <code>Request</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>res</td>
-                                            <td>
-                                                        <code>Response</code>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                             </td>
 
                                             <td>
@@ -299,19 +284,7 @@
                                         <tr>
                                                 <td>body</td>
                                             <td>
-                                                            <code><a href="../classes/PresentationRequest.html" target="_self" >PresentationRequest</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>user</td>
-                                            <td>
-                                                            <code><a href="../interfaces/TokenPayload.html" target="_self" >TokenPayload</a></code>
+                                                        <code>{ data?: string }</code>
                                             </td>
 
                                             <td>
@@ -324,7 +297,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>unknown</code>
+                            <b>Returns : </b>    <code>Promise&lt;Record&lt;string, unknown&gt;&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -339,119 +312,43 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">/**
+ * ISO 18013-7 Annex C response endpoint.
+ * Receives the HPKE-encrypted DeviceResponse from the browser (via DC API)
+ * and forwards to Iso18013Service for decryption and verification.
+ */
+import {
+    BadRequestException,
     Body,
     Controller,
-    ForbiddenException,
+    HttpCode,
+    HttpStatus,
+    Param,
     Post,
-    Req,
-    Res,
 } from &quot;@nestjs/common&quot;;
-import { ApiBody, ApiProduces, ApiResponse, ApiTags } from &quot;@nestjs/swagger&quot;;
-import { Request, Response } from &quot;express&quot;;
-import { Role } from &quot;../../auth/roles/role.enum&quot;;
-import { Secured } from &quot;../../auth/secure.decorator&quot;;
-import { Token, TokenPayload } from &quot;../../auth/token.decorator&quot;;
-import { OfferResponse } from &quot;../../issuer/issuance/oid4vci/dto/offer-request.dto&quot;;
-import { Iso18013Service } from &quot;../iso18013/iso18013.service&quot;;
-import {
-    PresentationRequest,
-    ResponseType,
-} from &quot;../oid4vp/dto/presentation-request.dto&quot;;
-import { Oid4vpService } from &quot;../oid4vp/oid4vp.service&quot;;
+import { ApiParam, ApiTags } from &quot;@nestjs/swagger&quot;;
+import { Iso18013Service } from &quot;./iso18013.service&quot;;
 
-@ApiTags(&quot;Verifier&quot;)
-@Secured([Role.PresentationRequest, Role.Presentations])
-@Controller(&quot;verifier/offer&quot;)
-export class VerifierOfferController {
-    constructor(
-        private readonly oid4vpService: Oid4vpService,
-        private readonly iso18013Service: Iso18013Service,
-    ) {}
+@ApiTags(&quot;ISO 18013-7&quot;)
+@Controller(&quot;presentations/:sessionId/iso-18013-7&quot;)
+@ApiParam({ name: &quot;sessionId&quot;, required: true })
+export class Iso18013Controller {
+    constructor(private readonly iso18013Service: Iso18013Service) {}
 
     /**
-     * Create an presentation request that can be sent to the user
-     * @param res
-     * @param body
+     * Accept the HPKE-encrypted DeviceResponse from the wallet (via DC API + browser JS).
+     * Body: { data: string }  — base64url-encoded HPKE output (enc || ciphertext)
      */
-    @ApiResponse({
-        description: &quot;JSON response&quot;,
-        status: 201,
-        //TODO: do not use type, otherwhise the response can not deal with both JSON and PNG.
-        type: OfferResponse,
-        content: {
-            &quot;application/json&quot;: { schema: { type: &quot;object&quot; } },
-            &quot;image/png&quot;: { schema: { type: &quot;string&quot;, format: &quot;binary&quot; } },
-        },
-    })
-    @ApiProduces(&quot;application/json&quot;, &quot;image/png&quot;)
-    @ApiBody({
-        type: PresentationRequest,
-        examples: {
-            uri: {
-                summary: &quot;URI&quot;,
-                value: {
-                    response_type: ResponseType.URI,
-                    requestId: &quot;pid&quot;,
-                },
-            },
-            &quot;dc-api&quot;: {
-                summary: &quot;DC API&quot;,
-                value: {
-                    response_type: ResponseType.DC_API,
-                    requestId: &quot;pid&quot;,
-                    expected_origin: &quot;http://localhost:8080&quot;,
-                },
-            },
-        },
-    })
     @Post()
-    async getOffer(
-        @Req() req: Request,
-        @Res() res: Response,
-        @Body() body: PresentationRequest,
-        @Token() user: TokenPayload,
-    ) {
-        // Check resource-level authorization
-        if (user.client?.allowedPresentationConfigs?.length) {
-            if (
-                !user.client.allowedPresentationConfigs.includes(body.requestId)
-            ) {
-                throw new ForbiddenException(
-                    &#x60;Client is not authorized to use presentation config: ${body.requestId}&#x60;,
-                );
-            }
+    @HttpCode(HttpStatus.OK)
+    async handleResponse(
+        @Param(&quot;sessionId&quot;) sessionId: string,
+        @Body() body: { data?: string },
+    ): Promise&lt;Record&lt;string, unknown&gt;&gt; {
+        if (!body?.data) {
+            throw new BadRequestException(&quot;Missing data field&quot;);
         }
-
-        // ISO 18013-7 Annex C: org.iso.mdoc via DC API
-        if (body.response_type &#x3D;&#x3D;&#x3D; ResponseType.ISO_18013_7) {
-            const origin &#x3D;
-                body.expected_origin ??
-                req.get(&quot;origin&quot;) ??
-                req.get(&quot;host&quot;) ??
-                &quot;&quot;;
-            const offer &#x3D; await this.iso18013Service.createOffer(
-                body.requestId,
-                user.entity!.id,
-                origin,
-            );
-            return res.status(201).json(offer);
-        }
-
-        const values &#x3D; await this.oid4vpService.createRequest(
-            body.requestId,
-            {
-                webhook: body.webhook,
-                redirectUri: body.redirectUri,
-                transaction_data: body.transaction_data,
-            },
-            user.entity!.id,
-            body.response_type &#x3D;&#x3D;&#x3D; ResponseType.DC_API,
-            body.expected_origin ?? req.get(&quot;origin&quot;) ?? req.get(&quot;host&quot;) ?? &quot;&quot;,
-        );
-        values.uri &#x3D; &#x60;openid4vp://?${values.uri}&#x60;;
-        values.crossDeviceUri &#x3D; &#x60;openid4vp://?${values.crossDeviceUri}&#x60;;
-        res.status(201).json(values);
+        return this.iso18013Service.processResponse(sessionId, body.data);
     }
 }
 </code></pre>
@@ -499,7 +396,7 @@ export class VerifierOfferController {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'controller';
-            var COMPODOC_CURRENT_PAGE_URL = 'VerifierOfferController.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'Iso18013Controller.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

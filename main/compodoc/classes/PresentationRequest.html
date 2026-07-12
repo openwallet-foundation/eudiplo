@@ -267,7 +267,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:66</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:71</a></div>
                         </td>
                     </tr>
 
@@ -312,7 +312,7 @@ Example: &quot;<a href="http://localhost:8080">http://localhost:8080</a>&quot;</
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:58</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:63</a></div>
                         </td>
                     </tr>
 
@@ -355,7 +355,7 @@ You can use the <code>{sessionId}</code> placeholder in the URI, which will be r
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:41</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -397,7 +397,7 @@ You can use the <code>{sessionId}</code> placeholder in the URI, which will be r
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -443,7 +443,7 @@ You can use the <code>{sessionId}</code> placeholder in the URI, which will be r
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:76</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:81</a></div>
                         </td>
                     </tr>
 
@@ -488,7 +488,7 @@ If provided, this will override the transaction_data from the presentation confi
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:49</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:54</a></div>
                         </td>
                     </tr>
 
@@ -535,9 +535,14 @@ export enum ResponseType {
      */
     URI &#x3D; &quot;uri&quot;,
     /**
-     * Response type indicating a DC API response will be used.
+     * Response type indicating a DC API response will be used (OID4VP via DC API).
      */
     DC_API &#x3D; &quot;dc-api&quot;,
+    /**
+     * Response type for ISO 18013-7 Annex C: org.iso.mdoc protocol via DC API.
+     * Returns a CBOR DeviceRequest + encryptionInfo (HPKE recipient key).
+     */
+    ISO_18013_7 &#x3D; &quot;iso-18013-7&quot;,
 }
 
 /**
