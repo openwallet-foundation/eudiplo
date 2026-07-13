@@ -194,6 +194,7 @@
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
                                 <a href="#getList" >getList</a>
                             </li>
                             <li>
@@ -204,6 +205,11 @@
                                     <span class="modifier"></span>
                                     <span class="modifier">Async</span>
                                 <a href="#getStatusListAggregation" >getStatusListAggregation</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#prefersCwt" >prefersCwt</a>
                             </li>
                         </ul>
                     </td>
@@ -230,6 +236,7 @@
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier">Async</span>
                         <span ><b>getList</b></span>
                         <a href="#getList"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -238,7 +245,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getList(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, listId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>getList(res: Response, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, listId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, acceptHeader?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, contentTypeHeader?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -246,14 +253,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get(&#x27;status-list/:listId&#x27;)<br />@Header(&#x27;Content-Type&#x27;, &#x27;application/statuslist+jwt&#x27;)<br /></code>
+                    <code>@Get(&#x27;status-list/:listId&#x27;)<br />@ApiProduces(&#x27;application/statuslist+jwt&#x27;, &#x27;application/statuslist+cwt&#x27;)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="26"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.controller.ts:26</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="28"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.controller.ts:28</a></div>
                         </td>
                     </tr>
 
@@ -276,6 +283,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr>
+                                                <td>res</td>
+                                            <td>
+                                                        <code>Response</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                            </td>
+                                        </tr>
                                         <tr>
                                                 <td>tenantId</td>
                                             <td>
@@ -308,15 +329,43 @@
 
                                             </td>
                                         </tr>
+                                        <tr>
+                                                <td>acceptHeader</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>contentTypeHeader</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>    <code>unknown</code>
 
                         </div>
                             <div class="io-description">
-                                <p>The status list JWT.</p>
+                                <p>The status list token (JWT or CWT).</p>
 
                             </div>
                 </td>
@@ -356,8 +405,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="54"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.controller.ts:54</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="79"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.controller.ts:79</a></div>
                         </td>
                     </tr>
 
@@ -414,18 +463,101 @@ See RFC draft-ietf-oauth-status-list Section 9.3.</p>
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="prefersCwt"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>prefersCwt</b></span>
+                        <a href="#prefersCwt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>prefersCwt(acceptHeader?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, contentTypeHeader?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="51"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.controller.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>acceptHeader</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>contentTypeHeader</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Controller, Get, Header, Param } from &quot;@nestjs/common&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Controller, Get, Header, Headers, Param, Res } from &quot;@nestjs/common&quot;;
 import {
     ApiExtraModels,
     ApiOkResponse,
     ApiOperation,
+    ApiProduces,
     ApiTags,
 } from &quot;@nestjs/swagger&quot;;
+import { Response } from &quot;express&quot;;
 import { StatusListAggregationDto } from &quot;./dto/status-list-aggregation.dto&quot;;
 import { StatusListImportDto } from &quot;./dto/status-list-import.dto&quot;;
 import { StatusListService } from &quot;./status-list.service&quot;;
@@ -440,15 +572,38 @@ export class StatusListController {
      * Get the JWT for a specific status list.
      * @param tenantId The tenant ID.
      * @param listId The status list ID.
-     * @returns The status list JWT.
+     * @returns The status list token (JWT or CWT).
      */
     @Get(&quot;status-list/:listId&quot;)
-    @Header(&quot;Content-Type&quot;, &quot;application/statuslist+jwt&quot;)
-    getList(
+    @ApiProduces(&quot;application/statuslist+jwt&quot;, &quot;application/statuslist+cwt&quot;)
+    async getList(
+        @Res({ passthrough: true }) res: Response,
         @Param(&quot;tenantId&quot;) tenantId: string,
         @Param(&quot;listId&quot;) listId: string,
+        @Headers(&quot;accept&quot;) acceptHeader?: string,
+        @Headers(&quot;content-type&quot;) contentTypeHeader?: string,
     ) {
+        const wantsCwt &#x3D; this.prefersCwt(acceptHeader, contentTypeHeader);
+
+        if (wantsCwt) {
+            res.setHeader(&quot;Content-Type&quot;, &quot;application/statuslist+cwt&quot;);
+            const cwt &#x3D; await this.statusListService.getListCwt(
+                tenantId,
+                listId,
+            );
+            res.send(Buffer.from(cwt));
+            return;
+        }
+
+        res.setHeader(&quot;Content-Type&quot;, &quot;application/statuslist+jwt&quot;);
         return this.statusListService.getListJwt(tenantId, listId);
+    }
+
+    private prefersCwt(acceptHeader?: string, contentTypeHeader?: string) {
+        const headers &#x3D; &#x60;${acceptHeader ?? &quot;&quot;},${contentTypeHeader ?? &quot;&quot;}&#x60;
+            .toLowerCase()
+            .replace(/\s+/g, &quot;&quot;);
+        return headers.includes(&quot;application/statuslist+cwt&quot;);
     }
 
     /**

@@ -248,7 +248,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:38</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:39</a></div>
                                 </td>
                             </tr>
 
@@ -293,7 +293,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:34</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:35</a></div>
                                 </td>
                             </tr>
 
@@ -338,7 +338,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:32</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:33</a></div>
                                 </td>
                             </tr>
 
@@ -388,7 +388,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:36</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:37</a></div>
                                 </td>
                             </tr>
 
@@ -411,6 +411,7 @@ import {
     getListFromStatusListJWT,
     getStatusListFromJWT,
     StatusList,
+    StatusListCwt,
     StatusListEntry,
     StatusType,
 } from &quot;@owf/token-status-list&quot;;
@@ -555,13 +556,27 @@ export class StatusListVerifierService {
 
         // Fetch and cache
         this.logger.debug(&#x60;Fetching status list from ${uri}&#x60;);
-        const statusListJwt &#x3D; await this.fetchStatusListJwt(uri);
-        const statusList &#x3D; getListFromStatusListJWT(statusListJwt);
+        const statusListToken &#x3D; await this.fetchStatusListToken(uri);
 
-        // Extract TTL and exp from the JWT payload
-        const payload &#x3D; decodeJwt(statusListJwt);
-        const ttl &#x3D; typeof payload.ttl &#x3D;&#x3D;&#x3D; &quot;number&quot; ? payload.ttl : undefined;
-        const exp &#x3D; typeof payload.exp &#x3D;&#x3D;&#x3D; &quot;number&quot; ? payload.exp : undefined;
+        let statusList: StatusList;
+        let ttl: number | undefined;
+        let exp: number | undefined;
+
+        if (typeof statusListToken &#x3D;&#x3D;&#x3D; &quot;string&quot;) {
+            statusList &#x3D; getListFromStatusListJWT(statusListToken);
+            const payload &#x3D; decodeJwt(statusListToken);
+            ttl &#x3D; typeof payload.ttl &#x3D;&#x3D;&#x3D; &quot;number&quot; ? payload.ttl : undefined;
+            exp &#x3D; typeof payload.exp &#x3D;&#x3D;&#x3D; &quot;number&quot; ? payload.exp : undefined;
+        } else {
+            const statusListCwt &#x3D; StatusListCwt.fromToken(statusListToken);
+            statusList &#x3D; statusListCwt.payload.statusList;
+            ttl &#x3D; statusListCwt.payload.timeToLive;
+            exp &#x3D; statusListCwt.payload.expirationTime
+                ? Math.floor(
+                      statusListCwt.payload.expirationTime.getTime() / 1000,
+                  )
+                : undefined;
+        }
 
         this.cache.set(uri, {
             statusList,
@@ -580,10 +595,10 @@ export class StatusListVerifierService {
      * @param timeoutMs Timeout in milliseconds
      * @returns The raw JWT string
      */
-    private async fetchStatusListJwt(
+    private async fetchStatusListToken(
         uri: string,
         timeoutMs &#x3D; 10000,
-    ): Promise&lt;string&gt; {
+    ): Promise&lt;string | Uint8Array&gt; {
         const ctrl &#x3D; new AbortController();
         const timeout &#x3D; setTimeout(() &#x3D;&gt; ctrl.abort(), timeoutMs);
 
@@ -591,13 +606,22 @@ export class StatusListVerifierService {
             const response &#x3D; await firstValueFrom(
                 this.httpService.get(uri, {
                     signal: ctrl.signal,
-                    responseType: &quot;text&quot;,
+                    responseType: &quot;arraybuffer&quot;,
                     headers: {
-                        Accept: &quot;application/statuslist+jwt, application/jwt&quot;,
+                        Accept: &quot;application/statuslist+jwt, application/statuslist+cwt, application/jwt&quot;,
                     },
                 }),
             );
-            return response.data;
+
+            const contentType &#x3D; String(
+                response.headers?.[&quot;content-type&quot;] || &quot;&quot;,
+            ).toLowerCase();
+
+            if (contentType.includes(&quot;application/statuslist+cwt&quot;)) {
+                return new Uint8Array(response.data);
+            }
+
+            return Buffer.from(response.data).toString(&quot;utf8&quot;).trim();
         } catch (error: any) {
             if (
                 error?.name &#x3D;&#x3D;&#x3D; &quot;CanceledError&quot; ||
@@ -619,6 +643,17 @@ export class StatusListVerifierService {
      * Check if a cache entry is expired.
      */
     private isCacheExpired(cached: CachedStatusList): boolean {
+        return this.isTimedCacheExpired(cached);
+    }
+
+    /**
+     * Shared expiration logic for parsed-list and raw-token caches.
+     */
+    private isTimedCacheExpired(cached: {
+        fetchedAt: number;
+        ttl?: number;
+        exp?: number;
+    }): boolean {
         const now &#x3D; Date.now();
 
         // Check if JWT has expired (exp claim)
@@ -698,7 +733,13 @@ export class StatusListVerifierService {
 
         // Fetch and cache
         this.logger.debug(&#x60;Fetching status list JWT from ${uri}&#x60;);
-        const jwt &#x3D; await this.fetchStatusListJwt(uri);
+        const token &#x3D; await this.fetchStatusListToken(uri);
+        if (typeof token !&#x3D;&#x3D; &quot;string&quot;) {
+            throw new TypeError(
+                &#x60;Status list at ${uri} returned CWT while JWT was requested&#x60;,
+            );
+        }
+        const jwt &#x3D; token;
 
         // Extract TTL and exp from the JWT payload
         const payload &#x3D; decodeJwt(jwt);
@@ -719,21 +760,7 @@ export class StatusListVerifierService {
      * Check if a JWT cache entry is expired.
      */
     private isJwtCacheExpired(cached: CachedJwt): boolean {
-        const now &#x3D; Date.now();
-
-        // Check if JWT has expired (exp claim)
-        if (cached.exp &amp;&amp; now &gt;&#x3D; cached.exp * 1000) {
-            return true;
-        }
-
-        // Check TTL from JWT payload
-        if (cached.ttl) {
-            const expiresAt &#x3D; cached.fetchedAt + cached.ttl * 1000;
-            return now &gt;&#x3D; expiresAt;
-        }
-
-        // Fall back to default cache TTL
-        return now &gt;&#x3D; cached.fetchedAt + this.defaultCacheTtlMs;
+        return this.isTimedCacheExpired(cached);
     }
 }
 </code></pre>
