@@ -187,7 +187,11 @@ describe("Presentation - mDOC Credential", () => {
             requestId: "pid-de",
         };
 
-        const res = await createPresentationRequest(app, authToken, requestBody);
+        const res = await createPresentationRequest(
+            app,
+            authToken,
+            requestBody,
+        );
 
         const authRequest = client.parseOpenid4vpAuthorizationRequest({
             authorizationRequest: res.body.uri,
