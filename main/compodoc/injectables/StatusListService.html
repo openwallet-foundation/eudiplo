@@ -667,8 +667,8 @@ See RFC draft-ietf-oauth-status-list Section 9.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="473"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:473</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="474"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:474</a></div>
                         </td>
                     </tr>
 
@@ -932,8 +932,8 @@ The JWT includes:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="589"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:589</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="590"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:590</a></div>
                         </td>
                     </tr>
 
@@ -1026,8 +1026,8 @@ Only allows deletion if the list has no used entries.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="428"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:428</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="429"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:429</a></div>
                         </td>
                     </tr>
 
@@ -1759,8 +1759,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="409"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:409</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="410"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:410</a></div>
                         </td>
                     </tr>
 
@@ -1852,8 +1852,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="665"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:665</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="666"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:666</a></div>
                         </td>
                     </tr>
 
@@ -1924,8 +1924,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="709"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:709</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="710"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:710</a></div>
                         </td>
                     </tr>
 
@@ -2008,8 +2008,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="533"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:533</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="534"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:534</a></div>
                         </td>
                     </tr>
 
@@ -2216,8 +2216,8 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="614"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:614</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="615"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:615</a></div>
                         </td>
                     </tr>
 
@@ -2324,8 +2324,8 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="559"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:559</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="560"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:560</a></div>
                         </td>
                     </tr>
 
@@ -2850,8 +2850,9 @@ export class StatusListService {
             protectedHeaders: new Map&lt;number, unknown&gt;([
                 [1, SignatureAlgorithm.ES256],
                 [4, new TextEncoder().encode(cert.keyId)],
+                // mDOC status verification expects x5chain in protected headers.
+                [33, x5chain],
             ]),
-            unprotectedHeaders: new Map&lt;number, unknown&gt;([[33, x5chain]]),
         });
 
         return cwt.signAndEncode(

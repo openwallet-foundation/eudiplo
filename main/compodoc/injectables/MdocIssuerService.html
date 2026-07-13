@@ -246,12 +246,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(certService: <a href="../injectables/CertService.html" target="_self">CertService</a>, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>)</code>
+<code>constructor(certService: <a href="../injectables/CertService.html" target="_self">CertService</a>, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>, statusListService: <a href="../injectables/StatusListService.html" target="_self">StatusListService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:33</a></div>
                             </td>
                         </tr>
 
@@ -285,6 +285,18 @@
                                                   
                                                         <td>
                                                                         <code><a href="../injectables/KeyChainService.html" target="_self" >KeyChainService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>statusListService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/StatusListService.html" target="_self" >StatusListService</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -329,8 +341,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="160"
-                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:160</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="187"
+                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:187</a></div>
                         </td>
                     </tr>
 
@@ -410,8 +422,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="206"
-                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:206</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="233"
+                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:233</a></div>
                         </td>
                     </tr>
 
@@ -481,8 +493,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="38"
-                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:38</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="46"
+                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -571,7 +583,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:33</a></div>
                         </td>
                     </tr>
 
@@ -586,12 +598,19 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, Logger } from &quot;@nestjs/common&quot;;
 import type { Jwk } from &quot;@openid4vc/oauth2&quot;;
-import { CoseKey, DeviceKey, Issuer, SignatureAlgorithm } from &quot;@owf/mdoc&quot;;
+import {
+    CoseKey,
+    DeviceKey,
+    Issuer,
+    SignatureAlgorithm,
+    StatusOptions,
+} from &quot;@owf/mdoc&quot;;
 import { X509Certificate } from &quot;@peculiar/x509&quot;;
 import { exportJWK, importX509 } from &quot;jose&quot;;
 import { CertService } from &quot;../../../../../crypto/key/cert/cert.service&quot;;
 import { KeyUsageType } from &quot;../../../../../crypto/key/entities/key-chain.entity&quot;;
 import { KeyChainService } from &quot;../../../../../crypto/key/key-chain.service&quot;;
+import { StatusListService } from &quot;../../../../lifecycle/status/status-list.service&quot;;
 import { Session } from &quot;../../../../../session/entities/session.entity&quot;;
 import { mdocContext } from &quot;../../../../../verifier/presentations/mdoc-context&quot;;
 import { CredentialConfig } from &quot;../../entities/credential.entity&quot;;
@@ -614,6 +633,7 @@ export class MdocIssuerService {
     constructor(
         private readonly certService: CertService,
         private readonly keyChainService: KeyChainService,
+        private readonly statusListService: StatusListService,
     ) {}
 
     /**
@@ -725,6 +745,24 @@ export class MdocIssuerService {
             validUntil.setFullYear(validUntil.getFullYear() + 1);
         }
 
+        // If status management is enabled, create an entry and map it to mDOC status format.
+        let status: StatusOptions | undefined;
+        if (credentialConfiguration.statusManagement) {
+            const statusPayload &#x3D; await this.statusListService.createEntry(
+                session,
+                credentialConfiguration.id,
+            );
+            const statusList &#x3D; statusPayload.status?.status_list;
+            if (statusList) {
+                status &#x3D; {
+                    statusList: {
+                        idx: statusList.idx,
+                        uri: statusList.uri,
+                    },
+                };
+            }
+        }
+
         // Sign the mDOC
         const issuerSigned &#x3D; await issuer.sign({
             signingKey: CoseKey.fromJwk(privateKey as Jwk),
@@ -733,6 +771,7 @@ export class MdocIssuerService {
             digestAlgorithm: &quot;SHA-256&quot;,
             deviceKeyInfo: { deviceKey: DeviceKey.fromJwk(deviceKey) },
             validityInfo: { signed, validFrom, validUntil },
+            status,
         });
 
         this.logger.debug(
