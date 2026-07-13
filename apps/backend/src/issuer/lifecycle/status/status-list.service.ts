@@ -380,8 +380,9 @@ export class StatusListService {
             protectedHeaders: new Map<number, unknown>([
                 [1, SignatureAlgorithm.ES256],
                 [4, new TextEncoder().encode(cert.keyId)],
+                // mDOC status verification expects x5chain in protected headers.
+                [33, x5chain],
             ]),
-            unprotectedHeaders: new Map<number, unknown>([[33, x5chain]]),
         });
 
         return cwt.signAndEncode(

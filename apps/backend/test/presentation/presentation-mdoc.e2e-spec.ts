@@ -24,6 +24,7 @@ import {
     prepareMdocPresentation,
     setupPresentationTestApp,
 } from "../utils";
+import { StatusListService } from "../../src/issuer/lifecycle/status/status-list.service";
 
 describe("Presentation - mDOC Credential", () => {
     let app: INestApplication<App>;
@@ -33,6 +34,7 @@ describe("Presentation - mDOC Credential", () => {
     let issuerCert: string;
     let ctx: PresentationTestContext;
     let client: Openid4vpClient;
+    let statusListService: StatusListService;
 
     function computeJwkThumbprint(jwks?: {
         keys?: Array<Record<string, any>>;
@@ -153,6 +155,7 @@ describe("Presentation - mDOC Credential", () => {
         host = ctx.host;
         privateIssuerKey = ctx.privateIssuerKey;
         issuerCert = ctx.issuerCert;
+        statusListService = ctx.statusListService;
 
         client = new Openid4vpClient({
             callbacks: {
@@ -175,6 +178,70 @@ describe("Presentation - mDOC Credential", () => {
         });
 
         expect(submitRes).toBeDefined();
+        expect(submitRes.response.status).toBe(200);
+    });
+
+    test("present mso mdoc credential with status list", async () => {
+        const requestBody: PresentationRequest = {
+            response_type: ResponseType.URI,
+            requestId: "pid-de",
+        };
+
+        const res = await createPresentationRequest(app, authToken, requestBody);
+
+        const authRequest = client.parseOpenid4vpAuthorizationRequest({
+            authorizationRequest: res.body.uri,
+        });
+
+        const resolved = await client.resolveOpenId4vpAuthorizationRequest({
+            authorizationRequestPayload: authRequest.params,
+            responseMode: { type: "direct_post" },
+        });
+
+        const statusPayload = await statusListService.createEntry(
+            { tenantId: "root", id: "mdoc-status-e2e" } as any,
+            "pid-mso-mdoc",
+        );
+        const statusList = statusPayload.status?.status_list;
+        expect(statusList).toBeDefined();
+
+        const vp_token = await prepareMdocPresentation(
+            resolved.authorizationRequestPayload.nonce,
+            privateIssuerKey,
+            issuerCert,
+            resolved.authorizationRequestPayload.client_id!,
+            resolved.authorizationRequestPayload.response_uri as string,
+            resolved.authorizationRequestPayload.response_mode ??
+                "direct_post.jwt",
+            computeJwkThumbprint(
+                resolved.authorizationRequestPayload.client_metadata?.jwks,
+            ),
+            {
+                statusList: {
+                    idx: statusList!.idx,
+                    uri: statusList!.uri,
+                },
+            },
+        );
+
+        const jwt = await encryptVpToken(vp_token, "pid-mso-mdoc", resolved);
+
+        const authorizationResponse =
+            await client.createOpenid4vpAuthorizationResponse({
+                authorizationRequestPayload: authRequest.params,
+                authorizationResponsePayload: {
+                    response: jwt,
+                },
+                ...callbacks,
+            });
+
+        const submitRes = await client.submitOpenid4vpAuthorizationResponse({
+            authorizationResponsePayload:
+                authorizationResponse.authorizationResponsePayload,
+            authorizationRequestPayload:
+                resolved.authorizationRequestPayload as Openid4vpAuthorizationRequest,
+        });
+
         expect(submitRes.response.status).toBe(200);
     });
 

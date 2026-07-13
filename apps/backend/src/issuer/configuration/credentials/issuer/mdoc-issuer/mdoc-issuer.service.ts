@@ -1,11 +1,12 @@
 import { Injectable, Logger } from "@nestjs/common";
 import type { Jwk } from "@openid4vc/oauth2";
-import { CoseKey, DeviceKey, Issuer, SignatureAlgorithm } from "@owf/mdoc";
+import { CoseKey, DeviceKey, Issuer, SignatureAlgorithm, StatusOptions } from "@owf/mdoc";
 import { X509Certificate } from "@peculiar/x509";
 import { exportJWK, importX509 } from "jose";
 import { CertService } from "../../../../../crypto/key/cert/cert.service";
 import { KeyUsageType } from "../../../../../crypto/key/entities/key-chain.entity";
 import { KeyChainService } from "../../../../../crypto/key/key-chain.service";
+import { StatusListService } from "../../../../lifecycle/status/status-list.service";
 import { Session } from "../../../../../session/entities/session.entity";
 import { mdocContext } from "../../../../../verifier/presentations/mdoc-context";
 import { CredentialConfig } from "../../entities/credential.entity";
@@ -28,6 +29,7 @@ export class MdocIssuerService {
     constructor(
         private readonly certService: CertService,
         private readonly keyChainService: KeyChainService,
+        private readonly statusListService: StatusListService,
     ) {}
 
     /**
@@ -139,6 +141,24 @@ export class MdocIssuerService {
             validUntil.setFullYear(validUntil.getFullYear() + 1);
         }
 
+        // If status management is enabled, create an entry and map it to mDOC status format.
+        let status: StatusOptions | undefined;
+        if (credentialConfiguration.statusManagement) {
+            const statusPayload = await this.statusListService.createEntry(
+                session,
+                credentialConfiguration.id,
+            );
+            const statusList = statusPayload.status?.status_list;
+            if (statusList) {
+                status = {
+                    statusList: {
+                        idx: statusList.idx,
+                        uri: statusList.uri,
+                    },
+                };
+            }
+        }
+
         // Sign the mDOC
         const issuerSigned = await issuer.sign({
             signingKey: CoseKey.fromJwk(privateKey as Jwk),
@@ -147,6 +167,7 @@ export class MdocIssuerService {
             digestAlgorithm: "SHA-256",
             deviceKeyInfo: { deviceKey: DeviceKey.fromJwk(deviceKey) },
             validityInfo: { signed, validFrom, validUntil },
+            status,
         });
 
         this.logger.debug(

@@ -397,6 +397,44 @@ export class CredentialChainValidationService {
     }
 
     /**
+     * Get trusted revocation certificate buffers for mDOC status validation.
+     * Returns certificates as Uint8Array[] for the mdoc library.
+     */
+    async getTrustedStatusCertificateBuffers(
+        trustListSource?: TrustListSource,
+    ): Promise<Uint8Array[]> {
+        const store = await this.getTrustStoreIfConfigured(trustListSource);
+        if (!store) {
+            return [];
+        }
+
+        const trustedCertificates: Uint8Array[] = [];
+
+        for (const entity of store.entities) {
+            const revocationServices = entity.services.filter((s) =>
+                s.serviceTypeIdentifier.endsWith("/Revocation"),
+            );
+
+            for (const svc of revocationServices) {
+                try {
+                    const cert = new x509.X509Certificate(svc.certValue as any);
+                    trustedCertificates.push(new Uint8Array(cert.rawData));
+                } catch (e: any) {
+                    this.logger.warn(
+                        `Failed to parse revocation certificate from entity ${entity.entityId}: ${e?.message ?? e}`,
+                    );
+                }
+            }
+        }
+
+        this.logger.debug(
+            `Loaded ${trustedCertificates.length} trusted status certificate(s) for verification`,
+        );
+
+        return trustedCertificates;
+    }
+
+    /**
      * Get the trust store if configured.
      */
     private async getTrustStoreIfConfigured(

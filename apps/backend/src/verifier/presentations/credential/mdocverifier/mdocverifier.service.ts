@@ -176,7 +176,14 @@ export class MdocverifierService {
                 await this.chainValidation.getTrustedCertificateBuffers(
                     options.trustListSource,
                 );
+            const trustedStatusCertBuffers =
+                await this.chainValidation.getTrustedStatusCertificateBuffers(
+                    options.trustListSource,
+                );
             const trustedAnchors = trustedCertBuffers.map(
+                (buffer) => new Uint8Array(buffer),
+            );
+            const trustedStatusAnchors = trustedStatusCertBuffers.map(
                 (buffer) => new Uint8Array(buffer),
             );
             const trustedCertificates =
@@ -184,6 +191,9 @@ export class MdocverifierService {
                     ? [
                           {
                               issuance: [...issuerX5Chain, ...trustedAnchors],
+                              ...(trustedStatusAnchors.length > 0
+                                  ? { status: trustedStatusAnchors }
+                                  : {}),
                           },
                       ]
                     : [];
