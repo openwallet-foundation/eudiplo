@@ -71,6 +71,17 @@
 
       <div fxLayout="row" fxLayoutGap="12px" fxLayout.lt-md="column">
         <mat-form-field fxFlex appearance="outline">
+          <mat-label>Name (optional)</mat-label>
+          <input
+            id="schema-metadata-name"
+            matInput
+            formControlName="name"
+            aria-label="Schema metadata name"
+            placeholder="Gym Membership Card"
+          />
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="outline">
           <mat-label>Category (optional)</mat-label>
           <mat-select formControlName="category" [disabled]="categoryVocabularies.length === 0">
             @for (entry of categoryVocabularies; track entry.code) {

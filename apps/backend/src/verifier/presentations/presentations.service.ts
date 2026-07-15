@@ -1897,7 +1897,6 @@ export class PresentationsService {
                           "direct_post.jwt",
                       jwkThumbprint: options.requestObjectJwkThumbprint,
                   };
-
         if (options.hasClaimSets) {
             return this.verifyMdocCredentialWithClaimSets({
                 ...options,
@@ -2103,11 +2102,12 @@ export class PresentationsService {
             verification_error: "mDOC verification failed",
         };
 
+        const detailedReason = result.failureReason?.trim();
         const reason =
+            detailedReason ||
             (result.failureType
                 ? reasonByType[result.failureType]
                 : undefined) ||
-            result.failureReason ||
             "mDOC verification failed";
 
         this.logger.warn(

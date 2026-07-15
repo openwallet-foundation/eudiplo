@@ -10,12 +10,75 @@ import { X509Certificate } from "@peculiar/x509";
 import { exportJWK, importX509 } from "jose";
 import { toBuffer } from "../../shared/utils/buffer.util";
 import { hex } from "@owf/identity-common";
+import { StatusListCbor } from "@owf/token-status-list";
 
 // Use global Web Crypto API (available in Node.js 19+)
 const webCrypto = globalThis.crypto;
+const STATUS_LIST_CWT_ACCEPT = "application/statuslist+cwt";
+
+const isStatusListUri = (url: string): boolean => {
+    const lower = url.toLowerCase();
+    return (
+        lower.includes("status") ||
+        lower.includes("status-list") ||
+        lower.includes("statuslist")
+    );
+};
+
+const mdocFetch: typeof fetch = async (input, init) => {
+    let url: string;
+    if (typeof input === "string") {
+        url = input;
+    } else if (input instanceof URL) {
+        url = input.toString();
+    } else {
+        url = input.url;
+    }
+    const headers = new Headers(init?.headers);
+
+    if (isStatusListUri(url)) {
+        headers.set("Accept", STATUS_LIST_CWT_ACCEPT);
+    }
+
+    const response = await fetch(input, {
+        ...init,
+        headers,
+    });
+
+    if (process.env.NODE_ENV !== "production" && isStatusListUri(url)) {
+        const contentType = response.headers.get("content-type") ?? "";
+        const responseClone = response.clone();
+
+        console.debug("[mDOC] status list fetch", {
+            url,
+            accept: headers.get("Accept"),
+            status: response.status,
+            contentType,
+        });
+
+        if (contentType.includes("application/statuslist+cwt")) {
+            const bytes = new Uint8Array(await responseClone.arrayBuffer());
+            console.debug("[mDOC] status list cwt payload", {
+                url,
+                byteLength: bytes.length,
+                cwtBase64Url: Buffer.from(bytes).toString("base64url"),
+                cwtHexPreview: Buffer.from(bytes).toString("hex").slice(0, 256),
+            });
+            const fromEncoded = StatusListCbor.decode(bytes);
+            console.log(fromEncoded);
+        } else {
+            console.debug("[mDOC] status list non-cwt payload", {
+                url,
+                bodyPreview: (await responseClone.text()).slice(0, 1000),
+            });
+        }
+    }
+
+    return response;
+};
 
 export const mdocContext: MdocContext = {
-    fetch,
+    fetch: mdocFetch,
     crypto: {
         digest: async ({ digestAlgorithm, bytes }) => {
             const digest = await webCrypto.subtle.digest(
