@@ -2103,12 +2103,21 @@ export class PresentationsService {
         };
 
         const detailedReason = result.failureReason?.trim();
-        const reason =
-            detailedReason ||
-            (result.failureType
-                ? reasonByType[result.failureType]
-                : undefined) ||
-            "mDOC verification failed";
+        const mappedReason = result.failureType
+            ? reasonByType[result.failureType]
+            : undefined;
+
+        // Keep API error messages stable and user-facing; detailed diagnostics stay in logs.
+        const inferredTrustFailure =
+            !mappedReason &&
+            detailedReason &&
+            /trust\s*chain|trusted\s*root|trusted\s*entity|configured\s*trust\s*lists|allowed\s*cert\s*thumbprints/i.test(
+                detailedReason,
+            );
+
+        const reason = inferredTrustFailure
+            ? "certificate chain does not match any trusted entity"
+            : mappedReason || "mDOC verification failed";
 
         this.logger.warn(
             {
