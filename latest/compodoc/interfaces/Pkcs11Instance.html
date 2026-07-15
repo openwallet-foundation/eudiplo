@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -120,12 +127,23 @@
   Pkcs11Instance</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -137,138 +155,114 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts</code>
-        </p>
 
 
 
+            </div>
 
-        <section data-compodoc="block-index">
-            <h3 id="index">Index</h3>
-            <table class="table table-sm table-bordered index-table">
-                <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <h6><b>Methods</b></h6>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <ul class="index-list">
-                                <li>
-                                    <a href="#C_CloseSession" 
->
-                                        C_CloseSession
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_DestroyObject" 
->
-                                        C_DestroyObject
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_Finalize" 
->
-                                        C_Finalize
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_FindObjects" 
->
-                                        C_FindObjects
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_FindObjectsFinal" 
->
-                                        C_FindObjectsFinal
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_FindObjectsInit" 
->
-                                        C_FindObjectsInit
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_GenerateKeyPair" 
->
-                                        C_GenerateKeyPair
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_GetAttributeValue" 
->
-                                        C_GetAttributeValue
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_GetSlotList" 
->
-                                        C_GetSlotList
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_GetTokenInfo" 
->
-                                        C_GetTokenInfo
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_Initialize" 
->
-                                        C_Initialize
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_Login" 
->
-                                        C_Login
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_Logout" 
->
-                                        C_Logout
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_OpenSession" 
->
-                                        C_OpenSession
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_Sign" 
->
-                                        C_Sign
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#C_SignInit" 
->
-                                        C_SignInit
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#load" 
->
-                                        load
-                                    </a>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+    <div class="tab-pane fade " id="api"><section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-3">
+                    <h6><b>Methods</b></h6>
+                </td>
+                <td class="col-md-9">
+                    <ul class="index-list">
+                        <li>
+                            <a href="#C_CloseSession" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_CloseSession</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_DestroyObject" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_DestroyObject</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_Finalize" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_Finalize</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_FindObjects" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_FindObjects</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_FindObjectsFinal" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_FindObjectsFinal</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_FindObjectsInit" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_FindObjectsInit</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_GenerateKeyPair" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_GenerateKeyPair</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_GetAttributeValue" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_GetAttributeValue</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_GetSlotList" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_GetSlotList</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_GetTokenInfo" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_GetTokenInfo</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_Initialize" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_Initialize</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_Login" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_Login</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_Logout" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_Logout</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_OpenSession" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_OpenSession</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_Sign" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_Sign</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#C_SignInit" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">C_SignInit</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#load" class="reference-link ">
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span><span class="reference-link-label">load</span>
+                            </a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
 
-            <section data-compodoc="block-methods">
+    <section data-compodoc="block-methods">
     
     <h3 id="methods">
         Methods
@@ -682,7 +676,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>C_GenerateKeyPair(session: Buffer, mechanism: literal type, publicTemplate: <a href="../interfaces/Pkcs11Attribute.html" target="_self">Pkcs11Attribute[]</a>, privateTemplate: <a href="../interfaces/Pkcs11Attribute.html" target="_self">Pkcs11Attribute[]</a>)</code>
+<code>C_GenerateKeyPair(session: Buffer, mechanism: { mechanism: number }, publicTemplate: <a href="../interfaces/Pkcs11Attribute.html" target="_self">Pkcs11Attribute[]</a>, privateTemplate: <a href="../interfaces/Pkcs11Attribute.html" target="_self">Pkcs11Attribute[]</a>)</code>
                 </td>
             </tr>
 
@@ -725,7 +719,7 @@
                                         <tr>
                                                 <td>mechanism</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                        <code>{ mechanism: number }</code>
                                             </td>
 
                                             <td>
@@ -762,7 +756,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>literal type</code>
+                            <b>Returns : </b>    <code>{ publicKey: Buffer; privateKey: Buffer }</code>
 
                         </div>
                             <div class="io-description">
@@ -987,7 +981,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>literal type</code>
+                            <b>Returns : </b>    <code>{ label: string }</code>
 
                         </div>
                             <div class="io-description">
@@ -1375,7 +1369,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>C_SignInit(session: Buffer, mechanism: literal type, key: Buffer)</code>
+<code>C_SignInit(session: Buffer, mechanism: { mechanism: number }, key: Buffer)</code>
                 </td>
             </tr>
 
@@ -1418,7 +1412,7 @@
                                         <tr>
                                                 <td>mechanism</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                        <code>{ mechanism: number }</code>
                                             </td>
 
                                             <td>
@@ -1522,7 +1516,8 @@
     </table>
 </section>
 
-    </div>
+
+</div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
@@ -2055,6 +2050,24 @@ async function loadPkcs11(): Promise&lt;Pkcs11Module&gt; {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -2070,7 +2083,6 @@ async function loadPkcs11(): Promise&lt;Pkcs11Module&gt; {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

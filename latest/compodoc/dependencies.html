@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -118,146 +125,306 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item">Dependencies</li>
     </ol>
-    <ul class="dependencies-list">
-        <li>
-            <b>@aws-sdk/client-kms</b> : ^3.1051.0</li>
-        <li>
-            <b>@aws-sdk/client-s3</b> : ^3.1000.0</li>
-        <li>
-            <b>@aws-sdk/client-secrets-manager</b> : ^3.1000.0</li>
-        <li>
-            <b>@azure/identity</b> : ^4.13.0</li>
-        <li>
-            <b>@azure/keyvault-secrets</b> : ^4.10.0</li>
-        <li>
-            <b>@badgateway/oauth2-client</b> : ^3.3.1</li>
-        <li>
-            <b>@keycloak/keycloak-admin-client</b> : ^26.5.4</li>
-        <li>
-            <b>@nestjs/axios</b> : ^4.0.1</li>
-        <li>
-            <b>@nestjs/common</b> : ^11.1.14</li>
-        <li>
-            <b>@nestjs/config</b> : ^4.0.3</li>
-        <li>
-            <b>@nestjs/core</b> : ^11.1.14</li>
-        <li>
-            <b>@nestjs/event-emitter</b> : ^3.0.1</li>
-        <li>
-            <b>@nestjs/passport</b> : ^11.0.5</li>
-        <li>
-            <b>@nestjs/platform-express</b> : ^11.1.14</li>
-        <li>
-            <b>@nestjs/schedule</b> : ^6.1.1</li>
-        <li>
-            <b>@nestjs/swagger</b> : ^11.2.6</li>
-        <li>
-            <b>@nestjs/terminus</b> : ^11.1.1</li>
-        <li>
-            <b>@nestjs/typeorm</b> : ^11.0.0</li>
-        <li>
-            <b>@noble/curves</b> : ^2.0.1</li>
-        <li>
-            <b>@noble/hashes</b> : ^2.0.1</li>
-        <li>
-            <b>@openid4vc/oauth2</b> : 0.5.1</li>
-        <li>
-            <b>@openid4vc/openid4vci</b> : 0.5.1</li>
-        <li>
-            <b>@openid4vc/openid4vp</b> : 0.5.1</li>
-        <li>
-            <b>@openid4vc/utils</b> : 0.5.1</li>
-        <li>
-            <b>@opentelemetry/api</b> : ^1.9.1</li>
-        <li>
-            <b>@opentelemetry/auto-instrumentations-node</b> : ^0.77.0</li>
-        <li>
-            <b>@opentelemetry/exporter-logs-otlp-proto</b> : ^0.219.0</li>
-        <li>
-            <b>@opentelemetry/exporter-metrics-otlp-proto</b> : ^0.219.0</li>
-        <li>
-            <b>@opentelemetry/exporter-trace-otlp-proto</b> : ^0.219.0</li>
-        <li>
-            <b>@opentelemetry/resources</b> : ^2.6.1</li>
-        <li>
-            <b>@opentelemetry/sdk-logs</b> : ^0.219.0</li>
-        <li>
-            <b>@opentelemetry/sdk-metrics</b> : ^2.6.1</li>
-        <li>
-            <b>@opentelemetry/sdk-node</b> : ^0.219.0</li>
-        <li>
-            <b>@opentelemetry/semantic-conventions</b> : ^1.40.0</li>
-        <li>
-            <b>@owf/eudi-attestation-schema</b> : 0.3.1-alpha-20260613182022</li>
-        <li>
-            <b>@owf/eudi-lote</b> : ^0.3.0</li>
-        <li>
-            <b>@owf/mdoc</b> : ^0.6.0</li>
-        <li>
-            <b>@owf/token-status-list</b> : 0.3.0-alpha-20260508181749</li>
-        <li>
-            <b>@panva/hkdf</b> : ^1.2.1</li>
-        <li>
-            <b>@peculiar/asn1-schema</b> : ^2.6.0</li>
-        <li>
-            <b>@peculiar/asn1-x509</b> : ^2.6.1</li>
-        <li>
-            <b>@peculiar/x509</b> : ^2.0.0</li>
-        <li>
-            <b>@sd-jwt/crypto-nodejs</b> : ^0.19.0</li>
-        <li>
-            <b>@sd-jwt/sd-jwt-vc</b> : ^0.19.0</li>
-        <li>
-            <b>@sd-jwt/types</b> : ^0.19.0</li>
-        <li>
-            <b>ajv</b> : ^8.18.0</li>
-        <li>
-            <b>axios</b> : ^1.13.6</li>
-        <li>
-            <b>bcrypt</b> : ^6.0.0</li>
-        <li>
-            <b>class-transformer</b> : ^0.5.1</li>
-        <li>
-            <b>class-validator</b> : ^0.15.1</li>
-        <li>
-            <b>joi</b> : ^18.0.2</li>
-        <li>
-            <b>jose</b> : ^6.1.3</li>
-        <li>
-            <b>jwks-rsa</b> : ^4.0.0</li>
-        <li>
-            <b>multer</b> : ^2.1.0</li>
-        <li>
-            <b>mysql2</b> : ^3.18.2</li>
-        <li>
-            <b>nestjs-otel</b> : ^8.0.2</li>
-        <li>
-            <b>nestjs-pino</b> : ^4.6.0</li>
-        <li>
-            <b>nestjs-zod</b> : ^5.1.1</li>
-        <li>
-            <b>passport-jwt</b> : ^4.0.1</li>
-        <li>
-            <b>pg</b> : ^8.19.0</li>
-        <li>
-            <b>pino-http</b> : ^11.0.0</li>
-        <li>
-            <b>pino-opentelemetry-transport</b> : ^3.0.0</li>
-        <li>
-            <b>pino-pretty</b> : ^13.0.0</li>
-        <li>
-            <b>pkcs11js</b> : ^2.1.6</li>
-        <li>
-            <b>reflect-metadata</b> : ^0.2.2</li>
-        <li>
-            <b>rxjs</b> : ^7.8.2</li>
-        <li>
-            <b>sqlite3</b> : ^5.1.7</li>
-        <li>
-            <b>typeorm</b> : ^0.3.28</li>
-        <li>
-            <b>uuid</b> : ^14.0.0</li>
-    </ul>
+    <div class="dependencies-table-wrapper">
+        <table class="table table-sm table-bordered dependencies-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Version</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><b>@aws-sdk/client-kms</b></td>
+                    <td>^3.1076.0</td>
+                </tr>
+                <tr>
+                    <td><b>@aws-sdk/client-s3</b></td>
+                    <td>^3.1076.0</td>
+                </tr>
+                <tr>
+                    <td><b>@aws-sdk/client-secrets-manager</b></td>
+                    <td>^3.1076.0</td>
+                </tr>
+                <tr>
+                    <td><b>@azure/identity</b></td>
+                    <td>^4.13.1</td>
+                </tr>
+                <tr>
+                    <td><b>@azure/keyvault-secrets</b></td>
+                    <td>^4.11.2</td>
+                </tr>
+                <tr>
+                    <td><b>@badgateway/oauth2-client</b></td>
+                    <td>^3.3.1</td>
+                </tr>
+                <tr>
+                    <td><b>@keycloak/keycloak-admin-client</b></td>
+                    <td>^26.6.4</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/axios</b></td>
+                    <td>^4.0.1</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/common</b></td>
+                    <td>^11.1.27</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/config</b></td>
+                    <td>^4.0.4</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/core</b></td>
+                    <td>^11.1.27</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/event-emitter</b></td>
+                    <td>^3.1.0</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/passport</b></td>
+                    <td>^11.0.5</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/platform-express</b></td>
+                    <td>^11.1.27</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/schedule</b></td>
+                    <td>^6.1.3</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/swagger</b></td>
+                    <td>^11.4.5</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/terminus</b></td>
+                    <td>^11.1.1</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/typeorm</b></td>
+                    <td>^11.0.3</td>
+                </tr>
+                <tr>
+                    <td><b>@noble/curves</b></td>
+                    <td>^2.2.0</td>
+                </tr>
+                <tr>
+                    <td><b>@noble/hashes</b></td>
+                    <td>^2.2.0</td>
+                </tr>
+                <tr>
+                    <td><b>@openid4vc/oauth2</b></td>
+                    <td>0.5.4</td>
+                </tr>
+                <tr>
+                    <td><b>@openid4vc/openid4vci</b></td>
+                    <td>0.5.4</td>
+                </tr>
+                <tr>
+                    <td><b>@openid4vc/openid4vp</b></td>
+                    <td>0.5.4</td>
+                </tr>
+                <tr>
+                    <td><b>@openid4vc/utils</b></td>
+                    <td>0.5.4</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/api</b></td>
+                    <td>^1.9.1</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/auto-instrumentations-node</b></td>
+                    <td>^0.78.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/exporter-logs-otlp-proto</b></td>
+                    <td>^0.220.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/exporter-metrics-otlp-proto</b></td>
+                    <td>^0.220.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/exporter-trace-otlp-proto</b></td>
+                    <td>^0.220.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/resources</b></td>
+                    <td>^2.8.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/sdk-logs</b></td>
+                    <td>^0.220.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/sdk-metrics</b></td>
+                    <td>^2.8.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/sdk-node</b></td>
+                    <td>^0.220.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/semantic-conventions</b></td>
+                    <td>^1.41.1</td>
+                </tr>
+                <tr>
+                    <td><b>@owf/cose</b></td>
+                    <td>^0.3.1</td>
+                </tr>
+                <tr>
+                    <td><b>@owf/crypto</b></td>
+                    <td>^0.3.1</td>
+                </tr>
+                <tr>
+                    <td><b>@owf/eudi-attestation-schema</b></td>
+                    <td>0.3.1-alpha-20260613182022</td>
+                </tr>
+                <tr>
+                    <td><b>@owf/eudi-lote</b></td>
+                    <td>^0.3.1</td>
+                </tr>
+                <tr>
+                    <td><b>@owf/identity-common</b></td>
+                    <td>^0.3.1</td>
+                </tr>
+                <tr>
+                    <td><b>@owf/mdoc</b></td>
+                    <td>^0.7.0</td>
+                </tr>
+                <tr>
+                    <td><b>@owf/token-status-list</b></td>
+                    <td>^0.3.1</td>
+                </tr>
+                <tr>
+                    <td><b>@panva/hkdf</b></td>
+                    <td>^1.2.1</td>
+                </tr>
+                <tr>
+                    <td><b>@peculiar/asn1-schema</b></td>
+                    <td>^2.8.0</td>
+                </tr>
+                <tr>
+                    <td><b>@peculiar/asn1-x509</b></td>
+                    <td>^2.8.0</td>
+                </tr>
+                <tr>
+                    <td><b>@peculiar/x509</b></td>
+                    <td>^2.0.0</td>
+                </tr>
+                <tr>
+                    <td><b>@sd-jwt/core</b></td>
+                    <td>^0.20.0</td>
+                </tr>
+                <tr>
+                    <td><b>@sd-jwt/sd-jwt-vc</b></td>
+                    <td>^0.20.0</td>
+                </tr>
+                <tr>
+                    <td><b>ajv</b></td>
+                    <td>^8.20.0</td>
+                </tr>
+                <tr>
+                    <td><b>axios</b></td>
+                    <td>^1.18.1</td>
+                </tr>
+                <tr>
+                    <td><b>bcrypt</b></td>
+                    <td>^6.0.0</td>
+                </tr>
+                <tr>
+                    <td><b>better-sqlite3</b></td>
+                    <td>^12.11.1</td>
+                </tr>
+                <tr>
+                    <td><b>class-transformer</b></td>
+                    <td>^0.5.1</td>
+                </tr>
+                <tr>
+                    <td><b>class-validator</b></td>
+                    <td>^0.15.1</td>
+                </tr>
+                <tr>
+                    <td><b>joi</b></td>
+                    <td>^18.2.3</td>
+                </tr>
+                <tr>
+                    <td><b>jose</b></td>
+                    <td>^6.2.3</td>
+                </tr>
+                <tr>
+                    <td><b>jwks-rsa</b></td>
+                    <td>^4.1.0</td>
+                </tr>
+                <tr>
+                    <td><b>multer</b></td>
+                    <td>^2.2.0</td>
+                </tr>
+                <tr>
+                    <td><b>mysql2</b></td>
+                    <td>^3.22.5</td>
+                </tr>
+                <tr>
+                    <td><b>nestjs-otel</b></td>
+                    <td>^8.1.0</td>
+                </tr>
+                <tr>
+                    <td><b>nestjs-pino</b></td>
+                    <td>^4.6.1</td>
+                </tr>
+                <tr>
+                    <td><b>nestjs-zod</b></td>
+                    <td>^5.4.0</td>
+                </tr>
+                <tr>
+                    <td><b>passport-jwt</b></td>
+                    <td>^4.0.1</td>
+                </tr>
+                <tr>
+                    <td><b>pg</b></td>
+                    <td>^8.22.0</td>
+                </tr>
+                <tr>
+                    <td><b>pino</b></td>
+                    <td>^10.3.1</td>
+                </tr>
+                <tr>
+                    <td><b>pino-http</b></td>
+                    <td>^11.0.0</td>
+                </tr>
+                <tr>
+                    <td><b>pino-opentelemetry-transport</b></td>
+                    <td>^3.0.0</td>
+                </tr>
+                <tr>
+                    <td><b>pino-pretty</b></td>
+                    <td>^13.1.3</td>
+                </tr>
+                <tr>
+                    <td><b>pkcs11js</b></td>
+                    <td>^2.1.6</td>
+                </tr>
+                <tr>
+                    <td><b>reflect-metadata</b></td>
+                    <td>^0.2.2</td>
+                </tr>
+                <tr>
+                    <td><b>rxjs</b></td>
+                    <td>^7.8.2</td>
+                </tr>
+                <tr>
+                    <td><b>typeorm</b></td>
+                    <td>^1.0.0</td>
+                </tr>
+                <tr>
+                    <td><b>uuid</b></td>
+                    <td>^14.0.1</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 
 
@@ -297,6 +464,24 @@
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -312,7 +497,6 @@
        <script src="./js/libs/lit-html.js"></script>
 
        <script src="./js/menu-wc.js" defer></script>
-       <script nomodule src="./js/menu-wc_es5.js" defer></script>
 
        <script src="./js/libs/bootstrap-native.js"></script>
 

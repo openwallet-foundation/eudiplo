@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >KeyChainSigningService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/crypto/key/key-chain-signing.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,13 +148,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/crypto/key/key-chain-signing.service.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
@@ -150,60 +161,79 @@ in <a href="../injectables/KeyChainService.html">KeyChainService</a>.</p>
 
 
 
+
+            </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getFirstKeyChain" >getFirstKeyChain</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getKeyChain" >getKeyChain</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getKid" >getKid</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#getPublicJwk" >getPublicJwk</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getPublicKey" >getPublicKey</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getPublicKey" >getPublicKey</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getPublicKey" >getPublicKey</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#refForStoredKey" >refForStoredKey</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#refFromEntity" >refFromEntity</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#signBytes" >signBytes</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#signer" >signer</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Async</span>
                                 <a href="#signJWT" >signJWT</a>
@@ -211,13 +241,13 @@ in <a href="../injectables/KeyChainService.html">KeyChainService</a>.</p>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -309,8 +339,8 @@ in <a href="../injectables/KeyChainService.html">KeyChainService</a>.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="127"
-                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:127</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="153"
+                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:153</a></div>
                         </td>
                     </tr>
 
@@ -379,8 +409,8 @@ in <a href="../injectables/KeyChainService.html">KeyChainService</a>.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="114"
-                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:114</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="140"
+                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:140</a></div>
                         </td>
                     </tr>
 
@@ -460,8 +490,8 @@ in <a href="../injectables/KeyChainService.html">KeyChainService</a>.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="109"
-                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:109</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="135"
+                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:135</a></div>
                         </td>
                     </tr>
 
@@ -529,8 +559,8 @@ in <a href="../injectables/KeyChainService.html">KeyChainService</a>.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="167"
-                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:167</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="196"
+                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:196</a></div>
                         </td>
                     </tr>
 
@@ -596,8 +626,8 @@ in <a href="../injectables/KeyChainService.html">KeyChainService</a>.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="84"
-                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:84</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="110"
+                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:110</a></div>
                         </td>
                     </tr>
 
@@ -687,8 +717,8 @@ in <a href="../injectables/KeyChainService.html">KeyChainService</a>.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="85"
-                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:85</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="111"
+                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:111</a></div>
                         </td>
                     </tr>
 
@@ -780,8 +810,8 @@ in <a href="../injectables/KeyChainService.html">KeyChainService</a>.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="90"
-                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:90</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="116"
+                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:116</a></div>
                         </td>
                     </tr>
 
@@ -873,8 +903,8 @@ in <a href="../injectables/KeyChainService.html">KeyChainService</a>.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="148"
-                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:148</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="177"
+                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:177</a></div>
                         </td>
                     </tr>
 
@@ -966,8 +996,8 @@ in <a href="../injectables/KeyChainService.html">KeyChainService</a>.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="139"
-                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:139</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="165"
+                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:165</a></div>
                         </td>
                     </tr>
 
@@ -1004,6 +1034,119 @@ in <a href="../injectables/KeyChainService.html">KeyChainService</a>.</p>
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>        <code><a href="../interfaces/KmsKeyRef.html" target="_self" >KmsKeyRef</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="signBytes"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>signBytes</b></span>
+                        <a href="#signBytes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>signBytes(data: Uint8Array, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, keyId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, alg?: <a href="../miscellaneous/typealiases.html#KmsSigningAlg" target="_self">KmsSigningAlg</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Span(&#x27;keychain.signBytes&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="91"
+                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:91</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                        <code>Uint8Array</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>keyId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>alg</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#KmsSigningAlg" target="_self" >KmsSigningAlg</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Uint8Array&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -1124,8 +1267,8 @@ in <a href="../injectables/KeyChainService.html">KeyChainService</a>.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="53"
-                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:53</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="56"
+                                    class="link-to-prism">src/crypto/key/key-chain-signing.service.ts:56</a></div>
                         </td>
                     </tr>
 
@@ -1209,13 +1352,14 @@ in <a href="../injectables/KeyChainService.html">KeyChainService</a>.</p>
     </table>
 </section>
 
+
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, NotFoundException } from &quot;@nestjs/common&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
-import type { Signer } from &quot;@sd-jwt/types&quot;;
+import type { Signer } from &quot;@sd-jwt/core&quot;;
 import {
     exportSPKI,
     importJWK,
@@ -1252,7 +1396,10 @@ export class KeyChainSigningService {
             ? await this.getKeyChain(tenantId, keyId)
             : await this.getFirstKeyChain(tenantId);
 
-        const adapter &#x3D; this.kmsRegistry.resolve(keyChain.kmsProvider);
+        const adapter &#x3D; this.kmsRegistry.resolve(
+            keyChain.kmsProvider,
+            keyChain.tenantId,
+        );
         const ref &#x3D; this.refFromEntity(keyChain);
 
         return async (data: string): Promise&lt;string&gt; &#x3D;&gt; {
@@ -1275,7 +1422,10 @@ export class KeyChainSigningService {
             ? await this.getKeyChain(tenantId, keyId)
             : await this.getFirstKeyChain(tenantId);
 
-        const adapter &#x3D; this.kmsRegistry.resolve(keyChain.kmsProvider);
+        const adapter &#x3D; this.kmsRegistry.resolve(
+            keyChain.kmsProvider,
+            keyChain.tenantId,
+        );
         const ref &#x3D; this.refFromEntity(keyChain);
 
         const { b64: _b64, ...compatibleHeader } &#x3D; header;
@@ -1294,6 +1444,26 @@ export class KeyChainSigningService {
         );
         const sigB64 &#x3D; Buffer.from(sig).toString(&quot;base64url&quot;);
         return &#x60;${signingInput}.${sigB64}&#x60;;
+    }
+
+    @Span(&quot;keychain.signBytes&quot;)
+    async signBytes(
+        data: Uint8Array,
+        tenantId: string,
+        keyId?: string,
+        alg?: KmsSigningAlg,
+    ): Promise&lt;Uint8Array&gt; {
+        const keyChain &#x3D; keyId
+            ? await this.getKeyChain(tenantId, keyId)
+            : await this.getFirstKeyChain(tenantId);
+
+        const adapter &#x3D; this.kmsRegistry.resolve(
+            keyChain.kmsProvider,
+            keyChain.tenantId,
+        );
+        const ref &#x3D; this.refFromEntity(keyChain);
+
+        return adapter.sign(ref, data, alg);
     }
 
     getPublicKey(type: &quot;jwk&quot;, tenantId: string, keyId?: string): Promise&lt;JWK&gt;;
@@ -1352,7 +1522,10 @@ export class KeyChainSigningService {
     }
 
     private refFromEntity(keyChain: KeyChainEntity): KmsKeyRef {
-        const adapter &#x3D; this.kmsRegistry.resolve(keyChain.kmsProvider);
+        const adapter &#x3D; this.kmsRegistry.resolve(
+            keyChain.kmsProvider,
+            keyChain.tenantId,
+        );
         return this.refForStoredKey(
             adapter,
             keyChain.activeJwk,
@@ -1436,6 +1609,24 @@ export class KeyChainSigningService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -1451,7 +1642,6 @@ export class KeyChainSigningService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

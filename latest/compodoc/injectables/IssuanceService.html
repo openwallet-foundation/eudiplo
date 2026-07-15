@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >IssuanceService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/issuer/configuration/issuance/issuance.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,13 +148,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/issuer/configuration/issuance/issuance.service.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
@@ -149,19 +160,41 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
 
 
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/ConfigurationModule.html" target="_self" >ConfigurationModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Properties</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#logger" >logger</a>
@@ -169,46 +202,58 @@ It provides methods to get, store, and delete issuance configurations.</p>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Public</span>
                                 <a href="#getIssuanceConfiguration" >getIssuanceConfiguration</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#importForTenant" >importForTenant</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#replaceUrl" >replaceUrl</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#sanitizeIssuanceConfigForLog" >sanitizeIssuanceConfigForLog</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#storeIssuanceConfiguration" >storeIssuanceConfiguration</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateRegistrationCertificateCache" >updateRegistrationCertificateCache</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -561,8 +606,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="180"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:180</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="256"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:256</a></div>
                         </td>
                     </tr>
 
@@ -623,15 +668,15 @@ It provides methods to get, store, and delete issuance configurations.</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>storeIssuanceConfiguration(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, value: <a href="../classes/IssuanceDto.html" target="_self">IssuanceDto</a>, actorToken?: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>, req?: Request)</code>
+                    <code>storeIssuanceConfiguration(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, value: <a href="../classes/IssuanceDto.html" target="_self">Partial&lt;IssuanceDto&gt;</a>, actorToken?: <a href="../interfaces/TokenPayload.html" target="_self">TokenPayload</a>, req?: Request)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="125"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:125</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="139"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:139</a></div>
                         </td>
                     </tr>
 
@@ -672,7 +717,7 @@ It provides methods to get, store, and delete issuance configurations.</p>
                                         <tr>
                                                 <td>value</td>
                                             <td>
-                                                            <code><a href="../classes/IssuanceDto.html" target="_self" >IssuanceDto</a></code>
+                                                            <code><a href="../classes/IssuanceDto.html" target="_self" >Partial&lt;IssuanceDto&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -719,7 +764,91 @@ It provides methods to get, store, and delete issuance configurations.</p>
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateRegistrationCertificateCache"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>updateRegistrationCertificateCache</b></span>
+                        <a href="#updateRegistrationCertificateCache"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateRegistrationCertificateCache(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, registrationCertificateCache: <a href="../classes/IssuanceConfig.html" target="_self">IssuanceConfig</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="120"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:120</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Updates only the server-managed registration certificate cache.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>registrationCertificateCache</td>
+                                            <td>
+                                                            <code><a href="../classes/IssuanceConfig.html" target="_self" >IssuanceConfig</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
+
             <section data-compodoc="block-properties">
     
     <h3 id="inputs">
@@ -764,7 +893,7 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, Logger } from &quot;@nestjs/common&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { BadRequestException, Injectable, Logger } from &quot;@nestjs/common&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
 import { Request } from &quot;express&quot;;
 import { Repository } from &quot;typeorm&quot;;
@@ -881,6 +1010,20 @@ export class IssuanceService {
     }
 
     /**
+     * Updates only the server-managed registration certificate cache.
+     */
+    async updateRegistrationCertificateCache(
+        tenantId: string,
+        registrationCertificateCache: IssuanceConfig[&quot;registrationCertificateCache&quot;],
+    ): Promise&lt;void&gt; {
+        await this.issuanceConfigRepo.save({
+            ...(await this.getIssuanceConfiguration(tenantId)),
+            tenantId,
+            registrationCertificateCache,
+        });
+    }
+
+    /**
      * Store the config. If it already exist, merge with existing values.
      * - Undefined values are ignored, preserving existing configuration.
      * - Null values explicitly clear/unset the field.
@@ -890,7 +1033,7 @@ export class IssuanceService {
      */
     async storeIssuanceConfiguration(
         tenantId: string,
-        value: IssuanceDto,
+        value: Partial&lt;IssuanceDto&gt;,
         actorToken?: TokenPayload,
         req?: Request,
     ) {
@@ -911,6 +1054,68 @@ export class IssuanceService {
         const filteredValue &#x3D; Object.fromEntries(
             Object.entries(value).filter(([, v]) &#x3D;&gt; v !&#x3D;&#x3D; undefined),
         );
+
+        const hasIncomingAuthorizationServers &#x3D;
+            Object.prototype.hasOwnProperty.call(
+                filteredValue,
+                &quot;authorizationServers&quot;,
+            );
+        const effectiveAuthorizationServers &#x3D; hasIncomingAuthorizationServers
+            ? (filteredValue as Partial&lt;IssuanceDto&gt;).authorizationServers
+            : existingConfig.authorizationServers;
+
+        if (!Array.isArray(effectiveAuthorizationServers)) {
+            throw new BadRequestException(
+                &quot;At least one authorization server must be configured&quot;,
+            );
+        }
+
+        const configuredAuthorizationServers &#x3D;
+            effectiveAuthorizationServers as Array&lt;{
+                id?: string;
+                type?: string;
+            }&gt;;
+
+        if (configuredAuthorizationServers.length &lt; 1) {
+            throw new BadRequestException(
+                &quot;At least one authorization server must be configured&quot;,
+            );
+        }
+
+        const builtInCount &#x3D; configuredAuthorizationServers.filter(
+            (server) &#x3D;&gt; server?.type &#x3D;&#x3D;&#x3D; &quot;built-in&quot;,
+        ).length;
+        if (builtInCount &gt; 1) {
+            throw new BadRequestException(
+                &quot;Only one built-in authorization server can be configured&quot;,
+            );
+        }
+
+        const reservedIds &#x3D; new Set([&quot;built-in&quot;, &quot;chained-as&quot;]);
+        const seenIds &#x3D; new Set&lt;string&gt;();
+        for (const server of configuredAuthorizationServers) {
+            if (typeof server.id !&#x3D;&#x3D; &quot;string&quot; || server.id.trim().length &lt; 1) {
+                throw new BadRequestException(
+                    &quot;Each authorization server must define a non-empty id&quot;,
+                );
+            }
+
+            const normalizedId &#x3D; server.id.trim();
+            if (reservedIds.has(normalizedId)) {
+                throw new BadRequestException(
+                    &#x60;Authorization server id &#x27;${normalizedId}&#x27; is reserved&#x60;,
+                );
+            }
+
+            if (seenIds.has(normalizedId)) {
+                throw new BadRequestException(
+                    &#x60;Authorization server id &#x27;${normalizedId}&#x27; is duplicated&#x60;,
+                );
+            }
+
+            seenIds.add(normalizedId);
+            server.id &#x3D; normalizedId;
+        }
 
         const before &#x3D;
             &quot;tenantId&quot; in existingConfig
@@ -946,21 +1151,35 @@ export class IssuanceService {
     private sanitizeIssuanceConfigForLog(
         config: IssuanceConfig,
     ): Record&lt;string, unknown&gt; {
+        const registrationCertificate &#x3D; config.registrationCertificate
+            ? {
+                  ...config.registrationCertificate,
+                  jwt: config.registrationCertificate.jwt
+                      ? &quot;[REDACTED]&quot;
+                      : undefined,
+              }
+            : config.registrationCertificate;
+
+        const registrationCertificateCache &#x3D; config.registrationCertificateCache
+            ? {
+                  ...config.registrationCertificateCache,
+                  jwt: &quot;[REDACTED]&quot;,
+              }
+            : config.registrationCertificateCache;
+
         return {
             display: config.display,
-            authServers: config.authServers,
             batchSize: config.batchSize,
             dPopRequired: config.dPopRequired,
             walletAttestationRequired: config.walletAttestationRequired,
             walletProviderTrustLists: config.walletProviderTrustLists,
             signingKeyId: config.signingKeyId,
-            preferredAuthServer: config.preferredAuthServer,
-            chainedAs: config.chainedAs,
+            authorizationServers: config.authorizationServers,
             federation: config.federation,
+            registrationCertificate,
+            registrationCertificateCache,
             credentialResponseEncryption: config.credentialResponseEncryption,
             credentialRequestEncryption: config.credentialRequestEncryption,
-            refreshTokenEnabled: config.refreshTokenEnabled,
-            refreshTokenExpiresInSeconds: config.refreshTokenExpiresInSeconds,
             txCodeMaxAttempts: config.txCodeMaxAttempts,
         };
     }
@@ -1014,6 +1233,24 @@ export class IssuanceService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -1029,7 +1266,6 @@ export class IssuanceService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

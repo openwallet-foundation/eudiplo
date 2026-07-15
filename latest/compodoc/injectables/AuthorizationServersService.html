@@ -1,0 +1,2723 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >AuthorizationServersService</li>
+</ol>
+
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts</code>
+</div>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+
+
+
+
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/AuthorizationModule.html" target="_self" >AuthorizationModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
+                <tr>
+                    <td class="col-md-3">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                    <td class="col-md-9">
+                        <ul class="index-list">
+                            <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#authCodeLifetimeSeconds" >authCodeLifetimeSeconds</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#requestUriPrefix" >requestUriPrefix</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#sessionLifetimeSeconds" >sessionLifetimeSeconds</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
+                <tr>
+                    <td class="col-md-3">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                    <td class="col-md-9">
+                        <ul class="index-list">
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildErrorRedirect" >buildErrorRedirect</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#buildTokenPayload" >buildTokenPayload</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                <a href="#getAuthorizationServerBaseUrl" >getAuthorizationServerBaseUrl</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getAuthorizationServerConfig" >getAuthorizationServerConfig</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getAuthorizationServerIssuerUrls" >getAuthorizationServerIssuerUrls</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getDefaultAuthorizationServerUrl" >getDefaultAuthorizationServerUrl</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getEnabledAuthorizationServers" >getEnabledAuthorizationServers</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getExternalAuthorizationServerUrls" >getExternalAuthorizationServerUrls</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getJwks" >getJwks</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getMetadata" >getMetadata</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleAuthorize" >handleAuthorize</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#handlePar" >handlePar</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleToken" >handleToken</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#handleVerifierCallback" >handleVerifierCallback</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#hasEnabledChainedAuthorizationServer" >hasEnabledChainedAuthorizationServer</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+
+
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(configService: ConfigService, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>, sessionService: <a href="../injectables/SessionService.html" target="_self">SessionService</a>, issuanceService: <a href="../injectables/IssuanceService.html" target="_self">IssuanceService</a>, walletAttestationService: <a href="../injectables/WalletAttestationService.html" target="_self">WalletAttestationService</a>, traceService: TraceService, oid4vpService: <a href="../injectables/Oid4vpService.html" target="_self">Oid4vpService</a>, sessionRepository: Repository<ChainedAsSessionEntity>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:64</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>configService</td>
+                                                  
+                                                        <td>
+                                                                    <code>ConfigService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>keyChainService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/KeyChainService.html" target="_self" >KeyChainService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>sessionService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/SessionService.html" target="_self" >SessionService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>issuanceService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/IssuanceService.html" target="_self" >IssuanceService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>walletAttestationService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/WalletAttestationService.html" target="_self" >WalletAttestationService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>traceService</td>
+                                                  
+                                                        <td>
+                                                                    <code>TraceService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>oid4vpService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/Oid4vpService.html" target="_self" >Oid4vpService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>sessionRepository</td>
+                                                  
+                                                        <td>
+                                                                    <code>Repository&lt;ChainedAsSessionEntity&gt;</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildErrorRedirect"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildErrorRedirect</b></span>
+                        <a href="#buildErrorRedirect"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildErrorRedirect(redirectUri: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, error: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, errorDescription?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, walletState?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="364"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:364</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>redirectUri</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>errorDescription</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>walletState</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildTokenPayload"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>buildTokenPayload</b></span>
+                        <a href="#buildTokenPayload"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>buildTokenPayload(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationServerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, session: <a href="../entitys/ChainedAsSessionEntity.html" target="_self">ChainedAsSessionEntity</a>, tokenLifetime: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, jti: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, dpopJkt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="463"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:463</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>session</td>
+                                            <td>
+                                                            <code><a href="../entitys/ChainedAsSessionEntity.html" target="_self" >ChainedAsSessionEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tokenLifetime</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>jti</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>dpopJkt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Record&lt;string, unknown&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAuthorizationServerBaseUrl"></a>
+                    <span class="name">
+                        <span ><b>getAuthorizationServerBaseUrl</b></span>
+                        <a href="#getAuthorizationServerBaseUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getAuthorizationServerBaseUrl(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationServerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="78"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:78</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAuthorizationServerConfig"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getAuthorizationServerConfig</b></span>
+                        <a href="#getAuthorizationServerConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAuthorizationServerConfig(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationServerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="152"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:152</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ManagedAuthorizationServerConfig.html" target="_self" >Promise&lt;Oid4VpManagedAuthorizationServerConfig&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAuthorizationServerIssuerUrls"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getAuthorizationServerIssuerUrls</b></span>
+                        <a href="#getAuthorizationServerIssuerUrls"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAuthorizationServerIssuerUrls(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="169"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:169</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDefaultAuthorizationServerUrl"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getDefaultAuthorizationServerUrl</b></span>
+                        <a href="#getDefaultAuthorizationServerUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getDefaultAuthorizationServerUrl(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, preferredAuthorizationServerId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="178"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:178</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>preferredAuthorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string | undefined&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getEnabledAuthorizationServers"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getEnabledAuthorizationServers</b></span>
+                        <a href="#getEnabledAuthorizationServers"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getEnabledAuthorizationServers(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="86"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:86</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/ManagedAuthorizationServerConfig.html" target="_self" >Promise&lt;Oid4VpManagedAuthorizationServerConfig[]&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getExternalAuthorizationServerUrls"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getExternalAuthorizationServerUrls</b></span>
+                        <a href="#getExternalAuthorizationServerUrls"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getExternalAuthorizationServerUrls(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="108"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:108</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getJwks"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getJwks</b></span>
+                        <a href="#getJwks"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getJwks(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationServerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="621"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:621</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;{ keys: Record[] }&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getMetadata"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getMetadata</b></span>
+                        <a href="#getMetadata"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getMetadata(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationServerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="587"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:587</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Record&lt;string, unknown&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleAuthorize"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>handleAuthorize</b></span>
+                        <a href="#handleAuthorize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleAuthorize(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationServerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, clientId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, requestUri: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="286"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:286</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>clientId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>requestUri</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>origin</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handlePar"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>handlePar</b></span>
+                        <a href="#handlePar"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handlePar(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationServerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, request: <a href="../classes/ChainedAsParRequestDto.html" target="_self">ChainedAsParRequestDto</a>, dpopJkt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, clientAttestation?: { clientAttestationJwt: string; clientAttestationPopJwt: string })</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="202"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:202</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>request</td>
+                                            <td>
+                                                            <code><a href="../classes/ChainedAsParRequestDto.html" target="_self" >ChainedAsParRequestDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>dpopJkt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>clientAttestation</td>
+                                            <td>
+                                                        <code>{ clientAttestationJwt: string; clientAttestationPopJwt: string }</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;ChainedAsParResponseDto&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleToken"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>handleToken</b></span>
+                        <a href="#handleToken"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleToken(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationServerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, request: <a href="../classes/ChainedAsTokenRequestDto.html" target="_self">ChainedAsTokenRequestDto</a>, dpopJwt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="500"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:500</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>request</td>
+                                            <td>
+                                                            <code><a href="../classes/ChainedAsTokenRequestDto.html" target="_self" >ChainedAsTokenRequestDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>dpopJwt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#Token" target="_self" >Promise&lt;ChainedAsTokenResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleVerifierCallback"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>handleVerifierCallback</b></span>
+                        <a href="#handleVerifierCallback"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleVerifierCallback(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationServerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, chainedAsSessionId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, responseCode?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, error?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, errorDescription?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="381"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:381</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>chainedAsSessionId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>responseCode</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>errorDescription</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasEnabledChainedAuthorizationServer"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>hasEnabledChainedAuthorizationServer</b></span>
+                        <a href="#hasEnabledChainedAuthorizationServer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>hasEnabledChainedAuthorizationServer(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:133</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="authCodeLifetimeSeconds"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>authCodeLifetimeSeconds</b></span>
+                        <a href="#authCodeLifetimeSeconds"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>300</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:64</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(AuthorizationServersService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:61</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="requestUriPrefix"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>requestUriPrefix</b></span>
+                        <a href="#requestUriPrefix"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&quot;urn:ietf:params:oauth:request_uri:&quot;</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sessionLifetimeSeconds"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>sessionLifetimeSeconds</b></span>
+                        <a href="#sessionLifetimeSeconds"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>600</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorization-servers/authorization-servers.service.ts:63</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { randomBytes } from &quot;node:crypto&quot;;
+import {
+    BadRequestException,
+    Injectable,
+    Logger,
+    NotFoundException,
+} from &quot;@nestjs/common&quot;;
+import { ConfigService } from &quot;@nestjs/config&quot;;
+import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
+import { TraceService } from &quot;nestjs-otel&quot;;
+import { Repository } from &quot;typeorm&quot;;
+import { v4 } from &quot;uuid&quot;;
+import { KeyChainService } from &quot;../../../../../crypto/key/key-chain.service&quot;;
+import { SessionStatus } from &quot;../../../../../session/entities/session.entity&quot;;
+import { SessionService } from &quot;../../../../../session/session.service&quot;;
+import { WalletAttestationService } from &quot;../../../../../shared/trust/wallet-attestation.service&quot;;
+import { ManagedAuthorizationServerConfig } from &quot;../../../../configuration/issuance/dto/authorization-server-config.dto&quot;;
+import { ChainedAsTokenConfig } from &quot;../../../../configuration/issuance/dto/chained-as-config.dto&quot;;
+import { IssuanceService } from &quot;../../../../configuration/issuance/issuance.service&quot;;
+import { Oid4vpService } from &quot;../../../../../verifier/oid4vp/oid4vp.service&quot;;
+import {
+    assertTokenRequestSessionValid,
+    buildAuthorizationServerMetadata,
+    buildWalletAttestationMetadata,
+    buildJwksResponse,
+    ChainedAsParRequestDto,
+    ChainedAsParResponseDto,
+    ChainedAsSessionEntity,
+    ChainedAsSessionStatus,
+    ChainedAsTokenRequestDto,
+    ChainedAsTokenResponseDto,
+    issueRefreshTokenIfEnabled,
+    resolveSessionForTokenRequest,
+    resolveTokenBinding,
+    DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+} from &quot;../shared&quot;;
+
+type Oid4VpManagedAuthorizationServerConfig &#x3D;
+    ManagedAuthorizationServerConfig &amp; {
+        type: &quot;oid4vp&quot;;
+        id: string;
+        presentationConfigId: string;
+        token?: ChainedAsTokenConfig;
+        requireDPoP?: boolean;
+    };
+
+type ExternalManagedAuthorizationServerConfig &#x3D;
+    ManagedAuthorizationServerConfig &amp; {
+        type: &quot;external&quot;;
+        issuer: string;
+    };
+
+type ChainedManagedAuthorizationServerConfig &#x3D;
+    ManagedAuthorizationServerConfig &amp; {
+        type: &quot;chained&quot;;
+        upstream: unknown;
+    };
+
+@Injectable()
+export class AuthorizationServersService {
+    private readonly logger &#x3D; new Logger(AuthorizationServersService.name);
+    private readonly requestUriPrefix &#x3D; &quot;urn:ietf:params:oauth:request_uri:&quot;;
+    private readonly sessionLifetimeSeconds &#x3D; 600;
+    private readonly authCodeLifetimeSeconds &#x3D; 300;
+
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly keyChainService: KeyChainService,
+        private readonly sessionService: SessionService,
+        private readonly issuanceService: IssuanceService,
+        private readonly walletAttestationService: WalletAttestationService,
+        private readonly traceService: TraceService,
+        private readonly oid4vpService: Oid4vpService,
+        @InjectRepository(ChainedAsSessionEntity)
+        private readonly sessionRepository: Repository&lt;ChainedAsSessionEntity&gt;,
+    ) {}
+
+    getAuthorizationServerBaseUrl(
+        tenantId: string,
+        authorizationServerId: string,
+    ): string {
+        const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
+        return &#x60;${publicUrl}/issuers/${tenantId}/authorization-servers/${authorizationServerId}&#x60;;
+    }
+
+    async getEnabledAuthorizationServers(
+        tenantId: string,
+    ): Promise&lt;Oid4VpManagedAuthorizationServerConfig[]&gt; {
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        return (issuanceConfig.authorizationServers ?? []).filter(
+            (config): config is Oid4VpManagedAuthorizationServerConfig &#x3D;&gt; {
+                const candidate &#x3D;
+                    config as Partial&lt;Oid4VpManagedAuthorizationServerConfig&gt;;
+                return (
+                    config.enabled !&#x3D;&#x3D; false &amp;&amp;
+                    config.type &#x3D;&#x3D;&#x3D; &quot;oid4vp&quot; &amp;&amp;
+                    typeof candidate.id &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                    candidate.id.length &gt; 0 &amp;&amp;
+                    typeof candidate.presentationConfigId &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                    candidate.presentationConfigId.length &gt; 0
+                );
+            },
+        );
+    }
+
+    async getExternalAuthorizationServerUrls(
+        tenantId: string,
+    ): Promise&lt;string[]&gt; {
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        return (issuanceConfig.authorizationServers ?? [])
+            .filter(
+                (
+                    config,
+                ): config is ExternalManagedAuthorizationServerConfig &#x3D;&gt; {
+                    const candidate &#x3D;
+                        config as Partial&lt;ExternalManagedAuthorizationServerConfig&gt;;
+                    return (
+                        config.enabled !&#x3D;&#x3D; false &amp;&amp;
+                        config.type &#x3D;&#x3D;&#x3D; &quot;external&quot; &amp;&amp;
+                        typeof candidate.issuer &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                        candidate.issuer.length &gt; 0
+                    );
+                },
+            )
+            .map((config) &#x3D;&gt; config.issuer)
+            .filter((url, index, arr) &#x3D;&gt; arr.indexOf(url) &#x3D;&#x3D;&#x3D; index);
+    }
+
+    async hasEnabledChainedAuthorizationServer(
+        tenantId: string,
+    ): Promise&lt;boolean&gt; {
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        return (issuanceConfig.authorizationServers ?? []).some(
+            (config): config is ChainedManagedAuthorizationServerConfig &#x3D;&gt; {
+                const candidate &#x3D;
+                    config as Partial&lt;ChainedManagedAuthorizationServerConfig&gt;;
+                return (
+                    config.enabled !&#x3D;&#x3D; false &amp;&amp;
+                    config.type &#x3D;&#x3D;&#x3D; &quot;chained&quot; &amp;&amp;
+                    !!candidate.upstream
+                );
+            },
+        );
+    }
+
+    async getAuthorizationServerConfig(
+        tenantId: string,
+        authorizationServerId: string,
+    ): Promise&lt;Oid4VpManagedAuthorizationServerConfig&gt; {
+        const config &#x3D; (
+            await this.getEnabledAuthorizationServers(tenantId)
+        ).find((entry) &#x3D;&gt; entry.id &#x3D;&#x3D;&#x3D; authorizationServerId);
+
+        if (!config) {
+            throw new NotFoundException(
+                &#x60;Authorization server &#x27;${authorizationServerId}&#x27; is not configured for this tenant&#x60;,
+            );
+        }
+
+        return config;
+    }
+
+    async getAuthorizationServerIssuerUrls(
+        tenantId: string,
+    ): Promise&lt;string[]&gt; {
+        const configs &#x3D; await this.getEnabledAuthorizationServers(tenantId);
+        return configs.map((config) &#x3D;&gt;
+            this.getAuthorizationServerBaseUrl(tenantId, config.id),
+        );
+    }
+
+    async getDefaultAuthorizationServerUrl(
+        tenantId: string,
+        preferredAuthorizationServerId?: string,
+    ): Promise&lt;string | undefined&gt; {
+        if (preferredAuthorizationServerId) {
+            await this.getAuthorizationServerConfig(
+                tenantId,
+                preferredAuthorizationServerId,
+            );
+            return this.getAuthorizationServerBaseUrl(
+                tenantId,
+                preferredAuthorizationServerId,
+            );
+        }
+
+        const configs &#x3D; await this.getEnabledAuthorizationServers(tenantId);
+        const first &#x3D; configs[0];
+        if (!first) {
+            return undefined;
+        }
+
+        return this.getAuthorizationServerBaseUrl(tenantId, first.id);
+    }
+
+    async handlePar(
+        tenantId: string,
+        authorizationServerId: string,
+        request: ChainedAsParRequestDto,
+        dpopJkt?: string,
+        clientAttestation?: {
+            clientAttestationJwt: string;
+            clientAttestationPopJwt: string;
+        },
+    ): Promise&lt;ChainedAsParResponseDto&gt; {
+        const config &#x3D; await this.getAuthorizationServerConfig(
+            tenantId,
+            authorizationServerId,
+        );
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        if (request.response_type !&#x3D;&#x3D; &quot;code&quot;) {
+            throw new BadRequestException(
+                &#x27;Invalid response_type, must be &quot;code&quot;&#x27;,
+            );
+        }
+
+        if (config.requireDPoP &amp;&amp; !dpopJkt) {
+            throw new BadRequestException(&quot;DPoP is required&quot;);
+        }
+
+        await this.walletAttestationService.verifyWalletAttestation(
+            tenantId,
+            clientAttestation,
+            this.getAuthorizationServerBaseUrl(tenantId, authorizationServerId),
+            issuanceConfig.walletAttestationRequired ?? false,
+            issuanceConfig.walletProviderTrustLists ?? [],
+        );
+
+        let issuerState &#x3D; request.issuer_state;
+        if (issuerState) {
+            try {
+                await this.sessionService.get(issuerState);
+            } catch {
+                throw new BadRequestException(&quot;Invalid issuer_state&quot;);
+            }
+        } else {
+            issuerState &#x3D; v4();
+        }
+
+        const sessionId &#x3D; v4();
+        const expiresAt &#x3D; new Date(
+            Date.now() + this.sessionLifetimeSeconds * 1000,
+        );
+
+        const session &#x3D; this.sessionRepository.create({
+            id: sessionId,
+            tenantId,
+            status: ChainedAsSessionStatus.PENDING_AUTHORIZE,
+            issuerState,
+            clientId: request.client_id,
+            redirectUri: request.redirect_uri,
+            codeChallenge: request.code_challenge,
+            codeChallengeMethod: request.code_challenge_method,
+            walletState: request.state,
+            scope: request.scope,
+            authorizationDetails: request.authorization_details,
+            dpopJkt,
+            expiresAt,
+            vpPresentationConfigId: config.presentationConfigId,
+        });
+
+        await this.sessionRepository.save(session);
+
+        this.traceService.getSpan()?.setAttributes({
+            &quot;session.id&quot;: issuerState,
+            &quot;authorization_server.session.id&quot;: sessionId,
+            &quot;session.tenantId&quot;: tenantId,
+            &quot;authorization_server.id&quot;: authorizationServerId,
+            &quot;authorization_server.endpoint&quot;: &quot;par&quot;,
+        });
+
+        return {
+            request_uri: &#x60;${this.requestUriPrefix}${sessionId}&#x60;,
+            expires_in: this.sessionLifetimeSeconds,
+        };
+    }
+
+    async handleAuthorize(
+        tenantId: string,
+        authorizationServerId: string,
+        clientId: string,
+        requestUri: string,
+        origin?: string,
+    ): Promise&lt;string&gt; {
+        const config &#x3D; await this.getAuthorizationServerConfig(
+            tenantId,
+            authorizationServerId,
+        );
+
+        if (!requestUri.startsWith(this.requestUriPrefix)) {
+            throw new BadRequestException(&quot;Invalid request_uri format&quot;);
+        }
+
+        const sessionId &#x3D; requestUri.slice(this.requestUriPrefix.length);
+        const session &#x3D; await this.sessionRepository.findOne({
+            where: {
+                id: sessionId,
+                tenantId,
+                status: ChainedAsSessionStatus.PENDING_AUTHORIZE,
+            },
+        });
+
+        if (!session) {
+            throw new BadRequestException(&quot;Invalid or expired request_uri&quot;);
+        }
+
+        if (session.clientId !&#x3D;&#x3D; clientId) {
+            throw new BadRequestException(&quot;Client ID mismatch&quot;);
+        }
+
+        if (session.expiresAt &lt; new Date()) {
+            session.status &#x3D; ChainedAsSessionStatus.EXPIRED;
+            await this.sessionRepository.save(session);
+            throw new BadRequestException(&quot;Session expired&quot;);
+        }
+
+        session.status &#x3D; ChainedAsSessionStatus.PENDING_VP_CALLBACK;
+        await this.sessionRepository.save(session);
+
+        this.traceService.getSpan()?.setAttributes({
+            &quot;session.id&quot;: session.issuerState,
+            &quot;authorization_server.session.id&quot;: session.id,
+            &quot;session.tenantId&quot;: tenantId,
+            &quot;authorization_server.id&quot;: authorizationServerId,
+            &quot;authorization_server.endpoint&quot;: &quot;authorize&quot;,
+        });
+
+        const callbackUrl &#x3D; &#x60;${this.getAuthorizationServerBaseUrl(tenantId, authorizationServerId)}/vp-callback?cas&#x3D;${encodeURIComponent(session.id)}&#x60;;
+
+        await this.sessionService.create({
+            id: session.id,
+            tenantId,
+            requestId: config.presentationConfigId,
+            redirectUri: callbackUrl,
+        });
+
+        const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
+        const offer &#x3D; await this.oid4vpService.createRequest(
+            config.presentationConfigId,
+            {
+                session: session.id,
+                redirectUri: callbackUrl,
+            },
+            tenantId,
+            false,
+            origin || publicUrl,
+        );
+
+        this.logger.debug(
+            &#x60;Redirecting session ${session.id} to OID4VP wallet invocation for ${authorizationServerId}&#x60;,
+        );
+
+        return &#x60;openid4vp://?${offer.uri}&#x60;;
+    }
+
+    private buildErrorRedirect(
+        redirectUri: string,
+        error: string,
+        errorDescription?: string,
+        walletState?: string,
+    ): string {
+        const redirectUrl &#x3D; new URL(redirectUri);
+        redirectUrl.searchParams.set(&quot;error&quot;, error);
+        if (errorDescription) {
+            redirectUrl.searchParams.set(&quot;error_description&quot;, errorDescription);
+        }
+        if (walletState) {
+            redirectUrl.searchParams.set(&quot;state&quot;, walletState);
+        }
+        return redirectUrl.toString();
+    }
+
+    async handleVerifierCallback(
+        tenantId: string,
+        authorizationServerId: string,
+        chainedAsSessionId: string,
+        responseCode?: string,
+        error?: string,
+        errorDescription?: string,
+    ): Promise&lt;string&gt; {
+        await this.getAuthorizationServerConfig(
+            tenantId,
+            authorizationServerId,
+        );
+
+        const session &#x3D; await this.sessionRepository.findOne({
+            where: {
+                id: chainedAsSessionId,
+                tenantId,
+                status: ChainedAsSessionStatus.PENDING_VP_CALLBACK,
+            },
+        });
+
+        if (!session) {
+            throw new BadRequestException(
+                &quot;Invalid or expired callback session&quot;,
+            );
+        }
+
+        if (error) {
+            session.status &#x3D; ChainedAsSessionStatus.EXPIRED;
+            await this.sessionRepository.save(session);
+            return this.buildErrorRedirect(
+                session.redirectUri,
+                error,
+                errorDescription,
+                session.walletState,
+            );
+        }
+
+        const verifierSession &#x3D; await this.sessionService.get(session.id);
+        if (
+            verifierSession.status !&#x3D;&#x3D; SessionStatus.Completed ||
+            !responseCode ||
+            verifierSession.responseCode !&#x3D;&#x3D; responseCode
+        ) {
+            session.status &#x3D; ChainedAsSessionStatus.EXPIRED;
+            await this.sessionRepository.save(session);
+            return this.buildErrorRedirect(
+                session.redirectUri,
+                &quot;invalid_request&quot;,
+                &quot;OID4VP verification did not complete successfully&quot;,
+                session.walletState,
+            );
+        }
+
+        if (session.issuerState &amp;&amp; verifierSession.credentials) {
+            await this.sessionService.add(session.issuerState, {
+                credentials: verifierSession.credentials as any,
+            });
+        }
+
+        const authorizationCode &#x3D; randomBytes(32).toString(&quot;base64url&quot;);
+        session.status &#x3D; ChainedAsSessionStatus.AUTHORIZED;
+        session.authorizationCode &#x3D; authorizationCode;
+        session.authorizationCodeExpiresAt &#x3D; new Date(
+            Date.now() + this.authCodeLifetimeSeconds * 1000,
+        );
+        session.vpResponseCode &#x3D; responseCode;
+        await this.sessionRepository.save(session);
+
+        const redirectUrl &#x3D; new URL(session.redirectUri);
+        redirectUrl.searchParams.set(&quot;code&quot;, authorizationCode);
+        redirectUrl.searchParams.set(
+            &quot;iss&quot;,
+            this.getAuthorizationServerBaseUrl(tenantId, authorizationServerId),
+        );
+        if (session.walletState) {
+            redirectUrl.searchParams.set(&quot;state&quot;, session.walletState);
+        }
+
+        return redirectUrl.toString();
+    }
+
+    private buildTokenPayload(
+        tenantId: string,
+        authorizationServerId: string,
+        session: ChainedAsSessionEntity,
+        tokenLifetime: number,
+        jti: string,
+        dpopJkt?: string,
+    ): Record&lt;string, unknown&gt; {
+        const now &#x3D; Math.floor(Date.now() / 1000);
+        const payload: Record&lt;string, unknown&gt; &#x3D; {
+            iss: this.getAuthorizationServerBaseUrl(
+                tenantId,
+                authorizationServerId,
+            ),
+            sub: session.clientId,
+            aud: &#x60;${this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;)}/issuers/${tenantId}&#x60;,
+            iat: now,
+            exp: now + tokenLifetime,
+            jti,
+            issuer_state: session.issuerState,
+            client_id: session.clientId,
+        };
+
+        if (dpopJkt) {
+            payload.cnf &#x3D; { jkt: dpopJkt };
+        }
+
+        if (
+            Array.isArray(session.authorizationDetails) &amp;&amp;
+            session.authorizationDetails.length &gt; 0
+        ) {
+            payload.authorization_details &#x3D; session.authorizationDetails;
+        }
+
+        return payload;
+    }
+
+    async handleToken(
+        tenantId: string,
+        authorizationServerId: string,
+        request: ChainedAsTokenRequestDto,
+        dpopJwt?: string,
+    ): Promise&lt;ChainedAsTokenResponseDto&gt; {
+        const config &#x3D; await this.getAuthorizationServerConfig(
+            tenantId,
+            authorizationServerId,
+        );
+
+        if (
+            request.grant_type !&#x3D;&#x3D; &quot;authorization_code&quot; &amp;&amp;
+            request.grant_type !&#x3D;&#x3D; &quot;refresh_token&quot;
+        ) {
+            throw new BadRequestException(
+                &#x27;Invalid grant_type, must be &quot;authorization_code&quot; or &quot;refresh_token&quot;&#x27;,
+            );
+        }
+
+        const session &#x3D; await resolveSessionForTokenRequest(
+            this.sessionRepository,
+            tenantId,
+            request,
+        );
+        await assertTokenRequestSessionValid(
+            this.sessionRepository,
+            session,
+            request,
+        );
+
+        const { tokenType, dpopJkt } &#x3D; resolveTokenBinding(
+            config.requireDPoP,
+            session,
+            dpopJwt,
+        );
+
+        const tokenLifetime &#x3D; config.token?.lifetimeSeconds || 3600;
+        const jti &#x3D; v4();
+        const tokenPayload &#x3D; this.buildTokenPayload(
+            tenantId,
+            authorizationServerId,
+            session,
+            tokenLifetime,
+            jti,
+            dpopJkt,
+        );
+
+        const signingKeyId &#x3D;
+            config.token?.signingKeyId ||
+            (await this.keyChainService.getKid(tenantId));
+        const publicKey &#x3D; await this.keyChainService.getPublicKey(
+            &quot;jwk&quot;,
+            tenantId,
+            signingKeyId,
+        );
+        const kid &#x3D; (publicKey as { kid?: string }).kid || signingKeyId;
+
+        const accessToken &#x3D; await this.keyChainService.signJWT(
+            tokenPayload as any,
+            { alg: &quot;ES256&quot;, kid, typ: &quot;at+jwt&quot; },
+            tenantId,
+            signingKeyId,
+        );
+
+        session.status &#x3D; ChainedAsSessionStatus.TOKEN_ISSUED;
+        session.accessTokenJti &#x3D; jti;
+        const refreshToken &#x3D; issueRefreshTokenIfEnabled(
+            session,
+            config.token ?? {},
+        );
+
+        await this.sessionRepository.save(session);
+
+        return {
+            access_token: accessToken,
+            token_type: tokenType,
+            expires_in: tokenLifetime,
+            scope: session.scope,
+            ...(Array.isArray(session.authorizationDetails) &amp;&amp;
+                session.authorizationDetails.length &gt; 0 &amp;&amp; {
+                    authorization_details: session.authorizationDetails,
+                }),
+            ...(refreshToken &amp;&amp; { refresh_token: refreshToken }),
+        };
+    }
+
+    async getMetadata(
+        tenantId: string,
+        authorizationServerId: string,
+    ): Promise&lt;Record&lt;string, unknown&gt;&gt; {
+        const config &#x3D; await this.getAuthorizationServerConfig(
+            tenantId,
+            authorizationServerId,
+        );
+        const baseUrl &#x3D; this.getAuthorizationServerBaseUrl(
+            tenantId,
+            authorizationServerId,
+        );
+        const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
+        const issuanceConfig &#x3D;
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const walletAttestationRequired &#x3D;
+            issuanceConfig.walletAttestationRequired ?? false;
+        const refreshTokensEnabled &#x3D; config.token?.refreshTokenEnabled ?? true;
+
+        return buildAuthorizationServerMetadata({
+            issuer: baseUrl,
+            authorizationEndpoint: &#x60;${baseUrl}/authorize&#x60;,
+            tokenEndpoint: &#x60;${baseUrl}/token&#x60;,
+            pushedAuthorizationRequestEndpoint: &#x60;${baseUrl}/par&#x60;,
+            jwksUri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/authorization-servers/${authorizationServerId}&#x60;,
+            grantTypesSupported: refreshTokensEnabled
+                ? [&quot;authorization_code&quot;, &quot;refresh_token&quot;]
+                : [&quot;authorization_code&quot;],
+            dpopSigningAlgValuesSupported:
+                DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+            ...buildWalletAttestationMetadata(walletAttestationRequired),
+        });
+    }
+
+    async getJwks(
+        tenantId: string,
+        authorizationServerId: string,
+    ): Promise&lt;{ keys: Record&lt;string, unknown&gt;[] }&gt; {
+        const config &#x3D; await this.getAuthorizationServerConfig(
+            tenantId,
+            authorizationServerId,
+        );
+        const signingKeyId &#x3D;
+            config.token?.signingKeyId ||
+            (await this.keyChainService.getKid(tenantId));
+        const publicKey &#x3D; await this.keyChainService.getPublicKey(
+            &quot;jwk&quot;,
+            tenantId,
+            signingKeyId,
+        );
+
+        return buildJwksResponse(
+            publicKey as { kid?: string; [key: string]: unknown },
+            signingKeyId,
+        );
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'AuthorizationServersService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

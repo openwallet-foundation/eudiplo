@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >ChainedAsService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,13 +148,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
@@ -156,39 +167,65 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
 
 
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/AuthorizationModule.html" target="_self" >AuthorizationModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Properties</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#AUTH_CODE_LIFETIME_SECONDS" >AUTH_CODE_LIFETIME_SECONDS</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#discoveryCache" >discoveryCache</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#logger" >logger</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#REQUEST_URI_PREFIX" >REQUEST_URI_PREFIX</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#SESSION_LIFETIME_SECONDS" >SESSION_LIFETIME_SECONDS</a>
@@ -196,96 +233,110 @@ the upstream OIDC provider (e.g., Keycloak).</p>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#assertFederationTrustForUpstreamIssuer" >assertFederationTrustForUpstreamIssuer</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#buildErrorRedirect" >buildErrorRedirect</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#buildTokenPayload" >buildTokenPayload</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#cleanupExpiredSessions" >cleanupExpiredSessions</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#exchangeUpstreamCode" >exchangeUpstreamCode</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#getChainedAsBaseUrl" >getChainedAsBaseUrl</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getChainedAsConfig" >getChainedAsConfig</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getJwks" >getJwks</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getMetadata" >getMetadata</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getUpstreamDiscovery" >getUpstreamDiscovery</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getUpstreamIdentityByIssuerState" >getUpstreamIdentityByIssuerState</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#handleAuthorize" >handleAuthorize</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#handlePar" >handlePar</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#handleToken" >handleToken</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#handleUpstreamCallback" >handleUpstreamCallback</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#handleUpstreamError" >handleUpstreamError</a>
                             </li>
-                            <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#verifyPkce" >verifyPkce</a>
-                            </li>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -299,7 +350,7 @@ the upstream OIDC provider (e.g., Keycloak).</p>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="106" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:106</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="83" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:83</a></div>
                             </td>
                         </tr>
 
@@ -461,8 +512,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="206"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:206</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="210"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:210</a></div>
                         </td>
                     </tr>
 
@@ -542,8 +593,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="430"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:430</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="434"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:434</a></div>
                         </td>
                     </tr>
 
@@ -649,8 +700,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="641"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:641</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="623"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:623</a></div>
                         </td>
                     </tr>
 
@@ -768,8 +819,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="919"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:919</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="815"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:815</a></div>
                         </td>
                     </tr>
 
@@ -810,8 +861,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="476"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:476</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="480"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:480</a></div>
                         </td>
                     </tr>
 
@@ -929,8 +980,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="124"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:124</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="101"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:101</a></div>
                         </td>
                     </tr>
 
@@ -1000,8 +1051,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="133"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:133</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="110"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:110</a></div>
                         </td>
                     </tr>
 
@@ -1045,6 +1096,13 @@ the upstream OIDC provider (e.g., Keycloak).</p>
                             <div class="io-description">
                                 
                             </div>
+                            <div class="io-description">
+                                <b>Throws :</b>
+                                <ul>
+                                        <li><p>NotFoundException if chained AS is not configured or not enabled</p>
+</li>
+                                </ul>
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -1071,8 +1129,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="850"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:850</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="762"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:762</a></div>
                         </td>
                     </tr>
 
@@ -1110,7 +1168,7 @@ the upstream OIDC provider (e.g., Keycloak).</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+                            <b>Returns : </b>    <code>Promise&lt;{ keys: Record[] }&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -1142,8 +1200,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="880"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:880</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="787"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:787</a></div>
                         </td>
                     </tr>
 
@@ -1213,8 +1271,8 @@ the upstream OIDC provider (e.g., Keycloak).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="150"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:150</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="154"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:154</a></div>
                         </td>
                     </tr>
 
@@ -1297,8 +1355,8 @@ Results are cached for 5 minutes.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="933"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:933</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="829"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:829</a></div>
                         </td>
                     </tr>
 
@@ -1375,8 +1433,8 @@ Used to retrieve the upstream OIDC provider&#39;s claims for webhook calls.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="332"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:332</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="336"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:336</a></div>
                         </td>
                     </tr>
 
@@ -1464,15 +1522,15 @@ Validates the request_uri and redirects to the upstream OIDC provider.</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>handlePar(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, request: <a href="../classes/ChainedAsParRequestDto.html" target="_self">ChainedAsParRequestDto</a>, dpopJkt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, clientAttestation?: literal type)</code>
+                    <code>handlePar(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, request: <a href="../classes/ChainedAsParRequestDto.html" target="_self">ChainedAsParRequestDto</a>, dpopJkt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, clientAttestation?: { clientAttestationJwt: string; clientAttestationPopJwt: string })</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="236"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:236</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="240"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:240</a></div>
                         </td>
                     </tr>
 
@@ -1534,7 +1592,7 @@ Creates a session and returns a request_uri for the authorize endpoint.</p>
                                         <tr>
                                                 <td>clientAttestation</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                        <code>{ clientAttestationJwt: string; clientAttestationPopJwt: string }</code>
                                             </td>
 
                                             <td>
@@ -1579,8 +1637,8 @@ Creates a session and returns a request_uri for the authorize endpoint.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="682"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:682</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="664"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:664</a></div>
                         </td>
                     </tr>
 
@@ -1675,8 +1733,8 @@ Exchanges the authorization code for an access token.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="526"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:526</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="530"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:530</a></div>
                         </td>
                     </tr>
 
@@ -1796,8 +1854,8 @@ Exchanges the code for tokens and redirects back to the wallet.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="450"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:450</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="454"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:454</a></div>
                         </td>
                     </tr>
 
@@ -1881,90 +1939,8 @@ Exchanges the code for tokens and redirects back to the wallet.</p>
             </tr>
         </tbody>
     </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="verifyPkce"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>verifyPkce</b></span>
-                        <a href="#verifyPkce"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>verifyPkce(session: <a href="../entitys/ChainedAsSessionEntity.html" target="_self">ChainedAsSessionEntity</a>, codeVerifier?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="619"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:619</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Verify PKCE code verifier against stored code challenge.</p>
-</div>
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>session</td>
-                                            <td>
-                                                            <code><a href="../entitys/ChainedAsSessionEntity.html" target="_self" >ChainedAsSessionEntity</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>codeVerifier</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    Yes
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 </section>
+
             <section data-compodoc="block-properties">
     
     <h3 id="inputs">
@@ -1996,7 +1972,7 @@ Exchanges the code for tokens and redirects back to the wallet.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="106" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:106</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="83" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:83</a></div>
                         </td>
                     </tr>
 
@@ -2038,7 +2014,7 @@ Exchanges the code for tokens and redirects back to the wallet.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="94" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:94</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:71</a></div>
                         </td>
                     </tr>
 
@@ -2077,7 +2053,7 @@ Exchanges the code for tokens and redirects back to the wallet.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="91" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:91</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:68</a></div>
                         </td>
                     </tr>
 
@@ -2110,7 +2086,7 @@ Exchanges the code for tokens and redirects back to the wallet.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="100" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:100</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:77</a></div>
                         </td>
                     </tr>
 
@@ -2149,7 +2125,7 @@ Exchanges the code for tokens and redirects back to the wallet.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="103" class="link-to-prism">src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts:103</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:80</a></div>
                         </td>
                     </tr>
 
@@ -2175,61 +2151,38 @@ import {
     Injectable,
     Logger,
     NotFoundException,
-    UnauthorizedException,
 } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
-import { decodeJwt, decodeProtectedHeader } from &quot;jose&quot;;
+import { decodeJwt } from &quot;jose&quot;;
 import { TraceService } from &quot;nestjs-otel&quot;;
 import { firstValueFrom } from &quot;rxjs&quot;;
 import { LessThan, Repository } from &quot;typeorm&quot;;
 import { v4 } from &quot;uuid&quot;;
-import { KeyChainService } from &quot;../../../../crypto/key/key-chain.service&quot;;
-import { SessionService } from &quot;../../../../session/session.service&quot;;
-import { FederationTrustService } from &quot;../../../../shared/trust/federation-trust.service&quot;;
-import { FederationTrustSource } from &quot;../../../../shared/trust/types&quot;;
-import { WalletAttestationService } from &quot;../../../../shared/trust/wallet-attestation.service&quot;;
-import { AuthorizationIdentity } from &quot;../../../configuration/credentials/dto/authorization-identity&quot;;
-import type { ChainedAsConfig } from &quot;../../../configuration/issuance/dto/chained-as-config.dto&quot;;
-import { IssuanceService } from &quot;../../../configuration/issuance/issuance.service&quot;;
+import { KeyChainService } from &quot;../../../../../crypto/key/key-chain.service&quot;;
+import { SessionService } from &quot;../../../../../session/session.service&quot;;
+import { FederationTrustService } from &quot;../../../../../shared/trust/federation-trust.service&quot;;
+import { FederationTrustSource } from &quot;../../../../../shared/trust/types&quot;;
+import { WalletAttestationService } from &quot;../../../../../shared/trust/wallet-attestation.service&quot;;
+import { AuthorizationIdentity } from &quot;../../../../configuration/credentials/dto/authorization-identity&quot;;
+import type { ChainedAsConfig } from &quot;../../../../configuration/issuance/dto/chained-as-config.dto&quot;;
+import { IssuanceService } from &quot;../../../../configuration/issuance/issuance.service&quot;;
 import {
+    assertTokenRequestSessionValid,
+    buildAuthorizationServerMetadata,
+    buildWalletAttestationMetadata,
+    buildJwksResponse,
     ChainedAsParRequestDto,
     ChainedAsParResponseDto,
-    ChainedAsTokenRequestDto,
-    ChainedAsTokenResponseDto,
-} from &quot;./dto/chained-as.dto&quot;;
-import {
     ChainedAsSessionEntity,
     ChainedAsSessionStatus,
-} from &quot;./entities/chained-as-session.entity&quot;;
-
-/**
- * Extract DPoP JWK thumbprint from DPoP JWT.
- * Returns undefined if parsing fails or DPoP is not provided.
- */
-export function extractDpopJkt(dpopJwt?: string): string | undefined {
-    if (!dpopJwt) {
-        return undefined;
-    }
-    try {
-        const header &#x3D; decodeProtectedHeader(dpopJwt);
-        if (header.jwk) {
-            // Calculate JWK thumbprint (simplified - in production use jose&#x27;s calculateJwkThumbprint)
-            const thumbprintInput &#x3D; JSON.stringify({
-                crv: header.jwk.crv,
-                kty: header.jwk.kty,
-                x: header.jwk.x,
-                y: header.jwk.y,
-            });
-            return createHash(&quot;sha256&quot;)
-                .update(thumbprintInput)
-                .digest(&quot;base64url&quot;);
-        }
-    } catch {
-        // Invalid DPoP JWT
-    }
-    return undefined;
-}
+    ChainedAsTokenRequestDto,
+    ChainedAsTokenResponseDto,
+    issueRefreshTokenIfEnabled,
+    resolveSessionForTokenRequest,
+    resolveTokenBinding,
+    DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+} from &quot;../shared&quot;;
 
 /**
  * Upstream OIDC discovery document structure.
@@ -2304,13 +2257,40 @@ export class ChainedAsService {
         const issuanceConfig &#x3D;
             await this.issuanceService.getIssuanceConfiguration(tenantId);
 
-        if (!issuanceConfig.chainedAs?.enabled) {
-            throw new NotFoundException(
-                &quot;Chained Authorization Server is not enabled for this tenant&quot;,
-            );
+        type ChainedServerConfig &#x3D; {
+            id: string;
+            enabled?: boolean;
+            type: &quot;chained&quot;;
+            upstream: ChainedAsConfig[&quot;upstream&quot;];
+            token?: ChainedAsConfig[&quot;token&quot;];
+            requireDPoP?: ChainedAsConfig[&quot;requireDPoP&quot;];
+        };
+
+        const chainedServer &#x3D; (issuanceConfig.authorizationServers ?? []).find(
+            (server): server is ChainedServerConfig &#x3D;&gt; {
+                const candidate &#x3D; server as Partial&lt;ChainedServerConfig&gt;;
+                return (
+                    server.enabled !&#x3D;&#x3D; false &amp;&amp;
+                    server.type &#x3D;&#x3D;&#x3D; &quot;chained&quot; &amp;&amp;
+                    typeof candidate.id &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                    candidate.id.length &gt; 0 &amp;&amp;
+                    !!candidate.upstream
+                );
+            },
+        );
+
+        if (chainedServer) {
+            return {
+                enabled: true,
+                upstream: chainedServer.upstream,
+                token: chainedServer.token,
+                requireDPoP: chainedServer.requireDPoP,
+            } as ChainedAsConfig;
         }
 
-        return issuanceConfig.chainedAs;
+        throw new NotFoundException(
+            &quot;Chained Authorization Server is not enabled for this tenant&quot;,
+        );
     }
 
     /**
@@ -2784,28 +2764,6 @@ export class ChainedAsService {
     }
 
     /**
-     * Verify PKCE code verifier against stored code challenge.
-     */
-    private verifyPkce(
-        session: ChainedAsSessionEntity,
-        codeVerifier?: string,
-    ): void {
-        if (session.codeChallenge &amp;&amp; codeVerifier) {
-            const expectedChallenge &#x3D;
-                session.codeChallengeMethod &#x3D;&#x3D;&#x3D; &quot;S256&quot;
-                    ? createHash(&quot;sha256&quot;)
-                          .update(codeVerifier)
-                          .digest(&quot;base64url&quot;)
-                    : codeVerifier;
-            if (expectedChallenge !&#x3D;&#x3D; session.codeChallenge) {
-                throw new UnauthorizedException(&quot;Invalid code_verifier&quot;);
-            }
-        } else if (session.codeChallenge &amp;&amp; !codeVerifier) {
-            throw new BadRequestException(&quot;code_verifier is required&quot;);
-        }
-    }
-
-    /**
      * Build access token payload.
      */
     private buildTokenPayload(
@@ -2863,48 +2821,11 @@ export class ChainedAsService {
             );
         }
 
-        let session: ChainedAsSessionEntity | null;
-
-        if (request.grant_type &#x3D;&#x3D;&#x3D; &quot;refresh_token&quot;) {
-            if (!request.refresh_token) {
-                throw new BadRequestException(
-                    &quot;refresh_token is required for refresh_token grant&quot;,
-                );
-            }
-            session &#x3D; await this.sessionRepository.findOne({
-                where: {
-                    tenantId,
-                    refreshToken: request.refresh_token,
-                },
-            });
-            if (!session) {
-                throw new UnauthorizedException(
-                    &quot;Invalid or expired refresh_token&quot;,
-                );
-            }
-            if (
-                session.refreshTokenExpiresAt &amp;&amp;
-                session.refreshTokenExpiresAt &lt; new Date()
-            ) {
-                throw new UnauthorizedException(&quot;refresh_token has expired&quot;);
-            }
-        } else {
-            if (!request.code) {
-                throw new BadRequestException(
-                    &quot;code is required for authorization_code grant&quot;,
-                );
-            }
-            session &#x3D; await this.sessionRepository.findOne({
-                where: {
-                    tenantId,
-                    authorizationCode: request.code,
-                    status: ChainedAsSessionStatus.AUTHORIZED,
-                },
-            });
-            if (!session) {
-                throw new UnauthorizedException(&quot;Invalid authorization code&quot;);
-            }
-        }
+        const session &#x3D; await resolveSessionForTokenRequest(
+            this.sessionRepository,
+            tenantId,
+            request,
+        );
 
         // Add session context to span for trace correlation
         this.traceService.getSpan()?.setAttributes({
@@ -2914,38 +2835,18 @@ export class ChainedAsService {
             &quot;chained_as.endpoint&quot;: &quot;token&quot;,
         });
 
-        if (
-            request.grant_type &#x3D;&#x3D;&#x3D; &quot;authorization_code&quot; &amp;&amp;
-            session.authorizationCodeExpiresAt &amp;&amp;
-            session.authorizationCodeExpiresAt &lt; new Date()
-        ) {
-            session.status &#x3D; ChainedAsSessionStatus.EXPIRED;
-            await this.sessionRepository.save(session);
-            throw new UnauthorizedException(&quot;Authorization code expired&quot;);
-        }
-
-        if (request.grant_type &#x3D;&#x3D;&#x3D; &quot;authorization_code&quot;) {
-            this.verifyPkce(session, request.code_verifier);
-        }
-
-        if (
-            request.redirect_uri &amp;&amp;
-            request.redirect_uri !&#x3D;&#x3D; session.redirectUri
-        ) {
-            throw new BadRequestException(&quot;redirect_uri mismatch&quot;);
-        }
+        await assertTokenRequestSessionValid(
+            this.sessionRepository,
+            session,
+            request,
+        );
 
         const config &#x3D; await this.getChainedAsConfig(tenantId);
-        let tokenType &#x3D; &quot;Bearer&quot;;
-        let dpopJkt: string | undefined;
-
-        if (dpopJwt) {
-            // DPoP validation: extract JWK thumbprint from DPoP proof
-            tokenType &#x3D; &quot;DPoP&quot;;
-            dpopJkt &#x3D; session.dpopJkt;
-        } else if (config.requireDPoP) {
-            throw new BadRequestException(&quot;DPoP proof is required&quot;);
-        }
+        const { tokenType, dpopJkt } &#x3D; resolveTokenBinding(
+            config.requireDPoP,
+            session,
+            dpopJwt,
+        );
 
         const tokenLifetime &#x3D; config.token?.lifetimeSeconds || 3600;
         const jti &#x3D; v4();
@@ -2980,23 +2881,10 @@ export class ChainedAsService {
 
         session.status &#x3D; ChainedAsSessionStatus.TOKEN_ISSUED;
         session.accessTokenJti &#x3D; jti;
-
-        const issuanceConfig &#x3D;
-            await this.issuanceService.getIssuanceConfiguration(tenantId);
-
-        let refreshToken: string | undefined;
-        if (issuanceConfig.refreshTokenEnabled) {
-            refreshToken &#x3D; randomBytes(32).toString(&quot;base64url&quot;);
-            let refreshTokenExpiresAt: Date | undefined;
-            if (issuanceConfig.refreshTokenExpiresInSeconds) {
-                refreshTokenExpiresAt &#x3D; new Date(
-                    Date.now() +
-                        issuanceConfig.refreshTokenExpiresInSeconds * 1000,
-                );
-            }
-            session.refreshToken &#x3D; refreshToken;
-            session.refreshTokenExpiresAt &#x3D; refreshTokenExpiresAt;
-        }
+        const refreshToken &#x3D; issueRefreshTokenIfEnabled(
+            session,
+            config.token ?? {},
+        );
 
         await this.sessionRepository.save(session);
 
@@ -3033,54 +2921,38 @@ export class ChainedAsService {
             signingKeyId,
         );
 
-        // Ensure the key has a kid set for proper JWT verification matching
-        const keyWithKid &#x3D; {
-            ...publicKey,
-            kid: (publicKey as { kid?: string }).kid || signingKeyId,
-        };
-
-        return {
-            keys: [keyWithKid as Record&lt;string, unknown&gt;],
-        };
+        return buildJwksResponse(
+            publicKey as { kid?: string; [key: string]: unknown },
+            signingKeyId,
+        );
     }
 
     /**
      * Get authorization server metadata for the Chained AS.
      */
     async getMetadata(tenantId: string): Promise&lt;Record&lt;string, unknown&gt;&gt; {
+        const config &#x3D; await this.getChainedAsConfig(tenantId);
         const baseUrl &#x3D; this.getChainedAsBaseUrl(tenantId);
         const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
-
         const issuanceConfig &#x3D;
             await this.issuanceService.getIssuanceConfiguration(tenantId);
         const walletAttestationRequired &#x3D;
             issuanceConfig.walletAttestationRequired ?? false;
+        const refreshTokensEnabled &#x3D; config.token?.refreshTokenEnabled ?? true;
 
-        const metadata: Record&lt;string, unknown&gt; &#x3D; {
+        return buildAuthorizationServerMetadata({
             issuer: baseUrl,
-            authorization_endpoint: &#x60;${baseUrl}/authorize&#x60;,
-            token_endpoint: &#x60;${baseUrl}/token&#x60;,
-            pushed_authorization_request_endpoint: &#x60;${baseUrl}/par&#x60;,
-            jwks_uri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/chained-as&#x60;,
-            response_types_supported: [&quot;code&quot;],
-            grant_types_supported: [&quot;authorization_code&quot;, &quot;refresh_token&quot;],
-            code_challenge_methods_supported: [&quot;S256&quot;],
-            dpop_signing_alg_values_supported: [&quot;ES256&quot;, &quot;ES384&quot;, &quot;ES512&quot;],
-        };
-
-        if (walletAttestationRequired) {
-            metadata.token_endpoint_auth_methods_supported &#x3D; [
-                &quot;attest_jwt_client_auth&quot;,
-            ];
-            metadata.client_attestation_signing_alg_values_supported &#x3D; [
-                &quot;ES256&quot;,
-            ];
-            metadata.client_attestation_pop_signing_alg_values_supported &#x3D; [
-                &quot;ES256&quot;,
-            ];
-        }
-
-        return metadata;
+            authorizationEndpoint: &#x60;${baseUrl}/authorize&#x60;,
+            tokenEndpoint: &#x60;${baseUrl}/token&#x60;,
+            pushedAuthorizationRequestEndpoint: &#x60;${baseUrl}/par&#x60;,
+            jwksUri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/chained-as&#x60;,
+            grantTypesSupported: refreshTokensEnabled
+                ? [&quot;authorization_code&quot;, &quot;refresh_token&quot;]
+                : [&quot;authorization_code&quot;],
+            dpopSigningAlgValuesSupported:
+                DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+            ...buildWalletAttestationMetadata(walletAttestationRequired),
+        });
     }
 
     /**
@@ -3177,6 +3049,24 @@ export class ChainedAsService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -3192,7 +3082,6 @@ export class ChainedAsService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

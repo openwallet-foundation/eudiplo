@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >StatusListVerifierService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/shared/trust/status-list-verifier.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,13 +148,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/shared/trust/status-list-verifier.service.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
@@ -150,34 +161,59 @@ Fetches and caches status list JWTs, and checks the status of entries.</p>
 
 
 
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/TrustModule.html" target="_self" >TrustModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Properties</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#cache" >cache</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#cachedJwts" >cachedJwts</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#defaultCacheTtlMs" >defaultCacheTtlMs</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#logger" >logger</a>
@@ -185,67 +221,85 @@ Fetches and caches status list JWTs, and checks the status of entries.</p>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#checkStatus" >checkStatus</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#checkStatusFromJwt" >checkStatusFromJwt</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#clearCache" >clearCache</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
-                                <a href="#fetchStatusListJwt" >fetchStatusListJwt</a>
+                                <a href="#fetchStatusListToken" >fetchStatusListToken</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getCacheStats" >getCacheStats</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#getStatusDescription" >getStatusDescription</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getStatusEntryFromJwt" >getStatusEntryFromJwt</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getStatusList" >getStatusList</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getStatusListJwt" >getStatusListJwt</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#isCacheExpired" >isCacheExpired</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#isJwtCacheExpired" >isJwtCacheExpired</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#isTimedCacheExpired" >isTimedCacheExpired</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -259,7 +313,7 @@ Fetches and caches status list JWTs, and checks the status of entries.</p>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:88</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:77</a></div>
                             </td>
                         </tr>
 
@@ -324,8 +378,8 @@ Fetches and caches status list JWTs, and checks the status of entries.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="133"
-                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:133</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="122"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:122</a></div>
                         </td>
                     </tr>
 
@@ -417,8 +471,8 @@ Fetches and caches status list JWTs, and checks the status of entries.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="115"
-                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:115</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="104"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:104</a></div>
                         </td>
                     </tr>
 
@@ -493,8 +547,8 @@ This will fetch the status list (with caching) and check the status at the speci
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="265"
-                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:265</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="288"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:288</a></div>
                         </td>
                     </tr>
 
@@ -551,27 +605,27 @@ This will fetch the status list (with caching) and check the status at the speci
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="fetchStatusListJwt"></a>
+                    <a name="fetchStatusListToken"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
                             <span class="modifier">Async</span>
-                        <span ><b>fetchStatusListJwt</b></span>
-                        <a href="#fetchStatusListJwt"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>fetchStatusListToken</b></span>
+                        <a href="#fetchStatusListToken"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchStatusListJwt(uri: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, timeoutMs: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                    <code>fetchStatusListToken(uri: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, timeoutMs: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="188"
-                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:188</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="191"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:191</a></div>
                         </td>
                     </tr>
 
@@ -636,7 +690,7 @@ This will fetch the status list (with caching) and check the status at the speci
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;string&gt;</code>
+                            <b>Returns : </b>    <code>Promise&lt;string | Uint8Array&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -667,8 +721,8 @@ This will fetch the status list (with caching) and check the status at the speci
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="278"
-                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:278</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="301"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:301</a></div>
                         </td>
                     </tr>
 
@@ -679,7 +733,7 @@ This will fetch the status list (with caching) and check the status at the speci
 </div>
 
                         <div class="io-description">
-                            <b>Returns : </b>    <code>literal type</code>
+                            <b>Returns : </b>    <code>{ size: number; jwtCacheSize: number; uris: string[] }</code>
 
                         </div>
                 </td>
@@ -701,15 +755,15 @@ This will fetch the status list (with caching) and check the status at the speci
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getStatusDescription(status: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                    <code>getStatusDescription(status: StatusType)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="247"
-                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:247</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="270"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:270</a></div>
                         </td>
                     </tr>
 
@@ -734,7 +788,7 @@ This will fetch the status list (with caching) and check the status at the speci
                                         <tr>
                                                 <td>status</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                                        <code>StatusType</code>
                                             </td>
 
                                             <td>
@@ -777,8 +831,8 @@ This will fetch the status list (with caching) and check the status at the speci
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="99"
-                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:99</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="88"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:88</a></div>
                         </td>
                     </tr>
 
@@ -855,8 +909,8 @@ This extracts the status_list reference (uri and idx) from the JWT.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="153"
-                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:153</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="142"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:142</a></div>
                         </td>
                     </tr>
 
@@ -932,8 +986,8 @@ This extracts the status_list reference (uri and idx) from the JWT.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="296"
-                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:296</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="319"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:319</a></div>
                         </td>
                     </tr>
 
@@ -1011,8 +1065,8 @@ The JWT is cached based on its TTL/exp claims.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="226"
-                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:226</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="238"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:238</a></div>
                         </td>
                     </tr>
 
@@ -1082,8 +1136,8 @@ The JWT is cached based on its TTL/exp claims.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="326"
-                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:326</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="355"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:355</a></div>
                         </td>
                     </tr>
 
@@ -1131,7 +1185,79 @@ The JWT is cached based on its TTL/exp claims.</p>
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isTimedCacheExpired"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>isTimedCacheExpired</b></span>
+                        <a href="#isTimedCacheExpired"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isTimedCacheExpired(cached: { fetchedAt: number; ttl?: number; exp?: number })</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="245"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:245</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Shared expiration logic for parsed-list and raw-token caches.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>cached</td>
+                                            <td>
+                                                        <code>{ fetchedAt: number; ttl?: number; exp?: number }</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
+
             <section data-compodoc="block-properties">
     
     <h3 id="inputs">
@@ -1163,7 +1289,7 @@ The JWT is cached based on its TTL/exp claims.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:79</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:68</a></div>
                         </td>
                     </tr>
 
@@ -1203,7 +1329,7 @@ Uses a simple in-memory cache with TTL support.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="85" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:85</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:74</a></div>
                         </td>
                     </tr>
 
@@ -1243,7 +1369,7 @@ Used by statusListFetcher interface for SD-JWT SDK.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:88</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:77</a></div>
                         </td>
                     </tr>
 
@@ -1282,7 +1408,7 @@ Used by statusListFetcher interface for SD-JWT SDK.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:73</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:62</a></div>
                         </td>
                     </tr>
 
@@ -1301,23 +1427,12 @@ import {
     getListFromStatusListJWT,
     getStatusListFromJWT,
     StatusList,
+    StatusListCwt,
     StatusListEntry,
+    StatusType,
 } from &quot;@owf/token-status-list&quot;;
 import { decodeJwt } from &quot;jose&quot;;
 import { firstValueFrom } from &quot;rxjs&quot;;
-
-/**
- * Status values as defined in the Token Status List spec.
- * @see https://datatracker.ietf.org/doc/html/draft-ietf-oauth-status-list
- */
-enum StatusValue {
-    /** The status is valid */
-    VALID &#x3D; 0x00,
-    /** The status is invalid/revoked */
-    INVALID &#x3D; 0x01,
-    /** The status is suspended */
-    SUSPENDED &#x3D; 0x02,
-}
 
 /**
  * Cached status list with metadata.
@@ -1436,7 +1551,7 @@ export class StatusListVerifierService {
 
         return {
             status,
-            isValid: status &#x3D;&#x3D;&#x3D; StatusValue.VALID,
+            isValid: status &#x3D;&#x3D;&#x3D; StatusType.Valid,
             description: this.getStatusDescription(status),
         };
     }
@@ -1457,13 +1572,27 @@ export class StatusListVerifierService {
 
         // Fetch and cache
         this.logger.debug(&#x60;Fetching status list from ${uri}&#x60;);
-        const statusListJwt &#x3D; await this.fetchStatusListJwt(uri);
-        const statusList &#x3D; getListFromStatusListJWT(statusListJwt);
+        const statusListToken &#x3D; await this.fetchStatusListToken(uri);
 
-        // Extract TTL and exp from the JWT payload
-        const payload &#x3D; decodeJwt(statusListJwt);
-        const ttl &#x3D; typeof payload.ttl &#x3D;&#x3D;&#x3D; &quot;number&quot; ? payload.ttl : undefined;
-        const exp &#x3D; typeof payload.exp &#x3D;&#x3D;&#x3D; &quot;number&quot; ? payload.exp : undefined;
+        let statusList: StatusList;
+        let ttl: number | undefined;
+        let exp: number | undefined;
+
+        if (typeof statusListToken &#x3D;&#x3D;&#x3D; &quot;string&quot;) {
+            statusList &#x3D; getListFromStatusListJWT(statusListToken);
+            const payload &#x3D; decodeJwt(statusListToken);
+            ttl &#x3D; typeof payload.ttl &#x3D;&#x3D;&#x3D; &quot;number&quot; ? payload.ttl : undefined;
+            exp &#x3D; typeof payload.exp &#x3D;&#x3D;&#x3D; &quot;number&quot; ? payload.exp : undefined;
+        } else {
+            const statusListCwt &#x3D; StatusListCwt.fromToken(statusListToken);
+            statusList &#x3D; statusListCwt.payload.statusList;
+            ttl &#x3D; statusListCwt.payload.timeToLive;
+            exp &#x3D; statusListCwt.payload.expirationTime
+                ? Math.floor(
+                      statusListCwt.payload.expirationTime.getTime() / 1000,
+                  )
+                : undefined;
+        }
 
         this.cache.set(uri, {
             statusList,
@@ -1482,10 +1611,10 @@ export class StatusListVerifierService {
      * @param timeoutMs Timeout in milliseconds
      * @returns The raw JWT string
      */
-    private async fetchStatusListJwt(
+    private async fetchStatusListToken(
         uri: string,
         timeoutMs &#x3D; 10000,
-    ): Promise&lt;string&gt; {
+    ): Promise&lt;string | Uint8Array&gt; {
         const ctrl &#x3D; new AbortController();
         const timeout &#x3D; setTimeout(() &#x3D;&gt; ctrl.abort(), timeoutMs);
 
@@ -1493,13 +1622,22 @@ export class StatusListVerifierService {
             const response &#x3D; await firstValueFrom(
                 this.httpService.get(uri, {
                     signal: ctrl.signal,
-                    responseType: &quot;text&quot;,
+                    responseType: &quot;arraybuffer&quot;,
                     headers: {
-                        Accept: &quot;application/statuslist+jwt, application/jwt&quot;,
+                        Accept: &quot;application/statuslist+jwt, application/statuslist+cwt, application/jwt&quot;,
                     },
                 }),
             );
-            return response.data;
+
+            const contentType &#x3D; String(
+                response.headers?.[&quot;content-type&quot;] || &quot;&quot;,
+            ).toLowerCase();
+
+            if (contentType.includes(&quot;application/statuslist+cwt&quot;)) {
+                return new Uint8Array(response.data);
+            }
+
+            return Buffer.from(response.data).toString(&quot;utf8&quot;).trim();
         } catch (error: any) {
             if (
                 error?.name &#x3D;&#x3D;&#x3D; &quot;CanceledError&quot; ||
@@ -1521,6 +1659,17 @@ export class StatusListVerifierService {
      * Check if a cache entry is expired.
      */
     private isCacheExpired(cached: CachedStatusList): boolean {
+        return this.isTimedCacheExpired(cached);
+    }
+
+    /**
+     * Shared expiration logic for parsed-list and raw-token caches.
+     */
+    private isTimedCacheExpired(cached: {
+        fetchedAt: number;
+        ttl?: number;
+        exp?: number;
+    }): boolean {
         const now &#x3D; Date.now();
 
         // Check if JWT has expired (exp claim)
@@ -1541,13 +1690,13 @@ export class StatusListVerifierService {
     /**
      * Get a human-readable description for a status value.
      */
-    private getStatusDescription(status: number): string {
+    private getStatusDescription(status: StatusType): string {
         switch (status) {
-            case StatusValue.VALID:
+            case StatusType.Valid:
                 return &quot;Valid&quot;;
-            case StatusValue.INVALID:
+            case StatusType.Invalid:
                 return &quot;Invalid/Revoked&quot;;
-            case StatusValue.SUSPENDED:
+            case StatusType.Suspended:
                 return &quot;Suspended&quot;;
             default:
                 return &#x60;Unknown status (${status})&#x60;;
@@ -1600,7 +1749,13 @@ export class StatusListVerifierService {
 
         // Fetch and cache
         this.logger.debug(&#x60;Fetching status list JWT from ${uri}&#x60;);
-        const jwt &#x3D; await this.fetchStatusListJwt(uri);
+        const token &#x3D; await this.fetchStatusListToken(uri);
+        if (typeof token !&#x3D;&#x3D; &quot;string&quot;) {
+            throw new TypeError(
+                &#x60;Status list at ${uri} returned CWT while JWT was requested&#x60;,
+            );
+        }
+        const jwt &#x3D; token;
 
         // Extract TTL and exp from the JWT payload
         const payload &#x3D; decodeJwt(jwt);
@@ -1621,21 +1776,7 @@ export class StatusListVerifierService {
      * Check if a JWT cache entry is expired.
      */
     private isJwtCacheExpired(cached: CachedJwt): boolean {
-        const now &#x3D; Date.now();
-
-        // Check if JWT has expired (exp claim)
-        if (cached.exp &amp;&amp; now &gt;&#x3D; cached.exp * 1000) {
-            return true;
-        }
-
-        // Check TTL from JWT payload
-        if (cached.ttl) {
-            const expiresAt &#x3D; cached.fetchedAt + cached.ttl * 1000;
-            return now &gt;&#x3D; expiresAt;
-        }
-
-        // Fall back to default cache TTL
-        return now &gt;&#x3D; cached.fetchedAt + this.defaultCacheTtlMs;
+        return this.isTimedCacheExpired(cached);
     }
 }
 </code></pre>
@@ -1687,6 +1828,24 @@ export class StatusListVerifierService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -1702,7 +1861,6 @@ export class StatusListVerifierService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

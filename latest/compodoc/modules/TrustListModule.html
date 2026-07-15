@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -107,6 +114,11 @@
     <li class="breadcrumb-item">Modules</li>
     <li class="breadcrumb-item" >TrustListModule</li>
 </ol>
+
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/issuer/trust-list/trustlist.module.ts</code>
+</div>
 
 <div class="text-center module-graph-container">
     <div id="module-graph-svg">
@@ -145,17 +157,17 @@
 <polygon fill="none" stroke="black" points="165,-78 165,-130 331,-130 331,-78 165,-78"/>
 </g>
 <!-- TrustListService  -->
-<g id="node1" class="node">
+<g id="node1" class="node"><a xlink:href="../injectables/TrustListService.html" href="../injectables/TrustListService.html" target="_top">
 <title>TrustListService </title>
 <polygon fill="#fb8072" stroke="black" points="304.3,-252 191.7,-252 191.7,-216 304.3,-216 304.3,-252"/>
 <text text-anchor="middle" x="248" y="-229.8" font-family="Times,serif" font-size="14.00">TrustListService </text>
-</g>
+</a></g>
 <!-- TrustListModule -->
-<g id="node2" class="node">
+<g id="node2" class="node"><a xlink:href="../modules/TrustListModule.html" href="../modules/TrustListModule.html" target="_top">
 <title>TrustListModule</title>
 <polygon fill="#8dd3c7" stroke="black" points="303.38,-187 300.38,-191 279.38,-191 276.38,-187 192.62,-187 192.62,-151 303.38,-151 303.38,-187"/>
 <text text-anchor="middle" x="248" y="-164.8" font-family="Times,serif" font-size="14.00">TrustListModule</text>
-</g>
+</a></g>
 <!-- TrustListModule&#45;&gt;TrustListService  -->
 <g id="edge1" class="edge">
 <title>TrustListModule&#45;&gt;TrustListService </title>
@@ -163,11 +175,11 @@
 <polygon fill="black" stroke="black" points="244.5,-205.99 248,-215.99 251.5,-205.99 244.5,-205.99"/>
 </g>
 <!-- TrustListService -->
-<g id="node3" class="node">
+<g id="node3" class="node"><a xlink:href="../injectables/TrustListService.html" href="../injectables/TrustListService.html" target="_top">
 <title>TrustListService</title>
 <ellipse fill="#fdb462" stroke="black" cx="248" cy="-104" rx="75.29" ry="18"/>
 <text text-anchor="middle" x="248" y="-99.8" font-family="Times,serif" font-size="14.00">TrustListService</text>
-</g>
+</a></g>
 <!-- TrustListService&#45;&gt;TrustListModule -->
 <g id="edge2" class="edge">
 <title>TrustListService&#45;&gt;TrustListModule</title>
@@ -205,13 +217,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/issuer/trust-list/trustlist.module.ts</code>
-        </p>
 
 
 
@@ -254,6 +259,39 @@
             </div>
         </div>
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/ConfigurationModule.html" target="_self" >ConfigurationModule</a></code>
+                                </li>
+                                <li>
+                                            <code><a href="../modules/IssuerModule.html" target="_self" >IssuerModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../injectables/TrustListService.html" target="_self" >TrustListService</a></code>
+                                </li>
+                                <li>
+                                            <code><a href="../controllers/TrustListController.html" target="_self" >TrustListController</a></code>
+                                </li>
+                                <li>
+                                            <code><a href="../controllers/TrustListPublicController.html" target="_self" >TrustListPublicController</a></code>
+                                </li>
+                        </ul>
+                </div>
+            </div>
+        </section>
+
 
     </div>
 
@@ -280,6 +318,7 @@ export class TrustListModule {}
 </code></pre>
     </div>
 </div>
+
 
 
 
@@ -329,6 +368,24 @@ export class TrustListModule {}
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -344,7 +401,6 @@ export class TrustListModule {}
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

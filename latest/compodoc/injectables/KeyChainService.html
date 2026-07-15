@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >KeyChainService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/crypto/key/key-chain.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,13 +148,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/crypto/key/key-chain.service.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
@@ -152,19 +163,22 @@ Certificate construction is delegated to
 
 
 
+
+            </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Properties</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#logger" >logger</a>
@@ -172,154 +186,194 @@ Certificate construction is delegated to
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#calculateNextRotation" >calculateNextRotation</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#create" >create</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#createInternalChain" >createInternalChain</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#createStandalone" >createStandalone</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#createStandaloneKey" >createStandaloneKey</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#delete" >delete</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#export" >export</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#findByUsageType" >findByUsageType</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getActiveCertificate" >getActiveCertificate</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getActiveKey" >getActiveKey</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getAll" >getAll</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getById" >getById</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getEntity" >getEntity</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#getHostname" >getHostname</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getKid" >getKid</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getProviderHealth" >getProviderHealth</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getProviders" >getProviders</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#getPublicJwk" >getPublicJwk</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getPublicKey" >getPublicKey</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getPublicKey" >getPublicKey</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getPublicKey" >getPublicKey</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getPublicKeys" >getPublicKeys</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#importKeyChain" >importKeyChain</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#refForStoredKey" >refForStoredKey</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#refFromEntity" >refFromEntity</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#rotate" >rotate</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#signBytes" >signBytes</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#signer" >signer</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#signJWT" >signJWT</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#storedKeyForEntity" >storedKeyForEntity</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#toCertificateInfo" >toCertificateInfo</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#toPublicKeyInfo" >toPublicKeyInfo</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#toResponseDto" >toResponseDto</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#update" >update</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -470,8 +524,8 @@ Certificate construction is delegated to
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="685"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:685</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="699"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:699</a></div>
                         </td>
                     </tr>
 
@@ -743,7 +797,7 @@ Certificate construction is delegated to
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>createStandalone(options: literal type)</code>
+                    <code>createStandalone(options: { tenantId: string; description?: string; usageType: KeyUsageType; privateKey: JWK })</code>
                 </td>
             </tr>
 
@@ -774,7 +828,7 @@ Certificate construction is delegated to
                                         <tr>
                                                 <td>options</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                        <code>{ tenantId: string; description?: string; usageType: KeyUsageType; privateKey: JWK }</code>
                                             </td>
 
                                             <td>
@@ -1216,8 +1270,8 @@ Certificate construction is delegated to
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="492"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:492</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="498"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:498</a></div>
                         </td>
                     </tr>
 
@@ -1297,8 +1351,8 @@ Certificate construction is delegated to
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="482"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:482</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="488"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:488</a></div>
                         </td>
                     </tr>
 
@@ -1621,8 +1675,8 @@ Certificate construction is delegated to
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="539"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:539</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="553"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:553</a></div>
                         </td>
                     </tr>
 
@@ -1660,8 +1714,8 @@ Certificate construction is delegated to
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="531"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:531</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="545"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:545</a></div>
                         </td>
                     </tr>
 
@@ -1720,7 +1774,7 @@ Certificate construction is delegated to
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getProviderHealth()</code>
+<code>getProviderHealth(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -1738,10 +1792,40 @@ Certificate construction is delegated to
                         <div class="io-description"><p>Run a health probe for every registered KMS provider.</p>
 </div>
 
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;Array&lt;literal type&gt;&gt;</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#enc" target="_self" >Promise&lt;Array&lt;{ providerId: string; type: string; ok: boolean; latencyMs?: number; error?: string }&gt;&gt;</a></code>
 
                         </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -1759,7 +1843,7 @@ Certificate construction is delegated to
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>getProviders()</code>
+<code>getProviders(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -1777,10 +1861,40 @@ Certificate construction is delegated to
                         <div class="io-description"><p>Return registered KMS providers (delegated to the registry).</p>
 </div>
 
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         <div class="io-description">
                             <b>Returns : </b>        <code><a href="../classes/KmsProvidersResponseDto.html" target="_self" >KmsProvidersResponseDto</a></code>
 
                         </div>
+                            <div class="io-description">
+                                
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -1807,8 +1921,8 @@ Certificate construction is delegated to
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="598"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:598</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="612"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:612</a></div>
                         </td>
                     </tr>
 
@@ -1874,8 +1988,8 @@ Certificate construction is delegated to
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="514"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:514</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="528"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:528</a></div>
                         </td>
                     </tr>
 
@@ -1965,8 +2079,8 @@ Certificate construction is delegated to
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="515"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:515</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="529"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:529</a></div>
                         </td>
                     </tr>
 
@@ -2056,8 +2170,8 @@ Certificate construction is delegated to
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="520"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:520</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="534"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:534</a></div>
                         </td>
                     </tr>
 
@@ -2149,8 +2263,8 @@ Certificate construction is delegated to
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="487"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:487</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="493"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:493</a></div>
                         </td>
                     </tr>
 
@@ -2230,8 +2344,8 @@ Certificate construction is delegated to
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="404"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:404</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="407"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:407</a></div>
                         </td>
                     </tr>
 
@@ -2311,8 +2425,8 @@ Certificate construction is delegated to
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="579"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:579</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="593"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:593</a></div>
                         </td>
                     </tr>
 
@@ -2414,8 +2528,8 @@ what adapters use as the external key identifier).</li>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="561"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:561</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="575"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:575</a></div>
                         </td>
                     </tr>
 
@@ -2486,8 +2600,8 @@ adapter can sign / delete.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="411"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:411</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="414"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:414</a></div>
                         </td>
                     </tr>
 
@@ -2549,6 +2663,99 @@ adapter can sign / delete.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="signBytes"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>signBytes</b></span>
+                        <a href="#signBytes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>signBytes(data: Uint8Array, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, keyId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="520"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:520</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                        <code>Uint8Array</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>keyId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Uint8Array&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="signer"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -2567,8 +2774,8 @@ adapter can sign / delete.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="501"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:501</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="507"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:507</a></div>
                         </td>
                     </tr>
 
@@ -2648,8 +2855,8 @@ adapter can sign / delete.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="505"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:505</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="511"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:511</a></div>
                         </td>
                     </tr>
 
@@ -2753,8 +2960,8 @@ adapter can sign / delete.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="550"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:550</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="564"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:564</a></div>
                         </td>
                     </tr>
 
@@ -2839,8 +3046,8 @@ the public JWK — the private key lives in the KMS backend.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="665"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:665</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="679"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:679</a></div>
                         </td>
                     </tr>
 
@@ -2908,8 +3115,8 @@ the public JWK — the private key lives in the KMS backend.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="653"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:653</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="667"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:667</a></div>
                         </td>
                     </tr>
 
@@ -2977,8 +3184,8 @@ the public JWK — the private key lives in the KMS backend.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="606"
-                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:606</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="620"
+                                    class="link-to-prism">src/crypto/key/key-chain.service.ts:620</a></div>
                         </td>
                     </tr>
 
@@ -3118,6 +3325,7 @@ the public JWK — the private key lives in the KMS backend.</p>
         </tbody>
     </table>
 </section>
+
             <section data-compodoc="block-properties">
     
     <h3 id="inputs">
@@ -3166,7 +3374,7 @@ the public JWK — the private key lives in the KMS backend.</p>
 import { ConfigService } from &quot;@nestjs/config&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
 import * as x509 from &quot;@peculiar/x509&quot;;
-import type { Signer } from &quot;@sd-jwt/types&quot;;
+import type { Signer } from &quot;@sd-jwt/core&quot;;
 import type { JWK, JWSHeaderParameters, JWTPayload } from &quot;jose&quot;;
 import { Repository } from &quot;typeorm&quot;;
 import { v4 } from &quot;uuid&quot;;
@@ -3217,12 +3425,12 @@ export class KeyChainService {
     ) {}
 
     /** Return registered KMS providers (delegated to the registry). */
-    getProviders(): KmsProvidersResponseDto {
-        return this.kmsRegistry.list();
+    getProviders(tenantId: string): KmsProvidersResponseDto {
+        return this.kmsRegistry.list(tenantId);
     }
 
     /** Run a health probe for every registered KMS provider. */
-    getProviderHealth(): Promise&lt;
+    getProviderHealth(tenantId: string): Promise&lt;
         Array&lt;{
             providerId: string;
             type: string;
@@ -3231,7 +3439,7 @@ export class KeyChainService {
             error?: string;
         }&gt;
     &gt; {
-        return this.kmsRegistry.health();
+        return this.kmsRegistry.health(tenantId);
     }
 
     async create(tenantId: string, dto: KeyChainCreateDto): Promise&lt;string&gt; {
@@ -3248,7 +3456,7 @@ export class KeyChainService {
             now.getTime() + certValidityDays * 24 * 60 * 60 * 1000,
         );
 
-        const adapter &#x3D; this.kmsRegistry.resolve(dto.kmsProvider);
+        const adapter &#x3D; this.kmsRegistry.resolve(dto.kmsProvider, tenantId);
 
         let keyChain: Partial&lt;KeyChainEntity&gt;;
 
@@ -3549,7 +3757,10 @@ export class KeyChainService {
 
         // Best-effort: ask the adapter to clean up external key material.
         try {
-            const adapter &#x3D; this.kmsRegistry.resolve(keyChain.kmsProvider);
+            const adapter &#x3D; this.kmsRegistry.resolve(
+                keyChain.kmsProvider,
+                keyChain.tenantId,
+            );
             if (adapter.capabilities.canDelete) {
                 await adapter.deleteKey(this.refFromEntity(keyChain));
             }
@@ -3594,7 +3805,10 @@ export class KeyChainService {
         const previousJwk &#x3D; keyChain.activeJwk;
         const previousCertificate &#x3D; keyChain.activeCertificate;
 
-        const adapter &#x3D; this.kmsRegistry.resolve(keyChain.kmsProvider);
+        const adapter &#x3D; this.kmsRegistry.resolve(
+            keyChain.kmsProvider,
+            keyChain.tenantId,
+        );
         const newMat &#x3D; await adapter.generateKey({
             kid: &#x60;${id}-${Date.now()}&#x60;,
         });
@@ -3675,6 +3889,14 @@ export class KeyChainService {
         return this.signingService.signJWT(payload, header, tenantId, keyId);
     }
 
+    async signBytes(
+        data: Uint8Array,
+        tenantId: string,
+        keyId?: string,
+    ): Promise&lt;Uint8Array&gt; {
+        return this.signingService.signBytes(data, tenantId, keyId);
+    }
+
     getPublicKey(type: &quot;jwk&quot;, tenantId: string, keyId?: string): Promise&lt;JWK&gt;;
     getPublicKey(
         type: &quot;pem&quot;,
@@ -3724,7 +3946,7 @@ export class KeyChainService {
      */
     private refFromEntity(keyChain: KeyChainEntity): KmsKeyRef {
         return this.refForStoredKey(
-            this.kmsRegistry.resolve(keyChain.kmsProvider),
+            this.kmsRegistry.resolve(keyChain.kmsProvider, keyChain.tenantId),
             keyChain.activeJwk,
             keyChain.externalKeyId ?? undefined,
         );
@@ -3907,6 +4129,24 @@ export class KeyChainService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -3922,7 +4162,6 @@ export class KeyChainService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

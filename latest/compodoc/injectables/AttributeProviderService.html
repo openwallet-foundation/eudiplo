@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >AttributeProviderService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/issuer/configuration/attribute-provider/attribute-provider.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,68 +148,89 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/issuer/configuration/attribute-provider/attribute-provider.service.ts</code>
-        </p>
 
 
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/ConfigurationModule.html" target="_self" >ConfigurationModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#create" >create</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#delete" >delete</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getAll" >getAll</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getById" >getById</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#importForTenant" >importForTenant</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#sanitizeAttributeProviderForLog" >sanitizeAttributeProviderForLog</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#update" >update</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -200,12 +239,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(repo: <a href="../entitys/AttributeProviderEntity.html" target="_self">Repository&lt;AttributeProviderEntity&gt;</a>, configImportService: <a href="../injectables/ConfigImportService.html" target="_self">ConfigImportService</a>, configImportOrchestrator: <a href="../injectables/ConfigImportOrchestratorService.html" target="_self">ConfigImportOrchestratorService</a>, tenantActionLogService: <a href="../injectables/AuditLogService.html" target="_self">AuditLogService</a>)</code>
+<code>constructor(repo: <a href="../entitys/AttributeProviderEntity.html" target="_self">Repository&lt;AttributeProviderEntity&gt;</a>, configImportService: <a href="../injectables/ConfigImportService.html" target="_self">ConfigImportService</a>, configImportOrchestrator: <a href="../injectables/ConfigImportOrchestratorService.html" target="_self">ConfigImportOrchestratorService</a>, tenantActionLogService: <a href="../injectables/AuditLogService.html" target="_self">AuditLogService</a>, outboundUrlPolicyService: <a href="../injectables/OutboundUrlPolicyService.html" target="_self">OutboundUrlPolicyService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:23</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:24</a></div>
                             </td>
                         </tr>
 
@@ -270,6 +309,18 @@
                                                     </td>
                                                     
                                                 </tr>
+                                                <tr>
+                                                        <td>outboundUrlPolicyService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/OutboundUrlPolicyService.html" target="_self" >OutboundUrlPolicyService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
                                         </tbody>
                                     </table>
                             </div>
@@ -306,8 +357,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="75"
-                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:75</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="77"
+                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:77</a></div>
                         </td>
                     </tr>
 
@@ -411,8 +462,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="133"
-                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:133</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="142"
+                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:142</a></div>
                         </td>
                     </tr>
 
@@ -514,8 +565,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="63"
-                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:63</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="65"
+                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:65</a></div>
                         </td>
                     </tr>
 
@@ -583,8 +634,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="67"
-                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:67</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="69"
+                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:69</a></div>
                         </td>
                     </tr>
 
@@ -665,8 +716,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="38"
-                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:38</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -734,8 +785,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="155"
-                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:155</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="164"
+                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:164</a></div>
                         </td>
                     </tr>
 
@@ -803,8 +854,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="100"
-                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:100</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="104"
+                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.service.ts:104</a></div>
                         </td>
                     </tr>
 
@@ -900,6 +951,7 @@
     </table>
 </section>
 
+
     </div>
 
 
@@ -921,6 +973,7 @@ import {
     ConfigImportOrchestratorService,
     ImportPhase,
 } from &quot;../../../shared/utils/config-import/config-import-orchestrator.service&quot;;
+import { OutboundUrlPolicyService } from &quot;../../../shared/utils/webhook/outbound-url-policy.service&quot;;
 import { CreateAttributeProviderDto } from &quot;./dto/create-attribute-provider.dto&quot;;
 import { UpdateAttributeProviderDto } from &quot;./dto/update-attribute-provider.dto&quot;;
 import { AttributeProviderEntity } from &quot;./entities/attribute-provider.entity&quot;;
@@ -933,6 +986,7 @@ export class AttributeProviderService {
         private readonly configImportService: ConfigImportService,
         private readonly configImportOrchestrator: ConfigImportOrchestratorService,
         private readonly tenantActionLogService: AuditLogService,
+        private readonly outboundUrlPolicyService: OutboundUrlPolicyService,
     ) {
         this.configImportOrchestrator.register(
             &quot;attribute-providers&quot;,
@@ -984,6 +1038,8 @@ export class AttributeProviderService {
         actorToken?: TokenPayload,
         req?: Request,
     ) {
+        await this.outboundUrlPolicyService.assertSafeUrl(dto.url);
+
         const saved &#x3D; await this.repo.save({ ...dto, tenantId });
 
         if (actorToken) {
@@ -1011,6 +1067,11 @@ export class AttributeProviderService {
         req?: Request,
     ) {
         const existing &#x3D; await this.getById(tenantId, id);
+
+        if (dto.url) {
+            await this.outboundUrlPolicyService.assertSafeUrl(dto.url);
+        }
+
         const saved &#x3D; await this.repo.save({
             ...existing,
             ...dto,
@@ -1119,6 +1180,24 @@ export class AttributeProviderService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -1134,7 +1213,6 @@ export class AttributeProviderService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

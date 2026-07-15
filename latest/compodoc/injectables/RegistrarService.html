@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >RegistrarService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/registrar/registrar.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,13 +148,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/registrar/registrar.service.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
@@ -155,80 +166,102 @@ Actual logic lives in the focused sub-services:</p>
 
 
 
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/RegistrarModule.html" target="_self" >RegistrarModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#addRegistrationCertificate" >addRegistrationCertificate</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#computeAuthorizedCredentialsFingerprint" >computeAuthorizedCredentialsFingerprint</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#computeDcqlFingerprint" >computeDcqlFingerprint</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#computeSpecFingerprint" >computeSpecFingerprint</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#createAccessCertificate" >createAccessCertificate</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#deleteConfig" >deleteConfig</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#findAllSchemaMetadata" >findAllSchemaMetadata</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getConfig" >getConfig</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#isEnabledForTenant" >isEnabledForTenant</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#onTenantInit" >onTenantInit</a>
                             </li>
                             <li>
-                                <a href="#reserveSchemaId" >reserveSchemaId</a>
-                            </li>
-                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#resolveRegistrationCertificate" >resolveRegistrationCertificate</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#saveConfig" >saveConfig</a>
                             </li>
                             <li>
-                                <a href="#submitSchemaMetadata" >submitSchemaMetadata</a>
-                            </li>
-                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#updateConfig" >updateConfig</a>
-                            </li>
-                            <li>
-                                <a href="#uploadSchemaMetadataAsset" >uploadSchemaMetadataAsset</a>
-                            </li>
-                            <li>
-                                <a href="#uploadSchemaMetadataAssetFromUrl" >uploadSchemaMetadataAssetFromUrl</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -334,7 +367,7 @@ Actual logic lives in the focused sub-services:</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>addRegistrationCertificate(req: literal type, dcqlQuery: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, requestId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>addRegistrationCertificate(req: { id?: string; body?: Partial<RegistrationCertificateCreation>; jwt?: string }, dcqlQuery: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, requestId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -365,7 +398,7 @@ Actual logic lives in the focused sub-services:</p>
                                         <tr>
                                                 <td>req</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                        <code>{ id?: string; body?: Partial&lt;RegistrationCertificateCreation&gt;; jwt?: string }</code>
                                             </td>
 
                                             <td>
@@ -694,7 +727,7 @@ Actual logic lives in the focused sub-services:</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+                            <b>Returns : </b>    <code>Promise&lt;{ id: string; certId: string; crt: string }&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -784,15 +817,15 @@ Actual logic lives in the focused sub-services:</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>findAllSchemaMetadata(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, filters: literal type)</code>
+<code>findAllSchemaMetadata(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, filters: { attestationId?: string; version?: string })</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="141"
-                                    class="link-to-prism">src/registrar/registrar.service.ts:141</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="137"
+                                    class="link-to-prism">src/registrar/registrar.service.ts:137</a></div>
                         </td>
                     </tr>
 
@@ -827,7 +860,7 @@ Actual logic lives in the focused sub-services:</p>
                                         <tr>
                                                 <td>filters</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                        <code>{ attestationId?: string; version?: string }</code>
                                             </td>
 
                                             <td>
@@ -1055,85 +1088,6 @@ Actual logic lives in the focused sub-services:</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="reserveSchemaId"></a>
-                    <span class="name">
-                        <span ><b>reserveSchemaId</b></span>
-                        <a href="#reserveSchemaId"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>reserveSchemaId(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, nameHint?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="137"
-                                    class="link-to-prism">src/registrar/registrar.service.ts:137</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>nameHint</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    Yes
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="resolveRegistrationCertificate"></a>
                     <span class="name">
                         <span ><b>resolveRegistrationCertificate</b></span>
@@ -1143,7 +1097,7 @@ Actual logic lives in the focused sub-services:</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>resolveRegistrationCertificate(req: literal type, dcqlQuery: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, requestId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>resolveRegistrationCertificate(req: { id?: string; body?: Partial<RegistrationCertificateCreation>; jwt?: string }, dcqlQuery: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, requestId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -1174,7 +1128,7 @@ Actual logic lives in the focused sub-services:</p>
                                         <tr>
                                                 <td>req</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                        <code>{ id?: string; body?: Partial&lt;RegistrationCertificateCreation&gt;; jwt?: string }</code>
                                             </td>
 
                                             <td>
@@ -1223,7 +1177,7 @@ Actual logic lives in the focused sub-services:</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+                            <b>Returns : </b>    <code>Promise&lt;{ jwt: string; payload: Record&lt;string, any&gt;; source: &quot;imported&quot; | &quot;registrar&quot; }&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -1316,85 +1270,6 @@ Actual logic lives in the focused sub-services:</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="submitSchemaMetadata"></a>
-                    <span class="name">
-                        <span ><b>submitSchemaMetadata</b></span>
-                        <a href="#submitSchemaMetadata"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>submitSchemaMetadata(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, signedJwt: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="148"
-                                    class="link-to-prism">src/registrar/registrar.service.ts:148</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>signedJwt</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="updateConfig"></a>
                     <span class="name">
                         <span ><b>updateConfig</b></span>
@@ -1470,201 +1345,8 @@ Actual logic lives in the focused sub-services:</p>
             </tr>
         </tbody>
     </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="uploadSchemaMetadataAsset"></a>
-                    <span class="name">
-                        <span ><b>uploadSchemaMetadataAsset</b></span>
-                        <a href="#uploadSchemaMetadataAsset"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>uploadSchemaMetadataAsset(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, type: "trustlists" | "rulebooks" | "schemas", file: Blob | File)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="169"
-                                    class="link-to-prism">src/registrar/registrar.service.ts:169</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>type</td>
-                                            <td>
-                                                        <code>&quot;trustlists&quot; | &quot;rulebooks&quot; | &quot;schemas&quot;</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>file</td>
-                                            <td>
-                                                        <code>Blob | File</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="uploadSchemaMetadataAssetFromUrl"></a>
-                    <span class="name">
-                        <span ><b>uploadSchemaMetadataAssetFromUrl</b></span>
-                        <a href="#uploadSchemaMetadataAssetFromUrl"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>uploadSchemaMetadataAssetFromUrl(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, type: "trustlists" | "rulebooks" | "schemas", sourceUrl: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, fallbackFileName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="155"
-                                    class="link-to-prism">src/registrar/registrar.service.ts:155</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>type</td>
-                                            <td>
-                                                        <code>&quot;trustlists&quot; | &quot;rulebooks&quot; | &quot;schemas&quot;</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>sourceUrl</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>fallbackFileName</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 </section>
+
 
     </div>
 
@@ -1680,7 +1362,7 @@ import { RegistrarConfigEntity } from &quot;./entities/registrar-config.entity&q
 import { type RegistrationCertificateCreation } from &quot;./generated&quot;;
 import { RegistrarConfigService } from &quot;./registrar-config.service&quot;;
 import { RegistrationCertificateService } from &quot;./registration-certificate.service&quot;;
-import { SchemaMetadataService } from &quot;./schema-metadata.service&quot;;
+import { SchemaMetadataService } from &quot;./schema-metadata/schema-metadata.service&quot;;
 
 /**
  * Facade that preserves the original public API of the registrar domain.
@@ -1803,47 +1485,14 @@ export class RegistrarService {
     }
 
     // -------------------------------------------------------------------------
-    // Schema metadata delegation → SchemaMetadataService
+    // Schema metadata list lookup used by verifier/catalog flows.
     // -------------------------------------------------------------------------
-
-    reserveSchemaId(tenantId: string, nameHint?: string) {
-        return this.schemaMetadataSvc.reserveSchemaId(tenantId, nameHint);
-    }
 
     findAllSchemaMetadata(
         tenantId: string,
         filters: { attestationId?: string; version?: string },
     ) {
         return this.schemaMetadataSvc.findAll(tenantId, filters);
-    }
-
-    submitSchemaMetadata(tenantId: string, signedJwt: string) {
-        return this.schemaMetadataSvc.submitSignedSchemaMetadata(
-            tenantId,
-            signedJwt,
-        );
-    }
-
-    uploadSchemaMetadataAssetFromUrl(
-        tenantId: string,
-        type: &quot;trustlists&quot; | &quot;rulebooks&quot; | &quot;schemas&quot;,
-        sourceUrl: string,
-        fallbackFileName: string,
-    ) {
-        return this.schemaMetadataSvc.uploadAssetFromUrl(
-            tenantId,
-            type,
-            sourceUrl,
-            fallbackFileName,
-        );
-    }
-
-    uploadSchemaMetadataAsset(
-        tenantId: string,
-        type: &quot;trustlists&quot; | &quot;rulebooks&quot; | &quot;schemas&quot;,
-        file: Blob | File,
-    ) {
-        return this.schemaMetadataSvc.uploadAsset(tenantId, type, file);
     }
 }
 </code></pre>
@@ -1895,6 +1544,24 @@ export class RegistrarService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -1910,7 +1577,6 @@ export class RegistrarService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

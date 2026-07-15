@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >InteractiveAuthorizationService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,13 +148,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
@@ -156,19 +167,41 @@ issuing credentials.</p>
 
 
 
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/AuthorizationModule.html" target="_self" >AuthorizationModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Properties</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#logger" >logger</a>
@@ -176,109 +209,133 @@ issuing credentials.</p>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#advanceOrComplete" >advanceOrComplete</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#completeWebAuthorization" >completeWebAuthorization</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#createErrorResponse" >createErrorResponse</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#createOpenid4vpInteractionResponse" >createOpenid4vpInteractionResponse</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#createOpenid4vpInteractionResponseForConfig" >createOpenid4vpInteractionResponseForConfig</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#createRedirectToWebResponse" >createRedirectToWebResponse</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#createRedirectToWebResponseForUrl" >createRedirectToWebResponseForUrl</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#executeIaeAction" >executeIaeAction</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getAuthorizationServerMetadata" >getAuthorizationServerMetadata</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#handleCodeVerifier" >handleCodeVerifier</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#handleFollowUpRequest" >handleFollowUpRequest</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#handleInitialRequest" >handleInitialRequest</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#handleOpenid4vpResponse" >handleOpenid4vpResponse</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#handleRequest" >handleRequest</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#issueAuthorizationCode" >issueAuthorizationCode</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#parseAuthorizationDetails" >parseAuthorizationDetails</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#parseRequest" >parseRequest</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#parseSessionContext" >parseSessionContext</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#processCodeVerifierFollow" >processCodeVerifierFollow</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#processOpenid4vpFollow" >processOpenid4vpFollow</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#validateAuthSession" >validateAuthSession</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#verifyPkce" >verifyPkce</a>
@@ -286,13 +343,13 @@ issuing credentials.</p>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -306,7 +363,7 @@ issuing credentials.</p>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:90</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:90</a></div>
                             </td>
                         </tr>
 
@@ -449,7 +506,7 @@ issuing credentials.</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>advanceOrComplete(authSession: <a href="../entitys/InteractiveAuthSessionEntity.html" target="_self">InteractiveAuthSessionEntity</a>, context: ReturnType<unknown>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>advanceOrComplete(authSession: <a href="../entitys/InteractiveAuthSessionEntity.html" target="_self">InteractiveAuthSessionEntity</a>, context: <a href="../miscellaneous/typealiases.html#IaeAction" target="_self">ReturnType&lt;(authSession: InteractiveAuthSessionEntity) &#x3D;&gt; { iaeActions: IaeAction[] | undefined; completedStepsData: any[]; supportedTypes: InteractionType[]; }&gt;</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -457,7 +514,7 @@ issuing credentials.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="584"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:584</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:584</a></div>
                         </td>
                     </tr>
 
@@ -494,7 +551,7 @@ issuing credentials.</p>
                                         <tr>
                                                 <td>context</td>
                                             <td>
-                                                        <code>ReturnType&lt;unknown&gt;</code>
+                                                            <code><a href="../miscellaneous/typealiases.html#IaeAction" target="_self" >ReturnType&lt;(authSession: InteractiveAuthSessionEntity) &#x3D;&gt; { iaeActions: IaeAction[] | undefined; completedStepsData: any[]; supportedTypes: InteractionType[]; }&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -564,7 +621,7 @@ issuing credentials.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="929"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:929</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:929</a></div>
                         </td>
                     </tr>
 
@@ -646,7 +703,7 @@ Called when user completes web-based authorization.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="943"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:943</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:943</a></div>
                         </td>
                     </tr>
 
@@ -730,7 +787,7 @@ Called when user completes web-based authorization.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="715"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:715</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:715</a></div>
                         </td>
                     </tr>
 
@@ -845,7 +902,7 @@ Generates a presentation request for the wallet.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="785"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:785</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:785</a></div>
                         </td>
                     </tr>
 
@@ -964,7 +1021,7 @@ Generates a presentation request for the wallet.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="833"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:833</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:833</a></div>
                         </td>
                     </tr>
 
@@ -1048,7 +1105,7 @@ Generates a PAR request URI for web-based authorization.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="843"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:843</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:843</a></div>
                         </td>
                     </tr>
 
@@ -1156,7 +1213,7 @@ Generates a PAR request URI for web-based authorization.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="376"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:376</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:376</a></div>
                         </td>
                     </tr>
 
@@ -1273,7 +1330,7 @@ Generates a PAR request URI for web-based authorization.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="109"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:109</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:109</a></div>
                         </td>
                     </tr>
 
@@ -1351,7 +1408,7 @@ Generates a PAR request URI for web-based authorization.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="668"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:668</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:668</a></div>
                         </td>
                     </tr>
 
@@ -1436,7 +1493,7 @@ Validates the code_verifier and returns success or error.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="433"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:433</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:433</a></div>
                         </td>
                     </tr>
 
@@ -1529,7 +1586,7 @@ Validates the submitted interaction response and either:</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>handleInitialRequest(request: <a href="../interfaces/InteractiveAuthInitialRequest.html" target="_self">InteractiveAuthInitialRequest</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, dpop?: literal type, clientAttestation?: literal type)</code>
+                    <code>handleInitialRequest(request: <a href="../interfaces/InteractiveAuthInitialRequest.html" target="_self">InteractiveAuthInitialRequest</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, dpop?: { jwk: Jwk; jwt: string }, clientAttestation?: { clientAttestationJwt: string; clientAttestationPopJwt: string })</code>
                 </td>
             </tr>
 
@@ -1537,7 +1594,7 @@ Validates the submitted interaction response and either:</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="270"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:270</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:270</a></div>
                         </td>
                     </tr>
 
@@ -1601,7 +1658,7 @@ Otherwise, falls back to the default behavior based on wallet-supported types.</
                                         <tr>
                                                 <td>dpop</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                        <code>{ jwk: Jwk; jwt: string }</code>
                                             </td>
 
                                             <td>
@@ -1613,7 +1670,7 @@ Otherwise, falls back to the default behavior based on wallet-supported types.</
                                         <tr>
                                                 <td>clientAttestation</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                        <code>{ clientAttestationJwt: string; clientAttestationPopJwt: string }</code>
                                             </td>
 
                                             <td>
@@ -1660,7 +1717,7 @@ Otherwise, falls back to the default behavior based on wallet-supported types.</
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="626"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:626</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:626</a></div>
                         </td>
                     </tr>
 
@@ -1744,7 +1801,7 @@ Validates and stores the VP data, returns success or error.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="220"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:220</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:220</a></div>
                         </td>
                     </tr>
 
@@ -1871,7 +1928,7 @@ Routes to the appropriate handler based on request type.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="874"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:874</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:874</a></div>
                         </td>
                     </tr>
 
@@ -1942,7 +1999,7 @@ Routes to the appropriate handler based on request type.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="198"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:198</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:198</a></div>
                         </td>
                     </tr>
 
@@ -2011,7 +2068,7 @@ Routes to the appropriate handler based on request type.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="130"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:130</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:130</a></div>
                         </td>
                     </tr>
 
@@ -2121,7 +2178,7 @@ Determines if the request is an initial or follow-up request.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="515"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:515</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:515</a></div>
                         </td>
                     </tr>
 
@@ -2159,7 +2216,7 @@ Determines if the request is an initial or follow-up request.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>literal type</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/enumerations.html#InteractionType" target="_self" >{ iaeActions: [] | undefined; completedStepsData: any[]; supportedTypes: InteractionType[] }</a></code>
 
                         </div>
                             <div class="io-description">
@@ -2185,7 +2242,7 @@ Determines if the request is an initial or follow-up request.</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>processCodeVerifierFollow(codeVerifier: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authSession: <a href="../entitys/InteractiveAuthSessionEntity.html" target="_self">InteractiveAuthSessionEntity</a>, context: ReturnType<unknown>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>processCodeVerifierFollow(codeVerifier: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authSession: <a href="../entitys/InteractiveAuthSessionEntity.html" target="_self">InteractiveAuthSessionEntity</a>, context: <a href="../miscellaneous/typealiases.html#IaeAction" target="_self">ReturnType&lt;(authSession: InteractiveAuthSessionEntity) &#x3D;&gt; { iaeActions: IaeAction[] | undefined; completedStepsData: any[]; supportedTypes: InteractionType[]; }&gt;</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -2193,7 +2250,7 @@ Determines if the request is an initial or follow-up request.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="562"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:562</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:562</a></div>
                         </td>
                     </tr>
 
@@ -2242,7 +2299,7 @@ Determines if the request is an initial or follow-up request.</p>
                                         <tr>
                                                 <td>context</td>
                                             <td>
-                                                        <code>ReturnType&lt;unknown&gt;</code>
+                                                            <code><a href="../miscellaneous/typealiases.html#IaeAction" target="_self" >ReturnType&lt;(authSession: InteractiveAuthSessionEntity) &#x3D;&gt; { iaeActions: IaeAction[] | undefined; completedStepsData: any[]; supportedTypes: InteractionType[]; }&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -2305,7 +2362,7 @@ Determines if the request is an initial or follow-up request.</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>processOpenid4vpFollow(openid4vpResponse: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authSession: <a href="../entitys/InteractiveAuthSessionEntity.html" target="_self">InteractiveAuthSessionEntity</a>, context: ReturnType<unknown>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>processOpenid4vpFollow(openid4vpResponse: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authSession: <a href="../entitys/InteractiveAuthSessionEntity.html" target="_self">InteractiveAuthSessionEntity</a>, context: <a href="../miscellaneous/typealiases.html#IaeAction" target="_self">ReturnType&lt;(authSession: InteractiveAuthSessionEntity) &#x3D;&gt; { iaeActions: IaeAction[] | undefined; completedStepsData: any[]; supportedTypes: InteractionType[]; }&gt;</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -2313,7 +2370,7 @@ Determines if the request is an initial or follow-up request.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="536"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:536</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:536</a></div>
                         </td>
                     </tr>
 
@@ -2362,7 +2419,7 @@ Determines if the request is an initial or follow-up request.</p>
                                         <tr>
                                                 <td>context</td>
                                             <td>
-                                                        <code>ReturnType&lt;unknown&gt;</code>
+                                                            <code><a href="../miscellaneous/typealiases.html#IaeAction" target="_self" >ReturnType&lt;(authSession: InteractiveAuthSessionEntity) &#x3D;&gt; { iaeActions: IaeAction[] | undefined; completedStepsData: any[]; supportedTypes: InteractionType[]; }&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -2433,7 +2490,7 @@ Determines if the request is an initial or follow-up request.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="484"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:484</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:484</a></div>
                         </td>
                     </tr>
 
@@ -2517,7 +2574,7 @@ Determines if the request is an initial or follow-up request.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="908"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:908</a></div>
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:908</a></div>
                         </td>
                     </tr>
 
@@ -2590,6 +2647,7 @@ Determines if the request is an initial or follow-up request.</p>
         </tbody>
     </table>
 </section>
+
             <section data-compodoc="block-properties">
     
     <h3 id="inputs">
@@ -2621,7 +2679,7 @@ Determines if the request is an initial or follow-up request.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/issuer/issuance/oid4vci/authorize/interactive-authorization.service.ts:90</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/interactive-authorization.service.ts:90</a></div>
                         </td>
                     </tr>
 
@@ -2646,21 +2704,21 @@ import {
 import type { Request } from &quot;express&quot;;
 import { Repository } from &quot;typeorm&quot;;
 import { v4 } from &quot;uuid&quot;;
-import { CryptoService } from &quot;../../../../crypto/crypto.service&quot;;
-import { SessionService } from &quot;../../../../session/session.service&quot;;
-import { Oid4vpService } from &quot;../../../../verifier/oid4vp/oid4vp.service&quot;;
-import { PresentationsService } from &quot;../../../../verifier/presentations/presentations.service&quot;;
-import { CredentialsService } from &quot;../../../configuration/credentials/credentials.service&quot;;
+import { CryptoService } from &quot;../../../../../crypto/crypto.service&quot;;
+import { SessionService } from &quot;../../../../../session/session.service&quot;;
+import { Oid4vpService } from &quot;../../../../../verifier/oid4vp/oid4vp.service&quot;;
+import { PresentationsService } from &quot;../../../../../verifier/presentations/presentations.service&quot;;
+import { CredentialsService } from &quot;../../../../configuration/credentials/credentials.service&quot;;
 import {
     type IaeAction,
     type IaeActionOpenid4vpPresentation,
     IaeActionType,
-} from &quot;../../../configuration/credentials/entities/iae-action.dto&quot;;
-import { IssuanceService } from &quot;../../../configuration/issuance/issuance.service&quot;;
+} from &quot;../../../../configuration/credentials/entities/iae-action.dto&quot;;
+import { IssuanceService } from &quot;../../../../configuration/issuance/issuance.service&quot;;
 import {
     InteractiveAuthSessionEntity,
     InteractiveAuthSessionStatus,
-} from &quot;../entities/interactive-auth-session.entity&quot;;
+} from &quot;../../entities/interactive-auth-session.entity&quot;;
 import {
     InteractionType,
     InteractiveAuthorizationRequestDto,
@@ -3635,6 +3693,24 @@ export class InteractiveAuthorizationService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -3650,7 +3726,6 @@ export class InteractiveAuthorizationService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

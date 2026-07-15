@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >MdocIssuerService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,13 +148,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
@@ -148,19 +159,41 @@
 
 
 
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/ConfigurationModule.html" target="_self" >ConfigurationModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Properties</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#logger" >logger</a>
@@ -168,38 +201,43 @@
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#assertSigningKeyMatchesLeafCertificate" >assertSigningKeyMatchesLeafCertificate</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#getDefaultNamespace" >getDefaultNamespace</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#issue" >issue</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -208,12 +246,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(certService: <a href="../injectables/CertService.html" target="_self">CertService</a>, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>)</code>
+<code>constructor(certService: <a href="../injectables/CertService.html" target="_self">CertService</a>, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>, statusListService: <a href="../injectables/StatusListService.html" target="_self">StatusListService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:33</a></div>
                             </td>
                         </tr>
 
@@ -247,6 +285,18 @@
                                                   
                                                         <td>
                                                                         <code><a href="../injectables/KeyChainService.html" target="_self" >KeyChainService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>statusListService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/StatusListService.html" target="_self" >StatusListService</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -291,8 +341,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="153"
-                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:153</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="187"
+                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:187</a></div>
                         </td>
                     </tr>
 
@@ -372,8 +422,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="199"
-                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:199</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="233"
+                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:233</a></div>
                         </td>
                     </tr>
 
@@ -443,8 +493,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="38"
-                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:38</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="46"
+                                    class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -501,6 +551,7 @@
         </tbody>
     </table>
 </section>
+
             <section data-compodoc="block-properties">
     
     <h3 id="inputs">
@@ -532,7 +583,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.ts:33</a></div>
                         </td>
                     </tr>
 
@@ -547,12 +598,19 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, Logger } from &quot;@nestjs/common&quot;;
 import type { Jwk } from &quot;@openid4vc/oauth2&quot;;
-import { CoseKey, DeviceKey, Issuer, SignatureAlgorithm } from &quot;@owf/mdoc&quot;;
+import {
+    CoseKey,
+    DeviceKey,
+    Issuer,
+    SignatureAlgorithm,
+    StatusOptions,
+} from &quot;@owf/mdoc&quot;;
 import { X509Certificate } from &quot;@peculiar/x509&quot;;
 import { exportJWK, importX509 } from &quot;jose&quot;;
 import { CertService } from &quot;../../../../../crypto/key/cert/cert.service&quot;;
 import { KeyUsageType } from &quot;../../../../../crypto/key/entities/key-chain.entity&quot;;
 import { KeyChainService } from &quot;../../../../../crypto/key/key-chain.service&quot;;
+import { StatusListService } from &quot;../../../../lifecycle/status/status-list.service&quot;;
 import { Session } from &quot;../../../../../session/entities/session.entity&quot;;
 import { mdocContext } from &quot;../../../../../verifier/presentations/mdoc-context&quot;;
 import { CredentialConfig } from &quot;../../entities/credential.entity&quot;;
@@ -575,6 +633,7 @@ export class MdocIssuerService {
     constructor(
         private readonly certService: CertService,
         private readonly keyChainService: KeyChainService,
+        private readonly statusListService: StatusListService,
     ) {}
 
     /**
@@ -599,18 +658,25 @@ export class MdocIssuerService {
         const claimsByNamespace &#x3D; buildClaimsByNamespace(
             credentialConfiguration.fields as any,
         );
+        const namespaceNames &#x3D; new Set(Object.keys(claimsByNamespace));
+        const defaultNamespaceClaims &#x3D;
+            claims &amp;&amp; typeof claims &#x3D;&#x3D;&#x3D; &quot;object&quot; &amp;&amp; !Array.isArray(claims)
+                ? Object.fromEntries(
+                      Object.entries(claims).filter(
+                          ([key]) &#x3D;&gt; !namespaceNames.has(key),
+                      ),
+                  )
+                : {};
 
         if (claimsByNamespace &amp;&amp; Object.keys(claimsByNamespace).length &gt; 0) {
             // Multiple namespaces specified
             for (const [ns, nsClaims] of Object.entries(claimsByNamespace)) {
                 issuer.addIssuerNamespace(ns, nsClaims);
             }
-            if (claims &amp;&amp; Object.keys(claims).length &gt; 0) {
-                issuer.addIssuerNamespace(defaultNamespace, claims);
-            }
-        } else {
-            // Single namespace with flat claims
-            issuer.addIssuerNamespace(defaultNamespace, claims);
+        }
+
+        if (Object.keys(defaultNamespaceClaims).length &gt; 0) {
+            issuer.addIssuerNamespace(defaultNamespace, defaultNamespaceClaims);
         }
 
         // Get signing certificate
@@ -679,6 +745,24 @@ export class MdocIssuerService {
             validUntil.setFullYear(validUntil.getFullYear() + 1);
         }
 
+        // If status management is enabled, create an entry and map it to mDOC status format.
+        let status: StatusOptions | undefined;
+        if (credentialConfiguration.statusManagement) {
+            const statusPayload &#x3D; await this.statusListService.createEntry(
+                session,
+                credentialConfiguration.id,
+            );
+            const statusList &#x3D; statusPayload.status?.status_list;
+            if (statusList) {
+                status &#x3D; {
+                    statusList: {
+                        idx: statusList.idx,
+                        uri: statusList.uri,
+                    },
+                };
+            }
+        }
+
         // Sign the mDOC
         const issuerSigned &#x3D; await issuer.sign({
             signingKey: CoseKey.fromJwk(privateKey as Jwk),
@@ -687,6 +771,7 @@ export class MdocIssuerService {
             digestAlgorithm: &quot;SHA-256&quot;,
             deviceKeyInfo: { deviceKey: DeviceKey.fromJwk(deviceKey) },
             validityInfo: { signed, validFrom, validUntil },
+            status,
         });
 
         this.logger.debug(
@@ -801,6 +886,24 @@ export class MdocIssuerService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -816,7 +919,6 @@ export class MdocIssuerService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

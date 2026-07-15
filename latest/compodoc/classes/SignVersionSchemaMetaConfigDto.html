@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -117,12 +124,23 @@
   <li class="breadcrumb-item" >SignVersionSchemaMetaConfigDto</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -134,61 +152,50 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
             </p>
             <p class="comment">
-                <p>Request body for the sign-and-submit new version endpoint.</p>
+                <p>Request body for new schema metadata version submission.</p>
+<p>The registrar builds and signs the new version.</p>
 
             </p>
 
 
 
 
+            </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Properties</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#config" >config</a>
                             </li>
-                            <li>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier">Optional</span>
-                                <a href="#keyChainId" >keyChainId</a>
-                            </li>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
 
@@ -222,52 +229,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({type: () &#x3D;&gt; SchemaMetaConfig, description: &#x27;The schema metadata configuration to sign and submit as a new version. Must include the existing id.&#x27;})<br />@ValidateNested()<br />@Type(undefined)<br />
+                            @ApiProperty({type: () &#x3D;&gt; SchemaMetaConfig, description: &#x27;The schema metadata configuration to submit as a new version. Must include the existing id.&#x27;})<br />@ValidateNested()<br />@Type(undefined)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="254" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:254</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="keyChainId"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier">Optional</span>
-                        <span ><b>keyChainId</b></span>
-                        <a href="#keyChainId"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @ApiPropertyOptional({description: &#x27;ID of the key chain to use for signing. Defaults to the tenant&#x27;s default key chain.&#x27;})<br />@IsOptional()<br />@IsString()<br />
-                        </code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="262" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:262</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="243" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:243</a></div>
                         </td>
                     </tr>
 
@@ -291,7 +259,6 @@ import { SchemaURIMeta } from &quot;@owf/eudi-attestation-schema&quot;;
 import { Type } from &quot;class-transformer&quot;;
 import {
     IsArray,
-    IsBoolean,
     IsEnum,
     IsObject,
     IsOptional,
@@ -400,14 +367,6 @@ export class TrustAuthorityEntry {
 
     @ApiPropertyOptional({
         description:
-            &quot;Whether this trust authority is a List of Trusted Entities (LoTE)&quot;,
-    })
-    @IsOptional()
-    @IsBoolean()
-    isLoTE?: boolean;
-
-    @ApiPropertyOptional({
-        description:
             &quot;Optional verification material for external trusted authorities (for example a JWK). &quot; +
             &quot;For internal trust-list URLs, EUDIPLO resolves verification material from the database.&quot;,
         oneOf: [
@@ -499,24 +458,20 @@ export class SchemaMetaConfig {
 }
 
 /**
- * Request body for the sign-and-submit schema metadata endpoint.
+ * Request body for schema metadata submission.
+ *
+ * The registrar builds and signs schema metadata from the submitted values.
+ * EUDIPLO no longer performs local SchemaMetadata JWT signing for this flow.
  */
 export class SignSchemaMetaConfigDto {
     @ApiProperty({
         type: () &#x3D;&gt; SchemaMetaConfig,
-        description: &quot;The schema metadata configuration to sign and submit&quot;,
+        description:
+            &quot;The schema metadata configuration to submit. Registrar builds and signs the final schema metadata.&quot;,
     })
     @ValidateNested()
     @Type(() &#x3D;&gt; SchemaMetaConfig)
     config!: SchemaMetaConfig;
-
-    @ApiPropertyOptional({
-        description:
-            &quot;ID of the key chain to use for signing. Defaults to the tenant&#x27;s default key chain.&quot;,
-    })
-    @IsOptional()
-    @IsString()
-    keyChainId?: string;
 
     @ApiPropertyOptional({
         description:
@@ -529,25 +484,19 @@ export class SignSchemaMetaConfigDto {
 }
 
 /**
- * Request body for the sign-and-submit new version endpoint.
+ * Request body for new schema metadata version submission.
+ *
+ * The registrar builds and signs the new version.
  */
 export class SignVersionSchemaMetaConfigDto {
     @ApiProperty({
         type: () &#x3D;&gt; SchemaMetaConfig,
         description:
-            &quot;The schema metadata configuration to sign and submit as a new version. Must include the existing id.&quot;,
+            &quot;The schema metadata configuration to submit as a new version. Must include the existing id.&quot;,
     })
     @ValidateNested()
     @Type(() &#x3D;&gt; SchemaMetaConfig)
     config!: SchemaMetaConfig;
-
-    @ApiPropertyOptional({
-        description:
-            &quot;ID of the key chain to use for signing. Defaults to the tenant&#x27;s default key chain.&quot;,
-    })
-    @IsOptional()
-    @IsString()
-    keyChainId?: string;
 }
 </code></pre>
     </div>
@@ -593,6 +542,24 @@ export class SignVersionSchemaMetaConfigDto {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -608,7 +575,6 @@ export class SignVersionSchemaMetaConfigDto {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

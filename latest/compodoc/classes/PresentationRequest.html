@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -117,12 +124,23 @@
   <li class="breadcrumb-item" >PresentationRequest</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/verifier/oid4vp/dto/presentation-request.dto.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -134,13 +152,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/verifier/oid4vp/dto/presentation-request.dto.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
@@ -153,39 +164,45 @@
 
 
 
+            </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Properties</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#expected_origin" >expected_origin</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#redirectUri" >redirectUri</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                 <a href="#requestId" >requestId</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                 <a href="#response_type" >response_type</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
@@ -194,6 +211,7 @@
                                 <a href="#transaction_data" >transaction_data</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
@@ -202,14 +220,14 @@
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
 
@@ -249,7 +267,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:66</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:71</a></div>
                         </td>
                     </tr>
 
@@ -294,7 +312,7 @@ Example: &quot;<a href="http://localhost:8080">http://localhost:8080</a>&quot;</
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:58</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:63</a></div>
                         </td>
                     </tr>
 
@@ -337,7 +355,7 @@ You can use the <code>{sessionId}</code> placeholder in the URI, which will be r
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:41</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -379,7 +397,7 @@ You can use the <code>{sessionId}</code> placeholder in the URI, which will be r
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -425,7 +443,7 @@ You can use the <code>{sessionId}</code> placeholder in the URI, which will be r
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:76</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:81</a></div>
                         </td>
                     </tr>
 
@@ -470,7 +488,7 @@ If provided, this will override the transaction_data from the presentation confi
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:49</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:54</a></div>
                         </td>
                     </tr>
 
@@ -517,9 +535,14 @@ export enum ResponseType {
      */
     URI &#x3D; &quot;uri&quot;,
     /**
-     * Response type indicating a DC API response will be used.
+     * Response type indicating a DC API response will be used (OID4VP via DC API).
      */
     DC_API &#x3D; &quot;dc-api&quot;,
+    /**
+     * Response type for ISO 18013-7 Annex C: org.iso.mdoc protocol via DC API.
+     * Returns a CBOR DeviceRequest + encryptionInfo (HPKE recipient key).
+     */
+    ISO_18013_7 &#x3D; &quot;iso-18013-7&quot;,
 }
 
 /**
@@ -624,6 +647,24 @@ export type PresentationRequestOptions &#x3D; Pick&lt;
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -639,7 +680,6 @@ export type PresentationRequestOptions &#x3D; Pick&lt;
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

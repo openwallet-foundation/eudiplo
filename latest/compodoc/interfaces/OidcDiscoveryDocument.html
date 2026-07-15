@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -120,12 +127,23 @@
   OidcDiscoveryDocument</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -137,13 +155,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/issuer/issuance/oid4vci/chained-as/chained-as.service.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
@@ -154,367 +165,407 @@
             </p>
 
 
-        <section data-compodoc="block-index">
-            <h3 id="index">Index</h3>
-            <table class="table table-sm table-bordered index-table">
+            </div>
+
+    <div class="tab-pane fade " id="api"><section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-3">
+                    <h6><b>Properties</b></h6>
+                </td>
+                <td class="col-md-9">
+                    <ul class="index-list">
+                        <li>
+                                <a href="#authorization_endpoint" class="reference-link ">
+                                    <span class="reference-badge reference-badge--property" aria-hidden="true">P</span><span class="reference-link-label">authorization_endpoint</span>
+                                </a>
+                        </li>
+                        <li>
+                                <a href="#issuer" class="reference-link ">
+                                    <span class="reference-badge reference-badge--property" aria-hidden="true">P</span><span class="reference-link-label">issuer</span>
+                                </a>
+                        </li>
+                        <li>
+                                <a href="#jwks_uri" class="reference-link ">
+                                    <span class="reference-badge reference-badge--property" aria-hidden="true">P</span><span class="reference-link-label">jwks_uri</span>
+                                </a>
+                        </li>
+                        <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#response_types_supported" class="reference-link ">
+                                    <span class="reference-badge reference-badge--property" aria-hidden="true">P</span><span class="reference-link-label">response_types_supported</span>
+                                </a>
+                        </li>
+                        <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#scopes_supported" class="reference-link ">
+                                    <span class="reference-badge reference-badge--property" aria-hidden="true">P</span><span class="reference-link-label">scopes_supported</span>
+                                </a>
+                        </li>
+                        <li>
+                                <a href="#token_endpoint" class="reference-link ">
+                                    <span class="reference-badge reference-badge--property" aria-hidden="true">P</span><span class="reference-link-label">token_endpoint</span>
+                                </a>
+                        </li>
+                        <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#token_endpoint_auth_methods_supported" class="reference-link ">
+                                    <span class="reference-badge reference-badge--property" aria-hidden="true">P</span><span class="reference-link-label">token_endpoint_auth_methods_supported</span>
+                                </a>
+                        </li>
+                        <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#userinfo_endpoint" class="reference-link ">
+                                    <span class="reference-badge reference-badge--property" aria-hidden="true">P</span><span class="reference-link-label">userinfo_endpoint</span>
+                                </a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+    <section data-compodoc="block-properties">
+        <h3 id="inputs">Properties</h3>
+            <table class="table table-sm table-bordered">
                 <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <h6><b>Properties</b></h6>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <ul class="index-list">
-                                <li>
-                                        <a href="#authorization_endpoint" 
->
-                                            authorization_endpoint
-                                        </a>
-                                </li>
-                                <li>
-                                        <a href="#issuer" 
->
-                                            issuer
-                                        </a>
-                                </li>
-                                <li>
-                                        <a href="#jwks_uri" 
->
-                                            jwks_uri
-                                        </a>
-                                </li>
-                                <li>
-                                            <span class="modifier">Optional</span>
-                                        <a href="#response_types_supported" 
->
-                                            response_types_supported
-                                        </a>
-                                </li>
-                                <li>
-                                            <span class="modifier">Optional</span>
-                                        <a href="#scopes_supported" 
->
-                                            scopes_supported
-                                        </a>
-                                </li>
-                                <li>
-                                        <a href="#token_endpoint" 
->
-                                            token_endpoint
-                                        </a>
-                                </li>
-                                <li>
-                                            <span class="modifier">Optional</span>
-                                        <a href="#token_endpoint_auth_methods_supported" 
->
-                                            token_endpoint_auth_methods_supported
-                                        </a>
-                                </li>
-                                <li>
-                                            <span class="modifier">Optional</span>
-                                        <a href="#userinfo_endpoint" 
->
-                                            userinfo_endpoint
-                                        </a>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <a name="authorization_endpoint"></a>
+                                <span class="name "><b>authorization_endpoint</b>
+                                    <a href="#authorization_endpoint">
+                                        <span class="icon ion-ios-link"></span>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <code>authorization_endpoint:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                            </td>
+                        </tr>
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                </td>
+                            </tr>
+
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:46</a></div>
+                                </td>
+                            </tr>
+
                 </tbody>
             </table>
-        </section>
-
-
-
-            <section data-compodoc="block-properties">
-                <h3 id="inputs">Properties</h3>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="authorization_endpoint"></a>
-                                        <span class="name "><b>authorization_endpoint</b>
-                                            <a href="#authorization_endpoint">
-                                                <span class="icon ion-ios-link"></span>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>authorization_endpoint:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                        <tr>
+                            <td class="col-md-4">
+                                <a name="issuer"></a>
+                                <span class="name "><b>issuer</b>
+                                    <a href="#issuer">
+                                        <span class="icon ion-ios-link"></span>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <code>issuer:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 </code>
-                                    </td>
-                                </tr>
+                            </td>
+                        </tr>
 
 
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
-                                        </td>
-                                    </tr>
-
-
+                                </td>
+                            </tr>
 
 
 
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="issuer"></a>
-                                        <span class="name "><b>issuer</b>
-                                            <a href="#issuer">
-                                                <span class="icon ion-ios-link"></span>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>issuer:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:45</a></div>
+                                </td>
+                            </tr>
+
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                        <tr>
+                            <td class="col-md-4">
+                                <a name="jwks_uri"></a>
+                                <span class="name "><b>jwks_uri</b>
+                                    <a href="#jwks_uri">
+                                        <span class="icon ion-ios-link"></span>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <code>jwks_uri:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 </code>
-                                    </td>
-                                </tr>
+                            </td>
+                        </tr>
 
 
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
-                                        </td>
-                                    </tr>
-
-
+                                </td>
+                            </tr>
 
 
 
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="jwks_uri"></a>
-                                        <span class="name "><b>jwks_uri</b>
-                                            <a href="#jwks_uri">
-                                                <span class="icon ion-ios-link"></span>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>jwks_uri:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:49</a></div>
+                                </td>
+                            </tr>
+
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                        <tr>
+                            <td class="col-md-4">
+                                <a name="response_types_supported"></a>
+                                <span class="name "><b>response_types_supported</b>
+                                    <a href="#response_types_supported">
+                                        <span class="icon ion-ios-link"></span>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <code>response_types_supported:     <code>string[]</code>
 </code>
-                                    </td>
-                                </tr>
+                            </td>
+                        </tr>
 
 
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Type : </i>    <code>string[]</code>
 
-                                        </td>
-                                    </tr>
-
-
+                                </td>
+                            </tr>
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Optional</i>
+                                </td>
+                            </tr>
 
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="response_types_supported"></a>
-                                        <span class="name "><b>response_types_supported</b>
-                                            <a href="#response_types_supported">
-                                                <span class="icon ion-ios-link"></span>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>response_types_supported:     <code>string[]</code>
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:51</a></div>
+                                </td>
+                            </tr>
+
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                        <tr>
+                            <td class="col-md-4">
+                                <a name="scopes_supported"></a>
+                                <span class="name "><b>scopes_supported</b>
+                                    <a href="#scopes_supported">
+                                        <span class="icon ion-ios-link"></span>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <code>scopes_supported:     <code>string[]</code>
 </code>
-                                    </td>
-                                </tr>
+                            </td>
+                        </tr>
 
 
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>    <code>string[]</code>
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Type : </i>    <code>string[]</code>
 
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Optional</i>
-                                        </td>
-                                    </tr>
+                                </td>
+                            </tr>
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Optional</i>
+                                </td>
+                            </tr>
 
 
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="scopes_supported"></a>
-                                        <span class="name "><b>scopes_supported</b>
-                                            <a href="#scopes_supported">
-                                                <span class="icon ion-ios-link"></span>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>scopes_supported:     <code>string[]</code>
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:50</a></div>
+                                </td>
+                            </tr>
+
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                        <tr>
+                            <td class="col-md-4">
+                                <a name="token_endpoint"></a>
+                                <span class="name "><b>token_endpoint</b>
+                                    <a href="#token_endpoint">
+                                        <span class="icon ion-ios-link"></span>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <code>token_endpoint:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 </code>
-                                    </td>
-                                </tr>
+                            </td>
+                        </tr>
 
 
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>    <code>string[]</code>
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Optional</i>
-                                        </td>
-                                    </tr>
+                                </td>
+                            </tr>
 
 
 
 
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="token_endpoint"></a>
-                                        <span class="name "><b>token_endpoint</b>
-                                            <a href="#token_endpoint">
-                                                <span class="icon ion-ios-link"></span>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>token_endpoint:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:47</a></div>
+                                </td>
+                            </tr>
+
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                        <tr>
+                            <td class="col-md-4">
+                                <a name="token_endpoint_auth_methods_supported"></a>
+                                <span class="name "><b>token_endpoint_auth_methods_supported</b>
+                                    <a href="#token_endpoint_auth_methods_supported">
+                                        <span class="icon ion-ios-link"></span>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <code>token_endpoint_auth_methods_supported:     <code>string[]</code>
 </code>
-                                    </td>
-                                </tr>
+                            </td>
+                        </tr>
 
 
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Type : </i>    <code>string[]</code>
 
-                                        </td>
-                                    </tr>
-
-
+                                </td>
+                            </tr>
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Optional</i>
+                                </td>
+                            </tr>
 
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="token_endpoint_auth_methods_supported"></a>
-                                        <span class="name "><b>token_endpoint_auth_methods_supported</b>
-                                            <a href="#token_endpoint_auth_methods_supported">
-                                                <span class="icon ion-ios-link"></span>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>token_endpoint_auth_methods_supported:     <code>string[]</code>
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:52</a></div>
+                                </td>
+                            </tr>
+
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                        <tr>
+                            <td class="col-md-4">
+                                <a name="userinfo_endpoint"></a>
+                                <span class="name "><b>userinfo_endpoint</b>
+                                    <a href="#userinfo_endpoint">
+                                        <span class="icon ion-ios-link"></span>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <code>userinfo_endpoint:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 </code>
-                                    </td>
-                                </tr>
+                            </td>
+                        </tr>
 
 
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>    <code>string[]</code>
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Optional</i>
-                                        </td>
-                                    </tr>
+                                </td>
+                            </tr>
 
 
-
-
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="userinfo_endpoint"></a>
-                                        <span class="name "><b>userinfo_endpoint</b>
-                                            <a href="#userinfo_endpoint">
-                                                <span class="icon ion-ios-link"></span>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>userinfo_endpoint:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-</code>
-                                    </td>
-                                </tr>
-
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Optional</i>
-                                        </td>
-                                    </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Optional</i>
+                                </td>
+                            </tr>
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.service.ts:48</a></div>
+                                </td>
+                            </tr>
 
-                        </tbody>
-                    </table>
-            </section>
-    </div>
+                </tbody>
+            </table>
+    </section>
+</div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
@@ -525,61 +576,38 @@ import {
     Injectable,
     Logger,
     NotFoundException,
-    UnauthorizedException,
 } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
-import { decodeJwt, decodeProtectedHeader } from &quot;jose&quot;;
+import { decodeJwt } from &quot;jose&quot;;
 import { TraceService } from &quot;nestjs-otel&quot;;
 import { firstValueFrom } from &quot;rxjs&quot;;
 import { LessThan, Repository } from &quot;typeorm&quot;;
 import { v4 } from &quot;uuid&quot;;
-import { KeyChainService } from &quot;../../../../crypto/key/key-chain.service&quot;;
-import { SessionService } from &quot;../../../../session/session.service&quot;;
-import { FederationTrustService } from &quot;../../../../shared/trust/federation-trust.service&quot;;
-import { FederationTrustSource } from &quot;../../../../shared/trust/types&quot;;
-import { WalletAttestationService } from &quot;../../../../shared/trust/wallet-attestation.service&quot;;
-import { AuthorizationIdentity } from &quot;../../../configuration/credentials/dto/authorization-identity&quot;;
-import type { ChainedAsConfig } from &quot;../../../configuration/issuance/dto/chained-as-config.dto&quot;;
-import { IssuanceService } from &quot;../../../configuration/issuance/issuance.service&quot;;
+import { KeyChainService } from &quot;../../../../../crypto/key/key-chain.service&quot;;
+import { SessionService } from &quot;../../../../../session/session.service&quot;;
+import { FederationTrustService } from &quot;../../../../../shared/trust/federation-trust.service&quot;;
+import { FederationTrustSource } from &quot;../../../../../shared/trust/types&quot;;
+import { WalletAttestationService } from &quot;../../../../../shared/trust/wallet-attestation.service&quot;;
+import { AuthorizationIdentity } from &quot;../../../../configuration/credentials/dto/authorization-identity&quot;;
+import type { ChainedAsConfig } from &quot;../../../../configuration/issuance/dto/chained-as-config.dto&quot;;
+import { IssuanceService } from &quot;../../../../configuration/issuance/issuance.service&quot;;
 import {
+    assertTokenRequestSessionValid,
+    buildAuthorizationServerMetadata,
+    buildWalletAttestationMetadata,
+    buildJwksResponse,
     ChainedAsParRequestDto,
     ChainedAsParResponseDto,
-    ChainedAsTokenRequestDto,
-    ChainedAsTokenResponseDto,
-} from &quot;./dto/chained-as.dto&quot;;
-import {
     ChainedAsSessionEntity,
     ChainedAsSessionStatus,
-} from &quot;./entities/chained-as-session.entity&quot;;
-
-/**
- * Extract DPoP JWK thumbprint from DPoP JWT.
- * Returns undefined if parsing fails or DPoP is not provided.
- */
-export function extractDpopJkt(dpopJwt?: string): string | undefined {
-    if (!dpopJwt) {
-        return undefined;
-    }
-    try {
-        const header &#x3D; decodeProtectedHeader(dpopJwt);
-        if (header.jwk) {
-            // Calculate JWK thumbprint (simplified - in production use jose&#x27;s calculateJwkThumbprint)
-            const thumbprintInput &#x3D; JSON.stringify({
-                crv: header.jwk.crv,
-                kty: header.jwk.kty,
-                x: header.jwk.x,
-                y: header.jwk.y,
-            });
-            return createHash(&quot;sha256&quot;)
-                .update(thumbprintInput)
-                .digest(&quot;base64url&quot;);
-        }
-    } catch {
-        // Invalid DPoP JWT
-    }
-    return undefined;
-}
+    ChainedAsTokenRequestDto,
+    ChainedAsTokenResponseDto,
+    issueRefreshTokenIfEnabled,
+    resolveSessionForTokenRequest,
+    resolveTokenBinding,
+    DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+} from &quot;../shared&quot;;
 
 /**
  * Upstream OIDC discovery document structure.
@@ -654,13 +682,40 @@ export class ChainedAsService {
         const issuanceConfig &#x3D;
             await this.issuanceService.getIssuanceConfiguration(tenantId);
 
-        if (!issuanceConfig.chainedAs?.enabled) {
-            throw new NotFoundException(
-                &quot;Chained Authorization Server is not enabled for this tenant&quot;,
-            );
+        type ChainedServerConfig &#x3D; {
+            id: string;
+            enabled?: boolean;
+            type: &quot;chained&quot;;
+            upstream: ChainedAsConfig[&quot;upstream&quot;];
+            token?: ChainedAsConfig[&quot;token&quot;];
+            requireDPoP?: ChainedAsConfig[&quot;requireDPoP&quot;];
+        };
+
+        const chainedServer &#x3D; (issuanceConfig.authorizationServers ?? []).find(
+            (server): server is ChainedServerConfig &#x3D;&gt; {
+                const candidate &#x3D; server as Partial&lt;ChainedServerConfig&gt;;
+                return (
+                    server.enabled !&#x3D;&#x3D; false &amp;&amp;
+                    server.type &#x3D;&#x3D;&#x3D; &quot;chained&quot; &amp;&amp;
+                    typeof candidate.id &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                    candidate.id.length &gt; 0 &amp;&amp;
+                    !!candidate.upstream
+                );
+            },
+        );
+
+        if (chainedServer) {
+            return {
+                enabled: true,
+                upstream: chainedServer.upstream,
+                token: chainedServer.token,
+                requireDPoP: chainedServer.requireDPoP,
+            } as ChainedAsConfig;
         }
 
-        return issuanceConfig.chainedAs;
+        throw new NotFoundException(
+            &quot;Chained Authorization Server is not enabled for this tenant&quot;,
+        );
     }
 
     /**
@@ -1134,28 +1189,6 @@ export class ChainedAsService {
     }
 
     /**
-     * Verify PKCE code verifier against stored code challenge.
-     */
-    private verifyPkce(
-        session: ChainedAsSessionEntity,
-        codeVerifier?: string,
-    ): void {
-        if (session.codeChallenge &amp;&amp; codeVerifier) {
-            const expectedChallenge &#x3D;
-                session.codeChallengeMethod &#x3D;&#x3D;&#x3D; &quot;S256&quot;
-                    ? createHash(&quot;sha256&quot;)
-                          .update(codeVerifier)
-                          .digest(&quot;base64url&quot;)
-                    : codeVerifier;
-            if (expectedChallenge !&#x3D;&#x3D; session.codeChallenge) {
-                throw new UnauthorizedException(&quot;Invalid code_verifier&quot;);
-            }
-        } else if (session.codeChallenge &amp;&amp; !codeVerifier) {
-            throw new BadRequestException(&quot;code_verifier is required&quot;);
-        }
-    }
-
-    /**
      * Build access token payload.
      */
     private buildTokenPayload(
@@ -1213,48 +1246,11 @@ export class ChainedAsService {
             );
         }
 
-        let session: ChainedAsSessionEntity | null;
-
-        if (request.grant_type &#x3D;&#x3D;&#x3D; &quot;refresh_token&quot;) {
-            if (!request.refresh_token) {
-                throw new BadRequestException(
-                    &quot;refresh_token is required for refresh_token grant&quot;,
-                );
-            }
-            session &#x3D; await this.sessionRepository.findOne({
-                where: {
-                    tenantId,
-                    refreshToken: request.refresh_token,
-                },
-            });
-            if (!session) {
-                throw new UnauthorizedException(
-                    &quot;Invalid or expired refresh_token&quot;,
-                );
-            }
-            if (
-                session.refreshTokenExpiresAt &amp;&amp;
-                session.refreshTokenExpiresAt &lt; new Date()
-            ) {
-                throw new UnauthorizedException(&quot;refresh_token has expired&quot;);
-            }
-        } else {
-            if (!request.code) {
-                throw new BadRequestException(
-                    &quot;code is required for authorization_code grant&quot;,
-                );
-            }
-            session &#x3D; await this.sessionRepository.findOne({
-                where: {
-                    tenantId,
-                    authorizationCode: request.code,
-                    status: ChainedAsSessionStatus.AUTHORIZED,
-                },
-            });
-            if (!session) {
-                throw new UnauthorizedException(&quot;Invalid authorization code&quot;);
-            }
-        }
+        const session &#x3D; await resolveSessionForTokenRequest(
+            this.sessionRepository,
+            tenantId,
+            request,
+        );
 
         // Add session context to span for trace correlation
         this.traceService.getSpan()?.setAttributes({
@@ -1264,38 +1260,18 @@ export class ChainedAsService {
             &quot;chained_as.endpoint&quot;: &quot;token&quot;,
         });
 
-        if (
-            request.grant_type &#x3D;&#x3D;&#x3D; &quot;authorization_code&quot; &amp;&amp;
-            session.authorizationCodeExpiresAt &amp;&amp;
-            session.authorizationCodeExpiresAt &lt; new Date()
-        ) {
-            session.status &#x3D; ChainedAsSessionStatus.EXPIRED;
-            await this.sessionRepository.save(session);
-            throw new UnauthorizedException(&quot;Authorization code expired&quot;);
-        }
-
-        if (request.grant_type &#x3D;&#x3D;&#x3D; &quot;authorization_code&quot;) {
-            this.verifyPkce(session, request.code_verifier);
-        }
-
-        if (
-            request.redirect_uri &amp;&amp;
-            request.redirect_uri !&#x3D;&#x3D; session.redirectUri
-        ) {
-            throw new BadRequestException(&quot;redirect_uri mismatch&quot;);
-        }
+        await assertTokenRequestSessionValid(
+            this.sessionRepository,
+            session,
+            request,
+        );
 
         const config &#x3D; await this.getChainedAsConfig(tenantId);
-        let tokenType &#x3D; &quot;Bearer&quot;;
-        let dpopJkt: string | undefined;
-
-        if (dpopJwt) {
-            // DPoP validation: extract JWK thumbprint from DPoP proof
-            tokenType &#x3D; &quot;DPoP&quot;;
-            dpopJkt &#x3D; session.dpopJkt;
-        } else if (config.requireDPoP) {
-            throw new BadRequestException(&quot;DPoP proof is required&quot;);
-        }
+        const { tokenType, dpopJkt } &#x3D; resolveTokenBinding(
+            config.requireDPoP,
+            session,
+            dpopJwt,
+        );
 
         const tokenLifetime &#x3D; config.token?.lifetimeSeconds || 3600;
         const jti &#x3D; v4();
@@ -1330,23 +1306,10 @@ export class ChainedAsService {
 
         session.status &#x3D; ChainedAsSessionStatus.TOKEN_ISSUED;
         session.accessTokenJti &#x3D; jti;
-
-        const issuanceConfig &#x3D;
-            await this.issuanceService.getIssuanceConfiguration(tenantId);
-
-        let refreshToken: string | undefined;
-        if (issuanceConfig.refreshTokenEnabled) {
-            refreshToken &#x3D; randomBytes(32).toString(&quot;base64url&quot;);
-            let refreshTokenExpiresAt: Date | undefined;
-            if (issuanceConfig.refreshTokenExpiresInSeconds) {
-                refreshTokenExpiresAt &#x3D; new Date(
-                    Date.now() +
-                        issuanceConfig.refreshTokenExpiresInSeconds * 1000,
-                );
-            }
-            session.refreshToken &#x3D; refreshToken;
-            session.refreshTokenExpiresAt &#x3D; refreshTokenExpiresAt;
-        }
+        const refreshToken &#x3D; issueRefreshTokenIfEnabled(
+            session,
+            config.token ?? {},
+        );
 
         await this.sessionRepository.save(session);
 
@@ -1383,54 +1346,38 @@ export class ChainedAsService {
             signingKeyId,
         );
 
-        // Ensure the key has a kid set for proper JWT verification matching
-        const keyWithKid &#x3D; {
-            ...publicKey,
-            kid: (publicKey as { kid?: string }).kid || signingKeyId,
-        };
-
-        return {
-            keys: [keyWithKid as Record&lt;string, unknown&gt;],
-        };
+        return buildJwksResponse(
+            publicKey as { kid?: string; [key: string]: unknown },
+            signingKeyId,
+        );
     }
 
     /**
      * Get authorization server metadata for the Chained AS.
      */
     async getMetadata(tenantId: string): Promise&lt;Record&lt;string, unknown&gt;&gt; {
+        const config &#x3D; await this.getChainedAsConfig(tenantId);
         const baseUrl &#x3D; this.getChainedAsBaseUrl(tenantId);
         const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
-
         const issuanceConfig &#x3D;
             await this.issuanceService.getIssuanceConfiguration(tenantId);
         const walletAttestationRequired &#x3D;
             issuanceConfig.walletAttestationRequired ?? false;
+        const refreshTokensEnabled &#x3D; config.token?.refreshTokenEnabled ?? true;
 
-        const metadata: Record&lt;string, unknown&gt; &#x3D; {
+        return buildAuthorizationServerMetadata({
             issuer: baseUrl,
-            authorization_endpoint: &#x60;${baseUrl}/authorize&#x60;,
-            token_endpoint: &#x60;${baseUrl}/token&#x60;,
-            pushed_authorization_request_endpoint: &#x60;${baseUrl}/par&#x60;,
-            jwks_uri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/chained-as&#x60;,
-            response_types_supported: [&quot;code&quot;],
-            grant_types_supported: [&quot;authorization_code&quot;, &quot;refresh_token&quot;],
-            code_challenge_methods_supported: [&quot;S256&quot;],
-            dpop_signing_alg_values_supported: [&quot;ES256&quot;, &quot;ES384&quot;, &quot;ES512&quot;],
-        };
-
-        if (walletAttestationRequired) {
-            metadata.token_endpoint_auth_methods_supported &#x3D; [
-                &quot;attest_jwt_client_auth&quot;,
-            ];
-            metadata.client_attestation_signing_alg_values_supported &#x3D; [
-                &quot;ES256&quot;,
-            ];
-            metadata.client_attestation_pop_signing_alg_values_supported &#x3D; [
-                &quot;ES256&quot;,
-            ];
-        }
-
-        return metadata;
+            authorizationEndpoint: &#x60;${baseUrl}/authorize&#x60;,
+            tokenEndpoint: &#x60;${baseUrl}/token&#x60;,
+            pushedAuthorizationRequestEndpoint: &#x60;${baseUrl}/par&#x60;,
+            jwksUri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}/chained-as&#x60;,
+            grantTypesSupported: refreshTokensEnabled
+                ? [&quot;authorization_code&quot;, &quot;refresh_token&quot;]
+                : [&quot;authorization_code&quot;],
+            dpopSigningAlgValuesSupported:
+                DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+            ...buildWalletAttestationMetadata(walletAttestationRequired),
+        });
     }
 
     /**
@@ -1521,6 +1468,24 @@ export class ChainedAsService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -1536,7 +1501,6 @@ export class ChainedAsService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 
