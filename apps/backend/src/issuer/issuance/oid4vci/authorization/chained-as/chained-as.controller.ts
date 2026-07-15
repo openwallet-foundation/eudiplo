@@ -95,8 +95,7 @@ export class ChainedAsController {
         @Headers("oauth-client-attestation") clientAttestationJwt?: string,
         @Headers("oauth-client-attestation-pop")
         clientAttestationPopJwt?: string,
-    ): Promise<ChainedAsParResponseDto> {
-        console.log(body);
+    ): Promise<ChainedAsParResponseDto> {        
         // DPoP JWK thumbprint extraction will be handled in service layer when DPoP is fully implemented
         const dpopJkt = dpopJwt ? extractDpopJkt(dpopJwt) : undefined;
 
@@ -144,8 +143,7 @@ export class ChainedAsController {
             tenantId,
             query.client_id,
             query.request_uri,
-        );
-        console.log(redirectUrl);
+        );        
         res.redirect(redirectUrl);
     }
 

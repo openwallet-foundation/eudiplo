@@ -252,8 +252,7 @@ export class MdocverifierService {
                 payload: vp,
                 docType,
             };
-        } catch (error: any) {
-            console.log(error);
+        } catch (error: any) {            
             return this.handleVerificationError(vp, error, options);
         }
     }
