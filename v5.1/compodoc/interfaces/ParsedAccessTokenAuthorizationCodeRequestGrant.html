@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -120,12 +127,23 @@
   ParsedAccessTokenAuthorizationCodeRequestGrant</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/issuer/issuance/oid4vci/authorization/authorize/authorize.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -137,119 +155,122 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/issuer/issuance/oid4vci/authorize/authorize.service.ts</code>
-        </p>
 
 
 
+            </div>
 
-        <section data-compodoc="block-index">
-            <h3 id="index">Index</h3>
-            <table class="table table-sm table-bordered index-table">
+    <div class="tab-pane fade " id="api"><section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+            <tr>
+                <td class="col-md-3">
+                    <h6><b>Properties</b></h6>
+                </td>
+                <td class="col-md-9">
+                    <ul class="index-list">
+                        <li>
+                                <a href="#code" class="reference-link ">
+                                    <span class="reference-badge reference-badge--property" aria-hidden="true">P</span><span class="reference-link-label">code</span>
+                                </a>
+                        </li>
+                        <li>
+                                <a href="#grantType" class="reference-link ">
+                                    <span class="reference-badge reference-badge--property" aria-hidden="true">P</span><span class="reference-link-label">grantType</span>
+                                </a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+    <section data-compodoc="block-properties">
+        <h3 id="inputs">Properties</h3>
+            <table class="table table-sm table-bordered">
                 <tbody>
-                    <tr>
-                        <td class="col-md-4">
-                            <h6><b>Properties</b></h6>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <ul class="index-list">
-                                <li>
-                                        <a href="#code" 
->
-                                            code
-                                        </a>
-                                </li>
-                                <li>
-                                        <a href="#grantType" 
->
-                                            grantType
-                                        </a>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <a name="code"></a>
+                                <span class="name "><b>code</b>
+                                    <a href="#code">
+                                        <span class="icon ion-ios-link"></span>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <code>code:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                            </td>
+                        </tr>
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                </td>
+                            </tr>
+
+
+
+
+
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/authorize.service.ts:38</a></div>
+                                </td>
+                            </tr>
+
                 </tbody>
             </table>
-        </section>
-
-
-
-            <section data-compodoc="block-properties">
-                <h3 id="inputs">Properties</h3>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="code"></a>
-                                        <span class="name "><b>code</b>
-                                            <a href="#code">
-                                                <span class="icon ion-ios-link"></span>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>code:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+            <table class="table table-sm table-bordered">
+                <tbody>
+                        <tr>
+                            <td class="col-md-4">
+                                <a name="grantType"></a>
+                                <span class="name "><b>grantType</b>
+                                    <a href="#grantType">
+                                        <span class="icon ion-ios-link"></span>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <code>grantType:     <code>AuthorizationCodeGrantIdentifier</code>
 </code>
-                                    </td>
-                                </tr>
+                            </td>
+                        </tr>
 
 
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <tr>
+                                <td class="col-md-4">
+                                    <i>Type : </i>    <code>AuthorizationCodeGrantIdentifier</code>
 
-                                        </td>
-                                    </tr>
-
-
-
-
-
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="grantType"></a>
-                                        <span class="name "><b>grantType</b>
-                                            <a href="#grantType">
-                                                <span class="icon ion-ios-link"></span>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>grantType:     <code>AuthorizationCodeGrantIdentifier</code>
-</code>
-                                    </td>
-                                </tr>
-
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>    <code>AuthorizationCodeGrantIdentifier</code>
-
-                                        </td>
-                                    </tr>
+                                </td>
+                            </tr>
 
 
 
 
 
-                        </tbody>
-                    </table>
-            </section>
-    </div>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/authorize/authorize.service.ts:37</a></div>
+                                </td>
+                            </tr>
+
+                </tbody>
+            </table>
+    </section>
+</div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
@@ -264,7 +285,6 @@ import {
     type HttpMethod,
     Jwk,
     Oauth2AuthorizationServer,
-    PkceCodeChallengeMethod,
     PreAuthorizedCodeGrantIdentifier,
     preAuthorizedCodeGrantIdentifier,
     type RefreshTokenGrantIdentifier,
@@ -273,15 +293,20 @@ import {
 import type { Request } from &quot;express&quot;;
 import { Repository } from &quot;typeorm&quot;;
 import { v4 } from &quot;uuid&quot;;
-import { CryptoService } from &quot;../../../../crypto/crypto.service&quot;;
-import { KeyChainService } from &quot;../../../../crypto/key/key-chain.service&quot;;
-import { SessionService } from &quot;../../../../session/session.service&quot;;
-import { WalletAttestationService } from &quot;../../../../shared/trust/wallet-attestation.service&quot;;
-import { IssuanceService } from &quot;../../../configuration/issuance/issuance.service&quot;;
-import { StatusListConfigService } from &quot;../../../lifecycle/status/status-list-config.service&quot;;
-import { NonceEntity } from &quot;../entities/nonces.entity&quot;;
-import { TokenErrorException } from &quot;../exceptions&quot;;
-import { getHeadersFromRequest } from &quot;../util&quot;;
+import { CryptoService } from &quot;../../../../../crypto/crypto.service&quot;;
+import { KeyChainService } from &quot;../../../../../crypto/key/key-chain.service&quot;;
+import { SessionService } from &quot;../../../../../session/session.service&quot;;
+import { WalletAttestationService } from &quot;../../../../../shared/trust/wallet-attestation.service&quot;;
+import { IssuanceService } from &quot;../../../../configuration/issuance/issuance.service&quot;;
+import { StatusListConfigService } from &quot;../../../../lifecycle/status/status-list-config.service&quot;;
+import {
+    buildAuthorizationServerMetadata,
+    buildWalletAttestationMetadata,
+    DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+} from &quot;../shared&quot;;
+import { NonceEntity } from &quot;../../entities/nonces.entity&quot;;
+import { TokenErrorException } from &quot;../../exceptions&quot;;
+import { getHeadersFromRequest } from &quot;../../util&quot;;
 import { AuthorizeQueries } from &quot;./dto/authorize-request.dto&quot;;
 
 interface ParsedAccessTokenAuthorizationCodeRequestGrant {
@@ -458,6 +483,37 @@ export class AuthorizeService {
         return &#x60;${this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;)}/issuers/${tenantId}&#x60;;
     }
 
+    private resolveRefreshTokenConfig(issuanceConfig: {
+        authorizationServers?: Array&lt;{
+            type?: string;
+            enabled?: boolean;
+            id?: string;
+            token?: {
+                refreshTokenEnabled?: boolean;
+                refreshTokenExpiresInSeconds?: number;
+            };
+        }&gt; | null;
+    }): {
+        enabled: boolean;
+        expiresInSeconds?: number;
+    } {
+        const server &#x3D; (issuanceConfig.authorizationServers ?? []).find(
+            (candidate) &#x3D;&gt;
+                candidate.enabled !&#x3D;&#x3D; false &amp;&amp;
+                candidate.type !&#x3D;&#x3D; &quot;external&quot; &amp;&amp;
+                !!candidate.token,
+        );
+        if (server?.token) {
+            return {
+                enabled: server.token.refreshTokenEnabled ?? true,
+                expiresInSeconds: server.token.refreshTokenExpiresInSeconds,
+            };
+        }
+
+        // Built-in authorization server defaults.
+        return { enabled: true, expiresInSeconds: 2592000 };
+    }
+
     /**
      * Build the RFC 9396 &#x60;authorization_details&#x60; array that must be bound to the
      * issued access token, per OID4VCI Section 6 / 7. The list of authorized
@@ -536,13 +592,12 @@ export class AuthorizeService {
     async authzMetadata(
         tenantId: string,
     ): Promise&lt;AuthorizationServerMetadata&gt; {
-        //TODO: read from config
-        const useDpop &#x3D; true;
-
         const issuanceConfig &#x3D;
             await this.issuanceService.getIssuanceConfiguration(tenantId);
         const walletAttestationRequired &#x3D;
             issuanceConfig.walletAttestationRequired ?? false;
+        const refreshTokenConfig &#x3D;
+            this.resolveRefreshTokenConfig(issuanceConfig);
 
         const publicUrl &#x3D; this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);
         const authServer &#x3D; this.getAuthzIssuer(tenantId);
@@ -554,38 +609,33 @@ export class AuthorizeService {
             ? &#x60;${authServer}/status-management/status-list-aggregation&#x60;
             : undefined;
 
-        const metadata: AuthorizationServerMetadata &#x3D; {
+        const metadata &#x3D; buildAuthorizationServerMetadata({
             issuer: authServer,
-            token_endpoint: &#x60;${authServer}/authorize/token&#x60;,
-            authorization_endpoint: &#x60;${authServer}/authorize&#x60;,
-            interactive_authorization_endpoint: &#x60;${authServer}/authorize/interactive&#x60;,
-            jwks_uri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}&#x60;,
-            grant_types_supported: [
-                &quot;authorization_code&quot;,
-                &quot;urn:ietf:params:oauth:grant-type:pre-authorized_code&quot;,
-            ],
-            dpop_signing_alg_values_supported: useDpop ? [&quot;ES256&quot;] : undefined,
-            // TODO: verify this on the server
-            require_pushed_authorization_requests: true,
-            pushed_authorization_request_endpoint: &#x60;${authServer}/authorize/par&#x60;,
-            code_challenge_methods_supported: [PkceCodeChallengeMethod.S256],
-            authorization_details_types_supported: [&quot;openid_credential&quot;],
-            token_endpoint_auth_methods_supported: [&quot;none&quot;],
-            status_list_aggregation_endpoint: statusListAggregationEndpoint,
-        };
-
-        if (walletAttestationRequired) {
-            metadata.token_endpoint_auth_methods_supported &#x3D; [
-                &quot;attest_jwt_client_auth&quot;,
-            ];
-            metadata.challenge_endpoint &#x3D; &#x60;${authServer}/authorize/challenge&#x60;;
-            metadata.client_attestation_signing_alg_values_supported &#x3D; [
-                &quot;ES256&quot;,
-            ];
-            metadata.client_attestation_pop_signing_alg_values_supported &#x3D; [
-                &quot;ES256&quot;,
-            ];
-        }
+            authorizationEndpoint: &#x60;${authServer}/authorize&#x60;,
+            tokenEndpoint: &#x60;${authServer}/authorize/token&#x60;,
+            pushedAuthorizationRequestEndpoint: &#x60;${authServer}/authorize/par&#x60;,
+            jwksUri: &#x60;${publicUrl}/.well-known/jwks.json/issuers/${tenantId}&#x60;,
+            grantTypesSupported: refreshTokenConfig.enabled
+                ? [
+                      &quot;authorization_code&quot;,
+                      &quot;refresh_token&quot;,
+                      &quot;urn:ietf:params:oauth:grant-type:pre-authorized_code&quot;,
+                  ]
+                : [
+                      &quot;authorization_code&quot;,
+                      &quot;urn:ietf:params:oauth:grant-type:pre-authorized_code&quot;,
+                  ],
+            dpopSigningAlgValuesSupported:
+                DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+            ...buildWalletAttestationMetadata(walletAttestationRequired),
+            additionalMetadata: {
+                // TODO: verify this on the server
+                require_pushed_authorization_requests: true,
+                interactive_authorization_endpoint: &#x60;${authServer}/authorize/interactive&#x60;,
+                status_list_aggregation_endpoint: statusListAggregationEndpoint,
+                challenge_endpoint: &#x60;${authServer}/authorize/challenge&#x60;,
+            },
+        }) as AuthorizationServerMetadata;
 
         return this.getAuthorizationServer(
             tenantId,
@@ -803,6 +853,8 @@ export class AuthorizeService {
 
         const issuanceConfig &#x3D;
             await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const refreshTokenConfig &#x3D;
+            this.resolveRefreshTokenConfig(issuanceConfig);
 
         const authorizationServerMetadata &#x3D; await this.authzMetadata(tenantId);
 
@@ -999,7 +1051,7 @@ export class AuthorizeService {
                 authorizationServer: authorizationServerMetadata.issuer,
                 clientId: req.body.client_id,
                 dpop: dpopValue,
-                refreshToken: issuanceConfig.refreshTokenEnabled ? true : false,
+                refreshToken: refreshTokenConfig.enabled,
                 additionalAccessTokenPayload: authorizationDetails
                     ? { authorization_details: authorizationDetails }
                     : undefined,
@@ -1020,12 +1072,11 @@ export class AuthorizeService {
         if (tokenResponse.refresh_token) {
             // Calculate refresh token expiration based on configured lifetime
             let refreshTokenExpiresAt: Date | undefined;
-            if (issuanceConfig.refreshTokenExpiresInSeconds) {
+            if (refreshTokenConfig.expiresInSeconds) {
                 const now &#x3D; new Date();
                 refreshTokenExpiresAt &#x3D; new Date(
                     now.getTime() +
-                        (issuanceConfig.refreshTokenExpiresInSeconds || 0) *
-                            1000,
+                        (refreshTokenConfig.expiresInSeconds || 0) * 1000,
                 );
             }
 
@@ -1095,6 +1146,24 @@ export class AuthorizeService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -1110,7 +1179,6 @@ export class AuthorizeService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

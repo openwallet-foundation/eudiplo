@@ -1436,6 +1436,8 @@
       
         
       
+        
+      
     
     
     
@@ -1490,6 +1492,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration/5.x-to-6.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.x to 6.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -3147,6 +3177,11 @@
 <td>Enable HTTP request logging  (default: <code>false</code>)</td>
 </tr>
 <tr>
+<td><code>LOG_HTTP_RESPONSE_BODY</code></td>
+<td><code>boolean</code></td>
+<td>Capture and log HTTP response bodies (buffered up to 4 KB). Disabled by default because response bodies may contain access tokens, credentials, or other sensitive data.  (default: <code>false</code>)</td>
+</tr>
+<tr>
 <td><code>LOG_ENABLE_SESSION_LOGGER</code></td>
 <td><code>boolean</code></td>
 <td>Enable session flow logging  (default: <code>false</code>)</td>
@@ -3170,6 +3205,11 @@
 <td><code>AUDIT_LOG_RETENTION_DAYS</code></td>
 <td><code>number</code></td>
 <td>Delete tenant activity audit log entries older than N days. Set to 0 to disable time-based pruning.  (default: <code>0</code>)</td>
+</tr>
+<tr>
+<td><code>OTEL_SDK_DISABLED</code></td>
+<td><code>boolean</code></td>
+<td>Disable OpenTelemetry SDK (and OTel log forwarding)  (default: <code>false</code>)</td>
 </tr>
 <tr>
 <td><code>AUDIT_LOG_MAX_ENTRIES_PER_TENANT</code></td>

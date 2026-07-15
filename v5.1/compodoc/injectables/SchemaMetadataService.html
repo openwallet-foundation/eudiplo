@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >SchemaMetadataService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/registrar/schema-metadata/schema-metadata.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,30 +148,45 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/registrar/schema-metadata.service.ts</code>
-        </p>
 
 
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/RegistrarModule.html" target="_self" >RegistrarModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Properties</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#logger" >logger</a>
@@ -161,93 +194,92 @@
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#createSchemaMetadata" >createSchemaMetadata</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#deprecateVersion" >deprecateVersion</a>
                             </li>
                             <li>
-                                    <span class="modifier">Async</span>
-                                <a href="#exportCatalogFormat" >exportCatalogFormat</a>
-                            </li>
-                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#findAll" >findAll</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#findOne" >findOne</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getLatest" >getLatest</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getMine" >getMine</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getSchemaByFormat" >getSchemaByFormat</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getSignedJwt" >getSignedJwt</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getVersions" >getVersions</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getVocabularies" >getVocabularies</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#remove" >remove</a>
                             </li>
                             <li>
-                                    <span class="modifier">Async</span>
-                                <a href="#reserveSchemaId" >reserveSchemaId</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Async</span>
-                                <a href="#submitSignedSchemaMetadata" >submitSignedSchemaMetadata</a>
-                            </li>
-                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#throwUpstreamError" >throwUpstreamError</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#updateMetadata" >updateMetadata</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Async</span>
-                                <a href="#uploadAsset" >uploadAsset</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Async</span>
-                                <a href="#uploadAssetFromUrl" >uploadAssetFromUrl</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -261,7 +293,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/registrar/schema-metadata.service.ts:45</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:44</a></div>
                             </td>
                         </tr>
 
@@ -308,6 +340,87 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="createSchemaMetadata"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>createSchemaMetadata</b></span>
+                        <a href="#createSchemaMetadata"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createSchemaMetadata(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, request: <a href="../miscellaneous/typealiases.html#CreateSchemaMetadataRequest" target="_self">CreateSchemaMetadataRequest</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="48"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>request</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#CreateSchemaMetadataRequest" target="_self" >CreateSchemaMetadataRequest</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;SchemaMetadata&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="deprecateVersion"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -326,8 +439,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="376"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:376</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="297"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:297</a></div>
                         </td>
                     </tr>
 
@@ -413,99 +526,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="exportCatalogFormat"></a>
-                    <span class="name">
-                            <span class="modifier">Async</span>
-                        <span ><b>exportCatalogFormat</b></span>
-                        <a href="#exportCatalogFormat"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>exportCatalogFormat(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, version: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="295"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:295</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>id</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>version</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;unknown&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="findAll"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -524,8 +544,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="173"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:173</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="110"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:110</a></div>
                         </td>
                     </tr>
 
@@ -605,8 +625,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="218"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:218</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="134"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:134</a></div>
                         </td>
                     </tr>
 
@@ -686,8 +706,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="340"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:340</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="261"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:261</a></div>
                         </td>
                     </tr>
 
@@ -767,8 +787,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="153"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:153</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="90"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:90</a></div>
                         </td>
                     </tr>
 
@@ -836,8 +856,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="317"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:317</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="211"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:211</a></div>
                         </td>
                     </tr>
 
@@ -941,8 +961,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="272"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:272</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="188"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:188</a></div>
                         </td>
                     </tr>
 
@@ -1034,8 +1054,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="358"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:358</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="279"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:279</a></div>
                         </td>
                     </tr>
 
@@ -1115,8 +1135,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="136"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:136</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="73"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:73</a></div>
                         </td>
                     </tr>
 
@@ -1184,8 +1204,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="256"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:256</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="172"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:172</a></div>
                         </td>
                     </tr>
 
@@ -1259,168 +1279,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="reserveSchemaId"></a>
-                    <span class="name">
-                            <span class="modifier">Async</span>
-                        <span ><b>reserveSchemaId</b></span>
-                        <a href="#reserveSchemaId"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>reserveSchemaId(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, nameHint?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="119"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:119</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>nameHint</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    Yes
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;ReservationResponseDto&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="submitSignedSchemaMetadata"></a>
-                    <span class="name">
-                            <span class="modifier">Async</span>
-                        <span ><b>submitSignedSchemaMetadata</b></span>
-                        <a href="#submitSignedSchemaMetadata"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>submitSignedSchemaMetadata(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, signedJwt: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="197"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:197</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>signedJwt</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;SchemaMetadata&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="throwUpstreamError"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -1439,8 +1297,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="400"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:400</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="321"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:321</a></div>
                         </td>
                     </tr>
 
@@ -1532,8 +1390,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="232"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:232</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="148"
+                                    class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:148</a></div>
                         </td>
                     </tr>
 
@@ -1615,205 +1473,8 @@
             </tr>
         </tbody>
     </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="uploadAsset"></a>
-                    <span class="name">
-                            <span class="modifier">Async</span>
-                        <span ><b>uploadAsset</b></span>
-                        <a href="#uploadAsset"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>uploadAsset(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, type: <a href="../miscellaneous/typealiases.html#UploadAssetType" target="_self">UploadAssetType</a>, file: Blob | File)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="49"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:49</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>type</td>
-                                            <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#UploadAssetType" target="_self" >UploadAssetType</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>file</td>
-                                            <td>
-                                                        <code>Blob | File</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;UploadAssetResponseDto&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="uploadAssetFromUrl"></a>
-                    <span class="name">
-                            <span class="modifier">Async</span>
-                        <span ><b>uploadAssetFromUrl</b></span>
-                        <a href="#uploadAssetFromUrl"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>uploadAssetFromUrl(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, type: <a href="../miscellaneous/typealiases.html#UploadAssetType" target="_self">UploadAssetType</a>, sourceUrl: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, fallbackFileName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="72"
-                                    class="link-to-prism">src/registrar/schema-metadata.service.ts:72</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>type</td>
-                                            <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#UploadAssetType" target="_self" >UploadAssetType</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>sourceUrl</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                        <tr>
-                                                <td>fallbackFileName</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;UploadAssetResponseDto&gt;</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 </section>
+
             <section data-compodoc="block-properties">
     
     <h3 id="inputs">
@@ -1845,7 +1506,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/registrar/schema-metadata.service.ts:45</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/registrar/schema-metadata/schema-metadata.service.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -1871,34 +1532,33 @@ import {
     UpdateSchemaMetadataDto,
 } from &quot;./dto/schema-metadata.dto&quot;;
 import {
-    type ReservationResponseDto,
     type SchemaMetadata,
     type SchemaMetadataVocabulariesDto,
-    schemaMetadataControllerExport,
+    schemaMetadataControllerCreateSchemaMetadata,
     schemaMetadataControllerFindAll,
     schemaMetadataControllerFindOne,
+    schemaMetadataControllerGetInternalMetadata,
     schemaMetadataControllerGetLatestVersionInfo,
-    schemaMetadataControllerGetSchema,
     schemaMetadataControllerGetSignedJwt,
     schemaMetadataControllerGetVocabularies,
     schemaMetadataControllerListVersions,
     schemaMetadataControllerRemove,
-    schemaMetadataControllerReserveSchemaId,
     schemaMetadataControllerSetVersionDeprecation,
-    schemaMetadataControllerSubmitSchemaMetadata,
     schemaMetadataControllerUpdateMetadata,
-    schemaMetadataControllerUploadAsset,
-    type UploadAssetResponseDto,
     schemaMetadataControllerFindAllByRelyingParty,
-} from &quot;./generated&quot;;
-import { RegistrarAuthService } from &quot;./registrar-auth.service&quot;;
+} from &quot;../generated&quot;;
+import { RegistrarAuthService } from &quot;../registrar-auth.service&quot;;
 
 type SchemaMetadataFilters &#x3D; {
     attestationId?: string;
     version?: string;
 };
 
-type UploadAssetType &#x3D; &quot;trustlists&quot; | &quot;rulebooks&quot; | &quot;schemas&quot;;
+type CreateSchemaMetadataRequest &#x3D; {
+    metadata: Record&lt;string, unknown&gt;;
+    rulebookFile: Blob | File;
+    schemaFiles: Array&lt;Blob | File&gt;;
+};
 
 @Injectable()
 export class SchemaMetadataService {
@@ -1906,88 +1566,26 @@ export class SchemaMetadataService {
 
     constructor(private readonly authService: RegistrarAuthService) {}
 
-    async uploadAsset(
+    async createSchemaMetadata(
         tenantId: string,
-        type: UploadAssetType,
-        file: Blob | File,
-    ): Promise&lt;UploadAssetResponseDto&gt; {
+        request: CreateSchemaMetadataRequest,
+    ): Promise&lt;SchemaMetadata&gt; {
         const client &#x3D; await this.authService.getClient(tenantId);
-        const res &#x3D; await schemaMetadataControllerUploadAsset({
+        const res &#x3D; await schemaMetadataControllerCreateSchemaMetadata({
             client,
-            path: { type },
-            body: { file },
+            body: {
+                metadata: JSON.stringify(request.metadata),
+                rulebookFile: request.rulebookFile,
+                schemaFiles: request.schemaFiles,
+            },
         });
 
         if (res.error) {
             this.throwUpstreamError(
                 tenantId,
-                &#x60;upload ${type} asset&#x60;,
+                &quot;create schema metadata&quot;,
                 res.error,
             );
-        }
-
-        return res.data!;
-    }
-
-    async uploadAssetFromUrl(
-        tenantId: string,
-        type: UploadAssetType,
-        sourceUrl: string,
-        fallbackFileName: string,
-    ): Promise&lt;UploadAssetResponseDto&gt; {
-        let response: Response;
-        try {
-            response &#x3D; await fetch(sourceUrl);
-        } catch (error) {
-            throw new BadRequestException(
-                &#x60;Failed to fetch ${type} source (${sourceUrl}) for registrar upload: ${
-                    error instanceof Error ? error.message : String(error)
-                }&#x60;,
-            );
-        }
-
-        if (!response.ok) {
-            throw new BadRequestException(
-                &#x60;Failed to fetch ${type} source (${sourceUrl}) for registrar upload: HTTP ${response.status}&#x60;,
-            );
-        }
-
-        const contentType &#x3D;
-            response.headers.get(&quot;content-type&quot;) || &quot;application/octet-stream&quot;;
-        const bytes &#x3D; await response.arrayBuffer();
-
-        const parsedName &#x3D; (() &#x3D;&gt; {
-            try {
-                const pathname &#x3D; new URL(sourceUrl).pathname;
-                const last &#x3D; pathname.split(&quot;/&quot;).filter(Boolean).pop();
-                return last || fallbackFileName;
-            } catch {
-                return fallbackFileName;
-            }
-        })();
-
-        const file &#x3D;
-            typeof File &#x3D;&#x3D;&#x3D; &quot;function&quot;
-                ? new File([bytes], parsedName, { type: contentType })
-                : (new Blob([bytes], {
-                      type: contentType,
-                  }) as Blob | File);
-
-        return this.uploadAsset(tenantId, type, file);
-    }
-
-    async reserveSchemaId(
-        tenantId: string,
-        nameHint?: string,
-    ): Promise&lt;ReservationResponseDto&gt; {
-        const client &#x3D; await this.authService.getClient(tenantId);
-        const res &#x3D; await schemaMetadataControllerReserveSchemaId({
-            client,
-            body: nameHint ? { nameHint } : {},
-        });
-
-        if (res.error) {
-            this.throwUpstreamError(tenantId, &quot;reserve schema id&quot;, res.error);
         }
 
         return res.data!;
@@ -2052,27 +1650,6 @@ export class SchemaMetadataService {
         }
 
         return res.data ?? [];
-    }
-
-    async submitSignedSchemaMetadata(
-        tenantId: string,
-        signedJwt: string,
-    ): Promise&lt;SchemaMetadata&gt; {
-        const client &#x3D; await this.authService.getClient(tenantId);
-        const res &#x3D; await schemaMetadataControllerSubmitSchemaMetadata({
-            client,
-            body: { jwt: signedJwt },
-        });
-
-        if (res.error) {
-            this.throwUpstreamError(
-                tenantId,
-                &quot;submit schema metadata&quot;,
-                res.error,
-            );
-        }
-
-        return res.data!;
     }
 
     async findOne(tenantId: string, id: string): Promise&lt;SchemaMetadata&gt; {
@@ -2152,28 +1729,6 @@ export class SchemaMetadataService {
         return res.data as string;
     }
 
-    async exportCatalogFormat(
-        tenantId: string,
-        id: string,
-        version: string,
-    ): Promise&lt;unknown&gt; {
-        const client &#x3D; await this.authService.getClient(tenantId);
-        const res &#x3D; await schemaMetadataControllerExport({
-            client,
-            path: { id, version },
-        });
-
-        if (res.error) {
-            this.throwUpstreamError(
-                tenantId,
-                &quot;export schema metadata&quot;,
-                res.error,
-            );
-        }
-
-        return res.data;
-    }
-
     async getSchemaByFormat(
         tenantId: string,
         id: string,
@@ -2181,9 +1736,9 @@ export class SchemaMetadataService {
         format: string,
     ): Promise&lt;unknown&gt; {
         const client &#x3D; await this.authService.getClient(tenantId);
-        const res &#x3D; await schemaMetadataControllerGetSchema({
+        const res &#x3D; await schemaMetadataControllerGetInternalMetadata({
             client,
-            path: { id, version, format },
+            path: { id, version },
         });
 
         if (res.error) {
@@ -2194,7 +1749,34 @@ export class SchemaMetadataService {
             );
         }
 
-        return res.data;
+        const internal &#x3D; res.data as
+            | {
+                  schemaFiles?: Array&lt;{
+                      formatIdentifier?: string;
+                      schemaContent?: unknown;
+                  }&gt;;
+                  schemaURIs?: Array&lt;{
+                      formatIdentifier?: string;
+                      schemaContent?: unknown;
+                  }&gt;;
+              }
+            | undefined;
+
+        const fromSchemaFiles &#x3D; internal?.schemaFiles?.find(
+            (entry) &#x3D;&gt; entry.formatIdentifier &#x3D;&#x3D;&#x3D; format,
+        )?.schemaContent;
+        if (fromSchemaFiles !&#x3D;&#x3D; undefined) {
+            return fromSchemaFiles;
+        }
+
+        const fromSchemaUris &#x3D; internal?.schemaURIs?.find(
+            (entry) &#x3D;&gt; entry.formatIdentifier &#x3D;&#x3D;&#x3D; format,
+        )?.schemaContent;
+        if (fromSchemaUris !&#x3D;&#x3D; undefined) {
+            return fromSchemaUris;
+        }
+
+        return internal ?? res.data;
     }
 
     async getLatest(tenantId: string, id: string): Promise&lt;SchemaMetadata&gt; {
@@ -2340,6 +1922,24 @@ export class SchemaMetadataService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -2355,7 +1955,6 @@ export class SchemaMetadataService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

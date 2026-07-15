@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -107,6 +114,11 @@
     <li class="breadcrumb-item">Modules</li>
     <li class="breadcrumb-item" >CryptoImplementatationModule</li>
 </ol>
+
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/crypto/key/crypto-implementation/crypto-implementation.module.ts</code>
+</div>
 
 <div class="text-center module-graph-container">
     <div id="module-graph-svg">
@@ -136,26 +148,26 @@
 <title>cluster_CryptoImplementatationModule</title>
 <polygon fill="none" stroke="black" stroke-dasharray="1,5" points="104,-70 104,-268 392,-268 392,-70 104,-70"/>
 </g>
-<g id="clust4" class="cluster">
-<title>cluster_CryptoImplementatationModule_exports</title>
-<polygon fill="none" stroke="black" points="145,-208 145,-260 351,-260 351,-208 145,-208"/>
-</g>
 <g id="clust6" class="cluster">
 <title>cluster_CryptoImplementatationModule_providers</title>
 <polygon fill="none" stroke="black" points="112,-78 112,-130 384,-130 384,-78 112,-78"/>
 </g>
+<g id="clust4" class="cluster">
+<title>cluster_CryptoImplementatationModule_exports</title>
+<polygon fill="none" stroke="black" points="145,-208 145,-260 351,-260 351,-208 145,-208"/>
+</g>
 <!-- CryptoImplementationService  -->
-<g id="node1" class="node">
+<g id="node1" class="node"><a xlink:href="../injectables/CryptoImplementationService.html" href="../injectables/CryptoImplementationService.html" target="_top">
 <title>CryptoImplementationService </title>
 <polygon fill="#fb8072" stroke="black" points="342.51,-252 153.49,-252 153.49,-216 342.51,-216 342.51,-252"/>
 <text text-anchor="middle" x="248" y="-229.8" font-family="Times,serif" font-size="14.00">CryptoImplementationService </text>
-</g>
+</a></g>
 <!-- CryptoImplementatationModule -->
-<g id="node2" class="node">
+<g id="node2" class="node"><a xlink:href="../modules/CryptoImplementatationModule.html" href="../modules/CryptoImplementatationModule.html" target="_top">
 <title>CryptoImplementatationModule</title>
 <polygon fill="#8dd3c7" stroke="black" points="346.69,-187 343.69,-191 322.69,-191 319.69,-187 149.31,-187 149.31,-151 346.69,-151 346.69,-187"/>
 <text text-anchor="middle" x="248" y="-164.8" font-family="Times,serif" font-size="14.00">CryptoImplementatationModule</text>
-</g>
+</a></g>
 <!-- CryptoImplementatationModule&#45;&gt;CryptoImplementationService  -->
 <g id="edge1" class="edge">
 <title>CryptoImplementatationModule&#45;&gt;CryptoImplementationService </title>
@@ -163,11 +175,11 @@
 <polygon fill="black" stroke="black" points="244.5,-205.99 248,-215.99 251.5,-205.99 244.5,-205.99"/>
 </g>
 <!-- CryptoImplementationService -->
-<g id="node3" class="node">
+<g id="node3" class="node"><a xlink:href="../injectables/CryptoImplementationService.html" href="../injectables/CryptoImplementationService.html" target="_top">
 <title>CryptoImplementationService</title>
 <ellipse fill="#fdb462" stroke="black" cx="248" cy="-104" rx="127.93" ry="18"/>
 <text text-anchor="middle" x="248" y="-99.8" font-family="Times,serif" font-size="14.00">CryptoImplementationService</text>
-</g>
+</a></g>
 <!-- CryptoImplementationService&#45;&gt;CryptoImplementatationModule -->
 <g id="edge2" class="edge">
 <title>CryptoImplementationService&#45;&gt;CryptoImplementatationModule</title>
@@ -206,13 +218,6 @@
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
 
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/crypto/key/crypto-implementation/crypto-implementation.module.ts</code>
-        </p>
-
 
 
 
@@ -241,6 +246,26 @@
             </div>
         </div>
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../injectables/CryptoImplementationService.html" target="_self" >CryptoImplementationService</a></code>
+                                </li>
+                        </ul>
+                </div>
+            </div>
+        </section>
+
 
     </div>
 
@@ -260,6 +285,7 @@ export class CryptoImplementatationModule {}
 </code></pre>
     </div>
 </div>
+
 
 
 
@@ -309,6 +335,24 @@ export class CryptoImplementatationModule {}
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -324,7 +368,6 @@ export class CryptoImplementatationModule {}
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

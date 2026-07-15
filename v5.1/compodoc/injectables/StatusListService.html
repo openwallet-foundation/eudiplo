@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >StatusListService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/issuer/lifecycle/status/status-list.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,35 +148,51 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/issuer/lifecycle/status/status-list.service.ts</code>
-        </p>
 
 
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/StatusListModule.html" target="_self" >StatusListModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Properties</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Public</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#keyChainService" >keyChainService</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#logger" >logger</a>
@@ -166,110 +200,143 @@
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#buildAggregationUri" >buildAggregationUri</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#buildStatusListUri" >buildStatusListUri</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#createEntry" >createEntry</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#createListJWT" >createListJWT</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#createNewList" >createNewList</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#deleteList" >deleteList</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#findAvailableList" >findAvailableList</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getEffectiveBits" >getEffectiveBits</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getEffectiveCapacity" >getEffectiveCapacity</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getListById" >getListById</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getListCwt" >getListCwt</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getListJwt" >getListJwt</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getLists" >getLists</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getSigningCert" >getSigningCert</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getStatusListUris" >getStatusListUris</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#hasStillFreeEntries" >hasStillFreeEntries</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#importForTenant" >importForTenant</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#processStatusListConfig" >processStatusListConfig</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#setEntry" >setEntry</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#shuffleArray" >shuffleArray</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#updateList" >updateList</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#updateStatus" >updateStatus</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -283,7 +350,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:45</a></div>
                             </td>
                         </tr>
 
@@ -444,8 +511,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="111"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:111</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="141"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:141</a></div>
                         </td>
                     </tr>
 
@@ -517,8 +584,8 @@ See RFC draft-ietf-oauth-status-list Section 9.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="101"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:101</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="131"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:131</a></div>
                         </td>
                     </tr>
 
@@ -600,8 +667,8 @@ See RFC draft-ietf-oauth-status-list Section 9.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="392"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:392</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="474"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:474</a></div>
                         </td>
                     </tr>
 
@@ -694,8 +761,8 @@ Automatically creates a new list if no available list is found.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="180"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:180</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="210"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:210</a></div>
                         </td>
                     </tr>
 
@@ -765,15 +832,15 @@ The JWT includes:</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>createNewList(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, options?: literal type)</code>
+                    <code>createNewList(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, options?: { credentialConfigurationId?: string; keyChainId?: string; bits?: BitsPerStatus; capacity?: number })</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="122"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:122</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="152"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:152</a></div>
                         </td>
                     </tr>
 
@@ -815,7 +882,7 @@ The JWT includes:</p>
                                         <tr>
                                                 <td>options</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                        <code>{ credentialConfigurationId?: string; keyChainId?: string; bits?: BitsPerStatus; capacity?: number }</code>
                                             </td>
 
                                             <td>
@@ -865,8 +932,8 @@ The JWT includes:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="508"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:508</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="590"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:590</a></div>
                         </td>
                     </tr>
 
@@ -959,8 +1026,8 @@ Only allows deletion if the list has no used entries.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="347"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:347</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="429"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:429</a></div>
                         </td>
                     </tr>
 
@@ -1054,8 +1121,8 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="78"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:78</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="108"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:108</a></div>
                         </td>
                     </tr>
 
@@ -1126,8 +1193,8 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="67"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:67</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="97"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:97</a></div>
                         </td>
                     </tr>
 
@@ -1197,8 +1264,8 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="286"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:286</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="297"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:297</a></div>
                         </td>
                     </tr>
 
@@ -1272,6 +1339,90 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="getListCwt"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getListCwt</b></span>
+                        <a href="#getListCwt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getListCwt(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, listId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="337"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:337</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Get the CWT for a specific status list.
+The CWT content follows the same freshness policy as JWT status list tokens.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>listId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Uint8Array&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="getListJwt"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -1290,8 +1441,8 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="306"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:306</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="317"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:317</a></div>
                         </td>
                     </tr>
 
@@ -1383,8 +1534,8 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="262"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:262</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="273"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:273</a></div>
                         </td>
                     </tr>
 
@@ -1442,6 +1593,76 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="getSigningCert"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>getSigningCert</b></span>
+                        <a href="#getSigningCert"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getSigningCert(entry: <a href="../entitys/StatusListEntity.html" target="_self">StatusListEntity</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="69"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:69</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>entry</td>
+                                            <td>
+                                                            <code><a href="../entitys/StatusListEntity.html" target="_self" >StatusListEntity</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="getStatusListUris"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -1460,8 +1681,8 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="275"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:275</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="286"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:286</a></div>
                         </td>
                     </tr>
 
@@ -1538,8 +1759,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="328"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:328</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="410"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:410</a></div>
                         </td>
                     </tr>
 
@@ -1631,8 +1852,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="584"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:584</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="666"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:666</a></div>
                         </td>
                     </tr>
 
@@ -1703,8 +1924,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="628"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:628</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="710"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:710</a></div>
                         </td>
                     </tr>
 
@@ -1787,8 +2008,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="452"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:452</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="534"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:534</a></div>
                         </td>
                     </tr>
 
@@ -1909,15 +2130,15 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>shuffleArray(array: T[])</code>
+                    <code>shuffleArray&lt;T&gt;(array: T[])</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="89"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:89</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="119"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:119</a></div>
                         </td>
                     </tr>
 
@@ -1988,15 +2209,15 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>updateList(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, listId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, updates: literal type)</code>
+                    <code>updateList(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, listId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, updates: { credentialConfigurationId?: string | null; keyChainId?: string | null })</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="533"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:533</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="615"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:615</a></div>
                         </td>
                     </tr>
 
@@ -2054,7 +2275,7 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
                                         <tr>
                                                 <td>updates</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                        <code>{ credentialConfigurationId?: string | null; keyChainId?: string | null }</code>
                                             </td>
 
                                             <td>
@@ -2103,8 +2324,8 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="478"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:478</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="560"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:560</a></div>
                         </td>
                     </tr>
 
@@ -2174,6 +2395,7 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
         </tbody>
     </table>
 </section>
+
             <section data-compodoc="block-properties">
     
     <h3 id="inputs">
@@ -2200,7 +2422,7 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:45</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:50</a></div>
                         </td>
                     </tr>
 
@@ -2233,7 +2455,7 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:45</a></div>
                         </td>
                     </tr>
 
@@ -2261,10 +2483,15 @@ import {
     BitsPerStatus,
     createHeaderAndPayload,
     JWTwithStatusListPayload,
+    getListFromStatusListJWT,
     StatusList,
+    StatusListCwt,
     StatusListJWTHeaderParameters,
 } from &quot;@owf/token-status-list&quot;;
-import { JwtPayload } from &quot;@sd-jwt/types&quot;;
+import { JwtPayload } from &quot;@sd-jwt/core&quot;;
+import { SignatureAlgorithm } from &quot;@owf/cose&quot;;
+import { X509Certificate } from &quot;@peculiar/x509&quot;;
+import { decodeJwt } from &quot;jose&quot;;
 import { IsNull, Repository } from &quot;typeorm&quot;;
 import { v4 } from &quot;uuid&quot;;
 import { TenantEntity } from &quot;../../../auth/tenant/entitites/tenant.entity&quot;;
@@ -2307,6 +2534,31 @@ export class StatusListService {
             ImportPhase.FINAL,
             (tenantId) &#x3D;&gt; this.importForTenant(tenantId),
         );
+    }
+
+    private async getSigningCert(entry: StatusListEntity) {
+        // Use the pinned key chain if specified, otherwise use the tenant&#x27;s default status list key chain.
+        // Falls back to attestation key chains when no dedicated status list key exists.
+        const cert &#x3D; entry.keyChainId
+            ? await this.certService.find({
+                  tenantId: entry.tenantId,
+                  type: KeyUsageType.StatusList,
+                  fallbackType: KeyUsageType.Attestation,
+                  keyId: entry.keyChainId,
+              })
+            : await this.certService.find({
+                  tenantId: entry.tenantId,
+                  type: KeyUsageType.StatusList,
+                  fallbackType: KeyUsageType.Attestation,
+              });
+
+        if (!cert) {
+            throw new NotFoundException(
+                &#x60;Key chain ${entry.keyChainId} not found for tenant ${entry.tenantId}&#x60;,
+            );
+        }
+
+        return cert;
     }
 
     /**
@@ -2448,26 +2700,7 @@ export class StatusListService {
             ttl, // Maximum cache time in seconds for verifiers
         };
 
-        // Use the pinned key chain if specified, otherwise use the tenant&#x27;s default status list key chain.
-        // Falls back to attestation key chains when no dedicated status list key exists.
-        const cert &#x3D; entry.keyChainId
-            ? await this.certService.find({
-                  tenantId: entry.tenantId,
-                  type: KeyUsageType.StatusList,
-                  fallbackType: KeyUsageType.Attestation,
-                  keyId: entry.keyChainId,
-              })
-            : await this.certService.find({
-                  tenantId: entry.tenantId,
-                  type: KeyUsageType.StatusList,
-                  fallbackType: KeyUsageType.Attestation,
-              });
-
-        if (!cert) {
-            throw new NotFoundException(
-                &#x60;Key chain ${entry.keyChainId} not found for tenant ${entry.tenantId}&#x60;,
-            );
-        }
+        const cert &#x3D; await this.getSigningCert(entry);
 
         const preHeader: StatusListJWTHeaderParameters &#x3D; {
             alg: &quot;ES256&quot;,
@@ -2565,6 +2798,77 @@ export class StatusListService {
         }
 
         return list.jwt!;
+    }
+
+    /**
+     * Get the CWT for a specific status list.
+     * The CWT content follows the same freshness policy as JWT status list tokens.
+     */
+    async getListCwt(tenantId: string, listId: string): Promise&lt;Uint8Array&gt; {
+        let list &#x3D; await this.getListById(tenantId, listId);
+
+        const needsRegeneration &#x3D;
+            !list.jwt || !list.expiresAt || list.expiresAt &lt;&#x3D; new Date();
+
+        if (needsRegeneration) {
+            await this.createListJWT(list);
+            list &#x3D; await this.getListById(tenantId, listId);
+        }
+
+        const jwt &#x3D; list.jwt!;
+        const jwtPayload &#x3D; decodeJwt(jwt);
+        const statusList &#x3D; getListFromStatusListJWT(jwt);
+        const cert &#x3D; await this.getSigningCert(list);
+
+        const subject &#x3D;
+            typeof jwtPayload.sub &#x3D;&#x3D;&#x3D; &quot;string&quot;
+                ? jwtPayload.sub
+                : this.buildStatusListUri(tenantId, listId);
+        const issuedAt &#x3D;
+            typeof jwtPayload.iat &#x3D;&#x3D;&#x3D; &quot;number&quot;
+                ? new Date(jwtPayload.iat * 1000)
+                : new Date();
+        const expirationTime &#x3D;
+            typeof jwtPayload.exp &#x3D;&#x3D;&#x3D; &quot;number&quot;
+                ? new Date(jwtPayload.exp * 1000)
+                : undefined;
+        const ttl &#x3D;
+            typeof jwtPayload.ttl &#x3D;&#x3D;&#x3D; &quot;number&quot; ? jwtPayload.ttl : undefined;
+
+        const x5chain &#x3D; cert.crt.map(
+            (pem) &#x3D;&gt; new Uint8Array(new X509Certificate(pem).rawData),
+        );
+
+        const cwt &#x3D; new StatusListCwt({
+            payload: {
+                subject,
+                issuedAt,
+                expirationTime,
+                timeToLive: ttl,
+                statusList,
+            },
+            protectedHeaders: new Map&lt;number, unknown&gt;([
+                [1, SignatureAlgorithm.ES256],
+                [4, new TextEncoder().encode(cert.keyId)],
+                // mDOC status verification expects x5chain in protected headers.
+                [33, x5chain],
+            ]),
+        });
+
+        return cwt.signAndEncode(
+            {
+                signingKey: { algorithm: SignatureAlgorithm.ES256 } as never,
+                algorithm: SignatureAlgorithm.ES256,
+            },
+            {
+                sign: async ({ toBeSigned }) &#x3D;&gt;
+                    this.keyChainService.signBytes(
+                        toBeSigned,
+                        tenantId,
+                        cert.keyId,
+                    ),
+            },
+        );
     }
 
     /**
@@ -2967,6 +3271,24 @@ export class StatusListService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -2982,7 +3304,6 @@ export class StatusListService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

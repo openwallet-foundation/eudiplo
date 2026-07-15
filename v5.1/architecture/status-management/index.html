@@ -1436,6 +1436,8 @@
       
         
       
+        
+      
     
     
     
@@ -1490,6 +1492,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration/5.x-to-6.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.x to 6.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1928,15 +1958,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#jwt-caching-and-ttl" class="md-nav__link">
+  <a href="#status-list-token-caching-and-ttl" class="md-nav__link">
     <span class="md-ellipsis">
       
-        JWT Caching and TTL
+        Status List Token Caching and TTL
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="JWT Caching and TTL">
+    <nav class="md-nav" aria-label="Status List Token Caching and TTL">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3157,15 +3187,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#jwt-caching-and-ttl" class="md-nav__link">
+  <a href="#status-list-token-caching-and-ttl" class="md-nav__link">
     <span class="md-ellipsis">
       
-        JWT Caching and TTL
+        Status List Token Caching and TTL
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="JWT Caching and TTL">
+    <nav class="md-nav" aria-label="Status List Token Caching and TTL">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3500,7 +3530,7 @@ list index).</p>
 
     Wallet-&gt;&gt;Verifier: Present credential
     Verifier-&gt;&gt;StatusList: GET /status-list/{id}
-    StatusList--&gt;&gt;Verifier: JWT with status bits
+    StatusList--&gt;&gt;Verifier: Status List Token (JWT or CWT)
     Note over Verifier: Check bit at index 42
 
     Issuer-&gt;&gt;StatusList: Revoke credential (set bit)
@@ -3625,8 +3655,10 @@ client:</p>
 <li><strong>1,000,000</strong> - Large-scale production</li>
 </ul>
 <p>Larger capacities mean larger JWT payloads but fewer status lists to manage.</p>
-<h2 id="jwt-caching-and-ttl">JWT Caching and TTL<a class="headerlink" href="#jwt-caching-and-ttl" title="Permanent link">¶</a></h2>
-<p>Per RFC 9528, status list JWTs include time-based claims for caching:</p>
+<h2 id="status-list-token-caching-and-ttl">Status List Token Caching and TTL<a class="headerlink" href="#status-list-token-caching-and-ttl" title="Permanent link">¶</a></h2>
+<p>Per RFC 9528, status list tokens include time-based claims for caching.
+EUDIPLO can serve JWT or CWT representations from the same endpoint.</p>
+<p>Example JWT payload:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">"iss"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://issuer.example.com"</span><span class="p">,</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">"sub"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://issuer.example.com/status-list/abc123"</span><span class="p">,</span>
@@ -3658,27 +3690,34 @@ client:</p>
 </tr>
 </tbody>
 </table>
+<p>For CWT responses, the same semantics are exposed as CWT claims:</p>
+<ul>
+<li>Subject (<code>sub</code>) maps to CWT claim key <code>2</code></li>
+<li>Issued At (<code>iat</code>) maps to CWT claim key <code>6</code></li>
+<li>Expiration (<code>exp</code>) maps to CWT claim key <code>4</code></li>
+<li>Time-To-Live (<code>ttl</code>) maps to CWT claim key <code>65534</code></li>
+</ul>
 <h3 id="regeneration-modes">Regeneration Modes<a class="headerlink" href="#regeneration-modes" title="Permanent link">¶</a></h3>
-<p>EUDIPLO supports two JWT regeneration strategies:</p>
+<p>EUDIPLO supports two token regeneration strategies:</p>
 <h4 id="lazy-mode-default">Lazy Mode (Default)<a class="headerlink" href="#lazy-mode-default" title="Permanent link">¶</a></h4>
-<p>The JWT is regenerated only when:</p>
+<p>The token is regenerated only when:</p>
 <ol>
 <li>A verifier requests the status list AND</li>
-<li>The current JWT has expired (<code>exp</code> &lt; now)</li>
+<li>The current token has expired (<code>exp</code> &lt; now)</li>
 </ol>
 <p>This minimizes computation but means status changes may not be immediately
 visible to verifiers until the TTL expires.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>TTL = 1 hour
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├─ 10:00 - Credential revoked (JWT not regenerated)
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>├─ 10:30 - Verifier checks (gets cached JWT, sees valid)
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>├─ 11:00 - JWT expires
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>└─ 11:05 - Verifier checks (new JWT generated, sees revoked)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├─ 10:00 - Credential revoked (token not regenerated)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>├─ 10:30 - Verifier checks (gets cached token, sees valid)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>├─ 11:00 - Token expires
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>└─ 11:05 - Verifier checks (new token generated, sees revoked)
 </code></pre></div>
 <h4 id="immediate-mode">Immediate Mode<a class="headerlink" href="#immediate-mode" title="Permanent link">¶</a></h4>
-<p>When <code>immediateUpdate</code> is enabled, the JWT is regenerated immediately whenever
+<p>When <code>immediateUpdate</code> is enabled, the token is regenerated immediately whenever
 a status entry changes. This ensures verifiers always see the latest status but
 increases computational overhead.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>├─ 10:00 - Credential revoked (JWT regenerated immediately)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>├─ 10:00 - Credential revoked (token regenerated immediately)
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>└─ 10:01 - Verifier checks (sees revoked)
 </code></pre></div>
 <div class="admonition warning">
@@ -3751,7 +3790,7 @@ usage and create new bound lists before reaching capacity.</p>
 <li>Compliance requires isolated status tracking</li>
 </ul>
 <h3 id="certificate-pinning">Certificate Pinning<a class="headerlink" href="#certificate-pinning" title="Permanent link">¶</a></h3>
-<p>By default, status list JWTs are signed with the tenant's default signing
+<p>By default, status list tokens are signed with the tenant's default signing
 certificate. You can pin a specific certificate to a status list for:</p>
 <ul>
 <li>Key rotation scenarios</li>
@@ -3759,7 +3798,7 @@ certificate. You can pin a specific certificate to a status list for:</p>
 <li>Isolation of signing keys per use case</li>
 </ul>
 <h3 id="signing-key-resolution">Signing Key Resolution<a class="headerlink" href="#signing-key-resolution" title="Permanent link">¶</a></h3>
-<p>When signing a status list JWT, EUDIPLO looks for a key chain with usage type
+<p>When signing a status list token, EUDIPLO looks for a key chain with usage type
 <code>statusList</code>. If no dedicated status list key chain exists for the tenant, it
 automatically falls back to the <code>attestation</code> key chain. This ensures that
 status lists share the same trust anchor as the issued credentials, which is
@@ -3813,11 +3852,38 @@ updating credential status entries.</p>
 </tbody>
 </table>
 <h3 id="public-status-list-endpoint">Public Status List Endpoint<a class="headerlink" href="#public-status-list-endpoint" title="Permanent link">¶</a></h3>
-<p>The status list JWT is served at a public endpoint for verifiers:</p>
+<p>The status list token is served at a public endpoint for verifiers:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>GET /{tenant}/status-management/status-list/{listId}
 </code></pre></div>
-<p>This endpoint requires no authentication and returns the cached status list JWT.
-Verifiers should respect the <code>exp</code> and <code>ttl</code> claims for caching.</p>
+<p>This endpoint requires no authentication.</p>
+<p>Response format negotiation:</p>
+<table>
+<thead>
+<tr>
+<th>Request Header</th>
+<th>Value</th>
+<th>Response Content-Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Accept</code></td>
+<td><code>application/statuslist+cwt</code></td>
+<td><code>application/statuslist+cwt</code></td>
+</tr>
+<tr>
+<td><code>Content-Type</code> (fallback)</td>
+<td><code>application/statuslist+cwt</code></td>
+<td><code>application/statuslist+cwt</code></td>
+</tr>
+<tr>
+<td>Otherwise</td>
+<td>Any/none</td>
+<td><code>application/statuslist+jwt</code></td>
+</tr>
+</tbody>
+</table>
+<p>Verifiers should respect <code>exp</code> and <code>ttl</code> for caching regardless of JWT/CWT format.</p>
 <h2 id="web-client">Web Client<a class="headerlink" href="#web-client" title="Permanent link">¶</a></h2>
 <p>The web client provides a user-friendly interface for status management:</p>
 <h3 id="status-list-overview">Status List Overview<a class="headerlink" href="#status-list-overview" title="Permanent link">¶</a></h3>

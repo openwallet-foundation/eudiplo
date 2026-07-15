@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >ConfigImportService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/shared/utils/config-import/config-import.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,30 +148,45 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/shared/utils/config-import/config-import.service.ts</code>
-        </p>
 
 
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/ConfigImportModule.html" target="_self" >ConfigImportModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Properties</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#logger" >logger</a>
@@ -161,47 +194,55 @@
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#extractErrorMessages" >extractErrorMessages</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#formatNestedValidationError" >formatNestedValidationError</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#importConfigs" class="deprecated-name">importConfigs</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#importConfigsForTenant" >importConfigsForTenant</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#replacePlaceholders" >replacePlaceholders</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#validateConfig" >validateConfig</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -271,7 +312,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>extractErrorMessages(error: ValidationError)</code>
+<code>extractErrorMessages(error: <a href="https://angular.dev/api/forms/signals/ValidationError" target="_blank">ValidationError</a>)</code>
                 </td>
             </tr>
 
@@ -304,7 +345,7 @@
                                         <tr>
                                                 <td>error</td>
                                             <td>
-                                                        <code>ValidationError</code>
+                                                            <code><a href="https://angular.dev/api/forms/signals/ValidationError" target="_blank" >ValidationError</a></code>
                                             </td>
 
                                             <td>
@@ -340,7 +381,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>formatNestedValidationError(error: ValidationError)</code>
+<code>formatNestedValidationError(error: <a href="https://angular.dev/api/forms/signals/ValidationError" target="_blank">ValidationError</a>)</code>
                 </td>
             </tr>
 
@@ -373,7 +414,7 @@
                                         <tr>
                                                 <td>error</td>
                                             <td>
-                                                        <code>ValidationError</code>
+                                                            <code><a href="https://angular.dev/api/forms/signals/ValidationError" target="_blank" >ValidationError</a></code>
                                             </td>
 
                                             <td>
@@ -416,7 +457,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>importConfigs(options: <a href="../interfaces/ImportOptions.html" target="_self">ImportOptions&lt;T&gt;</a>)</code>
+                    <code>importConfigs&lt;T&gt;(options: <a href="../interfaces/ImportOptions.html" target="_self">ImportOptions&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -495,7 +536,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>importConfigsForTenant(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, options: <a href="../interfaces/ImportOptions.html" target="_self">TenantImportOptions&lt;T&gt;</a>)</code>
+                    <code>importConfigsForTenant&lt;T&gt;(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, options: <a href="../interfaces/ImportOptions.html" target="_self">TenantImportOptions&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -587,7 +628,7 @@ This is the preferred method when using the orchestrator&#39;s tenant-by-tenant 
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>replacePlaceholders(input: T)</code>
+                    <code>replacePlaceholders&lt;T&gt;(input: T)</code>
                 </td>
             </tr>
 
@@ -668,7 +709,7 @@ ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;de
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>validateConfig(file: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, payload: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, cls: ClassConstructor<T>, tenant: literal type, resourceType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, formatError?: (error?: ValidationError) => void)</code>
+                    <code>validateConfig&lt;T&gt;(file: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, payload: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, cls: ClassConstructor<T>, tenant: { name: string }, resourceType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, formatError?: (error?: <a href="https://angular.dev/api/forms/signals/ValidationError" target="_blank">ValidationError</a>) => void)</code>
                 </td>
             </tr>
 
@@ -745,7 +786,7 @@ ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;de
                                         <tr>
                                                 <td>tenant</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                        <code>{ name: string }</code>
                                             </td>
 
                                             <td>
@@ -782,7 +823,7 @@ ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;de
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+                            <b>Returns : </b>    <code>Promise&lt;{ isValid: boolean; data: T }&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -793,6 +834,7 @@ ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;de
         </tbody>
     </table>
 </section>
+
             <section data-compodoc="block-properties">
     
     <h3 id="inputs">
@@ -1260,6 +1302,24 @@ export class ConfigImportService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -1275,7 +1335,6 @@ export class ConfigImportService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

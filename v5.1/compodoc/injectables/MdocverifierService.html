@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >MdocverifierService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,68 +148,91 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts</code>
-        </p>
 
 
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/PresentationsModule.html" target="_self" >PresentationsModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#buildDeviceRequest" >buildDeviceRequest</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#classifyVerificationError" >classifyVerificationError</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#extractErrorDetails" >extractErrorDetails</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#extractIssuerCertInfo" >extractIssuerCertInfo</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#handleVerificationError" >handleVerificationError</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                 <a href="#mapChainErrorToFailureType" >mapChainErrorToFailureType</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#summarizeTrustedCerts" >summarizeTrustedCerts</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#validateIssuerCertificateChain" >validateIssuerCertificateChain</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Async</span>
                                 <a href="#verify" >verify</a>
@@ -199,13 +240,13 @@
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -219,7 +260,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:60</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:88</a></div>
                             </td>
                         </tr>
 
@@ -289,15 +330,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>buildDeviceRequest(docType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, requestedClaimPaths: <a href="../miscellaneous/typealiases.html#RequestedMdocClaimPath" target="_self">RequestedMdocClaimPath[] | undefined</a>, claimsByNamespace: Record<string | Record<string, unknown>>)</code>
+                    <code>buildDeviceRequest(docType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, requestedClaimPaths: <a href="../miscellaneous/typealiases.html#RequestedMdocClaimPath" target="_self">RequestedMdocClaimPath[] | undefined</a>, claimsByNamespace: Record<string, Record<string, unknown>>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="445"
-                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:445</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="518"
+                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:518</a></div>
                         </td>
                     </tr>
 
@@ -347,7 +388,7 @@ This creates a request that matches what was received for verification.</p>
                                         <tr>
                                                 <td>claimsByNamespace</td>
                                             <td>
-                                                        <code>Record&lt;string | Record&lt;string, unknown&gt;&gt;</code>
+                                                        <code>Record&lt;string, Record&lt;string, unknown&gt;&gt;</code>
                                             </td>
 
                                             <td>
@@ -392,8 +433,8 @@ This creates a request that matches what was received for verification.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="324"
-                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:324</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="397"
+                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:397</a></div>
                         </td>
                     </tr>
 
@@ -429,7 +470,7 @@ This creates a request that matches what was received for verification.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>unknown</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#MdocVerificationResult" target="_self" >MdocVerificationResult[&#x27;failureType&#x27;]</a></code>
 
                         </div>
                             <div class="io-description">
@@ -462,8 +503,8 @@ This creates a request that matches what was received for verification.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="339"
-                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:339</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="412"
+                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:412</a></div>
                         </td>
                     </tr>
 
@@ -546,8 +587,8 @@ This creates a request that matches what was received for verification.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="379"
-                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:379</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="452"
+                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:452</a></div>
                         </td>
                     </tr>
 
@@ -630,8 +671,8 @@ This creates a request that matches what was received for verification.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="235"
-                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:235</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="308"
+                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:308</a></div>
                         </td>
                     </tr>
 
@@ -725,8 +766,8 @@ This creates a request that matches what was received for verification.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="309"
-                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:309</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="382"
+                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:382</a></div>
                         </td>
                     </tr>
 
@@ -762,7 +803,7 @@ This creates a request that matches what was received for verification.</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>unknown</code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#MdocVerificationResult" target="_self" >MdocVerificationResult[&#x27;failureType&#x27;]</a></code>
 
                         </div>
                             <div class="io-description">
@@ -795,8 +836,8 @@ This creates a request that matches what was received for verification.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="405"
-                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:405</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="478"
+                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:478</a></div>
                         </td>
                     </tr>
 
@@ -867,8 +908,8 @@ This creates a request that matches what was received for verification.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="194"
-                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:194</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="265"
+                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:265</a></div>
                         </td>
                     </tr>
 
@@ -960,8 +1001,8 @@ the shared CredentialChainValidationService.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="76"
-                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:76</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="104"
+                                    class="link-to-prism">src/verifier/presentations/credential/mdocverifier/mdocverifier.service.ts:104</a></div>
                         </td>
                     </tr>
 
@@ -1063,17 +1104,17 @@ the shared CredentialChainValidationService.</p>
     </table>
 </section>
 
+
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &quot;@nestjs/common&quot;;
+import { hex } from &quot;@owf/identity-common&quot;;
 import {
-    base64,
     DeviceRequest,
     DeviceResponse,
     DocRequest,
-    hex,
     ItemsRequest,
     SessionTranscript,
     Verifier,
@@ -1088,7 +1129,10 @@ import {
     CredentialChainValidationService,
 } from &quot;../credential-chain-validation.service&quot;;
 
-export type MdocSessionData &#x3D; {
+/**
+ * Session data for the standard OID4VP flow (direct_post or direct_post.jwt).
+ */
+export type MdocSessionDataOid4vp &#x3D; {
     protocol: &quot;openid4vp&quot;;
     nonce: string;
     responseMode: string;
@@ -1097,6 +1141,32 @@ export type MdocSessionData &#x3D; {
     /** SHA-256 JWK thumbprint (raw bytes) of the verifier&#x27;s JAR signing key. */
     jwkThumbprint?: Uint8Array;
 };
+
+/**
+ * Session data for OID4VP via DC API (openid4vp-v1-unsigned, response_mode&#x3D;dc_api.jwt).
+ * Uses OID4VPDCAPIHandover transcript: SHA256(CBOR([origin, nonce, jwkThumbprint?])).
+ */
+export type MdocSessionDataDcApi &#x3D; {
+    protocol: &quot;dc_api&quot;;
+    nonce: string;
+    origin: string;
+    jwkThumbprint?: Uint8Array;
+};
+
+/**
+ * Session data for ISO 18013-7 Annex C (org-iso-mdoc via DC API).
+ * The DCAPIHandover session transcript is pre-built by the caller.
+ */
+type MdocSessionDataIso18013 &#x3D; {
+    protocol: &quot;iso-18013-7&quot;;
+    /** Pre-built DCAPIHandover SessionTranscript for verifyDeviceResponse. */
+    sessionTranscript: SessionTranscript;
+};
+
+export type MdocSessionData &#x3D;
+    | MdocSessionDataOid4vp
+    | MdocSessionDataDcApi
+    | MdocSessionDataIso18013;
 
 export type RequestedMdocClaimPath &#x3D; string[];
 
@@ -1182,10 +1252,27 @@ export class MdocverifierService {
             }
 
             // 3) Build the session transcript for verification
-            const sessionTranscript &#x3D; await SessionTranscript.forOid4Vp(
-                sessionData,
-                mdocContext,
-            );
+            let sessionTranscript: SessionTranscript | Uint8Array;
+            if (sessionData.protocol &#x3D;&#x3D;&#x3D; &quot;iso-18013-7&quot;) {
+                // DCAPIHandover: pre-built by Iso18013Service
+                sessionTranscript &#x3D; sessionData.sessionTranscript;
+            } else if (sessionData.protocol &#x3D;&#x3D;&#x3D; &quot;dc_api&quot;) {
+                // OID4VP DC API: SHA256 hash of CBOR([origin, nonce, jwkThumbprint?])
+                sessionTranscript &#x3D; await SessionTranscript.forOid4VpDcApi(
+                    {
+                        origin: sessionData.origin,
+                        nonce: sessionData.nonce,
+                        jwkThumbprint: sessionData.jwkThumbprint,
+                    },
+                    mdocContext,
+                );
+            } else {
+                // Standard OID4VP: OpenID4VPHandover
+                sessionTranscript &#x3D; await SessionTranscript.forOid4Vp(
+                    sessionData,
+                    mdocContext,
+                );
+            }
 
             // 4) Build a device request (currently requesting all claims that were received)
             const deviceRequest &#x3D; this.buildDeviceRequest(
@@ -1194,6 +1281,34 @@ export class MdocverifierService {
                 claimsByNamespace,
             );
 
+            const issuerX5Chain &#x3D;
+                mdocDocument?.issuerSigned?.issuerAuth?.x5chain;
+            const trustedCertBuffers &#x3D;
+                await this.chainValidation.getTrustedCertificateBuffers(
+                    options.trustListSource,
+                );
+            const trustedStatusCertBuffers &#x3D;
+                await this.chainValidation.getTrustedStatusCertificateBuffers(
+                    options.trustListSource,
+                );
+            const trustedAnchors &#x3D; trustedCertBuffers.map(
+                (buffer) &#x3D;&gt; new Uint8Array(buffer),
+            );
+            const trustedStatusAnchors &#x3D; trustedStatusCertBuffers.map(
+                (buffer) &#x3D;&gt; new Uint8Array(buffer),
+            );
+            const trustedCertificates &#x3D;
+                issuerX5Chain &amp;&amp; issuerX5Chain.length &gt; 0
+                    ? [
+                          {
+                              issuance: [...issuerX5Chain, ...trustedAnchors],
+                              ...(trustedStatusAnchors.length &gt; 0
+                                  ? { status: trustedStatusAnchors }
+                                  : {}),
+                          },
+                      ]
+                    : [];
+
             // 5) Verify the device response (signature, device binding, etc.)
             // Certificate chain validation is disabled here - we do it separately via CredentialChainValidationService
             await Verifier.verifyDeviceResponse(
@@ -1201,8 +1316,7 @@ export class MdocverifierService {
                     deviceRequest,
                     deviceResponse,
                     sessionTranscript,
-                    trustedCertificates: [],
-                    disableCertificateChainValidation: true,
+                    trustedCertificates,
                 },
                 mdocContext,
             );
@@ -1250,7 +1364,6 @@ export class MdocverifierService {
                 docType,
             };
         } catch (error: any) {
-            console.log(error);
             return this.handleVerificationError(vp, error, options);
         }
     }
@@ -1284,7 +1397,9 @@ export class MdocverifierService {
         }
 
         // Convert Uint8Array[] to base64 string[] for CredentialChainValidationService
-        const x5cBase64 &#x3D; x5chain.map((cert) &#x3D;&gt; base64.encode(cert));
+        const x5cBase64 &#x3D; x5chain.map((cert) &#x3D;&gt;
+            Buffer.from(cert).toString(&quot;base64&quot;),
+        );
 
         return this.chainValidation.validateChain(
             x5cBase64,
@@ -1612,6 +1727,24 @@ export class MdocverifierService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -1627,7 +1760,6 @@ export class MdocverifierService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -113,12 +120,23 @@
   <li class="breadcrumb-item" >WellKnownService</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/issuer/issuance/oid4vci/well-known/well-known.service.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -130,13 +148,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/issuer/issuance/oid4vci/well-known/well-known.service.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
@@ -148,19 +159,41 @@
 
 
 
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/IssuanceModule.html" target="_self" >IssuanceModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Properties</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier">Public</span>
                                     <span class="modifier">Readonly</span>
                                 <a href="#keyChainService" >keyChainService</a>
@@ -168,45 +201,72 @@
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getAuthzMetadata" >getAuthzMetadata</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getChainedAsJwks" >getChainedAsJwks</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getChainedAsMetadata" >getChainedAsMetadata</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getChainedAsVpJwks" >getChainedAsVpJwks</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getChainedAsVpMetadata" >getChainedAsVpMetadata</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getIssuerMetadata" >getIssuerMetadata</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#getJwks" >getJwks</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getManagedAuthorizationServerJwks" >getManagedAuthorizationServerJwks</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getManagedAuthorizationServerMetadata" >getManagedAuthorizationServerMetadata</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -215,12 +275,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(oid4vciService: <a href="../injectables/Oid4vciService.html" target="_self">Oid4vciService</a>, certService: <a href="../injectables/CertService.html" target="_self">CertService</a>, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>, authorizeService: <a href="../injectables/AuthorizeService.html" target="_self">AuthorizeService</a>, cryptoImplementationService: <a href="../injectables/CryptoImplementationService.html" target="_self">CryptoImplementationService</a>, chainedAsService: <a href="../injectables/ChainedAsService.html" target="_self">ChainedAsService</a>, issuanceService: <a href="../injectables/IssuanceService.html" target="_self">IssuanceService</a>)</code>
+<code>constructor(oid4vciService: <a href="../injectables/Oid4vciService.html" target="_self">Oid4vciService</a>, certService: <a href="../injectables/CertService.html" target="_self">CertService</a>, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>, authorizeService: <a href="../injectables/AuthorizeService.html" target="_self">AuthorizeService</a>, cryptoImplementationService: <a href="../injectables/CryptoImplementationService.html" target="_self">CryptoImplementationService</a>, authorizationServersService: <a href="../injectables/AuthorizationServersService.html" target="_self">AuthorizationServersService</a>, chainedAsService: <a href="../injectables/ChainedAsService.html" target="_self">ChainedAsService</a>, chainedAsVpService: <a href="../injectables/ChainedAsVpService.html" target="_self">ChainedAsVpService</a>, issuanceService: <a href="../injectables/IssuanceService.html" target="_self">IssuanceService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:19</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:21</a></div>
                             </td>
                         </tr>
 
@@ -300,10 +360,34 @@
                                                     
                                                 </tr>
                                                 <tr>
+                                                        <td>authorizationServersService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/AuthorizationServersService.html" target="_self" >AuthorizationServersService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
                                                         <td>chainedAsService</td>
                                                   
                                                         <td>
                                                                         <code><a href="../injectables/ChainedAsService.html" target="_self" >ChainedAsService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>chainedAsVpService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ChainedAsVpService.html" target="_self" >ChainedAsVpService</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -359,8 +443,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="91"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:91</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="95"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:95</a></div>
                         </td>
                     </tr>
 
@@ -430,8 +514,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="171"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:171</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="175"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:175</a></div>
                         </td>
                     </tr>
 
@@ -469,7 +553,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+                            <b>Returns : </b>    <code>Promise&lt;{ keys: Record[] }&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -501,8 +585,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="150"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:150</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="154"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:154</a></div>
                         </td>
                     </tr>
 
@@ -512,6 +596,148 @@
                         <div class="io-description"><p>Returns the OAuth 2.0 Authorization Server metadata for the Chained AS.
 This supports the RFC 8414 alternative discovery path format:
 <code>/.well-known/oauth-authorization-server/:tenantId/chained-as</code></p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Record&lt;string, unknown&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getChainedAsVpJwks"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getChainedAsVpJwks</b></span>
+                        <a href="#getChainedAsVpJwks"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getChainedAsVpJwks(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="213"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:213</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Returns the JSON Web Key Set (JWKS) for the VP-backed Chained Authorization Server.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;{ keys: Record[] }&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getChainedAsVpMetadata"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getChainedAsVpMetadata</b></span>
+                        <a href="#getChainedAsVpMetadata"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getChainedAsVpMetadata(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="194"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:194</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Returns the OAuth 2.0 Authorization Server metadata for the VP-backed Chained AS.</p>
 </div>
 
                             <div class="io-description">
@@ -574,8 +800,8 @@ This supports the RFC 8414 alternative discovery path format:
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="45"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:45</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="49"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:49</a></div>
                         </td>
                     </tr>
 
@@ -662,8 +888,8 @@ The metadata can be returned in two formats:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="111"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:111</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="115"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:115</a></div>
                         </td>
                     </tr>
 
@@ -713,7 +939,170 @@ includes the <code>kid</code> so that JWT verification can match keys.</p>
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getManagedAuthorizationServerJwks"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getManagedAuthorizationServerJwks</b></span>
+                        <a href="#getManagedAuthorizationServerJwks"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getManagedAuthorizationServerJwks(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationServerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="249"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:249</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;{ keys: Record[] }&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getManagedAuthorizationServerMetadata"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getManagedAuthorizationServerMetadata</b></span>
+                        <a href="#getManagedAuthorizationServerMetadata"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getManagedAuthorizationServerMetadata(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationServerId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="229"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:229</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Record&lt;string, unknown&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
+
             <section data-compodoc="block-properties">
     
     <h3 id="inputs">
@@ -740,7 +1129,7 @@ includes the <code>kid</code> so that JWT verification can match keys.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:29</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/issuer/issuance/oid4vci/well-known/well-known.service.ts:31</a></div>
                         </td>
                     </tr>
 
@@ -760,8 +1149,10 @@ import { KeyUsageType } from &quot;../../../../crypto/key/entities/key-chain.ent
 import { KeyChainService } from &quot;../../../../crypto/key/key-chain.service&quot;;
 import { MediaType } from &quot;../../../../shared/utils/mediaType/media-type.enum&quot;;
 import { IssuanceService } from &quot;../../../configuration/issuance/issuance.service&quot;;
-import { AuthorizeService } from &quot;../authorize/authorize.service&quot;;
-import { ChainedAsService } from &quot;../chained-as/chained-as.service&quot;;
+import { AuthorizeService } from &quot;../authorization/authorize/authorize.service&quot;;
+import { AuthorizationServersService } from &quot;../authorization/authorization-servers/authorization-servers.service&quot;;
+import { ChainedAsService } from &quot;../authorization/chained-as/chained-as.service&quot;;
+import { ChainedAsVpService } from &quot;../authorization/chained-as-vp/chained-as-vp.service&quot;;
 import { WellKnownException } from &quot;../exceptions&quot;;
 import { Oid4vciService } from &quot;../oid4vci.service&quot;;
 import { CredentialIssuerMetadataDto } from &quot;./dto/credential-issuer-metadata.dto&quot;;
@@ -784,7 +1175,9 @@ export class WellKnownService {
         public readonly keyChainService: KeyChainService,
         private readonly authorizeService: AuthorizeService,
         private readonly cryptoImplementationService: CryptoImplementationService,
+        private readonly authorizationServersService: AuthorizationServersService,
         private readonly chainedAsService: ChainedAsService,
+        private readonly chainedAsVpService: ChainedAsVpService,
         private readonly issuanceService: IssuanceService,
     ) {}
 
@@ -938,6 +1331,84 @@ export class WellKnownService {
             );
         }
     }
+
+    /**
+     * Returns the OAuth 2.0 Authorization Server metadata for the VP-backed Chained AS.
+     */
+    async getChainedAsVpMetadata(
+        tenantId: string,
+    ): Promise&lt;Record&lt;string, unknown&gt;&gt; {
+        try {
+            return await this.chainedAsVpService.getMetadata(tenantId);
+        } catch (error) {
+            if (error instanceof WellKnownException) {
+                throw error;
+            }
+            throw new WellKnownException(
+                &#x60;Failed to retrieve VP Chained AS metadata for tenant ${tenantId}: ${error instanceof Error ? error.message : &quot;Unknown error&quot;}&#x60;,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
+
+    /**
+     * Returns the JSON Web Key Set (JWKS) for the VP-backed Chained Authorization Server.
+     */
+    async getChainedAsVpJwks(
+        tenantId: string,
+    ): Promise&lt;{ keys: Record&lt;string, unknown&gt;[] }&gt; {
+        try {
+            return await this.chainedAsVpService.getJwks(tenantId);
+        } catch (error) {
+            if (error instanceof WellKnownException) {
+                throw error;
+            }
+            throw new WellKnownException(
+                &#x60;Failed to retrieve VP Chained AS JWKS for tenant ${tenantId}: ${error instanceof Error ? error.message : &quot;Unknown error&quot;}&#x60;,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
+
+    async getManagedAuthorizationServerMetadata(
+        tenantId: string,
+        authorizationServerId: string,
+    ): Promise&lt;Record&lt;string, unknown&gt;&gt; {
+        try {
+            return await this.authorizationServersService.getMetadata(
+                tenantId,
+                authorizationServerId,
+            );
+        } catch (error) {
+            if (error instanceof WellKnownException) {
+                throw error;
+            }
+            throw new WellKnownException(
+                &#x60;Failed to retrieve managed authorization server metadata for tenant ${tenantId}: ${error instanceof Error ? error.message : &quot;Unknown error&quot;}&#x60;,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
+
+    async getManagedAuthorizationServerJwks(
+        tenantId: string,
+        authorizationServerId: string,
+    ): Promise&lt;{ keys: Record&lt;string, unknown&gt;[] }&gt; {
+        try {
+            return await this.authorizationServersService.getJwks(
+                tenantId,
+                authorizationServerId,
+            );
+        } catch (error) {
+            if (error instanceof WellKnownException) {
+                throw error;
+            }
+            throw new WellKnownException(
+                &#x60;Failed to retrieve managed authorization server JWKS for tenant ${tenantId}: ${error instanceof Error ? error.message : &quot;Unknown error&quot;}&#x60;,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
 }
 </code></pre>
     </div>
@@ -988,6 +1459,24 @@ export class WellKnownService {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -1003,7 +1492,6 @@ export class WellKnownService {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

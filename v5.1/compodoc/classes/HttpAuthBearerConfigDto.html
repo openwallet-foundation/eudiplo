@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -117,12 +124,23 @@
   <li class="breadcrumb-item" >HttpAuthBearerConfigDto</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/crypto/key/dto/kms-config.dto.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -134,13 +152,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/crypto/key/dto/kms-config.dto.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
@@ -159,39 +170,61 @@
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../classes/HttpAuthBaseConfigDto.html" target="_self" >HttpAuthBaseConfigDto</a></code>
+                                </li>
+                        </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Properties</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#token" >token</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                 <a href="#type" >type</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
 
@@ -231,7 +264,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="226" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:226</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="232" class="link-to-prism">src/crypto/key/dto/kms-config.dto.ts:232</a></div>
                         </td>
                     </tr>
 
@@ -264,7 +297,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/HttpAuthBaseConfigDto.html#source" target="_self" >HttpAuthBaseConfigDto:218</a></code>
+                                <div class="io-line">        <code><a href="../classes/HttpAuthBaseConfigDto.html#source" target="_self" >HttpAuthBaseConfigDto:224</a></code>
 </div>
                         </td>
                     </tr>
@@ -284,7 +317,12 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+    ApiExtraModels,
+    ApiProperty,
+    ApiPropertyOptional,
+    getSchemaPath,
+} from &quot;@nestjs/swagger&quot;;
 import { Type } from &quot;class-transformer&quot;;
 import {
     IsArray,
@@ -305,6 +343,7 @@ const KMS_PROVIDER_TYPES &#x3D; [
     &quot;aws-kms&quot;,
     &quot;pkcs11&quot;,
     &quot;http&quot;,
+    &quot;csc&quot;,
 ] as const;
 export type KmsProviderType &#x3D; (typeof KMS_PROVIDER_TYPES)[number];
 
@@ -666,6 +705,156 @@ class HttpKmsConfigDto extends BaseKmsProviderConfigDto {
     canImport?: boolean;
 }
 
+// ---------------------------------------------------------------------------
+// CSC KMS provider config
+// ---------------------------------------------------------------------------
+
+class CscAuthorizeAuthDataDto {
+    @ApiProperty({
+        description:
+            &quot;Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).&quot;,
+        example: &quot;PIN&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    id!: string;
+
+    @ApiProperty({
+        description:
+            &quot;Authentication factor value sent to CSC credentials/authorize.&quot;,
+        example: &quot;123456&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    value!: string;
+}
+
+/**
+ * Configuration for a CSC (Cloud Signature Consortium) compatible
+ * remote signature service.
+ */
+class CscKmsConfigDto extends BaseKmsProviderConfigDto {
+    @ApiProperty({
+        description: &quot;Type of the KMS provider.&quot;,
+        enum: [&quot;csc&quot;],
+        example: &quot;csc&quot;,
+    })
+    @IsIn([&quot;csc&quot;])
+    declare type: &quot;csc&quot;;
+
+    @ApiProperty({
+        description:
+            &quot;Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${CSC_URL}&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    baseUrl!: string;
+
+    @ApiProperty({
+        description:
+            &quot;OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${CSC_TOKEN_URL}&quot;,
+    })
+    @IsUrl({ require_tld: false })
+    tokenUrl!: string;
+
+    @ApiProperty({
+        description: &quot;OAuth2 client ID. Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${CSC_CLIENT_ID}&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    clientId!: string;
+
+    @ApiProperty({
+        description: &quot;OAuth2 client secret. Supports ${ENV_VAR} placeholders.&quot;,
+        example: &quot;${CSC_CLIENT_SECRET}&quot;,
+    })
+    @IsString()
+    @IsNotEmpty()
+    clientSecret!: string;
+
+    @ApiPropertyOptional({
+        description: &quot;OAuth2 scope to request during token acquisition.&quot;,
+        example: &quot;service&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    scope?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.&quot;,
+        example: &quot;[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    credentialId?: string;
+
+    @ApiPropertyOptional({
+        description: &quot;Optional CSC user ID used in credentials/list requests.&quot;,
+        example: &quot;eudiplo_user&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    userId?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;CSC API path prefix appended to baseUrl. Defaults to /csc/v2.&quot;,
+        example: &quot;/csc/v2&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    apiPath?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.&quot;,
+        example: &quot;2.16.840.1.101.3.4.2.1&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    hashAlgorithmOid?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.&quot;,
+        example: &quot;1.2.840.10045.4.3.2&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    signAlgorithmOid?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.&quot;,
+    })
+    @IsString()
+    @IsOptional()
+    sad?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.&quot;,
+        example: false,
+    })
+    @IsOptional()
+    useAuthorizeEndpoint?: boolean;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).&quot;,
+        type: [CscAuthorizeAuthDataDto],
+    })
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() &#x3D;&gt; CscAuthorizeAuthDataDto)
+    @IsOptional()
+    authorizeAuthData?: CscAuthorizeAuthDataDto[];
+}
+
 /**
  * Union type for all provider configurations.
  */
@@ -674,7 +863,8 @@ export type KmsProviderConfigDto &#x3D;
     | VaultKmsConfigDto
     | AwsKmsConfigDto
     | Pkcs11KmsConfigDto
-    | HttpKmsConfigDto;
+    | HttpKmsConfigDto
+    | CscKmsConfigDto;
 
 /**
  * Root DTO for kms.json.
@@ -696,6 +886,14 @@ export type KmsProviderConfigDto &#x3D;
  * }
  * &#x60;&#x60;&#x60;
  */
+@ApiExtraModels(
+    DbKmsConfigDto,
+    VaultKmsConfigDto,
+    AwsKmsConfigDto,
+    Pkcs11KmsConfigDto,
+    HttpKmsConfigDto,
+    CscKmsConfigDto,
+)
 export class KmsConfigDto {
     @ApiPropertyOptional({
         description:
@@ -709,7 +907,28 @@ export class KmsConfigDto {
     @ApiProperty({
         description:
             &quot;List of KMS provider configurations. Each provider must have a unique id and a type.&quot;,
-        type: [BaseKmsProviderConfigDto],
+        type: &quot;array&quot;,
+        items: {
+            oneOf: [
+                { $ref: getSchemaPath(DbKmsConfigDto) },
+                { $ref: getSchemaPath(VaultKmsConfigDto) },
+                { $ref: getSchemaPath(AwsKmsConfigDto) },
+                { $ref: getSchemaPath(Pkcs11KmsConfigDto) },
+                { $ref: getSchemaPath(HttpKmsConfigDto) },
+                { $ref: getSchemaPath(CscKmsConfigDto) },
+            ],
+            discriminator: {
+                propertyName: &quot;type&quot;,
+                mapping: {
+                    db: getSchemaPath(DbKmsConfigDto),
+                    vault: getSchemaPath(VaultKmsConfigDto),
+                    &quot;aws-kms&quot;: getSchemaPath(AwsKmsConfigDto),
+                    pkcs11: getSchemaPath(Pkcs11KmsConfigDto),
+                    http: getSchemaPath(HttpKmsConfigDto),
+                    csc: getSchemaPath(CscKmsConfigDto),
+                },
+            },
+        },
         example: [
             { id: &quot;db&quot;, type: &quot;db&quot;, description: &quot;Default database provider&quot; },
             {
@@ -738,6 +957,7 @@ export class KmsConfigDto {
                 { value: AwsKmsConfigDto, name: &quot;aws-kms&quot; },
                 { value: Pkcs11KmsConfigDto, name: &quot;pkcs11&quot; },
                 { value: HttpKmsConfigDto, name: &quot;http&quot; },
+                { value: CscKmsConfigDto, name: &quot;csc&quot; },
             ],
         },
         keepDiscriminatorProperty: true,
@@ -788,6 +1008,24 @@ export class KmsConfigDto {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -803,7 +1041,6 @@ export class KmsConfigDto {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

@@ -1445,6 +1445,8 @@
       
         
       
+        
+      
     
     
     
@@ -1499,6 +1501,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration/5.x-to-6.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.x to 6.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -2929,6 +2959,8 @@ of credential types, their formats, claims, and display properties.</p>
 <p>Schema metadata is managed in a dedicated flow. See <a href="schema-metadata/">Schema Metadata</a> for setup and version management.</p>
 <h3 id="issuance-configuration">Issuance Configuration<a class="headerlink" href="#issuance-configuration" title="Permanent link">¶</a></h3>
 <p>The endpoints to manage issuance configuration can be found in the <a href="../../api/openapi/">API documentation</a> section.</p>
+<p>Registration certificate publication in issuer metadata (<code>issuer_info</code>) is configured
+in issuance configuration. See <a href="issuance-configuration/#registration-certificate-in-issuer-metadata">Issuance Configuration</a>.</p>
 <p>Based on your passed access token, endpoints will be scoped to the tenant ID of the
 token. You also need the <code>issuance:manage</code> role to access these endpoints.
 The configurations are internally stored in a database.</p>
@@ -2988,7 +3020,7 @@ OID4VCI request, runs the protocol with the wallet, and optionally calls
 optional webhook calls, and you can use it to query issuance status via the API.</p>
 <hr>
 <h2 id="supported-issuance-flows">Supported Issuance Flows<a class="headerlink" href="#supported-issuance-flows" title="Permanent link">¶</a></h2>
-<p>EUDIPLO supports three authentication patterns for OID4VCI credential issuance. Each pattern serves different use cases depending on how users are identified and authenticated.</p>
+<p>EUDIPLO supports four authentication patterns for OID4VCI credential issuance. Each pattern serves different use cases depending on how users are identified and authenticated.</p>
 <h3 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">¶</a></h3>
 <table>
 <thead>
@@ -3016,6 +3048,13 @@ optional webhook calls, and you can use it to query issuance status via the API.
 <td>Attribute Provider (required)</td>
 </tr>
 <tr>
+<td><strong>Authorization code + Managed AS (nested OID4VP)</strong></td>
+<td>No</td>
+<td>OID4VP presentation handled by issuer-hosted AS facade</td>
+<td>Issuer or Wallet</td>
+<td>Attribute Provider (required)</td>
+</tr>
+<tr>
 <td><strong>Interactive Authorization (IAE)</strong></td>
 <td>No</td>
 <td>Credential presentation (OID4VP) or web redirect</td>
@@ -3029,6 +3068,7 @@ optional webhook calls, and you can use it to query issuance status via the API.
 <ul>
 <li><strong>Pre-authorized code</strong>: User was already authenticated <em>before</em> the OID4VCI flow starts. You know who they are and can include their claims in the offer.</li>
 <li><strong>Authorization code + External AS</strong>: User authenticates during the flow at an external Identity Provider (Keycloak, Azure AD, Okta) via OIDC.</li>
+<li><strong>Authorization code + Managed AS (nested OID4VP)</strong>: User authenticates through an issuer-hosted authorization server facade that internally starts an OID4VP request and only returns the OAuth code once presentation succeeds.</li>
 <li><strong>Interactive Authorization (IAE)</strong>: User proves their identity by presenting an existing credential (OID4VP) or completing a web-based flow.</li>
 </ul>
 <h4 id="2-initiator-who-starts-the-flow">2. Initiator (Who starts the flow?)<a class="headerlink" href="#2-initiator-who-starts-the-flow" title="Permanent link">¶</a></h4>
@@ -3038,8 +3078,8 @@ optional webhook calls, and you can use it to query issuance status via the API.
 </ul>
 <div class="admonition info">
 <p class="admonition-title">Pre-authorized code is issuer-initiated only</p>
-</div>
 <p>Since the user must be known before creating the offer, pre-authorized code flows are always issuer-initiated. The other patterns support both.</p>
+</div>
 <h4 id="3-claims-source-where-do-credential-claims-come-from">3. Claims Source (Where do credential claims come from?)<a class="headerlink" href="#3-claims-source-where-do-credential-claims-come-from" title="Permanent link">¶</a></h4>
 <ul>
 <li><strong>In the offer</strong>: Claims are embedded in the credential offer when it's created. Only possible when the user is known upfront (pre-authorized code flow).</li>
@@ -3115,9 +3155,15 @@ optional webhook calls, and you can use it to query issuance status via the API.
 <li>Configure external authorization servers in issuance config:</li>
 </ul>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">"authServers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://keycloak.example.com/realms/myrealm"</span><span class="p">],</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">"dPopRequired"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">}</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">"authorizationServers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"external"</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"external-corp-idp"</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">            </span><span class="nt">"issuer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://keycloak.example.com/realms/myrealm"</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="p">],</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nt">"dPopRequired"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">}</span>
 </code></pre></div>
 <ul>
 <li>Configure an Attribute Provider on the credential configuration:</li>
@@ -3141,6 +3187,52 @@ optional webhook calls, and you can use it to query issuance status via the API.
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">}</span>
 </code></pre></div>
 <p>See <a href="attribute-provider/">Attribute Providers</a> for setup details, request/response formats, and full payload documentation.</p>
+<hr>
+<h4 id="authorization-code-flow-with-managed-authorization-server-nested-oid4vp">Authorization Code Flow with Managed Authorization Server (Nested OID4VP)<a class="headerlink" href="#authorization-code-flow-with-managed-authorization-server-nested-oid4vp" title="Permanent link">¶</a></h4>
+<p><strong>Use when:</strong> You want to keep a pure OAuth/OID4VCI authorization-code interface for wallets, but authenticate users by nesting an OID4VP request inside an issuer-hosted authorization server.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Wallet
+    participant AS as EUDIPLO Managed AS
+    participant Verifier as EUDIPLO OID4VP Verifier
+    participant Backend as Your Backend
+
+    alt Issuer-initiated
+        AS-&gt;&gt;Wallet: Credential offer
+    else Wallet-initiated
+        Wallet-&gt;&gt;AS: Discover metadata
+    end
+    Wallet-&gt;&gt;AS: PAR + authorize
+    AS-&gt;&gt;Verifier: Start nested OID4VP request
+    Verifier--&gt;&gt;Wallet: OID4VP request
+    Wallet-&gt;&gt;Verifier: VP response
+    Verifier--&gt;&gt;AS: Presentation verified
+    AS--&gt;&gt;Wallet: OAuth authorization code
+    Wallet-&gt;&gt;AS: Token request
+    AS--&gt;&gt;Wallet: Access token
+    Wallet-&gt;&gt;Backend: Credential flow continues (claims webhook)</code></pre>
+<p><strong>Why this pattern exists:</strong></p>
+<ul>
+<li>It provides an interoperable authorization-code surface for wallets today.</li>
+<li>It is a practical solution beside IAE when you need wallet-facing AS endpoints and nested OID4VP verification.</li>
+</ul>
+<p><strong>Configuration example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="nt">"authorizationServers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"oid4vp"</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pid-auth"</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">            </span><span class="nt">"presentationConfigId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pid-no-hook"</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">            </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">            </span><span class="nt">"immediateWalletRedirect"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">            </span><span class="nt">"requireDPoP"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">}</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Relationship to IAE</p>
+<p>Interactive Authorization (IAE) is still available and documented below, but it is not yet part of the final OID4VCI 1.0 specification. Managed authorization servers with nested OID4VP can be used as a spec-aligned alternative when you want to keep authorization within the authorization-code pattern.</p>
+</div>
 <hr>
 <h4 id="interactive-authorization-endpoint-iae">Interactive Authorization Endpoint (IAE)<a class="headerlink" href="#interactive-authorization-endpoint-iae" title="Permanent link">¶</a></h4>
 <p><strong>Use when:</strong> You want users to prove their identity by presenting an existing credential or completing a web-based verification.</p>
@@ -3192,31 +3284,31 @@ optional webhook calls, and you can use it to query issuance status via the API.
 </ul>
 <p><strong>Configuration:</strong></p>
 <p>Configure IAE action on the credential configuration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="nt">"iaeAction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"openid4vp_presentation"</span><span class="p">,</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">        </span><span class="nt">"presentationDefinition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verify-membership"</span><span class="p">,</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">            </span><span class="nt">"input_descriptors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">                </span><span class="p">{</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">                    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"membership-credential"</span><span class="p">,</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">                    </span><span class="nt">"constraints"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">                        </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">                            </span><span class="p">{</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">                                </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"$.vct"</span><span class="p">],</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">                                </span><span class="nt">"filter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">                                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">                                    </span><span class="nt">"const"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MembershipCredential"</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">                                </span><span class="p">}</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">                            </span><span class="p">}</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">                        </span><span class="p">]</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">                    </span><span class="p">}</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">                </span><span class="p">}</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">            </span><span class="p">]</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">    </span><span class="nt">"attributeProviderId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"iae-claims-provider"</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="nt">"iaeAction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"openid4vp_presentation"</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">        </span><span class="nt">"presentationDefinition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verify-membership"</span><span class="p">,</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">            </span><span class="nt">"input_descriptors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">                </span><span class="p">{</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">                    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"membership-credential"</span><span class="p">,</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">                    </span><span class="nt">"constraints"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">                        </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">                            </span><span class="p">{</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">                                </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"$.vct"</span><span class="p">],</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">                                </span><span class="nt">"filter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">                                    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">                                    </span><span class="nt">"const"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MembershipCredential"</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">                                </span><span class="p">}</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">                            </span><span class="p">}</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">                        </span><span class="p">]</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">                    </span><span class="p">}</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">            </span><span class="p">]</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">    </span><span class="nt">"attributeProviderId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"iae-claims-provider"</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="p">}</span>
 </code></pre></div>
 <h5 id="redirect-to-web-flow">Redirect to Web Flow<a class="headerlink" href="#redirect-to-web-flow" title="Permanent link">¶</a></h5>
 <pre class="mermaid"><code>sequenceDiagram
@@ -3239,13 +3331,13 @@ optional webhook calls, and you can use it to query issuance status via the API.
 <li>Terms acceptance or consent collection</li>
 </ul>
 <p><strong>Configuration:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="nt">"iaeAction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"redirect_to_web"</span><span class="p">,</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">        </span><span class="nt">"redirectUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://your-app.example.com/verify"</span><span class="p">,</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">        </span><span class="nt">"callbackUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://issuer.example.com/{tenantId}/authorize/interactive/callback"</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span><span class="nt">"iaeAction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"redirect_to_web"</span><span class="p">,</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">        </span><span class="nt">"redirectUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://your-app.example.com/verify"</span><span class="p">,</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">        </span><span class="nt">"callbackUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://issuer.example.com/{tenantId}/authorize/interactive/callback"</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">}</span>
 </code></pre></div>
 <hr>
 <h3 id="decision-flowchart">Decision Flowchart<a class="headerlink" href="#decision-flowchart" title="Permanent link">¶</a></h3>
@@ -3256,21 +3348,24 @@ optional webhook calls, and you can use it to query issuance status via the API.
     B --&gt;|No| D{How should the user&lt;br/&gt;prove their identity?}
 
     D --&gt;|Login at existing IdP| E[Authorization code + External AS]
-    D --&gt;|Present existing credential| F[IAE: openid4vp_presentation]
-    D --&gt;|Custom web verification| G[IAE: redirect_to_web]
+    D --&gt;|Nested OID4VP via managed AS| F[Authorization code + Managed AS]
+    D --&gt;|Present existing credential| G[IAE: openid4vp_presentation]
+    D --&gt;|Custom web verification| H[IAE: redirect_to_web]
 
-    C --&gt; H{Where are claims?}
-    H --&gt;|Known at offer creation| I[Include claims in offer]
-    H --&gt;|Need to fetch later| J[Use Attribute Provider]
+    C --&gt; Q{Where are claims?}
+    Q --&gt;|Known at offer creation| I[Include claims in offer]
+    Q --&gt;|Need to fetch later| J[Use Attribute Provider]
 
     E --&gt; K[Attribute Provider required]
     F --&gt; L[Attribute Provider required]
     G --&gt; M[Attribute Provider required]
+    H --&gt; N[Attribute Provider required]
 
     style C fill:#90EE90
     style E fill:#87CEEB
-    style F fill:#DDA0DD
-    style G fill:#DDA0DD</code></pre>
+    style F fill:#87CEEB
+    style G fill:#DDA0DD
+    style H fill:#DDA0DD</code></pre>
 <hr>
 <h2 id="deferred-credential-issuance">Deferred Credential Issuance<a class="headerlink" href="#deferred-credential-issuance" title="Permanent link">¶</a></h2>
 <p>EUDIPLO supports <strong>deferred credential issuance</strong> for scenarios where credentials cannot be issued immediately. This is useful when:</p>

@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -110,12 +117,23 @@
   <li class="breadcrumb-item" >VerifierOfferController</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/verifier/verifier-offer/verifier-offer.controller.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -127,12 +145,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/verifier/verifier-offer/verifier-offer.controller.ts</code>
-        </p>
             <p class="comment">
                 <h3>Prefix</h3>
             </p>
@@ -145,20 +157,41 @@
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/VerifierModule.html" target="_self" >VerifierModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
@@ -169,13 +202,13 @@
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-methods">
@@ -291,7 +324,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>    <code>unknown</code>
 
                         </div>
                             <div class="io-description">
@@ -301,7 +334,8 @@
             </tr>
         </tbody>
     </table>
-</section>    </div>
+</section>
+    </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
@@ -319,6 +353,7 @@ import { Role } from &quot;../../auth/roles/role.enum&quot;;
 import { Secured } from &quot;../../auth/secure.decorator&quot;;
 import { Token, TokenPayload } from &quot;../../auth/token.decorator&quot;;
 import { OfferResponse } from &quot;../../issuer/issuance/oid4vci/dto/offer-request.dto&quot;;
+import { Iso18013Service } from &quot;../iso18013/iso18013.service&quot;;
 import {
     PresentationRequest,
     ResponseType,
@@ -329,11 +364,10 @@ import { Oid4vpService } from &quot;../oid4vp/oid4vp.service&quot;;
 @Secured([Role.PresentationRequest, Role.Presentations])
 @Controller(&quot;verifier/offer&quot;)
 export class VerifierOfferController {
-    /**
-     * Constructor for the Oid4vpController.
-     * @param oid4vpService - Instance of Oid4vpService for handling OID4VP operations.
-     */
-    constructor(private readonly oid4vpService: Oid4vpService) {}
+    constructor(
+        private readonly oid4vpService: Oid4vpService,
+        private readonly iso18013Service: Iso18013Service,
+    ) {}
 
     /**
      * Create an presentation request that can be sent to the user
@@ -387,6 +421,21 @@ export class VerifierOfferController {
                     &#x60;Client is not authorized to use presentation config: ${body.requestId}&#x60;,
                 );
             }
+        }
+
+        // ISO 18013-7 Annex C: org.iso.mdoc via DC API
+        if (body.response_type &#x3D;&#x3D;&#x3D; ResponseType.ISO_18013_7) {
+            const origin &#x3D;
+                body.expected_origin ??
+                req.get(&quot;origin&quot;) ??
+                req.get(&quot;host&quot;) ??
+                &quot;&quot;;
+            const offer &#x3D; await this.iso18013Service.createOffer(
+                body.requestId,
+                user.entity!.id,
+                origin,
+            );
+            return res.status(201).json(offer);
         }
 
         const values &#x3D; await this.oid4vpService.createRequest(
@@ -456,6 +505,24 @@ export class VerifierOfferController {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -471,7 +538,6 @@ export class VerifierOfferController {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

@@ -1445,6 +1445,8 @@
       
         
       
+        
+      
     
     
     
@@ -1499,6 +1501,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration/5.x-to-6.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.x to 6.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -2801,6 +2831,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#iso-18013-7-presentation-flow-digital-credentials-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ISO 18013-7 Presentation Flow (Digital Credentials API)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3015,6 +3056,17 @@ providing flexibility for various business requirements.</p>
 <li>See <a href="../../architecture/iae/">Interactive Authorization Endpoint</a> for details</li>
 </ul>
 </li>
+<li>
+<p>ISO 18013-7 Presentation (Digital Credentials API)</p>
+<ul>
+<li>Requests an mdoc credential through the browser using the <code>org-iso-mdoc</code>
+  protocol (ISO/IEC TS 18013-7:2025 Annex C)</li>
+<li>Covers browsers that do not implement the OpenID4VP profile of the
+  Digital Credentials API (e.g. Safari on iOS/macOS)</li>
+<li>See <a href="presentation-requests/#iso-18013-7-requests">Presentation Requests</a>
+  for the request payload</li>
+</ul>
+</li>
 </ul>
 <h3 id="dcql-digital-credentials-query-language">DCQL (Digital Credentials Query Language)<a class="headerlink" href="#dcql-digital-credentials-query-language" title="Permanent link">¶</a></h3>
 <p>EUDIPLO uses
@@ -3139,6 +3191,35 @@ This flow uses OID4VCI 1.1's authorization code flow with interactive authorizat
     Wallet-&gt;&gt;EUDIPLO: Credential Request
     EUDIPLO--&gt;&gt;Wallet: Issued Credential</code></pre>
 <p>For multi-step flows and configuration details, see <a href="../../architecture/iae/">Interactive Authorization Endpoint</a>.</p>
+<h3 id="iso-18013-7-presentation-flow-digital-credentials-api">ISO 18013-7 Presentation Flow (Digital Credentials API)<a class="headerlink" href="#iso-18013-7-presentation-flow-digital-credentials-api" title="Permanent link">¶</a></h3>
+<p>Requests an mdoc credential through the browser using the <code>org-iso-mdoc</code>
+protocol of the Digital Credentials API (ISO/IEC TS 18013-7:2025 Annex C).
+The wallet returns the <code>DeviceResponse</code> encrypted with HPKE (RFC 9180), bound
+to the browser origin through the session transcript. Verification applies
+the same trust validation (<code>trusted_authorities</code>) as the OpenID4VP flow.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor User
+    participant Wallet
+    participant Verifier
+    participant EUDIPLO
+
+    Verifier-&gt;&gt;EUDIPLO: Create presentation request (response_type iso-18013-7)
+    EUDIPLO--&gt;&gt;Verifier: DeviceRequest + EncryptionInfo (CBOR)
+    Verifier-&gt;&gt;Wallet: navigator.credentials.get (org-iso-mdoc)
+    Wallet-&gt;&gt;User: Request consent for data sharing
+    User-&gt;&gt;Wallet: Approve presentation
+    Wallet--&gt;&gt;Verifier: HPKE-encrypted DeviceResponse
+    Verifier-&gt;&gt;EUDIPLO: POST /presentations/{session}/iso-18013-7
+    EUDIPLO-&gt;&gt;EUDIPLO: Decrypt + verify mdoc + trust validation
+    EUDIPLO--&gt;&gt;Verifier: {} or redirect_uri (webhook fires)</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Known gap: verifier authentication (<code>readerAuth</code>)</p>
+<p>The <code>DeviceRequest</code> is currently sent without <code>readerAuth</code>, so the wallet
+cannot cryptographically authenticate the verifier — unlike the OpenID4VP
+flow, where the request object is signed with the tenant's access
+certificate. For a complete EUDI deployment this is a gap; support is
+planned as a follow-up.</p>
+</div>
 <hr>
 <h2 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">¶</a></h2>
 <h3 id="direct-post-security-model-oid4vp-133">Direct Post Security Model (OID4VP §13.3)<a class="headerlink" href="#direct-post-security-model-oid4vp-133" title="Permanent link">¶</a></h3>

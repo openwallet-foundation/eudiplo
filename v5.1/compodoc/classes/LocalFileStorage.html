@@ -85,7 +85,14 @@
         </div>
 
         <div class="xs-menu menu" id="mobile-menu">
-                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
         </div>
 
         <div class="container-fluid main">
@@ -117,12 +124,23 @@
   <li class="breadcrumb-item" >LocalFileStorage</li>
 </ol>
 
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/storage/adapters/local.storage.ts</code>
+</div>
+
 <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a href="#info" 
                 class="nav-link"
                 class="nav-link active"
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
         </li>
         <li class="nav-item">
             <a href="#source" 
@@ -134,13 +152,6 @@
 
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
-        <p class="comment">
-            <h3>File</h3>
-        </p>
-        <p class="comment">
-            <code>src/storage/adapters/local.storage.ts</code>
-        </p>
-
 
             <p class="comment">
                 <h3>Description</h3>
@@ -159,42 +170,71 @@
             </p>
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../interfaces/FileStorage.html" target="_self" >FileStorage</a></code>
+                                </li>
+                        </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
     <h3 id="index">Index</h3>
-    <table class="table table-sm table-bordered index-table">
-        <tbody>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
                 <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-3">
                         <h6><b>Methods</b></h6>
                     </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
+                    <td class="col-md-9">
                         <ul class="index-list">
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#delete" >delete</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#exists" >exists</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#getStream" >getStream</a>
                             </li>
                             <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#put" >put</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#resolveSafePath" >resolveSafePath</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
+            </tbody>
+        </table>
 
 
 
 
 
-        </tbody>
-    </table>
 </section>
 
             <section data-compodoc="block-constructor">
@@ -274,8 +314,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="78"
-                                    class="link-to-prism">src/storage/adapters/local.storage.ts:78</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="99"
+                                    class="link-to-prism">src/storage/adapters/local.storage.ts:99</a></div>
                         </td>
                     </tr>
 
@@ -343,8 +383,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="91"
-                                    class="link-to-prism">src/storage/adapters/local.storage.ts:91</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="112"
+                                    class="link-to-prism">src/storage/adapters/local.storage.ts:112</a></div>
                         </td>
                     </tr>
 
@@ -412,8 +452,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="59"
-                                    class="link-to-prism">src/storage/adapters/local.storage.ts:59</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="80"
+                                    class="link-to-prism">src/storage/adapters/local.storage.ts:80</a></div>
                         </td>
                     </tr>
 
@@ -483,8 +523,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="30"
-                                    class="link-to-prism">src/storage/adapters/local.storage.ts:30</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="51"
+                                    class="link-to-prism">src/storage/adapters/local.storage.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -556,7 +596,77 @@
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resolveSafePath"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>resolveSafePath</b></span>
+                        <a href="#resolveSafePath"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resolveSafePath(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="25"
+                                    class="link-to-prism">src/storage/adapters/local.storage.ts:25</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>key</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
+
 
 
 
@@ -576,7 +686,7 @@
     statSync,
     writeFileSync,
 } from &quot;node:fs&quot;;
-import { dirname, join } from &quot;node:path&quot;;
+import { dirname, relative, resolve } from &quot;node:path&quot;;
 import { Readable } from &quot;node:stream&quot;;
 import { FileStorage, type PutOptions } from &quot;../storage.types&quot;;
 
@@ -590,6 +700,27 @@ export class LocalFileStorage implements FileStorage {
      */
     constructor(private readonly baseDir: string) {}
 
+    private resolveSafePath(key: string): string {
+        if (!key || key.includes(&quot;\0&quot;)) {
+            throw new Error(&quot;Invalid storage key&quot;);
+        }
+
+        const basePath &#x3D; resolve(this.baseDir);
+        const fullPath &#x3D; resolve(basePath, key);
+        const relativePath &#x3D; relative(basePath, fullPath);
+
+        // Reject absolute paths and any path escaping the base directory.
+        if (
+            relativePath.startsWith(&quot;..&quot;) ||
+            relativePath.includes(&#x60;/..&#x60;) ||
+            relativePath &#x3D;&#x3D;&#x3D; &quot;&quot;
+        ) {
+            throw new Error(&quot;Invalid storage key&quot;);
+        }
+
+        return fullPath;
+    }
+
     /**
      * Saves a file to the local storage.
      * @param key
@@ -600,7 +731,7 @@ export class LocalFileStorage implements FileStorage {
         body: Buffer | Readable,
         opts?: PutOptions,
     ): Promise&lt;void&gt; {
-        const fullPath &#x3D; join(this.baseDir, key);
+        const fullPath &#x3D; this.resolveSafePath(key);
         mkdirSync(dirname(fullPath), { recursive: true });
 
         await new Promise&lt;void&gt;((resolve, reject) &#x3D;&gt; {
@@ -625,7 +756,7 @@ export class LocalFileStorage implements FileStorage {
      * @returns
      */
     getStream(key: string) {
-        const fullPath &#x3D; join(this.baseDir, key);
+        const fullPath &#x3D; this.resolveSafePath(key);
         const stat &#x3D; statSync(fullPath);
         const metaPath &#x3D; &#x60;${fullPath}.meta&#x60;;
         const contentType &#x3D; existsSync(metaPath)
@@ -644,7 +775,7 @@ export class LocalFileStorage implements FileStorage {
      * @returns
      */
     delete(key: string) {
-        const fullPath &#x3D; join(this.baseDir, key);
+        const fullPath &#x3D; this.resolveSafePath(key);
         rmSync(fullPath);
         const metaPath &#x3D; &#x60;${fullPath}.meta&#x60;;
         if (existsSync(metaPath)) rmSync(metaPath);
@@ -657,7 +788,11 @@ export class LocalFileStorage implements FileStorage {
      * @returns
      */
     exists(key: string) {
-        return Promise.resolve(existsSync(join(this.baseDir, key)));
+        try {
+            return Promise.resolve(existsSync(this.resolveSafePath(key)));
+        } catch {
+            return Promise.resolve(false);
+        }
     }
 }
 </code></pre>
@@ -704,6 +839,24 @@ export class LocalFileStorage implements FileStorage {
 
        <script>
                $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
                checkToggle(darkModeState);
                if ($darkModeToggleSwitchers.length > 0) {
                     for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
@@ -719,7 +872,6 @@ export class LocalFileStorage implements FileStorage {
        <script src="../js/libs/lit-html.js"></script>
 
        <script src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

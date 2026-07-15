@@ -1664,6 +1664,8 @@
       
         
       
+        
+      
     
     
     
@@ -1718,6 +1720,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration/5.x-to-6.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.x to 6.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -3113,6 +3143,12 @@ EUDIPLO:</p>
 <td><a href="https://apps.multipaz.org/">Android</a></td>
 <td><a href="#multipaz">Details</a></td>
 </tr>
+<tr>
+<td>AV Reference Implementation</td>
+<td><a href="https://github.com/eu-digital-identity-wallet/av-app-android-wallet-ui">EC</a></td>
+<td><a href="https://github.com/eu-digital-identity-wallet/av-app-android-wallet-ui/releases">Android</a></td>
+<td><a href="#av-reference-implementation">Details</a></td>
+</tr>
 </tbody>
 </table>
 <h3 id="feature-support-details">Feature Support Details<a class="headerlink" href="#feature-support-details" title="Permanent link">¶</a></h3>
@@ -3128,6 +3164,10 @@ EUDIPLO:</p>
 </li>
 <li><strong>Presentation (OID4VP)</strong><ul>
 <li><strong>DC API</strong>: Digital Credentials API support</li>
+</ul>
+</li>
+<li><strong>Presentation (ISO 18013-7)</strong><ul>
+<li><strong>Annex C</strong>: <code>org-iso-mdoc</code> protocol via the Digital Credentials API</li>
 </ul>
 </li>
 <li><strong>Credential Format</strong><ul>
@@ -3150,6 +3190,7 @@ EUDIPLO:</p>
 <th>DPoP</th>
 <th>Att</th>
 <th>DC API</th>
+<th>Annex C</th>
 <th>SD-JWT</th>
 <th>Mdocs</th>
 </tr>
@@ -3163,6 +3204,7 @@ EUDIPLO:</p>
 <td>✅</td>
 <td>✅</td>
 <td>n/a</td>
+<td>—</td>
 <td>✅</td>
 <td>✅</td>
 </tr>
@@ -3174,6 +3216,7 @@ EUDIPLO:</p>
 <td>✅</td>
 <td>n/a</td>
 <td>✅</td>
+<td>—</td>
 <td>✅</td>
 <td>✅</td>
 </tr>
@@ -3185,11 +3228,25 @@ EUDIPLO:</p>
 <td>✅</td>
 <td>n/a</td>
 <td>✅</td>
+<td>—</td>
 <td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>AV Reference Implementation</td>
+<td>—</td>
+<td>✅</td>
+<td>n/a</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>✅</td>
+<td>n/a</td>
 <td>✅</td>
 </tr>
 </tbody>
 </table>
+<p>("—" means not yet tested against EUDIPLO.)</p>
 <h4 id="individual-wallet-details">Individual Wallet Details<a class="headerlink" href="#individual-wallet-details" title="Permanent link">¶</a></h4>
 <h5 id="reference-implementation">Reference Implementation<a class="headerlink" href="#reference-implementation" title="Permanent link">¶</a></h5>
 <ul>
@@ -3221,6 +3278,21 @@ EUDIPLO:</p>
 <li><strong>Last verified</strong>: June 17, 2026</li>
 <li><strong>Notes</strong>:<ul>
 <li>Using the logo for the card of a credential</li>
+</ul>
+</li>
+</ul>
+<h5 id="av-reference-implementation">AV Reference Implementation<a class="headerlink" href="#av-reference-implementation" title="Permanent link">¶</a></h5>
+<ul>
+<li><strong>Version tested</strong>: July 2026 demo build (Android, via Chrome DC API)</li>
+<li><strong>Last verified</strong>: July 9, 2026</li>
+<li><strong>Notes</strong>:<ul>
+<li>Tested for the ISO 18013-7 Annex C flow: mdoc issuance (pre-authorized
+  code flow) and <code>org-iso-mdoc</code> presentation via the Digital Credentials
+  API, including HPKE response decryption and DeviceAuth verification.</li>
+<li>mdoc-only wallet; SD-JWT VC is not applicable.</li>
+<li>Its reference IACA/DS certificates carry a malformed <code>issuerAltName</code>
+  extension; EUDIPLO parses them through a tolerant X.509 extension
+  parser registered at startup (reported upstream).</li>
 </ul>
 </li>
 </ul>
