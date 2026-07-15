@@ -1,0 +1,522 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+	   <link rel="stylesheet" href="./styles/style.css">
+        <link rel="stylesheet" href="./styles/dark.css">
+        <link rel="stylesheet" href="./styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="./" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content package-dependencies">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">Dependencies</li>
+    </ol>
+    <div class="dependencies-table-wrapper">
+        <table class="table table-sm table-bordered dependencies-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Version</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><b>@aws-sdk/client-kms</b></td>
+                    <td>^3.1076.0</td>
+                </tr>
+                <tr>
+                    <td><b>@aws-sdk/client-s3</b></td>
+                    <td>^3.1076.0</td>
+                </tr>
+                <tr>
+                    <td><b>@aws-sdk/client-secrets-manager</b></td>
+                    <td>^3.1076.0</td>
+                </tr>
+                <tr>
+                    <td><b>@azure/identity</b></td>
+                    <td>^4.13.1</td>
+                </tr>
+                <tr>
+                    <td><b>@azure/keyvault-secrets</b></td>
+                    <td>^4.11.2</td>
+                </tr>
+                <tr>
+                    <td><b>@badgateway/oauth2-client</b></td>
+                    <td>^3.3.1</td>
+                </tr>
+                <tr>
+                    <td><b>@keycloak/keycloak-admin-client</b></td>
+                    <td>^26.6.4</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/axios</b></td>
+                    <td>^4.0.1</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/common</b></td>
+                    <td>^11.1.27</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/config</b></td>
+                    <td>^4.0.4</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/core</b></td>
+                    <td>^11.1.27</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/event-emitter</b></td>
+                    <td>^3.1.0</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/passport</b></td>
+                    <td>^11.0.5</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/platform-express</b></td>
+                    <td>^11.1.27</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/schedule</b></td>
+                    <td>^6.1.3</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/swagger</b></td>
+                    <td>^11.4.5</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/terminus</b></td>
+                    <td>^11.1.1</td>
+                </tr>
+                <tr>
+                    <td><b>@nestjs/typeorm</b></td>
+                    <td>^11.0.3</td>
+                </tr>
+                <tr>
+                    <td><b>@noble/curves</b></td>
+                    <td>^2.2.0</td>
+                </tr>
+                <tr>
+                    <td><b>@noble/hashes</b></td>
+                    <td>^2.2.0</td>
+                </tr>
+                <tr>
+                    <td><b>@openid4vc/oauth2</b></td>
+                    <td>0.5.4</td>
+                </tr>
+                <tr>
+                    <td><b>@openid4vc/openid4vci</b></td>
+                    <td>0.5.4</td>
+                </tr>
+                <tr>
+                    <td><b>@openid4vc/openid4vp</b></td>
+                    <td>0.5.4</td>
+                </tr>
+                <tr>
+                    <td><b>@openid4vc/utils</b></td>
+                    <td>0.5.4</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/api</b></td>
+                    <td>^1.9.1</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/auto-instrumentations-node</b></td>
+                    <td>^0.78.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/exporter-logs-otlp-proto</b></td>
+                    <td>^0.220.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/exporter-metrics-otlp-proto</b></td>
+                    <td>^0.220.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/exporter-trace-otlp-proto</b></td>
+                    <td>^0.220.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/resources</b></td>
+                    <td>^2.8.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/sdk-logs</b></td>
+                    <td>^0.220.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/sdk-metrics</b></td>
+                    <td>^2.8.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/sdk-node</b></td>
+                    <td>^0.220.0</td>
+                </tr>
+                <tr>
+                    <td><b>@opentelemetry/semantic-conventions</b></td>
+                    <td>^1.41.1</td>
+                </tr>
+                <tr>
+                    <td><b>@owf/cose</b></td>
+                    <td>^0.3.1</td>
+                </tr>
+                <tr>
+                    <td><b>@owf/crypto</b></td>
+                    <td>^0.3.1</td>
+                </tr>
+                <tr>
+                    <td><b>@owf/eudi-attestation-schema</b></td>
+                    <td>0.3.1-alpha-20260613182022</td>
+                </tr>
+                <tr>
+                    <td><b>@owf/eudi-lote</b></td>
+                    <td>^0.3.1</td>
+                </tr>
+                <tr>
+                    <td><b>@owf/identity-common</b></td>
+                    <td>^0.3.1</td>
+                </tr>
+                <tr>
+                    <td><b>@owf/mdoc</b></td>
+                    <td>^0.7.0</td>
+                </tr>
+                <tr>
+                    <td><b>@owf/token-status-list</b></td>
+                    <td>^0.3.1</td>
+                </tr>
+                <tr>
+                    <td><b>@panva/hkdf</b></td>
+                    <td>^1.2.1</td>
+                </tr>
+                <tr>
+                    <td><b>@peculiar/asn1-schema</b></td>
+                    <td>^2.8.0</td>
+                </tr>
+                <tr>
+                    <td><b>@peculiar/asn1-x509</b></td>
+                    <td>^2.8.0</td>
+                </tr>
+                <tr>
+                    <td><b>@peculiar/x509</b></td>
+                    <td>^2.0.0</td>
+                </tr>
+                <tr>
+                    <td><b>@sd-jwt/core</b></td>
+                    <td>^0.20.0</td>
+                </tr>
+                <tr>
+                    <td><b>@sd-jwt/sd-jwt-vc</b></td>
+                    <td>^0.20.0</td>
+                </tr>
+                <tr>
+                    <td><b>ajv</b></td>
+                    <td>^8.20.0</td>
+                </tr>
+                <tr>
+                    <td><b>axios</b></td>
+                    <td>^1.18.1</td>
+                </tr>
+                <tr>
+                    <td><b>bcrypt</b></td>
+                    <td>^6.0.0</td>
+                </tr>
+                <tr>
+                    <td><b>better-sqlite3</b></td>
+                    <td>^12.11.1</td>
+                </tr>
+                <tr>
+                    <td><b>class-transformer</b></td>
+                    <td>^0.5.1</td>
+                </tr>
+                <tr>
+                    <td><b>class-validator</b></td>
+                    <td>^0.15.1</td>
+                </tr>
+                <tr>
+                    <td><b>joi</b></td>
+                    <td>^18.2.3</td>
+                </tr>
+                <tr>
+                    <td><b>jose</b></td>
+                    <td>^6.2.3</td>
+                </tr>
+                <tr>
+                    <td><b>jwks-rsa</b></td>
+                    <td>^4.1.0</td>
+                </tr>
+                <tr>
+                    <td><b>multer</b></td>
+                    <td>^2.2.0</td>
+                </tr>
+                <tr>
+                    <td><b>mysql2</b></td>
+                    <td>^3.22.5</td>
+                </tr>
+                <tr>
+                    <td><b>nestjs-otel</b></td>
+                    <td>^8.1.0</td>
+                </tr>
+                <tr>
+                    <td><b>nestjs-pino</b></td>
+                    <td>^4.6.1</td>
+                </tr>
+                <tr>
+                    <td><b>nestjs-zod</b></td>
+                    <td>^5.4.0</td>
+                </tr>
+                <tr>
+                    <td><b>passport-jwt</b></td>
+                    <td>^4.0.1</td>
+                </tr>
+                <tr>
+                    <td><b>pg</b></td>
+                    <td>^8.22.0</td>
+                </tr>
+                <tr>
+                    <td><b>pino</b></td>
+                    <td>^10.3.1</td>
+                </tr>
+                <tr>
+                    <td><b>pino-http</b></td>
+                    <td>^11.0.0</td>
+                </tr>
+                <tr>
+                    <td><b>pino-opentelemetry-transport</b></td>
+                    <td>^3.0.0</td>
+                </tr>
+                <tr>
+                    <td><b>pino-pretty</b></td>
+                    <td>^13.1.3</td>
+                </tr>
+                <tr>
+                    <td><b>pkcs11js</b></td>
+                    <td>^2.1.6</td>
+                </tr>
+                <tr>
+                    <td><b>reflect-metadata</b></td>
+                    <td>^0.2.2</td>
+                </tr>
+                <tr>
+                    <td><b>rxjs</b></td>
+                    <td>^7.8.2</td>
+                </tr>
+                <tr>
+                    <td><b>typeorm</b></td>
+                    <td>^1.0.0</td>
+                </tr>
+                <tr>
+                    <td><b>uuid</b></td>
+                    <td>^14.0.1</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'package-dependencies';
+            var COMPODOC_CURRENT_PAGE_URL = 'dependencies.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="./js/libs/custom-elements.min.js"></script>
+       <script src="./js/libs/lit-html.js"></script>
+
+       <script src="./js/menu-wc.js" defer></script>
+
+       <script src="./js/libs/bootstrap-native.js"></script>
+
+       <script src="./js/libs/es6-shim.min.js"></script>
+       <script src="./js/libs/EventDispatcher.js"></script>
+       <script src="./js/libs/promise.min.js"></script>
+
+       <script src="./js/compodoc.js"></script>
+
+       <script src="./js/tabs.js"></script>
+       <script src="./js/menu.js"></script>
+       <script src="./js/libs/clipboard.min.js"></script>
+       <script src="./js/libs/prism.js"></script>
+       <script src="./js/sourceCode.js"></script>
+          <script src="./js/search/search.js"></script>
+          <script src="./js/search/lunr.min.js"></script>
+          <script src="./js/search/search-lunr.js"></script>
+          <script src="./js/search/search_index.js"></script>
+       <script src="./js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
