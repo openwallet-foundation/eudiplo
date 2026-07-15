@@ -492,7 +492,7 @@ describe("Presentation - mDOC Credential", () => {
             'mDOC verification failed for credential "pid-mso-mdoc":',
         );
         expect(sessionRes.body.errorReason).toMatch(
-            /no trust chain to a trusted root could be built|certificate chain does not match any trusted entity/i,
+            /no trust chain to a trusted root could be built|certificate chain does not match any trusted entity|Untrusted mDOC Issuer/i,
         );
     });
 });
