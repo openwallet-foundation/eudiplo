@@ -917,7 +917,8 @@ export const OfferRequestDtoSchema = {
         response_type: {
             enum: [
                 'uri',
-                'dc-api'
+                'dc-api',
+                'iso-18013-7'
             ],
             type: 'string',
             examples: [
@@ -1196,6 +1197,14 @@ export const SessionSchema = {
         useDcApi: {
             type: 'boolean',
             description: 'Flag indicating whether to use the DC API for the presentation request.'
+        },
+        dcApiProtocol: {
+            type: 'string',
+            description: 'DC API sub-protocol: "oid4vp" (OpenID4VP via DC API) or "iso-18013-7" (org.iso.mdoc).\nNull/undefined means the standard OID4VP flow (useDcApi=false).'
+        },
+        browserOrigin: {
+            type: 'string',
+            description: 'Browser page origin recorded at offer time for BrowserHandover session transcript.\nUsed exclusively by the ISO 18013-7 Annex C flow.'
         },
         tenantId: {
             type: 'string',
@@ -4744,6 +4753,20 @@ export const ResolveSchemaMetadataDtoSchema = {
     ]
 } as const;
 
+export const ResolveSchemaMetadataJwtDtoSchema = {
+    type: 'object',
+    properties: {
+        signedJwt: {
+            type: 'string',
+            description: 'Signed schema metadata JWT to resolve server-side. The JWT will be verified, resolved, and converted to DCQL.',
+            example: 'eyJ0eXAiOiJhdHRlc3RhdGlvbi1zY2hlbWErand0IiwiYWxnIjoiRVMyNTYiLCJ4NWMiOlsiTUlJQ01qQ0NBZGlnQXdJQkFnSVVDa0hwaTlPWHQ0QUJTY2NWbEl3UlJRdlE5cU1Rd0NnWUlLb1pJemowRUF3SXdLREVMTUFrR0ExVUVCaE1DUkVVeEdUQVhCZ05WQkFNTUVFZGxjbTFoYmlCU1pXZHBjM1J5WVhJd0hoY05Nall3TVRFMk1UQXdOVEE0V2hjTk1qZ3dNVEUyTVRBd05UQTRXakFvTVFzd0NRWURWUVFHRXdKRVJURVpNQmNHQTFVRUF3d1FSMlZ5YldGdUlGSmxaMmx6ZEhKaGNqQlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDlBd0VIQTBJQUJBUXQrK1dGQnJkVVJjYXkycmtyMG9pdW9zMDE2dlVLT2tsWVNJUVF4K1cvclcyOVc4bkE3SFMrNHMrNW0zWW5tUmRRcXphYWZDT3ZHYXhjSUd5UXFjQ2pnZDh3Z2R3d0hRWURWUjBPQkJZRUZQNGwyNXhUZWxBbnNEa0U2QXFlc09zd3pxWWxNQjhHQTFVZEl3UVlNQmFBRlA0bDI1eFRlbEFuc0RrRTZBcWVzT3N3enFZbE1CSUdBMVVkRXdFQi93UUlNQVlCQWY4Q0FRQXdEZ1lEVlIwUEFRSC9CQVFEQWdFR01Dd0dBMVVkRWdRbE1DT0dJV2gwZEhCek9pOHZjbVZuYVhOMGNtRnlMbVYxWkdrdGQyRnNiR1YwTG1SbGRqQklCZ05WSFI4RVFUQS9NRDJnTzZBNWhqZG9kSFJ3Y3pvdkwzSmxaMmx6ZEhKaGNpNWxkV1JwTFhkaGJHeGxkQzVrWlhZdmMzUmhkSFZ6TFcxaGJtRm5aVzFsYm5RdlkzSnNNQW9HQ0NxR1NNNDlCQU1DQTBnQU1FVUNJRFcxTXA0ZDc3a2oxWVVIWHlhVU1mMmNpbGtxTmpkL2RpdWpud3A4Ti9ISkFpRUF2WXlaK1IyUXFuUUJJUnZBL281aEVjVHJuNTNMQ2ZEQWZnWGt1OWxzZUIwPSJdIn0.eyJpZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwMS9zY2hlbWEtbWV0YWRhdGEvNWMzNzFhMjEtZWIxOC00NzY3LTk4MTktMGIwMGY2NTQzY2QzIiwidmVyc2lvbiI6IjEuMC4wIn0.signature'
+        }
+    },
+    required: [
+        'signedJwt'
+    ]
+} as const;
+
 export const PresentationConfigCreateDtoSchema = {
     type: 'object',
     properties: {
@@ -6647,7 +6670,8 @@ export const PresentationRequestSchema = {
             description: 'The type of response expected from the presentation request.',
             enum: [
                 'uri',
-                'dc-api'
+                'dc-api',
+                'iso-18013-7'
             ]
         },
         requestId: {

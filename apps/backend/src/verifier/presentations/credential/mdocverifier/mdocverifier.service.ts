@@ -253,7 +253,6 @@ export class MdocverifierService {
                 docType,
             };
         } catch (error: any) {
-            console.log(error);
             return this.handleVerificationError(vp, error, options);
         }
     }

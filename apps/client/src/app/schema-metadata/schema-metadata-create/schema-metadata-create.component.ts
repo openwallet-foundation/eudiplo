@@ -101,6 +101,7 @@ export class SchemaMetadataCreateComponent implements OnInit {
     rulebookURI: new FormControl('', [Validators.required]),
     attestationLoS: new FormControl('', [Validators.required]),
     bindingType: new FormControl('', [Validators.required]),
+    name: new FormControl(''),
     category: new FormControl(''),
     tags: new FormControl<string[]>([]),
     schemaURIs: new FormArray<FormGroup>([], Validators.required),
@@ -295,6 +296,7 @@ export class SchemaMetadataCreateComponent implements OnInit {
       rulebookURI: raw.rulebookURI!,
       attestationLoS: raw.attestationLoS,
       bindingType: raw.bindingType,
+      ...(raw.name ? { name: raw.name } : {}),
       ...(raw.category ? { category: raw.category } : {}),
       ...(Array.isArray(raw.tags) && raw.tags.length > 0 ? { tags: raw.tags } : {}),
       // Send credential config references so backend can resolve schema URI metadata.

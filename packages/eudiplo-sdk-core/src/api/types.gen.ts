@@ -427,7 +427,7 @@ export type OfferRequestDto = {
     /**
      * The type of response expected for the offer request.
      */
-    response_type: 'uri' | 'dc-api';
+    response_type: 'uri' | 'dc-api' | 'iso-18013-7';
     /**
      * Authorization server id from issuer configuration. If omitted, the first enabled server is used.
      */
@@ -552,6 +552,16 @@ export type Session = {
      * Flag indicating whether to use the DC API for the presentation request.
      */
     useDcApi: boolean;
+    /**
+     * DC API sub-protocol: "oid4vp" (OpenID4VP via DC API) or "iso-18013-7" (org.iso.mdoc).
+     * Null/undefined means the standard OID4VP flow (useDcApi=false).
+     */
+    dcApiProtocol?: string;
+    /**
+     * Browser page origin recorded at offer time for BrowserHandover session transcript.
+     * Used exclusively by the ISO 18013-7 Annex C flow.
+     */
+    browserOrigin?: string;
     /**
      * Tenant ID for multi-tenancy support.
      */
@@ -2312,6 +2322,13 @@ export type ResolveSchemaMetadataDto = {
     schemaMetadataUrl: string;
 };
 
+export type ResolveSchemaMetadataJwtDto = {
+    /**
+     * Signed schema metadata JWT to resolve server-side. The JWT will be verified, resolved, and converted to DCQL.
+     */
+    signedJwt: string;
+};
+
 export type PresentationConfigCreateDto = {
     /**
      * Unique identifier for the VP request.
@@ -3446,7 +3463,7 @@ export type PresentationRequest = {
     /**
      * The type of response expected from the presentation request.
      */
-    response_type: 'uri' | 'dc-api';
+    response_type: 'uri' | 'dc-api' | 'iso-18013-7';
     /**
      * Identifier of the presentation configuration
      */
@@ -5077,6 +5094,27 @@ export type PresentationManagementControllerResolveSchemaMetadataErrors = {
 };
 
 export type PresentationManagementControllerResolveSchemaMetadataResponses = {
+    /**
+     * Resolved schema metadata import payload
+     */
+    200: unknown;
+};
+
+export type PresentationManagementControllerResolveSchemaMetadataJwtData = {
+    body: ResolveSchemaMetadataJwtDto;
+    path?: never;
+    query?: never;
+    url: '/api/verifier/config/schema-metadata/resolve-jwt';
+};
+
+export type PresentationManagementControllerResolveSchemaMetadataJwtErrors = {
+    /**
+     * Invalid JWT or invalid schema metadata
+     */
+    400: unknown;
+};
+
+export type PresentationManagementControllerResolveSchemaMetadataJwtResponses = {
     /**
      * Resolved schema metadata import payload
      */

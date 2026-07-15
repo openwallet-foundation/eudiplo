@@ -280,10 +280,10 @@ export class Oid4vpService {
                     aud: "https://self-issued.me/v2",
                     exp: Math.floor(Date.now() / 1000) + lifeTime,
                     iat: Math.floor(Date.now() / 1000),
-                    verifier_attestations: regCert
+                    verifier_info: regCert
                         ? [
                               {
-                                  format: "jwt",
+                                  format: "registration_cert",
                                   data: regCert,
                               },
                           ]
