@@ -93,4 +93,28 @@ describe("Status List - Token Format Negotiation", () => {
             })
             .expect(200);
     });
+
+    test("returns the same cached CWT across repeated requests", async () => {
+        const firstResponse = await request(app.getHttpServer())
+            .get(`/issuers/root/status-management/status-list/${listId}`)
+            .set("Accept", "application/statuslist+cwt")
+            .buffer(true)
+            .parse(parseBinary)
+            .expect(200);
+
+        const secondResponse = await request(app.getHttpServer())
+            .get(`/issuers/root/status-management/status-list/${listId}`)
+            .set("Accept", "application/statuslist+cwt")
+            .buffer(true)
+            .parse(parseBinary)
+            .expect(200);
+
+        expect(firstResponse.headers["content-type"]).toContain(
+            "application/statuslist+cwt",
+        );
+        expect(secondResponse.headers["content-type"]).toContain(
+            "application/statuslist+cwt",
+        );
+        expect(Buffer.compare(firstResponse.body, secondResponse.body)).toBe(0);
+    });
 });

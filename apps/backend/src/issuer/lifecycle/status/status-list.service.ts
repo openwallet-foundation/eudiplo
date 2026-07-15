@@ -200,7 +200,7 @@ export class StatusListService {
     }
 
     /**
-     * Create the JWT for a status list and update the entity.
+     * Create status list tokens (JWT and CWT) and update the entity.
      * The JWT includes:
      * - `iat`: When the token was issued (REQUIRED)
      * - `exp`: When the token expires (RECOMMENDED)
@@ -208,16 +208,17 @@ export class StatusListService {
      * - `aggregation_uri`: URI to fetch all status list URIs (OPTIONAL, per RFC Section 9)
      */
     async createListJWT(entry: StatusListEntity): Promise<void> {
-        const list = new StatusList(entry.elements, entry.bits);
-        const iss = `${this.configService.getOrThrow<string>("PUBLIC_URL")}`;
-
-        const sub = this.buildStatusListUri(entry.tenantId, entry.id);
-
         // Get TTL from tenant config or global default
         const effectiveConfig =
             await this.statusListConfigService.getEffectiveConfig(
                 entry.tenantId,
             );
+        const aggregationUri = effectiveConfig.enableAggregation
+            ? this.buildAggregationUri(entry.tenantId)
+            : undefined;
+        const list = new StatusList(entry.elements, entry.bits, aggregationUri);
+        const iss = `${this.configService.getOrThrow<string>("PUBLIC_URL")}`;
+        const sub = this.buildStatusListUri(entry.tenantId, entry.id);
         const ttl = effectiveConfig.ttl!;
         const now = Math.floor(Date.now() / 1000);
         const exp = now + ttl;
@@ -247,7 +248,7 @@ export class StatusListService {
         // This allows relying parties to pre-fetch all status lists for offline validation
         if (effectiveConfig.enableAggregation && payload.status_list) {
             (payload.status_list as Record<string, unknown>).aggregation_uri =
-                this.buildAggregationUri(entry.tenantId);
+                aggregationUri;
         }
 
         const jwt = await this.keyChainService.signJWT(
@@ -257,11 +258,70 @@ export class StatusListService {
             cert.keyId,
         );
 
-        // Store JWT and expiration time
+        const issuedAt = new Date(now * 1000);
+        const expirationTime = new Date(exp * 1000);
+        const cwt = await this.signStatusListCwt(
+            entry.tenantId,
+            cert.keyId,
+            cert.crt,
+            {
+                subject: sub,
+                issuedAt,
+                expirationTime,
+                ttl,
+                statusList: list,
+            },
+        );
+
+        // Store JWT/CWT and expiration time
         const expiresAt = new Date(exp * 1000);
         await this.statusListRepository.update(
             { id: entry.id, tenantId: entry.tenantId },
-            { jwt, expiresAt },
+            { jwt, cwt: Buffer.from(cwt).toString("base64url"), expiresAt },
+        );
+    }
+
+    private async signStatusListCwt(
+        tenantId: string,
+        keyId: string,
+        certChainPem: string[],
+        payload: {
+            subject: string;
+            issuedAt: Date;
+            expirationTime?: Date;
+            ttl?: number;
+            statusList: StatusList;
+        },
+    ): Promise<Uint8Array> {
+        const x5chain = certChainPem.map(
+            (pem) => new Uint8Array(new X509Certificate(pem).rawData),
+        );
+
+        const cwt = new StatusListCwt({
+            payload: {
+                subject: payload.subject,
+                issuedAt: payload.issuedAt,
+                expirationTime: payload.expirationTime,
+                timeToLive: payload.ttl,
+                statusList: payload.statusList,
+            },
+            protectedHeaders: new Map<number, unknown>([
+                [1, SignatureAlgorithm.ES256],
+                [4, new TextEncoder().encode(keyId)],
+                // mDOC status verification expects x5chain in protected headers.
+                [33, x5chain],
+            ]),
+        });
+
+        return cwt.signAndEncode(
+            {
+                signingKey: { algorithm: SignatureAlgorithm.ES256 } as never,
+                algorithm: SignatureAlgorithm.ES256,
+            },
+            {
+                sign: async ({ toBeSigned }) =>
+                    this.keyChainService.signBytes(toBeSigned, tenantId, keyId),
+            },
         );
     }
 
@@ -332,7 +392,7 @@ export class StatusListService {
 
     /**
      * Get the CWT for a specific status list.
-     * The CWT content follows the same freshness policy as JWT status list tokens.
+     * The CWT follows the same caching/freshness policy as JWT status list tokens.
      */
     async getListCwt(tenantId: string, listId: string): Promise<Uint8Array> {
         let list = await this.getListById(tenantId, listId);
@@ -345,60 +405,50 @@ export class StatusListService {
             list = await this.getListById(tenantId, listId);
         }
 
-        const jwt = list.jwt!;
-        const jwtPayload = decodeJwt(jwt);
-        const statusList = getListFromStatusListJWT(jwt);
-        const cert = await this.getSigningCert(list);
+        if (!list.cwt) {
+            const jwt = list.jwt!;
+            const jwtPayload = decodeJwt(jwt);
+            const statusList = getListFromStatusListJWT(jwt);
+            const cert = await this.getSigningCert(list);
 
-        const subject =
-            typeof jwtPayload.sub === "string"
-                ? jwtPayload.sub
-                : this.buildStatusListUri(tenantId, listId);
-        const issuedAt =
-            typeof jwtPayload.iat === "number"
-                ? new Date(jwtPayload.iat * 1000)
-                : new Date();
-        const expirationTime =
-            typeof jwtPayload.exp === "number"
-                ? new Date(jwtPayload.exp * 1000)
-                : undefined;
-        const ttl =
-            typeof jwtPayload.ttl === "number" ? jwtPayload.ttl : undefined;
+            const subject =
+                typeof jwtPayload.sub === "string"
+                    ? jwtPayload.sub
+                    : this.buildStatusListUri(tenantId, listId);
+            const issuedAt =
+                typeof jwtPayload.iat === "number"
+                    ? new Date(jwtPayload.iat * 1000)
+                    : new Date();
+            const expirationTime =
+                typeof jwtPayload.exp === "number"
+                    ? new Date(jwtPayload.exp * 1000)
+                    : undefined;
+            const ttl =
+                typeof jwtPayload.ttl === "number"
+                    ? jwtPayload.ttl
+                    : undefined;
 
-        const x5chain = cert.crt.map(
-            (pem) => new Uint8Array(new X509Certificate(pem).rawData),
-        );
+            const cwt = await this.signStatusListCwt(
+                tenantId,
+                cert.keyId,
+                cert.crt,
+                {
+                    subject,
+                    issuedAt,
+                    expirationTime,
+                    ttl,
+                    statusList,
+                },
+            );
 
-        const cwt = new StatusListCwt({
-            payload: {
-                subject,
-                issuedAt,
-                expirationTime,
-                timeToLive: ttl,
-                statusList,
-            },
-            protectedHeaders: new Map<number, unknown>([
-                [1, SignatureAlgorithm.ES256],
-                [4, new TextEncoder().encode(cert.keyId)],
-                // mDOC status verification expects x5chain in protected headers.
-                [33, x5chain],
-            ]),
-        });
+            await this.statusListRepository.update(
+                { id: list.id, tenantId: list.tenantId },
+                { cwt: Buffer.from(cwt).toString("base64url") },
+            );
+            list = await this.getListById(tenantId, listId);
+        }
 
-        return cwt.signAndEncode(
-            {
-                signingKey: { algorithm: SignatureAlgorithm.ES256 } as never,
-                algorithm: SignatureAlgorithm.ES256,
-            },
-            {
-                sign: async ({ toBeSigned }) =>
-                    this.keyChainService.signBytes(
-                        toBeSigned,
-                        tenantId,
-                        cert.keyId,
-                    ),
-            },
-        );
+        return Uint8Array.from(Buffer.from(list.cwt!, "base64url"));
     }
 
     /**

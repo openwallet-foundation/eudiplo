@@ -71,6 +71,13 @@ export class StatusListEntity {
     jwt?: string;
 
     /**
+     * Base64url-encoded CBOR Web Token (CWT) for the status list.
+     * Cached alongside JWT to avoid re-signing on each CWT request.
+     */
+    @Column("text", { nullable: true })
+    cwt?: string;
+
+    /**
      * When the current JWT expires (based on TTL).
      * Used for lazy regeneration - JWT is regenerated on request when expired.
      */
