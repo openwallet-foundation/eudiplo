@@ -1353,10 +1353,10 @@ export class Oid4vpService {
                     aud: &quot;https://self-issued.me/v2&quot;,
                     exp: Math.floor(Date.now() / 1000) + lifeTime,
                     iat: Math.floor(Date.now() / 1000),
-                    verifier_attestations: regCert
+                    verifier_info: regCert
                         ? [
                               {
-                                  format: &quot;jwt&quot;,
+                                  format: &quot;registration_cert&quot;,
                                   data: regCert,
                               },
                           ]

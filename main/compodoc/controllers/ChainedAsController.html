@@ -312,8 +312,8 @@ issuing its own tokens containing issuer_state for session correlation.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="138"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:138</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="137"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:137</a></div>
                         </td>
                     </tr>
 
@@ -421,8 +421,8 @@ Validates the request_uri and redirects to the upstream OIDC provider.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="173"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:173</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="171"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:171</a></div>
                         </td>
                     </tr>
 
@@ -707,8 +707,8 @@ Wallets submit authorization parameters here before redirecting to authorize.</p
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="224"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:224</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="222"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:222</a></div>
                         </td>
                     </tr>
 
@@ -884,7 +884,6 @@ export class ChainedAsController {
         @Headers(&quot;oauth-client-attestation-pop&quot;)
         clientAttestationPopJwt?: string,
     ): Promise&lt;ChainedAsParResponseDto&gt; {
-        console.log(body);
         // DPoP JWK thumbprint extraction will be handled in service layer when DPoP is fully implemented
         const dpopJkt &#x3D; dpopJwt ? extractDpopJkt(dpopJwt) : undefined;
 
@@ -933,7 +932,6 @@ export class ChainedAsController {
             query.client_id,
             query.request_uri,
         );
-        console.log(redirectUrl);
         res.redirect(redirectUrl);
     }
 
