@@ -614,6 +614,25 @@ export const TrustAuthoritySchema = {
     required: ["id", "frameworkType", "value", "schemaMetadata"],
 } as const;
 
+export const IssuerOfferEntrySchema = {
+    type: "object",
+    properties: {
+        credentialOfferUrl: {
+            type: "string",
+            description:
+                "URL where the user can receive a credential offer from this issuer.",
+            example: "https://issuer.example.com/credential-offer/pid",
+        },
+        description: {
+            type: "string",
+            description:
+                "Human-readable description explaining when this issuer offer is relevant for the user.",
+            example: "Use this issuer if you need a PID credential for travel.",
+        },
+    },
+    required: ["credentialOfferUrl", "description"],
+} as const;
+
 export const SchemaMetadataSchema = {
     type: "object",
     properties: {
@@ -683,6 +702,14 @@ export const SchemaMetadataSchema = {
             type: "array",
             items: {
                 $ref: "#/components/schemas/TrustAuthority",
+            },
+        },
+        issuerOffers: {
+            description:
+                "Issuer offer entries for this schema metadata. Each entry provides a credential offer URL and user-facing description.",
+            type: "array",
+            items: {
+                $ref: "#/components/schemas/IssuerOfferEntry",
             },
         },
         category: {
@@ -779,6 +806,7 @@ export const SchemaMetadataSchema = {
         "supportedFormats",
         "schemaURIs",
         "trustedAuthorities",
+        "issuerOffers",
         "deprecated",
         "signedJwt",
         "issuer",
@@ -922,6 +950,24 @@ export const SetVersionDeprecationDtoSchema = {
     required: ["deprecated"],
 } as const;
 
+export const UpdateIssuerOfferDtoSchema = {
+    type: "object",
+    properties: {
+        credentialOfferUrl: {
+            type: "string",
+            description:
+                "URL where the user can receive a credential offer from this issuer.",
+            example: "https://issuer.example.com/credential-offer/pid",
+        },
+        description: {
+            type: "string",
+            description:
+                "Human-readable description to help users choose the right issuer.",
+            example: "Use this issuer for PID in Germany.",
+        },
+    },
+} as const;
+
 export const UpdateSchemaMetadataDtoSchema = {
     type: "object",
     properties: {
@@ -964,6 +1010,14 @@ export const UpdateSchemaMetadataDtoSchema = {
             description:
                 "Optional human-readable schema name for UI display and search.",
             example: "European Personal Identity Data (PID)",
+        },
+        issuerOffers: {
+            description:
+                "Issuer offer entries shown to users, each with credential-offer URL and description.",
+            type: "array",
+            items: {
+                $ref: "#/components/schemas/UpdateIssuerOfferDto",
+            },
         },
     },
 } as const;

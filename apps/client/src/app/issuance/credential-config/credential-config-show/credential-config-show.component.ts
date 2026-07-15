@@ -95,6 +95,20 @@ export class CredentialConfigShowComponent implements OnInit {
     return this.config?.config?.display?.[0];
   }
 
+  get schemaMetadataId(): string | null {
+    const id = (this.config as any)?.schemaMeta?.id;
+    return typeof id === 'string' && id.trim().length > 0 ? id : null;
+  }
+
+  get schemaMetadataRouteId(): string | null {
+    if (!this.schemaMetadataId) {
+      return null;
+    }
+
+    const segments = this.schemaMetadataId.split('/').filter(Boolean);
+    return segments.at(-1) ?? this.schemaMetadataId;
+  }
+
   get fields(): Record<string, unknown>[] {
     const value = (this.config as any)?.fields;
     return Array.isArray(value) ? (value as Record<string, unknown>[]) : [];

@@ -862,12 +862,15 @@
                     <mat-form-field>
                       <mat-label>Schema Metadata</mat-label>
                       <mat-select formControlName="schemaMetadataIds" multiple>
+                        <mat-select-trigger>
+                          {{ getSelectedSchemaMetadataLabels() }}
+                        </mat-select-trigger>
                         @for (
                           schema of availableSchemaMetadata;
                           track schema.id + '@' + schema.version
                         ) {
                           <mat-option [value]="schema.id + '@' + schema.version">
-                            {{ schema.id }} @ {{ schema.version }}
+                            {{ getSchemaMetadataOptionLabel(schema) }}
                           </mat-option>
                         }
                       </mat-select>

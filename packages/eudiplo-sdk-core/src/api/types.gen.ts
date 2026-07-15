@@ -1920,6 +1920,17 @@ export type TrustAuthorityDto = {
     };
 };
 
+export type IssuerOfferEntryDto = {
+    /**
+     * URL where the user can receive a credential offer from this issuer.
+     */
+    credentialOfferUrl: string;
+    /**
+     * Human-readable description explaining when this issuer offer is relevant for the user.
+     */
+    description: string;
+};
+
 export type AccessCertificateRefDto = {
     id: string;
     relyingPartyId: string;
@@ -1974,6 +1985,14 @@ export type SchemaMetadataResponseDto = {
      */
     tags?: Array<string>;
     /**
+     * Optional human-readable schema name for UI display and filtering.
+     */
+    displayName?: string;
+    /**
+     * Issuer offer entries for this schema metadata. Each entry provides a credential offer URL and user-facing description.
+     */
+    issuerOffers: Array<IssuerOfferEntryDto>;
+    /**
      * The original signed JWT
      */
     signedJwt: string;
@@ -2015,6 +2034,17 @@ export type SchemaMetadataResponseDto = {
     deprecatedAt?: string;
 };
 
+export type UpdateIssuerOfferDto = {
+    /**
+     * URL where the user can receive a credential offer from this issuer.
+     */
+    credentialOfferUrl?: string;
+    /**
+     * Human-readable description to help users choose the right issuer.
+     */
+    description?: string;
+};
+
 export type UpdateSchemaMetadataDto = {
     /**
      * Domain category for filtering
@@ -2024,6 +2054,14 @@ export type UpdateSchemaMetadataDto = {
      * Predefined tags for filtering and search
      */
     tags?: Array<'pid' | 'eudi' | 'kyc' | 'aml' | 'age-verification' | 'residency' | 'membership' | 'education' | 'employment' | 'mobility'>;
+    /**
+     * Optional human-readable schema name for UI display and search
+     */
+    displayName?: string;
+    /**
+     * Issuer offer entries shown to users, each with credential-offer URL and description
+     */
+    issuerOffers?: Array<UpdateIssuerOfferDto>;
 };
 
 export type DeprecateSchemaMetadataDto = {

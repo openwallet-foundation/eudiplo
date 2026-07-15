@@ -39,6 +39,12 @@ export enum SchemaMetaFrameworkType {
     OPENID_FEDERATION = "openid_federation",
 }
 
+export enum SchemaMetadataPinMode {
+    KEEP_CURRENT = "keep_current",
+    UPDATE_TO_NEW_VERSION = "update_to_new_version",
+    REPLACE_ID = "replace_id",
+}
+
 /**
  * Schema URI entry per attestation format.
  */
@@ -151,6 +157,15 @@ export class SchemaMetaConfig {
     id?: string;
 
     @ApiPropertyOptional({
+        description:
+            "Human-readable name of the schema metadata entry. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.",
+        example: "German PID",
+    })
+    @IsOptional()
+    @IsString()
+    name?: string;
+
+    @ApiPropertyOptional({
         description: "Schema version in SemVer format",
         example: "1.0.0",
     })
@@ -158,11 +173,13 @@ export class SchemaMetaConfig {
     version!: string;
 
     @ApiPropertyOptional({
-        description: "URI of the Attestation Rulebook",
+        description:
+            "URI of the Attestation Rulebook. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.",
         example: "https://example.com/rulebooks/my-credential/1.0.0.md",
     })
+    @IsOptional()
     @IsString()
-    rulebookURI!: string;
+    rulebookURI?: string;
 
     @ApiPropertyOptional({
         enum: AttestationLoS,
@@ -225,6 +242,16 @@ export class SignSchemaMetaConfigDto {
     @IsOptional()
     @IsString()
     credentialConfigId?: string;
+
+    @ApiPropertyOptional({
+        enum: SchemaMetadataPinMode,
+        description:
+            "How to update credential config pinning after publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to a different schema id.",
+        default: SchemaMetadataPinMode.KEEP_CURRENT,
+    })
+    @IsOptional()
+    @IsEnum(SchemaMetadataPinMode)
+    pinMode?: SchemaMetadataPinMode;
 }
 
 /**
@@ -241,4 +268,22 @@ export class SignVersionSchemaMetaConfigDto {
     @ValidateNested()
     @Type(() => SchemaMetaConfig)
     config!: SchemaMetaConfig;
+
+    @ApiPropertyOptional({
+        description:
+            "Optional credential config to update pinning for after successful version publish.",
+    })
+    @IsOptional()
+    @IsString()
+    credentialConfigId?: string;
+
+    @ApiPropertyOptional({
+        enum: SchemaMetadataPinMode,
+        description:
+            "How to update credential config pinning after version publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to config.id.",
+        default: SchemaMetadataPinMode.KEEP_CURRENT,
+    })
+    @IsOptional()
+    @IsEnum(SchemaMetadataPinMode)
+    pinMode?: SchemaMetadataPinMode;
 }

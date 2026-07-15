@@ -378,8 +378,11 @@ export class SchemaMetadataShowComponent implements OnInit {
       return;
     }
 
-    const config: SchemaMetaConfig = {
+    const schemaMetadataName = (this.item as { name?: string } | undefined)?.name ?? this.id;
+
+    const config = {
       id: catalogId,
+      name: schemaMetadataName,
       version: newVersion,
       rulebookURI: rulebookURI ?? undefined,
       attestationLoS: this.item.attestationLoS,
@@ -408,7 +411,7 @@ export class SchemaMetadataShowComponent implements OnInit {
 
     this.publishing = true;
     try {
-      const newEntry = await this.schemaMetadataService.publishNewVersion(config);
+      const newEntry = await this.schemaMetadataService.publishSchemaMetadataVersion(config);
 
       if (deprecateCurrent) {
         await this.schemaMetadataService.deprecateVersion(this.item.id, this.item.version, {

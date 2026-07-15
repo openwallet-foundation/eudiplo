@@ -469,6 +469,27 @@ export class IssuanceConfigCreateComponent implements OnInit {
     );
   }
 
+  getSchemaMetadataOptionLabel(metadata: SchemaMetadataResponseDto): string {
+    const idAndVersion = `${metadata.id} @ ${metadata.version}`;
+    return metadata.displayName ? `${metadata.displayName} (${idAndVersion})` : idAndVersion;
+  }
+
+  getSchemaMetadataSelectionLabel(selection: string): string {
+    const metadata = this.findSchemaMetadataBySelection(selection);
+    return metadata ? this.getSchemaMetadataOptionLabel(metadata) : selection;
+  }
+
+  getSelectedSchemaMetadataLabels(): string {
+    const selected = this.registrationCertificate.get('schemaMetadataIds')?.value;
+    if (!Array.isArray(selected) || selected.length === 0) {
+      return '';
+    }
+
+    return selected
+      .map((selection) => this.getSchemaMetadataSelectionLabel(String(selection)))
+      .join(', ');
+  }
+
   private buildAttestationsFromSchemaMetadata(metadata: SchemaMetadataResponseDto): any[] {
     const schemaUris = Array.isArray(metadata.schemaURIs) ? metadata.schemaURIs : [];
     if (schemaUris.length > 0) {

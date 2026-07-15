@@ -226,6 +226,17 @@ export type TrustAuthority = {
     schemaMetadata: SchemaMetadata;
 };
 
+export type IssuerOfferEntry = {
+    /**
+     * URL where the user can receive a credential offer from this issuer.
+     */
+    credentialOfferUrl: string;
+    /**
+     * Human-readable description explaining when this issuer offer is relevant for the user.
+     */
+    description: string;
+};
+
 export type SchemaMetadata = {
     /**
      * Stable schema identifier. For reserved catalog URLs, this stores the last path segment.
@@ -267,6 +278,10 @@ export type SchemaMetadata = {
      * Trust frameworks / trust anchors applicable to this schema metadata.
      */
     trustedAuthorities: Array<TrustAuthority>;
+    /**
+     * Issuer offer entries for this schema metadata. Each entry provides a credential offer URL and user-facing description.
+     */
+    issuerOffers: Array<IssuerOfferEntry>;
     /**
      * Domain category for filtering.
      */
@@ -408,6 +423,17 @@ export type SetVersionDeprecationDto = {
     supersededByVersion?: string;
 };
 
+export type UpdateIssuerOfferDto = {
+    /**
+     * URL where the user can receive a credential offer from this issuer.
+     */
+    credentialOfferUrl?: string;
+    /**
+     * Human-readable description to help users choose the right issuer.
+     */
+    description?: string;
+};
+
 export type UpdateSchemaMetadataDto = {
     /**
      * Domain category for filtering.
@@ -439,6 +465,10 @@ export type UpdateSchemaMetadataDto = {
      * Optional human-readable schema name for UI display and search.
      */
     displayName?: string;
+    /**
+     * Issuer offer entries shown to users, each with credential-offer URL and description.
+     */
+    issuerOffers?: Array<UpdateIssuerOfferDto>;
 };
 
 export type InternalSchemaMetadataDto = {

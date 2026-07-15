@@ -509,15 +509,51 @@ export class Oid4vciService {
         };
     }
 
+    private normalizeSchemaMetadataIds(
+        ids: Array<string | null | undefined>,
+    ): string[] {
+        return Array.from(
+            new Set(
+                ids
+                    .filter(
+                        (id): id is string =>
+                            typeof id === "string" && id.trim().length > 0,
+                    )
+                    .map((id) => id.trim()),
+            ),
+        ).sort((left, right) => left.localeCompare(right));
+    }
+
+    private async resolveSchemaMetadataIdsForRegistrationCertificate(
+        tenantId: string,
+        registrationCertificateConfig: IssuerRegistrationCertificateConfig,
+    ): Promise<string[]> {
+        const configuredSchemaMetadataIds = this.normalizeSchemaMetadataIds(
+            registrationCertificateConfig.schemaMetadataIds ?? [],
+        );
+        if (configuredSchemaMetadataIds.length > 0) {
+            return configuredSchemaMetadataIds;
+        }
+
+        const credentialConfigs =
+            await this.credentialsService.getCredentialConfigsForTenant(
+                tenantId,
+            );
+
+        return this.normalizeSchemaMetadataIds(
+            credentialConfigs.map((credentialConfig) =>
+                credentialConfig.schemaMeta?.id,
+            ),
+        );
+    }
+
     private computeRegistrationCertificateFingerprint(
         registrationCertificateConfig: IssuerRegistrationCertificateConfig,
+        resolvedSchemaMetadataIds: string[],
     ): string {
         const material = {
             mode: registrationCertificateConfig.mode,
-            schemaMetadataIds:
-                registrationCertificateConfig.schemaMetadataIds
-                    ?.slice()
-                    .sort() ?? [],
+            schemaMetadataIds: resolvedSchemaMetadataIds,
             privacyPolicy: registrationCertificateConfig.privacyPolicy,
             supportUri: registrationCertificateConfig.supportUri,
             providedAttestations:
@@ -629,8 +665,15 @@ export class Oid4vciService {
             return undefined;
         }
 
+        const schemaMetadataIds =
+            await this.resolveSchemaMetadataIdsForRegistrationCertificate(
+                tenantId,
+                registrationCertificateConfig,
+            );
+
         const fingerprint = this.computeRegistrationCertificateFingerprint(
             registrationCertificateConfig,
+            schemaMetadataIds,
         );
 
         const issuanceConfig =
@@ -667,9 +710,19 @@ export class Oid4vciService {
             return undefined;
         }
 
+        if (schemaMetadataIds.length === 0) {
+            this.logger.warn(
+                `[${tenantId}] registrationCertificate generate mode resolved no schema metadata IDs from credential configs; generated certificate will not include provides_attestations`,
+            );
+        }
+
         const creationBody: Partial<RegistrationCertificateCreation> = {
-            provides_attestations:
-                registrationCertificateConfig.providedAttestations as RegistrationCertificateCreation["provides_attestations"],
+            ...(schemaMetadataIds.length > 0
+                ? {
+                      provides_attestations:
+                          schemaMetadataIds as RegistrationCertificateCreation["provides_attestations"],
+                  }
+                : {}),
             credentials,
             ...(registrationCertificateConfig.privacyPolicy
                 ? {

@@ -20,6 +20,15 @@ export enum IssuerRegistrationCertificateMode {
 export class IssuerProvidedAttestation {
     @ApiPropertyOptional({
         description:
+            "Credential configuration ID backing this attestation entry (for payload traceability/UI mapping).",
+        example: "pid-no-key",
+    })
+    @IsOptional()
+    @IsString()
+    credentialConfigId?: string;
+
+    @ApiPropertyOptional({
+        description:
             "Attestation format as expected by the registrar (for example dc+sd-jwt, mso_mdoc).",
         example: "dc+sd-jwt",
     })
@@ -72,7 +81,7 @@ export class IssuerRegistrationCertificateConfig {
 
     @ApiPropertyOptional({
         description:
-            "Schema metadata IDs selected for inclusion in generated registration certificates.",
+            "Schema metadata IDs selected for inclusion in generated registration certificates. When provided, this overrides credential-config-derived schema metadata IDs.",
         type: () => [String],
     })
     @IsOptional()

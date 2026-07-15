@@ -8,9 +8,9 @@ import {
   schemaMetadataControllerGetLatest,
   schemaMetadataControllerGetVocabularies,
   schemaMetadataControllerGetVersions,
+  schemaMetadataControllerPublishSchemaMetadata,
+  schemaMetadataControllerPublishSchemaMetadataVersion,
   schemaMetadataControllerRemove,
-  schemaMetadataControllerSignSchemaMetaConfig,
-  schemaMetadataControllerSignVersionSchemaMetaConfig,
   schemaMetadataControllerUpdate,
   type DeprecateSchemaMetadataDto,
   type SchemaMetaConfig,
@@ -117,37 +117,46 @@ export class SchemaMetadataService {
   }
 
   /**
-   * Signs the supplied SchemaMetaConfig (with the existing `id` already set)
-   * and submits it to the registrar as a new version. The backend recomputes
-   * SRI hashes server-side, so `rulebookIntegrity` does not need to be
-   * provided by the caller.
+   * Publishes the supplied SchemaMetaConfig (with existing `id`) as a new
+   * version via the non-deprecated publish-version endpoint.
    */
-  async publishNewVersion(config: SchemaMetaConfig, keyChainId?: string): Promise<SchemaMetadata> {
-    const response = await schemaMetadataControllerSignVersionSchemaMetaConfig({
-      body: { config, ...(keyChainId ? { keyChainId } : {}) },
+  async publishSchemaMetadataVersion(
+    config: SchemaMetaConfig,
+    keyChainId?: string,
+    credentialConfigId?: string,
+    pinMode?: 'keep_current' | 'update_to_new_version' | 'replace_id'
+  ): Promise<SchemaMetadata> {
+    const response = await schemaMetadataControllerPublishSchemaMetadataVersion({
+      body: {
+        config,
+        ...(keyChainId ? { keyChainId } : {}),
+        ...(credentialConfigId ? { credentialConfigId } : {}),
+        ...(pinMode ? { pinMode } : {}),
+      },
     });
 
     return response.data as SchemaMetadata;
   }
 
   /**
-   * Reserve an attestation id at the registrar, sign the supplied
-   * SchemaMetaConfig (with the reserved id baked in as `id`) and submit
-   * the JWS to the registrar in a single backend round-trip. Returns the
+  * Reserve an attestation id at the registrar and publish the supplied
+  * SchemaMetaConfig in a single backend round-trip. Returns the
    * registrar's metadata entry for the freshly created attestation.
    *
    * `keyChainId` is optional (defaults to the tenant's default key chain).
    */
-  async signSchemaMetaConfig(
+  async publishSchemaMetadata(
     config: Omit<SchemaMetaConfig, 'id'>,
     keyChainId?: string,
-    credentialConfigId?: string
+    credentialConfigId?: string,
+    pinMode?: 'keep_current' | 'update_to_new_version' | 'replace_id'
   ): Promise<SchemaMetadata> {
-    const response = await schemaMetadataControllerSignSchemaMetaConfig({
+    const response = await schemaMetadataControllerPublishSchemaMetadata({
       body: {
         config,
         ...(keyChainId ? { keyChainId } : {}),
         ...(credentialConfigId ? { credentialConfigId } : {}),
+        ...(pinMode ? { pinMode } : {}),
       },
     });
 

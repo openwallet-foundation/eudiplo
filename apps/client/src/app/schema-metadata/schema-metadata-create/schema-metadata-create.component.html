@@ -71,7 +71,7 @@
 
       <div fxLayout="row" fxLayoutGap="12px" fxLayout.lt-md="column">
         <mat-form-field fxFlex appearance="outline">
-          <mat-label>Name (optional)</mat-label>
+          <mat-label>Name</mat-label>
           <input
             id="schema-metadata-name"
             matInput
@@ -79,6 +79,9 @@
             aria-label="Schema metadata name"
             placeholder="Gym Membership Card"
           />
+          @if (composeForm.get('name')?.hasError('required') && composeForm.get('name')?.touched) {
+            <mat-error>Name is required.</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field fxFlex appearance="outline">

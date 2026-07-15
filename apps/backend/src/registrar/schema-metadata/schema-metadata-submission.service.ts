@@ -5,6 +5,7 @@ import { KeyChainService } from "../../crypto/key/key-chain.service";
 import { SchemaMetadataService } from "./schema-metadata.service";
 import { CredentialConfigService } from "../../issuer/configuration/credentials/credential-config/credential-config.service";
 import {
+    SchemaMetadataPinMode,
     SignSchemaMetaConfigDto,
     SignVersionSchemaMetaConfigDto,
 } from "../../issuer/configuration/credentials/dto/schema-meta-config.dto";
@@ -463,6 +464,7 @@ export class SchemaMetadataSubmissionService {
     ): Record<string, unknown> {
         const metadata: Record<string, unknown> = {
             ...(config.id ? { id: config.id } : {}),
+            name: config.name,
             version: config.version,
             attestationLoS: config.attestationLoS,
             bindingType: config.bindingType,
@@ -516,11 +518,99 @@ export class SchemaMetadataSubmissionService {
         return metadata;
     }
 
+    private async updateCredentialConfigSchemaMetaLink(
+        tenantId: string,
+        credentialConfigId: string,
+        normalizedConfig: SignSchemaMetaConfigDto["config"],
+        generatedSchemaMetadataId: string,
+        pinMode: SchemaMetadataPinMode = SchemaMetadataPinMode.KEEP_CURRENT,
+    ): Promise<void> {
+        const existing = await this.credentialsService.getById(
+            tenantId,
+            credentialConfigId,
+        );
+
+        const existingPinnedId =
+            typeof existing.schemaMeta?.id === "string"
+                ? existing.schemaMeta.id
+                : undefined;
+
+        if (
+            existingPinnedId &&
+            existingPinnedId !== generatedSchemaMetadataId &&
+            pinMode !== SchemaMetadataPinMode.REPLACE_ID
+        ) {
+            throw new BadRequestException(
+                `Credential config '${credentialConfigId}' is already pinned to schema metadata id '${existingPinnedId}'. Use pinMode='replace_id' to repoint it to '${generatedSchemaMetadataId}'.`,
+            );
+        }
+
+        const hasNoPinnedId = !existingPinnedId;
+        const isSamePinnedId = existingPinnedId === generatedSchemaMetadataId;
+
+        const shouldUpdatePin =
+            hasNoPinnedId ||
+            pinMode === SchemaMetadataPinMode.REPLACE_ID ||
+            (pinMode === SchemaMetadataPinMode.UPDATE_TO_NEW_VERSION &&
+                isSamePinnedId);
+
+        if (!shouldUpdatePin) {
+            return;
+        }
+
+        const schemaMetaForLink = {
+            ...existing.schemaMeta,
+            ...normalizedConfig,
+            id: generatedSchemaMetadataId,
+        };
+
+        await this.credentialsService.update(tenantId, credentialConfigId, {
+            schemaMeta: schemaMetaForLink as any,
+        });
+    }
+
     async submitSchemaMetadata(
         tenantId: string,
         body: SignSchemaMetaConfigDto,
     ) {
         const normalizedConfig = this.normalizeConfigFromFormInput(body.config);
+
+        const isLinkOnlyRequest =
+            !!body.credentialConfigId &&
+            typeof normalizedConfig.id === "string" &&
+            normalizedConfig.id.trim().length > 0 &&
+            (!normalizedConfig.rulebookURI ||
+                normalizedConfig.rulebookURI.trim().length === 0);
+
+        if (isLinkOnlyRequest) {
+            await this.updateCredentialConfigSchemaMetaLink(
+                tenantId,
+                body.credentialConfigId!,
+                normalizedConfig,
+                normalizedConfig.id!,
+                body.pinMode,
+            );
+
+            return this.schemaMetadataService.getById(
+                tenantId,
+                normalizedConfig.id!,
+            );
+        }
+
+        if (!normalizedConfig.name || normalizedConfig.name.trim().length === 0) {
+            throw new BadRequestException(
+                "config.name is required when publishing new schema metadata",
+            );
+        }
+
+        if (
+            !normalizedConfig.rulebookURI ||
+            normalizedConfig.rulebookURI.trim().length === 0
+        ) {
+            throw new BadRequestException(
+                "config.rulebookURI is required when publishing new schema metadata",
+            );
+        }
 
         const [rulebookFile, schemaEntries, trustedAuthorities] =
             await Promise.all([
@@ -554,21 +644,12 @@ export class SchemaMetadataSubmissionService {
         );
 
         if (body.credentialConfigId) {
-            const existing = await this.credentialsService.getById(
+            await this.updateCredentialConfigSchemaMetaLink(
                 tenantId,
                 body.credentialConfigId,
-            );
-            const schemaMetaForLink = {
-                ...existing.schemaMeta,
-                ...normalizedConfig,
-                id: result.id,
-            };
-            await this.credentialsService.update(
-                tenantId,
-                body.credentialConfigId,
-                {
-                    schemaMeta: schemaMetaForLink as any,
-                },
+                normalizedConfig,
+                result.id,
+                body.pinMode,
             );
         }
 
@@ -587,6 +668,21 @@ export class SchemaMetadataSubmissionService {
             );
         }
 
+        if (!normalizedConfig.name || normalizedConfig.name.trim().length === 0) {
+            throw new BadRequestException(
+                "config.name is required when publishing a new schema metadata version",
+            );
+        }
+
+        if (
+            !normalizedConfig.rulebookURI ||
+            normalizedConfig.rulebookURI.trim().length === 0
+        ) {
+            throw new BadRequestException(
+                "config.rulebookURI is required when publishing a new schema metadata version",
+            );
+        }
+
         const [rulebookFile, schemaEntries, trustedAuthorities] =
             await Promise.all([
                 this.fetchRemoteFile(
@@ -594,21 +690,40 @@ export class SchemaMetadataSubmissionService {
                     `rulebook-${normalizedConfig.version}.md`,
                     "rulebook",
                 ),
-                this.resolveSchemaEntries(tenantId, normalizedConfig),
+                this.resolveSchemaEntries(
+                    tenantId,
+                    normalizedConfig,
+                    body.credentialConfigId,
+                ),
                 this.resolveTrustedAuthoritiesForRegistrar(
                     tenantId,
                     normalizedConfig.trustedAuthorities,
                 ),
             ]);
 
-        return this.schemaMetadataService.createSchemaMetadata(tenantId, {
-            metadata: this.buildRegistrarMetadata(
+        const result = await this.schemaMetadataService.createSchemaMetadata(
+            tenantId,
+            {
+                metadata: this.buildRegistrarMetadata(
+                    normalizedConfig,
+                    schemaEntries,
+                    trustedAuthorities,
+                ),
+                rulebookFile,
+                schemaFiles: schemaEntries.map((entry) => entry.file),
+            },
+        );
+
+        if (body.credentialConfigId) {
+            await this.updateCredentialConfigSchemaMetaLink(
+                tenantId,
+                body.credentialConfigId,
                 normalizedConfig,
-                schemaEntries,
-                trustedAuthorities,
-            ),
-            rulebookFile,
-            schemaFiles: schemaEntries.map((entry) => entry.file),
-        });
+                result.id,
+                body.pinMode,
+            );
+        }
+
+        return result;
     }
 }

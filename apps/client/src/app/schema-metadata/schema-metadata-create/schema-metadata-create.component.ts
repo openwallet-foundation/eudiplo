@@ -101,7 +101,7 @@ export class SchemaMetadataCreateComponent implements OnInit {
     rulebookURI: new FormControl('', [Validators.required]),
     attestationLoS: new FormControl('', [Validators.required]),
     bindingType: new FormControl('', [Validators.required]),
-    name: new FormControl(''),
+    name: new FormControl('', [Validators.required]),
     category: new FormControl(''),
     tags: new FormControl<string[]>([]),
     schemaURIs: new FormArray<FormGroup>([], Validators.required),
@@ -131,6 +131,7 @@ export class SchemaMetadataCreateComponent implements OnInit {
 
   applyDemoValues(): void {
     this.composeForm.patchValue({
+      name: 'German PID',
       version: '1.0.0',
       rulebookURI:
         'https://raw.githubusercontent.com/cre8/catalog-of-attestations/refs/heads/main/rulebooks/gym-membership-card/1.0.0.md',
@@ -330,7 +331,7 @@ export class SchemaMetadataCreateComponent implements OnInit {
       // The backend reserves the attestation id, signs the config and submits
       // it to the registrar in a single call — we just receive the resulting
       // metadata entry.
-      const created = await this.schemaMetadataService.signSchemaMetaConfig(
+      const created = await this.schemaMetadataService.publishSchemaMetadata(
         this.buildConfigFromForm(),
         undefined,
         this.credentialConfigId

@@ -3886,6 +3886,24 @@ export const TrustAuthorityDtoSchema = {
     ]
 } as const;
 
+export const IssuerOfferEntryDtoSchema = {
+    type: 'object',
+    properties: {
+        credentialOfferUrl: {
+            type: 'string',
+            description: 'URL where the user can receive a credential offer from this issuer.'
+        },
+        description: {
+            type: 'string',
+            description: 'Human-readable description explaining when this issuer offer is relevant for the user.'
+        }
+    },
+    required: [
+        'credentialOfferUrl',
+        'description'
+    ]
+} as const;
+
 export const AccessCertificateRefDtoSchema = {
     type: 'object',
     properties: {
@@ -3998,6 +4016,17 @@ export const SchemaMetadataResponseDtoSchema = {
                 type: 'string'
             }
         },
+        displayName: {
+            type: 'string',
+            description: 'Optional human-readable schema name for UI display and filtering.'
+        },
+        issuerOffers: {
+            description: 'Issuer offer entries for this schema metadata. Each entry provides a credential offer URL and user-facing description.',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/IssuerOfferEntryDto'
+            }
+        },
         signedJwt: {
             type: 'string',
             description: 'The original signed JWT'
@@ -4051,6 +4080,7 @@ export const SchemaMetadataResponseDtoSchema = {
         'supportedFormats',
         'schemaURIs',
         'trustedAuthorities',
+        'issuerOffers',
         'signedJwt',
         'issuer',
         'issuedAt',
@@ -4058,6 +4088,20 @@ export const SchemaMetadataResponseDtoSchema = {
         'updatedAt',
         'deprecated'
     ]
+} as const;
+
+export const UpdateIssuerOfferDtoSchema = {
+    type: 'object',
+    properties: {
+        credentialOfferUrl: {
+            type: 'string',
+            description: 'URL where the user can receive a credential offer from this issuer.'
+        },
+        description: {
+            type: 'string',
+            description: 'Human-readable description to help users choose the right issuer.'
+        }
+    }
 } as const;
 
 export const UpdateSchemaMetadataDtoSchema = {
@@ -4094,6 +4138,17 @@ export const UpdateSchemaMetadataDtoSchema = {
                 ]
             },
             description: 'Predefined tags for filtering and search'
+        },
+        displayName: {
+            type: 'string',
+            description: 'Optional human-readable schema name for UI display and search'
+        },
+        issuerOffers: {
+            description: 'Issuer offer entries shown to users, each with credential-offer URL and description',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/UpdateIssuerOfferDto'
+            }
         }
     }
 } as const;

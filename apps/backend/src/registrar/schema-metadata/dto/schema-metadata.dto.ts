@@ -7,6 +7,15 @@ import {
     IsString,
     ValidateNested,
 } from "class-validator";
+import type {
+    AccessCertificate,
+    MetadataSchema,
+    SchemaMetadata,
+    TrustAuthority,
+    UpdateIssuerOfferDto as GeneratedUpdateIssuerOfferDto,
+    UpdateSchemaMetadataDto as GeneratedUpdateSchemaMetadataDto,
+    IssuerOfferEntry,
+} from "../../generated";
 
 const ATTESTATION_LOS_VALUES = [
     "iso_18045_high",
@@ -54,10 +63,30 @@ export type VocabularyStatus = (typeof VOCABULARY_STATUS_VALUES)[number];
 // Request bodies
 // ─────────────────────────────────────────────────────────────────────────────
 
+export class UpdateIssuerOfferDto implements GeneratedUpdateIssuerOfferDto {
+    @ApiPropertyOptional({
+        description:
+            "URL where the user can receive a credential offer from this issuer.",
+    })
+    @IsOptional()
+    @IsString()
+    credentialOfferUrl?: string;
+
+    @ApiPropertyOptional({
+        description:
+            "Human-readable description to help users choose the right issuer.",
+    })
+    @IsOptional()
+    @IsString()
+    description?: string;
+}
+
 /**
  * Request body for `PATCH /registrar/schema-metadata/:id`.
  */
-export class UpdateSchemaMetadataDto {
+export class UpdateSchemaMetadataDto
+    implements GeneratedUpdateSchemaMetadataDto
+{
     @ApiPropertyOptional({
         description: "Domain category for filtering",
         enum: CATEGORY_VALUES,
@@ -75,6 +104,25 @@ export class UpdateSchemaMetadataDto {
     @IsArray()
     @IsEnum(TAG_VALUES, { each: true })
     tags?: SchemaMetadataTag[];
+
+    @ApiPropertyOptional({
+        description:
+            "Optional human-readable schema name for UI display and search",
+    })
+    @IsOptional()
+    @IsString()
+    displayName?: string;
+
+    @ApiPropertyOptional({
+        description:
+            "Issuer offer entries shown to users, each with credential-offer URL and description",
+        type: [UpdateIssuerOfferDto],
+    })
+    @IsOptional()
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => UpdateIssuerOfferDto)
+    issuerOffers?: UpdateIssuerOfferDto[];
 }
 
 export class VocabularyEntryDto {
@@ -130,7 +178,9 @@ export class SchemaMetadataVocabulariesDto {
 // Response DTOs
 // ─────────────────────────────────────────────────────────────────────────────
 
-export class MetadataSchemaDto {
+type MetadataSchemaBase = Omit<MetadataSchema, "schemaMetadata">;
+
+export class MetadataSchemaDto implements MetadataSchemaBase {
     @ApiProperty({ description: "Unique identifier for this schema entry" })
     id!: string;
 
@@ -156,7 +206,9 @@ export class MetadataSchemaDto {
     integrity?: string;
 }
 
-export class TrustAuthorityDto {
+type TrustAuthorityBase = Omit<TrustAuthority, "schemaMetadata">;
+
+export class TrustAuthorityDto implements TrustAuthorityBase {
     @ApiProperty({
         description: "Unique identifier for this trust authority entry",
     })
@@ -182,7 +234,12 @@ export class TrustAuthorityDto {
     verificationMethod?: Record<string, unknown>;
 }
 
-export class AccessCertificateRefDto {
+type AccessCertificateRefBase = Pick<
+    AccessCertificate,
+    "id" | "relyingPartyId" | "certificate" | "revoked" | "createdAt"
+>;
+
+export class AccessCertificateRefDto implements AccessCertificateRefBase {
     @ApiProperty()
     id!: string;
 
@@ -199,13 +256,36 @@ export class AccessCertificateRefDto {
     createdAt!: string;
 }
 
+export class IssuerOfferEntryDto implements IssuerOfferEntry {
+    @ApiProperty({
+        description:
+            "URL where the user can receive a credential offer from this issuer.",
+    })
+    credentialOfferUrl!: string;
+
+    @ApiProperty({
+        description:
+            "Human-readable description explaining when this issuer offer is relevant for the user.",
+    })
+    description!: string;
+}
+
 /**
  * Schema metadata record as returned by `GET/POST /registrar/schema-metadata` and friends.
  *
  * The shape mirrors the registrar-API response 1:1 so that the service can pass
  * upstream payloads through unchanged.
  */
-export class SchemaMetadataResponseDto {
+type SchemaMetadataResponseBase = Omit<
+    SchemaMetadata,
+    "schemaURIs" | "trustedAuthorities" | "signerCertificate"
+> & {
+    schemaURIs: MetadataSchemaDto[];
+    trustedAuthorities: TrustAuthorityDto[];
+    signerCertificate?: AccessCertificateRefDto;
+};
+
+export class SchemaMetadataResponseDto implements SchemaMetadataResponseBase {
     @ApiProperty({
         description:
             "The unique, server-assigned identifier (UUID) for the schema metadata",
@@ -273,6 +353,21 @@ export class SchemaMetadataResponseDto {
         type: [String],
     })
     tags?: string[];
+
+    @ApiPropertyOptional({
+        description:
+            "Optional human-readable schema name for UI display and filtering.",
+    })
+    displayName?: string;
+
+    @ApiProperty({
+        description:
+            "Issuer offer entries for this schema metadata. Each entry provides a credential offer URL and user-facing description.",
+        type: [IssuerOfferEntryDto],
+    })
+    @ValidateNested({ each: true })
+    @Type(() => IssuerOfferEntryDto)
+    issuerOffers!: IssuerOfferEntryDto[];
 
     @ApiProperty({ description: "The original signed JWT" })
     signedJwt!: string;
