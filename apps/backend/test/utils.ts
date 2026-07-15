@@ -680,7 +680,7 @@ export async function setupPresentationTestApp(): Promise<PresentationTestContex
                 `Request failed: expected ${expectedStatus}, got ${res.status} for endpoint ${req.url}`,
             );
             console.error("Response body:", JSON.stringify(res.body, null, 2));
-        }        
+        }
         expect(res.status).toBe(expectedStatus);
         return res;
     }
