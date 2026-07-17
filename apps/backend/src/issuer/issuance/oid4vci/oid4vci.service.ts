@@ -1074,7 +1074,7 @@ export class Oid4vciService {
                 throw new NotFoundException("Credential offer not found");
             });
 
-        /*         if (!session.offer) {
+                if (!session.offer) {
             throw new NotFoundException("Credential offer not found");
         }
 
@@ -1085,7 +1085,7 @@ export class Oid4vciService {
 
         if (!consumed) {
             throw new NotFoundException("Credential offer not found");
-        } */
+        }
 
         return session.offer as CredentialOfferObject;
     }
