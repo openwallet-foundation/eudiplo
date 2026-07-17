@@ -155,7 +155,7 @@ async function bootstrap() {
         )
         .setExternalDoc(
             "Documentation",
-            "https://openwallet-foundation.github.io/eudiplo/latest/",
+            "https://openwallet-foundation.github.io/eudiplo/docs/latest/",
         )
         .setOpenAPIVersion("3.1.0")
         .setVersion(process.env.VERSION ?? "main");
@@ -199,7 +199,7 @@ async function bootstrap() {
         )
         .setExternalDoc(
             "Documentation",
-            "https://openwallet-foundation.github.io/eudiplo/latest/",
+            "https://openwallet-foundation.github.io/eudiplo/docs/latest/",
         )
         .setOpenAPIVersion("3.1.0")
         .setVersion(process.env.VERSION ?? "main")
@@ -307,7 +307,7 @@ async function bootstrap() {
             logger.log(`   → Management:   ${baseUrl}/api/docs`);
             logger.log(`   → Protocol:     ${baseUrl}/docs`);
             logger.log(
-                `   → Full Docs:    https://openwallet-foundation.github.io/eudiplo/latest/`,
+                `   → Full Docs:    https://openwallet-foundation.github.io/eudiplo/docs/latest/`,
             );
             logger.log("");
             logger.log("🏥 Health Check:");

@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/openwallet-foundation/eudiplo/actions/workflows/ci-and-release.yml/badge.svg)](https://github.com/openwallet-foundation/eudiplo/actions)
 ![License](https://img.shields.io/github/license/openwallet-foundation/eudiplo)
-[![Website](https://img.shields.io/badge/website-eudiplo-blue)](https://openwallet-foundation.github.io/eudiplo/latest/)
+[![Website](https://img.shields.io/badge/website-eudiplo-blue)](https://openwallet-foundation.github.io/eudiplo/docs/latest/)
 [![Documentation Coverage](https://openwallet-foundation.github.io/eudiplo/main/compodoc/images/coverage-badge-documentation.svg)](https://openwallet-foundation.github.io/eudiplo/main/compodoc/coverage.html)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=openwallet-foundation_eudiplo&metric=coverage)](https://sonarcloud.io/project/overview?id=openwallet-foundation_eudiplo)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=openwallet-foundation_eudiplo&metric=security_rating)](https://sonarcloud.io/project/overview?id=openwallet-foundation_eudiplo)
@@ -158,10 +158,10 @@ curl -X POST http://localhost:3000/api/oauth2/token \
 ```
 
 📚 API:
-[https://openwallet-foundation.github.io/eudiplo/latest/api/](https://openwallet-foundation.github.io/eudiplo/latest/api/)  
+[https://openwallet-foundation.github.io/eudiplo/docs/latest/api/](https://openwallet-foundation.github.io/eudiplo/docs/latest/api/)  
 📦
 Full setup:
-[Quickstart Guide](https://openwallet-foundation.github.io/eudiplo/latest/getting-started/quick-start/)
+[Quickstart Guide](https://openwallet-foundation.github.io/eudiplo/docs/latest/getting-started/quick-start/)
 
 ---
 
@@ -170,7 +170,7 @@ Full setup:
 **Choose your documentation version:**
 
 - 🚀 **Latest Stable** (recommended):
-  [https://openwallet-foundation.github.io/eudiplo/latest/](https://openwallet-foundation.github.io/eudiplo/latest/) -
+  [https://openwallet-foundation.github.io/eudiplo/docs/latest/](https://openwallet-foundation.github.io/eudiplo/docs/latest/) -
   Documentation for the most recent major release
 - 🔬 **Development**:
   [https://openwallet-foundation.github.io/eudiplo/main/](https://openwallet-foundation.github.io/eudiplo/main/) -
@@ -181,10 +181,10 @@ Full setup:
 
 **Key sections:**
 
-- [Architecture](https://openwallet-foundation.github.io/eudiplo/latest/architecture/)
-- [Supported Protocols](https://openwallet-foundation.github.io/eudiplo/latest/architecture/supported-protocols/)
-- [API Reference](https://openwallet-foundation.github.io/eudiplo/latest/api/)
-- [Code Documentation](https://openwallet-foundation.github.io/eudiplo/latest/compodoc/)
+- [Architecture](https://openwallet-foundation.github.io/eudiplo/docs/latest/architecture/)
+- [Supported Protocols](https://openwallet-foundation.github.io/eudiplo/docs/latest/architecture/supported-protocols/)
+- [API Reference](https://openwallet-foundation.github.io/eudiplo/docs/latest/api/)
+- [Code Documentation](https://openwallet-foundation.github.io/eudiplo/docs/latest/compodoc/)
 
 ---
 
@@ -207,4 +207,4 @@ Licensed under the [Apache 2.0 License](LICENSE)
 
 ## Governance
 
-The Project Charter for EUDIPLO can be found [here](https://github.com/openwallet-foundation/technical-project-charters/blob/main/EUDIPLO%20Technical%20Charter%20(FINAL%2008.11.25).pdf).
+The Project Charter for EUDIPLO can be found [here](<https://github.com/openwallet-foundation/technical-project-charters/blob/main/EUDIPLO%20Technical%20Charter%20(FINAL%2008.11.25).pdf>).

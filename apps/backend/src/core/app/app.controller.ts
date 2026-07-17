@@ -25,7 +25,7 @@ export class AppController {
         return {
             service: "EUDIPLO",
             documentation:
-                "https://openwallet-foundation.github.io/eudiplo/latest/",
+                "https://openwallet-foundation.github.io/eudiplo/docs/latest/",
         };
     }
 

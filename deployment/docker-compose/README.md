@@ -54,10 +54,10 @@ docker compose --profile full up -d       # Full
 By default, EUDIPLO mounts `/app/config` from a named Docker volume.
 
 - Default behavior (persistent named volume):
-    - `EUDIPLO_CONFIG_MOUNT` unset
-    - Compose uses `eudiplo-config:/app/config`
+  - `EUDIPLO_CONFIG_MOUNT` unset
+  - Compose uses `eudiplo-config:/app/config`
 - Use repository config files (useful for load tests and config import):
-    - Set `EUDIPLO_CONFIG_MOUNT=../../assets:/app/config`
+  - Set `EUDIPLO_CONFIG_MOUNT=../../assets:/app/config`
 
 When using the demo image (`EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo-demo:main` or `EUDIPLO_IMAGE=eudiplo-demo:local`), you typically do not need a bind mount for config import.
 
@@ -161,4 +161,4 @@ After deployment, access the services at:
 4. **Set up TLS/HTTPS** via reverse proxy
 5. **Configure backup strategies** for PostgreSQL and MinIO
 
-For more details, see the [full documentation](https://openwallet-foundation.github.io/eudiplo/latest/deployment/docker-compose/).
+For more details, see the [full documentation](https://openwallet-foundation.github.io/eudiplo/docs/latest/deployment/docker-compose/).

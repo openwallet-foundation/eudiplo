@@ -268,27 +268,6 @@ jobs:
           # Reuse existing gh-pages history when available so mike can maintain version metadata.
           git fetch origin gh-pages:gh-pages || true
 
-          # One-time migration support: if old mike history exists at gh-pages root,
-          # copy it under /docs so /docs/versions.json keeps historical versions.
-          if git rev-parse --verify gh-pages >/dev/null 2>&1 \
-            && git cat-file -e gh-pages:versions.json 2>/dev/null \
-            && ! git cat-file -e gh-pages:docs/versions.json 2>/dev/null; then
-            git worktree add gh-pages-bootstrap gh-pages
-            mkdir -p gh-pages-bootstrap/docs
-            mapfile -t version_entries < <(jq -r '.[] | .version, (.aliases[]?)' gh-pages-bootstrap/versions.json | awk 'NF' | sort -u)
-            for entry in "${version_entries[@]}" versions.json index.html; do
-              if [ -e "gh-pages-bootstrap/$entry" ] || [ -L "gh-pages-bootstrap/$entry" ]; then
-              cp -a "gh-pages-bootstrap/$entry" gh-pages-bootstrap/docs/
-              fi
-            done
-
-            git -C gh-pages-bootstrap add docs
-            git -C gh-pages-bootstrap commit -m "Bootstrap docs prefix from existing mike history" || true
-              bootstrap_head=$(git -C gh-pages-bootstrap rev-parse HEAD)
-            git worktree remove gh-pages-bootstrap --force
-              git update-ref refs/heads/gh-pages "$bootstrap_head"
-          fi
-
           mike deploy --branch gh-pages --deploy-prefix docs --alias-type copy --update-aliases main latest-dev
           mike set-default --branch gh-pages --deploy-prefix docs main
 

@@ -2,7 +2,7 @@
 
 This directory contains Kubernetes manifests for EUDIPLO using Kustomize for flexible, composable deployments.
 
-📚 **Full documentation:** [https://openwallet-foundation.github.io/eudiplo/latest/deployment/kubernetes/](https://openwallet-foundation.github.io/eudiplo/latest/deployment/kubernetes/)
+📚 **Full documentation:** [https://openwallet-foundation.github.io/eudiplo/docs/latest/deployment/kubernetes/](https://openwallet-foundation.github.io/eudiplo/docs/latest/deployment/kubernetes/)
 
 ## Directory Structure
 
@@ -148,4 +148,4 @@ kubectl -n eudiplo port-forward svc/eudiplo 3000:3000
 4. **Configure resource limits**
 5. **Set up monitoring** (Prometheus, Grafana)
 
-👉 **[Read the full documentation](https://openwallet-foundation.github.io/eudiplo/latest/deployment/kubernetes/)**
+👉 **[Read the full documentation](https://openwallet-foundation.github.io/eudiplo/docs/latest/deployment/kubernetes/)**
