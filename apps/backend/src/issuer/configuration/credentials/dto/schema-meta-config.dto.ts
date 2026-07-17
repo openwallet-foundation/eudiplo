@@ -13,7 +13,7 @@ import {
 /**
  * Attestation Level of Security (LoS) as defined in TS11.
  */
-export enum AttestationLoS {
+enum AttestationLoS {
     HIGH = "iso_18045_high",
     MODERATE = "iso_18045_moderate",
     ENHANCED_BASIC = "iso_18045_enhanced-basic",
@@ -23,7 +23,7 @@ export enum AttestationLoS {
 /**
  * Cryptographic binding type as defined in TS11.
  */
-export enum SchemaMetaBindingType {
+enum SchemaMetaBindingType {
     CLAIM = "claim",
     KEY = "key",
     BIOMETRIC = "biometric",
