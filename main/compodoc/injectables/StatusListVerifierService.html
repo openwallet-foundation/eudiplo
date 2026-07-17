@@ -1136,8 +1136,8 @@ The JWT is cached based on its TTL/exp claims.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="355"
-                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:355</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="356"
+                                    class="link-to-prism">src/shared/trust/status-list-verifier.service.ts:356</a></div>
                         </td>
                     </tr>
 
@@ -1750,6 +1750,7 @@ export class StatusListVerifierService {
         // Fetch and cache
         this.logger.debug(&#x60;Fetching status list JWT from ${uri}&#x60;);
         const token &#x3D; await this.fetchStatusListToken(uri);
+        console.log(token);
         if (typeof token !&#x3D;&#x3D; &quot;string&quot;) {
             throw new TypeError(
                 &#x60;Status list at ${uri} returned CWT while JWT was requested&#x60;,

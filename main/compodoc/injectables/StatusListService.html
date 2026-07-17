@@ -673,8 +673,8 @@ See RFC draft-ietf-oauth-status-list Section 9.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="524"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:524</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="522"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:522</a></div>
                         </td>
                     </tr>
 
@@ -938,8 +938,8 @@ The JWT includes:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="640"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:640</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="638"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:638</a></div>
                         </td>
                     </tr>
 
@@ -1032,8 +1032,8 @@ Only allows deletion if the list has no used entries.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="479"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:479</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="477"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:477</a></div>
                         </td>
                     </tr>
 
@@ -1765,8 +1765,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="460"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:460</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="458"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:458</a></div>
                         </td>
                     </tr>
 
@@ -1858,8 +1858,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="716"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:716</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="714"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:714</a></div>
                         </td>
                     </tr>
 
@@ -1930,8 +1930,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="760"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:760</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="758"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:758</a></div>
                         </td>
                     </tr>
 
@@ -2014,8 +2014,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="584"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:584</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="582"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:582</a></div>
                         </td>
                     </tr>
 
@@ -2328,8 +2328,8 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="665"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:665</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="663"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:663</a></div>
                         </td>
                     </tr>
 
@@ -2436,8 +2436,8 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="610"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:610</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="608"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:608</a></div>
                         </td>
                     </tr>
 
@@ -3006,9 +3006,7 @@ export class StatusListService {
                     ? new Date(jwtPayload.exp * 1000)
                     : undefined;
             const ttl &#x3D;
-                typeof jwtPayload.ttl &#x3D;&#x3D;&#x3D; &quot;number&quot;
-                    ? jwtPayload.ttl
-                    : undefined;
+                typeof jwtPayload.ttl &#x3D;&#x3D;&#x3D; &quot;number&quot; ? jwtPayload.ttl : undefined;
 
             const cwt &#x3D; await this.signStatusListCwt(
                 tenantId,

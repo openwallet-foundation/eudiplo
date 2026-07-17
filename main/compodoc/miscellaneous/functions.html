@@ -3407,7 +3407,7 @@ Converts to PEM format which is more reliably parsed by</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>attachResponseBodyCapture(req: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, res: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+<code>attachResponseBodyCapture(req: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, res: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, maxLoggedResponseBodyLength?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
                 </td>
             </tr>
 
@@ -3449,6 +3449,18 @@ Converts to PEM format which is more reliably parsed by</p>
 
                                             <td>
                                                     No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>maxLoggedResponseBodyLength</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
                                             </td>
 
 
@@ -3540,7 +3552,7 @@ Converts to PEM format which is more reliably parsed by</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serializeResponseBody(rawBody: Buffer, contentType)</code>
+<code>serializeResponseBody(rawBody: Buffer, contentType, maxLength?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
                 </td>
             </tr>
 
@@ -3585,6 +3597,18 @@ Converts to PEM format which is more reliably parsed by</p>
 
 
                                         </tr>
+                                        <tr>
+                                                <td>maxLength</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -3612,7 +3636,7 @@ Converts to PEM format which is more reliably parsed by</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>truncate(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>truncate(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, maxLength?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
                 </td>
             </tr>
 
@@ -3642,6 +3666,18 @@ Converts to PEM format which is more reliably parsed by</p>
 
                                             <td>
                                                     No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>maxLength</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
                                             </td>
 
 

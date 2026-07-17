@@ -734,6 +734,7 @@ export class StatusListVerifierService {
         // Fetch and cache
         this.logger.debug(&#x60;Fetching status list JWT from ${uri}&#x60;);
         const token &#x3D; await this.fetchStatusListToken(uri);
+        console.log(token);
         if (typeof token !&#x3D;&#x3D; &quot;string&quot;) {
             throw new TypeError(
                 &#x60;Status list at ${uri} returned CWT while JWT was requested&#x60;,

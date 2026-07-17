@@ -260,7 +260,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:54</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:60</a></div>
                         </td>
                     </tr>
 
@@ -299,7 +299,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:63</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="69" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:69</a></div>
                         </td>
                     </tr>
 
@@ -338,7 +338,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:80</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="86" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:86</a></div>
                         </td>
                     </tr>
 
@@ -377,7 +377,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="70" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:70</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:76</a></div>
                         </td>
                     </tr>
 
@@ -411,7 +411,7 @@ import {
 /**
  * Attestation Level of Security (LoS) as defined in TS11.
  */
-export enum AttestationLoS {
+enum AttestationLoS {
     HIGH &#x3D; &quot;iso_18045_high&quot;,
     MODERATE &#x3D; &quot;iso_18045_moderate&quot;,
     ENHANCED_BASIC &#x3D; &quot;iso_18045_enhanced-basic&quot;,
@@ -421,7 +421,7 @@ export enum AttestationLoS {
 /**
  * Cryptographic binding type as defined in TS11.
  */
-export enum SchemaMetaBindingType {
+enum SchemaMetaBindingType {
     CLAIM &#x3D; &quot;claim&quot;,
     KEY &#x3D; &quot;key&quot;,
     BIOMETRIC &#x3D; &quot;biometric&quot;,
@@ -435,6 +435,12 @@ export enum SchemaMetaFrameworkType {
     AKI &#x3D; &quot;aki&quot;,
     ETSI_TL &#x3D; &quot;etsi_tl&quot;,
     OPENID_FEDERATION &#x3D; &quot;openid_federation&quot;,
+}
+
+export enum SchemaMetadataPinMode {
+    KEEP_CURRENT &#x3D; &quot;keep_current&quot;,
+    UPDATE_TO_NEW_VERSION &#x3D; &quot;update_to_new_version&quot;,
+    REPLACE_ID &#x3D; &quot;replace_id&quot;,
 }
 
 /**
@@ -549,6 +555,15 @@ export class SchemaMetaConfig {
     id?: string;
 
     @ApiPropertyOptional({
+        description:
+            &quot;Human-readable name of the schema metadata entry. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.&quot;,
+        example: &quot;German PID&quot;,
+    })
+    @IsOptional()
+    @IsString()
+    name?: string;
+
+    @ApiPropertyOptional({
         description: &quot;Schema version in SemVer format&quot;,
         example: &quot;1.0.0&quot;,
     })
@@ -556,11 +571,13 @@ export class SchemaMetaConfig {
     version!: string;
 
     @ApiPropertyOptional({
-        description: &quot;URI of the Attestation Rulebook&quot;,
+        description:
+            &quot;URI of the Attestation Rulebook. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.&quot;,
         example: &quot;https://example.com/rulebooks/my-credential/1.0.0.md&quot;,
     })
+    @IsOptional()
     @IsString()
-    rulebookURI!: string;
+    rulebookURI?: string;
 
     @ApiPropertyOptional({
         enum: AttestationLoS,
@@ -623,6 +640,16 @@ export class SignSchemaMetaConfigDto {
     @IsOptional()
     @IsString()
     credentialConfigId?: string;
+
+    @ApiPropertyOptional({
+        enum: SchemaMetadataPinMode,
+        description:
+            &quot;How to update credential config pinning after publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to a different schema id.&quot;,
+        default: SchemaMetadataPinMode.KEEP_CURRENT,
+    })
+    @IsOptional()
+    @IsEnum(SchemaMetadataPinMode)
+    pinMode?: SchemaMetadataPinMode;
 }
 
 /**
@@ -639,6 +666,24 @@ export class SignVersionSchemaMetaConfigDto {
     @ValidateNested()
     @Type(() &#x3D;&gt; SchemaMetaConfig)
     config!: SchemaMetaConfig;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Optional credential config to update pinning for after successful version publish.&quot;,
+    })
+    @IsOptional()
+    @IsString()
+    credentialConfigId?: string;
+
+    @ApiPropertyOptional({
+        enum: SchemaMetadataPinMode,
+        description:
+            &quot;How to update credential config pinning after version publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to config.id.&quot;,
+        default: SchemaMetadataPinMode.KEEP_CURRENT,
+    })
+    @IsOptional()
+    @IsEnum(SchemaMetadataPinMode)
+    pinMode?: SchemaMetadataPinMode;
 }
 </code></pre>
     </div>

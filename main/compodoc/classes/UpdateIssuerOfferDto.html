@@ -121,7 +121,7 @@
 
 <ol class="breadcrumb">
   <li class="breadcrumb-item">Classes</li>
-  <li class="breadcrumb-item" >SchemaMetadataVocabulariesDto</li>
+  <li class="breadcrumb-item" >UpdateIssuerOfferDto</li>
 </ol>
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
@@ -155,9 +155,34 @@
 
 
 
+            <p class="comment">
+                <h3>Implements</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../classes/UpdateIssuerOfferDto.html" target="_self" >GeneratedUpdateIssuerOfferDto</a></code>
+            </p>
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../classes/UpdateIssuerOfferDto.html" target="_self" >GeneratedUpdateIssuerOfferDto</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -175,19 +200,16 @@
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                <a href="#categories" >categories</a>
+                                    <span class="modifier">Optional</span>
+                                <a href="#credentialOfferUrl" >credentialOfferUrl</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                <a href="#tags" >tags</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                <a href="#version" >version</a>
+                                    <span class="modifier">Optional</span>
+                                <a href="#description" >description</a>
                             </li>
                         </ul>
                     </td>
@@ -212,87 +234,14 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="categories"></a>
+                    <a name="credentialOfferUrl"></a>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                        <span ><b>categories</b></span>
-                        <a href="#categories"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../classes/VocabularyEntryDto.html" target="_self" >VocabularyEntryDto[]</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @ApiProperty({description: &#x27;Allowed category values that can be used when updating schema metadata category.&#x27;, type: undefined})<br />@ValidateNested({each: true})<br />@Type(undefined)<br />
-                        </code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="165" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:165</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="tags"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                        <span ><b>tags</b></span>
-                        <a href="#tags"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../classes/VocabularyEntryDto.html" target="_self" >VocabularyEntryDto[]</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @ApiProperty({description: &#x27;Allowed tag values that can be used when updating schema metadata tags.&#x27;, type: undefined})<br />@ValidateNested({each: true})<br />@Type(undefined)<br />
-                        </code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="174" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:174</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="version"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                        <span ><b>version</b></span>
-                        <a href="#version"><span class="icon ion-ios-link"></span></a>
+                            <span class="modifier">Optional</span>
+                        <span ><b>credentialOfferUrl</b></span>
+                        <a href="#credentialOfferUrl"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -307,13 +256,52 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Vocabulary publication version for cache invalidation.&#x27;})<br />
+                            @ApiPropertyOptional({description: &#x27;URL where the user can receive a credential offer from this issuer.&#x27;})<br />@IsOptional()<br />@IsString()<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="156" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:156</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:73</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="description"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>description</b></span>
+                        <a href="#description"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiPropertyOptional({description: &#x27;Human-readable description to help users choose the right issuer.&#x27;})<br />@IsOptional()<br />@IsString()<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:81</a></div>
                         </td>
                     </tr>
 
@@ -806,7 +794,7 @@ export class DeprecateSchemaMetadataDto {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'SchemaMetadataVocabulariesDto.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'UpdateIssuerOfferDto.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

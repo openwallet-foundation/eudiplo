@@ -155,9 +155,34 @@
 
 
 
+            <p class="comment">
+                <h3>Implements</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../miscellaneous/typealiases.html#MetadataSchemaBase" target="_self" >MetadataSchemaBase</a></code>
+            </p>
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../miscellaneous/typealiases.html#MetadataSchemaBase" target="_self" >MetadataSchemaBase</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -246,7 +271,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="141" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:141</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="191" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:191</a></div>
                         </td>
                     </tr>
 
@@ -282,7 +307,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="135" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:135</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="185" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:185</a></div>
                         </td>
                     </tr>
 
@@ -319,7 +344,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="156" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:156</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="206" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:206</a></div>
                         </td>
                     </tr>
 
@@ -356,7 +381,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="151" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:151</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="201" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:201</a></div>
                         </td>
                     </tr>
 
@@ -393,7 +418,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="144" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:144</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="194" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:194</a></div>
                         </td>
                     </tr>
 
@@ -421,6 +446,15 @@ import {
     IsString,
     ValidateNested,
 } from &quot;class-validator&quot;;
+import type {
+    AccessCertificate,
+    MetadataSchema,
+    SchemaMetadata,
+    TrustAuthority,
+    UpdateIssuerOfferDto as GeneratedUpdateIssuerOfferDto,
+    UpdateSchemaMetadataDto as GeneratedUpdateSchemaMetadataDto,
+    IssuerOfferEntry,
+} from &quot;../../generated&quot;;
 
 const ATTESTATION_LOS_VALUES &#x3D; [
     &quot;iso_18045_high&quot;,
@@ -468,10 +502,30 @@ export type VocabularyStatus &#x3D; (typeof VOCABULARY_STATUS_VALUES)[number];
 // Request bodies
 // ─────────────────────────────────────────────────────────────────────────────
 
+export class UpdateIssuerOfferDto implements GeneratedUpdateIssuerOfferDto {
+    @ApiPropertyOptional({
+        description:
+            &quot;URL where the user can receive a credential offer from this issuer.&quot;,
+    })
+    @IsOptional()
+    @IsString()
+    credentialOfferUrl?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Human-readable description to help users choose the right issuer.&quot;,
+    })
+    @IsOptional()
+    @IsString()
+    description?: string;
+}
+
 /**
  * Request body for &#x60;PATCH /registrar/schema-metadata/:id&#x60;.
  */
-export class UpdateSchemaMetadataDto {
+export class UpdateSchemaMetadataDto
+    implements GeneratedUpdateSchemaMetadataDto
+{
     @ApiPropertyOptional({
         description: &quot;Domain category for filtering&quot;,
         enum: CATEGORY_VALUES,
@@ -489,6 +543,25 @@ export class UpdateSchemaMetadataDto {
     @IsArray()
     @IsEnum(TAG_VALUES, { each: true })
     tags?: SchemaMetadataTag[];
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Optional human-readable schema name for UI display and search&quot;,
+    })
+    @IsOptional()
+    @IsString()
+    displayName?: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Issuer offer entries shown to users, each with credential-offer URL and description&quot;,
+        type: [UpdateIssuerOfferDto],
+    })
+    @IsOptional()
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() &#x3D;&gt; UpdateIssuerOfferDto)
+    issuerOffers?: UpdateIssuerOfferDto[];
 }
 
 export class VocabularyEntryDto {
@@ -544,7 +617,9 @@ export class SchemaMetadataVocabulariesDto {
 // Response DTOs
 // ─────────────────────────────────────────────────────────────────────────────
 
-export class MetadataSchemaDto {
+type MetadataSchemaBase &#x3D; Omit&lt;MetadataSchema, &quot;schemaMetadata&quot;&gt;;
+
+export class MetadataSchemaDto implements MetadataSchemaBase {
     @ApiProperty({ description: &quot;Unique identifier for this schema entry&quot; })
     id!: string;
 
@@ -570,7 +645,9 @@ export class MetadataSchemaDto {
     integrity?: string;
 }
 
-export class TrustAuthorityDto {
+type TrustAuthorityBase &#x3D; Omit&lt;TrustAuthority, &quot;schemaMetadata&quot;&gt;;
+
+export class TrustAuthorityDto implements TrustAuthorityBase {
     @ApiProperty({
         description: &quot;Unique identifier for this trust authority entry&quot;,
     })
@@ -596,7 +673,12 @@ export class TrustAuthorityDto {
     verificationMethod?: Record&lt;string, unknown&gt;;
 }
 
-export class AccessCertificateRefDto {
+type AccessCertificateRefBase &#x3D; Pick&lt;
+    AccessCertificate,
+    &quot;id&quot; | &quot;relyingPartyId&quot; | &quot;certificate&quot; | &quot;revoked&quot; | &quot;createdAt&quot;
+&gt;;
+
+export class AccessCertificateRefDto implements AccessCertificateRefBase {
     @ApiProperty()
     id!: string;
 
@@ -613,13 +695,36 @@ export class AccessCertificateRefDto {
     createdAt!: string;
 }
 
+export class IssuerOfferEntryDto implements IssuerOfferEntry {
+    @ApiProperty({
+        description:
+            &quot;URL where the user can receive a credential offer from this issuer.&quot;,
+    })
+    credentialOfferUrl!: string;
+
+    @ApiProperty({
+        description:
+            &quot;Human-readable description explaining when this issuer offer is relevant for the user.&quot;,
+    })
+    description!: string;
+}
+
 /**
  * Schema metadata record as returned by &#x60;GET/POST /registrar/schema-metadata&#x60; and friends.
  *
  * The shape mirrors the registrar-API response 1:1 so that the service can pass
  * upstream payloads through unchanged.
  */
-export class SchemaMetadataResponseDto {
+type SchemaMetadataResponseBase &#x3D; Omit&lt;
+    SchemaMetadata,
+    &quot;schemaURIs&quot; | &quot;trustedAuthorities&quot; | &quot;signerCertificate&quot;
+&gt; &amp; {
+    schemaURIs: MetadataSchemaDto[];
+    trustedAuthorities: TrustAuthorityDto[];
+    signerCertificate?: AccessCertificateRefDto;
+};
+
+export class SchemaMetadataResponseDto implements SchemaMetadataResponseBase {
     @ApiProperty({
         description:
             &quot;The unique, server-assigned identifier (UUID) for the schema metadata&quot;,
@@ -687,6 +792,21 @@ export class SchemaMetadataResponseDto {
         type: [String],
     })
     tags?: string[];
+
+    @ApiPropertyOptional({
+        description:
+            &quot;Optional human-readable schema name for UI display and filtering.&quot;,
+    })
+    displayName?: string;
+
+    @ApiProperty({
+        description:
+            &quot;Issuer offer entries for this schema metadata. Each entry provides a credential offer URL and user-facing description.&quot;,
+        type: [IssuerOfferEntryDto],
+    })
+    @ValidateNested({ each: true })
+    @Type(() &#x3D;&gt; IssuerOfferEntryDto)
+    issuerOffers!: IssuerOfferEntryDto[];
 
     @ApiProperty({ description: &quot;The original signed JWT&quot; })
     signedJwt!: string;

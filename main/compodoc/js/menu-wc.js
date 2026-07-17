@@ -1390,6 +1390,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/IssuerMetadataCredentialConfig.html" data-type="entity-link" >IssuerMetadataCredentialConfig</a>
                             </li>
                             <li class="link">
+                                <a href="classes/IssuerOfferEntryDto.html" data-type="entity-link" >IssuerOfferEntryDto</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/IssuerProvidedAttestation.html" data-type="entity-link" >IssuerProvidedAttestation</a>
                             </li>
                             <li class="link">
@@ -1649,6 +1652,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/UpdateIssuanceDto.html" data-type="entity-link" >UpdateIssuanceDto</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/UpdateIssuerOfferDto.html" data-type="entity-link" >UpdateIssuerOfferDto</a>
                             </li>
                             <li class="link">
                                 <a href="classes/UpdateRegistrarConfigDto.html" data-type="entity-link" >UpdateRegistrarConfigDto</a>

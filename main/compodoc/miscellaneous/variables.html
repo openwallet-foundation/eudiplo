@@ -300,9 +300,6 @@
                             <a href="#LOG_VALIDATION_SCHEMA" title="src/shared/utils/logger/log-validation.schema.ts" class="reference-link "><span class="reference-badge reference-badge--variable" aria-hidden="true">V</span><span class="reference-link-label"><b>LOG_VALIDATION_SCHEMA</b>&nbsp;&nbsp;&nbsp;(src/.../log-validation.schema.ts)</span></a>
                         </li>
                         <li>
-                            <a href="#MAX_LOGGED_RESPONSE_BODY_LENGTH" title="src/shared/utils/logger/logger.factory.ts" class="reference-link "><span class="reference-badge reference-badge--variable" aria-hidden="true">V</span><span class="reference-link-label"><b>MAX_LOGGED_RESPONSE_BODY_LENGTH</b>&nbsp;&nbsp;&nbsp;(src/.../logger.factory.ts)</span></a>
-                        </li>
-                        <li>
                             <a href="#mdocContext" title="src/verifier/presentations/mdoc-context.ts" class="reference-link "><span class="reference-badge reference-badge--variable" aria-hidden="true">V</span><span class="reference-link-label"><b>mdocContext</b>&nbsp;&nbsp;&nbsp;(src/.../mdoc-context.ts)</span></a>
                         </li>
                         <li>
@@ -1503,6 +1500,16 @@ This decorator can be used to determine the media type of the request.</p>
     // Check if file logging is enabled
     const logToFile &#x3D; configService.getOrThrow&lt;boolean&gt;(&quot;LOG_TO_FILE&quot;);
     const logFilePath &#x3D; configService.getOrThrow&lt;string&gt;(&quot;LOG_FILE_PATH&quot;);
+    const logHttpResponseBodyMaxLength &#x3D; configService.getOrThrow&lt;number&gt;(
+        &quot;LOG_HTTP_RESPONSE_BODY_MAX_LENGTH&quot;,
+    );
+    const redactSensitiveData &#x3D; configService.getOrThrow&lt;boolean&gt;(
+        &quot;LOG_REDACT_SENSITIVE_DATA&quot;,
+    );
+    const maxLoggedResponseBodyLength &#x3D;
+        logHttpResponseBodyMaxLength &gt; 0
+            ? logHttpResponseBodyMaxLength
+            : undefined;
 
     // Check if OTel is disabled
     const otelDisabled &#x3D; configService.getOrThrow&lt;boolean&gt;(&quot;OTEL_SDK_DISABLED&quot;);
@@ -1557,6 +1564,27 @@ This decorator can be used to determine the media type of the request.</p>
         });
     }
 
+    const redact &#x3D; redactSensitiveData
+        ? {
+              paths: [
+                  &quot;req.headers.authorization&quot;,
+                  &quot;req.headers.cookie&quot;,
+                  &quot;req.headers.dpop&quot;,
+                  &#x27;req.headers[&quot;oauth-client-attestation&quot;]&#x27;,
+                  &#x27;req.headers[&quot;oauth-client-attestation-pop&quot;]&#x27;,
+                  &#x27;res.headers[&quot;set-cookie&quot;]&#x27;,
+                  &quot;res.body.access_token&quot;,
+                  &quot;res.body.refresh_token&quot;,
+                  &quot;res.body.id_token&quot;,
+                  &quot;res.body.c_nonce&quot;,
+                  &quot;res.body.credential&quot;,
+                  &quot;res.body.credentials&quot;,
+                  &quot;res.body.attestation_challenge&quot;,
+              ],
+              censor: &quot;[redacted]&quot;,
+          }
+        : undefined;
+
     return {
         pinoHttp: {
             level: logLevel,
@@ -1576,26 +1604,8 @@ This decorator can be used to determine the media type of the request.</p>
                     );
                 },
             },
-            // Redact sensitive request/response fields. Response bodies are
-            // additionally gated behind LOG_HTTP_RESPONSE_BODY.
-            redact: {
-                paths: [
-                    &quot;req.headers.authorization&quot;,
-                    &quot;req.headers.cookie&quot;,
-                    &quot;req.headers.dpop&quot;,
-                    &#x27;req.headers[&quot;oauth-client-attestation&quot;]&#x27;,
-                    &#x27;req.headers[&quot;oauth-client-attestation-pop&quot;]&#x27;,
-                    &#x27;res.headers[&quot;set-cookie&quot;]&#x27;,
-                    &quot;res.body.access_token&quot;,
-                    &quot;res.body.refresh_token&quot;,
-                    &quot;res.body.id_token&quot;,
-                    &quot;res.body.c_nonce&quot;,
-                    &quot;res.body.credential&quot;,
-                    &quot;res.body.credentials&quot;,
-                    &quot;res.body.attestation_challenge&quot;,
-                ],
-                censor: &quot;[redacted]&quot;,
-            },
+            // Redact sensitive request/response fields unless explicitly disabled.
+            redact,
             transport: {
                 targets,
             },
@@ -1623,7 +1633,11 @@ This decorator can be used to determine the media type of the request.</p>
             },
             customProps: (req: any, res: any) &#x3D;&gt; {
                 if (captureResponseBody) {
-                    attachResponseBodyCapture(req, res);
+                    attachResponseBodyCapture(
+                        req,
+                        res,
+                        maxLoggedResponseBodyLength,
+                    );
                 }
                 return {
                     sessionId: req.params?.session,
@@ -1669,32 +1683,6 @@ This decorator can be used to determine the media type of the request.</p>
 </div>
                 </td>
             </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="MAX_LOGGED_RESPONSE_BODY_LENGTH"></a>
-                    <span class="name">
-                        <span ><b>MAX_LOGGED_RESPONSE_BODY_LENGTH</b></span>
-                        <a href="#MAX_LOGGED_RESPONSE_BODY_LENGTH"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>4096</code>
-                    </td>
-                </tr>
-
 
         </tbody>
     </table>
@@ -2920,11 +2908,25 @@ surface without receiving a duplicate <code>/api/api</code> prefix.</p>
     LOG_HTTP_RESPONSE_BODY: Joi.boolean()
         .default(false)
         .description(
-            &quot;Capture and log HTTP response bodies (buffered up to 4 KB). &quot; +
+            &quot;Capture and log HTTP response bodies (buffered up to LOG_HTTP_RESPONSE_BODY_MAX_LENGTH bytes). &quot; +
                 &quot;Disabled by default because response bodies may contain access tokens, &quot; +
                 &quot;credentials, or other sensitive data.&quot;,
         )
         .meta({ group: &quot;log&quot;, order: 25 }),
+    LOG_HTTP_RESPONSE_BODY_MAX_LENGTH: Joi.number()
+        .integer()
+        .min(0)
+        .default(4096)
+        .description(
+            &quot;Maximum number of bytes to capture for HTTP response bodies. Set to 0 to disable truncation.&quot;,
+        )
+        .meta({ group: &quot;log&quot;, order: 27 }),
+    LOG_REDACT_SENSITIVE_DATA: Joi.boolean()
+        .default(true)
+        .description(
+            &quot;Redact sensitive request/response fields from logs. Disable only for debugging.&quot;,
+        )
+        .meta({ group: &quot;log&quot;, order: 28 }),
     LOG_ENABLE_SESSION_LOGGER: Joi.boolean()
         .default(false)
         .description(&quot;Enable session flow logging&quot;)
