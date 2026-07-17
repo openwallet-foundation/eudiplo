@@ -836,7 +836,7 @@ PVCs use the cluster's default StorageClass (Docker Desktop includes one by defa
 
 ## Support & Resources
 
-- **Documentation**: [https://openwallet-foundation.github.io/eudiplo/latest/](https://openwallet-foundation.github.io/eudiplo/latest/)
+- **Documentation**: [https://openwallet-foundation.github.io/eudiplo/docs/](https://openwallet-foundation.github.io/eudiplo/docs/)
 - **GitHub Issues**: [https://github.com/openwallet-foundation/eudiplo/issues](https://github.com/openwallet-foundation/eudiplo/issues)
 - **Discord Community**: [https://discord.gg/58ys8XfXDu](https://discord.gg/58ys8XfXDu)
 - **Source Code**: [https://github.com/openwallet-foundation/eudiplo](https://github.com/openwallet-foundation/eudiplo)

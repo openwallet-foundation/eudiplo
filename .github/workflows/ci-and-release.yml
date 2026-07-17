@@ -210,58 +210,42 @@ jobs:
           path: site/
 
   deploy-docs:
-    name: Deploy Documentation
+    name: Deploy Website & Documentation
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [build-doc]
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
       pages: write
       id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Download built documentation
+        uses: actions/download-artifact@v5
         with:
-          fetch-depth: 0 # Fetch full history for mike versioning
+          name: generated-docs
+          path: site
 
-      - uses: pnpm/action-setup@v6
-        name: Install pnpm
-        with:
-          run_install: false
-
-      - name: Install Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.11'
-
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt
-
-      - name: Configure git for mike
+      - name: Assemble Pages artifact
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p pages/docs
+          cp -R website/. pages/
+          cp -R site/. pages/docs/
+          touch pages/.nojekyll
 
-      - name: Build and deploy main branch docs
-        env:
-          MASTER_SECRET: ci-docs-build-secret-minimum-32-chars
-          AUTH_CLIENT_ID: ci-docs-client
-          AUTH_CLIENT_SECRET: ci-docs-secret
-          ENCRYPTION_KEY: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
-        run: |
-          pnpm run doc:generate
-          pnpm run compodoc
-          mike deploy --push --update-aliases main
-          mike set-default --push main
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: pages
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
   test-e2e:
     permissions:

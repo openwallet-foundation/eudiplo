@@ -991,7 +991,7 @@ docker volume prune
 
 ## Support & Resources
 
-- **Documentation:** [https://openwallet-foundation.github.io/eudiplo/latest/](https://openwallet-foundation.github.io/eudiplo/latest/)
+- **Documentation:** [https://openwallet-foundation.github.io/eudiplo/docs/](https://openwallet-foundation.github.io/eudiplo/docs/)
 - **GitHub Issues:** [https://github.com/openwallet-foundation/eudiplo/issues](https://github.com/openwallet-foundation/eudiplo/issues)
 - **Discord Community:** [https://discord.gg/58ys8XfXDu](https://discord.gg/58ys8XfXDu)
 - **Docker Compose Docs:** [https://docs.docker.com/compose/](https://docs.docker.com/compose/)
