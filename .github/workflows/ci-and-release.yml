@@ -284,11 +284,14 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
+          name: github-pages-${{ github.run_attempt }}
           path: pages
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ github.run_attempt }}
 
   test-e2e:
     permissions:
