@@ -35,6 +35,17 @@
         ]
       },
       "description": "Predefined tags for filtering and search"
+    },
+    "displayName": {
+      "type": "string",
+      "description": "Optional human-readable schema name for UI display and search"
+    },
+    "issuerOffers": {
+      "description": "Issuer offer entries shown to users, each with credential-offer URL and description",
+      "type": "array",
+      "items": {
+        "$ref": "./UpdateIssuerOfferDto.schema.json"
+      }
     }
   },
   "additionalProperties": false

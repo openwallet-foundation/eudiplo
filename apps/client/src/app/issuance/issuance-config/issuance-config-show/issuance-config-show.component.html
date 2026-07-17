@@ -249,13 +249,23 @@
               </mat-list>
             </mat-card-content>
           </mat-card>
+        </div>
+      </mat-tab>
 
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">badge</mat-icon>
+          Registration Certificate
+        </ng-template>
+
+        <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
           <mat-card>
             <mat-card-header>
               <mat-card-title>
-                <mat-icon>badge</mat-icon>
-                Registration Certificate
+                <mat-icon>verified_user</mat-icon>
+                Certificate Status
               </mat-card-title>
+              <mat-card-subtitle>Issuer registration certificate lifecycle</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
               <mat-list class="config-list">
@@ -267,9 +277,9 @@
                     {{ registrationCertificateConfig?.enabled ? 'verified' : 'block' }}
                   </mat-icon>
                   <span matListItemTitle>Enabled</span>
-                  <span matListItemLine>
-                    {{ registrationCertificateConfig?.enabled ? 'Yes' : 'No' }}
-                  </span>
+                  <span matListItemLine>{{
+                    registrationCertificateConfig?.enabled ? 'Yes' : 'No'
+                  }}</span>
                 </mat-list-item>
 
                 @if (registrationCertificateConfig?.enabled) {
@@ -277,39 +287,109 @@
                     <mat-icon matListItemIcon>tune</mat-icon>
                     <span matListItemTitle>Mode</span>
                     <span matListItemLine>{{
-                      registrationCertificateConfig?.mode || 'import'
+                      registrationCertificateConfig?.mode || 'generate'
                     }}</span>
                   </mat-list-item>
 
-                  @if (registrationCertificateConfig?.mode === 'import') {
+                  <mat-list-item>
+                    <mat-icon matListItemIcon>
+                      {{
+                        registrationCertificateStatus === 'active'
+                          ? 'verified'
+                          : registrationCertificateStatus === 'expiring'
+                            ? 'warning'
+                            : registrationCertificateStatus === 'expired'
+                              ? 'error'
+                              : registrationCertificateStatus === 'pending'
+                                ? 'pending'
+                                : 'block'
+                      }}
+                    </mat-icon>
+                    <span matListItemTitle>Status</span>
+                    <span matListItemLine>{{ registrationCertificateStatus }}</span>
+                  </mat-list-item>
+
+                  @if (registrationCertificateCache?.issuedAt) {
                     <mat-list-item>
-                      <mat-icon matListItemIcon>key</mat-icon>
-                      <span matListItemTitle>Imported JWT</span>
+                      <mat-icon matListItemIcon>schedule</mat-icon>
+                      <span matListItemTitle>Issued At</span>
                       <span matListItemLine>
-                        {{ registrationCertificateConfig?.jwt ? 'Configured' : 'Not configured' }}
+                        {{ registrationCertificateCache.issuedAt * 1000 | date: 'medium' }}
                       </span>
                     </mat-list-item>
                   }
 
-                  @if (registrationCertificateConfig?.mode === 'generate') {
+                  @if (registrationCertificateCache?.expiresAt) {
                     <mat-list-item>
-                      <mat-icon matListItemIcon>schema</mat-icon>
-                      <span matListItemTitle>Schema Metadata</span>
+                      <mat-icon matListItemIcon>event</mat-icon>
+                      <span matListItemTitle>Expires At</span>
                       <span matListItemLine>
-                        {{ registrationCertificateConfig?.schemaMetadataIds?.length || 0 }} selected
-                      </span>
-                    </mat-list-item>
-                    <mat-list-item>
-                      <mat-icon matListItemIcon>data_object</mat-icon>
-                      <span matListItemTitle>Provided Attestations</span>
-                      <span matListItemLine>
-                        {{ registrationCertificateConfig?.providedAttestations?.length || 0 }}
-                        configured
+                        {{ registrationCertificateCache.expiresAt * 1000 | date: 'medium' }}
                       </span>
                     </mat-list-item>
                   }
                 }
               </mat-list>
+
+              @if (
+                registrationCertificateConfig?.enabled &&
+                registrationCertificateConfig?.mode === 'generate'
+              ) {
+                <div fxLayout="row" fxLayoutGap="12px" style="margin-top: 16px">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="reissueRegistrationCertificate()"
+                    [disabled]="reissuing"
+                  >
+                    <mat-icon>autorenew</mat-icon>
+                    {{ reissuing ? 'Regenerating...' : 'Regenerate now' }}
+                  </button>
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>key</mat-icon>
+                JWT
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              @if (registrationCertificateJwt) {
+                <div fxLayout="row" fxLayoutAlign="space-between center" style="margin-bottom: 8px">
+                  <strong>Certificate JWT</strong>
+                  <button
+                    mat-stroked-button
+                    (click)="
+                      copyToClipboard(registrationCertificateJwt!, 'Registration certificate JWT')
+                    "
+                  >
+                    <mat-icon>content_copy</mat-icon>
+                    Copy
+                  </button>
+                </div>
+                <pre class="config-value">{{ registrationCertificateJwt }}</pre>
+              } @else {
+                <p>No registration certificate JWT available.</p>
+              }
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>data_object</mat-icon>
+                Decoded Payload
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <h4>Header</h4>
+              <pre class="config-value">{{ parsedRegistrationCertHeader }}</pre>
+              <h4>Payload</h4>
+              <pre class="config-value">{{ parsedRegistrationCertPayload }}</pre>
             </mat-card-content>
           </mat-card>
         </div>

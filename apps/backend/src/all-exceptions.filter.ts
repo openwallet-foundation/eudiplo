@@ -30,8 +30,21 @@ export class AllExceptionsFilter implements ExceptionFilter {
         }
 
         let message: unknown;
+        let responseBody: Record<string, unknown> | undefined;
         if (exception instanceof HttpException) {
-            message = exception.getResponse();
+            const httpResponse = exception.getResponse();
+            if (typeof httpResponse === "string") {
+                message = httpResponse;
+            } else if (
+                httpResponse &&
+                typeof httpResponse === "object" &&
+                !Array.isArray(httpResponse)
+            ) {
+                responseBody = httpResponse as Record<string, unknown>;
+                message = responseBody.message;
+            } else {
+                message = httpResponse;
+            }
         } else if (exception instanceof Error && !isProduction) {
             message = exception.message;
         } else {
@@ -48,6 +61,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
             statusCode: status,
             timestamp: new Date().toISOString(),
             path: requestPath,
+            ...(responseBody ?? {}),
             message,
         });
     }

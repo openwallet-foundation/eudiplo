@@ -574,6 +574,147 @@ export const SchemaMetadataVocabulariesDtoSchema = {
     required: ["version", "categories", "tags"],
 } as const;
 
+export const CreateTrustAuthorityDtoSchema = {
+    type: "object",
+    properties: {
+        frameworkType: {
+            type: "string",
+            enum: ["etsi_tl"],
+            description: "Type of trust framework.",
+            example: "etsi_tl",
+        },
+        value: {
+            type: "string",
+            description: "URI or identifier for the trust list/authority.",
+            example: "https://example.org/trust-list.jwt",
+        },
+        verificationMethod: {
+            type: "object",
+            additionalProperties: true,
+            description:
+                "Verification method for trust list signature (for example JWK).",
+            example: {
+                type: "JsonWebKey2020",
+                publicKeyJwk: {
+                    kty: "EC",
+                    crv: "P-256",
+                },
+            },
+        },
+    },
+    required: ["frameworkType", "value"],
+} as const;
+
+export const CreateIssuerOfferDtoSchema = {
+    type: "object",
+    properties: {
+        credentialOfferUrl: {
+            type: "string",
+            description:
+                "URL where the user can receive a credential offer from this issuer.",
+            example: "https://issuer.example.com/credential-offer/pid",
+        },
+        description: {
+            type: "string",
+            description:
+                "Human-readable description to help users choose the right issuer.",
+            example: "Use this issuer for PID in Germany.",
+        },
+    },
+    required: ["credentialOfferUrl", "description"],
+} as const;
+
+export const CreateSchemaFileDescriptorDtoSchema = {
+    type: "object",
+    properties: {
+        fileIndex: {
+            type: "number",
+            minimum: 0,
+            description: "Index in multipart schemaFiles[] array.",
+            example: 0,
+        },
+        formatIdentifier: {
+            enum: ["dc+sd-jwt", "mso_mdoc"],
+            type: "string",
+            description: "Credential format for this schema file.",
+            example: "dc+sd-jwt",
+        },
+        schemaTypeIdentifier: {
+            type: "string",
+            description:
+                "Schema type identifier value. Use vct for dc+sd-jwt, doctype_value for mso_mdoc.",
+            example: "eu.europa.ec.eudi.pid.1",
+        },
+    },
+    required: ["fileIndex", "formatIdentifier", "schemaTypeIdentifier"],
+} as const;
+
+export const CreateSchemaMetadataMultipartDtoSchema = {
+    type: "object",
+    properties: {
+        id: {
+            type: "string",
+            description:
+                "Optional existing schema identifier (short ID or full catalog URL) for publishing a new version. Omit for first publication and the registrar will generate it.",
+            example: "feded2b8-4205-480e-b498-8033f0491d55",
+        },
+        version: {
+            type: "string",
+            description: "Schema metadata version (SemVer).",
+            example: "1.0.0",
+        },
+        attestationLoS: {
+            type: "string",
+            enum: [
+                "iso_18045_high",
+                "iso_18045_moderate",
+                "iso_18045_enhanced-basic",
+                "iso_18045_basic",
+            ],
+            description: "Level of security (LoS) of this attestation.",
+            example: "iso_18045_basic",
+        },
+        bindingType: {
+            type: "string",
+            enum: ["claim", "key", "biometric", "none"],
+            description:
+                "Required binding type between attestation and holder.",
+            example: "key",
+        },
+        trustedAuthorities: {
+            description:
+                "Trust frameworks / trust anchors applicable to this schema metadata.",
+            type: "array",
+            items: {
+                $ref: "#/components/schemas/CreateTrustAuthorityDto",
+            },
+        },
+        issuerOffers: {
+            description:
+                "Issuer offer entries exposed to users, each with a credential-offer URL and description.",
+            type: "array",
+            items: {
+                $ref: "#/components/schemas/CreateIssuerOfferDto",
+            },
+        },
+        schemas: {
+            description:
+                "Schema descriptors mapped to multipart schemaFiles by index.",
+            type: "array",
+            items: {
+                $ref: "#/components/schemas/CreateSchemaFileDescriptorDto",
+            },
+        },
+    },
+    required: [
+        "version",
+        "attestationLoS",
+        "bindingType",
+        "trustedAuthorities",
+        "schemas",
+    ],
+} as const;
+
 export const TrustAuthoritySchema = {
     type: "object",
     properties: {
@@ -612,6 +753,25 @@ export const TrustAuthoritySchema = {
         },
     },
     required: ["id", "frameworkType", "value", "schemaMetadata"],
+} as const;
+
+export const IssuerOfferEntrySchema = {
+    type: "object",
+    properties: {
+        credentialOfferUrl: {
+            type: "string",
+            description:
+                "URL where the user can receive a credential offer from this issuer.",
+            example: "https://issuer.example.com/credential-offer/pid",
+        },
+        description: {
+            type: "string",
+            description:
+                "Human-readable description explaining when this issuer offer is relevant for the user.",
+            example: "Use this issuer if you need a PID credential for travel.",
+        },
+    },
+    required: ["credentialOfferUrl", "description"],
 } as const;
 
 export const SchemaMetadataSchema = {
@@ -683,6 +843,14 @@ export const SchemaMetadataSchema = {
             type: "array",
             items: {
                 $ref: "#/components/schemas/TrustAuthority",
+            },
+        },
+        issuerOffers: {
+            description:
+                "Issuer offer entries for this schema metadata. Each entry provides a credential offer URL and user-facing description.",
+            type: "array",
+            items: {
+                $ref: "#/components/schemas/IssuerOfferEntry",
             },
         },
         category: {
@@ -779,6 +947,7 @@ export const SchemaMetadataSchema = {
         "supportedFormats",
         "schemaURIs",
         "trustedAuthorities",
+        "issuerOffers",
         "deprecated",
         "signedJwt",
         "issuer",
@@ -922,6 +1091,24 @@ export const SetVersionDeprecationDtoSchema = {
     required: ["deprecated"],
 } as const;
 
+export const UpdateIssuerOfferDtoSchema = {
+    type: "object",
+    properties: {
+        credentialOfferUrl: {
+            type: "string",
+            description:
+                "URL where the user can receive a credential offer from this issuer.",
+            example: "https://issuer.example.com/credential-offer/pid",
+        },
+        description: {
+            type: "string",
+            description:
+                "Human-readable description to help users choose the right issuer.",
+            example: "Use this issuer for PID in Germany.",
+        },
+    },
+} as const;
+
 export const UpdateSchemaMetadataDtoSchema = {
     type: "object",
     properties: {
@@ -964,6 +1151,14 @@ export const UpdateSchemaMetadataDtoSchema = {
             description:
                 "Optional human-readable schema name for UI display and search.",
             example: "European Personal Identity Data (PID)",
+        },
+        issuerOffers: {
+            description:
+                "Issuer offer entries shown to users, each with credential-offer URL and description.",
+            type: "array",
+            items: {
+                $ref: "#/components/schemas/UpdateIssuerOfferDto",
+            },
         },
     },
 } as const;

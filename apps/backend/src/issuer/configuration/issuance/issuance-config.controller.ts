@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Req } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Request } from "express";
 import { Role } from "../../../auth/roles/role.enum";
 import { Secured } from "../../../auth/secure.decorator";
@@ -49,6 +49,33 @@ export class IssuanceConfigController {
             config,
             user,
             req,
+        );
+    }
+
+    /**
+     * Force-reissue issuer registration certificate cache.
+     */
+    @Post("registration-cert/reissue")
+    @ApiOperation({
+        summary: "Reissue issuer registration certificate",
+        description:
+            "Bypasses and refreshes the issuer registration certificate cache, revoking the previous active certificate when replaced.",
+    })
+    @ApiResponse({
+        status: 201,
+        description: "Updated issuance configuration",
+        type: IssuanceConfig,
+    })
+    @ApiResponse({
+        status: 400,
+        description:
+            "Registration certificate is not enabled/generate mode or registrar is unavailable",
+    })
+    reissueRegistrationCertificate(
+        @Token() user: TokenPayload,
+    ): Promise<IssuanceConfig> {
+        return this.issuanceService.reissueRegistrationCertificate(
+            user.entity!.id,
         );
     }
 }

@@ -22,11 +22,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
-import {
-  IssuanceConfig,
-  UpdateIssuanceDto,
-  type SchemaMetadataResponseDto,
-} from '@eudiplo/sdk-core';
+import { IssuanceConfig, UpdateIssuanceDto } from '@eudiplo/sdk-core';
 import { IssuanceConfigService } from '../issuance-config.service';
 import { issuanceConfigSchema } from '../../../utils/schemas';
 import { JsonViewDialogComponent } from '../../credential-config/credential-config-create/json-view-dialog/json-view-dialog.component';
@@ -35,6 +31,7 @@ import { MatSlideToggle, MatSlideToggleModule } from '@angular/material/slide-to
 import { ImageFieldComponent } from '../../../utils/image-field/image-field.component';
 import { MatCardModule } from '@angular/material/card';
 import { PresentationManagementService } from '../../../presentation/presentation-config/presentation-management.service';
+import { RegistrarService } from '../../../registrar/registrar.service';
 
 @Component({
   selector: 'app-issuance-config-create',
@@ -68,8 +65,8 @@ export class IssuanceConfigCreateComponent implements OnInit {
   public form: FormGroup;
   public loading = false;
   public availablePresentationConfigIds: string[] = [];
-  public availableSchemaMetadata: SchemaMetadataResponseDto[] = [];
   private readonly federationModes = ['federation-only', 'hybrid'] as const;
+  private registrarRegistrationCertificateDefaults: Record<string, unknown> | null = null;
 
   private asRecord(value: unknown): Record<string, unknown> {
     return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
@@ -88,7 +85,8 @@ export class IssuanceConfigCreateComponent implements OnInit {
     private readonly snackBar: MatSnackBar,
     private readonly dialog: MatDialog,
     private readonly fb: FormBuilder,
-    private readonly presentationManagementService: PresentationManagementService
+    private readonly presentationManagementService: PresentationManagementService,
+    private readonly registrarService: RegistrarService
   ) {
     this.form = new FormGroup({
       display: this.fb.array([]),
@@ -111,9 +109,8 @@ export class IssuanceConfigCreateComponent implements OnInit {
       }),
       registrationCertificate: this.fb.group({
         enabled: [false],
-        mode: ['import'],
+        mode: ['generate'],
         jwt: [''],
-        schemaMetadataIds: [[]],
         privacyPolicy: [''],
         supportUri: [''],
       }),
@@ -124,9 +121,81 @@ export class IssuanceConfigCreateComponent implements OnInit {
     // Defer network/config hydration so tab navigation is interactive immediately.
     setTimeout(() => {
       this.loadPresentationConfigs();
-      this.loadSchemaMetadata();
       void this.loadConfigForEdit();
+      void this.loadRegistrarDefaults();
     }, 0);
+  }
+
+  private async loadRegistrarDefaults(): Promise<void> {
+    try {
+      const config = await this.registrarService.getConfig();
+      const defaults = config?.registrationCertificateDefaults;
+      if (!defaults || typeof defaults !== 'object') {
+        this.registrarRegistrationCertificateDefaults = null;
+        return;
+      }
+
+      this.registrarRegistrationCertificateDefaults = defaults as Record<string, unknown>;
+      this.applyRegistrationCertificateDefaultsIfMissing(defaults as Record<string, unknown>);
+    } catch {
+      // Keep form editable even if registrar settings are unavailable.
+    }
+  }
+
+  async applyRegistrarDefaultsFromRegistrar(): Promise<void> {
+    try {
+      const config = await this.registrarService.getConfig();
+      const defaults = config?.registrationCertificateDefaults;
+
+      if (!defaults || typeof defaults !== 'object') {
+        this.snackBar.open(
+          'No registration certificate defaults configured in registrar',
+          'Close',
+          {
+            duration: 3000,
+          }
+        );
+        return;
+      }
+
+      this.registrarRegistrationCertificateDefaults = defaults as Record<string, unknown>;
+      this.applyRegistrationCertificateDefaults(defaults as Record<string, unknown>, true);
+      this.snackBar.open('Loaded privacy policy and support URI from registrar defaults', 'Close', {
+        duration: 2500,
+      });
+    } catch {
+      this.snackBar.open('Failed to load registrar defaults', 'Close', {
+        duration: 3000,
+      });
+    }
+  }
+
+  private applyRegistrationCertificateDefaultsIfMissing(defaults: Record<string, unknown>): void {
+    this.applyRegistrationCertificateDefaults(defaults, false);
+  }
+
+  private applyRegistrationCertificateDefaults(
+    defaults: Record<string, unknown>,
+    overwriteExisting: boolean
+  ): void {
+    const privacy =
+      typeof defaults['privacy_policy'] === 'string' ? defaults['privacy_policy'].trim() : '';
+    const support =
+      typeof defaults['support_uri'] === 'string' ? defaults['support_uri'].trim() : '';
+
+    const registrationCertificate = this.registrationCertificate;
+    const privacyCtrl = registrationCertificate.get('privacyPolicy');
+    const supportCtrl = registrationCertificate.get('supportUri');
+
+    const currentPrivacy = `${privacyCtrl?.value ?? ''}`.trim();
+    const currentSupport = `${supportCtrl?.value ?? ''}`.trim();
+
+    if ((overwriteExisting || !currentPrivacy) && privacy) {
+      privacyCtrl?.setValue(privacy);
+    }
+    if ((overwriteExisting || !currentSupport) && support) {
+      supportCtrl?.setValue(support);
+    }
   }
 
   private async loadConfigForEdit(): Promise<void> {
@@ -274,9 +343,8 @@ export class IssuanceConfigCreateComponent implements OnInit {
         txCodeMaxAttempts: config.txCodeMaxAttempts ?? null,
         registrationCertificate: {
           enabled: registrationCertificate?.enabled ?? false,
-          mode: registrationCertificate?.mode ?? 'import',
+          mode: registrationCertificate?.mode ?? 'generate',
           jwt: registrationCertificate?.jwt ?? '',
-          schemaMetadataIds: registrationCertificate?.schemaMetadataIds ?? [],
           privacyPolicy: registrationCertificate?.privacyPolicy ?? '',
           supportUri: registrationCertificate?.supportUri ?? '',
         },
@@ -313,6 +381,12 @@ export class IssuanceConfigCreateComponent implements OnInit {
       }
 
       await this.yieldToUi();
+
+      if (this.registrarRegistrationCertificateDefaults) {
+        this.applyRegistrationCertificateDefaultsIfMissing(
+          this.registrarRegistrationCertificateDefaults
+        );
+      }
     } catch (error) {
       console.error('Error loading config:', error);
       this.snackBar.open('Failed to load configuration', 'Close', {
@@ -335,19 +409,6 @@ export class IssuanceConfigCreateComponent implements OnInit {
       },
       (error) => {
         console.error('Failed to load presentation configs:', error);
-      }
-    );
-  }
-
-  private loadSchemaMetadata(): void {
-    this.issuanceConfigService.getSchemaMetadata().then(
-      (schemas) => {
-        this.availableSchemaMetadata = [...(schemas || [])].sort((a, b) =>
-          `${a.id}@${a.version}`.localeCompare(`${b.id}@${b.version}`)
-        );
-      },
-      (error) => {
-        console.error('Failed to load schema metadata:', error);
       }
     );
   }
@@ -434,10 +495,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
     return authorizationServers;
   }
 
-  private buildRegistrationCertificatePayload(
-    registrationCertificateFormValue: any,
-    providedAttestations: any[]
-  ): any {
+  private buildRegistrationCertificatePayload(registrationCertificateFormValue: any): any {
     if (!registrationCertificateFormValue?.enabled) {
       return undefined;
     }
@@ -453,108 +511,18 @@ export class IssuanceConfigCreateComponent implements OnInit {
     return {
       enabled: true,
       mode: 'generate',
-      schemaMetadataIds: registrationCertificateFormValue.schemaMetadataIds?.length
-        ? registrationCertificateFormValue.schemaMetadataIds
-        : undefined,
-      providedAttestations,
       privacyPolicy: registrationCertificateFormValue.privacyPolicy || undefined,
       supportUri: registrationCertificateFormValue.supportUri || undefined,
     };
-  }
-
-  private findSchemaMetadataBySelection(selection: string): SchemaMetadataResponseDto | undefined {
-    const [id, version] = String(selection).split('@');
-    return this.availableSchemaMetadata.find(
-      (entry) => entry.id === id && entry.version === version
-    );
-  }
-
-  private buildAttestationsFromSchemaMetadata(metadata: SchemaMetadataResponseDto): any[] {
-    const schemaUris = Array.isArray(metadata.schemaURIs) ? metadata.schemaURIs : [];
-    if (schemaUris.length > 0) {
-      return schemaUris.map((schema) => ({
-        format: schema.formatIdentifier,
-        meta: {
-          schema_metadata_id: metadata.id,
-          schema_metadata_version: metadata.version,
-          schema_uri: schema.uri,
-          schema_entry_id: schema.id,
-        },
-      }));
-    }
-
-    return (metadata.supportedFormats || []).map((format) => ({
-      format,
-      meta: {
-        schema_metadata_id: metadata.id,
-        schema_metadata_version: metadata.version,
-      },
-    }));
-  }
-
-  private buildProvidedAttestationsFromSchemaSelection(
-    registrationCertificate: any
-  ): { ok: true; value: any[] } | { ok: false; error: string } {
-    if (!registrationCertificate?.enabled || registrationCertificate.mode !== 'generate') {
-      return { ok: true, value: [] };
-    }
-
-    const selected = Array.isArray(registrationCertificate.schemaMetadataIds)
-      ? registrationCertificate.schemaMetadataIds
-      : [];
-
-    if (selected.length === 0) {
-      return {
-        ok: false,
-        error: 'Select at least one schema metadata entry in generate mode.',
-      };
-    }
-
-    const missingSelection = selected.find(
-      (selection: string) => !this.findSchemaMetadataBySelection(String(selection))
-    );
-    if (missingSelection) {
-      return {
-        ok: false,
-        error: `Selected schema metadata ${missingSelection} is no longer available.`,
-      };
-    }
-
-    const providedAttestations = selected.flatMap((selection: string) =>
-      this.buildAttestationsFromSchemaMetadata(
-        this.findSchemaMetadataBySelection(String(selection)) as SchemaMetadataResponseDto
-      )
-    );
-
-    if (providedAttestations.length === 0) {
-      return {
-        ok: false,
-        error: 'No attestations could be derived from selected schema metadata entries.',
-      };
-    }
-
-    return { ok: true, value: providedAttestations };
   }
 
   onSubmit(): void {
     this.loading = true;
     const formValue = this.form.value;
 
-    const parseResult = this.buildProvidedAttestationsFromSchemaSelection(
-      formValue.registrationCertificate
-    );
-    if (!parseResult.ok) {
-      this.snackBar.open(parseResult.error, 'Close', {
-        duration: 4000,
-      });
-      this.loading = false;
-      return;
-    }
-
     const unifiedAuthorizationServers = this.buildUnifiedAuthorizationServers(formValue);
     const registrationCertificate = this.buildRegistrationCertificatePayload(
-      formValue.registrationCertificate,
-      parseResult.value
+      formValue.registrationCertificate
     );
 
     const issuanceDto: UpdateIssuanceDto = {
@@ -802,7 +770,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
   }
 
   get registrationCertificateMode(): 'import' | 'generate' {
-    return this.registrationCertificate.get('mode')?.value ?? 'import';
+    return this.registrationCertificate.get('mode')?.value ?? 'generate';
   }
 
   get federationEnabled(): boolean {
@@ -846,16 +814,6 @@ export class IssuanceConfigCreateComponent implements OnInit {
    */
   viewAsJson(): void {
     const currentConfig = this.form.value;
-    const parseResult = this.buildProvidedAttestationsFromSchemaSelection(
-      currentConfig.registrationCertificate
-    );
-    if (!parseResult.ok) {
-      this.snackBar.open(parseResult.error, 'Close', {
-        duration: 4000,
-      });
-      return;
-    }
-
     if (currentConfig.registrationCertificate?.enabled) {
       currentConfig.registrationCertificate = {
         enabled: true,
@@ -864,13 +822,6 @@ export class IssuanceConfigCreateComponent implements OnInit {
           currentConfig.registrationCertificate.mode === 'import'
             ? currentConfig.registrationCertificate.jwt || undefined
             : undefined,
-        schemaMetadataIds:
-          currentConfig.registrationCertificate.mode === 'generate' &&
-          currentConfig.registrationCertificate.schemaMetadataIds?.length
-            ? currentConfig.registrationCertificate.schemaMetadataIds
-            : undefined,
-        providedAttestations:
-          currentConfig.registrationCertificate.mode === 'generate' ? parseResult.value : undefined,
         privacyPolicy:
           currentConfig.registrationCertificate.mode === 'generate'
             ? currentConfig.registrationCertificate.privacyPolicy || undefined

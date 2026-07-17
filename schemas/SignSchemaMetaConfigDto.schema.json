@@ -15,6 +15,16 @@
     "credentialConfigId": {
       "type": "string",
       "description": "ID of the credential config to link back after submission. When provided, schemaMeta.id on the credential config is updated with the reserved attestation ID."
+    },
+    "pinMode": {
+      "enum": [
+        "keep_current",
+        "update_to_new_version",
+        "replace_id"
+      ],
+      "type": "string",
+      "description": "How to update credential config pinning after publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to a different schema id.",
+      "default": "keep_current"
     }
   },
   "required": [

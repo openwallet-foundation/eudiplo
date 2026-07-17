@@ -79,6 +79,7 @@ export class SchemaMetadataShowComponent implements OnInit {
   trustListIds: { value: string; localId: string | null }[] = [];
 
   metadataForm = new FormGroup({
+    displayName: new FormControl(''),
     category: new FormControl(''),
     tags: new FormControl<string[]>([]),
   });
@@ -88,6 +89,15 @@ export class SchemaMetadataShowComponent implements OnInit {
     rulebookURI: new FormControl(''),
     deprecateCurrent: new FormControl(true),
   });
+
+  get displayName(): string {
+    const displayName = (this.item as { displayName?: string } | undefined)?.displayName;
+    if (typeof displayName === 'string' && displayName.trim().length > 0) {
+      return displayName;
+    }
+
+    return this.item?.id ?? this.id;
+  }
 
   ngOnInit(): void {
     combineLatest([this.route.paramMap, this.route.queryParamMap])
@@ -138,6 +148,7 @@ export class SchemaMetadataShowComponent implements OnInit {
       }
 
       this.metadataForm.patchValue({
+        displayName: (this.item as { displayName?: string } | undefined)?.displayName || '',
         category: this.item.category || '',
         tags: (this.item.tags ?? []) as string[],
       });
@@ -193,6 +204,9 @@ export class SchemaMetadataShowComponent implements OnInit {
         this.id,
         this.item?.version ?? '',
         {
+          displayName:
+            (this.metadataForm.get('displayName')?.value as string | undefined)?.trim() ||
+            undefined,
           category:
             (this.metadataForm.get('category')?.value as
               UpdateSchemaMetadataDto['category'] | undefined) || undefined,
@@ -378,8 +392,11 @@ export class SchemaMetadataShowComponent implements OnInit {
       return;
     }
 
-    const config: SchemaMetaConfig = {
+    const schemaMetadataName = (this.item as { name?: string } | undefined)?.name ?? this.id;
+
+    const config = {
       id: catalogId,
+      name: schemaMetadataName,
       version: newVersion,
       rulebookURI: rulebookURI ?? undefined,
       attestationLoS: this.item.attestationLoS,
@@ -408,7 +425,7 @@ export class SchemaMetadataShowComponent implements OnInit {
 
     this.publishing = true;
     try {
-      const newEntry = await this.schemaMetadataService.publishNewVersion(config);
+      const newEntry = await this.schemaMetadataService.publishSchemaMetadataVersion(config);
 
       if (deprecateCurrent) {
         await this.schemaMetadataService.deprecateVersion(this.item.id, this.item.version, {

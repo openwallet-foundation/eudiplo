@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
   type SchemaMetadataResponseDto,
+  type IssuanceConfig,
   issuanceConfigControllerGetIssuanceConfigurations,
+  issuanceConfigControllerReissueRegistrationCertificate,
   issuanceConfigControllerStoreIssuanceConfiguration,
   credentialOfferControllerGetOffer,
   schemaMetadataControllerFindAll,
@@ -23,6 +25,12 @@ export class IssuanceConfigService {
   saveConfiguration(config: UpdateIssuanceDto) {
     return issuanceConfigControllerStoreIssuanceConfiguration({ body: config }).then(
       (response) => response.data
+    );
+  }
+
+  reissueRegistrationCertificate() {
+    return issuanceConfigControllerReissueRegistrationCertificate().then(
+      (response) => response.data as IssuanceConfig
     );
   }
 

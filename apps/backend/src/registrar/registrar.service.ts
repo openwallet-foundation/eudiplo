@@ -116,6 +116,16 @@ export class RegistrarService {
         );
     }
 
+    revokeRegistrationCertificateByJwt(
+        tenantId: string,
+        jwt: string,
+    ): Promise<boolean> {
+        return this.regCertSvc.revokeRegistrationCertificateByJwt(
+            tenantId,
+            jwt,
+        );
+    }
+
     computeDcqlFingerprint(dcqlQuery: any): string {
         return this.regCertSvc.computeDcqlFingerprint(dcqlQuery);
     }

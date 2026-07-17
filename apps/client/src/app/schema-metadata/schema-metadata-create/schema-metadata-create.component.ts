@@ -101,7 +101,7 @@ export class SchemaMetadataCreateComponent implements OnInit {
     rulebookURI: new FormControl('', [Validators.required]),
     attestationLoS: new FormControl('', [Validators.required]),
     bindingType: new FormControl('', [Validators.required]),
-    name: new FormControl(''),
+    name: new FormControl('', [Validators.required]),
     category: new FormControl(''),
     tags: new FormControl<string[]>([]),
     schemaURIs: new FormArray<FormGroup>([], Validators.required),
@@ -131,6 +131,7 @@ export class SchemaMetadataCreateComponent implements OnInit {
 
   applyDemoValues(): void {
     this.composeForm.patchValue({
+      name: 'German PID',
       version: '1.0.0',
       rulebookURI:
         'https://raw.githubusercontent.com/cre8/catalog-of-attestations/refs/heads/main/rulebooks/gym-membership-card/1.0.0.md',
@@ -319,9 +320,56 @@ export class SchemaMetadataCreateComponent implements OnInit {
     };
   }
 
+  private resolveLinkedCredentialConfigId(): string | undefined {
+    if (this.credentialConfigId) {
+      return this.credentialConfigId;
+    }
+
+    const selectedIds = this.importSchemaConfigIds.value ?? [];
+    return selectedIds.length === 1 ? selectedIds[0] : undefined;
+  }
+
+  get linkedCredentialConfig(): CredentialConfig | undefined {
+    const linkedCredentialConfigId = this.resolveLinkedCredentialConfigId();
+    if (!linkedCredentialConfigId) {
+      return undefined;
+    }
+
+    return this.credentialConfigs.find((config) => config.id === linkedCredentialConfigId);
+  }
+
+  get linkedSchemaMetadataId(): string | null {
+    const schemaMetadataId = (this.linkedCredentialConfig as any)?.schemaMeta?.id;
+    return typeof schemaMetadataId === 'string' && schemaMetadataId.trim().length > 0
+      ? schemaMetadataId
+      : null;
+  }
+
+  get linkedSchemaMetadataRouteId(): string | null {
+    if (!this.linkedSchemaMetadataId) {
+      return null;
+    }
+
+    const segments = this.linkedSchemaMetadataId.split('/').filter(Boolean);
+    return segments.at(-1) ?? this.linkedSchemaMetadataId;
+  }
+
+  get hasLinkedSchemaMetadataConflict(): boolean {
+    return !!this.resolveLinkedCredentialConfigId() && !!this.linkedSchemaMetadataId;
+  }
+
   async submit(): Promise<void> {
     if (this.composeForm.invalid) {
       this.composeForm.markAllAsTouched();
+      return;
+    }
+
+    if (this.hasLinkedSchemaMetadataConflict) {
+      this.snackBar.open(
+        'The selected credential config already has linked schema metadata. Open the existing schema metadata or unlink it first.',
+        'Close',
+        { duration: 5000 }
+      );
       return;
     }
 
@@ -330,10 +378,10 @@ export class SchemaMetadataCreateComponent implements OnInit {
       // The backend reserves the attestation id, signs the config and submits
       // it to the registrar in a single call — we just receive the resulting
       // metadata entry.
-      const created = await this.schemaMetadataService.signSchemaMetaConfig(
+      const created = await this.schemaMetadataService.publishSchemaMetadata(
         this.buildConfigFromForm(),
         undefined,
-        this.credentialConfigId
+        this.resolveLinkedCredentialConfigId()
       );
 
       this.snackBar.open('Schema metadata submitted', 'Close', { duration: 3000 });

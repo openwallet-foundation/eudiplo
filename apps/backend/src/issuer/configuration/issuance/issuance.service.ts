@@ -1,9 +1,13 @@
+import { createHash } from "node:crypto";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { decodeJwt } from "jose";
 import { Request } from "express";
+import { v4 } from "uuid";
 import { Repository } from "typeorm";
 import { AuditLogService } from "../../../audit-log/audit-log.service";
 import { TokenPayload } from "../../../auth/token.decorator";
+import { RegistrarService } from "../../../registrar/registrar.service";
 import {
     extractRequestMeta,
     getChangedFields,
@@ -16,6 +20,8 @@ import {
     ImportPhase,
 } from "../../../shared/utils/config-import/config-import-orchestrator.service";
 import { FilesService } from "../../../storage/files.service";
+import { CredentialConfigService } from "../credentials/credential-config/credential-config.service";
+import { IssuerProvidedAttestation } from "./dto/issuer-registration-certificate.dto";
 import { DisplayInfo } from "./dto/display.dto";
 import { IssuanceDto } from "./dto/issuance.dto";
 import { IssuanceConfig } from "./entities/issuance-config.entity";
@@ -36,6 +42,8 @@ export class IssuanceService {
         @InjectRepository(IssuanceConfig)
         private readonly issuanceConfigRepo: Repository<IssuanceConfig>,
         private readonly filesService: FilesService,
+        private readonly credentialConfigService: CredentialConfigService,
+        private readonly registrarService: RegistrarService,
         private readonly configImportService: ConfigImportService,
         private readonly configImportOrchestrator: ConfigImportOrchestratorService,
         private readonly tenantActionLogService: AuditLogService,
@@ -126,6 +134,112 @@ export class IssuanceService {
             tenantId,
             registrationCertificateCache,
         });
+    }
+
+    /**
+     * Force reissue of issuer registration certificate in generate mode.
+     * Replaces cache and revokes the previously active cached certificate.
+     */
+    async reissueRegistrationCertificate(
+        tenantId: string,
+    ): Promise<IssuanceConfig> {
+        const issuanceConfig = await this.getIssuanceConfiguration(tenantId);
+        const registrationCertificateConfig =
+            issuanceConfig.registrationCertificate;
+
+        if (!registrationCertificateConfig?.enabled) {
+            throw new BadRequestException(
+                "Issuance config has no enabled registration certificate",
+            );
+        }
+
+        const mode = registrationCertificateConfig.mode ?? "generate";
+        if (mode !== "generate") {
+            throw new BadRequestException(
+                "Reissue is only supported in generate mode",
+            );
+        }
+
+        if (!(await this.registrarService.isEnabledForTenant(tenantId))) {
+            throw new BadRequestException(
+                "Registrar is not enabled for this tenant",
+            );
+        }
+
+        const previousJwt = issuanceConfig.registrationCertificateCache?.jwt;
+        const { schemaMetadataIds, providedAttestations } =
+            await this.deriveRegistrationCertificateMaterialFromCredentialConfigs(
+                tenantId,
+            );
+
+        if (providedAttestations.length === 0) {
+            throw new BadRequestException(
+                "No credential configs with supported schema metadata found for registration certificate generation",
+            );
+        }
+
+        const creationBody = {
+            ...(schemaMetadataIds.length > 0
+                ? {
+                      provides_attestations: schemaMetadataIds,
+                  }
+                : {}),
+            ...(registrationCertificateConfig.privacyPolicy
+                ? {
+                      privacy_policy:
+                          registrationCertificateConfig.privacyPolicy,
+                  }
+                : {}),
+            ...(registrationCertificateConfig.supportUri
+                ? { support_uri: registrationCertificateConfig.supportUri }
+                : {}),
+        };
+
+        const resolved =
+            await this.registrarService.resolveRegistrationCertificate(
+                { body: creationBody },
+                {},
+                `issuance-reissue-${v4()}`,
+                tenantId,
+            );
+
+        if (
+            previousJwt &&
+            previousJwt !== resolved.jwt &&
+            this.isJwtActive(previousJwt)
+        ) {
+            try {
+                await this.registrarService.revokeRegistrationCertificateByJwt(
+                    tenantId,
+                    previousJwt,
+                );
+            } catch (error) {
+                this.logger.warn(
+                    `[${tenantId}] Failed to revoke previous issuer registration certificate during manual reissue: ${error instanceof Error ? error.message : "unknown error"}`,
+                );
+            }
+        }
+
+        const fingerprint = this.computeRegistrationCertificateFingerprint(
+            registrationCertificateConfig,
+            schemaMetadataIds,
+            providedAttestations,
+        );
+
+        await this.updateRegistrationCertificateCache(tenantId, {
+            jwt: resolved.jwt,
+            fingerprint,
+            issuedAt:
+                typeof resolved.payload.iat === "number"
+                    ? resolved.payload.iat
+                    : undefined,
+            expiresAt:
+                typeof resolved.payload.exp === "number"
+                    ? resolved.payload.exp
+                    : undefined,
+        });
+
+        return this.getIssuanceConfiguration(tenantId);
     }
 
     /**
@@ -287,5 +401,137 @@ export class IssuanceService {
             credentialRequestEncryption: config.credentialRequestEncryption,
             txCodeMaxAttempts: config.txCodeMaxAttempts,
         };
+    }
+
+    private normalizeSchemaMetadataIds(
+        ids: Array<string | null | undefined>,
+    ): string[] {
+        return Array.from(
+            new Set(
+                ids
+                    .filter(
+                        (id): id is string =>
+                            typeof id === "string" && id.trim().length > 0,
+                    )
+                    .map((id) => id.trim()),
+            ),
+        ).sort((left, right) => left.localeCompare(right));
+    }
+
+    private async deriveRegistrationCertificateMaterialFromCredentialConfigs(
+        tenantId: string,
+    ): Promise<{
+        schemaMetadataIds: string[];
+        providedAttestations: IssuerProvidedAttestation[];
+    }> {
+        const credentialConfigs =
+            await this.credentialConfigService.get(tenantId);
+        const providedAttestations: IssuerProvidedAttestation[] = [];
+
+        for (const credentialConfig of credentialConfigs) {
+            const schemaMetadataId = credentialConfig.schemaMeta?.id;
+            if (!schemaMetadataId || schemaMetadataId.trim().length === 0) {
+                continue;
+            }
+
+            const format = credentialConfig.config?.format;
+            if (format !== "dc+sd-jwt" && format !== "mso_mdoc") {
+                continue;
+            }
+
+            const schemaMetadataVersion =
+                typeof credentialConfig.schemaMeta?.version === "string" &&
+                credentialConfig.schemaMeta.version.trim().length > 0
+                    ? credentialConfig.schemaMeta.version.trim()
+                    : undefined;
+
+            providedAttestations.push({
+                credentialConfigId: credentialConfig.id,
+                format,
+                meta: {
+                    schema_metadata_id: schemaMetadataId.trim(),
+                    ...(schemaMetadataVersion
+                        ? {
+                              schema_metadata_version: schemaMetadataVersion,
+                          }
+                        : {}),
+                },
+            });
+        }
+
+        providedAttestations.sort((left, right) => {
+            const leftId =
+                typeof left.meta?.["schema_metadata_id"] === "string"
+                    ? left.meta["schema_metadata_id"]
+                    : "";
+            const rightId =
+                typeof right.meta?.["schema_metadata_id"] === "string"
+                    ? right.meta["schema_metadata_id"]
+                    : "";
+
+            if (leftId !== rightId) {
+                return leftId.localeCompare(rightId);
+            }
+
+            return (left.format ?? "").localeCompare(right.format ?? "");
+        });
+
+        const schemaMetadataIds = this.normalizeSchemaMetadataIds(
+            providedAttestations.map((attestation) => {
+                const value = attestation.meta?.["schema_metadata_id"];
+                return typeof value === "string" ? value : undefined;
+            }),
+        );
+
+        return {
+            schemaMetadataIds,
+            providedAttestations,
+        };
+    }
+
+    private computeRegistrationCertificateFingerprint(
+        registrationCertificateConfig: NonNullable<
+            IssuanceConfig["registrationCertificate"]
+        >,
+        resolvedSchemaMetadataIds: string[],
+        derivedProvidedAttestations: IssuerProvidedAttestation[],
+    ): string {
+        const material = {
+            mode: registrationCertificateConfig.mode,
+            schemaMetadataIds: resolvedSchemaMetadataIds,
+            privacyPolicy: registrationCertificateConfig.privacyPolicy,
+            supportUri: registrationCertificateConfig.supportUri,
+            providedAttestations: derivedProvidedAttestations,
+        };
+
+        return createHash("sha256")
+            .update(JSON.stringify(material))
+            .digest("hex");
+    }
+
+    private isJwtActive(jwt: string): boolean {
+        try {
+            const payload = decodeJwt(jwt);
+            const now = Math.floor(Date.now() / 1000);
+            const skewSeconds = 30;
+
+            if (
+                typeof payload.nbf === "number" &&
+                now + skewSeconds < payload.nbf
+            ) {
+                return false;
+            }
+
+            if (
+                typeof payload.exp === "number" &&
+                now - skewSeconds >= payload.exp
+            ) {
+                return false;
+            }
+
+            return true;
+        } catch {
+            return false;
+        }
     }
 }

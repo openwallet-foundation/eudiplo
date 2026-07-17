@@ -13,6 +13,7 @@ import { RegistrarConfigEntity } from "./entities/registrar-config.entity";
 import {
     type RegistrationCertificateCreation,
     registrationCertificateControllerAll,
+    registrationCertificateControllerDelete,
     registrationCertificateControllerRegister,
 } from "./generated";
 import { RegistrarAuthService } from "./registrar-auth.service";
@@ -148,7 +149,14 @@ export class RegistrationCertificateService {
             ...(req.body ?? {}),
         };
 
-        if (!Array.isArray(mergedBody.credentials)) {
+        const hasProvidesAttestations =
+            Array.isArray(mergedBody.provides_attestations) &&
+            mergedBody.provides_attestations.length > 0;
+
+        if (
+            !hasProvidesAttestations &&
+            !Array.isArray(mergedBody.credentials)
+        ) {
             const dcqlCredentials = Array.isArray(dcqlQuery?.credentials)
                 ? dcqlQuery.credentials
                 : [];
@@ -170,22 +178,29 @@ export class RegistrationCertificateService {
             );
         }
 
-        if (
-            !Array.isArray(mergedBody.purpose) ||
-            mergedBody.purpose.length === 0
-        ) {
-            throw new BadRequestException(
-                "registrationCert.body.purpose must be provided in the presentation config",
-            );
-        }
+        const hasPurpose =
+            Array.isArray(mergedBody.purpose) && mergedBody.purpose.length > 0;
+        const hasCredentials =
+            Array.isArray(mergedBody.credentials) &&
+            mergedBody.credentials.length > 0;
 
-        if (
-            !Array.isArray(mergedBody.credentials) ||
-            mergedBody.credentials.length === 0
-        ) {
-            throw new BadRequestException(
-                "registrationCert.body.credentials could not be derived from dcql_query.credentials",
-            );
+        // Two supported certificate intents:
+        // 1) Verifier role: must carry purpose and credentials
+        // 2) Issuer role: must carry provides_attestations
+        if (hasProvidesAttestations) {
+            // Issuer role accepted without verifier-specific purpose/credentials constraints.
+        } else {
+            if (!hasPurpose) {
+                throw new BadRequestException(
+                    "registrationCert.body must include either provides_attestations (issuer role) or both purpose and credentials (verifier role)",
+                );
+            }
+
+            if (!hasCredentials) {
+                throw new BadRequestException(
+                    "registrationCert.body.credentials could not be derived from dcql_query.credentials",
+                );
+            }
         }
 
         const bodyWithRpId: RegistrationCertificateCreation = {
@@ -242,6 +257,64 @@ export class RegistrationCertificateService {
             "body",
         );
         return { jwt: newJwt, payload, source: "registrar" };
+    }
+
+    /**
+     * Revoke an active registration certificate identified by its JWT.
+     *
+     * Returns true when a matching active certificate was found and revoked.
+     * Returns false when no active matching certificate exists.
+     */
+    async revokeRegistrationCertificateByJwt(
+        tenantId: string,
+        jwt: string,
+    ): Promise<boolean> {
+        const client = await this.authService.getClient(tenantId);
+        const relyingPartyId =
+            await this.authService.getRelyingPartyId(tenantId);
+
+        const existingCerts = await registrationCertificateControllerAll({
+            client,
+            query: { rp: relyingPartyId },
+        });
+
+        if (existingCerts.error) {
+            this.logger.error(
+                { error: existingCerts.error },
+                `[${tenantId}] Failed to fetch registration certificates before revoke`,
+            );
+            throw new BadRequestException(
+                "Failed to query registration certificates",
+            );
+        }
+
+        const matchingActive = existingCerts.data?.find(
+            (cert) => cert.revoked == null && cert.jwt === jwt,
+        );
+
+        if (!matchingActive?.id) {
+            return false;
+        }
+
+        const revokeRes = await registrationCertificateControllerDelete({
+            client,
+            path: { id: matchingActive.id },
+        });
+
+        if (revokeRes.error) {
+            this.logger.error(
+                {
+                    error: revokeRes.error,
+                    certId: matchingActive.id,
+                },
+                `[${tenantId}] Failed to revoke registration certificate`,
+            );
+            throw new BadRequestException(
+                "Failed to revoke registration certificate",
+            );
+        }
+
+        return true;
     }
 
     // -------------------------------------------------------------------------
@@ -343,6 +416,14 @@ export class RegistrationCertificateService {
             );
         }
 
+        const requestedCredentials = Array.isArray(dcqlQuery?.credentials)
+            ? dcqlQuery.credentials
+            : [];
+
+        if (requestedCredentials.length === 0) {
+            return payload;
+        }
+
         const authorizedCredentials = Array.isArray(payload.credentials)
             ? payload.credentials
             : null;
@@ -355,14 +436,6 @@ export class RegistrationCertificateService {
             throw new BadRequestException(
                 "Registration certificate has no authorized credentials",
             );
-        }
-
-        const requestedCredentials = Array.isArray(dcqlQuery?.credentials)
-            ? dcqlQuery.credentials
-            : [];
-
-        if (requestedCredentials.length === 0) {
-            return payload;
         }
 
         const authorizedFingerprints = new Set(

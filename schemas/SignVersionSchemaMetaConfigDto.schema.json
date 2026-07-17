@@ -11,6 +11,20 @@
           "$ref": "./SchemaMetaConfig.schema.json"
         }
       ]
+    },
+    "credentialConfigId": {
+      "type": "string",
+      "description": "Optional credential config to update pinning for after successful version publish."
+    },
+    "pinMode": {
+      "enum": [
+        "keep_current",
+        "update_to_new_version",
+        "replace_id"
+      ],
+      "type": "string",
+      "description": "How to update credential config pinning after version publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to config.id.",
+      "default": "keep_current"
     }
   },
   "required": [
