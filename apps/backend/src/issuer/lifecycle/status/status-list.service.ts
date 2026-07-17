@@ -424,9 +424,7 @@ export class StatusListService {
                     ? new Date(jwtPayload.exp * 1000)
                     : undefined;
             const ttl =
-                typeof jwtPayload.ttl === "number"
-                    ? jwtPayload.ttl
-                    : undefined;
+                typeof jwtPayload.ttl === "number" ? jwtPayload.ttl : undefined;
 
             const cwt = await this.signStatusListCwt(
                 tenantId,
