@@ -222,21 +222,65 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
+      - uses: pnpm/action-setup@v6
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Download built documentation
-        uses: actions/download-artifact@v5
-        with:
-          name: generated-docs
-          path: site
+      - name: Build generated docs content
+        env:
+          PUBLIC_URL: https://example.com
+          ENABLE_SWAGGER: true
+          OIDC: false
+          MASTER_SECRET: ci-docs-build-secret-minimum-32-chars
+          AUTH_CLIENT_ID: ci-docs-client
+          AUTH_CLIENT_SECRET: ci-docs-secret
+          ENCRYPTION_KEY: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+        run: pnpm run doc:generate && pnpm run compodoc
+
+      - name: Build versioned docs with mike under /docs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Reuse existing gh-pages history when available so mike can maintain version metadata.
+          git fetch origin gh-pages:gh-pages || true
+
+          mike deploy --branch gh-pages --deploy-prefix docs --alias-type copy --update-aliases main latest-dev
+          mike set-default --branch gh-pages --deploy-prefix docs main
+
+          git worktree add gh-pages-out gh-pages
 
       - name: Assemble Pages artifact
         run: |
           mkdir -p pages/docs
           cp -R website/. pages/
-          cp -R site/. pages/docs/
+          cp -R gh-pages-out/docs/. pages/docs/
           touch pages/.nojekyll
+
+      - name: Cleanup temporary worktree
+        if: always()
+        run: git worktree remove gh-pages-out --force || true
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
