@@ -234,6 +234,41 @@ export class CredentialConfigShowComponent implements OnInit {
     }
   }
 
+  unlinkSchemaMetadata(): void {
+    if (!this.config?.id || !this.schemaMetadataId) {
+      return;
+    }
+
+    if (
+      !confirm(
+        `Unlink schema metadata '${this.schemaMetadataId}' from this credential configuration?`
+      )
+    ) {
+      return;
+    }
+
+    this.credentialConfigService
+      .updateConfiguration(this.config.id, { schemaMeta: null } as any)
+      .then(() => {
+        if (this.config) {
+          this.config = {
+            ...this.config,
+            schemaMeta: undefined,
+          };
+        }
+
+        this.snackBar.open('Schema metadata link removed', 'Close', {
+          duration: 3000,
+        });
+      })
+      .catch((error) => {
+        this.snackBar.open('Failed to remove schema metadata link', 'Close', {
+          duration: 3000,
+        });
+        console.error('Unlink schema metadata error:', error);
+      });
+  }
+
   formatLifetime(seconds?: number | null): string {
     if (!seconds) return 'Not set';
 

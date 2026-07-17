@@ -2091,22 +2091,6 @@ export const FederationConfigSchema = {
     ]
 } as const;
 
-export const IssuerProvidedAttestationSchema = {
-    type: 'object',
-    properties: {
-        format: {
-            type: 'string',
-            description: 'Attestation format as expected by the registrar (for example dc+sd-jwt, mso_mdoc).',
-            example: 'dc+sd-jwt'
-        },
-        meta: {
-            type: 'object',
-            additionalProperties: true,
-            description: 'Arbitrary attestation metadata forwarded to the registrar.'
-        }
-    }
-} as const;
-
 export const IssuerRegistrationCertificateConfigSchema = {
     type: 'object',
     properties: {
@@ -2121,19 +2105,12 @@ export const IssuerRegistrationCertificateConfigSchema = {
                 'generate'
             ],
             type: 'string',
-            description: 'import: use an existing JWT, generate: create via registrar from provided attestations and selected credential configurations.',
-            default: 'import'
+            description: 'import: use an existing JWT, generate: create via registrar using attestation data derived from configured credential configurations.',
+            default: 'generate'
         },
         jwt: {
             type: 'string',
             description: 'Existing registration certificate JWT used when mode is import.'
-        },
-        schemaMetadataIds: {
-            description: 'Schema metadata IDs selected for inclusion in generated registration certificates.',
-            type: 'array',
-            items: {
-                type: 'string'
-            }
         },
         privacyPolicy: {
             type: 'string',
@@ -2144,13 +2121,6 @@ export const IssuerRegistrationCertificateConfigSchema = {
             type: 'string',
             description: 'Support URI used when generating a registration certificate (optional if registrar defaults are configured).',
             example: 'mailto:support@issuer.example'
-        },
-        providedAttestations: {
-            description: 'Provided attestations included in generated registration certificates.',
-            type: 'array',
-            items: {
-                $ref: '#/components/schemas/IssuerProvidedAttestation'
-            }
         }
     }
 } as const;
@@ -2887,6 +2857,11 @@ export const SchemaMetaConfigSchema = {
             description: 'Optional override for the schema ID (attestation identifier URI). When not set, derived from vct (dc+sd-jwt) or docType (mso_mdoc).',
             example: 'https://example.com/attestations/my-credential'
         },
+        name: {
+            type: 'string',
+            description: 'Human-readable name of the schema metadata entry. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.',
+            example: 'German PID'
+        },
         version: {
             type: 'string',
             description: 'Schema version in SemVer format',
@@ -2894,7 +2869,7 @@ export const SchemaMetaConfigSchema = {
         },
         rulebookURI: {
             type: 'string',
-            description: 'URI of the Attestation Rulebook',
+            description: 'URI of the Attestation Rulebook. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.',
             example: 'https://example.com/rulebooks/my-credential/1.0.0.md'
         },
         attestationLoS: {
@@ -3736,6 +3711,16 @@ export const SignSchemaMetaConfigDtoSchema = {
         credentialConfigId: {
             type: 'string',
             description: 'ID of the credential config to link back after submission. When provided, schemaMeta.id on the credential config is updated with the reserved attestation ID.'
+        },
+        pinMode: {
+            enum: [
+                'keep_current',
+                'update_to_new_version',
+                'replace_id'
+            ],
+            type: 'string',
+            description: 'How to update credential config pinning after publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to a different schema id.',
+            default: 'keep_current'
         }
     },
     required: [
@@ -3753,6 +3738,20 @@ export const SignVersionSchemaMetaConfigDtoSchema = {
                     $ref: '#/components/schemas/SchemaMetaConfig'
                 }
             ]
+        },
+        credentialConfigId: {
+            type: 'string',
+            description: 'Optional credential config to update pinning for after successful version publish.'
+        },
+        pinMode: {
+            enum: [
+                'keep_current',
+                'update_to_new_version',
+                'replace_id'
+            ],
+            type: 'string',
+            description: 'How to update credential config pinning after version publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to config.id.',
+            default: 'keep_current'
         }
     },
     required: [

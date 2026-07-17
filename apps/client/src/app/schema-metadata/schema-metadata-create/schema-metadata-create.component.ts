@@ -320,9 +320,56 @@ export class SchemaMetadataCreateComponent implements OnInit {
     };
   }
 
+  private resolveLinkedCredentialConfigId(): string | undefined {
+    if (this.credentialConfigId) {
+      return this.credentialConfigId;
+    }
+
+    const selectedIds = this.importSchemaConfigIds.value ?? [];
+    return selectedIds.length === 1 ? selectedIds[0] : undefined;
+  }
+
+  get linkedCredentialConfig(): CredentialConfig | undefined {
+    const linkedCredentialConfigId = this.resolveLinkedCredentialConfigId();
+    if (!linkedCredentialConfigId) {
+      return undefined;
+    }
+
+    return this.credentialConfigs.find((config) => config.id === linkedCredentialConfigId);
+  }
+
+  get linkedSchemaMetadataId(): string | null {
+    const schemaMetadataId = (this.linkedCredentialConfig as any)?.schemaMeta?.id;
+    return typeof schemaMetadataId === 'string' && schemaMetadataId.trim().length > 0
+      ? schemaMetadataId
+      : null;
+  }
+
+  get linkedSchemaMetadataRouteId(): string | null {
+    if (!this.linkedSchemaMetadataId) {
+      return null;
+    }
+
+    const segments = this.linkedSchemaMetadataId.split('/').filter(Boolean);
+    return segments.at(-1) ?? this.linkedSchemaMetadataId;
+  }
+
+  get hasLinkedSchemaMetadataConflict(): boolean {
+    return !!this.resolveLinkedCredentialConfigId() && !!this.linkedSchemaMetadataId;
+  }
+
   async submit(): Promise<void> {
     if (this.composeForm.invalid) {
       this.composeForm.markAllAsTouched();
+      return;
+    }
+
+    if (this.hasLinkedSchemaMetadataConflict) {
+      this.snackBar.open(
+        'The selected credential config already has linked schema metadata. Open the existing schema metadata or unlink it first.',
+        'Close',
+        { duration: 5000 }
+      );
       return;
     }
 
@@ -334,7 +381,7 @@ export class SchemaMetadataCreateComponent implements OnInit {
       const created = await this.schemaMetadataService.publishSchemaMetadata(
         this.buildConfigFromForm(),
         undefined,
-        this.credentialConfigId
+        this.resolveLinkedCredentialConfigId()
       );
 
       this.snackBar.open('Schema metadata submitted', 'Close', { duration: 3000 });

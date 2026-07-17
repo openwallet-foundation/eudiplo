@@ -1064,36 +1064,19 @@ export type FederationConfig = {
     trustAnchors: Array<FederationTrustAnchorConfig>;
 };
 
-export type IssuerProvidedAttestation = {
-    /**
-     * Attestation format as expected by the registrar (for example dc+sd-jwt, mso_mdoc).
-     */
-    format?: string;
-    /**
-     * Arbitrary attestation metadata forwarded to the registrar.
-     */
-    meta?: {
-        [key: string]: unknown;
-    };
-};
-
 export type IssuerRegistrationCertificateConfig = {
     /**
      * Enable inclusion of a registration certificate in credential issuer metadata.
      */
     enabled?: boolean;
     /**
-     * import: use an existing JWT, generate: create via registrar from provided attestations and selected credential configurations.
+     * import: use an existing JWT, generate: create via registrar using attestation data derived from configured credential configurations.
      */
     mode?: 'import' | 'generate';
     /**
      * Existing registration certificate JWT used when mode is import.
      */
     jwt?: string;
-    /**
-     * Schema metadata IDs selected for inclusion in generated registration certificates.
-     */
-    schemaMetadataIds?: Array<string>;
     /**
      * Privacy policy URL used when generating a registration certificate (optional if registrar defaults are configured).
      */
@@ -1102,10 +1085,6 @@ export type IssuerRegistrationCertificateConfig = {
      * Support URI used when generating a registration certificate (optional if registrar defaults are configured).
      */
     supportUri?: string;
-    /**
-     * Provided attestations included in generated registration certificates.
-     */
-    providedAttestations?: Array<IssuerProvidedAttestation>;
 };
 
 export type IssuerRegistrationCertificateCache = {
@@ -1433,11 +1412,15 @@ export type SchemaMetaConfig = {
      */
     id?: string;
     /**
+     * Human-readable name of the schema metadata entry. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.
+     */
+    name?: string;
+    /**
      * Schema version in SemVer format
      */
     version?: string;
     /**
-     * URI of the Attestation Rulebook
+     * URI of the Attestation Rulebook. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.
      */
     rulebookURI?: string;
     /**
@@ -1831,6 +1814,10 @@ export type SignSchemaMetaConfigDto = {
      * ID of the credential config to link back after submission. When provided, schemaMeta.id on the credential config is updated with the reserved attestation ID.
      */
     credentialConfigId?: string;
+    /**
+     * How to update credential config pinning after publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to a different schema id.
+     */
+    pinMode?: 'keep_current' | 'update_to_new_version' | 'replace_id';
 };
 
 export type SignVersionSchemaMetaConfigDto = {
@@ -1838,6 +1825,14 @@ export type SignVersionSchemaMetaConfigDto = {
      * The schema metadata configuration to submit as a new version. Must include the existing id.
      */
     config: SchemaMetaConfig;
+    /**
+     * Optional credential config to update pinning for after successful version publish.
+     */
+    credentialConfigId?: string;
+    /**
+     * How to update credential config pinning after version publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to config.id.
+     */
+    pinMode?: 'keep_current' | 'update_to_new_version' | 'replace_id';
 };
 
 export type VocabularyEntryDto = {
@@ -4372,6 +4367,27 @@ export type IssuanceConfigControllerStoreIssuanceConfigurationResponses = {
 };
 
 export type IssuanceConfigControllerStoreIssuanceConfigurationResponse = IssuanceConfigControllerStoreIssuanceConfigurationResponses[keyof IssuanceConfigControllerStoreIssuanceConfigurationResponses];
+
+export type IssuanceConfigControllerReissueRegistrationCertificateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/issuer/config/registration-cert/reissue';
+};
+
+export type IssuanceConfigControllerReissueRegistrationCertificateErrors = {
+    /**
+     * Registration certificate is not enabled/generate mode or registrar is unavailable
+     */
+    400: unknown;
+};
+
+export type IssuanceConfigControllerReissueRegistrationCertificateResponses = {
+    /**
+     * Updated issuance configuration
+     */
+    201: unknown;
+};
 
 export type CredentialConfigControllerGetConfigsData = {
     body?: never;

@@ -9,6 +9,11 @@
       "description": "Optional override for the schema ID (attestation identifier URI). When not set, derived from vct (dc+sd-jwt) or docType (mso_mdoc).",
       "example": "https://example.com/attestations/my-credential"
     },
+    "name": {
+      "type": "string",
+      "description": "Human-readable name of the schema metadata entry. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.",
+      "example": "German PID"
+    },
     "version": {
       "type": "string",
       "description": "Schema version in SemVer format",
@@ -16,7 +21,7 @@
     },
     "rulebookURI": {
       "type": "string",
-      "description": "URI of the Attestation Rulebook",
+      "description": "URI of the Attestation Rulebook. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.",
       "example": "https://example.com/rulebooks/my-credential/1.0.0.md"
     },
     "attestationLoS": {

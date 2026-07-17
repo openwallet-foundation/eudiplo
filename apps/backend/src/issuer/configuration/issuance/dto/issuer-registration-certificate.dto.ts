@@ -1,7 +1,5 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
 import {
-    IsArray,
     IsBoolean,
     IsEnum,
     IsNumber,
@@ -9,7 +7,6 @@ import {
     IsOptional,
     IsString,
     ValidateIf,
-    ValidateNested,
 } from "class-validator";
 
 export enum IssuerRegistrationCertificateMode {
@@ -60,8 +57,8 @@ export class IssuerRegistrationCertificateConfig {
     @ApiPropertyOptional({
         enum: IssuerRegistrationCertificateMode,
         description:
-            "import: use an existing JWT, generate: create via registrar from provided attestations and selected credential configurations.",
-        default: IssuerRegistrationCertificateMode.IMPORT,
+            "import: use an existing JWT, generate: create via registrar using attestation data derived from configured credential configurations.",
+        default: IssuerRegistrationCertificateMode.GENERATE,
     })
     @IsOptional()
     @IsEnum(IssuerRegistrationCertificateMode)
@@ -81,16 +78,6 @@ export class IssuerRegistrationCertificateConfig {
 
     @ApiPropertyOptional({
         description:
-            "Schema metadata IDs selected for inclusion in generated registration certificates. When provided, this overrides credential-config-derived schema metadata IDs.",
-        type: () => [String],
-    })
-    @IsOptional()
-    @IsArray()
-    @IsString({ each: true })
-    schemaMetadataIds?: string[];
-
-    @ApiPropertyOptional({
-        description:
             "Privacy policy URL used when generating a registration certificate (optional if registrar defaults are configured).",
         example: "https://issuer.example/privacy",
     })
@@ -106,21 +93,6 @@ export class IssuerRegistrationCertificateConfig {
     @IsOptional()
     @IsString()
     supportUri?: string;
-
-    @ApiPropertyOptional({
-        description:
-            "Provided attestations included in generated registration certificates.",
-        type: () => [IssuerProvidedAttestation],
-    })
-    @ValidateIf(
-        (value: IssuerRegistrationCertificateConfig) =>
-            value.mode === IssuerRegistrationCertificateMode.GENERATE,
-    )
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => IssuerProvidedAttestation)
-    providedAttestations?: IssuerProvidedAttestation[];
 }
 
 export class IssuerRegistrationCertificateCache {

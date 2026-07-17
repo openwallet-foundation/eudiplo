@@ -3,8 +3,6 @@ import { IncomingMessage } from "node:http";
 import { Params } from "nestjs-pino";
 import { SerializedRequest, SerializedResponse } from "pino";
 
-const MAX_LOGGED_RESPONSE_BODY_LENGTH = 4096;
-
 /**
  * Content types we consider safe to buffer and stringify for logs. Anything else
  * (binary uploads/downloads, streaming) is skipped entirely.
@@ -21,23 +19,24 @@ function isLoggableContentType(contentType: string | undefined): boolean {
     );
 }
 
-function truncate(value: string): string {
-    if (value.length <= MAX_LOGGED_RESPONSE_BODY_LENGTH) {
+function truncate(value: string, maxLength?: number): string {
+    if (maxLength === undefined || value.length <= maxLength) {
         return value;
     }
 
-    return `${value.slice(0, MAX_LOGGED_RESPONSE_BODY_LENGTH)}...[truncated]`;
+    return `${value.slice(0, maxLength)}...[truncated]`;
 }
 
 function serializeResponseBody(
     rawBody: Buffer,
     contentType: string | undefined,
+    maxLength?: number,
 ): unknown {
     if (!rawBody.length) {
         return undefined;
     }
 
-    const bodyText = truncate(rawBody.toString("utf8"));
+    const bodyText = truncate(rawBody.toString("utf8"), maxLength);
 
     if ((contentType || "").toLowerCase().includes("json")) {
         try {
@@ -50,7 +49,11 @@ function serializeResponseBody(
     return bodyText;
 }
 
-function attachResponseBodyCapture(req: any, res: any): void {
+function attachResponseBodyCapture(
+    req: any,
+    res: any,
+    maxLoggedResponseBodyLength?: number,
+): void {
     const response = res?.raw ?? res;
     if (!response || response.__eudiploResponseBodyCaptureInstalled) {
         return;
@@ -93,11 +96,19 @@ function attachResponseBodyCapture(req: any, res: any): void {
         if (chunk === undefined || chunk === null || !shouldCapture()) {
             return;
         }
-        if (totalLength >= MAX_LOGGED_RESPONSE_BODY_LENGTH) {
+        if (
+            maxLoggedResponseBodyLength !== undefined &&
+            totalLength >= maxLoggedResponseBodyLength
+        ) {
             return;
         }
         const buf = Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk));
-        const remaining = MAX_LOGGED_RESPONSE_BODY_LENGTH - totalLength;
+        if (maxLoggedResponseBodyLength === undefined) {
+            chunks.push(buf);
+            totalLength += buf.length;
+            return;
+        }
+        const remaining = maxLoggedResponseBodyLength - totalLength;
         chunks.push(buf.length > remaining ? buf.subarray(0, remaining) : buf);
         totalLength += Math.min(buf.length, remaining);
     };
@@ -120,6 +131,7 @@ function attachResponseBodyCapture(req: any, res: any): void {
             response.__eudiploLoggedResponseBody = serializeResponseBody(
                 bodyBuffer,
                 responseContentType,
+                maxLoggedResponseBodyLength,
             );
         }
 
@@ -157,6 +169,16 @@ export const createLoggerOptions = (configService: ConfigService) => {
     // Check if file logging is enabled
     const logToFile = configService.getOrThrow<boolean>("LOG_TO_FILE");
     const logFilePath = configService.getOrThrow<string>("LOG_FILE_PATH");
+    const logHttpResponseBodyMaxLength = configService.getOrThrow<number>(
+        "LOG_HTTP_RESPONSE_BODY_MAX_LENGTH",
+    );
+    const redactSensitiveData = configService.getOrThrow<boolean>(
+        "LOG_REDACT_SENSITIVE_DATA",
+    );
+    const maxLoggedResponseBodyLength =
+        logHttpResponseBodyMaxLength > 0
+            ? logHttpResponseBodyMaxLength
+            : undefined;
 
     // Check if OTel is disabled
     const otelDisabled = configService.getOrThrow<boolean>("OTEL_SDK_DISABLED");
@@ -211,6 +233,27 @@ export const createLoggerOptions = (configService: ConfigService) => {
         });
     }
 
+    const redact = redactSensitiveData
+        ? {
+              paths: [
+                  "req.headers.authorization",
+                  "req.headers.cookie",
+                  "req.headers.dpop",
+                  'req.headers["oauth-client-attestation"]',
+                  'req.headers["oauth-client-attestation-pop"]',
+                  'res.headers["set-cookie"]',
+                  "res.body.access_token",
+                  "res.body.refresh_token",
+                  "res.body.id_token",
+                  "res.body.c_nonce",
+                  "res.body.credential",
+                  "res.body.credentials",
+                  "res.body.attestation_challenge",
+              ],
+              censor: "[redacted]",
+          }
+        : undefined;
+
     return {
         pinoHttp: {
             level: logLevel,
@@ -230,26 +273,8 @@ export const createLoggerOptions = (configService: ConfigService) => {
                     );
                 },
             },
-            // Redact sensitive request/response fields. Response bodies are
-            // additionally gated behind LOG_HTTP_RESPONSE_BODY.
-            redact: {
-                paths: [
-                    "req.headers.authorization",
-                    "req.headers.cookie",
-                    "req.headers.dpop",
-                    'req.headers["oauth-client-attestation"]',
-                    'req.headers["oauth-client-attestation-pop"]',
-                    'res.headers["set-cookie"]',
-                    "res.body.access_token",
-                    "res.body.refresh_token",
-                    "res.body.id_token",
-                    "res.body.c_nonce",
-                    "res.body.credential",
-                    "res.body.credentials",
-                    "res.body.attestation_challenge",
-                ],
-                censor: "[redacted]",
-            },
+            // Redact sensitive request/response fields unless explicitly disabled.
+            redact,
             transport: {
                 targets,
             },
@@ -277,7 +302,11 @@ export const createLoggerOptions = (configService: ConfigService) => {
             },
             customProps: (req: any, res: any) => {
                 if (captureResponseBody) {
-                    attachResponseBodyCapture(req, res);
+                    attachResponseBodyCapture(
+                        req,
+                        res,
+                        maxLoggedResponseBodyLength,
+                    );
                 }
                 return {
                     sessionId: req.params?.session,

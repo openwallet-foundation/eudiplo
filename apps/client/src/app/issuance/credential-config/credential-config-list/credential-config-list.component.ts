@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { CredentialConfig } from '@eudiplo/sdk-core';
@@ -11,7 +12,14 @@ import { DisplayFormValue } from '../credential-config.types';
 
 @Component({
   selector: 'app-credential-config-list',
-  imports: [MatTableModule, MatIconModule, MatButtonModule, RouterModule, FlexLayoutModule],
+  imports: [
+    MatTableModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    RouterModule,
+    FlexLayoutModule,
+  ],
   templateUrl: './credential-config-list.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './credential-config-list.component.scss',
@@ -21,9 +29,10 @@ export class CredentialConfigListComponent extends BaseAsyncListComponent<Creden
     return this.items;
   }
 
-  displayedColumns: (keyof CredentialConfig | 'description' | 'actions')[] = [
+  displayedColumns: (keyof CredentialConfig | 'description' | 'schemaMetadata' | 'actions')[] = [
     'id',
     'description',
+    'schemaMetadata',
     'keyBinding',
     'lifeTime',
     'embeddedDisclosurePolicy',
@@ -31,7 +40,7 @@ export class CredentialConfigListComponent extends BaseAsyncListComponent<Creden
     'actions',
   ];
 
-  constructor(private credentialConfigService: CredentialConfigService) {
+  constructor(private readonly credentialConfigService: CredentialConfigService) {
     super();
   }
 
@@ -44,5 +53,10 @@ export class CredentialConfigListComponent extends BaseAsyncListComponent<Creden
       ((config.config as any).display as DisplayFormValue[])[0]?.description ||
       'No description available'
     );
+  }
+
+  getSchemaMetadataId(config: CredentialConfig): string | null {
+    const id = (config as any)?.schemaMeta?.id;
+    return typeof id === 'string' && id.trim().length > 0 ? id.trim() : null;
   }
 }

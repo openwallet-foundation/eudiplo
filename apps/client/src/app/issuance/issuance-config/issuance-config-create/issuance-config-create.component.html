@@ -835,9 +835,7 @@
                     <mat-label>Mode</mat-label>
                     <mat-select formControlName="mode">
                       <mat-option value="import">Import existing JWT</mat-option>
-                      <mat-option value="generate"
-                        >Generate from selected schema metadata</mat-option
-                      >
+                      <mat-option value="generate">Generate from credential configs</mat-option>
                     </mat-select>
                     <mat-icon matSuffix>tune</mat-icon>
                   </mat-form-field>
@@ -859,27 +857,21 @@
                   }
 
                   @if (registrationCertificateMode === 'generate') {
-                    <mat-form-field>
-                      <mat-label>Schema Metadata</mat-label>
-                      <mat-select formControlName="schemaMetadataIds" multiple>
-                        <mat-select-trigger>
-                          {{ getSelectedSchemaMetadataLabels() }}
-                        </mat-select-trigger>
-                        @for (
-                          schema of availableSchemaMetadata;
-                          track schema.id + '@' + schema.version
-                        ) {
-                          <mat-option [value]="schema.id + '@' + schema.version">
-                            {{ getSchemaMetadataOptionLabel(schema) }}
-                          </mat-option>
-                        }
-                      </mat-select>
-                      <mat-icon matSuffix>schema</mat-icon>
-                      <mat-hint
-                        >Select schema metadata entries to include as provided
-                        attestations.</mat-hint
+                    <mat-hint>
+                      Provides attestations are derived automatically from credential configs with
+                      schema metadata.
+                    </mat-hint>
+
+                    <div>
+                      <button
+                        mat-stroked-button
+                        type="button"
+                        (click)="applyRegistrarDefaultsFromRegistrar()"
                       >
-                    </mat-form-field>
+                        <mat-icon>sync</mat-icon>
+                        Use Registrar Defaults
+                      </button>
+                    </div>
 
                     <mat-form-field>
                       <mat-label>Privacy Policy URL (optional)</mat-label>

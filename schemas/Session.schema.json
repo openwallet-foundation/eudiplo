@@ -38,6 +38,14 @@
       "type": "boolean",
       "description": "Flag indicating whether to use the DC API for the presentation request."
     },
+    "dcApiProtocol": {
+      "type": "string",
+      "description": "DC API sub-protocol: \"oid4vp\" (OpenID4VP via DC API) or \"iso-18013-7\" (org.iso.mdoc).\nNull/undefined means the standard OID4VP flow (useDcApi=false)."
+    },
+    "browserOrigin": {
+      "type": "string",
+      "description": "Browser page origin recorded at offer time for BrowserHandover session transcript.\nUsed exclusively by the ISO 18013-7 Annex C flow."
+    },
     "tenantId": {
       "type": "string",
       "description": "Tenant ID for multi-tenancy support."

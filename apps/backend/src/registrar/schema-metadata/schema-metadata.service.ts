@@ -11,6 +11,7 @@ import {
     UpdateSchemaMetadataDto,
 } from "./dto/schema-metadata.dto";
 import {
+    type CreateSchemaMetadataMultipartDto,
     type SchemaMetadata,
     type SchemaMetadataVocabulariesDto,
     schemaMetadataControllerCreateSchemaMetadata,
@@ -34,7 +35,7 @@ type SchemaMetadataFilters = {
 };
 
 type CreateSchemaMetadataRequest = {
-    metadata: Record<string, unknown>;
+    metadata: CreateSchemaMetadataMultipartDto;
     rulebookFile: Blob | File;
     schemaFiles: Array<Blob | File>;
 };

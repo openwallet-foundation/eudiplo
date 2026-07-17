@@ -77,8 +77,21 @@ describe("SchemaMetadataSubmissionService pinning behavior", () => {
         const schemaMetadataService = {
             createSchemaMetadata: vi.fn(async () => ({
                 id: options?.generatedId ?? "schema-new",
+                version: baseConfig.version,
             })),
-            getById: vi.fn(async (_tenantId: string, id: string) => ({
+            updateMetadata: vi.fn(
+                async (
+                    _tenantId: string,
+                    id: string,
+                    version: string,
+                    body: Record<string, unknown>,
+                ) => ({
+                    id,
+                    version,
+                    ...body,
+                }),
+            ),
+            findOne: vi.fn(async (_tenantId: string, id: string) => ({
                 id,
                 version: "1.0.0",
             })),
@@ -122,9 +135,9 @@ describe("SchemaMetadataSubmissionService pinning behavior", () => {
             credentialConfigId,
         };
 
-        await expect(service.submitSchemaMetadata(tenantId, body)).rejects.toBeInstanceOf(
-            BadRequestException,
-        );
+        await expect(
+            service.submitSchemaMetadata(tenantId, body),
+        ).rejects.toBeInstanceOf(BadRequestException);
         expect(credentialsService.update).not.toHaveBeenCalled();
     });
 
@@ -225,8 +238,10 @@ describe("SchemaMetadataSubmissionService pinning behavior", () => {
 
         await service.submitSchemaMetadata(tenantId, body);
 
-        expect(schemaMetadataService.createSchemaMetadata).not.toHaveBeenCalled();
-        expect(schemaMetadataService.getById).toHaveBeenCalledWith(
+        expect(
+            schemaMetadataService.createSchemaMetadata,
+        ).not.toHaveBeenCalled();
+        expect(schemaMetadataService.findOne).toHaveBeenCalledWith(
             tenantId,
             "schema-existing",
         );

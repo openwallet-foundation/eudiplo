@@ -97,6 +97,19 @@ export class CredentialConfigService {
 
         await this.validateAttestationKeyChain(tenantId, config.keyChainId);
 
+        // Keep runtime-linked schema metadata unless the imported file explicitly
+        // sets (or clears) schemaMeta. This avoids losing registrar linkage on
+        // forced imports/reloads when schemaMeta is omitted from file configs.
+        const existing = await this.getById(tenantId, config.id).catch(
+            () => null,
+        );
+        if (
+            existing?.schemaMeta !== undefined &&
+            config.schemaMeta === undefined
+        ) {
+            config.schemaMeta = existing.schemaMeta;
+        }
+
         // Skip IAE validation during import - presentation configs are imported later
         await this.store(tenantId, config, true);
     }

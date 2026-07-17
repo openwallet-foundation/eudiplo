@@ -85,6 +85,17 @@
         "type": "string"
       }
     },
+    "displayName": {
+      "type": "string",
+      "description": "Optional human-readable schema name for UI display and filtering."
+    },
+    "issuerOffers": {
+      "description": "Issuer offer entries for this schema metadata. Each entry provides a credential offer URL and user-facing description.",
+      "type": "array",
+      "items": {
+        "$ref": "./IssuerOfferEntryDto.schema.json"
+      }
+    },
     "signedJwt": {
       "type": "string",
       "description": "The original signed JWT"
@@ -138,6 +149,7 @@
     "supportedFormats",
     "schemaURIs",
     "trustedAuthorities",
+    "issuerOffers",
     "signedJwt",
     "issuer",
     "issuedAt",

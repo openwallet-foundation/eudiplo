@@ -87,7 +87,7 @@
 
     <mat-card>
       <mat-card-header>
-        <mat-card-title>{{ item.id }}</mat-card-title>
+        <mat-card-title>{{ displayName }}</mat-card-title>
         <mat-card-subtitle>ID: {{ item.id }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
@@ -226,6 +226,17 @@
       </mat-card-header>
       <mat-card-content>
         <form [formGroup]="metadataForm" fxLayout="column" fxLayoutGap="12px">
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input
+              id="schema-metadata-display-name"
+              matInput
+              formControlName="displayName"
+              aria-label="Schema metadata name"
+              placeholder="German PID"
+            />
+          </mat-form-field>
+
           <mat-form-field appearance="outline">
             <mat-label>Category</mat-label>
             <mat-select formControlName="category">

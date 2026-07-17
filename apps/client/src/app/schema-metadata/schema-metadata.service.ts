@@ -139,8 +139,8 @@ export class SchemaMetadataService {
   }
 
   /**
-  * Reserve an attestation id at the registrar and publish the supplied
-  * SchemaMetaConfig in a single backend round-trip. Returns the
+   * Reserve an attestation id at the registrar and publish the supplied
+   * SchemaMetaConfig in a single backend round-trip. Returns the
    * registrar's metadata entry for the freshly created attestation.
    *
    * `keyChainId` is optional (defaults to the tenant's default key chain).

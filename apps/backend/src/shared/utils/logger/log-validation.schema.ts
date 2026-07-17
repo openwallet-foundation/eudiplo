@@ -16,11 +16,25 @@ export const LOG_VALIDATION_SCHEMA = Joi.object({
     LOG_HTTP_RESPONSE_BODY: Joi.boolean()
         .default(false)
         .description(
-            "Capture and log HTTP response bodies (buffered up to 4 KB). " +
+            "Capture and log HTTP response bodies (buffered up to LOG_HTTP_RESPONSE_BODY_MAX_LENGTH bytes). " +
                 "Disabled by default because response bodies may contain access tokens, " +
                 "credentials, or other sensitive data.",
         )
         .meta({ group: "log", order: 25 }),
+    LOG_HTTP_RESPONSE_BODY_MAX_LENGTH: Joi.number()
+        .integer()
+        .min(0)
+        .default(4096)
+        .description(
+            "Maximum number of bytes to capture for HTTP response bodies. Set to 0 to disable truncation.",
+        )
+        .meta({ group: "log", order: 27 }),
+    LOG_REDACT_SENSITIVE_DATA: Joi.boolean()
+        .default(true)
+        .description(
+            "Redact sensitive request/response fields from logs. Disable only for debugging.",
+        )
+        .meta({ group: "log", order: 28 }),
     LOG_ENABLE_SESSION_LOGGER: Joi.boolean()
         .default(false)
         .description("Enable session flow logging")

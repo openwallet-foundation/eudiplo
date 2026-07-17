@@ -204,6 +204,84 @@ export type SchemaMetadataVocabulariesDto = {
     tags: Array<VocabularyEntryDto>;
 };
 
+export type CreateTrustAuthorityDto = {
+    /**
+     * Type of trust framework.
+     */
+    frameworkType: "etsi_tl";
+    /**
+     * URI or identifier for the trust list/authority.
+     */
+    value: string;
+    /**
+     * Verification method for trust list signature (for example JWK).
+     */
+    verificationMethod?: {
+        [key: string]: unknown;
+    };
+};
+
+export type CreateIssuerOfferDto = {
+    /**
+     * URL where the user can receive a credential offer from this issuer.
+     */
+    credentialOfferUrl: string;
+    /**
+     * Human-readable description to help users choose the right issuer.
+     */
+    description: string;
+};
+
+export type CreateSchemaFileDescriptorDto = {
+    /**
+     * Index in multipart schemaFiles[] array.
+     */
+    fileIndex: number;
+    /**
+     * Credential format for this schema file.
+     */
+    formatIdentifier: "dc+sd-jwt" | "mso_mdoc";
+    /**
+     * Schema type identifier value. Use vct for dc+sd-jwt, doctype_value for mso_mdoc.
+     */
+    schemaTypeIdentifier: string;
+};
+
+export type CreateSchemaMetadataMultipartDto = {
+    /**
+     * Optional existing schema identifier (short ID or full catalog URL) for publishing a new version. Omit for first publication and the registrar will generate it.
+     */
+    id?: string;
+    /**
+     * Schema metadata version (SemVer).
+     */
+    version: string;
+    /**
+     * Level of security (LoS) of this attestation.
+     */
+    attestationLoS:
+        | "iso_18045_high"
+        | "iso_18045_moderate"
+        | "iso_18045_enhanced-basic"
+        | "iso_18045_basic";
+    /**
+     * Required binding type between attestation and holder.
+     */
+    bindingType: "claim" | "key" | "biometric" | "none";
+    /**
+     * Trust frameworks / trust anchors applicable to this schema metadata.
+     */
+    trustedAuthorities: Array<CreateTrustAuthorityDto>;
+    /**
+     * Issuer offer entries exposed to users, each with a credential-offer URL and description.
+     */
+    issuerOffers?: Array<CreateIssuerOfferDto>;
+    /**
+     * Schema descriptors mapped to multipart schemaFiles by index.
+     */
+    schemas: Array<CreateSchemaFileDescriptorDto>;
+};
+
 export type TrustAuthority = {
     /**
      * Unique identifier for this trust authority entry.
@@ -1125,7 +1203,7 @@ export type SchemaMetadataControllerFindAllResponse =
 export type SchemaMetadataControllerCreateSchemaMetadataData = {
     body: {
         /**
-         * JSON string matching CreateSchemaMetadataMultipartDto, including schema file index mappings.
+         * JSON string matching the schema of #/components/schemas/CreateSchemaMetadataMultipartDto
          */
         metadata: string;
         rulebookFile: Blob | File;

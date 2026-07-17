@@ -15,19 +15,12 @@
         "generate"
       ],
       "type": "string",
-      "description": "import: use an existing JWT, generate: create via registrar from provided attestations and selected credential configurations.",
-      "default": "import"
+      "description": "import: use an existing JWT, generate: create via registrar using attestation data derived from configured credential configurations.",
+      "default": "generate"
     },
     "jwt": {
       "type": "string",
       "description": "Existing registration certificate JWT used when mode is import."
-    },
-    "schemaMetadataIds": {
-      "description": "Schema metadata IDs selected for inclusion in generated registration certificates.",
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
     },
     "privacyPolicy": {
       "type": "string",
@@ -38,13 +31,6 @@
       "type": "string",
       "description": "Support URI used when generating a registration certificate (optional if registrar defaults are configured).",
       "example": "mailto:support@issuer.example"
-    },
-    "providedAttestations": {
-      "description": "Provided attestations included in generated registration certificates.",
-      "type": "array",
-      "items": {
-        "$ref": "./IssuerProvidedAttestation.schema.json"
-      }
     }
   },
   "additionalProperties": false

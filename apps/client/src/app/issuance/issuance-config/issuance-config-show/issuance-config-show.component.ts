@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
+import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -12,6 +13,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { decodeJwt, decodeProtectedHeader } from 'jose';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { IssuanceConfig } from '@eudiplo/sdk-core';
 import { downloadJsonFile } from '../../../common/download-json.util';
@@ -51,6 +53,7 @@ interface AuthorizationServerRow {
     MatCardModule,
     MatButtonModule,
     MatTooltipModule,
+    DatePipe,
     MatExpansionModule,
     MatChipsModule,
     MatDividerModule,
@@ -67,6 +70,7 @@ interface AuthorizationServerRow {
 })
 export class IssuanceConfigShowComponent implements OnInit {
   config?: IssuanceConfig;
+  reissuing = false;
   readonly authServerDisplayedColumns = [
     'label',
     'id',
@@ -140,6 +144,73 @@ export class IssuanceConfigShowComponent implements OnInit {
     return (this.config as any)?.registrationCertificate;
   }
 
+  get registrationCertificateCache(): any {
+    return (this.config as any)?.registrationCertificateCache;
+  }
+
+  get registrationCertificateJwt(): string | null {
+    const cacheJwt = this.registrationCertificateCache?.jwt;
+    if (typeof cacheJwt === 'string' && cacheJwt.length > 0) {
+      return cacheJwt;
+    }
+
+    const importedJwt = this.registrationCertificateConfig?.jwt;
+    if (typeof importedJwt === 'string' && importedJwt.length > 0) {
+      return importedJwt;
+    }
+
+    return null;
+  }
+
+  get registrationCertificateStatus(): 'none' | 'pending' | 'active' | 'expiring' | 'expired' {
+    const cfg = this.registrationCertificateConfig;
+    if (!cfg?.enabled) {
+      return 'none';
+    }
+
+    const cache = this.registrationCertificateCache;
+    if (!cache) {
+      return 'pending';
+    }
+
+    const exp = cache.expiresAt;
+    if (typeof exp === 'number') {
+      const now = Math.floor(Date.now() / 1000);
+      if (exp < now) {
+        return 'expired';
+      }
+
+      const oneWeekSeconds = 7 * 24 * 60 * 60;
+      if (exp - now < oneWeekSeconds) {
+        return 'expiring';
+      }
+    }
+
+    return 'active';
+  }
+
+  get parsedRegistrationCertHeader(): string {
+    const jwt = this.registrationCertificateJwt;
+    if (!jwt) return 'No registration certificate JWT available';
+
+    try {
+      return JSON.stringify(decodeProtectedHeader(jwt), null, 2);
+    } catch (error) {
+      return `Unable to decode JWT header: ${error instanceof Error ? error.message : 'Unknown error'}`;
+    }
+  }
+
+  get parsedRegistrationCertPayload(): string {
+    const jwt = this.registrationCertificateJwt;
+    if (!jwt) return 'No registration certificate JWT available';
+
+    try {
+      return JSON.stringify(decodeJwt(jwt), null, 2);
+    } catch (error) {
+      return `Unable to decode JWT payload: ${error instanceof Error ? error.message : 'Unknown error'}`;
+    }
+  }
+
   get authorizationServerRows(): AuthorizationServerRow[] {
     const servers = ((this.config as any)?.authorizationServers ?? []) as any[];
     const rows = servers
@@ -200,6 +271,29 @@ export class IssuanceConfigShowComponent implements OnInit {
     this.snackBar.open(`${label} copied to clipboard`, 'Close', {
       duration: 2000,
     });
+  }
+
+  reissueRegistrationCertificate(): void {
+    this.reissuing = true;
+    this.issuanceConfigService
+      .reissueRegistrationCertificate()
+      .then((updated) => {
+        this.config = updated;
+        this.snackBar.open(
+          'Registration certificate regenerated. Previous active certificate was revoked if present.',
+          'Close',
+          { duration: 3500 }
+        );
+      })
+      .catch((error) => {
+        console.error('Failed to regenerate issuer registration certificate', error);
+        this.snackBar.open('Failed to regenerate registration certificate', 'Close', {
+          duration: 4000,
+        });
+      })
+      .finally(() => {
+        this.reissuing = false;
+      });
   }
 
   ngOnInit(): void {

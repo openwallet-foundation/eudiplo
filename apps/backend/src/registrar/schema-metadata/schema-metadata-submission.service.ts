@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { SchemaURIMeta } from "@owf/eudi-attestation-schema";
 import { KeyChainService } from "../../crypto/key/key-chain.service";
 import { SchemaMetadataService } from "./schema-metadata.service";
+import { type UpdateSchemaMetadataDto } from "./dto/schema-metadata.dto";
 import { CredentialConfigService } from "../../issuer/configuration/credentials/credential-config/credential-config.service";
 import {
     SchemaMetadataPinMode,
@@ -11,10 +12,13 @@ import {
 } from "../../issuer/configuration/credentials/dto/schema-meta-config.dto";
 import { buildJsonSchema } from "../../issuer/configuration/credentials/utils";
 import { TrustListService } from "../../issuer/trust-list/trustlist.service";
+import { type CreateSchemaMetadataMultipartDto } from "../generated";
 
 type TrustedAuthorityInput = NonNullable<
     SignSchemaMetaConfigDto["config"]["trustedAuthorities"]
 >[number];
+
+type RegistrarMetadataPayload = CreateSchemaMetadataMultipartDto;
 
 @Injectable()
 export class SchemaMetadataSubmissionService {
@@ -461,28 +465,16 @@ export class SchemaMetadataSubmissionService {
         config: SignSchemaMetaConfigDto["config"],
         schemaEntries: Array<{ format: string; meta: SchemaURIMeta }>,
         trustedAuthorities: Array<Record<string, unknown>>,
-    ): Record<string, unknown> {
-        const metadata: Record<string, unknown> = {
+    ): RegistrarMetadataPayload {
+        const metadata: RegistrarMetadataPayload = {
             ...(config.id ? { id: config.id } : {}),
-            name: config.name,
             version: config.version,
             attestationLoS: config.attestationLoS,
             bindingType: config.bindingType,
-            trustedAuthorities,
+            trustedAuthorities:
+                trustedAuthorities as RegistrarMetadataPayload["trustedAuthorities"],
+            schemas: [],
         };
-
-        const category = (config as { category?: unknown }).category;
-        if (typeof category === "string") {
-            metadata.category = category;
-        }
-
-        const tags = (config as { tags?: unknown }).tags;
-        if (
-            Array.isArray(tags) &&
-            tags.every((tag) => typeof tag === "string")
-        ) {
-            metadata.tags = tags;
-        }
 
         metadata.schemas = schemaEntries.map((entry, fileIndex) => {
             let schemaTypeIdentifier: string | undefined;
@@ -513,9 +505,45 @@ export class SchemaMetadataSubmissionService {
                 fileIndex,
                 schemaTypeIdentifier,
             };
-        });
+        }) as RegistrarMetadataPayload["schemas"];
 
         return metadata;
+    }
+
+    private buildPostCreateMetadataUpdate(
+        config: SignSchemaMetaConfigDto["config"],
+    ): UpdateSchemaMetadataDto | undefined {
+        const displayName =
+            typeof config.name === "string" && config.name.trim().length > 0
+                ? config.name.trim()
+                : undefined;
+
+        const category = (config as { category?: unknown }).category;
+        const normalizedCategory =
+            typeof category === "string" ? category : undefined;
+
+        const tags = (config as { tags?: unknown }).tags;
+        const normalizedTags =
+            Array.isArray(tags) && tags.every((tag) => typeof tag === "string")
+                ? tags
+                : undefined;
+
+        if (!displayName && !normalizedCategory && !normalizedTags?.length) {
+            return undefined;
+        }
+
+        return {
+            ...(displayName ? { displayName } : {}),
+            ...(normalizedCategory
+                ? {
+                      category:
+                          normalizedCategory as UpdateSchemaMetadataDto["category"],
+                  }
+                : {}),
+            ...(normalizedTags?.length
+                ? { tags: normalizedTags as UpdateSchemaMetadataDto["tags"] }
+                : {}),
+        };
     }
 
     private async updateCredentialConfigSchemaMetaLink(
@@ -591,13 +619,16 @@ export class SchemaMetadataSubmissionService {
                 body.pinMode,
             );
 
-            return this.schemaMetadataService.getById(
+            return this.schemaMetadataService.findOne(
                 tenantId,
                 normalizedConfig.id!,
             );
         }
 
-        if (!normalizedConfig.name || normalizedConfig.name.trim().length === 0) {
+        if (
+            !normalizedConfig.name ||
+            normalizedConfig.name.trim().length === 0
+        ) {
             throw new BadRequestException(
                 "config.name is required when publishing new schema metadata",
             );
@@ -643,17 +674,28 @@ export class SchemaMetadataSubmissionService {
             },
         );
 
+        const metadataUpdate =
+            this.buildPostCreateMetadataUpdate(normalizedConfig);
+        const finalResult = metadataUpdate
+            ? await this.schemaMetadataService.updateMetadata(
+                  tenantId,
+                  result.id,
+                  result.version,
+                  metadataUpdate,
+              )
+            : result;
+
         if (body.credentialConfigId) {
             await this.updateCredentialConfigSchemaMetaLink(
                 tenantId,
                 body.credentialConfigId,
                 normalizedConfig,
-                result.id,
+                finalResult.id,
                 body.pinMode,
             );
         }
 
-        return result;
+        return finalResult;
     }
 
     async submitSchemaMetadataVersion(
@@ -668,7 +710,10 @@ export class SchemaMetadataSubmissionService {
             );
         }
 
-        if (!normalizedConfig.name || normalizedConfig.name.trim().length === 0) {
+        if (
+            !normalizedConfig.name ||
+            normalizedConfig.name.trim().length === 0
+        ) {
             throw new BadRequestException(
                 "config.name is required when publishing a new schema metadata version",
             );
@@ -714,16 +759,27 @@ export class SchemaMetadataSubmissionService {
             },
         );
 
+        const metadataUpdate =
+            this.buildPostCreateMetadataUpdate(normalizedConfig);
+        const finalResult = metadataUpdate
+            ? await this.schemaMetadataService.updateMetadata(
+                  tenantId,
+                  result.id,
+                  result.version,
+                  metadataUpdate,
+              )
+            : result;
+
         if (body.credentialConfigId) {
             await this.updateCredentialConfigSchemaMetaLink(
                 tenantId,
                 body.credentialConfigId,
                 normalizedConfig,
-                result.id,
+                finalResult.id,
                 body.pinMode,
             );
         }
 
-        return result;
+        return finalResult;
     }
 }

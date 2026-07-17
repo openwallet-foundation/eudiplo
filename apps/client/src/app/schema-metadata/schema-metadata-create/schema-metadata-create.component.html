@@ -137,6 +137,26 @@
             <mat-error>At least one schema URI is required. Select a credential config.</mat-error>
           }
         </mat-form-field>
+
+        <p class="mat-body-small">
+          When exactly one credential config is selected here, the created schema metadata is linked
+          back to that credential config automatically.
+        </p>
+
+        @if (
+          hasLinkedSchemaMetadataConflict && linkedCredentialConfig && linkedSchemaMetadataRouteId
+        ) {
+          <p class="mat-body-small">
+            The selected credential config
+            <strong>{{ configLabel(linkedCredentialConfig) }}</strong>
+            is already linked to schema metadata
+            <a [routerLink]="['/schema-metadata', linkedSchemaMetadataRouteId]">
+              {{ linkedSchemaMetadataId }}
+            </a>
+            . Open the existing schema metadata to publish a new version, or unlink it from the
+            credential config first.
+          </p>
+        }
       </div>
 
       <!-- Trusted Authorities -->
