@@ -278,30 +278,30 @@ jobs:
             fi
 
             python - <<'PY'
-            import json
-            import pathlib
-            import shutil
+          import json
+          import pathlib
+          import shutil
 
-            root = pathlib.Path("gh-pages-migrate")
-            docs = root / "docs"
-            versions = json.loads((docs / "versions.json").read_text())
-            names = set()
+          root = pathlib.Path("gh-pages-migrate")
+          docs = root / "docs"
+          versions = json.loads((docs / "versions.json").read_text())
+          names = set()
 
-            for entry in versions:
-              version = entry.get("version")
-              if isinstance(version, str):
-                names.add(version)
-              aliases = entry.get("aliases") or []
-              for alias in aliases:
-                if isinstance(alias, str):
-                  names.add(alias)
+          for entry in versions:
+            version = entry.get("version")
+            if isinstance(version, str):
+              names.add(version)
+            aliases = entry.get("aliases") or []
+            for alias in aliases:
+              if isinstance(alias, str):
+                names.add(alias)
 
-            for name in sorted(names):
-              src = root / name
-              dst = docs / name
-              if src.exists() and not dst.exists():
-                shutil.move(str(src), str(dst))
-            PY
+          for name in sorted(names):
+            src = root / name
+            dst = docs / name
+            if src.exists() and not dst.exists():
+              shutil.move(str(src), str(dst))
+          PY
 
             if [ -n "$(git -C gh-pages-migrate status --porcelain)" ]; then
               git -C gh-pages-migrate add .
@@ -1162,30 +1162,30 @@ jobs:
             fi
 
             python - <<'PY'
-            import json
-            import pathlib
-            import shutil
+          import json
+          import pathlib
+          import shutil
 
-            root = pathlib.Path("gh-pages-migrate")
-            docs = root / "docs"
-            versions = json.loads((docs / "versions.json").read_text())
-            names = set()
+          root = pathlib.Path("gh-pages-migrate")
+          docs = root / "docs"
+          versions = json.loads((docs / "versions.json").read_text())
+          names = set()
 
-            for entry in versions:
-              version = entry.get("version")
-              if isinstance(version, str):
-                names.add(version)
-              aliases = entry.get("aliases") or []
-              for alias in aliases:
-                if isinstance(alias, str):
-                  names.add(alias)
+          for entry in versions:
+            version = entry.get("version")
+            if isinstance(version, str):
+              names.add(version)
+            aliases = entry.get("aliases") or []
+            for alias in aliases:
+              if isinstance(alias, str):
+                names.add(alias)
 
-            for name in sorted(names):
-              src = root / name
-              dst = docs / name
-              if src.exists() and not dst.exists():
-                shutil.move(str(src), str(dst))
-            PY
+          for name in sorted(names):
+            src = root / name
+            dst = docs / name
+            if src.exists() and not dst.exists():
+              shutil.move(str(src), str(dst))
+          PY
 
             if [ -n "$(git -C gh-pages-migrate status --porcelain)" ]; then
               git -C gh-pages-migrate add .
