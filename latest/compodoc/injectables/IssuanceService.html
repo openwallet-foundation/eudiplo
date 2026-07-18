@@ -215,6 +215,17 @@ It provides methods to get, store, and delete issuance configurations.</p>
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#computeRegistrationCertificateFingerprint" >computeRegistrationCertificateFingerprint</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#deriveRegistrationCertificateMaterialFromCredentialConfigs" >deriveRegistrationCertificateMaterialFromCredentialConfigs</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Public</span>
                                 <a href="#getIssuanceConfiguration" >getIssuanceConfiguration</a>
                             </li>
@@ -223,6 +234,21 @@ It provides methods to get, store, and delete issuance configurations.</p>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#importForTenant" >importForTenant</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#isJwtActive" >isJwtActive</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#normalizeSchemaMetadataIds" >normalizeSchemaMetadataIds</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#reissueRegistrationCertificate" >reissueRegistrationCertificate</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
@@ -262,12 +288,12 @@ It provides methods to get, store, and delete issuance configurations.</p>
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(issuanceConfigRepo: <a href="../classes/IssuanceConfig.html" target="_self">Repository&lt;IssuanceConfig&gt;</a>, filesService: <a href="../injectables/FilesService.html" target="_self">FilesService</a>, configImportService: <a href="../injectables/ConfigImportService.html" target="_self">ConfigImportService</a>, configImportOrchestrator: <a href="../injectables/ConfigImportOrchestratorService.html" target="_self">ConfigImportOrchestratorService</a>, tenantActionLogService: <a href="../injectables/AuditLogService.html" target="_self">AuditLogService</a>)</code>
+<code>constructor(issuanceConfigRepo: <a href="../classes/IssuanceConfig.html" target="_self">Repository&lt;IssuanceConfig&gt;</a>, filesService: <a href="../injectables/FilesService.html" target="_self">FilesService</a>, credentialConfigService: <a href="../injectables/CredentialConfigService.html" target="_self">CredentialConfigService</a>, registrarService: <a href="../injectables/RegistrarService.html" target="_self">RegistrarService</a>, configImportService: <a href="../injectables/ConfigImportService.html" target="_self">ConfigImportService</a>, configImportOrchestrator: <a href="../injectables/ConfigImportOrchestratorService.html" target="_self">ConfigImportOrchestratorService</a>, tenantActionLogService: <a href="../injectables/AuditLogService.html" target="_self">AuditLogService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:28</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:34</a></div>
                             </td>
                         </tr>
 
@@ -303,6 +329,30 @@ It provides methods to get, store, and delete issuance configurations.</p>
                                                   
                                                         <td>
                                                                         <code><a href="../injectables/FilesService.html" target="_self" >FilesService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>credentialConfigService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/CredentialConfigService.html" target="_self" >CredentialConfigService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>registrarService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/RegistrarService.html" target="_self" >RegistrarService</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -364,6 +414,169 @@ It provides methods to get, store, and delete issuance configurations.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="computeRegistrationCertificateFingerprint"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>computeRegistrationCertificateFingerprint</b></span>
+                        <a href="#computeRegistrationCertificateFingerprint"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>computeRegistrationCertificateFingerprint(registrationCertificateConfig: <a href="../classes/IssuanceConfig.html" target="_self">NonNullable&lt;IssuanceConfig&gt;</a>, resolvedSchemaMetadataIds: string[], derivedProvidedAttestations: <a href="../classes/IssuerProvidedAttestation.html" target="_self">IssuerProvidedAttestation[]</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="492"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:492</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>registrationCertificateConfig</td>
+                                            <td>
+                                                            <code><a href="../classes/IssuanceConfig.html" target="_self" >NonNullable&lt;IssuanceConfig&gt;</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>resolvedSchemaMetadataIds</td>
+                                            <td>
+                                                        <code>string[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>derivedProvidedAttestations</td>
+                                            <td>
+                                                            <code><a href="../classes/IssuerProvidedAttestation.html" target="_self" >IssuerProvidedAttestation[]</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deriveRegistrationCertificateMaterialFromCredentialConfigs"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>deriveRegistrationCertificateMaterialFromCredentialConfigs</b></span>
+                        <a href="#deriveRegistrationCertificateMaterialFromCredentialConfigs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deriveRegistrationCertificateMaterialFromCredentialConfigs(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="421"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:421</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/IssuerProvidedAttestation.html" target="_self" >Promise&lt;{ schemaMetadataIds: string[]; providedAttestations: IssuerProvidedAttestation[] }&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="getIssuanceConfiguration"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
@@ -382,8 +595,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="113"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:113</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="121"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:121</a></div>
                         </td>
                     </tr>
 
@@ -454,8 +667,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="53"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:53</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:61</a></div>
                         </td>
                     </tr>
 
@@ -507,6 +720,216 @@ It provides methods to get, store, and delete issuance configurations.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="isJwtActive"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>isJwtActive</b></span>
+                        <a href="#isJwtActive"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isJwtActive(jwt: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="512"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:512</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>jwt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="normalizeSchemaMetadataIds"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>normalizeSchemaMetadataIds</b></span>
+                        <a href="#normalizeSchemaMetadataIds"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>normalizeSchemaMetadataIds(ids: Array<string | null | undefined>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="406"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:406</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>ids</td>
+                                            <td>
+                                                        <code>Array&lt;string | null | undefined&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="reissueRegistrationCertificate"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>reissueRegistrationCertificate</b></span>
+                        <a href="#reissueRegistrationCertificate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>reissueRegistrationCertificate(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="143"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:143</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Force reissue of issuer registration certificate in generate mode.
+Replaces cache and revokes the previously active cached certificate.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/IssuanceConfig.html" target="_self" >Promise&lt;IssuanceConfig&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="replaceUrl"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -525,8 +948,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="86"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:86</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="94"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:94</a></div>
                         </td>
                     </tr>
 
@@ -606,8 +1029,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="256"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:256</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="370"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:370</a></div>
                         </td>
                     </tr>
 
@@ -675,8 +1098,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="139"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:139</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="253"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:253</a></div>
                         </td>
                     </tr>
 
@@ -786,8 +1209,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="120"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:120</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:128</a></div>
                         </td>
                     </tr>
 
@@ -880,7 +1303,7 @@ It provides methods to get, store, and delete issuance configurations.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:28</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -893,12 +1316,16 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { BadRequestException, Injectable, Logger } from &quot;@nestjs/common&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createHash } from &quot;node:crypto&quot;;
+import { BadRequestException, Injectable, Logger } from &quot;@nestjs/common&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
+import { decodeJwt } from &quot;jose&quot;;
 import { Request } from &quot;express&quot;;
+import { v4 } from &quot;uuid&quot;;
 import { Repository } from &quot;typeorm&quot;;
 import { AuditLogService } from &quot;../../../audit-log/audit-log.service&quot;;
 import { TokenPayload } from &quot;../../../auth/token.decorator&quot;;
+import { RegistrarService } from &quot;../../../registrar/registrar.service&quot;;
 import {
     extractRequestMeta,
     getChangedFields,
@@ -911,6 +1338,8 @@ import {
     ImportPhase,
 } from &quot;../../../shared/utils/config-import/config-import-orchestrator.service&quot;;
 import { FilesService } from &quot;../../../storage/files.service&quot;;
+import { CredentialConfigService } from &quot;../credentials/credential-config/credential-config.service&quot;;
+import { IssuerProvidedAttestation } from &quot;./dto/issuer-registration-certificate.dto&quot;;
 import { DisplayInfo } from &quot;./dto/display.dto&quot;;
 import { IssuanceDto } from &quot;./dto/issuance.dto&quot;;
 import { IssuanceConfig } from &quot;./entities/issuance-config.entity&quot;;
@@ -931,6 +1360,8 @@ export class IssuanceService {
         @InjectRepository(IssuanceConfig)
         private readonly issuanceConfigRepo: Repository&lt;IssuanceConfig&gt;,
         private readonly filesService: FilesService,
+        private readonly credentialConfigService: CredentialConfigService,
+        private readonly registrarService: RegistrarService,
         private readonly configImportService: ConfigImportService,
         private readonly configImportOrchestrator: ConfigImportOrchestratorService,
         private readonly tenantActionLogService: AuditLogService,
@@ -1021,6 +1452,112 @@ export class IssuanceService {
             tenantId,
             registrationCertificateCache,
         });
+    }
+
+    /**
+     * Force reissue of issuer registration certificate in generate mode.
+     * Replaces cache and revokes the previously active cached certificate.
+     */
+    async reissueRegistrationCertificate(
+        tenantId: string,
+    ): Promise&lt;IssuanceConfig&gt; {
+        const issuanceConfig &#x3D; await this.getIssuanceConfiguration(tenantId);
+        const registrationCertificateConfig &#x3D;
+            issuanceConfig.registrationCertificate;
+
+        if (!registrationCertificateConfig?.enabled) {
+            throw new BadRequestException(
+                &quot;Issuance config has no enabled registration certificate&quot;,
+            );
+        }
+
+        const mode &#x3D; registrationCertificateConfig.mode ?? &quot;generate&quot;;
+        if (mode !&#x3D;&#x3D; &quot;generate&quot;) {
+            throw new BadRequestException(
+                &quot;Reissue is only supported in generate mode&quot;,
+            );
+        }
+
+        if (!(await this.registrarService.isEnabledForTenant(tenantId))) {
+            throw new BadRequestException(
+                &quot;Registrar is not enabled for this tenant&quot;,
+            );
+        }
+
+        const previousJwt &#x3D; issuanceConfig.registrationCertificateCache?.jwt;
+        const { schemaMetadataIds, providedAttestations } &#x3D;
+            await this.deriveRegistrationCertificateMaterialFromCredentialConfigs(
+                tenantId,
+            );
+
+        if (providedAttestations.length &#x3D;&#x3D;&#x3D; 0) {
+            throw new BadRequestException(
+                &quot;No credential configs with supported schema metadata found for registration certificate generation&quot;,
+            );
+        }
+
+        const creationBody &#x3D; {
+            ...(schemaMetadataIds.length &gt; 0
+                ? {
+                      provides_attestations: schemaMetadataIds,
+                  }
+                : {}),
+            ...(registrationCertificateConfig.privacyPolicy
+                ? {
+                      privacy_policy:
+                          registrationCertificateConfig.privacyPolicy,
+                  }
+                : {}),
+            ...(registrationCertificateConfig.supportUri
+                ? { support_uri: registrationCertificateConfig.supportUri }
+                : {}),
+        };
+
+        const resolved &#x3D;
+            await this.registrarService.resolveRegistrationCertificate(
+                { body: creationBody },
+                {},
+                &#x60;issuance-reissue-${v4()}&#x60;,
+                tenantId,
+            );
+
+        if (
+            previousJwt &amp;&amp;
+            previousJwt !&#x3D;&#x3D; resolved.jwt &amp;&amp;
+            this.isJwtActive(previousJwt)
+        ) {
+            try {
+                await this.registrarService.revokeRegistrationCertificateByJwt(
+                    tenantId,
+                    previousJwt,
+                );
+            } catch (error) {
+                this.logger.warn(
+                    &#x60;[${tenantId}] Failed to revoke previous issuer registration certificate during manual reissue: ${error instanceof Error ? error.message : &quot;unknown error&quot;}&#x60;,
+                );
+            }
+        }
+
+        const fingerprint &#x3D; this.computeRegistrationCertificateFingerprint(
+            registrationCertificateConfig,
+            schemaMetadataIds,
+            providedAttestations,
+        );
+
+        await this.updateRegistrationCertificateCache(tenantId, {
+            jwt: resolved.jwt,
+            fingerprint,
+            issuedAt:
+                typeof resolved.payload.iat &#x3D;&#x3D;&#x3D; &quot;number&quot;
+                    ? resolved.payload.iat
+                    : undefined,
+            expiresAt:
+                typeof resolved.payload.exp &#x3D;&#x3D;&#x3D; &quot;number&quot;
+                    ? resolved.payload.exp
+                    : undefined,
+        });
+
+        return this.getIssuanceConfiguration(tenantId);
     }
 
     /**
@@ -1182,6 +1719,138 @@ export class IssuanceService {
             credentialRequestEncryption: config.credentialRequestEncryption,
             txCodeMaxAttempts: config.txCodeMaxAttempts,
         };
+    }
+
+    private normalizeSchemaMetadataIds(
+        ids: Array&lt;string | null | undefined&gt;,
+    ): string[] {
+        return Array.from(
+            new Set(
+                ids
+                    .filter(
+                        (id): id is string &#x3D;&gt;
+                            typeof id &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp; id.trim().length &gt; 0,
+                    )
+                    .map((id) &#x3D;&gt; id.trim()),
+            ),
+        ).sort((left, right) &#x3D;&gt; left.localeCompare(right));
+    }
+
+    private async deriveRegistrationCertificateMaterialFromCredentialConfigs(
+        tenantId: string,
+    ): Promise&lt;{
+        schemaMetadataIds: string[];
+        providedAttestations: IssuerProvidedAttestation[];
+    }&gt; {
+        const credentialConfigs &#x3D;
+            await this.credentialConfigService.get(tenantId);
+        const providedAttestations: IssuerProvidedAttestation[] &#x3D; [];
+
+        for (const credentialConfig of credentialConfigs) {
+            const schemaMetadataId &#x3D; credentialConfig.schemaMeta?.id;
+            if (!schemaMetadataId || schemaMetadataId.trim().length &#x3D;&#x3D;&#x3D; 0) {
+                continue;
+            }
+
+            const format &#x3D; credentialConfig.config?.format;
+            if (format !&#x3D;&#x3D; &quot;dc+sd-jwt&quot; &amp;&amp; format !&#x3D;&#x3D; &quot;mso_mdoc&quot;) {
+                continue;
+            }
+
+            const schemaMetadataVersion &#x3D;
+                typeof credentialConfig.schemaMeta?.version &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                credentialConfig.schemaMeta.version.trim().length &gt; 0
+                    ? credentialConfig.schemaMeta.version.trim()
+                    : undefined;
+
+            providedAttestations.push({
+                credentialConfigId: credentialConfig.id,
+                format,
+                meta: {
+                    schema_metadata_id: schemaMetadataId.trim(),
+                    ...(schemaMetadataVersion
+                        ? {
+                              schema_metadata_version: schemaMetadataVersion,
+                          }
+                        : {}),
+                },
+            });
+        }
+
+        providedAttestations.sort((left, right) &#x3D;&gt; {
+            const leftId &#x3D;
+                typeof left.meta?.[&quot;schema_metadata_id&quot;] &#x3D;&#x3D;&#x3D; &quot;string&quot;
+                    ? left.meta[&quot;schema_metadata_id&quot;]
+                    : &quot;&quot;;
+            const rightId &#x3D;
+                typeof right.meta?.[&quot;schema_metadata_id&quot;] &#x3D;&#x3D;&#x3D; &quot;string&quot;
+                    ? right.meta[&quot;schema_metadata_id&quot;]
+                    : &quot;&quot;;
+
+            if (leftId !&#x3D;&#x3D; rightId) {
+                return leftId.localeCompare(rightId);
+            }
+
+            return (left.format ?? &quot;&quot;).localeCompare(right.format ?? &quot;&quot;);
+        });
+
+        const schemaMetadataIds &#x3D; this.normalizeSchemaMetadataIds(
+            providedAttestations.map((attestation) &#x3D;&gt; {
+                const value &#x3D; attestation.meta?.[&quot;schema_metadata_id&quot;];
+                return typeof value &#x3D;&#x3D;&#x3D; &quot;string&quot; ? value : undefined;
+            }),
+        );
+
+        return {
+            schemaMetadataIds,
+            providedAttestations,
+        };
+    }
+
+    private computeRegistrationCertificateFingerprint(
+        registrationCertificateConfig: NonNullable&lt;
+            IssuanceConfig[&quot;registrationCertificate&quot;]
+        &gt;,
+        resolvedSchemaMetadataIds: string[],
+        derivedProvidedAttestations: IssuerProvidedAttestation[],
+    ): string {
+        const material &#x3D; {
+            mode: registrationCertificateConfig.mode,
+            schemaMetadataIds: resolvedSchemaMetadataIds,
+            privacyPolicy: registrationCertificateConfig.privacyPolicy,
+            supportUri: registrationCertificateConfig.supportUri,
+            providedAttestations: derivedProvidedAttestations,
+        };
+
+        return createHash(&quot;sha256&quot;)
+            .update(JSON.stringify(material))
+            .digest(&quot;hex&quot;);
+    }
+
+    private isJwtActive(jwt: string): boolean {
+        try {
+            const payload &#x3D; decodeJwt(jwt);
+            const now &#x3D; Math.floor(Date.now() / 1000);
+            const skewSeconds &#x3D; 30;
+
+            if (
+                typeof payload.nbf &#x3D;&#x3D;&#x3D; &quot;number&quot; &amp;&amp;
+                now + skewSeconds &lt; payload.nbf
+            ) {
+                return false;
+            }
+
+            if (
+                typeof payload.exp &#x3D;&#x3D;&#x3D; &quot;number&quot; &amp;&amp;
+                now - skewSeconds &gt;&#x3D; payload.exp
+            ) {
+                return false;
+            }
+
+            return true;
+        } catch {
+            return false;
+        }
     }
 }
 </code></pre>

@@ -219,7 +219,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:45</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:48</a></div>
                             </td>
                         </tr>
 
@@ -361,15 +361,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>createOffer(requestId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>createOffer(requestId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, skewSeconds?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="62"
-                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:62</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="65"
+                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:65</a></div>
                         </td>
                     </tr>
 
@@ -428,6 +428,18 @@ and persist a session for the response phase.</p>
 
 
                                         </tr>
+                                        <tr>
+                                                <td>skewSeconds</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -464,8 +476,8 @@ and persist a session for the response phase.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="150"
-                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:150</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="158"
+                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:158</a></div>
                         </td>
                     </tr>
 
@@ -553,7 +565,10 @@ import { EncryptionService } from &quot;../../crypto/encryption/encryption.servi
 import { ServiceTypeIdentifier } from &quot;../../issuer/trust-list/trustlist.service&quot;;
 import { SessionStatus } from &quot;../../session/entities/session.entity&quot;;
 import { SessionService } from &quot;../../session/session.service&quot;;
-import { VerifierOptions } from &quot;../../shared/trust/types&quot;;
+import {
+    DEFAULT_VERIFIER_SKEW_SECONDS,
+    VerifierOptions,
+} from &quot;../../shared/trust/types&quot;;
 import { AuditLogService } from &quot;../../shared/utils/logger/audit-log.service&quot;;
 import { WebhookService } from &quot;../../shared/utils/webhook/webhook.service&quot;;
 import { MdocverifierService } from &quot;../presentations/credential/mdocverifier/mdocverifier.service&quot;;
@@ -599,6 +614,7 @@ export class Iso18013Service {
         requestId: string,
         tenantId: string,
         origin: string,
+        skewSeconds?: number,
     ): Promise&lt;Iso18013Offer&gt; {
         const config &#x3D; await this.presentationsService.getPresentationConfig(
             requestId,
@@ -662,6 +678,10 @@ export class Iso18013Service {
             vp_nonce: nonce.toString(&quot;hex&quot;),
             parsedWebhook: config.webhook ?? undefined,
             redirectUri: config.redirectUri ?? undefined,
+            skewSeconds:
+                skewSeconds ??
+                config.skewSeconds ??
+                DEFAULT_VERIFIER_SKEW_SECONDS,
             expiresAt,
             status: SessionStatus.Active,
         });
@@ -818,6 +838,10 @@ export class Iso18013Service {
             policy: {
                 requireX5c: true,
             },
+            skewSeconds:
+                session.skewSeconds ??
+                config.skewSeconds ??
+                DEFAULT_VERIFIER_SKEW_SECONDS,
         };
 
         const deviceResponseB64 &#x3D; deviceResponseCbor.toString(&quot;base64url&quot;);

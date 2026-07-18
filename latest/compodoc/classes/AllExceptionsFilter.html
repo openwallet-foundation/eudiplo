@@ -399,8 +399,21 @@ export class AllExceptionsFilter implements ExceptionFilter {
         }
 
         let message: unknown;
+        let responseBody: Record&lt;string, unknown&gt; | undefined;
         if (exception instanceof HttpException) {
-            message &#x3D; exception.getResponse();
+            const httpResponse &#x3D; exception.getResponse();
+            if (typeof httpResponse &#x3D;&#x3D;&#x3D; &quot;string&quot;) {
+                message &#x3D; httpResponse;
+            } else if (
+                httpResponse &amp;&amp;
+                typeof httpResponse &#x3D;&#x3D;&#x3D; &quot;object&quot; &amp;&amp;
+                !Array.isArray(httpResponse)
+            ) {
+                responseBody &#x3D; httpResponse as Record&lt;string, unknown&gt;;
+                message &#x3D; responseBody.message;
+            } else {
+                message &#x3D; httpResponse;
+            }
         } else if (exception instanceof Error &amp;&amp; !isProduction) {
             message &#x3D; exception.message;
         } else {
@@ -417,6 +430,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
             statusCode: status,
             timestamp: new Date().toISOString(),
             path: requestPath,
+            ...(responseBody ?? {}),
             message,
         });
     }

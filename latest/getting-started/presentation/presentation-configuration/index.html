@@ -5,6 +5,8 @@
       
       
       
+        <link rel="canonical" href="https://openwallet-foundation.github.io/eudiplo/docs/latest/getting-started/presentation/presentation-configuration/">
+      
       
         <link rel="prev" href="../presentation-requests/">
       
@@ -16,7 +18,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -24,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2996,6 +2998,7 @@ be requested from users.</p>
 <li><code>webhook</code>: <strong>OPTIONAL</strong> - Webhook configuration for receiving verified presentations asynchronously. See <a href="../../../architecture/webhooks/#presentation-webhook">Webhook Integration</a> for details.</li>
 <li><code>redirectUri</code>: <strong>OPTIONAL</strong> - URI to redirect the user to after completing the presentation. This is useful for web applications that need to return the user to a specific page after verification. You can use the <code>{sessionId}</code> placeholder in the URI, which will be replaced with the actual session ID (e.g., <code>https://example.com/callback?session={sessionId}</code>).</li>
 <li><code>transaction_data</code>: <strong>OPTIONAL</strong> - Array of transaction data objects to include in the OID4VP authorization request. See <a href="../transaction-data/">Transaction Data</a> for details.</li>
+<li><code>skewSeconds</code>: <strong>OPTIONAL</strong> - Clock skew tolerance in seconds for credential JWT time validation. Defaults to <code>60</code> seconds.</li>
 </ul>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
@@ -3008,6 +3011,7 @@ be requested from users.</p>
 <li><code>webhook</code> in the request overrides <code>webhook</code> from the presentation configuration</li>
 <li><code>redirectUri</code> in the request overrides <code>redirectUri</code> from the presentation configuration</li>
 <li><code>transaction_data</code> in the request overrides <code>transaction_data</code> from the presentation configuration</li>
+<li><code>skewSeconds</code> in the request overrides <code>skewSeconds</code> from the presentation configuration for that session</li>
 </ul>
 </div>
 <h3 id="registrationcert-structure">registrationCert Structure<a class="headerlink" href="#registrationcert-structure" title="Permanent link">¶</a></h3>
@@ -3209,9 +3213,7 @@ be requested from users.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.code.copy", "content.action.view", "content.action.edit", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.instant", "navigation.instant.prefetch", "navigation.path", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../../assets/external/unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   

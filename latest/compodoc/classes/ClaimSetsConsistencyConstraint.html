@@ -243,8 +243,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="102"
-                                    class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:102</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="103"
+                                    class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:103</a></div>
                         </td>
                     </tr>
 
@@ -280,8 +280,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="69"
-                                    class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:69</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="70"
+                                    class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:70</a></div>
                         </td>
                     </tr>
 
@@ -366,6 +366,7 @@ import {
     IsObject,
     IsOptional,
     IsString,
+    Min,
     Validate,
     ValidateNested,
     ValidationArguments,
@@ -610,6 +611,20 @@ export class PresentationConfig {
     @IsOptional()
     @Column(&quot;int&quot;, { default: 300 })
     lifeTime?: number;
+
+    /**
+     * Clock skew tolerance for credential JWT time validation, in seconds.
+     */
+    @ApiPropertyOptional({
+        description:
+            &quot;Clock skew tolerance for credential JWT time validation, in seconds.&quot;,
+        default: 60,
+    })
+    @IsNumber()
+    @Min(0)
+    @IsOptional()
+    @Column(&quot;int&quot;, { default: 60 })
+    skewSeconds?: number;
 
     /**
      * The DCQL query to be used for the VP request.

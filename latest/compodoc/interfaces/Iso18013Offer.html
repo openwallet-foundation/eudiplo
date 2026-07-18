@@ -234,7 +234,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:37</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:40</a></div>
                                 </td>
                             </tr>
 
@@ -290,7 +290,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:38</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:41</a></div>
                                 </td>
                             </tr>
 
@@ -329,7 +329,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:35</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:38</a></div>
                                 </td>
                             </tr>
 
@@ -368,7 +368,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:36</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:39</a></div>
                                 </td>
                             </tr>
 
@@ -391,7 +391,10 @@ import { EncryptionService } from &quot;../../crypto/encryption/encryption.servi
 import { ServiceTypeIdentifier } from &quot;../../issuer/trust-list/trustlist.service&quot;;
 import { SessionStatus } from &quot;../../session/entities/session.entity&quot;;
 import { SessionService } from &quot;../../session/session.service&quot;;
-import { VerifierOptions } from &quot;../../shared/trust/types&quot;;
+import {
+    DEFAULT_VERIFIER_SKEW_SECONDS,
+    VerifierOptions,
+} from &quot;../../shared/trust/types&quot;;
 import { AuditLogService } from &quot;../../shared/utils/logger/audit-log.service&quot;;
 import { WebhookService } from &quot;../../shared/utils/webhook/webhook.service&quot;;
 import { MdocverifierService } from &quot;../presentations/credential/mdocverifier/mdocverifier.service&quot;;
@@ -437,6 +440,7 @@ export class Iso18013Service {
         requestId: string,
         tenantId: string,
         origin: string,
+        skewSeconds?: number,
     ): Promise&lt;Iso18013Offer&gt; {
         const config &#x3D; await this.presentationsService.getPresentationConfig(
             requestId,
@@ -500,6 +504,10 @@ export class Iso18013Service {
             vp_nonce: nonce.toString(&quot;hex&quot;),
             parsedWebhook: config.webhook ?? undefined,
             redirectUri: config.redirectUri ?? undefined,
+            skewSeconds:
+                skewSeconds ??
+                config.skewSeconds ??
+                DEFAULT_VERIFIER_SKEW_SECONDS,
             expiresAt,
             status: SessionStatus.Active,
         });
@@ -656,6 +664,10 @@ export class Iso18013Service {
             policy: {
                 requireX5c: true,
             },
+            skewSeconds:
+                session.skewSeconds ??
+                config.skewSeconds ??
+                DEFAULT_VERIFIER_SKEW_SECONDS,
         };
 
         const deviceResponseB64 &#x3D; deviceResponseCbor.toString(&quot;base64url&quot;);

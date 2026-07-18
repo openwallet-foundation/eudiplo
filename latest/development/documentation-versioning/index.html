@@ -5,6 +5,8 @@
       
       
       
+        <link rel="canonical" href="https://openwallet-foundation.github.io/eudiplo/docs/latest/development/documentation-versioning/">
+      
       
         <link rel="prev" href="../logging-configuration/">
       
@@ -14,7 +16,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -22,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -79,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#documentation-versioning" class="md-skip">
+        <a href="#documentation-publishing" class="md-skip">
           Skip to content
         </a>
       
@@ -2662,17 +2664,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
-  <a href="#available-versions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Available Versions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2696,10 +2687,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#version-strategy" class="md-nav__link">
+  <a href="#version-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Version Strategy
+        Version Behavior
       
     </span>
   </a>
@@ -2707,10 +2698,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#version-switching" class="md-nav__link">
+  <a href="#access-urls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Version Switching
+        Access URLs
       
     </span>
   </a>
@@ -2741,17 +2732,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#accessing-documentation-versions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Accessing Documentation Versions
-      
-    </span>
-  </a>
   
 </li>
       
@@ -2809,17 +2789,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
-  <a href="#available-versions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Available Versions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2843,10 +2812,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#version-strategy" class="md-nav__link">
+  <a href="#version-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Version Strategy
+        Version Behavior
       
     </span>
   </a>
@@ -2854,10 +2823,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#version-switching" class="md-nav__link">
+  <a href="#access-urls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Version Switching
+        Access URLs
       
     </span>
   </a>
@@ -2888,17 +2857,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#accessing-documentation-versions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Accessing Documentation Versions
-      
-    </span>
-  </a>
   
 </li>
       
@@ -2952,89 +2910,61 @@
   
 
 
-<h1 id="documentation-versioning">Documentation Versioning<a class="headerlink" href="#documentation-versioning" title="Permanent link">¶</a></h1>
-<p>This project uses <a href="https://github.com/jimporter/mike">mike</a> to manage multiple
-versions of the documentation.</p>
-<h2 id="available-versions">Available Versions<a class="headerlink" href="#available-versions" title="Permanent link">¶</a></h2>
+<h1 id="documentation-publishing">Documentation Publishing<a class="headerlink" href="#documentation-publishing" title="Permanent link">¶</a></h1>
+<p>EUDIPLO uses GitHub Pages to publish a combined site:</p>
 <ul>
-<li><strong>main</strong>: Always reflects the current state of the main branch</li>
-<li><strong>latest</strong>: Documentation for the most recent stable release</li>
-<li><strong>Specific Versions</strong>: Documentation for specific releases (e.g., <code>1.2.3</code>)
-  accessible via direct URL</li>
+<li>Website landing page at <code>/</code></li>
+<li>Versioned documentation under <code>/docs/</code> using mike</li>
 </ul>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">¶</a></h2>
 <h3 id="automatic-deployment">Automatic Deployment<a class="headerlink" href="#automatic-deployment" title="Permanent link">¶</a></h3>
+<p>On pushes to <code>main</code>, CI:</p>
 <ol>
-<li><strong>Main Branch Updates</strong>: When code is pushed to <code>main</code>, the documentation is
-   automatically built and deployed as the <code>main</code> version</li>
-<li><strong>Releases</strong>: When a new release is published:<ul>
-<li>Documentation is deployed as <code>latest</code></li>
-<li><code>latest</code> becomes the default/recommended documentation version</li>
-<li>The specific version (e.g., <code>1.2.3</code>) is also available via direct URL
-  access</li>
+<li>Generates docs content (<code>doc:generate</code>, Compodoc)</li>
+<li>Runs mike deployment with <code>--deploy-prefix docs</code></li>
+<li>Publishes a Pages artifact where:<ul>
+<li><code>website/index.html</code> is published at site root (<code>/</code>)</li>
+<li>mike-managed docs are published under <code>/docs/</code></li>
 </ul>
 </li>
+<li>Deploys that artifact through GitHub Pages</li>
 </ol>
-<h3 id="version-strategy">Version Strategy<a class="headerlink" href="#version-strategy" title="Permanent link">¶</a></h3>
+<h3 id="version-behavior">Version Behavior<a class="headerlink" href="#version-behavior" title="Permanent link">¶</a></h3>
 <ul>
-<li><strong>Version Selector Shows</strong>: <code>main</code>, <code>latest</code> (clean and simple)</li>
-<li><strong>Direct Access Available</strong>: You can still access specific versions like
-  <code>/1.2.3/</code> directly via URL</li>
-<li><strong>Latest Points To</strong>: The most recent stable release</li>
-<li><strong>Default</strong>: <code>latest</code> is set as the default documentation version</li>
+<li><code>main</code> is deployed on each push to <code>main</code></li>
+<li><code>latest-dev</code> is updated as an alias to <code>main</code></li>
+<li>Default docs version under <code>/docs/</code> points to <code>main</code></li>
 </ul>
-<h3 id="version-switching">Version Switching<a class="headerlink" href="#version-switching" title="Permanent link">¶</a></h3>
-<p>Users can switch between documentation versions using the version selector in
-the top navigation bar of the documentation site.</p>
+<h3 id="access-urls">Access URLs<a class="headerlink" href="#access-urls" title="Permanent link">¶</a></h3>
+<p>Once deployed:</p>
+<ul>
+<li><strong>Primary website</strong>: <a href="https://openwallet-foundation.github.io/eudiplo/">https://openwallet-foundation.github.io/eudiplo/</a></li>
+<li><strong>Documentation root</strong>: <a href="https://openwallet-foundation.github.io/eudiplo/docs/">https://openwallet-foundation.github.io/eudiplo/docs/</a></li>
+<li><strong>Main docs</strong>: <a href="https://openwallet-foundation.github.io/eudiplo/docs/main/">https://openwallet-foundation.github.io/eudiplo/docs/main/</a></li>
+<li><strong>Latest dev alias</strong>: <a href="https://openwallet-foundation.github.io/eudiplo/docs/latest-dev/">https://openwallet-foundation.github.io/eudiplo/docs/latest-dev/</a></li>
+</ul>
+<p>When major versions are deployed with mike (for example <code>1</code>, <code>2</code>), they are
+available under <code>/docs/&lt;version&gt;/</code>.</p>
 <h3 id="local-development">Local Development<a class="headerlink" href="#local-development" title="Permanent link">¶</a></h3>
-<p>For local development with versioning:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># First time setup: Initialize mike with a main version</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pnpm<span class="w"> </span>run<span class="w"> </span>doc:init
+<p>For local docs development:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Serve docs locally with live reload</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pnpm<span class="w"> </span>run<span class="w"> </span>doc:watch
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Serve versioned docs locally</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pnpm<span class="w"> </span>run<span class="w"> </span>doc:serve-versions
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Build docs locally</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pnpm<span class="w"> </span>run<span class="w"> </span>doc:build
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Deploy a development version</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pnpm<span class="w"> </span>run<span class="w"> </span>doc:deploy-dev
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Deploy a major version manually (example: version 1)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>pnpm<span class="w"> </span>run<span class="w"> </span>doc:deploy-major<span class="w"> </span><span class="m">1</span><span class="w"> </span>latest
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List all deployed versions</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>pnpm<span class="w"> </span>run<span class="w"> </span>doc:list-versions
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Delete a specific version (be careful!)</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>pnpm<span class="w"> </span>run<span class="w"> </span>doc:delete-version<span class="w"> </span><span class="o">[</span>version-name<span class="o">]</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Serve mike versioned docs locally</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pnpm<span class="w"> </span>run<span class="w"> </span>doc:serve-versions
 </code></pre></div>
-<p><strong>Note</strong>: If you get a 404 error when first running
-<code>pnpm run doc:serve-versions</code>, you need to run <code>pnpm run doc:init</code> first to
-initialize mike with at least one version.</p>
 <h3 id="manual-deployment">Manual Deployment<a class="headerlink" href="#manual-deployment" title="Permanent link">¶</a></h3>
-<p>You can manually trigger documentation deployment using the GitHub Actions
-workflow dispatch feature in the repository's Actions tab.</p>
-<h2 id="accessing-documentation-versions">Accessing Documentation Versions<a class="headerlink" href="#accessing-documentation-versions" title="Permanent link">¶</a></h2>
-<p>Once deployed, the documentation versions are available at:</p>
-<ul>
-<li><strong>Latest Stable</strong>:
-  <a href="https://openwallet-foundation.github.io/eudiplo/latest/">https://openwallet-foundation.github.io/eudiplo/latest/</a>
-  (points to latest major version)</li>
-<li><strong>Development</strong>:
-  <a href="https://openwallet-foundation.github.io/eudiplo/main/">https://openwallet-foundation.github.io/eudiplo/main/</a>
-  (alias: <code>/latest-dev/</code>)</li>
-<li><strong>Major Versions</strong>: <code>https://openwallet-foundation.github.io/eudiplo/1/</code>,
-  <code>https://openwallet-foundation.github.io/eudiplo/2/</code>, etc.</li>
-<li><strong>Specific Versions</strong>:
-  <code>https://openwallet-foundation.github.io/eudiplo/v1.2.3/</code> (direct access
-  only, not in version selector)</li>
-<li><strong>Version Selector</strong>: Available in the top navigation, shows only major
-  versions + main</li>
-</ul>
+<p>Manual deployment follows the same GitHub Actions workflow in the repository
+Actions tab.</p>
 <h2 id="structure">Structure<a class="headerlink" href="#structure" title="Permanent link">¶</a></h2>
 <ul>
 <li>Documentation lives in the <code>docs/</code> directory</li>
 <li>API documentation is auto-generated from Swagger/OpenAPI specs</li>
 <li>Code documentation is auto-generated using Compodoc</li>
-<li>The site is built using MkDocs with the Material theme</li>
+<li>The site is built using MkDocs with the Material theme and versioned with mike</li>
 </ul>
 
 
@@ -3149,9 +3079,7 @@ workflow dispatch feature in the repository's Actions tab.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.action.view", "content.action.edit", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.instant", "navigation.instant.prefetch", "navigation.path", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/external/unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   

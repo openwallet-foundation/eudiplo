@@ -260,7 +260,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="210" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:210</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="211" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:211</a></div>
                                 </td>
                             </tr>
 
@@ -310,7 +310,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="216" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:216</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="217" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:217</a></div>
                                 </td>
                             </tr>
 
@@ -355,7 +355,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="208" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:208</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="209" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:209</a></div>
                                 </td>
                             </tr>
 
@@ -405,7 +405,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="214" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:214</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="215" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:215</a></div>
                                 </td>
                             </tr>
 
@@ -450,7 +450,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="206" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:206</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="207" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:207</a></div>
                                 </td>
                             </tr>
 
@@ -495,7 +495,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="218" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:218</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="219" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:219</a></div>
                                 </td>
                             </tr>
 
@@ -540,7 +540,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="212" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:212</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="213" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:213</a></div>
                                 </td>
                             </tr>
 
@@ -573,6 +573,7 @@ import {
     IsObject,
     IsOptional,
     IsString,
+    Min,
     Validate,
     ValidateNested,
     ValidationArguments,
@@ -817,6 +818,20 @@ export class PresentationConfig {
     @IsOptional()
     @Column(&quot;int&quot;, { default: 300 })
     lifeTime?: number;
+
+    /**
+     * Clock skew tolerance for credential JWT time validation, in seconds.
+     */
+    @ApiPropertyOptional({
+        description:
+            &quot;Clock skew tolerance for credential JWT time validation, in seconds.&quot;,
+        default: 60,
+    })
+    @IsNumber()
+    @Min(0)
+    @IsOptional()
+    @Column(&quot;int&quot;, { default: 60 })
+    skewSeconds?: number;
 
     /**
      * The DCQL query to be used for the VP request.

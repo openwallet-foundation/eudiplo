@@ -319,6 +319,12 @@
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#signStatusListCwt" >signStatusListCwt</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#updateList" >updateList</a>
                             </li>
@@ -667,8 +673,8 @@ See RFC draft-ietf-oauth-status-list Section 9.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="474"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:474</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="522"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:522</a></div>
                         </td>
                     </tr>
 
@@ -769,7 +775,7 @@ Automatically creates a new list if no available list is found.</p>
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Create the JWT for a status list and update the entity.
+                        <div class="io-description"><p>Create status list tokens (JWT and CWT) and update the entity.
 The JWT includes:</p>
 <ul>
 <li><code>iat</code>: When the token was issued (REQUIRED)</li>
@@ -932,8 +938,8 @@ The JWT includes:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="590"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:590</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="638"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:638</a></div>
                         </td>
                     </tr>
 
@@ -1026,8 +1032,8 @@ Only allows deletion if the list has no used entries.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="429"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:429</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="477"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:477</a></div>
                         </td>
                     </tr>
 
@@ -1264,8 +1270,8 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="297"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:297</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="357"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:357</a></div>
                         </td>
                     </tr>
 
@@ -1357,8 +1363,8 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="337"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:337</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="397"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:397</a></div>
                         </td>
                     </tr>
 
@@ -1366,7 +1372,7 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
             <tr>
                 <td class="col-md-4">
                         <div class="io-description"><p>Get the CWT for a specific status list.
-The CWT content follows the same freshness policy as JWT status list tokens.</p>
+The CWT follows the same caching/freshness policy as JWT status list tokens.</p>
 </div>
 
                             <div class="io-description">
@@ -1441,8 +1447,8 @@ The CWT content follows the same freshness policy as JWT status list tokens.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="317"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:317</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="377"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:377</a></div>
                         </td>
                     </tr>
 
@@ -1534,8 +1540,8 @@ The CWT content follows the same freshness policy as JWT status list tokens.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="273"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:273</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="333"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:333</a></div>
                         </td>
                     </tr>
 
@@ -1681,8 +1687,8 @@ The CWT content follows the same freshness policy as JWT status list tokens.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="286"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:286</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="346"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:346</a></div>
                         </td>
                     </tr>
 
@@ -1759,8 +1765,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="410"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:410</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="458"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:458</a></div>
                         </td>
                     </tr>
 
@@ -1852,8 +1858,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="666"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:666</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="714"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:714</a></div>
                         </td>
                     </tr>
 
@@ -1924,8 +1930,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="710"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:710</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="758"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:758</a></div>
                         </td>
                     </tr>
 
@@ -2008,8 +2014,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="534"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:534</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="582"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:582</a></div>
                         </td>
                     </tr>
 
@@ -2198,6 +2204,112 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="signStatusListCwt"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>signStatusListCwt</b></span>
+                        <a href="#signStatusListCwt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>signStatusListCwt(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, keyId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, certChainPem: string[], payload: { subject: string; issuedAt: Date; expirationTime?: Date; ttl?: number; statusList: StatusList })</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="284"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:284</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>keyId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>certChainPem</td>
+                                            <td>
+                                                        <code>string[]</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>payload</td>
+                                            <td>
+                                                        <code>{ subject: string; issuedAt: Date; expirationTime?: Date; ttl?: number; statusList: StatusList }</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Uint8Array&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="updateList"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -2216,8 +2328,8 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="615"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:615</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="663"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:663</a></div>
                         </td>
                     </tr>
 
@@ -2324,8 +2436,8 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="560"
-                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:560</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="608"
+                                    class="link-to-prism">src/issuer/lifecycle/status/status-list.service.ts:608</a></div>
                         </td>
                     </tr>
 
@@ -2670,7 +2782,7 @@ export class StatusListService {
     }
 
     /**
-     * Create the JWT for a status list and update the entity.
+     * Create status list tokens (JWT and CWT) and update the entity.
      * The JWT includes:
      * - &#x60;iat&#x60;: When the token was issued (REQUIRED)
      * - &#x60;exp&#x60;: When the token expires (RECOMMENDED)
@@ -2678,16 +2790,17 @@ export class StatusListService {
      * - &#x60;aggregation_uri&#x60;: URI to fetch all status list URIs (OPTIONAL, per RFC Section 9)
      */
     async createListJWT(entry: StatusListEntity): Promise&lt;void&gt; {
-        const list &#x3D; new StatusList(entry.elements, entry.bits);
-        const iss &#x3D; &#x60;${this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;)}&#x60;;
-
-        const sub &#x3D; this.buildStatusListUri(entry.tenantId, entry.id);
-
         // Get TTL from tenant config or global default
         const effectiveConfig &#x3D;
             await this.statusListConfigService.getEffectiveConfig(
                 entry.tenantId,
             );
+        const aggregationUri &#x3D; effectiveConfig.enableAggregation
+            ? this.buildAggregationUri(entry.tenantId)
+            : undefined;
+        const list &#x3D; new StatusList(entry.elements, entry.bits, aggregationUri);
+        const iss &#x3D; &#x60;${this.configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;)}&#x60;;
+        const sub &#x3D; this.buildStatusListUri(entry.tenantId, entry.id);
         const ttl &#x3D; effectiveConfig.ttl!;
         const now &#x3D; Math.floor(Date.now() / 1000);
         const exp &#x3D; now + ttl;
@@ -2717,7 +2830,7 @@ export class StatusListService {
         // This allows relying parties to pre-fetch all status lists for offline validation
         if (effectiveConfig.enableAggregation &amp;&amp; payload.status_list) {
             (payload.status_list as Record&lt;string, unknown&gt;).aggregation_uri &#x3D;
-                this.buildAggregationUri(entry.tenantId);
+                aggregationUri;
         }
 
         const jwt &#x3D; await this.keyChainService.signJWT(
@@ -2727,11 +2840,70 @@ export class StatusListService {
             cert.keyId,
         );
 
-        // Store JWT and expiration time
+        const issuedAt &#x3D; new Date(now * 1000);
+        const expirationTime &#x3D; new Date(exp * 1000);
+        const cwt &#x3D; await this.signStatusListCwt(
+            entry.tenantId,
+            cert.keyId,
+            cert.crt,
+            {
+                subject: sub,
+                issuedAt,
+                expirationTime,
+                ttl,
+                statusList: list,
+            },
+        );
+
+        // Store JWT/CWT and expiration time
         const expiresAt &#x3D; new Date(exp * 1000);
         await this.statusListRepository.update(
             { id: entry.id, tenantId: entry.tenantId },
-            { jwt, expiresAt },
+            { jwt, cwt: Buffer.from(cwt).toString(&quot;base64url&quot;), expiresAt },
+        );
+    }
+
+    private async signStatusListCwt(
+        tenantId: string,
+        keyId: string,
+        certChainPem: string[],
+        payload: {
+            subject: string;
+            issuedAt: Date;
+            expirationTime?: Date;
+            ttl?: number;
+            statusList: StatusList;
+        },
+    ): Promise&lt;Uint8Array&gt; {
+        const x5chain &#x3D; certChainPem.map(
+            (pem) &#x3D;&gt; new Uint8Array(new X509Certificate(pem).rawData),
+        );
+
+        const cwt &#x3D; new StatusListCwt({
+            payload: {
+                subject: payload.subject,
+                issuedAt: payload.issuedAt,
+                expirationTime: payload.expirationTime,
+                timeToLive: payload.ttl,
+                statusList: payload.statusList,
+            },
+            protectedHeaders: new Map&lt;number, unknown&gt;([
+                [1, SignatureAlgorithm.ES256],
+                [4, new TextEncoder().encode(keyId)],
+                // mDOC status verification expects x5chain in protected headers.
+                [33, x5chain],
+            ]),
+        });
+
+        return cwt.signAndEncode(
+            {
+                signingKey: { algorithm: SignatureAlgorithm.ES256 } as never,
+                algorithm: SignatureAlgorithm.ES256,
+            },
+            {
+                sign: async ({ toBeSigned }) &#x3D;&gt;
+                    this.keyChainService.signBytes(toBeSigned, tenantId, keyId),
+            },
         );
     }
 
@@ -2802,7 +2974,7 @@ export class StatusListService {
 
     /**
      * Get the CWT for a specific status list.
-     * The CWT content follows the same freshness policy as JWT status list tokens.
+     * The CWT follows the same caching/freshness policy as JWT status list tokens.
      */
     async getListCwt(tenantId: string, listId: string): Promise&lt;Uint8Array&gt; {
         let list &#x3D; await this.getListById(tenantId, listId);
@@ -2815,60 +2987,48 @@ export class StatusListService {
             list &#x3D; await this.getListById(tenantId, listId);
         }
 
-        const jwt &#x3D; list.jwt!;
-        const jwtPayload &#x3D; decodeJwt(jwt);
-        const statusList &#x3D; getListFromStatusListJWT(jwt);
-        const cert &#x3D; await this.getSigningCert(list);
+        if (!list.cwt) {
+            const jwt &#x3D; list.jwt!;
+            const jwtPayload &#x3D; decodeJwt(jwt);
+            const statusList &#x3D; getListFromStatusListJWT(jwt);
+            const cert &#x3D; await this.getSigningCert(list);
 
-        const subject &#x3D;
-            typeof jwtPayload.sub &#x3D;&#x3D;&#x3D; &quot;string&quot;
-                ? jwtPayload.sub
-                : this.buildStatusListUri(tenantId, listId);
-        const issuedAt &#x3D;
-            typeof jwtPayload.iat &#x3D;&#x3D;&#x3D; &quot;number&quot;
-                ? new Date(jwtPayload.iat * 1000)
-                : new Date();
-        const expirationTime &#x3D;
-            typeof jwtPayload.exp &#x3D;&#x3D;&#x3D; &quot;number&quot;
-                ? new Date(jwtPayload.exp * 1000)
-                : undefined;
-        const ttl &#x3D;
-            typeof jwtPayload.ttl &#x3D;&#x3D;&#x3D; &quot;number&quot; ? jwtPayload.ttl : undefined;
+            const subject &#x3D;
+                typeof jwtPayload.sub &#x3D;&#x3D;&#x3D; &quot;string&quot;
+                    ? jwtPayload.sub
+                    : this.buildStatusListUri(tenantId, listId);
+            const issuedAt &#x3D;
+                typeof jwtPayload.iat &#x3D;&#x3D;&#x3D; &quot;number&quot;
+                    ? new Date(jwtPayload.iat * 1000)
+                    : new Date();
+            const expirationTime &#x3D;
+                typeof jwtPayload.exp &#x3D;&#x3D;&#x3D; &quot;number&quot;
+                    ? new Date(jwtPayload.exp * 1000)
+                    : undefined;
+            const ttl &#x3D;
+                typeof jwtPayload.ttl &#x3D;&#x3D;&#x3D; &quot;number&quot; ? jwtPayload.ttl : undefined;
 
-        const x5chain &#x3D; cert.crt.map(
-            (pem) &#x3D;&gt; new Uint8Array(new X509Certificate(pem).rawData),
-        );
+            const cwt &#x3D; await this.signStatusListCwt(
+                tenantId,
+                cert.keyId,
+                cert.crt,
+                {
+                    subject,
+                    issuedAt,
+                    expirationTime,
+                    ttl,
+                    statusList,
+                },
+            );
 
-        const cwt &#x3D; new StatusListCwt({
-            payload: {
-                subject,
-                issuedAt,
-                expirationTime,
-                timeToLive: ttl,
-                statusList,
-            },
-            protectedHeaders: new Map&lt;number, unknown&gt;([
-                [1, SignatureAlgorithm.ES256],
-                [4, new TextEncoder().encode(cert.keyId)],
-                // mDOC status verification expects x5chain in protected headers.
-                [33, x5chain],
-            ]),
-        });
+            await this.statusListRepository.update(
+                { id: list.id, tenantId: list.tenantId },
+                { cwt: Buffer.from(cwt).toString(&quot;base64url&quot;) },
+            );
+            list &#x3D; await this.getListById(tenantId, listId);
+        }
 
-        return cwt.signAndEncode(
-            {
-                signingKey: { algorithm: SignatureAlgorithm.ES256 } as never,
-                algorithm: SignatureAlgorithm.ES256,
-            },
-            {
-                sign: async ({ toBeSigned }) &#x3D;&gt;
-                    this.keyChainService.signBytes(
-                        toBeSigned,
-                        tenantId,
-                        cert.keyId,
-                    ),
-            },
-        );
+        return Uint8Array.from(Buffer.from(list.cwt!, &quot;base64url&quot;));
     }
 
     /**

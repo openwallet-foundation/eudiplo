@@ -224,7 +224,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="124" class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:124</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="125" class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:125</a></div>
                                 </td>
                             </tr>
 
@@ -263,7 +263,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="123" class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:123</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="124" class="link-to-prism">src/issuer/issuance/oid4vci/oid4vci.service.ts:124</a></div>
                                 </td>
                             </tr>
 
@@ -331,6 +331,7 @@ import { CredentialsService } from &quot;../../configuration/credentials/credent
 import { AuthorizationIdentity } from &quot;../../configuration/credentials/dto/authorization-identity&quot;;
 import { ClaimsWebhookResult } from &quot;../../configuration/credentials/dto/claims-webhook-result&quot;;
 import {
+    IssuerProvidedAttestation,
     IssuerRegistrationCertificateConfig,
     IssuerRegistrationCertificateMode,
 } from &quot;../../configuration/issuance/dto/issuer-registration-certificate.dto&quot;;
@@ -785,19 +786,106 @@ export class Oid4vciService {
         };
     }
 
+    private normalizeSchemaMetadataIds(
+        ids: Array&lt;string | null | undefined&gt;,
+    ): string[] {
+        return Array.from(
+            new Set(
+                ids
+                    .filter(
+                        (id): id is string &#x3D;&gt;
+                            typeof id &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp; id.trim().length &gt; 0,
+                    )
+                    .map((id) &#x3D;&gt; id.trim()),
+            ),
+        ).sort((left, right) &#x3D;&gt; left.localeCompare(right));
+    }
+
+    private async deriveRegistrationCertificateMaterialFromCredentialConfigs(
+        tenantId: string,
+    ): Promise&lt;{
+        schemaMetadataIds: string[];
+        providedAttestations: IssuerProvidedAttestation[];
+    }&gt; {
+        const credentialConfigs &#x3D;
+            await this.credentialsService.getCredentialConfigsForTenant(
+                tenantId,
+            );
+
+        const providedAttestations: IssuerProvidedAttestation[] &#x3D; [];
+
+        for (const credentialConfig of credentialConfigs) {
+            const schemaMetadataId &#x3D; credentialConfig.schemaMeta?.id;
+            if (!schemaMetadataId || schemaMetadataId.trim().length &#x3D;&#x3D;&#x3D; 0) {
+                continue;
+            }
+
+            const format &#x3D; credentialConfig.config?.format;
+            if (format !&#x3D;&#x3D; &quot;dc+sd-jwt&quot; &amp;&amp; format !&#x3D;&#x3D; &quot;mso_mdoc&quot;) {
+                continue;
+            }
+
+            const schemaMetadataVersion &#x3D;
+                typeof credentialConfig.schemaMeta?.version &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+                credentialConfig.schemaMeta.version.trim().length &gt; 0
+                    ? credentialConfig.schemaMeta.version.trim()
+                    : undefined;
+
+            providedAttestations.push({
+                credentialConfigId: credentialConfig.id,
+                format,
+                meta: {
+                    schema_metadata_id: schemaMetadataId.trim(),
+                    ...(schemaMetadataVersion
+                        ? {
+                              schema_metadata_version: schemaMetadataVersion,
+                          }
+                        : {}),
+                },
+            });
+        }
+
+        providedAttestations.sort((left, right) &#x3D;&gt; {
+            const leftId &#x3D;
+                typeof left.meta?.[&quot;schema_metadata_id&quot;] &#x3D;&#x3D;&#x3D; &quot;string&quot;
+                    ? left.meta[&quot;schema_metadata_id&quot;]
+                    : &quot;&quot;;
+            const rightId &#x3D;
+                typeof right.meta?.[&quot;schema_metadata_id&quot;] &#x3D;&#x3D;&#x3D; &quot;string&quot;
+                    ? right.meta[&quot;schema_metadata_id&quot;]
+                    : &quot;&quot;;
+
+            if (leftId !&#x3D;&#x3D; rightId) {
+                return leftId.localeCompare(rightId);
+            }
+
+            return (left.format ?? &quot;&quot;).localeCompare(right.format ?? &quot;&quot;);
+        });
+
+        const schemaMetadataIds &#x3D; this.normalizeSchemaMetadataIds(
+            providedAttestations.map((attestation) &#x3D;&gt; {
+                const value &#x3D; attestation.meta?.[&quot;schema_metadata_id&quot;];
+                return typeof value &#x3D;&#x3D;&#x3D; &quot;string&quot; ? value : undefined;
+            }),
+        );
+
+        return {
+            schemaMetadataIds,
+            providedAttestations,
+        };
+    }
+
     private computeRegistrationCertificateFingerprint(
         registrationCertificateConfig: IssuerRegistrationCertificateConfig,
+        resolvedSchemaMetadataIds: string[],
+        derivedProvidedAttestations: IssuerProvidedAttestation[],
     ): string {
         const material &#x3D; {
             mode: registrationCertificateConfig.mode,
-            schemaMetadataIds:
-                registrationCertificateConfig.schemaMetadataIds
-                    ?.slice()
-                    .sort() ?? [],
+            schemaMetadataIds: resolvedSchemaMetadataIds,
             privacyPolicy: registrationCertificateConfig.privacyPolicy,
             supportUri: registrationCertificateConfig.supportUri,
-            providedAttestations:
-                registrationCertificateConfig.providedAttestations ?? [],
+            providedAttestations: derivedProvidedAttestations,
         };
 
         return createHash(&quot;sha256&quot;)
@@ -873,7 +961,7 @@ export class Oid4vciService {
     ): Promise&lt;string | undefined&gt; {
         const mode &#x3D;
             registrationCertificateConfig.mode ??
-            IssuerRegistrationCertificateMode.IMPORT;
+            IssuerRegistrationCertificateMode.GENERATE;
 
         if (mode &#x3D;&#x3D;&#x3D; IssuerRegistrationCertificateMode.IMPORT) {
             if (!registrationCertificateConfig.jwt) {
@@ -893,20 +981,22 @@ export class Oid4vciService {
             return registrationCertificateConfig.jwt;
         }
 
-        if (
-            !Array.isArray(
-                registrationCertificateConfig.providedAttestations,
-            ) ||
-            registrationCertificateConfig.providedAttestations.length &#x3D;&#x3D;&#x3D; 0
-        ) {
+        const { schemaMetadataIds, providedAttestations } &#x3D;
+            await this.deriveRegistrationCertificateMaterialFromCredentialConfigs(
+                tenantId,
+            );
+
+        if (providedAttestations.length &#x3D;&#x3D;&#x3D; 0) {
             this.logger.warn(
-                &#x60;[${tenantId}] registrationCertificate generate mode requires providedAttestations&#x60;,
+                &#x60;[${tenantId}] registrationCertificate generate mode requires credential configs with schema metadata&#x60;,
             );
             return undefined;
         }
 
         const fingerprint &#x3D; this.computeRegistrationCertificateFingerprint(
             registrationCertificateConfig,
+            schemaMetadataIds,
+            providedAttestations,
         );
 
         const issuanceConfig &#x3D;
@@ -920,33 +1010,19 @@ export class Oid4vciService {
             return cache.jwt;
         }
 
-        const credentials &#x3D; (
-            registrationCertificateConfig.providedAttestations ?? []
-        )
-            .map((attestation) &#x3D;&gt;
-                this.toRegistrationCertificateCredentialFromAttestation(
-                    attestation,
-                ),
-            )
-            .filter(
-                (
-                    value,
-                ): value is NonNullable&lt;
-                    RegistrationCertificateCreation[&quot;credentials&quot;]
-                &gt;[number] &#x3D;&gt; !!value,
-            );
-
-        if (credentials.length &#x3D;&#x3D;&#x3D; 0) {
+        if (schemaMetadataIds.length &#x3D;&#x3D;&#x3D; 0) {
             this.logger.warn(
-                &#x60;[${tenantId}] registrationCertificate generate mode could not derive credentials from providedAttestations&#x60;,
+                &#x60;[${tenantId}] registrationCertificate generate mode resolved no schema metadata IDs from credential configs; generated certificate will not include provides_attestations&#x60;,
             );
-            return undefined;
         }
 
         const creationBody: Partial&lt;RegistrationCertificateCreation&gt; &#x3D; {
-            provides_attestations:
-                registrationCertificateConfig.providedAttestations as RegistrationCertificateCreation[&quot;provides_attestations&quot;],
-            credentials,
+            ...(schemaMetadataIds.length &gt; 0
+                ? {
+                      provides_attestations:
+                          schemaMetadataIds as RegistrationCertificateCreation[&quot;provides_attestations&quot;],
+                  }
+                : {}),
             ...(registrationCertificateConfig.privacyPolicy
                 ? {
                       privacy_policy:
@@ -961,10 +1037,34 @@ export class Oid4vciService {
         const resolved &#x3D;
             await this.registrarService.resolveRegistrationCertificate(
                 { body: creationBody },
-                this.buildRegistrationCertificateDcql(credentials),
+                {},
                 v4(),
                 tenantId,
             );
+
+        const previousJwt &#x3D; cache?.jwt;
+        if (
+            previousJwt &amp;&amp;
+            previousJwt !&#x3D;&#x3D; resolved.jwt &amp;&amp;
+            this.isJwtActive(previousJwt)
+        ) {
+            try {
+                const revoked &#x3D;
+                    await this.registrarService.revokeRegistrationCertificateByJwt(
+                        tenantId,
+                        previousJwt,
+                    );
+                if (!revoked) {
+                    this.logger.warn(
+                        &#x60;[${tenantId}] Previous issuer registration certificate was not found as active during replacement&#x60;,
+                    );
+                }
+            } catch (error) {
+                this.logger.warn(
+                    &#x60;[${tenantId}] Failed to revoke previous issuer registration certificate during replacement: ${error instanceof Error ? error.message : &quot;unknown error&quot;}&#x60;,
+                );
+            }
+        }
 
         await this.issuanceService.updateRegistrationCertificateCache(
             tenantId,

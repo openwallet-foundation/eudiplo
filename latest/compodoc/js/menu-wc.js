@@ -1009,6 +1009,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/AddCredentialResponseEncryptionToIssuanceConfig1753000000000.html" data-type="entity-link" >AddCredentialResponseEncryptionToIssuanceConfig1753000000000</a>
                             </li>
                             <li class="link">
+                                <a href="classes/AddCwtCacheToStatusList1771000000000.html" data-type="entity-link" >AddCwtCacheToStatusList1771000000000</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/AddDcApiProtocolToSession1770000000000.html" data-type="entity-link" >AddDcApiProtocolToSession1770000000000</a>
                             </li>
                             <li class="link">
@@ -1070,6 +1073,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/AddTxCodeAttemptTracking1757000000000.html" data-type="entity-link" >AddTxCodeAttemptTracking1757000000000</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/AddVerifierSkewSeconds1772000000000.html" data-type="entity-link" >AddVerifierSkewSeconds1772000000000</a>
                             </li>
                             <li class="link">
                                 <a href="classes/AllExceptionsFilter.html" data-type="entity-link" >AllExceptionsFilter</a>
@@ -1387,6 +1393,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/IssuerMetadataCredentialConfig.html" data-type="entity-link" >IssuerMetadataCredentialConfig</a>
                             </li>
                             <li class="link">
+                                <a href="classes/IssuerOfferEntryDto.html" data-type="entity-link" >IssuerOfferEntryDto</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/IssuerProvidedAttestation.html" data-type="entity-link" >IssuerProvidedAttestation</a>
                             </li>
                             <li class="link">
@@ -1646,6 +1655,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/UpdateIssuanceDto.html" data-type="entity-link" >UpdateIssuanceDto</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/UpdateIssuerOfferDto.html" data-type="entity-link" >UpdateIssuerOfferDto</a>
                             </li>
                             <li class="link">
                                 <a href="classes/UpdateRegistrarConfigDto.html" data-type="entity-link" >UpdateRegistrarConfigDto</a>

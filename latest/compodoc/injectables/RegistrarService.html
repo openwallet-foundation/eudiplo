@@ -246,6 +246,10 @@ Actual logic lives in the focused sub-services:</p>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                <a href="#revokeRegistrationCertificateByJwt" >revokeRegistrationCertificateByJwt</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#saveConfig" >saveConfig</a>
                             </li>
                             <li>
@@ -477,8 +481,8 @@ Actual logic lives in the focused sub-services:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="123"
-                                    class="link-to-prism">src/registrar/registrar.service.ts:123</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">src/registrar/registrar.service.ts:133</a></div>
                         </td>
                     </tr>
 
@@ -544,8 +548,8 @@ Actual logic lives in the focused sub-services:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="119"
-                                    class="link-to-prism">src/registrar/registrar.service.ts:119</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="129"
+                                    class="link-to-prism">src/registrar/registrar.service.ts:129</a></div>
                         </td>
                     </tr>
 
@@ -611,8 +615,8 @@ Actual logic lives in the focused sub-services:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="129"
-                                    class="link-to-prism">src/registrar/registrar.service.ts:129</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="139"
+                                    class="link-to-prism">src/registrar/registrar.service.ts:139</a></div>
                         </td>
                     </tr>
 
@@ -824,8 +828,8 @@ Actual logic lives in the focused sub-services:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="137"
-                                    class="link-to-prism">src/registrar/registrar.service.ts:137</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="147"
+                                    class="link-to-prism">src/registrar/registrar.service.ts:147</a></div>
                         </td>
                     </tr>
 
@@ -1191,6 +1195,85 @@ Actual logic lives in the focused sub-services:</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="revokeRegistrationCertificateByJwt"></a>
+                    <span class="name">
+                        <span ><b>revokeRegistrationCertificateByJwt</b></span>
+                        <a href="#revokeRegistrationCertificateByJwt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>revokeRegistrationCertificateByJwt(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, jwt: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="119"
+                                    class="link-to-prism">src/registrar/registrar.service.ts:119</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>jwt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="saveConfig"></a>
                     <span class="name">
                         <span ><b>saveConfig</b></span>
@@ -1467,6 +1550,16 @@ export class RegistrarService {
             dcqlQuery,
             requestId,
             tenantId,
+        );
+    }
+
+    revokeRegistrationCertificateByJwt(
+        tenantId: string,
+        jwt: string,
+    ): Promise&lt;boolean&gt; {
+        return this.regCertSvc.revokeRegistrationCertificateByJwt(
+            tenantId,
+            jwt,
         );
     }
 

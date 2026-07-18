@@ -262,7 +262,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:31</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:32</a></div>
                             </td>
                         </tr>
 
@@ -467,8 +467,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="122"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:122</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="123"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:123</a></div>
                         </td>
                     </tr>
 
@@ -572,8 +572,8 @@ It initializes the session logging context and logs the start of the flow.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="344"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:344</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="345"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:345</a></div>
                         </td>
                     </tr>
 
@@ -699,8 +699,8 @@ It initializes the session logging context and logs the start of the flow.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="71"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:71</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="72"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:72</a></div>
                         </td>
                     </tr>
 
@@ -814,8 +814,8 @@ session creation, which is essential for transaction_data hash validation.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="464"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:464</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="469"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:469</a></div>
                         </td>
                     </tr>
 
@@ -908,8 +908,8 @@ from the URL path (not the session ID).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="320"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:320</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="321"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:321</a></div>
                         </td>
                     </tr>
 
@@ -978,8 +978,8 @@ from the URL path (not the session ID).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="54"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:54</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:55</a></div>
                         </td>
                     </tr>
 
@@ -1058,7 +1058,7 @@ compatibility with sessions created before the walletNonce migration.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:36</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -1090,6 +1090,7 @@ import { OfferResponse } from &quot;../../issuer/issuance/oid4vci/dto/offer-requ
 import { RegistrarService } from &quot;../../registrar/registrar.service&quot;;
 import { SessionStatus } from &quot;../../session/entities/session.entity&quot;;
 import { SessionService } from &quot;../../session/session.service&quot;;
+import { DEFAULT_VERIFIER_SKEW_SECONDS } from &quot;../../shared/trust/types&quot;;
 import { AuditLogContext } from &quot;../../shared/utils/logger/audit-log.service&quot;;
 import { SessionLoggerService } from &quot;../../shared/utils/logger/session-logger.service&quot;;
 import { WebhookService } from &quot;../../shared/utils/webhook/webhook.service&quot;;
@@ -1499,6 +1500,10 @@ export class Oid4vpService {
                 clientId,
                 responseUri,
                 transaction_data,
+                skewSeconds:
+                    values.skewSeconds ??
+                    presentationConfig.skewSeconds ??
+                    DEFAULT_VERIFIER_SKEW_SECONDS,
             });
 
             if (request_uri_method &#x3D;&#x3D;&#x3D; &quot;get&quot;) {

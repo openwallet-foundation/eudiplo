@@ -249,7 +249,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="147" class="link-to-prism">src/issuer/configuration/issuance/dto/issuer-registration-certificate.dto.ts:147</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="128" class="link-to-prism">src/issuer/configuration/issuance/dto/issuer-registration-certificate.dto.ts:128</a></div>
                         </td>
                     </tr>
 
@@ -286,7 +286,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="131" class="link-to-prism">src/issuer/configuration/issuance/dto/issuer-registration-certificate.dto.ts:131</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="112" class="link-to-prism">src/issuer/configuration/issuance/dto/issuer-registration-certificate.dto.ts:112</a></div>
                         </td>
                     </tr>
 
@@ -325,7 +325,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="139" class="link-to-prism">src/issuer/configuration/issuance/dto/issuer-registration-certificate.dto.ts:139</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="120" class="link-to-prism">src/issuer/configuration/issuance/dto/issuer-registration-certificate.dto.ts:120</a></div>
                         </td>
                     </tr>
 
@@ -362,7 +362,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="124" class="link-to-prism">src/issuer/configuration/issuance/dto/issuer-registration-certificate.dto.ts:124</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="105" class="link-to-prism">src/issuer/configuration/issuance/dto/issuer-registration-certificate.dto.ts:105</a></div>
                         </td>
                     </tr>
 
@@ -382,9 +382,7 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
 import {
-    IsArray,
     IsBoolean,
     IsEnum,
     IsNumber,
@@ -392,7 +390,6 @@ import {
     IsOptional,
     IsString,
     ValidateIf,
-    ValidateNested,
 } from &quot;class-validator&quot;;
 
 export enum IssuerRegistrationCertificateMode {
@@ -401,6 +398,15 @@ export enum IssuerRegistrationCertificateMode {
 }
 
 export class IssuerProvidedAttestation {
+    @ApiPropertyOptional({
+        description:
+            &quot;Credential configuration ID backing this attestation entry (for payload traceability/UI mapping).&quot;,
+        example: &quot;pid-no-key&quot;,
+    })
+    @IsOptional()
+    @IsString()
+    credentialConfigId?: string;
+
     @ApiPropertyOptional({
         description:
             &quot;Attestation format as expected by the registrar (for example dc+sd-jwt, mso_mdoc).&quot;,
@@ -434,8 +440,8 @@ export class IssuerRegistrationCertificateConfig {
     @ApiPropertyOptional({
         enum: IssuerRegistrationCertificateMode,
         description:
-            &quot;import: use an existing JWT, generate: create via registrar from provided attestations and selected credential configurations.&quot;,
-        default: IssuerRegistrationCertificateMode.IMPORT,
+            &quot;import: use an existing JWT, generate: create via registrar using attestation data derived from configured credential configurations.&quot;,
+        default: IssuerRegistrationCertificateMode.GENERATE,
     })
     @IsOptional()
     @IsEnum(IssuerRegistrationCertificateMode)
@@ -455,16 +461,6 @@ export class IssuerRegistrationCertificateConfig {
 
     @ApiPropertyOptional({
         description:
-            &quot;Schema metadata IDs selected for inclusion in generated registration certificates.&quot;,
-        type: () &#x3D;&gt; [String],
-    })
-    @IsOptional()
-    @IsArray()
-    @IsString({ each: true })
-    schemaMetadataIds?: string[];
-
-    @ApiPropertyOptional({
-        description:
             &quot;Privacy policy URL used when generating a registration certificate (optional if registrar defaults are configured).&quot;,
         example: &quot;https://issuer.example/privacy&quot;,
     })
@@ -480,21 +476,6 @@ export class IssuerRegistrationCertificateConfig {
     @IsOptional()
     @IsString()
     supportUri?: string;
-
-    @ApiPropertyOptional({
-        description:
-            &quot;Provided attestations included in generated registration certificates.&quot;,
-        type: () &#x3D;&gt; [IssuerProvidedAttestation],
-    })
-    @ValidateIf(
-        (value: IssuerRegistrationCertificateConfig) &#x3D;&gt;
-            value.mode &#x3D;&#x3D;&#x3D; IssuerRegistrationCertificateMode.GENERATE,
-    )
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; IssuerProvidedAttestation)
-    providedAttestations?: IssuerProvidedAttestation[];
 }
 
 export class IssuerRegistrationCertificateCache {

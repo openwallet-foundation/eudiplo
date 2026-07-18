@@ -5,6 +5,8 @@
       
       
       
+        <link rel="canonical" href="https://openwallet-foundation.github.io/eudiplo/docs/latest/getting-started/presentation/presentation-requests/">
+      
       
         <link rel="prev" href="../">
       
@@ -16,7 +18,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -24,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3044,6 +3046,11 @@ to request (DCQL, webhook defaults, registration certificate), see
 <td>Transaction data override for this request.</td>
 </tr>
 <tr>
+<td><code>skewSeconds</code></td>
+<td>No</td>
+<td>Clock skew override in seconds for credential JWT time validation.</td>
+</tr>
+<tr>
 <td><code>expected_origin</code></td>
 <td>No</td>
 <td>Browser origin for DC API flows. Falls back to the <code>Origin</code> header.</td>
@@ -3074,8 +3081,9 @@ to request (DCQL, webhook defaults, registration certificate), see
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">            </span><span class="nt">"credential_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"pid"</span><span class="p">],</span>
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">            </span><span class="nt">"resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Building A"</span>
 <a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="p">]</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="p">}</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="p">],</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span><span class="nt">"skewSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="p">}</span>
 </code></pre></div>
 <hr>
 <h2 id="override-rules">Override Rules<a class="headerlink" href="#override-rules" title="Permanent link">¶</a></h2>
@@ -3085,6 +3093,7 @@ from the presentation configuration for that session:</p>
 <li><code>webhook</code> overrides configuration <code>webhook</code></li>
 <li><code>redirectUri</code> overrides configuration <code>redirectUri</code></li>
 <li><code>transaction_data</code> overrides configuration <code>transaction_data</code></li>
+<li><code>skewSeconds</code> overrides configuration <code>skewSeconds</code></li>
 </ul>
 <p>These values are not merged.</p>
 <hr>
@@ -3258,9 +3267,7 @@ look up the completed session.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.code.copy", "content.action.view", "content.action.edit", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.instant", "navigation.instant.prefetch", "navigation.path", "navigation.sections", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "search.highlight", "search.suggest", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../../assets/external/unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   

@@ -206,6 +206,14 @@
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#skewSeconds" >skewSeconds</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#transaction_data" >transaction_data</a>
@@ -267,7 +275,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:71</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:73</a></div>
                         </td>
                     </tr>
 
@@ -312,7 +320,7 @@ Example: &quot;<a href="http://localhost:8080">http://localhost:8080</a>&quot;</
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:63</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:65</a></div>
                         </td>
                     </tr>
 
@@ -355,7 +363,7 @@ You can use the <code>{sessionId}</code> placeholder in the URI, which will be r
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:46</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:48</a></div>
                         </td>
                     </tr>
 
@@ -397,13 +405,59 @@ You can use the <code>{sessionId}</code> placeholder in the URI, which will be r
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:42</a></div>
                         </td>
                     </tr>
 
             <tr>
                 <td class="col-md-4">
                     <div class="io-description"><p>The type of response expected from the presentation request.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skewSeconds"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>skewSeconds</b></span>
+                        <a href="#skewSeconds"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @IsOptional()<br />@IsNumber()<br />@Min(0)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:92</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Optional clock skew tolerance for this presentation offer, in seconds.
+If provided, this overrides the presentation configuration for the created session.</p>
 </div>
                 </td>
             </tr>
@@ -443,7 +497,7 @@ You can use the <code>{sessionId}</code> placeholder in the URI, which will be r
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:81</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="83" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:83</a></div>
                         </td>
                     </tr>
 
@@ -488,7 +542,7 @@ If provided, this will override the transaction_data from the presentation confi
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:54</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/verifier/oid4vp/dto/presentation-request.dto.ts:56</a></div>
                         </td>
                     </tr>
 
@@ -518,9 +572,11 @@ If not provided, the configured webhook from the configuration will be used.</p>
 import {
     IsArray,
     IsEnum,
+    IsNumber,
     IsObject,
     IsOptional,
     IsString,
+    Min,
 } from &quot;class-validator&quot;;
 import { WebhookConfig } from &quot;../../../shared/utils/webhook/webhook.dto&quot;;
 import { TransactionData } from &quot;../../presentations/entities/presentation-config.entity&quot;;
@@ -595,11 +651,24 @@ export class PresentationRequest {
     @IsTransactionData()
     @Type(() &#x3D;&gt; TransactionData)
     transaction_data?: TransactionData[];
+
+    /**
+     * Optional clock skew tolerance for this presentation offer, in seconds.
+     * If provided, this overrides the presentation configuration for the created session.
+     */
+    @IsOptional()
+    @IsNumber()
+    @Min(0)
+    skewSeconds?: number;
 }
 
 export type PresentationRequestOptions &#x3D; Pick&lt;
     PresentationRequest,
-    &quot;webhook&quot; | &quot;redirectUri&quot; | &quot;expected_origin&quot; | &quot;transaction_data&quot;
+    | &quot;webhook&quot;
+    | &quot;redirectUri&quot;
+    | &quot;expected_origin&quot;
+    | &quot;transaction_data&quot;
+    | &quot;skewSeconds&quot;
 &gt; &amp; {
     session?: string;
 };
