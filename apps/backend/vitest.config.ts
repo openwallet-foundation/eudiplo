@@ -8,6 +8,12 @@ export default defineConfig({
         globals: false,
         root: "./",
         setupFiles: ["./vitest.setup.ts"],
+        coverage: {
+            provider: "v8",
+            reportsDirectory: "./coverage/unit",
+            reporter: ["text", "lcov"],
+            cleanOnRerun: false,
+        },
     },
     plugins: [swc.vite()],
 });
