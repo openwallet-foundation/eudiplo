@@ -383,7 +383,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 0  # Full history for SonarQube analysis
+          fetch-depth: 0 # Full history for SonarQube analysis
 
       - name: Add entry to /etc/hosts
         run: echo "127.0.0.1       host.testcontainers.internal" | sudo tee -a /etc/hosts
