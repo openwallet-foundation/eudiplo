@@ -36,3 +36,4 @@ export { RemoveRefreshTokenFromIssuanceConfig1768000000000 } from "./17680000000
 export { RemovePreferredAuthServerFromIssuanceConfig1769000000000 } from "./1769000000000-RemovePreferredAuthServerFromIssuanceConfig";
 export { AddDcApiProtocolToSession1770000000000 } from "./1770000000000-AddDcApiProtocolToSession";
 export { AddCwtCacheToStatusList1771000000000 } from "./1771000000000-AddCwtCacheToStatusList";
+export { AddVerifierSkewSeconds1772000000000 } from "./1772000000000-AddVerifierSkewSeconds";

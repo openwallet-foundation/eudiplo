@@ -14,6 +14,7 @@ import {
     IsObject,
     IsOptional,
     IsString,
+    Min,
     Validate,
     ValidateNested,
     ValidationArguments,
@@ -258,6 +259,20 @@ export class PresentationConfig {
     @IsOptional()
     @Column("int", { default: 300 })
     lifeTime?: number;
+
+    /**
+     * Clock skew tolerance for credential JWT time validation, in seconds.
+     */
+    @ApiPropertyOptional({
+        description:
+            "Clock skew tolerance for credential JWT time validation, in seconds.",
+        default: 60,
+    })
+    @IsNumber()
+    @Min(0)
+    @IsOptional()
+    @Column("int", { default: 60 })
+    skewSeconds?: number;
 
     /**
      * The DCQL query to be used for the VP request.

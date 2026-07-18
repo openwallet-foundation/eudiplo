@@ -2292,6 +2292,10 @@ export type PresentationConfig = {
      */
     lifeTime?: number;
     /**
+     * Clock skew tolerance for credential JWT time validation, in seconds.
+     */
+    skewSeconds?: number;
+    /**
      * The DCQL query to be used for the VP request.
      */
     dcql_query: Dcql;
@@ -2376,6 +2380,10 @@ export type PresentationConfigCreateDto = {
      */
     lifeTime?: number;
     /**
+     * Clock skew tolerance for credential JWT time validation, in seconds.
+     */
+    skewSeconds?: number;
+    /**
      * The DCQL query to be used for the VP request.
      */
     dcql_query: Dcql;
@@ -2430,6 +2438,10 @@ export type PresentationConfigUpdateDto = {
      * Lifetime how long the presentation request is valid after creation, in seconds.
      */
     lifeTime?: number;
+    /**
+     * Clock skew tolerance for credential JWT time validation, in seconds.
+     */
+    skewSeconds?: number;
     /**
      * The DCQL query to be used for the VP request.
      */
@@ -3521,6 +3533,11 @@ export type PresentationRequest = {
      * If provided, this will override the transaction_data from the presentation configuration.
      */
     transaction_data?: Array<TransactionData>;
+    /**
+     * Optional clock skew tolerance for this presentation offer, in seconds.
+     * If provided, this overrides the presentation configuration for the created session.
+     */
+    skewSeconds?: number;
 };
 
 export type FileUploadDto = {

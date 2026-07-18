@@ -159,6 +159,7 @@ const { uri, sessionId } = await client.createPresentationRequest({
   configId: 'age-over-18', // Presentation config ID
   responseType: 'uri', // 'uri' | 'qrcode' | 'dc-api'
   redirectUri: 'https://...', // Optional redirect after completion
+  skewSeconds: 60, // Optional JWT clock skew override for this request
 });
 ```
 

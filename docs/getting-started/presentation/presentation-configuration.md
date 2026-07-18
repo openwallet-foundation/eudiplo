@@ -28,6 +28,7 @@ For creating request payloads and runtime overrides, see
 - `webhook`: **OPTIONAL** - Webhook configuration for receiving verified presentations asynchronously. See [Webhook Integration](../../architecture/webhooks.md#presentation-webhook) for details.
 - `redirectUri`: **OPTIONAL** - URI to redirect the user to after completing the presentation. This is useful for web applications that need to return the user to a specific page after verification. You can use the `{sessionId}` placeholder in the URI, which will be replaced with the actual session ID (e.g., `https://example.com/callback?session={sessionId}`).
 - `transaction_data`: **OPTIONAL** - Array of transaction data objects to include in the OID4VP authorization request. See [Transaction Data](transaction-data.md) for details.
+- `skewSeconds`: **OPTIONAL** - Clock skew tolerance in seconds for credential JWT time validation. Defaults to `60` seconds.
 
 !!! Info
 
@@ -40,6 +41,7 @@ For creating request payloads and runtime overrides, see
     - `webhook` in the request overrides `webhook` from the presentation configuration
     - `redirectUri` in the request overrides `redirectUri` from the presentation configuration
     - `transaction_data` in the request overrides `transaction_data` from the presentation configuration
+    - `skewSeconds` in the request overrides `skewSeconds` from the presentation configuration for that session
 
 ### registrationCert Structure
 

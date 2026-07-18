@@ -21,7 +21,10 @@ import { TokenPayload } from "../../auth/token.decorator";
 import { ServiceTypeIdentifier } from "../../issuer/trust-list/trustlist.service";
 import { RegistrarService } from "../../registrar/registrar.service";
 import { Session } from "../../session/entities/session.entity";
-import { VerifierOptions } from "../../shared/trust/types";
+import {
+    DEFAULT_VERIFIER_SKEW_SECONDS,
+    VerifierOptions,
+} from "../../shared/trust/types";
 import {
     extractRequestMeta,
     getChangedFields,
@@ -680,6 +683,7 @@ export class PresentationsService {
             lifeTime: config.lifeTime,
             dcql_query: config.dcql_query,
             transaction_data: config.transaction_data,
+            skewSeconds: config.skewSeconds,
             registration_cert: config.registration_cert,
             registrationCertCache: config.registrationCertCache,
             webhook: config.webhook,
@@ -1514,6 +1518,10 @@ export class PresentationsService {
                     policy: {
                         requireX5c: true,
                     },
+                    skewSeconds:
+                        session.skewSeconds ??
+                        presentationConfig.skewSeconds ??
+                        DEFAULT_VERIFIER_SKEW_SECONDS,
                     // Pass transaction data for hash validation (only for credentials that have it)
                     transactionData: relevantTransactionData,
                 };

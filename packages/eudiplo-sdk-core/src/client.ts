@@ -191,6 +191,8 @@ export interface PresentationRequestOptions {
   responseType?: 'uri' | 'dc-api';
   /** Optional redirect URI after presentation completes */
   redirectUri?: string;
+  /** Optional clock skew tolerance for this presentation request, in seconds */
+  skewSeconds?: number;
   /**
    * Optional browser origin used for DC API audience binding.
    * For server-side flows, pass the caller origin explicitly.
@@ -421,6 +423,7 @@ export class EudiploClient {
       response_type: options.responseType ?? 'uri',
       requestId: options.configId,
       redirectUri: options.redirectUri,
+      skewSeconds: options.skewSeconds,
       expected_origin:
         options.responseType === 'dc-api' ? inferredOrigin : undefined,
     };

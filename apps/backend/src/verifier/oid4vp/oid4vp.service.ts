@@ -17,6 +17,7 @@ import { OfferResponse } from "../../issuer/issuance/oid4vci/dto/offer-request.d
 import { RegistrarService } from "../../registrar/registrar.service";
 import { SessionStatus } from "../../session/entities/session.entity";
 import { SessionService } from "../../session/session.service";
+import { DEFAULT_VERIFIER_SKEW_SECONDS } from "../../shared/trust/types";
 import { AuditLogContext } from "../../shared/utils/logger/audit-log.service";
 import { SessionLoggerService } from "../../shared/utils/logger/session-logger.service";
 import { WebhookService } from "../../shared/utils/webhook/webhook.service";
@@ -426,6 +427,10 @@ export class Oid4vpService {
                 clientId,
                 responseUri,
                 transaction_data,
+                skewSeconds:
+                    values.skewSeconds ??
+                    presentationConfig.skewSeconds ??
+                    DEFAULT_VERIFIER_SKEW_SECONDS,
             });
 
             if (request_uri_method === "get") {

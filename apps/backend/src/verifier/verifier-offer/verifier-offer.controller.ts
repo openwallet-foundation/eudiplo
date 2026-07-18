@@ -93,6 +93,7 @@ export class VerifierOfferController {
                 body.requestId,
                 user.entity!.id,
                 origin,
+                body.skewSeconds,
             );
             return res.status(201).json(offer);
         }
@@ -103,6 +104,7 @@ export class VerifierOfferController {
                 webhook: body.webhook,
                 redirectUri: body.redirectUri,
                 transaction_data: body.transaction_data,
+                skewSeconds: body.skewSeconds,
             },
             user.entity!.id,
             body.response_type === ResponseType.DC_API,

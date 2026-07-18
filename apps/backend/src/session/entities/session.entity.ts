@@ -259,6 +259,12 @@ export class Session {
     @Column("json", { nullable: true })
     transaction_data?: TransactionData[];
 
+    /**
+     * Per-session clock skew tolerance for presentation credential JWT time validation.
+     */
+    @Column("int", { nullable: true })
+    skewSeconds?: number;
+
     // External authorization server fields (for wallet-initiated flows with external AS like Keycloak)
 
     /**

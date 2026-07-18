@@ -4695,6 +4695,11 @@ export const PresentationConfigSchema = {
             type: 'number',
             description: 'Lifetime how long the presentation request is valid after creation, in seconds.'
         },
+        skewSeconds: {
+            type: 'number',
+            description: 'Clock skew tolerance for credential JWT time validation, in seconds.',
+            default: 60
+        },
         dcql_query: {
             description: 'The DCQL query to be used for the VP request.',
             allOf: [
@@ -4837,6 +4842,11 @@ export const PresentationConfigCreateDtoSchema = {
             type: 'number',
             description: 'Lifetime how long the presentation request is valid after creation, in seconds.'
         },
+        skewSeconds: {
+            type: 'number',
+            description: 'Clock skew tolerance for credential JWT time validation, in seconds.',
+            default: 60
+        },
         dcql_query: {
             description: 'The DCQL query to be used for the VP request.',
             allOf: [
@@ -4921,6 +4931,11 @@ export const PresentationConfigUpdateDtoSchema = {
         lifeTime: {
             type: 'number',
             description: 'Lifetime how long the presentation request is valid after creation, in seconds.'
+        },
+        skewSeconds: {
+            type: 'number',
+            description: 'Clock skew tolerance for credential JWT time validation, in seconds.',
+            default: 60
         },
         dcql_query: {
             description: 'The DCQL query to be used for the VP request.',
@@ -6755,6 +6770,10 @@ export const PresentationRequestSchema = {
             items: {
                 $ref: '#/components/schemas/TransactionData'
             }
+        },
+        skewSeconds: {
+            type: 'number',
+            description: 'Optional clock skew tolerance for this presentation offer, in seconds.\nIf provided, this overrides the presentation configuration for the created session.'
         }
     },
     required: [

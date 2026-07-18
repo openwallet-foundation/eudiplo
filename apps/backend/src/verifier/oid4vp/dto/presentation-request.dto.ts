@@ -2,9 +2,11 @@ import { Type } from "class-transformer";
 import {
     IsArray,
     IsEnum,
+    IsNumber,
     IsObject,
     IsOptional,
     IsString,
+    Min,
 } from "class-validator";
 import { WebhookConfig } from "../../../shared/utils/webhook/webhook.dto";
 import { TransactionData } from "../../presentations/entities/presentation-config.entity";
@@ -79,11 +81,24 @@ export class PresentationRequest {
     @IsTransactionData()
     @Type(() => TransactionData)
     transaction_data?: TransactionData[];
+
+    /**
+     * Optional clock skew tolerance for this presentation offer, in seconds.
+     * If provided, this overrides the presentation configuration for the created session.
+     */
+    @IsOptional()
+    @IsNumber()
+    @Min(0)
+    skewSeconds?: number;
 }
 
 export type PresentationRequestOptions = Pick<
     PresentationRequest,
-    "webhook" | "redirectUri" | "expected_origin" | "transaction_data"
+    | "webhook"
+    | "redirectUri"
+    | "expected_origin"
+    | "transaction_data"
+    | "skewSeconds"
 > & {
     session?: string;
 };

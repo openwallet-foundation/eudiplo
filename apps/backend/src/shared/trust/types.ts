@@ -80,6 +80,8 @@ export type FederationTrustSource = {
     enforceSigningPolicy?: boolean;
 };
 
+export const DEFAULT_VERIFIER_SKEW_SECONDS = 60;
+
 export type VerifierOptions = {
     trustListSource?: TrustListSource;
     federationTrustSource?: FederationTrustSource;
@@ -104,6 +106,11 @@ export type VerifierOptions = {
      * SD-JWT key binding nonce.
      */
     keyBindingNonce?: string;
+    /**
+     * Allow for clock skew when validating JWTs and SD-JWTs.
+     * Default is 60 seconds.
+     */
+    skewSeconds?: number;
 };
 
 export type TrustListSource = {
