@@ -419,13 +419,14 @@ jobs:
   test-coverage-report:
     permissions:
       contents: read
-    name: Test Coverage & SonarQube Report
+    name: Test Coverage Report
     runs-on: ubuntu-latest
     needs: [lint]
     steps:
       - uses: actions/checkout@v7
         with:
-          fetch-depth: 0 # Full history for SonarQube analysis
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Add entry to /etc/hosts
         run: echo "127.0.0.1       host.testcontainers.internal" | sudo tee -a /etc/hosts
@@ -449,55 +450,55 @@ jobs:
           nohup pnpm --filter test-rp dev &
 
       - name: Run backend unit tests with coverage
-        run: pnpm run --filter @eudiplo/backend test -- --coverage
-        continue-on-error: true
+        run: pnpm --filter @eudiplo/backend exec vitest run --coverage --config ./vitest.config.ts
 
       - name: Run backend E2E tests with coverage
         run: pnpm run --filter @eudiplo/backend test:e2e
         env:
           TESTCONTAINERS_HOST_OVERRIDE: host.testcontainers.internal
-        continue-on-error: true
 
-      - name: Merge coverage reports and fix paths for SonarQube
-        run: |
-          # Install lcov for merging
-          sudo apt-get update && sudo apt-get install -y lcov
-
-          # Create output directory
-          mkdir -p apps/backend/coverage/merged
-
-          # Merge unit and e2e coverage reports
-          if [ -f "apps/backend/coverage/unit/lcov.info" ] && [ -f "apps/backend/coverage/e2e/lcov.info" ]; then
-            lcov -a apps/backend/coverage/unit/lcov.info -a apps/backend/coverage/e2e/lcov.info -o apps/backend/coverage/merged/lcov.info
-            echo "✓ Merged unit and e2e coverage reports"
-          elif [ -f "apps/backend/coverage/unit/lcov.info" ]; then
-            cp apps/backend/coverage/unit/lcov.info apps/backend/coverage/merged/lcov.info
-            echo "✓ Using unit coverage report only"
-          elif [ -f "apps/backend/coverage/e2e/lcov.info" ]; then
-            cp apps/backend/coverage/e2e/lcov.info apps/backend/coverage/merged/lcov.info
-            echo "✓ Using e2e coverage report only"
-          else
-            echo "⚠ No coverage reports found"
-            ls -la apps/backend/coverage/ || echo "Coverage directory not found"
-            exit 1
-          fi
-
-          # Fix absolute paths to relative paths for SonarQube
-          sed -i 's|SF:.*/eudiplo/apps/backend/|SF:apps/backend/|g' apps/backend/coverage/merged/lcov.info
-          echo "✓ Fixed coverage report paths"
-
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v3
+      - name: Upload Cobertura coverage artifacts
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
         with:
-          args: >
-            -Dsonar.projectKey=eudiplo
-            -Dsonar.sources=apps/backend/src,apps/client/src,packages/eudiplo-sdk-core/src
-            -Dsonar.javascript.lcov.reportPaths=apps/backend/coverage/merged/lcov.info
-            -Dsonar.typescript.lcov.reportPaths=apps/backend/coverage/merged/lcov.info
-        env:
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        continue-on-error: true
+          name: backend-cobertura-coverage
+          path: |
+            apps/backend/coverage/unit/cobertura-coverage.xml
+            apps/backend/coverage/e2e/cobertura-coverage.xml
+          if-no-files-found: error
+
+  upload-code-coverage:
+    permissions:
+      contents: read
+      pull-requests: read
+      code-quality: write
+    name: Upload Coverage to GitHub Code Quality
+    runs-on: ubuntu-latest
+    needs: [test-coverage-report]
+    if: >-
+      needs.test-coverage-report.result == 'success' &&
+      (
+        github.event_name != 'pull_request' ||
+        github.event.pull_request.head.repo.full_name == github.repository
+      )
+    steps:
+      - name: Download Cobertura coverage artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: backend-cobertura-coverage
+          path: apps/backend/coverage
+
+      - uses: actions/upload-code-coverage@v1
+        with:
+          file: apps/backend/coverage/unit/cobertura-coverage.xml
+          language: TypeScript
+          label: backend-unit
+
+      - uses: actions/upload-code-coverage@v1
+        with:
+          file: apps/backend/coverage/e2e/cobertura-coverage.xml
+          language: TypeScript
+          label: backend-e2e
 
   # =============================================================================
   # Docker Backend: Build, Test & Push (multi-platform with native runners)

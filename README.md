@@ -4,7 +4,6 @@
 ![License](https://img.shields.io/github/license/openwallet-foundation/eudiplo)
 [![Website](https://img.shields.io/badge/website-eudiplo-blue)](https://openwallet-foundation.github.io/eudiplo/docs/latest/)
 [![Documentation Coverage](https://openwallet-foundation.github.io/eudiplo/main/compodoc/images/coverage-badge-documentation.svg)](https://openwallet-foundation.github.io/eudiplo/main/compodoc/coverage.html)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=openwallet-foundation_eudiplo&metric=coverage)](https://sonarcloud.io/project/overview?id=openwallet-foundation_eudiplo)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=openwallet-foundation_eudiplo&metric=security_rating)](https://sonarcloud.io/project/overview?id=openwallet-foundation_eudiplo)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=openwallet-foundation_eudiplo&metric=alert_status)](https://sonarcloud.io/project/overview?id=openwallet-foundation_eudiplo)
 [![Join our Discord](https://img.shields.io/discord/1022962884864643214?label=Join%20our%20Discord&logo=discord&color=7289DA&labelColor=2C2F33)](https://discord.gg/58ys8XfXDu)
