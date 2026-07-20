@@ -1,0 +1,171 @@
+# EUDIPLO Docker Compose - Multi-Profile Deployment
+#
+# Usage:
+#   docker compose up                              # Minimal: just EUDIPLO (SQLite, local storage)
+#   docker compose --profile standard up           # Standard: + Postgres + MinIO
+#   docker compose --profile full up               # Full: + Postgres + MinIO + Vault
+#
+# For more information, see the documentation:
+# https://openwallet-foundation.github.io/eudiplo/docs/latest/deployment/docker-compose/
+
+services:
+  # =============================================================================
+  # CORE SERVICES (always run)
+  # =============================================================================
+
+  eudiplo:
+    image: ${EUDIPLO_IMAGE:-ghcr.io/openwallet-foundation/eudiplo:latest}
+    restart: always
+    env_file:
+      - ${EUDIPLO_ENV_FILE:-.env}
+    ports:
+      - '3000:3000'
+    volumes:
+      - ${EUDIPLO_CONFIG_MOUNT:-eudiplo-config:/app/config}
+      - eudiplo-uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+        required: false
+      minio:
+        condition: service_healthy
+        required: false
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - eudiplo-network
+
+  eudiplo-client:
+    image: ghcr.io/openwallet-foundation/eudiplo-client:latest
+    restart: always
+    ports:
+      - '4200:8080'
+    depends_on:
+      eudiplo:
+        condition: service_healthy
+    environment:
+      - API_BASE_URL=http://eudiplo:3000
+      # Uncomment to serve the client from a subpath behind a reverse proxy:
+      # - CLIENT_BASE_HREF=/eudiplo-client/
+    healthcheck:
+      test: ['CMD', 'wget', '-qO', '/dev/null', 'http://localhost:8080']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - eudiplo-network
+
+  # =============================================================================
+  # STANDARD PROFILE: PostgreSQL + MinIO
+  # =============================================================================
+
+  postgres:
+    image: postgres:16
+    restart: always
+    profiles: ['standard', 'full']
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-eudiplo}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+      POSTGRES_DB: ${DB_DATABASE:-eudiplo}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U ${DB_USERNAME:-eudiplo} -d ${DB_DATABASE:-eudiplo}',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - eudiplo-network
+
+  minio:
+    image: quay.io/minio/minio:latest
+    restart: always
+    profiles: ['standard', 'full']
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - eudiplo-network
+
+  # MinIO bucket initialization job
+  minio-init:
+    image: quay.io/minio/mc:latest
+    profiles: ['standard', 'full']
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      MINIO_BUCKET: ${S3_BUCKET:-uploads}
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD;
+      mc mb -p local/$$MINIO_BUCKET || true;
+      mc anonymous set download local/$$MINIO_BUCKET || true;
+      echo 'Bucket created successfully';
+      "
+    networks:
+      - eudiplo-network
+
+  # =============================================================================
+  # FULL PROFILE: + HashiCorp Vault
+  # =============================================================================
+
+  vault:
+    image: hashicorp/vault:latest
+    restart: always
+    profiles: ['full']
+    ports:
+      - '8200:8200'
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_TOKEN:-root}
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+      VAULT_API_ADDR: http://0.0.0.0:8200
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - vault-data:/vault/data
+      - vault-logs:/vault/logs
+    command: vault server -dev -dev-listen-address=0.0.0.0:8200
+    networks:
+      - eudiplo-network
+
+networks:
+  eudiplo-network:
+    driver: bridge
+
+volumes:
+  eudiplo-config:
+    driver: local
+  eudiplo-uploads:
+    driver: local
+  postgres-data:
+    driver: local
+  minio-data:
+    driver: local
+  vault-data:
+    driver: local
+  vault-logs:
+    driver: local

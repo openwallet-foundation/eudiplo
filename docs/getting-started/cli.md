@@ -1,0 +1,94 @@
+# EUDIPLO CLI
+
+The EUDIPLO CLI is designed around deployment targets. Generic commands inspect
+an EUDIPLO API over HTTP, while lifecycle commands are provided by a deployment
+driver.
+
+## Run a Local Demo
+
+!!! info
+
+    `npx` is provided by npm, which is installed with [Node.js](https://nodejs.org/en/download/current). It is not an operating
+    system tool, so install a current Node.js distribution first if `npx` is missing.
+
+Use the scoped package name for one-off npm execution:
+
+```bash
+npx @eudiplo/cli demo
+```
+
+For repeated use, install the CLI globally and run the `eudiplo` command from
+any directory:
+
+```bash
+npm install -g @eudiplo/cli
+eudiplo doctor
+```
+
+The demo command copies EUDIPLO's bundled Docker Compose deployment template,
+creates a local `.eudiplo.env` file, and starts the `compose` driver. This keeps
+the quick-start path usable without cloning the repository while still using the
+same Compose file maintained under `deployment/docker-compose`.
+
+## Register an Existing Deployment
+
+For Kubernetes, Helm, standalone containers, or any externally managed instance,
+register the public API URL:
+
+```bash
+npx @eudiplo/cli instance add production \
+  --url https://eudiplo.example.com
+```
+
+Instance metadata is stored in the user's EUDIPLO CLI config directory, not in
+the source tree. Do not put secrets in this config; commands that need client
+credentials read `EUDIPLO_CLIENT_ID` and `EUDIPLO_CLIENT_SECRET` from the
+environment.
+
+## Deployment-Neutral Commands
+
+These commands work with both `compose` and `external` instances and do not
+require Docker:
+
+```bash
+npx @eudiplo/cli doctor --instance production
+npx @eudiplo/cli status --instance production
+npx @eudiplo/cli config validate
+npx @eudiplo/cli --version
+npx @eudiplo/cli version
+```
+
+`--version` and `-v` print the installed CLI version without network access.
+`version` also checks the npm registry and reports whether an update is
+available.
+
+`doctor` checks the configured public URL, API reachability, `/health`, optional
+client connectivity, and whether authentication environment variables are
+available.
+
+`config validate` parses the local CLI config, validates instance targets and
+HTTP(S) URLs, verifies the default instance points to a configured instance, and
+prints the configured instances. It does not require Docker or contact the
+deployment.
+
+## Compose Driver Commands
+
+These commands are available only for `compose` instances:
+
+```bash
+npx @eudiplo/cli init --target compose
+npx @eudiplo/cli up
+npx @eudiplo/cli down
+npx @eudiplo/cli logs
+```
+
+If a compose-only command is used against an external instance, the CLI returns a
+clear error such as `logs is not available for externally managed deployments`.
+
+## Command Name Usability
+
+The best publishable npm shape is `@eudiplo/cli` with a `eudiplo` binary. That
+means `npx @eudiplo/cli` is the reliable one-off command, while `eudiplo` is what
+users type after installation. A shorter `npx eudiplo` command would require a
+separate unscoped npm package named `eudiplo` that depends on or aliases the
+scoped CLI package.

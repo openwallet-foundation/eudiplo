@@ -1,0 +1,55 @@
+{
+    "name": "@eudiplo/cli",
+    "version": "0.1.4",
+    "description": "Deployment-aware command line tools for EUDIPLO",
+    "private": false,
+    "type": "module",
+    "bin": {
+        "eudiplo": "dist/index.js"
+    },
+    "files": [
+        "dist",
+        "templates",
+        "README.md"
+    ],
+    "scripts": {
+        "assets:check": "node ../../scripts/check-cli-assets.js",
+        "build": "pnpm assets:check && tsc -p tsconfig.json",
+        "dev": "tsx src/index.ts",
+        "test": "vitest run",
+        "lint": "biome lint .",
+        "prepublishOnly": "pnpm build"
+    },
+    "keywords": [
+        "eudiplo",
+        "cli",
+        "eudi",
+        "wallet",
+        "oid4vci",
+        "oid4vp"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/openwallet-foundation/eudiplo.git",
+        "directory": "apps/cli"
+    },
+    "homepage": "https://github.com/openwallet-foundation/eudiplo/tree/main/apps/cli#readme",
+    "bugs": {
+        "url": "https://github.com/openwallet-foundation/eudiplo/issues"
+    },
+    "author": "OpenWallet Foundation",
+    "license": "Apache-2.0",
+    "engines": {
+        "node": ">=22.0.0"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "2.5.3",
+        "@types/node": "^26.0.1",
+        "tsx": "^4.22.4",
+        "typescript": "^6.0.3",
+        "vitest": "4.1.10"
+    }
+}

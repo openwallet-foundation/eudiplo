@@ -87,6 +87,31 @@ jobs:
       - name: Build SDK Core
         run: pnpm --filter @eudiplo/sdk-core build
 
+  build-cli:
+    name: Build CLI
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build CLI
+        run: pnpm --filter @eudiplo/cli build
+
   build-backend:
     name: Build Backend
     permissions:
@@ -937,12 +962,12 @@ jobs:
 
   # =============================================================================
   # NPM Pre-release (Main Branch Only)
-  # Publishes @eudiplo/sdk-core with a "main" tag as a pre-release version.
+  # Publishes @eudiplo/sdk-core and @eudiplo/cli with a "main" tag as pre-release versions.
   # =============================================================================
   npm-prerelease:
-    name: Publish SDK Pre-release to npm
+    name: Publish npm Pre-release
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: [build-sdk-core]
+    needs: [build-sdk-core, build-cli]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -970,6 +995,9 @@ jobs:
       - name: Build SDK
         run: pnpm --filter @eudiplo/sdk-core build
 
+      - name: Build CLI
+        run: pnpm --filter @eudiplo/cli build
+
       - name: Set pre-release version
         working-directory: packages/eudiplo-sdk-core
         run: |
@@ -986,10 +1014,14 @@ jobs:
           PRE_VERSION="${CURRENT_VERSION}-main.${SHORT_SHA}"
           echo "Publishing version: ${PRE_VERSION}"
           npm version "${PRE_VERSION}" --no-git-tag-version
+          node ../../scripts/sync-cli-version.js "${PRE_VERSION}"
 
       - name: Publish to npm with main tag
         working-directory: packages/eudiplo-sdk-core
         run: npm publish --tag main --access public --provenance
+
+      - name: Publish CLI to npm with main tag
+        run: node scripts/publish-cli.js main
 
   # =============================================================================
   # Versioned Release (Manual Trigger Only)
@@ -1031,6 +1063,9 @@ jobs:
 
       - name: Build SDK
         run: pnpm --filter @eudiplo/sdk-core build
+
+      - name: Build CLI
+        run: pnpm --filter @eudiplo/cli build
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
