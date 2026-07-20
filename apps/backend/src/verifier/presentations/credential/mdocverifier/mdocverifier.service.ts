@@ -389,6 +389,8 @@ export class MdocverifierService {
                 return "no_trust_chain_to_root";
             case "no_trusted_entity_match":
                 return "trust_chain_not_trusted";
+            case "trust_list_unavailable":
+                return "trust_chain_not_trusted";
             default:
                 return "verification_error";
         }

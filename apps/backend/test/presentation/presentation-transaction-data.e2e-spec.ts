@@ -18,10 +18,7 @@ import {
     ResponseType,
 } from "../../src/verifier/oid4vp/dto/presentation-request.dto";
 import { PresentationConfigCreateDto } from "../../src/verifier/presentations/dto/presentation-config-create.dto";
-import {
-    TransactionData,
-    TrustedAuthorityType,
-} from "../../src/verifier/presentations/entities/presentation-config.entity";
+import { TransactionData } from "../../src/verifier/presentations/entities/presentation-config.entity";
 import {
     callbacks,
     createPresentationRequest,
@@ -312,14 +309,12 @@ describe("Presentation - Transaction Data", () => {
                                     path: ["address", "locality"],
                                 },
                             ],
-                            trusted_authorities: [
-                                {
-                                    type: TrustedAuthorityType.ETSI_TL,
-                                    values: [
-                                        `${host}/issuers/demo/trust-list/580831bc-ef11-43f4-a3be-a2b6bf1b29a3`,
-                                    ],
-                                },
-                            ],
+                            // No trusted_authorities: these tests exercise
+                            // transaction data, not trust-list validation. The
+                            // previous value referenced a trust list that was
+                            // never created, so it only ever "passed" because
+                            // trust validation used to fail open on load errors
+                            // (fixed in credential-chain-validation.service.ts).
                         },
                     ],
                 },
