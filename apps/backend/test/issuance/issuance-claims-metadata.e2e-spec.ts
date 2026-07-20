@@ -209,11 +209,11 @@ describe("Issuance - Claims Metadata", () => {
         expect(credConfig.credential_metadata).toBeDefined();
         expect(credConfig.credential_metadata.claims).toBeDefined();
         expect(credConfig.credential_metadata.claims).toHaveLength(2);
-
+        
         // Check mDOC claim path structure [namespace, claim_name]
         const givenNameClaim = credConfig.credential_metadata.claims.find(
             (c: any) =>
-                JSON.stringify(c.path) === JSON.stringify(["given_name"]),
+                JSON.stringify(c.path) === JSON.stringify([ "org.test.claims", "given_name"]),
         );
         expect(givenNameClaim).toBeDefined();
     });

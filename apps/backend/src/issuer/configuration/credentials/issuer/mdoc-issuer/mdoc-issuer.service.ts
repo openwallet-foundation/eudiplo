@@ -57,29 +57,12 @@ export class MdocIssuerService {
         const issuer = new Issuer(docType, mdocContext);
 
         const defaultNamespace = this.getDefaultNamespace(docType);
-        const claimsByNamespace = buildClaimsByNamespace(
+        this.addClaimsToIssuer(
+            issuer,
             credentialConfiguration.fields as any,
+            defaultNamespace,
+            claims,
         );
-        const namespaceNames = new Set(Object.keys(claimsByNamespace));
-        const defaultNamespaceClaims =
-            claims && typeof claims === "object" && !Array.isArray(claims)
-                ? Object.fromEntries(
-                      Object.entries(claims).filter(
-                          ([key]) => !namespaceNames.has(key),
-                      ),
-                  )
-                : {};
-
-        if (claimsByNamespace && Object.keys(claimsByNamespace).length > 0) {
-            // Multiple namespaces specified
-            for (const [ns, nsClaims] of Object.entries(claimsByNamespace)) {
-                issuer.addIssuerNamespace(ns, nsClaims);
-            }
-        }
-
-        if (Object.keys(defaultNamespaceClaims).length > 0) {
-            issuer.addIssuerNamespace(defaultNamespace, defaultNamespaceClaims);
-        }
 
         // Get signing certificate
         const certificate = await this.certService.find({
@@ -237,5 +220,51 @@ export class MdocIssuerService {
         }
         // For other docTypes, use the docType as namespace
         return docType;
+    }
+
+    private addClaimsToIssuer(
+        issuer: Issuer,
+        fields: any,
+        defaultNamespace: string,
+        claims: Record<string, any>,
+    ): void {
+        const claimsByNamespace = buildClaimsByNamespace(fields);
+        const namespaceNames = new Set(Object.keys(claimsByNamespace));
+        const defaultNamespaceClaims =
+            claims && typeof claims === "object" && !Array.isArray(claims)
+                ? Object.fromEntries(
+                      Object.entries(claims).filter(
+                          ([key]) => !namespaceNames.has(key),
+                      ),
+                  )
+                : {};
+
+        // Merge claims per namespace first, then add each namespace once.
+        // This avoids duplicate issuer-signed items when fallback claims map
+        // to the same default namespace already populated from field defaults.
+        const mergedClaimsByNamespace: Record<string, Record<string, unknown>> =
+            {};
+
+        for (const [ns, nsClaims] of Object.entries(claimsByNamespace)) {
+            mergedClaimsByNamespace[ns] = {
+                ...nsClaims,
+            };
+        }
+
+        if (Object.keys(defaultNamespaceClaims).length > 0) {
+            const existingDefaultNamespaceClaims =
+                mergedClaimsByNamespace[defaultNamespace] ?? {};
+            mergedClaimsByNamespace[defaultNamespace] = {
+                ...existingDefaultNamespaceClaims,
+                ...defaultNamespaceClaims,
+            };
+        }
+
+        for (const [ns, nsClaims] of Object.entries(mergedClaimsByNamespace)) {
+            if (Object.keys(nsClaims).length === 0) {
+                continue;
+            }
+            issuer.addIssuerNamespace(ns, nsClaims);
+        }
     }
 }
