@@ -8,7 +8,12 @@ const packagePath = fileURLToPath(packageDirectory);
 
 rmSync(new URL("dist-sea", packageDirectory), { recursive: true, force: true });
 
-execFileSync("pnpm", ["build:sea:bundle"], {
+const pnpmExecutable = process.env.npm_execpath;
+if (!pnpmExecutable) {
+    throw new Error("pnpm executable path is not available.");
+}
+
+execFileSync(process.execPath, [pnpmExecutable, "build:sea:bundle"], {
     cwd: packagePath,
     stdio: "inherit",
 });
@@ -19,7 +24,7 @@ execFileSync(process.execPath, ["--build-sea", "sea-config.json"], {
 });
 
 if (platform === "darwin") {
-    execFileSync("codesign", ["--sign", "-", "dist-sea/eudiplo"], {
+    execFileSync("/usr/bin/codesign", ["--sign", "-", "dist-sea/eudiplo"], {
         cwd: packagePath,
         stdio: "inherit",
     });
