@@ -386,9 +386,12 @@ export function buildClaimsMetadata(
 ): ClaimMetadata[] {
     return flattenFields(fields)
         .filter((field) => field.path.length > 0)
-        .map((field) => {            
+        .map((field) => {
             const metadata: ClaimMetadata = {
-                path: [field.namespace!, ...field.path.map((segment) => segmentToKey(segment))],
+                path: [
+                    field.namespace!,
+                    ...field.path.map((segment) => segmentToKey(segment)),
+                ],
             };
 
             if (typeof field.mandatory === "boolean") {
