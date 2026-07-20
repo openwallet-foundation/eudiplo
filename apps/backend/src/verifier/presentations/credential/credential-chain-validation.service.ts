@@ -18,6 +18,23 @@ import {
 } from "../../../shared/trust/x509-validation.service";
 
 /**
+ * Raised when a trust list WAS configured for a credential but could not be
+ * turned into a usable trust store — the fetch/parse/signature check failed, or
+ * the list is stale (its `NextUpdate` is in the past).
+ *
+ * This is deliberately distinct from "no trust list configured": the latter is a
+ * legitimate opt-out (trust validation is opt-in per credential), whereas this
+ * error means a requested security control is unavailable and verification MUST
+ * fail closed rather than silently accept the credential.
+ */
+class TrustListUnavailableError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "TrustListUnavailableError";
+    }
+}
+
+/**
  * Policy options for certificate chain validation.
  */
 export interface ChainValidationPolicy {
@@ -168,8 +185,37 @@ export class CredentialChainValidationService {
             };
         }
 
-        // 4) Load trust store for LoTE-based validation
-        const store = await this.getTrustStoreIfConfigured(trustListSource);
+        // 4) Load trust store for LoTE-based validation.
+        // A configured-but-unavailable trust list (fetch/parse/signature failure
+        // or stale list) MUST fail closed — never accept a credential when a
+        // requested trust list cannot be evaluated. Under an enforced federation
+        // policy, defer to the federation result (LoTE is supplementary there).
+        let store: BuiltTrustStore | null;
+        try {
+            store = await this.getTrustStoreIfConfigured(trustListSource);
+        } catch (error) {
+            if (error instanceof TrustListUnavailableError) {
+                if (enforceFederationPolicy) {
+                    return {
+                        verified: Boolean(federationTrustResult?.trusted),
+                        matchedEntity: null,
+                        error: federationTrustResult?.trusted
+                            ? undefined
+                            : "trust_list_unavailable",
+                        errorDetails:
+                            federationTrustResult?.reason ?? error.message,
+                    };
+                }
+
+                return {
+                    verified: false,
+                    matchedEntity: null,
+                    error: "trust_list_unavailable",
+                    errorDetails: error.message,
+                };
+            }
+            throw error;
+        }
         if (!store) {
             if (enforceFederationPolicy) {
                 return {
@@ -365,7 +411,7 @@ export class CredentialChainValidationService {
     async getTrustedCertificateBuffers(
         trustListSource?: TrustListSource,
     ): Promise<Uint8Array[]> {
-        const store = await this.getTrustStoreIfConfigured(trustListSource);
+        const store = await this.getTrustStoreForAugmentation(trustListSource);
         if (!store) {
             return [];
         }
@@ -403,7 +449,7 @@ export class CredentialChainValidationService {
     async getTrustedStatusCertificateBuffers(
         trustListSource?: TrustListSource,
     ): Promise<Uint8Array[]> {
-        const store = await this.getTrustStoreIfConfigured(trustListSource);
+        const store = await this.getTrustStoreForAugmentation(trustListSource);
         if (!store) {
             return [];
         }
@@ -435,8 +481,37 @@ export class CredentialChainValidationService {
     }
 
     /**
-     * Get the trust store if configured.
+     * Load the configured trust store.
+     *
+     * Returns `null` ONLY when no trust list is configured for the credential
+     * (legitimate opt-out). When a trust list IS configured but cannot be turned
+     * into a usable store — the fetch/parse/signature check fails, or the list is
+     * stale ({@link BuiltTrustStore.nextUpdate} in the past) — it throws
+     * {@link TrustListUnavailableError} so callers can fail closed instead of
+     * silently accepting the credential.
      */
+    /**
+     * Best-effort trust store load for NON-authoritative anchor augmentation
+     * (supplying extra certificates to the mDOC signature check).
+     *
+     * Unlike {@link getTrustStoreIfConfigured}, an unavailable/stale trust list is
+     * swallowed to `null` here: the authoritative trust decision is made by
+     * {@link validateChain}, which fails closed on {@link TrustListUnavailableError}.
+     * Returning no extra anchors from this path is therefore safe.
+     */
+    private async getTrustStoreForAugmentation(
+        trustListSource?: TrustListSource,
+    ): Promise<BuiltTrustStore | null> {
+        try {
+            return await this.getTrustStoreIfConfigured(trustListSource);
+        } catch (error) {
+            if (error instanceof TrustListUnavailableError) {
+                return null;
+            }
+            throw error;
+        }
+    }
+
     private async getTrustStoreIfConfigured(
         trustListSource?: TrustListSource,
     ): Promise<BuiltTrustStore | null> {
@@ -444,26 +519,25 @@ export class CredentialChainValidationService {
             return null;
         }
 
+        let store: BuiltTrustStore;
         try {
-            const store = await this.trustStore.getTrustStore(trustListSource);
-
-            if (store.nextUpdate) {
-                const nu = new Date(store.nextUpdate);
-                if (!Number.isNaN(nu.getTime()) && nu.getTime() < Date.now()) {
-                    this.logger.warn(
-                        `Trust list NextUpdate is in the past: ${store.nextUpdate}`,
-                    );
-                    return null;
-                }
-            }
-
-            return store;
+            store = await this.trustStore.getTrustStore(trustListSource);
         } catch (error: any) {
-            this.logger.error(
-                `Failed to load trust store: ${error?.message ?? error}`,
-            );
-            return null;
+            const message = `Failed to load configured trust store: ${error?.message ?? error}`;
+            this.logger.error(message);
+            throw new TrustListUnavailableError(message);
         }
+
+        if (store.nextUpdate) {
+            const nu = new Date(store.nextUpdate);
+            if (!Number.isNaN(nu.getTime()) && nu.getTime() < Date.now()) {
+                const message = `Configured trust list is stale (NextUpdate in the past: ${store.nextUpdate})`;
+                this.logger.warn(message);
+                throw new TrustListUnavailableError(message);
+            }
+        }
+
+        return store;
     }
 
     /**
