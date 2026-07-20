@@ -388,11 +388,11 @@ export function buildClaimsMetadata(
         .filter((field) => field.path.length > 0)
         .map((field) => {
             const metadata: ClaimMetadata = {
-                path: [
-                    field.namespace!,
-                    ...field.path.map((segment) => segmentToKey(segment)),
-                ],
+                path: field.path.map((segment) => segmentToKey(segment)),                
             };
+            if(field.namespace) {
+                metadata.path = [field.namespace, ...metadata.path];
+            }
 
             if (typeof field.mandatory === "boolean") {
                 metadata.mandatory = field.mandatory;
