@@ -127,6 +127,14 @@ In external OIDC mode:
 - `AUTH_CLIENT_ID` and `AUTH_CLIENT_SECRET` are optional; when both are set,
   EUDIPLO bootstraps a Keycloak client intended for initial/root login
 
+!!! note "Keycloak client_credentials behavior"
+
+    When using Keycloak with the current `@keycloak/keycloak-admin-client`
+    startup flow, enable **Use refresh tokens for client credentials grant** on
+    the client configured by `OIDC_CLIENT_ID`. Otherwise, startup may fail with
+    `Cannot read properties of undefined (reading 'split')` during admin client
+    authentication.
+
 ### Integrated OAuth2 Server
 
 ```bash
@@ -219,7 +227,13 @@ If the client attempts to use a config not in their allowed list, a `403 Forbidd
    Keycloak admin client (`OIDC_CLIENT_ID`/`OIDC_CLIENT_SECRET`) has
    `realm-management` permissions (`manage-realm`, and typically
    `manage-clients`, `manage-users`, `view-realm`, `view-clients`, `view-users`)
-2. If bootstrap root login fails, ensure both `AUTH_CLIENT_ID` and
+2. If startup fails with `Cannot read properties of undefined (reading 'split')`
+   from `@keycloak/keycloak-admin-client` while authenticating with
+   `client_credentials`, enable **Use refresh tokens for client credentials grant**
+   on the Keycloak admin client used by `OIDC_CLIENT_ID`.
+   This is required by the currently used admin client library behavior, which
+   expects a `refresh_token` field in the token response.
+3. If bootstrap root login fails, ensure both `AUTH_CLIENT_ID` and
    `AUTH_CLIENT_SECRET` are set and obtain tokens from Keycloak's token endpoint
    (not from EUDIPLO `/api/oauth2/token`)
 

@@ -77,7 +77,7 @@ export class KeycloakClientsProvider
         const creds: Credentials = {
             grantType: "client_credentials",
             clientId: this.configService.getOrThrow("OIDC_CLIENT_ID"),
-            clientSecret: this.configService.getOrThrow("OIDC_CLIENT_SECRET"),
+            clientSecret: this.configService.getOrThrow("OIDC_CLIENT_SECRET"),            
         };
 
         await this.kc.auth(creds);
