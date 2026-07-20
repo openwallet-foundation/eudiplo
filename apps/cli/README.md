@@ -101,3 +101,17 @@ pnpm --filter @eudiplo/cli lint
 
 The build runs `assets:check`, which fails if the bundled Compose template has
 drifted from the canonical deployment Compose file.
+
+## Single Executable Application
+
+To produce a standalone CLI binary with Node.js SEA support, run:
+
+```bash
+pnpm --filter @eudiplo/cli build:sea
+```
+
+This writes the executable to `apps/cli/dist-sea/eudiplo` and bundles the
+Compose template as a SEA asset.
+
+The GitHub release workflow also publishes that SEA binary as a release asset,
+so consumers can download the standalone executable without cloning the repo.

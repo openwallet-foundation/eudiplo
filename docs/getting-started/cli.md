@@ -30,6 +30,10 @@ creates a local `.eudiplo.env` file, and starts the `compose` driver. This keeps
 the quick-start path usable without cloning the repository while still using the
 same Compose file maintained under `deployment/docker-compose`.
 
+If you prefer a standalone binary, the release workflow also publishes the SEA
+build as a GitHub release asset. For local builds, run `pnpm --filter
+@eudiplo/cli build:sea`.
+
 ## Register an Existing Deployment
 
 For Kubernetes, Helm, standalone containers, or any externally managed instance,

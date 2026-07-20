@@ -15,6 +15,8 @@
     "scripts": {
         "assets:check": "node ../../scripts/check-cli-assets.js",
         "build": "pnpm assets:check && tsc -p tsconfig.json",
+        "build:sea:bundle": "esbuild src/index.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist-sea/index.js",
+        "build:sea": "node ../../scripts/build-cli-sea.mjs",
         "dev": "tsx src/index.ts",
         "test": "vitest run",
         "lint": "biome lint .",
@@ -48,6 +50,7 @@
     "devDependencies": {
         "@biomejs/biome": "2.5.3",
         "@types/node": "^26.0.1",
+        "esbuild": "^0.25.12",
         "tsx": "^4.22.4",
         "typescript": "^6.0.3",
         "vitest": "4.1.10"

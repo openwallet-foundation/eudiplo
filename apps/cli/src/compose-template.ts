@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { readFile } from "node:fs/promises";
+import { readCliTextAsset } from "./sea-assets.js";
 
 export const defaultComposeFileName = "eudiplo.compose.yaml";
 export const defaultComposeOverrideFileName = "eudiplo.compose.override.yaml";
@@ -23,7 +23,10 @@ export function createComposeEnv(useDemoImage: boolean): string {
 }
 
 export async function createComposeFile(): Promise<string> {
-    return readFile(new URL("../templates/docker-compose.yml", import.meta.url), "utf8");
+    return readCliTextAsset(
+        "templates/docker-compose.yml",
+        new URL("../templates/docker-compose.yml", import.meta.url),
+    );
 }
 
 export function createNoClientComposeOverride(): string {

@@ -218,6 +218,12 @@
           font-size: 18px;
           line-height: 1.65;
         }
+        #eudiplo-homepage-concept .hero-note {
+          margin-top: 18px;
+          max-width: 560px;
+          font-size: 15px;
+          line-height: 1.55;
+        }
         #eudiplo-homepage-concept .cta-row {
           display: flex;
           flex-wrap: wrap;
@@ -681,6 +687,86 @@
         #eudiplo-homepage-concept .terminal-note {
           opacity: 0.65;
           font-size: 11px;
+        }
+        #eudiplo-homepage-concept .terminal-card {
+          margin-top: 36px;
+          padding: 22px;
+          border: 1px solid
+            color-mix(in srgb, var(--eudi-blue) 20%, var(--border));
+          border-radius: 18px;
+          background: linear-gradient(
+            145deg,
+            color-mix(in srgb, var(--eudi-blue) 10%, var(--card)),
+            color-mix(in srgb, var(--eudi-violet) 8%, var(--card))
+          );
+          box-shadow: 0 18px 48px
+            color-mix(in srgb, var(--foreground) 10%, transparent);
+        }
+        #eudiplo-homepage-concept .terminal-card-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          margin-bottom: 14px;
+        }
+        #eudiplo-homepage-concept .terminal-badge {
+          display: inline-flex;
+          align-items: center;
+          min-height: 26px;
+          padding: 0 10px;
+          border-radius: 999px;
+          background: color-mix(in srgb, var(--eudi-blue) 12%, var(--card));
+          color: var(--foreground);
+          font-size: 11px;
+          font-weight: 650;
+          letter-spacing: 0.02em;
+          text-transform: uppercase;
+        }
+        #eudiplo-homepage-concept .terminal-card-head .terminal-note {
+          font-size: 12px;
+          text-align: right;
+        }
+        #eudiplo-homepage-concept .terminal-shell {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 18px;
+          padding: 16px 18px;
+          border: 1px solid var(--border);
+          border-radius: 14px;
+          background: var(--foreground);
+          color: var(--background);
+          font:
+            13px/1.5 ui-monospace,
+            SFMono-Regular,
+            Menlo,
+            monospace;
+        }
+        #eudiplo-homepage-concept .terminal-shell span:first-child::before {
+          content: '$ ';
+          opacity: 0.55;
+        }
+        #eudiplo-homepage-concept .terminal-shell a {
+          flex: 0 0 auto;
+          display: inline-flex;
+          align-items: center;
+          min-height: 34px;
+          padding: 0 12px;
+          border-radius: 999px;
+          border: 1px solid
+            color-mix(in srgb, var(--background) 16%, transparent);
+          background: color-mix(in srgb, var(--background) 8%, transparent);
+          color: var(--background);
+          font-size: 12px;
+          font-weight: 600;
+          text-decoration: none;
+        }
+        #eudiplo-homepage-concept .terminal-caption {
+          margin: 14px 0 0;
+          max-width: 560px;
+          color: var(--muted-foreground);
+          font-size: 14px;
+          line-height: 1.6;
         }
         #eudiplo-homepage-concept .final {
           position: relative;
@@ -1162,11 +1248,26 @@
                 </p>
               </article>
             </div>
-            <div class="terminal">
-              <span>npx @eudiplo/cli demo</span
-              ><span class="terminal-note"
-                >one command to a local issuer/verifier demo</span
-              >
+            <div class="terminal-card">
+              <div class="terminal-card-head">
+                <span class="terminal-badge">Quick start</span>
+                <span class="terminal-note"
+                  >one command to a local issuer/verifier demo</span
+                >
+              </div>
+              <div class="terminal-shell">
+                <span>npx @eudiplo/cli demo</span>
+                <a
+                  href="docs/main/getting-started/cli/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Learn the CLI</a
+                >
+              </div>
+              <p class="terminal-caption">
+                Prefer a standalone CLI? The release workflow publishes a Node
+                SEA binary for <code>eudiplo</code>.
+              </p>
             </div>
           </div>
         </section>
