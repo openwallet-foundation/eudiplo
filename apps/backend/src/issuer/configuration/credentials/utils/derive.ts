@@ -388,9 +388,9 @@ export function buildClaimsMetadata(
         .filter((field) => field.path.length > 0)
         .map((field) => {
             const metadata: ClaimMetadata = {
-                path: field.path.map((segment) => segmentToKey(segment)),                
+                path: field.path.map((segment) => segmentToKey(segment)),
             };
-            if(field.namespace) {
+            if (field.namespace) {
                 metadata.path = [field.namespace, ...metadata.path];
             }
 
