@@ -1,6 +1,6 @@
 import type { CommandContext, InstanceConfig } from "./types.js";
 
-export type CheckStatus = "pass" | "warn" | "fail";
+type CheckStatus = "pass" | "warn" | "fail";
 
 export interface DoctorCheck {
     name: string;

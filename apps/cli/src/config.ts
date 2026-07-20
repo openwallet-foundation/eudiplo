@@ -37,7 +37,7 @@ export async function saveConfig(path: string, config: CliConfig): Promise<void>
     });
 }
 
-export function validateConfig(value: unknown): CliConfig {
+function validateConfig(value: unknown): CliConfig {
     if (!isRecord(value)) {
         throw new Error("Config must be a JSON object.");
     }
