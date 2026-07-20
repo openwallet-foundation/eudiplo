@@ -242,8 +242,10 @@ export class MdocIssuerService {
         // Merge claims per namespace first, then add each namespace once.
         // This avoids duplicate issuer-signed items when fallback claims map
         // to the same default namespace already populated from field defaults.
-        const mergedClaimsByNamespace: Record<string, Record<string, unknown>> =
-            {};
+        const mergedClaimsByNamespace: Record<
+            string,
+            Record<string, unknown>
+        > = {};
 
         for (const [ns, nsClaims] of Object.entries(claimsByNamespace)) {
             mergedClaimsByNamespace[ns] = {

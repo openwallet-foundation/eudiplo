@@ -151,8 +151,8 @@ describe("Issuance - mDOC Credentials", () => {
 
         const credential: string = (
             credentialResponse.credentialResponse.credentials?.[0] as any
-        ).credential;        
-        expect(credential).toBeDefined();        
+        ).credential;
+        expect(credential).toBeDefined();
 
         // mDOC credential should be a base64url encoded string
         expect(typeof credential).toBe("string");
