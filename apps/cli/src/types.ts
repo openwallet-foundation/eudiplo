@@ -5,6 +5,7 @@ export interface InstanceConfig {
     url: string;
     clientUrl?: string;
     composeFile?: string;
+    composeFiles?: string[];
     envFile?: string;
     projectName?: string;
 }

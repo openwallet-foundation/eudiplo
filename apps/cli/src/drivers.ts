@@ -1,10 +1,12 @@
-import { access, writeFile } from "node:fs/promises";
+import { access, unlink, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import {
     createComposeFile,
-    createDemoEnv,
+    createComposeEnv,
+    createNoClientComposeOverride,
     defaultComposeFileName,
+    defaultComposeOverrideFileName,
     defaultEnvFileName,
 } from "./compose-template.js";
 import type {
@@ -22,11 +24,11 @@ export const drivers: Record<DeploymentTarget, DeploymentDriver> = {
             if (!(await resolveDockerExecutable())) {
                 messages.push("Docker was not found in a supported install location.");
             }
-            if (instance.composeFile) {
+            for (const composeFile of getComposeFiles(instance)) {
                 try {
-                    await access(resolve(context.cwd, instance.composeFile));
+                    await access(resolve(context.cwd, composeFile));
                 } catch {
-                    messages.push(`Compose file not found: ${instance.composeFile}`);
+                    messages.push(`Compose file not found: ${composeFile}`);
                 }
             }
             return messages;
@@ -49,22 +51,41 @@ export const drivers: Record<DeploymentTarget, DeploymentDriver> = {
     },
 };
 
-export async function ensureComposeProject(cwd: string): Promise<InstanceConfig> {
+export async function ensureComposeProject(
+    cwd: string,
+    options: { useDemoImage?: boolean; noClient?: boolean } = {},
+): Promise<InstanceConfig> {
     const composePath = join(cwd, defaultComposeFileName);
+    const overridePath = join(cwd, defaultComposeOverrideFileName);
     const envPath = join(cwd, defaultEnvFileName);
 
     if (!(await exists(composePath))) {
         await writeFile(composePath, await createComposeFile(), "utf8");
     }
     if (!(await exists(envPath))) {
-        await writeFile(envPath, createDemoEnv(), { encoding: "utf8", mode: 0o600 });
+        await writeFile(envPath, createComposeEnv(options.useDemoImage === true), {
+            encoding: "utf8",
+            mode: 0o600,
+        });
+    }
+
+    if (options.noClient === true) {
+        await writeFile(overridePath, createNoClientComposeOverride(), "utf8");
+    } else {
+        await removeIfExists(overridePath);
+    }
+
+    const composeFiles = [defaultComposeFileName];
+    if (options.noClient === true) {
+        composeFiles.push(defaultComposeOverrideFileName);
     }
 
     return {
         target: "compose",
         url: "http://localhost:3000",
-        clientUrl: "http://localhost:4200",
+        clientUrl: options.noClient === true ? undefined : "http://localhost:4200",
         composeFile: defaultComposeFileName,
+        composeFiles,
         envFile: defaultEnvFileName,
         projectName: "eudiplo-demo",
     };
@@ -85,8 +106,8 @@ async function runCompose(
     if (instance.envFile) {
         composeArgs.push("--env-file", resolve(context.cwd, instance.envFile));
     }
-    if (instance.composeFile) {
-        composeArgs.push("-f", resolve(context.cwd, instance.composeFile));
+    for (const composeFile of getComposeFiles(instance)) {
+        composeArgs.push("-f", resolve(context.cwd, composeFile));
     }
     if (instance.projectName) {
         composeArgs.push("--project-name", instance.projectName);
@@ -135,5 +156,19 @@ async function exists(path: string): Promise<boolean> {
         return true;
     } catch {
         return false;
+    }
+}
+
+function getComposeFiles(instance: InstanceConfig): string[] {
+    return instance.composeFiles ?? (instance.composeFile ? [instance.composeFile] : []);
+}
+
+async function removeIfExists(path: string): Promise<void> {
+    try {
+        await unlink(path);
+    } catch (error) {
+        if (!(error instanceof Error) || !("code" in error) || error.code !== "ENOENT") {
+            throw error;
+        }
     }
 }

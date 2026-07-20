@@ -113,6 +113,7 @@ function validateInstanceConfig(name: string, value: unknown): InstanceConfig {
         url: value.url,
         clientUrl: optionalString(value.clientUrl),
         composeFile: optionalString(value.composeFile),
+        composeFiles: optionalStringArray(value.composeFiles),
         envFile: optionalString(value.envFile),
         projectName: optionalString(value.projectName),
     };
@@ -120,6 +121,16 @@ function validateInstanceConfig(name: string, value: unknown): InstanceConfig {
 
 function optionalString(value: unknown): string | undefined {
     return typeof value === "string" ? value : undefined;
+}
+
+function optionalStringArray(value: unknown): string[] | undefined {
+    if (!Array.isArray(value)) {
+        return undefined;
+    }
+    if (value.some((item) => typeof item !== "string")) {
+        throw new Error("composeFiles must contain only strings.");
+    }
+    return value;
 }
 
 function validateOptionalHttpUrl(value: unknown, label: string): void {

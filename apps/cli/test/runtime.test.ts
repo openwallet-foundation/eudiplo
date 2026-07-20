@@ -2,6 +2,7 @@ import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { describe, expect, it } from "vitest";
+import { drivers } from "../src/drivers.js";
 import { runCli } from "../src/runtime.js";
 import type { CommandContext } from "../src/types.js";
 
@@ -21,6 +22,16 @@ describe("EUDIPLO CLI", () => {
         expect(output.stdout).toContain("For more information");
     });
 
+    it("treats -h like global help", async () => {
+        const { context, output } = await createContext();
+
+        const code = await runCli(["-h"], context);
+
+        expect(code).toBe(0);
+        expect(output.stdout).toContain("Commands:");
+        expect(output.stdout).toContain("--help");
+    });
+
     it("prints command-specific help", async () => {
         const { context, output } = await createContext();
 
@@ -30,6 +41,19 @@ describe("EUDIPLO CLI", () => {
         expect(output.stdout).toContain("Usage:\n    eudiplo init --target compose [options]");
         expect(output.stdout).toContain("--target <compose|external>");
         expect(output.stdout).toContain("--instance <name>");
+        expect(output.stdout).toContain("--demo");
+        expect(output.stdout).toContain("--no-client");
+        expect(output.stdout).not.toContain("Commands:\n    eudiplo demo");
+    });
+
+    it("treats -h like command-specific help", async () => {
+        const { context, output } = await createContext();
+
+        const code = await runCli(["init", "-h"], context);
+
+        expect(code).toBe(0);
+        expect(output.stdout).toContain("Usage:\n    eudiplo init --target compose [options]");
+        expect(output.stdout).toContain("--no-client");
         expect(output.stdout).not.toContain("Commands:\n    eudiplo demo");
     });
 
@@ -108,7 +132,7 @@ describe("EUDIPLO CLI", () => {
         );
     });
 
-    it("initializes compose instances with demo compose assets", async () => {
+    it("initializes compose instances with standard compose assets by default", async () => {
         const { context, output, cwd } = await createContext();
 
         const code = await runCli(["init", "--target", "compose"], context);
@@ -118,12 +142,104 @@ describe("EUDIPLO CLI", () => {
         await expect(readFile(join(cwd, "eudiplo.compose.yaml"), "utf8")).resolves.toContain(
             "EUDIPLO Docker Compose - Multi-Profile Deployment",
         );
-        await expect(readFile(join(cwd, ".eudiplo.env"), "utf8")).resolves.toContain(
-            "ghcr.io/openwallet-foundation/eudiplo-demo:main",
+        await expect(readFile(join(cwd, ".eudiplo.env"), "utf8")).resolves.not.toContain(
+            "EUDIPLO_IMAGE=",
         );
         await expect(readFile(join(cwd, ".eudiplo.env"), "utf8")).resolves.toContain(
             "AUTH_CLIENT_ID=root",
         );
+    });
+
+    it("initializes compose instances with the demo image when requested", async () => {
+        const { context, output, cwd } = await createContext();
+
+        const code = await runCli(["init", "--target", "compose", "--demo"], context);
+
+        expect(code).toBe(0);
+        expect(output.stdout).toContain("Initialized compose instance local.");
+        await expect(readFile(join(cwd, ".eudiplo.env"), "utf8")).resolves.toContain(
+            "ghcr.io/openwallet-foundation/eudiplo-demo:main",
+        );
+    });
+
+    it("initializes compose instances without the client when requested", async () => {
+        const { context, output, cwd, configPath } = await createContext();
+
+        const code = await runCli(["init", "--target", "compose", "--no-client"], context);
+
+        expect(code).toBe(0);
+        expect(output.stdout).toContain("Initialized compose instance local.");
+        await expect(
+            readFile(join(cwd, "eudiplo.compose.override.yaml"), "utf8"),
+        ).resolves.toContain('profiles: ["disabled"]');
+
+        const config = JSON.parse(await readFile(configPath, "utf8"));
+        expect(config.instances.local.composeFiles).toEqual([
+            "eudiplo.compose.yaml",
+            "eudiplo.compose.override.yaml",
+        ]);
+        expect(config.instances.local.clientUrl).toBeUndefined();
+    });
+
+    it("removes the no-client override when reinitialized without the flag", async () => {
+        const { context, cwd } = await createContext();
+
+        expect(await runCli(["init", "--target", "compose", "--no-client"], context)).toBe(0);
+        expect(await runCli(["init", "--target", "compose"], context)).toBe(0);
+
+        await expect(
+            readFile(join(cwd, "eudiplo.compose.override.yaml"), "utf8"),
+        ).rejects.toMatchObject({ code: "ENOENT" });
+    });
+
+    it("reports compose commands with the client enabled", async () => {
+        const { context, output } = await createContext();
+        const originalUp = drivers.compose.up;
+        drivers.compose.up = async () => 0;
+
+        try {
+            expect(await runCli(["init", "--target", "compose"], context)).toBe(0);
+            output.stdout = "";
+
+            expect(await runCli(["up"], context)).toBe(0);
+            expect(output.stdout).toContain("up local (client enabled)");
+        } finally {
+            drivers.compose.up = originalUp;
+        }
+    });
+
+    it("reports compose commands with the client disabled", async () => {
+        const { context, output } = await createContext();
+        const originalLogs = drivers.compose.logs;
+        drivers.compose.logs = async () => 0;
+
+        try {
+            expect(await runCli(["init", "--target", "compose", "--no-client"], context)).toBe(0);
+            output.stdout = "";
+
+            expect(await runCli(["logs"], context)).toBe(0);
+            expect(output.stdout).toContain("logs local (client disabled)");
+        } finally {
+            drivers.compose.logs = originalLogs;
+        }
+    });
+
+    it("keeps the demo command pinned to the demo image", async () => {
+        const { context, output, cwd } = await createContext();
+        const originalUp = drivers.compose.up;
+        drivers.compose.up = async () => 0;
+
+        try {
+            const code = await runCli(["demo"], context);
+
+            expect(code).toBe(0);
+            expect(output.stdout).toContain("Starting EUDIPLO demo with Docker Compose...");
+            await expect(readFile(join(cwd, ".eudiplo.env"), "utf8")).resolves.toContain(
+                "ghcr.io/openwallet-foundation/eudiplo-demo:main",
+            );
+        } finally {
+            drivers.compose.up = originalUp;
+        }
     });
 
     it("runs doctor against external instances without Docker diagnostics", async () => {

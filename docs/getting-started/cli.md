@@ -77,10 +77,17 @@ These commands are available only for `compose` instances:
 
 ```bash
 npx @eudiplo/cli init --target compose
+npx @eudiplo/cli init --target compose --demo
+npx @eudiplo/cli init --target compose --no-client
 npx @eudiplo/cli up
 npx @eudiplo/cli down
 npx @eudiplo/cli logs
 ```
+
+`init --target compose` creates the local `.eudiplo.env` using the standard
+image from the bundled Compose file. Add `--demo` if you want the CLI to write
+the demo image override into `.eudiplo.env` instead. Add `--no-client` if you
+want the CLI to generate a Compose override that leaves out the web client.
 
 If a compose-only command is used against an external instance, the CLI returns a
 clear error such as `logs is not available for externally managed deployments`.

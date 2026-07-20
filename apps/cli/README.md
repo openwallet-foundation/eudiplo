@@ -56,10 +56,17 @@ Compose driver commands require a `compose` instance:
 
 ```bash
 eudiplo init --target compose
+eudiplo init --target compose --demo
+eudiplo init --target compose --no-client
 eudiplo up
 eudiplo down
 eudiplo logs
 ```
+
+`init --target compose` writes a local `.eudiplo.env` that uses the standard
+`ghcr.io/openwallet-foundation/eudiplo:latest` image via the Compose default.
+Add `--demo` to write the demo image override instead. Add `--no-client` to
+generate a small Compose override that skips the web client container.
 
 If a driver-specific command is used with an unsupported target, the CLI exits
 with a clear error, for example:

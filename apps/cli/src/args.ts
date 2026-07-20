@@ -1,11 +1,23 @@
 import type { ParsedArgs } from "./types.js";
 
+const shortFlagAliases: Record<string, string> = {
+    h: "help",
+    v: "version",
+};
+
 export function parseArgs(args: string[]): ParsedArgs {
     const flags: Record<string, string | boolean> = {};
     const positionals: string[] = [];
 
     for (let index = 0; index < args.length; index += 1) {
         const token = args[index];
+        if (token.startsWith("-") && !token.startsWith("--")) {
+            const alias = shortFlagAliases[token.slice(1)];
+            if (alias) {
+                flags[alias] = true;
+                continue;
+            }
+        }
         if (!token.startsWith("--")) {
             positionals.push(token);
             continue;

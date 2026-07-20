@@ -80,9 +80,11 @@ async function init(
     const target = parseTarget(readStringFlag(parsed.flags, "target") ?? "compose");
     const name = readStringFlag(parsed.flags, "instance") ?? "local";
     const url = readStringFlag(parsed.flags, "url");
+    const useDemoImage = parsed.flags.demo === true;
+    const noClient = parsed.flags["no-client"] === true;
 
     if (target === "compose") {
-        const instance = await ensureComposeProject(context.cwd);
+        const instance = await ensureComposeProject(context.cwd, { useDemoImage, noClient });
         const nextConfig = upsertInstance(config, name, {
             ...instance,
             url: url ?? instance.url,
@@ -109,7 +111,7 @@ async function demo(
     config: CliConfig,
     context: CommandContext,
 ): Promise<number> {
-    const instance = await ensureComposeProject(context.cwd);
+    const instance = await ensureComposeProject(context.cwd, { useDemoImage: true });
     const nextConfig = upsertInstance(config, "local", instance);
     await saveConfig(configPath, nextConfig);
     context.stdout.write("Starting EUDIPLO demo with Docker Compose...\n");
@@ -216,6 +218,11 @@ async function driverCommand(
     if (!handler) {
         throw new Error(unsupportedCommand(command, instance.target));
     }
+    if (instance.target === "compose") {
+        context.stdout.write(
+            `${command} ${instanceName} (${composeClientMode(instance)})\n`,
+        );
+    }
     return handler({ instanceName, instance, args: parsed.positionals, context });
 }
 
@@ -241,6 +248,10 @@ function parseTarget(value: string): DeploymentTarget {
     throw new Error(`Unsupported target: ${value}`);
 }
 
+function composeClientMode(instance: CliConfig["instances"][string]): string {
+    return instance.clientUrl ? "client enabled" : "client disabled";
+}
+
 function helpText(): string {
     return `EUDIPLO CLI
 
@@ -249,7 +260,7 @@ Usage:
 
 Commands:
     eudiplo demo                         Creates and starts a local Docker Compose demo.
-    eudiplo init --target compose        Creates local Compose assets without starting them.
+    eudiplo init --target compose        Creates local Compose assets; add --demo or --no-client as needed.
     eudiplo up                           Starts the selected Compose deployment.
     eudiplo down                         Stops the selected Compose deployment.
     eudiplo logs                         Streams logs for the selected Compose deployment.
@@ -264,6 +275,7 @@ Options:
     --target <compose|external>          Selects the deployment target for init/add.
     --url <url>                          Sets the EUDIPLO API URL for an instance.
     --client-url <url>                   Sets the optional web client URL for an instance.
+    --no-client                          Skips the web client for compose init.
     --help                               Shows this help message.
     --version, -v                        Prints the installed CLI version without network access.
 
@@ -296,6 +308,8 @@ Creates local deployment assets without starting them.
 Options:
     --target <compose|external>          Selects the deployment target. Defaults to compose.
     --instance <name>                    Names the instance in CLI config. Defaults to local.
+    --demo                               Uses the demo image instead of the standard image.
+    --no-client                          Omits the web client from the local Compose setup.
     --url <url>                          Overrides the instance API URL.
     --help                               Shows this help message.`;
         case "up":
