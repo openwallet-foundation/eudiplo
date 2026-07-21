@@ -132,10 +132,10 @@ jobs:
 
           if [ "$NEXT_MAJOR" -gt "$CURRENT_MAJOR" ]; then
             echo "⚠️  MAJOR VERSION BUMP DETECTED: $CURRENT_VERSION → $NEXT_VERSION"
-            echo "is_major=true" >> $GITHUB_OUTPUT
+            echo "is_major=true" >> "$GITHUB_OUTPUT"
           else
             echo "Minor/patch release: $CURRENT_VERSION → $NEXT_VERSION"
-            echo "is_major=false" >> $GITHUB_OUTPUT
+            echo "is_major=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Abort when no release is pending
