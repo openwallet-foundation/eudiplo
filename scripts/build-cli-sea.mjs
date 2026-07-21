@@ -8,15 +8,18 @@ const packagePath = fileURLToPath(packageDirectory);
 
 rmSync(new URL("dist-sea", packageDirectory), { recursive: true, force: true });
 
-const pnpmExecutable = process.env.npm_execpath;
-if (!pnpmExecutable) {
-    throw new Error("pnpm executable path is not available.");
+const packageManagerExecutable = process.env.npm_execpath;
+if (packageManagerExecutable) {
+    execFileSync(process.execPath, [packageManagerExecutable, "run", "build:sea:bundle"], {
+        cwd: packagePath,
+        stdio: "inherit",
+    });
+} else {
+    execFileSync("pnpm", ["run", "build:sea:bundle"], {
+        cwd: packagePath,
+        stdio: "inherit",
+    });
 }
-
-execFileSync(process.execPath, [pnpmExecutable, "build:sea:bundle"], {
-    cwd: packagePath,
-    stdio: "inherit",
-});
 
 execFileSync(process.execPath, ["--build-sea", "sea-config.json"], {
     cwd: packagePath,

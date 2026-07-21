@@ -202,7 +202,10 @@ export class StatusListVerifierService {
                     signal: ctrl.signal,
                     responseType: "arraybuffer",
                     headers: {
-                        Accept: type === "cwt" ? "application/statuslist+cwt" : "application/statuslist+jwt",
+                        Accept:
+                            type === "cwt"
+                                ? "application/statuslist+cwt"
+                                : "application/statuslist+jwt",
                     },
                 }),
             );
