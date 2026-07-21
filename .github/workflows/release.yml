@@ -1,0 +1,285 @@
+name: Versioned Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_major:
+        description: 'Type CONFIRM to allow a major version bump'
+        required: false
+        type: string
+        default: ''
+
+concurrency:
+  group: versioned-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Create Versioned Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+      actions: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # Fetch full history for mike versioning
+
+      - name: Require the main branch
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "Versioned releases must be dispatched from the main branch."
+          exit 1
+
+      - name: Verify successful CI for this commit
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const response = await github.rest.actions.listWorkflowRuns({
+              owner,
+              repo,
+              workflow_id: 'ci-and-release.yml',
+              head_sha: context.sha,
+              event: 'push',
+              status: 'completed',
+              per_page: 100,
+            });
+
+            const successfulRun = response.data.workflow_runs.find(
+              (run) => run.conclusion === 'success',
+            );
+
+            if (!successfulRun) {
+              core.setFailed(
+                `No successful CI / Docker push run exists for ${context.sha}.`,
+              );
+              return;
+            }
+
+            core.info(`Releasing artifacts from ${successfulRun.html_url}`);
+
+      - uses: pnpm/action-setup@v6
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build SDK
+        run: pnpm --filter @eudiplo/sdk-core build
+
+      - name: Build CLI
+        run: pnpm --filter @eudiplo/cli build
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify immutable Docker source images
+        run: |
+          docker buildx imagetools inspect "ghcr.io/openwallet-foundation/eudiplo:sha-${GITHUB_SHA}"
+          docker buildx imagetools inspect "ghcr.io/openwallet-foundation/eudiplo-client:sha-${GITHUB_SHA}"
+
+      - name: Check for major version bump
+        id: version_check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Running semantic-release dry-run to detect version bump..."
+          DRY_OUTPUT=$(npx semantic-release --dry-run 2>&1) || true
+          echo "$DRY_OUTPUT"
+
+          # Extract the next version from dry-run output
+          NEXT_VERSION=$(echo "$DRY_OUTPUT" | grep -oP "The next release version is \K[0-9]+\.[0-9]+\.[0-9]+" || echo "")
+          CURRENT_VERSION=$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//' || echo "0.0.0")
+
+          echo "Current version: $CURRENT_VERSION"
+          echo "Next version: $NEXT_VERSION"
+
+          if [ -z "$NEXT_VERSION" ]; then
+            echo "No release will be created"
+            echo "has_release=false" >> "$GITHUB_OUTPUT"
+            echo "is_major=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "has_release=true" >> "$GITHUB_OUTPUT"
+          echo "next_version=$NEXT_VERSION" >> "$GITHUB_OUTPUT"
+
+          # Extract major versions
+          CURRENT_MAJOR=$(echo "$CURRENT_VERSION" | cut -d. -f1)
+          NEXT_MAJOR=$(echo "$NEXT_VERSION" | cut -d. -f1)
+
+          if [ "$NEXT_MAJOR" -gt "$CURRENT_MAJOR" ]; then
+            echo "⚠️  MAJOR VERSION BUMP DETECTED: $CURRENT_VERSION → $NEXT_VERSION"
+            echo "is_major=true" >> $GITHUB_OUTPUT
+          else
+            echo "Minor/patch release: $CURRENT_VERSION → $NEXT_VERSION"
+            echo "is_major=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Abort when no release is pending
+        if: steps.version_check.outputs.has_release != 'true'
+        run: |
+          echo "No releasable commits were found since the latest version."
+          exit 1
+
+      - name: Abort if major release not confirmed
+        if: steps.version_check.outputs.is_major == 'true' && github.event.inputs.confirm_major != 'CONFIRM'
+        run: |
+          echo "❌ MAJOR VERSION RELEASE BLOCKED"
+          echo ""
+          echo "A major version bump was detected but not confirmed."
+          echo "To release a major version, trigger this workflow manually with:"
+          echo "  confirm_major: CONFIRM"
+          echo ""
+          echo "This safeguard prevents accidental breaking changes from being released."
+          exit 1
+
+      - name: Run semantic-release
+        id: semantic_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
+          DOCKER_REGISTRY_USER: ${{ github.actor }}
+          DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_SOURCE_SHA: ${{ github.sha }}
+        run: |
+          echo "Running semantic-release..."
+          npx semantic-release
+
+          NEXT_VERSION="${{ steps.version_check.outputs.next_version }}"
+          EXPECTED_TAG="v${NEXT_VERSION}"
+
+          if ! git ls-remote --exit-code --tags origin "refs/tags/${EXPECTED_TAG}" >/dev/null; then
+            echo "semantic-release did not publish the expected tag ${EXPECTED_TAG}"
+            exit 1
+          fi
+
+          echo "New release detected: ${EXPECTED_TAG}"
+          echo "new_release=true" >> "$GITHUB_OUTPUT"
+          echo "version=${EXPECTED_TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Debug release detection
+        run: |
+          echo "New release: ${{ steps.semantic_release.outputs.new_release }}"
+          echo "Version: ${{ steps.semantic_release.outputs.version }}"
+
+      - name: Set up Python for docs
+        if: steps.semantic_release.outputs.new_release == 'true'
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies for docs
+        if: steps.semantic_release.outputs.new_release == 'true'
+        run: pip install -r requirements.txt
+
+      - name: Copy env file for docs
+        if: steps.semantic_release.outputs.new_release == 'true'
+        run: cp .env.example .env
+
+      - name: Configure git for mike
+        if: steps.semantic_release.outputs.new_release == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Build and deploy release docs
+        if: steps.semantic_release.outputs.new_release == 'true'
+        env:
+          MASTER_SECRET: ci-docs-build-secret-minimum-32-chars
+          AUTH_CLIENT_ID: ci-docs-client
+          AUTH_CLIENT_SECRET: ci-docs-secret
+          ENCRYPTION_KEY: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+        run: |
+          FULL_VERSION="${{ steps.semantic_release.outputs.version }}"
+          RELEASE_VERSION="${FULL_VERSION#v}"
+          # Extract major.minor (e.g., 3.2.0 → 3.2) so patch releases update the same version slot
+          MINOR_VERSION="${RELEASE_VERSION%.*}"
+          pnpm run doc:generate
+          pnpm run compodoc
+
+          # Reuse existing gh-pages history so mike can maintain version metadata.
+          git fetch origin gh-pages:gh-pages || true
+
+          # Migrate legacy mike layout from branch root to /docs so old versions stay visible.
+          git worktree add gh-pages-migrate gh-pages 2>/dev/null || true
+          if [ -d gh-pages-migrate ] && [ -f gh-pages-migrate/versions.json ] && [ ! -f gh-pages-migrate/docs/versions.json ]; then
+            mkdir -p gh-pages-migrate/docs
+            mv gh-pages-migrate/versions.json gh-pages-migrate/docs/versions.json
+            if [ -f gh-pages-migrate/aliases.json ]; then
+              mv gh-pages-migrate/aliases.json gh-pages-migrate/docs/aliases.json
+            fi
+
+            python - <<'PY'
+          import json
+          import pathlib
+          import shutil
+
+          root = pathlib.Path("gh-pages-migrate")
+          docs = root / "docs"
+          versions = json.loads((docs / "versions.json").read_text())
+          names = set()
+
+          for entry in versions:
+            version = entry.get("version")
+            if isinstance(version, str):
+              names.add(version)
+            aliases = entry.get("aliases") or []
+            for alias in aliases:
+              if isinstance(alias, str):
+                names.add(alias)
+
+          for name in sorted(names):
+            src = root / name
+            dst = docs / name
+            if src.exists() and not dst.exists():
+              shutil.move(str(src), str(dst))
+          PY
+
+            if [ -n "$(git -C gh-pages-migrate status --porcelain)" ]; then
+              git -C gh-pages-migrate add .
+              git -C gh-pages-migrate commit -m "docs: migrate legacy mike versions into docs prefix"
+            fi
+          fi
+          git worktree remove gh-pages-migrate --force || true
+
+          # Deploy under major.minor (e.g., 3.2), patches overwrite the same entry
+          mike deploy --branch gh-pages --deploy-prefix docs --alias-type copy --update-aliases "$MINOR_VERSION" latest
+          mike set-default --branch gh-pages --deploy-prefix docs latest
+
+          git worktree add gh-pages-out gh-pages
+          rsync -a --delete --exclude docs --exclude .git website/. gh-pages-out/
+          touch gh-pages-out/.nojekyll
+
+          if [ -n "$(git -C gh-pages-out status --porcelain)" ]; then
+            git -C gh-pages-out add .
+            git -C gh-pages-out commit -m "docs: sync website for $FULL_VERSION"
+          fi
+
+          git push origin gh-pages
+
+      - name: Cleanup temporary docs worktree
+        if: always()
+        run: git worktree remove gh-pages-out --force || true
