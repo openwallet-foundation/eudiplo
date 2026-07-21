@@ -295,7 +295,8 @@ jobs:
 
           git worktree add gh-pages-out gh-pages
 
-          git push origin gh-pages
+          git -C gh-pages-out pull --rebase origin gh-pages || true
+          git -C gh-pages-out push origin gh-pages
       - name: Assemble Pages artifact
         run: |
           mkdir -p pages/docs
