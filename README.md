@@ -3,7 +3,7 @@
 [![Build Status](https://github.com/openwallet-foundation/eudiplo/actions/workflows/ci-and-release.yml/badge.svg)](https://github.com/openwallet-foundation/eudiplo/actions)
 ![License](https://img.shields.io/github/license/openwallet-foundation/eudiplo)
 [![Website](https://img.shields.io/badge/website-eudiplo-blue)](https://openwallet-foundation.github.io/eudiplo/docs/latest/)
-[![Documentation Coverage](https://openwallet-foundation.github.io/eudiplo/main/compodoc/images/coverage-badge-documentation.svg)](https://openwallet-foundation.github.io/eudiplo/main/compodoc/coverage.html)
+[![Documentation Coverage](https://openwallet-foundation.github.io/eudiplo/docs/main/compodoc/images/coverage-badge-documentation.svg)](https://openwallet-foundation.github.io/eudiplo/main/compodoc/coverage.html)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=openwallet-foundation_eudiplo&metric=security_rating)](https://sonarcloud.io/project/overview?id=openwallet-foundation_eudiplo)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=openwallet-foundation_eudiplo&metric=alert_status)](https://sonarcloud.io/project/overview?id=openwallet-foundation_eudiplo)
 [![Join our Discord](https://img.shields.io/discord/1022962884864643214?label=Join%20our%20Discord&logo=discord&color=7289DA&labelColor=2C2F33)](https://discord.gg/58ys8XfXDu)
@@ -65,6 +65,25 @@ Join our bi-weekly community call every Thursday:
 [Participate via Zoom](https://zoom-lfx.platform.linuxfoundation.org/meeting/94494306854?password=0d272140-5b2b-4bd4-a8fe-0b70efe1aa86)
 
 ## 🚀 Quick Start
+
+### Simplest Setup: Use the CLI
+
+The easiest way to create and start a local EUDIPLO setup is with the CLI:
+
+```bash
+npx @eudiplo/cli demo
+```
+
+This command creates the local setup files and starts EUDIPLO with Docker Compose.
+For repeated use, install it once and run `eudiplo` directly:
+
+```bash
+npm install -g @eudiplo/cli
+eudiplo demo
+```
+
+See the full CLI guide:
+[https://openwallet-foundation.github.io/eudiplo/docs/latest/getting-started/cli/](https://openwallet-foundation.github.io/eudiplo/docs/latest/getting-started/cli/)
 
 ### Demo Setup (Easiest)
 

@@ -36,7 +36,7 @@ export class VerifierOfferController {
     @ApiResponse({
         description: "JSON response",
         status: 201,
-        //TODO: do not use type, otherwhise the response can not deal with both JSON and PNG.
+        //TODO: do not use type, otherwise the response can not deal with both JSON and PNG.
         type: OfferResponse,
         content: {
             "application/json": { schema: { type: "object" } },
