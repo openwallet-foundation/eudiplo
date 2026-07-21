@@ -60,7 +60,7 @@ export class LocalFileStorage implements FileStorage {
             const write = createWriteStream(fullPath);
             const src = body instanceof Readable ? body : Readable.from(body);
             pipeline(src, write, (err) => {
-                if (err) reject(err);                
+                if (err) reject(err);
                 else resolve();
             });
         });
