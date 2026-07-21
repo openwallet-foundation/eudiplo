@@ -38,7 +38,6 @@ export function extractRawTokenFromSubmission(
     // 2. FALLBACK STRATEGY: ID-Mapping
     if (
         typeof vpToken === "object" &&
-        vpToken !== null &&
         !Array.isArray(vpToken)
     ) {
         const mapping = vpToken as Record<string, unknown>;

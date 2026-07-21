@@ -188,48 +188,6 @@ function pickBestJsonResponse(responses: AnyObj): AnyObj | undefined {
   return undefined;
 }
 
-async function emitOperationSchemas(doc: AnyObj, isOAS31: boolean) {
-  await mkdir(OUT_SCHEMAS, { recursive: true });
-  const paths = doc.paths || {};
-  let reqCount = 0;
-  let resCount = 0;
-
-  for (const [pathKey, ops] of Object.entries<AnyObj>(paths)) {
-    for (const [method, op] of Object.entries<AnyObj>(ops)) {
-      if (!["get", "post", "put", "patch", "delete", "options", "head"].includes(method)) continue;
-
-      const baseName = sanitize(
-        (op.operationId as string) || `${method}_${String(pathKey).replace(/[\/{}]/g, "_")}`
-      );
-
-      // Request body (application/json)
-      const rb = op.requestBody?.content?.["application/json"]?.schema;
-      if (rb) {
-        const s = isOAS31 ? rb : openapiSchemaToJsonSchema(rb, { cloneSchema: true });
-        const withIds = withMeta(s, `${baseName}.request`);
-        const rewritten = rewriteComponentRefs(withIds);
-        const final = strictObjectSchemas(rewritten);
-        const out = join(OUT_SCHEMAS, `${method}_${baseName}.request.schema.json`);
-        await writeFile(out, JSON.stringify(final, null, 2), "utf8");
-        reqCount++;
-      }
-
-      // Response (best JSON response)
-      const picked = pickBestJsonResponse(op.responses || {});
-      if (picked) {
-        const s = isOAS31 ? picked : openapiSchemaToJsonSchema(picked, { cloneSchema: true });
-        const withIds = withMeta(s, `${baseName}.response`);
-        const rewritten = rewriteComponentRefs(withIds);
-        const final = strictObjectSchemas(rewritten);
-        const out = join(OUT_SCHEMAS, `${method}_${baseName}.response.schema.json`);
-        await writeFile(out, JSON.stringify(final, null, 2), "utf8");
-        resCount++;
-      }
-    }
-  }
-  console.log(`✓ Wrote ${reqCount} request & ${resCount} response schema(s) → ${OUT_SCHEMAS}`);
-}
-
 /**
  * Add manually-created schemas that don't come from OpenAPI components.
  * These schemas are imported directly from the schemas/ directory.
