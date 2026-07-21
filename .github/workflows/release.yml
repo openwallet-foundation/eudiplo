@@ -45,14 +45,13 @@ jobs:
               owner,
               repo,
               workflow_id: 'ci-and-release.yml',
-              head_sha: context.sha,
               event: 'push',
               status: 'completed',
               per_page: 100,
             });
 
             const successfulRun = response.data.workflow_runs.find(
-              (run) => run.conclusion === 'success',
+              (run) => run.head_sha === context.sha && run.conclusion === 'success',
             );
 
             if (!successfulRun) {
