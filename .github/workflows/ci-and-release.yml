@@ -291,11 +291,11 @@ jobs:
           # Reuse existing gh-pages history when available so mike can maintain version metadata.
           git fetch origin gh-pages:gh-pages || true
 
-          mike deploy --branch gh-pages --deploy-prefix docs --alias-type copy --update-aliases main latest-dev          
+          mike deploy --branch gh-pages --deploy-prefix docs --alias-type copy --update-aliases main latest-dev
 
           git worktree add gh-pages-out gh-pages
 
-          git -C gh-pages-out pull --rebase origin gh-pages || true
+          git -C gh-pages-out pull --rebase origin gh-pages
           git -C gh-pages-out push origin gh-pages
       - name: Assemble Pages artifact
         run: |
