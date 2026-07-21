@@ -241,7 +241,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     permissions:
-      contents: read
+      contents: write
       pages: write
       id-token: write
     steps:
@@ -351,6 +351,7 @@ jobs:
 
           git worktree add gh-pages-out gh-pages
 
+          git push origin gh-pages
       - name: Assemble Pages artifact
         run: |
           mkdir -p pages/docs
