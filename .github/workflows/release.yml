@@ -215,25 +215,41 @@ jobs:
         run: |
           FULL_VERSION="${{ steps.semantic_release.outputs.version }}"
           RELEASE_VERSION="${FULL_VERSION#v}"
-          # Extract major.minor (e.g., 3.2.0 → 3.2) so patch releases update the same version slot
-          MINOR_VERSION="${RELEASE_VERSION%.*}"
+          MINOR_VERSION="v${RELEASE_VERSION%.*}"
+
           pnpm run doc:generate
           pnpm run compodoc
 
-          # Reuse existing gh-pages history so mike can maintain version metadata.
-          git fetch origin gh-pages:gh-pages || true
+          git fetch origin gh-pages:gh-pages
 
-          # Migrate legacy mike layout from branch root to /docs so old versions stay visible.
+          mike deploy \
+            --branch gh-pages \
+            --deploy-prefix docs \
+            --alias-type copy \
+            --update-aliases \
+            "$MINOR_VERSION" latest
 
-          # Deploy under major.minor (e.g., 3.2), patches overwrite the same entry
-          mike deploy --branch gh-pages --deploy-prefix docs --alias-type copy --update-aliases "$MINOR_VERSION" latest
-          mike set-default --branch gh-pages --deploy-prefix docs latest
+          mike set-default \
+            --branch gh-pages \
+            --deploy-prefix docs \
+            latest
 
           git worktree add gh-pages-out gh-pages
-          rsync -a --delete --exclude docs --exclude .git website/. gh-pages-out/
+
+          rsync -a --delete \
+            --exclude docs \
+            --exclude .git \
+            website/. gh-pages-out/
+
           touch gh-pages-out/.nojekyll
 
           if [ -n "$(git -C gh-pages-out status --porcelain)" ]; then
             git -C gh-pages-out add .
             git -C gh-pages-out commit -m "docs: sync website for $FULL_VERSION"
           fi
+
+          git push origin gh-pages
+
+      - name: Cleanup temporary docs worktree
+        if: always()
+        run: git worktree remove gh-pages-out --force || true

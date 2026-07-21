@@ -291,63 +291,7 @@ jobs:
           # Reuse existing gh-pages history when available so mike can maintain version metadata.
           git fetch origin gh-pages:gh-pages || true
 
-          # Migrate legacy mike layout from branch root to /docs so old versions stay visible.
-          git worktree add gh-pages-migrate gh-pages 2>/dev/null || true
-          if [ -d gh-pages-migrate ] && [ -f gh-pages-migrate/versions.json ] && [ ! -f gh-pages-migrate/docs/versions.json ]; then
-            mkdir -p gh-pages-migrate/docs
-            mv gh-pages-migrate/versions.json gh-pages-migrate/docs/versions.json
-            if [ -f gh-pages-migrate/aliases.json ]; then
-              mv gh-pages-migrate/aliases.json gh-pages-migrate/docs/aliases.json
-            fi
-
-            python - <<'PY'
-          import json
-          import pathlib
-          import shutil
-
-          root = pathlib.Path("gh-pages-migrate")
-          docs = root / "docs"
-          versions = json.loads((docs / "versions.json").read_text())
-          names = set()
-
-          for entry in versions:
-            version = entry.get("version")
-            if isinstance(version, str):
-              names.add(version)
-            aliases = entry.get("aliases") or []
-            for alias in aliases:
-              if isinstance(alias, str):
-                names.add(alias)
-
-          for name in sorted(names):
-            src = root / name
-            dst = docs / name
-            if src.exists() and not dst.exists():
-              shutil.move(str(src), str(dst))
-          PY
-
-            if [ -n "$(git -C gh-pages-migrate status --porcelain)" ]; then
-              git -C gh-pages-migrate add .
-              git -C gh-pages-migrate commit -m "docs: migrate legacy mike versions into docs prefix"
-            fi
-          fi
-          git worktree remove gh-pages-migrate --force || true
-
-          # One-time migration: "latest" was historically a version.
-          # Remove it so it can become an alias of the newest release.
-          if git show gh-pages:docs/versions.json | python -c '
-          import json, sys
-          versions = json.load(sys.stdin)
-          sys.exit(0 if any(v.get("version") == "latest" for v in versions) else 1)
-          '; then
-            mike delete \
-              --branch gh-pages \
-              --deploy-prefix docs \
-              latest
-          fi
-
-          mike deploy --branch gh-pages --deploy-prefix docs --alias-type copy --update-aliases main latest-dev
-          mike set-default --branch gh-pages --deploy-prefix docs main
+          mike deploy --branch gh-pages --deploy-prefix docs --alias-type copy --update-aliases main latest-dev          
 
           git worktree add gh-pages-out gh-pages
 
