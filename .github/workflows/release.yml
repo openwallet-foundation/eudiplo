@@ -207,12 +207,11 @@ jobs:
 
       - name: Build and deploy release docs
         if: steps.semantic_release.outputs.new_release == 'true'
-        env:
-          MASTER_SECRET: ci-docs-build-secret-minimum-32-chars
-          AUTH_CLIENT_ID: ci-docs-client
-          AUTH_CLIENT_SECRET: ci-docs-secret
-          ENCRYPTION_KEY: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
         run: |
+          export MASTER_SECRET="$(openssl rand -base64 32)"
+          export AUTH_CLIENT_ID="ci-docs-client"
+          export AUTH_CLIENT_SECRET="$(openssl rand -hex 32)"
+          export ENCRYPTION_KEY="$(openssl rand -hex 32)"
           FULL_VERSION="${{ steps.semantic_release.outputs.version }}"
           RELEASE_VERSION="${FULL_VERSION#v}"
           MINOR_VERSION="v${RELEASE_VERSION%.*}"
