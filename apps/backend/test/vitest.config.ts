@@ -20,11 +20,10 @@ export default defineConfig({
         },
         env: {
             // Required environment variables for E2E tests
-            MASTER_SECRET: "e2e-test-master-secret-do-not-use-in-production",
-            AUTH_CLIENT_ID: "e2e-test-client",
-            AUTH_CLIENT_SECRET: "e2e-test-secret",
-            ENCRYPTION_KEY:
-                "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+            MASTER_SECRET: process.env.MASTER_SECRET ?? "e2e-test-master-secret-do-not-use-in-production",
+            AUTH_CLIENT_ID: process.env.AUTH_CLIENT_ID ?? "e2e-test-client",
+            AUTH_CLIENT_SECRET: process.env.AUTH_CLIENT_SECRET ?? "e2e-test-secret",
+            ENCRYPTION_KEY: process.env.ENCRYPTION_KEY ?? "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
             // Use synchronize for tests (fresh DB each run), skip migrations
             DB_SYNCHRONIZE: "true",
             DB_MIGRATIONS_RUN: "false",
