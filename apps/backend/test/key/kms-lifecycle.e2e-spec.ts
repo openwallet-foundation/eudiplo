@@ -51,72 +51,72 @@ describe("Key Chain — KMS provider lifecycle (e2e)", () => {
         expect(availableProviders.length).toBeGreaterThanOrEqual(1);
     });
 
-    test.each([
-        "db",
-        "vault",
-    ])("%s — full key chain lifecycle (create → get → list → delete)", async (providerName) => {
-        const provider = availableProviders.find(
-            (p) => p.name === providerName,
-        );
-
-        if (!provider) {
-            console.log(`Skipping "${providerName}" — not configured`);
-            return;
-        }
-
-        if (!provider.capabilities.canCreate) {
-            console.log(
-                `Skipping "${providerName}" — does not support key generation`,
+    test.each(["db", "vault"])(
+        "%s — full key chain lifecycle (create → get → list → delete)",
+        async (providerName) => {
+            const provider = availableProviders.find(
+                (p) => p.name === providerName,
             );
-            return;
-        }
 
-        // 1. Create a key chain
-        const createRes = await request(app.getHttpServer())
-            .post("/key-chain")
-            .set("Authorization", `Bearer ${authToken}`)
-            .send({
-                type: KeyChainType.Standalone,
-                usageType: "access",
-                kmsProvider: providerName,
-                description: `e2e test key chain (${providerName})`,
-            })
-            .expect(201);
+            if (!provider) {
+                console.log(`Skipping "${providerName}" — not configured`);
+                return;
+            }
 
-        const keyChainId = createRes.body.id;
-        expect(keyChainId).toBeDefined();
-        expect(typeof keyChainId).toBe("string");
+            if (!provider.capabilities.canCreate) {
+                console.log(
+                    `Skipping "${providerName}" — does not support key generation`,
+                );
+                return;
+            }
 
-        // 2. Retrieve the key chain by ID
-        const getRes = await request(app.getHttpServer())
-            .get(`/key-chain/${keyChainId}`)
-            .set("Authorization", `Bearer ${authToken}`)
-            .expect(200);
+            // 1. Create a key chain
+            const createRes = await request(app.getHttpServer())
+                .post("/key-chain")
+                .set("Authorization", `Bearer ${authToken}`)
+                .send({
+                    type: KeyChainType.Standalone,
+                    usageType: "access",
+                    kmsProvider: providerName,
+                    description: `e2e test key chain (${providerName})`,
+                })
+                .expect(201);
 
-        expect(getRes.body.id).toBe(keyChainId);
-        expect(getRes.body.kmsProvider).toBe(providerName);
+            const keyChainId = createRes.body.id;
+            expect(keyChainId).toBeDefined();
+            expect(typeof keyChainId).toBe("string");
 
-        // 3. Key chain should appear in the list
-        const listRes = await request(app.getHttpServer())
-            .get("/key-chain")
-            .set("Authorization", `Bearer ${authToken}`)
-            .expect(200);
-
-        const listed = listRes.body.find((k: any) => k.id === keyChainId);
-        expect(listed).toBeDefined();
-
-        // 4. Delete the key chain
-        if (provider.capabilities.canDelete) {
-            await request(app.getHttpServer())
-                .delete(`/key-chain/${keyChainId}`)
+            // 2. Retrieve the key chain by ID
+            const getRes = await request(app.getHttpServer())
+                .get(`/key-chain/${keyChainId}`)
                 .set("Authorization", `Bearer ${authToken}`)
                 .expect(200);
 
-            // Verify it's gone
-            await request(app.getHttpServer())
-                .get(`/key-chain/${keyChainId}`)
+            expect(getRes.body.id).toBe(keyChainId);
+            expect(getRes.body.kmsProvider).toBe(providerName);
+
+            // 3. Key chain should appear in the list
+            const listRes = await request(app.getHttpServer())
+                .get("/key-chain")
                 .set("Authorization", `Bearer ${authToken}`)
-                .expect(404);
-        }
-    });
+                .expect(200);
+
+            const listed = listRes.body.find((k: any) => k.id === keyChainId);
+            expect(listed).toBeDefined();
+
+            // 4. Delete the key chain
+            if (provider.capabilities.canDelete) {
+                await request(app.getHttpServer())
+                    .delete(`/key-chain/${keyChainId}`)
+                    .set("Authorization", `Bearer ${authToken}`)
+                    .expect(200);
+
+                // Verify it's gone
+                await request(app.getHttpServer())
+                    .get(`/key-chain/${keyChainId}`)
+                    .set("Authorization", `Bearer ${authToken}`)
+                    .expect(404);
+            }
+        },
+    );
 });
