@@ -191,6 +191,7 @@ export class StatusListVerifierService {
     private async fetchStatusListToken(
         uri: string,
         timeoutMs = 10000,
+        type: "jwt" | "cwt" = "jwt",
     ): Promise<string | Uint8Array> {
         const ctrl = new AbortController();
         const timeout = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -201,7 +202,7 @@ export class StatusListVerifierService {
                     signal: ctrl.signal,
                     responseType: "arraybuffer",
                     headers: {
-                        Accept: "application/statuslist+jwt, application/statuslist+cwt, application/jwt",
+                        Accept: type === "cwt" ? "application/statuslist+cwt" : "application/statuslist+jwt",
                     },
                 }),
             );
@@ -327,7 +328,6 @@ export class StatusListVerifierService {
         // Fetch and cache
         this.logger.debug(`Fetching status list JWT from ${uri}`);
         const token = await this.fetchStatusListToken(uri);
-        console.log(token);
         if (typeof token !== "string") {
             throw new TypeError(
                 `Status list at ${uri} returned CWT while JWT was requested`,

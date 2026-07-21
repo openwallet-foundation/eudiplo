@@ -10,7 +10,7 @@
     "lint:fix": "pnpm -r lint:fix",
     "test": "pnpm -r test",
     "clean": "pnpm -r clean",
-    "release:dry": "set -a && source .env && set +a && npx semantic-release --dry-run 2>&1 | grep -iE 'next release version|no release'",
+    "release:dry": "set -a && source .env && set +a && npx semantic-release --dry-run 2>&1",
     "release:version": "set -a && source .env && set +a && npx semantic-release --dry-run 2>&1 | sed -n 's/.*next release version is \\([0-9]*\\.[0-9]*\\.[0-9]*\\).*/\\1/p' | head -1 || echo 'No release pending'",
     "gen:api": "ts-node scripts/generate-from-openapi.ts --url http://localhost:3000/api/docs-json --out schemas --no-type",
     "gen:sdk": "pnpm --filter @eudiplo/sdk-core generate",
