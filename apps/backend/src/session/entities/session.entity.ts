@@ -207,7 +207,7 @@ export class Session {
     credentials?: VerificationResult[];
 
     /**
-     * Noncce from the Verifiable Presentation request.
+     * Nonce from the Verifiable Presentation request.
      */
     @Column("varchar", { nullable: true })
     vp_nonce?: string;

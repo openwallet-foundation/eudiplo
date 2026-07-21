@@ -29,12 +29,12 @@ EUDIPLO is tested with every code change against the [OpenID Foundation Conforma
 The following wallets have been tested and verified to work with
 EUDIPLO:
 
-| Wallet                      | Provider                                                                       | Download                                                                                                                                              | Features                             |
-| --------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| EU Reference Implementation | [EC](https://github.com/eu-digital-identity-wallet/eudi-app-android-wallet-ui) | [Android](https://github.com/eu-digital-identity-wallet/eudi-app-android-wallet-ui/releases)                                                          | [Details](#reference-implementation) |
-| Paradym Wallet              | [Animo](https://animo.id)                                                      | [Android](https://play.google.com/store/apps/details?id=id.paradym.wallet) / [iOS](https://apps.apple.com/nl/app/paradym-wallet/id6449846111?l=en-GB) | [Details](#paradym-wallet)           |
-| Multipaz                    | [Multipaz](https://multipaz.com)                                               | [Android](https://apps.multipaz.org/)                                                                                                                 | [Details](#multipaz)                 |
-| AV Reference Implementation         | [EC](https://github.com/eu-digital-identity-wallet/av-app-android-wallet-ui)   | [Android](https://github.com/eu-digital-identity-wallet/av-app-android-wallet-ui/releases)                                                            | [Details](#av-reference-implementation)      |
+| Wallet                      | Provider                                                                       | Download                                                                                                                                              | Features                                |
+| --------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| EU Reference Implementation | [EC](https://github.com/eu-digital-identity-wallet/eudi-app-android-wallet-ui) | [Android](https://github.com/eu-digital-identity-wallet/eudi-app-android-wallet-ui/releases)                                                          | [Details](#reference-implementation)    |
+| Paradym Wallet              | [Animo](https://animo.id)                                                      | [Android](https://play.google.com/store/apps/details?id=id.paradym.wallet) / [iOS](https://apps.apple.com/nl/app/paradym-wallet/id6449846111?l=en-GB) | [Details](#paradym-wallet)              |
+| Multipaz                    | [Multipaz](https://multipaz.com)                                               | [Android](https://apps.multipaz.org/)                                                                                                                 | [Details](#multipaz)                    |
+| AV Reference Implementation | [EC](https://github.com/eu-digital-identity-wallet/av-app-android-wallet-ui)   | [Android](https://github.com/eu-digital-identity-wallet/av-app-android-wallet-ui/releases)                                                            | [Details](#av-reference-implementation) |
 
 ### Feature Support Details
 
@@ -59,12 +59,12 @@ EUDIPLO:
 
 #### Feature Matrix
 
-| Wallet                   | Auth | Pre | IAE | DPoP | Att | DC API | Annex C | SD-JWT | Mdocs |
-| ------------------------ | ---- | --- | --- | ---- | --- | ------ | ------- | ------ | ----- |
-| Reference Implementation | ✅   | ✅  | n/a | ✅   | ✅  | n/a    | —       | ✅     | ✅    |
-| Paradym Wallet           | ✅   | ✅  | n/a | ✅   | n/a | ✅     | —       | ✅     | ✅    |
-| Multipaz                 | ✅   | ✅  | n/a | ✅   | n/a | ✅     | —       | ✅     | ✅    |
-| AV Reference Implementation      | —    | ✅  | n/a | —    | —   | —      | ✅      | n/a    | ✅    |
+| Wallet                      | Auth | Pre | IAE | DPoP | Att | DC API | Annex C | SD-JWT | Mdocs |
+| --------------------------- | ---- | --- | --- | ---- | --- | ------ | ------- | ------ | ----- |
+| Reference Implementation    | ✅   | ✅  | n/a | ✅   | ✅  | n/a    | —       | ✅     | ✅    |
+| Paradym Wallet              | ✅   | ✅  | n/a | ✅   | n/a | ✅     | —       | ✅     | ✅    |
+| Multipaz                    | ✅   | ✅  | n/a | ✅   | n/a | ✅     | —       | ✅     | ✅    |
+| AV Reference Implementation | —    | ✅  | n/a | —    | —   | —      | ✅      | n/a    | ✅    |
 
 ("—" means not yet tested against EUDIPLO.)
 
@@ -72,7 +72,7 @@ EUDIPLO:
 
 ##### Reference Implementation
 
-- **Version tested**: 2026.02.35-Demo
+- **Version tested**: 2026.02.26-Demo
 - **Last verified**: February 26, 2026
 - **Notes**:
     - Forces Wallet attestation

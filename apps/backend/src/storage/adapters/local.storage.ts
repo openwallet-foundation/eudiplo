@@ -9,7 +9,7 @@ import {
     writeFileSync,
 } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
-import { Readable } from "node:stream";
+import { pipeline, Readable } from "node:stream";
 import { FileStorage, type PutOptions } from "../storage.types";
 
 /**
@@ -59,9 +59,10 @@ export class LocalFileStorage implements FileStorage {
         await new Promise<void>((resolve, reject) => {
             const write = createWriteStream(fullPath);
             const src = body instanceof Readable ? body : Readable.from(body);
-            src.pipe(write)
-                .on("finish", () => resolve())
-                .on("error", reject);
+            pipeline(src, write, (err) => {
+                if (err) reject(err);
+                else resolve();
+            });
         });
 
         if (opts?.contentType) {
