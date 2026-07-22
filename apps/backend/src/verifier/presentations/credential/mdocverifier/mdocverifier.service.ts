@@ -224,7 +224,8 @@ export class MdocverifierService {
                               // When LoTE issuance anchors are available, pass only
                               // those here instead of mixing in the presented x5chain.
                               issuance: issuanceAnchors,
-                              ...(attachStatus && statusAnchorsForMdoc.length > 0
+                              ...(attachStatus &&
+                              statusAnchorsForMdoc.length > 0
                                   ? { status: statusAnchorsForMdoc }
                                   : {}),
                           },
@@ -239,8 +240,9 @@ export class MdocverifierService {
             // use revocation policy only to control fail-open/fail-closed behavior.
             const includeStatusCheck = revocationPolicy.enabled;
             const attachStatusAnchorsForMdoc = true;
-            let trustedCertificates =
-                buildTrustedCertificates(attachStatusAnchorsForMdoc);
+            let trustedCertificates = buildTrustedCertificates(
+                attachStatusAnchorsForMdoc,
+            );
 
             if (!revocationPolicy.enabled) {
                 this.logger.debug(
@@ -644,11 +646,15 @@ export class MdocverifierService {
             }
         };
 
-        const [issuerChain, issuanceAnchors, statusAnchors] = await Promise.all([
-            Promise.all((issuerX5Chain ?? []).map((cert) => toDebug(cert))),
-            Promise.all(trustedIssuanceAnchors.map((cert) => toDebug(cert))),
-            Promise.all(trustedStatusAnchors.map((cert) => toDebug(cert))),
-        ]);
+        const [issuerChain, issuanceAnchors, statusAnchors] = await Promise.all(
+            [
+                Promise.all((issuerX5Chain ?? []).map((cert) => toDebug(cert))),
+                Promise.all(
+                    trustedIssuanceAnchors.map((cert) => toDebug(cert)),
+                ),
+                Promise.all(trustedStatusAnchors.map((cert) => toDebug(cert))),
+            ],
+        );
 
         this.logger.debug(
             {

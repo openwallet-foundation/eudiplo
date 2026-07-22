@@ -1,8 +1,4 @@
-import {
-    RevocationCheckMode,
-    VerifyPolicy,
-    VerifierOptions,
-} from "./types";
+import { RevocationCheckMode, VerifyPolicy, VerifierOptions } from "./types";
 
 const DEFAULT_REVOCATION_POLICY: NonNullable<VerifyPolicy["revocation"]> = {
     enabled: true,
@@ -31,17 +27,24 @@ export function revocationModeToPolicy(
 
 export function resolveRevocationPolicy(
     options: VerifierOptions,
-): Required<Pick<NonNullable<VerifyPolicy["revocation"]>, "enabled" | "failClosed">> {
+): Required<
+    Pick<NonNullable<VerifyPolicy["revocation"]>, "enabled" | "failClosed">
+> {
     const configured = options.policy.revocation;
 
     return {
         enabled: configured?.enabled ?? DEFAULT_REVOCATION_POLICY.enabled,
-        failClosed: configured?.failClosed ?? DEFAULT_REVOCATION_POLICY.failClosed ?? true,
+        failClosed:
+            configured?.failClosed ??
+            DEFAULT_REVOCATION_POLICY.failClosed ??
+            true,
     };
 }
 
 export function isStatusListUnavailableError(error: unknown): boolean {
-    const message = String((error as Error | undefined)?.message ?? error ?? "").toLowerCase();
+    const message = String(
+        (error as Error | undefined)?.message ?? error ?? "",
+    ).toLowerCase();
 
     const statusListRelated =
         message.includes("status list") ||

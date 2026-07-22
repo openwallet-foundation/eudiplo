@@ -681,7 +681,9 @@ export class CredentialChainValidationService {
         });
 
         const pathCerts = await Promise.all(path.map((cert) => mapCert(cert)));
-        const rootOfTrust = path.at(-1) ? await mapCert(path.at(-1)!) : undefined;
+        const rootOfTrust = path.at(-1)
+            ? await mapCert(path.at(-1)!)
+            : undefined;
 
         this.logger.debug(
             {

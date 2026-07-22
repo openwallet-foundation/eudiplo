@@ -153,7 +153,10 @@ describe("MdocverifierService revocation mode", () => {
             ],
         } as any);
 
-        vi.spyOn(service as any, "validateIssuerCertificateChain").mockResolvedValue({
+        vi.spyOn(
+            service as any,
+            "validateIssuerCertificateChain",
+        ).mockResolvedValue({
             verified: true,
             matchedEntity: null,
         });
@@ -192,10 +195,10 @@ describe("MdocverifierService revocation mode", () => {
             .trustedCertificates as Array<Record<string, unknown>>;
         const secondCallTrusted = verifyDeviceResponse.mock.calls[1][0]
             .trustedCertificates as Array<Record<string, unknown>>;
-        const firstDisableStatusValidation = verifyDeviceResponse.mock.calls[0][0]
-            .disableStatusValidation;
-        const secondDisableStatusValidation = verifyDeviceResponse.mock.calls[1][0]
-            .disableStatusValidation;
+        const firstDisableStatusValidation =
+            verifyDeviceResponse.mock.calls[0][0].disableStatusValidation;
+        const secondDisableStatusValidation =
+            verifyDeviceResponse.mock.calls[1][0].disableStatusValidation;
 
         expect(firstCallTrusted[0].status).toBeDefined();
         expect(secondCallTrusted[0].status).toBeUndefined();
@@ -257,8 +260,8 @@ describe("MdocverifierService revocation mode", () => {
 
         const trustedCertificates = verifyDeviceResponse.mock.calls[0][0]
             .trustedCertificates as Array<Record<string, Uint8Array[]>>;
-        const disableStatusValidation = verifyDeviceResponse.mock.calls[0][0]
-            .disableStatusValidation;
+        const disableStatusValidation =
+            verifyDeviceResponse.mock.calls[0][0].disableStatusValidation;
 
         expect(trustedCertificates).toHaveLength(1);
         expect(trustedCertificates[0].issuance).toEqual([
@@ -295,8 +298,8 @@ describe("MdocverifierService revocation mode", () => {
 
         const trustedCertificates = verifyDeviceResponse.mock.calls[0][0]
             .trustedCertificates as Array<Record<string, Uint8Array[]>>;
-        const disableStatusValidation = verifyDeviceResponse.mock.calls[0][0]
-            .disableStatusValidation;
+        const disableStatusValidation =
+            verifyDeviceResponse.mock.calls[0][0].disableStatusValidation;
 
         expect(trustedCertificates).toHaveLength(1);
         expect(trustedCertificates[0].issuance).toEqual([

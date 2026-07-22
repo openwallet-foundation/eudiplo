@@ -79,7 +79,9 @@ const chainLinkDiagnostics = async (chain: X509Certificate[]) => {
 };
 
 const toX509Certificates = (certificates: Uint8Array[]) =>
-    certificates.map((certificate) => new x509.X509Certificate(toBuffer(certificate)));
+    certificates.map(
+        (certificate) => new x509.X509Certificate(toBuffer(certificate)),
+    );
 
 const trimChainToTrustedAnchor = async (
     parsedChain: X509Certificate[],
@@ -96,16 +98,21 @@ const trimChainToTrustedAnchor = async (
     }
 
     const parsedTrustedCertificates = trustedCertificates.map(
-        (trustedCertificate) => new X509Certificate(toBuffer(trustedCertificate)),
+        (trustedCertificate) =>
+            new X509Certificate(toBuffer(trustedCertificate)),
     );
 
     const trustedCertificateIndex = parsedChain.findIndex((cert) =>
-        parsedTrustedCertificates.some((trustedCert) => cert.equal(trustedCert)),
+        parsedTrustedCertificates.some((trustedCert) =>
+            cert.equal(trustedCert),
+        ),
     );
 
     if (trustedCertificateIndex === -1) {
         const [chainDiagnostics, trustedDiagnostics] = await Promise.all([
-            Promise.all(parsedChain.map((cert) => certificateIdentifiers(cert))),
+            Promise.all(
+                parsedChain.map((cert) => certificateIdentifiers(cert)),
+            ),
             Promise.all(
                 parsedTrustedCertificates.map((cert) =>
                     certificateIdentifiers(cert),

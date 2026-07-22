@@ -110,7 +110,8 @@ export class SdjwtvcverifierService {
 
             this.logger.warn(
                 {
-                    error: error instanceof Error ? error.message : String(error),
+                    error:
+                        error instanceof Error ? error.message : String(error),
                 },
                 "Status list unavailable in best-effort mode, retrying SD-JWT verification without status check",
             );
