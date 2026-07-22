@@ -2873,6 +2873,10 @@ surface without receiving a duplicate <code>/api/api</code> prefix.</p>
             &quot;Comma-separated hostname allowlist for outbound webhook calls (supports exact host and subdomains)&quot;,
         )
         .meta({ group: &quot;issuer&quot;, order: 40 }),
+    ISSUER_MULTI_CONSUMPTION: Joi.boolean()
+        .default(false)
+        .description(&quot;Enable or disable multi-consumption for the issuer&quot;)
+        .meta({ group: &quot;issuer&quot;, order: 50 }),
 })</code>
                     </td>
                 </tr>
