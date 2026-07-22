@@ -1074,17 +1074,20 @@ export class Oid4vciService {
                 throw new NotFoundException("Credential offer not found");
             });
 
-        if (!session.offer) {
-            throw new NotFoundException("Credential offer not found");
-        }
+        if (
+            !this.configService.getOrThrow<boolean>("ISSUER_MULTI_CONSUMPTION")
+        ) {
+            if (!session.offer) {
+                throw new NotFoundException("Credential offer not found");
+            }
 
-        const consumed = await this.sessionService.consumeOfferByReference(
-            sessionId,
-            tenantId,
-        );
-
-        if (!consumed) {
-            throw new NotFoundException("Credential offer not found");
+            const consumed = await this.sessionService.consumeOfferByReference(
+                sessionId,
+                tenantId,
+            );
+            if (!consumed) {
+                throw new NotFoundException("Credential offer not found");
+            }
         }
 
         return session.offer as CredentialOfferObject;
