@@ -25,6 +25,7 @@ import {
     DEFAULT_VERIFIER_SKEW_SECONDS,
     VerifierOptions,
 } from "../../shared/trust/types";
+import { revocationModeToPolicy } from "../../shared/trust/revocation-policy.util";
 import {
     extractRequestMeta,
     getChangedFields,
@@ -1517,6 +1518,9 @@ export class PresentationsService {
                         : undefined,
                     policy: {
                         requireX5c: true,
+                        revocation: revocationModeToPolicy(
+                            presentationConfig.statusCheckMode,
+                        ),
                     },
                     skewSeconds:
                         session.skewSeconds ??

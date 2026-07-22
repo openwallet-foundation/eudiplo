@@ -130,7 +130,7 @@
     },
     "vp_nonce": {
       "type": "string",
-      "description": "Noncce from the Verifiable Presentation request."
+      "description": "Nonce from the Verifiable Presentation request."
     },
     "clientId": {
       "type": "string",
@@ -167,6 +167,10 @@
       "items": {
         "$ref": "./TransactionData.schema.json"
       }
+    },
+    "skewSeconds": {
+      "type": "number",
+      "description": "Per-session clock skew tolerance for presentation credential JWT time validation."
     },
     "externalIssuer": {
       "type": "string"

@@ -80,6 +80,12 @@ export type FederationTrustSource = {
     enforceSigningPolicy?: boolean;
 };
 
+export enum RevocationCheckMode {
+    Strict = "strict",
+    BestEffort = "best_effort",
+    Disabled = "disabled",
+}
+
 export const DEFAULT_VERIFIER_SKEW_SECONDS = 60;
 
 export type VerifierOptions = {
@@ -132,3 +138,5 @@ type VerifyPolicy = {
     // - "pathEnd": require chain to terminate at pinned cert (rare)
     pinnedCertMode?: "leaf" | "pathEnd";
 };
+
+export type { VerifyPolicy };

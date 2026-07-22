@@ -10,6 +10,10 @@ import { VerifierOptions } from "../../../../shared/trust/types";
 import { MatchedTrustedEntity } from "../../../../shared/trust/x509-validation.service";
 import { ResolverService } from "../../../resolver/resolver.service";
 import { CredentialChainValidationService } from "../credential-chain-validation.service";
+import {
+    isStatusListUnavailableError,
+    resolveRevocationPolicy,
+} from "../../../../shared/trust/revocation-policy.util";
 
 @Injectable()
 export class SdjwtvcverifierService {
@@ -40,42 +44,78 @@ export class SdjwtvcverifierService {
         cred: string,
         options: VerifierOptions,
     ): Promise<VerificationResult> {
+        const revocationPolicy = resolveRevocationPolicy(options);
+
+        const verifyWithStatusMode = async (
+            enableStatusCheck: boolean,
+        ): Promise<VerificationResult> => {
+            // Closure to capture the matched TrustedEntity during verification
+            let matchedEntity: MatchedTrustedEntity | null = null;
+
+            // Create a fresh instance per verification to ensure thread safety
+            const sdjwtInstance = new SDJwtVcInstance({
+                hasher: digest,
+                verifier: async (data: string, signature: string) => {
+                    const result = await this.verifyCredential(
+                        data,
+                        signature,
+                        options,
+                    );
+                    matchedEntity = result.matchedEntity;
+                    return result.verified;
+                },
+                kbVerifier: (data, signature, payload) =>
+                    this.verifyKeyBindingJwt(
+                        data,
+                        signature,
+                        payload,
+                        options.keyBindingAudience,
+                    ),
+                ...(enableStatusCheck
+                    ? {
+                          statusListFetcher: (uri: string) =>
+                              this.chainValidation.fetchStatusListJwt(uri),
+                          statusVerifier: (data: string, signature: string) => {
+                              // Verify status list JWT using the revocation cert from the same entity
+                              return this.verifyStatusList(
+                                  data,
+                                  signature,
+                                  options,
+                                  matchedEntity,
+                              );
+                          },
+                      }
+                    : {}),
+            });
+
+            return sdjwtInstance.verify(cred, options);
+        };
+
+        if (!revocationPolicy.enabled) {
+            return verifyWithStatusMode(false);
+        }
+
+        if (revocationPolicy.failClosed) {
+            return verifyWithStatusMode(true);
+        }
+
         // Closure to capture the matched TrustedEntity during verification
-        let matchedEntity: MatchedTrustedEntity | null = null;
+        let result: VerificationResult;
+        try {
+            result = await verifyWithStatusMode(true);
+        } catch (error) {
+            if (!isStatusListUnavailableError(error)) {
+                throw error;
+            }
 
-        // Create a fresh instance per verification to ensure thread safety
-        const sdjwtInstance = new SDJwtVcInstance({
-            hasher: digest,
-            verifier: async (data: string, signature: string) => {
-                const result = await this.verifyCredential(
-                    data,
-                    signature,
-                    options,
-                );
-                matchedEntity = result.matchedEntity;
-                return result.verified;
-            },
-            kbVerifier: (data, signature, payload) =>
-                this.verifyKeyBindingJwt(
-                    data,
-                    signature,
-                    payload,
-                    options.keyBindingAudience,
-                ),
-            statusListFetcher: (uri: string) =>
-                this.chainValidation.fetchStatusListJwt(uri),
-            statusVerifier: (data: string, signature: string) => {
-                // Verify status list JWT using the revocation cert from the same entity
-                return this.verifyStatusList(
-                    data,
-                    signature,
-                    options,
-                    matchedEntity,
-                );
-            },
-        });
-
-        const result = await sdjwtInstance.verify(cred, options);
+            this.logger.warn(
+                {
+                    error: error instanceof Error ? error.message : String(error),
+                },
+                "Status list unavailable in best-effort mode, retrying SD-JWT verification without status check",
+            );
+            result = await verifyWithStatusMode(false);
+        }
 
         // Validate transaction data hashes if transaction data was provided
         if (options.transactionData && options.transactionData.length > 0) {

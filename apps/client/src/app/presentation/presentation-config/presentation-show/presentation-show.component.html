@@ -76,6 +76,11 @@
                     config.lifeTime ? formatLifetime(config.lifeTime) : 'Not set'
                   }}</span>
                 </mat-list-item>
+                <mat-list-item>
+                  <mat-icon matListItemIcon>rule</mat-icon>
+                  <span matListItemTitle>Status List Check Mode</span>
+                  <span matListItemLine>{{ statusCheckModeLabels[statusCheckMode] }}</span>
+                </mat-list-item>
                 @if (config.redirectUri) {
                   <mat-list-item>
                     <mat-icon matListItemIcon>open_in_new</mat-icon>
@@ -283,8 +288,8 @@
                         @if (registrationCertExpiresIn) {
                           — expires in {{ registrationCertExpiresIn }}
                         }
-                        @if (registrationCertCache?.source) {
-                          ({{ registrationCertCache?.source }})
+                        @if (registrationCertSource) {
+                          ({{ registrationCertSource }})
                         }
                       </span>
                     }

@@ -19,8 +19,10 @@ import { SessionStatus } from "../../session/entities/session.entity";
 import { SessionService } from "../../session/session.service";
 import {
     DEFAULT_VERIFIER_SKEW_SECONDS,
+    RevocationCheckMode,
     VerifierOptions,
 } from "../../shared/trust/types";
+import { revocationModeToPolicy } from "../../shared/trust/revocation-policy.util";
 import { AuditLogService } from "../../shared/utils/logger/audit-log.service";
 import { WebhookService } from "../../shared/utils/webhook/webhook.service";
 import { MdocverifierService } from "../presentations/credential/mdocverifier/mdocverifier.service";
@@ -289,6 +291,9 @@ export class Iso18013Service {
                 : undefined,
             policy: {
                 requireX5c: true,
+                revocation: revocationModeToPolicy(
+                    config.statusCheckMode ?? RevocationCheckMode.Strict,
+                ),
             },
             skewSeconds:
                 session.skewSeconds ??
@@ -347,7 +352,7 @@ export class Iso18013Service {
             consumedAt: new Date(),
         });
 
-        const webhook = session.parsedWebhook ?? config.webhook;
+        const webhook = session.parsedWebhook;
         if (webhook) {
             const webhookResponse = await this.webhookService
                 .sendWebhook({
