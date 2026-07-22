@@ -26,7 +26,7 @@ export const ISSUER_VALIDATION_SCHEMA = Joi.object({
         )
         .meta({ group: "issuer", order: 40 }),
     ISSUER_MULTI_CONSUMPTION: Joi.boolean()
-            .default(false)
-            .description("Enable or disable multi-consumption for the issuer")
-            .meta({ group: "issuer", order: 50 }),
+        .default(false)
+        .description("Enable or disable multi-consumption for the issuer")
+        .meta({ group: "issuer", order: 50 }),
 });
