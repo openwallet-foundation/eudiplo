@@ -309,7 +309,7 @@ jobs:
         run: git worktree remove gh-pages-out --force || true
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           name: github-pages-${{ github.run_attempt }}
           path: pages
