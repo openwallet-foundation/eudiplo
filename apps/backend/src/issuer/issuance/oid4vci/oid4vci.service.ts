@@ -1073,8 +1073,10 @@ export class Oid4vciService {
             .catch(() => {
                 throw new NotFoundException("Credential offer not found");
             });
-            
-        if(!this.configService.getOrThrow<boolean>("ISSUER_MULTI_CONSUMPTION")) {
+
+        if (
+            !this.configService.getOrThrow<boolean>("ISSUER_MULTI_CONSUMPTION")
+        ) {
             if (!session.offer) {
                 throw new NotFoundException("Credential offer not found");
             }
