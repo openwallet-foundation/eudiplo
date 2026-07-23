@@ -13,7 +13,13 @@ import { hex } from "@owf/identity-common";
 
 // Use global Web Crypto API (available in Node.js 19+)
 const webCrypto = globalThis.crypto;
-const X509_CHAIN_DEBUG = process.env.EUDIPLO_DEBUG_X509_CHAIN === "true";
+const configuredLogLevel = (
+    process.env.LOG_LEVEL ??
+    (process.env.NODE_ENV === "production" ? "warn" : "debug")
+).toLowerCase();
+const X509_CHAIN_TRACE = configuredLogLevel === "trace";
+const X509_CHAIN_DEBUG =
+    X509_CHAIN_TRACE || configuredLogLevel === "debug";
 
 const extractExtensionKeyId = (
     extension: { keyId?: string } | undefined,
@@ -335,7 +341,7 @@ export const mdocContext: MdocContext = {
                 trimmed.previousCertificate,
             );
 
-            if (X509_CHAIN_DEBUG) {
+            if (X509_CHAIN_TRACE) {
                 const [chainDiagnostics, links] = await Promise.all([
                     Promise.all(
                         parsedChain.map((cert) => certificateIdentifiers(cert)),
