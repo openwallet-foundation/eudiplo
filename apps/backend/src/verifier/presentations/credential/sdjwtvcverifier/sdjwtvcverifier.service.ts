@@ -91,31 +91,30 @@ export class SdjwtvcverifierService {
             return sdjwtInstance.verify(cred, options);
         };
 
-        if (!revocationPolicy.enabled) {
-            return verifyWithStatusMode(false);
-        }
-
-        if (revocationPolicy.failClosed) {
-            return verifyWithStatusMode(true);
-        }
-
-        // Closure to capture the matched TrustedEntity during verification
         let result: VerificationResult;
-        try {
-            result = await verifyWithStatusMode(true);
-        } catch (error) {
-            if (!isStatusListUnavailableError(error)) {
-                throw error;
-            }
-
-            this.logger.warn(
-                {
-                    error:
-                        error instanceof Error ? error.message : String(error),
-                },
-                "Status list unavailable in best-effort mode, retrying SD-JWT verification without status check",
-            );
+        if (!revocationPolicy.enabled) {
             result = await verifyWithStatusMode(false);
+        } else if (revocationPolicy.failClosed) {
+            result = await verifyWithStatusMode(true);
+        } else {
+            try {
+                result = await verifyWithStatusMode(true);
+            } catch (error) {
+                if (!isStatusListUnavailableError(error)) {
+                    throw error;
+                }
+
+                this.logger.warn(
+                    {
+                        error:
+                            error instanceof Error
+                                ? error.message
+                                : String(error),
+                    },
+                    "Status list unavailable in best-effort mode, retrying SD-JWT verification without status check",
+                );
+                result = await verifyWithStatusMode(false);
+            }
         }
 
         // Validate transaction data hashes if transaction data was provided
