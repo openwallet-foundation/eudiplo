@@ -18,8 +18,7 @@ const configuredLogLevel = (
     (process.env.NODE_ENV === "production" ? "warn" : "debug")
 ).toLowerCase();
 const X509_CHAIN_TRACE = configuredLogLevel === "trace";
-const X509_CHAIN_DEBUG =
-    X509_CHAIN_TRACE || configuredLogLevel === "debug";
+const X509_CHAIN_DEBUG = X509_CHAIN_TRACE || configuredLogLevel === "debug";
 
 const extractExtensionKeyId = (
     extension: { keyId?: string } | undefined,
