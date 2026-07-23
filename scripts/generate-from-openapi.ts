@@ -170,24 +170,6 @@ async function emitComponentSchemas(doc: AnyObj, isOAS31: boolean) {
   console.log(`✓ Wrote ${count} component schema(s) → ${OUT_SCHEMAS}`);
 }
 
-function pickBestJsonResponse(responses: AnyObj): AnyObj | undefined {
-  // Prefer 200, then other 2xx, then anything with application/json
-  const keys = Object.keys(responses).sort((a, b) => {
-    if (a === "200") return -1;
-    if (b === "200") return 1;
-    const a2xx = /^2\d\d$/.test(a);
-    const b2xx = /^2\d\d$/.test(b);
-    if (a2xx && !b2xx) return -1;
-    if (!a2xx && b2xx) return 1;
-    return a.localeCompare(b, undefined, { numeric: true });
-  });
-  for (const code of keys) {
-    const c = responses[code]?.content?.["application/json"]?.schema;
-    if (c) return c;
-  }
-  return undefined;
-}
-
 /**
  * Add manually-created schemas that don't come from OpenAPI components.
  * These schemas are imported directly from the schemas/ directory.
