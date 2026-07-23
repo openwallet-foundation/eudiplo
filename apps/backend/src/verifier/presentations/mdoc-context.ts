@@ -129,16 +129,6 @@ const trimChainToTrustedAnchor = async (
             "No trusted certificate was found while validating the X.509 chain",
         );
     }
-            Promise.all(
-                parsedTrustedCertificates.map((cert) =>
-                    certificateIdentifiers(cert),
-                ),
-            ),
-        ]);
-        throw new Error(
-            `No trusted certificate was found while validating the X.509 chain. chain=${JSON.stringify(chainDiagnostics)} trusted=${JSON.stringify(trustedDiagnostics)}`,
-        );
-    }
 
     if (trustedCertificateIndex > 0) {
         return {
