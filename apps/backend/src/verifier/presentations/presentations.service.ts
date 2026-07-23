@@ -1452,6 +1452,18 @@ export class PresentationsService {
             }
         }
 
+        // Fallback for sessions where requestObject is not present:
+        // use persisted session transaction_data and encode exactly as in
+        // createAuthorizationRequest() so hash validation remains enforced.
+        if (
+            (!transactionDataStrings || transactionDataStrings.length === 0) &&
+            session.transaction_data?.length
+        ) {
+            transactionDataStrings = session.transaction_data.map((td) =>
+                base64url.encode(JSON.stringify(td)),
+            );
+        }
+
         const results = await Promise.all(
             attestationIds.map(async (attId) => {
                 const credentials = res.vp_token[attId] as unknown as string[];
@@ -1469,7 +1481,7 @@ export class PresentationsService {
                 // Find transaction data entries that reference this credential
                 // The strings are already base64url-encoded from the request object
                 // We need to decode them to check credential_ids, then use the original encoded string for hash validation
-                const relevantTransactionData = transactionDataStrings?.filter(
+                let relevantTransactionData = transactionDataStrings?.filter(
                     (tdStr) => {
                         try {
                             const td = JSON.parse(
@@ -1481,6 +1493,16 @@ export class PresentationsService {
                         }
                     },
                 );
+
+                if (
+                    (!relevantTransactionData ||
+                        relevantTransactionData.length === 0) &&
+                    session.transaction_data?.length
+                ) {
+                    relevantTransactionData = session.transaction_data
+                        .filter((td) => td.credential_ids?.includes(attId))
+                        .map((td) => base64url.encode(JSON.stringify(td)));
+                }
 
                 const loteAuthorities =
                     dcqlCredential.trusted_authorities?.find(
