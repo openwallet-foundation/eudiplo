@@ -238,7 +238,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/verifier/presentations/credential/sdjwtvcverifier/sdjwtvcverifier.service.ts:15</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/verifier/presentations/credential/sdjwtvcverifier/sdjwtvcverifier.service.ts:19</a></div>
                             </td>
                         </tr>
 
@@ -339,8 +339,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="103"
-                                    class="link-to-prism">src/verifier/presentations/credential/sdjwtvcverifier/sdjwtvcverifier.service.ts:103</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="143"
+                                    class="link-to-prism">src/verifier/presentations/credential/sdjwtvcverifier/sdjwtvcverifier.service.ts:143</a></div>
                         </td>
                     </tr>
 
@@ -455,8 +455,8 @@ specifies otherwise.</li>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="39"
-                                    class="link-to-prism">src/verifier/presentations/credential/sdjwtvcverifier/sdjwtvcverifier.service.ts:39</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="43"
+                                    class="link-to-prism">src/verifier/presentations/credential/sdjwtvcverifier/sdjwtvcverifier.service.ts:43</a></div>
                         </td>
                     </tr>
 
@@ -544,8 +544,8 @@ See OID4VP spec Appendix B.3.3.1 for details.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="180"
-                                    class="link-to-prism">src/verifier/presentations/credential/sdjwtvcverifier/sdjwtvcverifier.service.ts:180</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="220"
+                                    class="link-to-prism">src/verifier/presentations/credential/sdjwtvcverifier/sdjwtvcverifier.service.ts:220</a></div>
                         </td>
                     </tr>
 
@@ -643,8 +643,8 @@ signature = &quot;&lt;b64url(signature)&gt;&quot;</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="299"
-                                    class="link-to-prism">src/verifier/presentations/credential/sdjwtvcverifier/sdjwtvcverifier.service.ts:299</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="339"
+                                    class="link-to-prism">src/verifier/presentations/credential/sdjwtvcverifier/sdjwtvcverifier.service.ts:339</a></div>
                         </td>
                     </tr>
 
@@ -749,8 +749,8 @@ signature = &quot;&lt;b64url(signature)&gt;&quot;</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="251"
-                                    class="link-to-prism">src/verifier/presentations/credential/sdjwtvcverifier/sdjwtvcverifier.service.ts:251</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="291"
+                                    class="link-to-prism">src/verifier/presentations/credential/sdjwtvcverifier/sdjwtvcverifier.service.ts:291</a></div>
                         </td>
                     </tr>
 
@@ -874,6 +874,10 @@ import { VerifierOptions } from &quot;../../../../shared/trust/types&quot;;
 import { MatchedTrustedEntity } from &quot;../../../../shared/trust/x509-validation.service&quot;;
 import { ResolverService } from &quot;../../../resolver/resolver.service&quot;;
 import { CredentialChainValidationService } from &quot;../credential-chain-validation.service&quot;;
+import {
+    isStatusListUnavailableError,
+    resolveRevocationPolicy,
+} from &quot;../../../../shared/trust/revocation-policy.util&quot;;
 
 @Injectable()
 export class SdjwtvcverifierService {
@@ -904,42 +908,78 @@ export class SdjwtvcverifierService {
         cred: string,
         options: VerifierOptions,
     ): Promise&lt;VerificationResult&gt; {
-        // Closure to capture the matched TrustedEntity during verification
-        let matchedEntity: MatchedTrustedEntity | null &#x3D; null;
+        const revocationPolicy &#x3D; resolveRevocationPolicy(options);
 
-        // Create a fresh instance per verification to ensure thread safety
-        const sdjwtInstance &#x3D; new SDJwtVcInstance({
-            hasher: digest,
-            verifier: async (data: string, signature: string) &#x3D;&gt; {
-                const result &#x3D; await this.verifyCredential(
-                    data,
-                    signature,
-                    options,
-                );
-                matchedEntity &#x3D; result.matchedEntity;
-                return result.verified;
-            },
-            kbVerifier: (data, signature, payload) &#x3D;&gt;
-                this.verifyKeyBindingJwt(
-                    data,
-                    signature,
-                    payload,
-                    options.keyBindingAudience,
-                ),
-            statusListFetcher: (uri: string) &#x3D;&gt;
-                this.chainValidation.fetchStatusListJwt(uri),
-            statusVerifier: (data: string, signature: string) &#x3D;&gt; {
-                // Verify status list JWT using the revocation cert from the same entity
-                return this.verifyStatusList(
-                    data,
-                    signature,
-                    options,
-                    matchedEntity,
-                );
-            },
-        });
+        const verifyWithStatusMode &#x3D; async (
+            enableStatusCheck: boolean,
+        ): Promise&lt;VerificationResult&gt; &#x3D;&gt; {
+            // Closure to capture the matched TrustedEntity during verification
+            let matchedEntity: MatchedTrustedEntity | null &#x3D; null;
 
-        const result &#x3D; await sdjwtInstance.verify(cred, options);
+            // Create a fresh instance per verification to ensure thread safety
+            const sdjwtInstance &#x3D; new SDJwtVcInstance({
+                hasher: digest,
+                verifier: async (data: string, signature: string) &#x3D;&gt; {
+                    const result &#x3D; await this.verifyCredential(
+                        data,
+                        signature,
+                        options,
+                    );
+                    matchedEntity &#x3D; result.matchedEntity;
+                    return result.verified;
+                },
+                kbVerifier: (data, signature, payload) &#x3D;&gt;
+                    this.verifyKeyBindingJwt(
+                        data,
+                        signature,
+                        payload,
+                        options.keyBindingAudience,
+                    ),
+                ...(enableStatusCheck
+                    ? {
+                          statusListFetcher: (uri: string) &#x3D;&gt;
+                              this.chainValidation.fetchStatusListJwt(uri),
+                          statusVerifier: (data: string, signature: string) &#x3D;&gt; {
+                              // Verify status list JWT using the revocation cert from the same entity
+                              return this.verifyStatusList(
+                                  data,
+                                  signature,
+                                  options,
+                                  matchedEntity,
+                              );
+                          },
+                      }
+                    : {}),
+            });
+
+            return sdjwtInstance.verify(cred, options);
+        };
+
+        let result: VerificationResult;
+        if (!revocationPolicy.enabled) {
+            result &#x3D; await verifyWithStatusMode(false);
+        } else if (revocationPolicy.failClosed) {
+            result &#x3D; await verifyWithStatusMode(true);
+        } else {
+            try {
+                result &#x3D; await verifyWithStatusMode(true);
+            } catch (error) {
+                if (!isStatusListUnavailableError(error)) {
+                    throw error;
+                }
+
+                this.logger.warn(
+                    {
+                        error:
+                            error instanceof Error
+                                ? error.message
+                                : String(error),
+                    },
+                    &quot;Status list unavailable in best-effort mode, retrying SD-JWT verification without status check&quot;,
+                );
+                result &#x3D; await verifyWithStatusMode(false);
+            }
+        }
 
         // Validate transaction data hashes if transaction data was provided
         if (options.transactionData &amp;&amp; options.transactionData.length &gt; 0) {

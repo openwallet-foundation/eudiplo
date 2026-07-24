@@ -231,7 +231,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:61</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:62</a></div>
                         </td>
                     </tr>
 
@@ -268,7 +268,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:65</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:66</a></div>
                         </td>
                     </tr>
 
@@ -323,6 +323,7 @@ import { WebhookConfig } from &quot;../../../shared/utils/webhook/webhook.dto&qu
 import { WebhookEndpointEntity } from &quot;../../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity&quot;;
 import { RegistrationCertificateRequest } from &quot;../dto/vp-request.dto&quot;;
 import { IsTransactionData } from &quot;../validators/transaction-data.validator&quot;;
+import { RevocationCheckMode } from &quot;../../../shared/trust/types&quot;;
 
 export enum TrustedAuthorityType {
     ETSI_TL &#x3D; &quot;etsi_tl&quot;,
@@ -562,6 +563,20 @@ export class PresentationConfig {
     @IsOptional()
     @Column(&quot;int&quot;, { default: 60 })
     skewSeconds?: number;
+
+    /**
+     * Controls how credential status lists (revocation/suspension) are handled during verification.
+     */
+    @ApiPropertyOptional({
+        description:
+            &quot;Status list verification mode for presentations: strict (default), best_effort, or disabled.&quot;,
+        enum: RevocationCheckMode,
+        default: RevocationCheckMode.Strict,
+    })
+    @IsEnum(RevocationCheckMode)
+    @IsOptional()
+    @Column(&quot;varchar&quot;, { default: RevocationCheckMode.Strict })
+    statusCheckMode?: RevocationCheckMode;
 
     /**
      * The DCQL query to be used for the VP request.

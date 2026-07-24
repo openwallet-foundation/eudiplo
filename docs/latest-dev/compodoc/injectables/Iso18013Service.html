@@ -219,7 +219,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:48</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:50</a></div>
                             </td>
                         </tr>
 
@@ -368,8 +368,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="65"
-                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:65</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="67"
+                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:67</a></div>
                         </td>
                     </tr>
 
@@ -476,8 +476,8 @@ and persist a session for the response phase.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="158"
-                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:158</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="160"
+                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:160</a></div>
                         </td>
                     </tr>
 
@@ -567,8 +567,10 @@ import { SessionStatus } from &quot;../../session/entities/session.entity&quot;;
 import { SessionService } from &quot;../../session/session.service&quot;;
 import {
     DEFAULT_VERIFIER_SKEW_SECONDS,
+    RevocationCheckMode,
     VerifierOptions,
 } from &quot;../../shared/trust/types&quot;;
+import { revocationModeToPolicy } from &quot;../../shared/trust/revocation-policy.util&quot;;
 import { AuditLogService } from &quot;../../shared/utils/logger/audit-log.service&quot;;
 import { WebhookService } from &quot;../../shared/utils/webhook/webhook.service&quot;;
 import { MdocverifierService } from &quot;../presentations/credential/mdocverifier/mdocverifier.service&quot;;
@@ -837,6 +839,9 @@ export class Iso18013Service {
                 : undefined,
             policy: {
                 requireX5c: true,
+                revocation: revocationModeToPolicy(
+                    config.statusCheckMode ?? RevocationCheckMode.Strict,
+                ),
             },
             skewSeconds:
                 session.skewSeconds ??
@@ -895,7 +900,7 @@ export class Iso18013Service {
             consumedAt: new Date(),
         });
 
-        const webhook &#x3D; session.parsedWebhook ?? config.webhook;
+        const webhook &#x3D; session.parsedWebhook;
         if (webhook) {
             const webhookResponse &#x3D; await this.webhookService
                 .sendWebhook({

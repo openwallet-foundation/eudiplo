@@ -333,6 +333,9 @@
                             <a href="#isLoggableContentType" title="src/shared/utils/logger/logger.factory.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>isLoggableContentType</b>&nbsp;&nbsp;&nbsp;(src/.../logger.factory.ts)</span></a>
                         </li>
                         <li>
+                            <a href="#isStatusListUnavailableError" title="src/shared/trust/revocation-policy.util.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>isStatusListUnavailableError</b>&nbsp;&nbsp;&nbsp;(src/.../revocation-policy.util.ts)</span></a>
+                        </li>
+                        <li>
                             <a href="#issueRefreshTokenIfEnabled" title="src/issuer/issuance/oid4vci/authorization/shared/chained-as-token.util.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>issueRefreshTokenIfEnabled</b>&nbsp;&nbsp;&nbsp;(src/.../chained-as-token.util.ts)</span></a>
                         </li>
                         <li>
@@ -411,10 +414,16 @@
                             <a href="#resolveEnvPlaceholders" title="src/crypto/key/kms/kms-config.service.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>resolveEnvPlaceholders</b>&nbsp;&nbsp;&nbsp;(src/.../kms-config.service.ts)</span></a>
                         </li>
                         <li>
+                            <a href="#resolveRevocationPolicy" title="src/shared/trust/revocation-policy.util.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>resolveRevocationPolicy</b>&nbsp;&nbsp;&nbsp;(src/.../revocation-policy.util.ts)</span></a>
+                        </li>
+                        <li>
                             <a href="#resolveSessionForTokenRequest" title="src/issuer/issuance/oid4vci/authorization/shared/chained-as-token.util.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>resolveSessionForTokenRequest</b>&nbsp;&nbsp;&nbsp;(src/.../chained-as-token.util.ts)</span></a>
                         </li>
                         <li>
                             <a href="#resolveTokenBinding" title="src/issuer/issuance/oid4vci/authorization/shared/chained-as-token.util.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>resolveTokenBinding</b>&nbsp;&nbsp;&nbsp;(src/.../chained-as-token.util.ts)</span></a>
+                        </li>
+                        <li>
+                            <a href="#revocationModeToPolicy" title="src/shared/trust/revocation-policy.util.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>revocationModeToPolicy</b>&nbsp;&nbsp;&nbsp;(src/.../revocation-policy.util.ts)</span></a>
                         </li>
                         <li>
                             <a href="#Secured" title="src/auth/secure.decorator.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>Secured</b>&nbsp;&nbsp;&nbsp;(src/.../secure.decorator.ts)</span></a>
@@ -7462,6 +7471,188 @@ native subtle operation — only for signing, and only when the
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>    <code>CryptoKey</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <h3>src/shared/trust/revocation-policy.util.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isStatusListUnavailableError"></a>
+                    <span class="name">
+                        <span ><b>isStatusListUnavailableError</b></span>
+                        <a href="#isStatusListUnavailableError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isStatusListUnavailableError(error)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>error</td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resolveRevocationPolicy"></a>
+                    <span class="name">
+                        <span ><b>resolveRevocationPolicy</b></span>
+                        <a href="#resolveRevocationPolicy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>resolveRevocationPolicy(options: <a href="../miscellaneous/typealiases.html#VerifierOptions" target="_self">VerifierOptions</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#VerifierOptions" target="_self" >VerifierOptions</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#VerifyPolicy" target="_self" >Required&lt;Pick&lt;NonNullable&lt;VerifyPolicy[&#x27;revocation&#x27;]&gt;, &quot;enabled&quot; | &quot;failClosed&quot;&gt;&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="revocationModeToPolicy"></a>
+                    <span class="name">
+                        <span ><b>revocationModeToPolicy</b></span>
+                        <a href="#revocationModeToPolicy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>revocationModeToPolicy(mode?: <a href="../miscellaneous/enumerations.html#RevocationCheckMode" target="_self">RevocationCheckMode</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>mode</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/enumerations.html#RevocationCheckMode" target="_self" >RevocationCheckMode</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#VerifyPolicy" target="_self" >NonNullable&lt;VerifyPolicy[&#x27;revocation&#x27;]&gt;</a></code>
 
                         </div>
                             <div class="io-description">

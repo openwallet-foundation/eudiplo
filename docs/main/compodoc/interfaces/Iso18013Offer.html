@@ -234,7 +234,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:40</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:42</a></div>
                                 </td>
                             </tr>
 
@@ -290,7 +290,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:41</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:43</a></div>
                                 </td>
                             </tr>
 
@@ -329,7 +329,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:38</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:40</a></div>
                                 </td>
                             </tr>
 
@@ -368,7 +368,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:39</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:41</a></div>
                                 </td>
                             </tr>
 
@@ -393,8 +393,10 @@ import { SessionStatus } from &quot;../../session/entities/session.entity&quot;;
 import { SessionService } from &quot;../../session/session.service&quot;;
 import {
     DEFAULT_VERIFIER_SKEW_SECONDS,
+    RevocationCheckMode,
     VerifierOptions,
 } from &quot;../../shared/trust/types&quot;;
+import { revocationModeToPolicy } from &quot;../../shared/trust/revocation-policy.util&quot;;
 import { AuditLogService } from &quot;../../shared/utils/logger/audit-log.service&quot;;
 import { WebhookService } from &quot;../../shared/utils/webhook/webhook.service&quot;;
 import { MdocverifierService } from &quot;../presentations/credential/mdocverifier/mdocverifier.service&quot;;
@@ -663,6 +665,9 @@ export class Iso18013Service {
                 : undefined,
             policy: {
                 requireX5c: true,
+                revocation: revocationModeToPolicy(
+                    config.statusCheckMode ?? RevocationCheckMode.Strict,
+                ),
             },
             skewSeconds:
                 session.skewSeconds ??
@@ -721,7 +726,7 @@ export class Iso18013Service {
             consumedAt: new Date(),
         });
 
-        const webhook &#x3D; session.parsedWebhook ?? config.webhook;
+        const webhook &#x3D; session.parsedWebhook;
         if (webhook) {
             const webhookResponse &#x3D; await this.webhookService
                 .sendWebhook({
