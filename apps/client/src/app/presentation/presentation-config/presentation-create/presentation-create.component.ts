@@ -68,6 +68,28 @@ import { RegistrarService } from '../../../registrar/registrar.service';
   styleUrls: ['./presentation-create.component.scss'],
 })
 export class PresentationCreateComponent implements OnInit {
+  readonly statusCheckModeOptions: {
+    value: 'strict' | 'best_effort' | 'disabled';
+    label: string;
+    hint: string;
+  }[] = [
+    {
+      value: 'strict',
+      label: 'Strict',
+      hint: 'Always check status list; fail verification when unavailable.',
+    },
+    {
+      value: 'best_effort',
+      label: 'Best effort',
+      hint: 'Try status list check, continue when temporarily unavailable.',
+    },
+    {
+      value: 'disabled',
+      label: 'Disabled',
+      hint: 'Do not perform status list checks.',
+    },
+  ];
+
   public form: FormGroup;
   public create = true;
   public copyMode = false;
@@ -127,6 +149,7 @@ export class PresentationCreateComponent implements OnInit {
       accessKeyChainId: new FormControl(undefined),
       dcql_query: new FormControl(undefined, [Validators.required]),
       lifeTime: new FormControl(300, [Validators.required, Validators.min(1)]),
+      statusCheckMode: new FormControl<'strict' | 'best_effort' | 'disabled'>('strict'),
       registrationCertImportJwt: new FormControl(undefined),
       registrationCertImportId: new FormControl(undefined),
       registrationCertBodyPrivacyPolicy: new FormControl(undefined),
@@ -182,6 +205,9 @@ export class PresentationCreateComponent implements OnInit {
 
           // Convert dcql_query object to JSON string for form display
           const formData: any = { ...config };
+          if (!formData.statusCheckMode) {
+            formData.statusCheckMode = 'strict';
+          }
           if (formData.dcql_query && typeof formData.dcql_query === 'object') {
             formData.dcql_query = JSON.stringify(formData.dcql_query, null, 2);
           }
@@ -281,6 +307,11 @@ export class PresentationCreateComponent implements OnInit {
     return this.form.get(value) as FormGroup;
   }
 
+  get selectedStatusCheckModeLabel(): string {
+    const selected = this.form.get('statusCheckMode')?.value;
+    return this.statusCheckModeOptions.find((mode) => mode.value === selected)?.label ?? 'Strict';
+  }
+
   asFormGroup(value: any) {
     return value as FormGroup;
   }
@@ -288,6 +319,14 @@ export class PresentationCreateComponent implements OnInit {
   createOrUpdatePresentation(): void {
     // Parse the JSON string to an object for dcql_query
     const formValue = { ...this.form.value };
+
+    if (
+      formValue.statusCheckMode !== 'strict' &&
+      formValue.statusCheckMode !== 'best_effort' &&
+      formValue.statusCheckMode !== 'disabled'
+    ) {
+      formValue.statusCheckMode = 'strict';
+    }
 
     // Convert dcql_query from string to object
     if (formValue.dcql_query) {
@@ -393,6 +432,8 @@ export class PresentationCreateComponent implements OnInit {
   private getCompleteConfiguration(): any {
     const formValue = { ...this.form.getRawValue() };
 
+    this.ensureValidStatusCheckMode(formValue);
+
     delete formValue.registrationCertImportJwt;
     delete formValue.registrationCertImportId;
     delete formValue.registrationCertBodyPrivacyPolicy;
@@ -446,6 +487,16 @@ export class PresentationCreateComponent implements OnInit {
       formValue.attached = undefined;
     }
     return formValue;
+  }
+
+  private ensureValidStatusCheckMode(formValue: any): void {
+    if (
+      formValue.statusCheckMode !== 'strict' &&
+      formValue.statusCheckMode !== 'best_effort' &&
+      formValue.statusCheckMode !== 'disabled'
+    ) {
+      formValue.statusCheckMode = 'strict';
+    }
   }
 
   private getExportRegistrationCert(): any {

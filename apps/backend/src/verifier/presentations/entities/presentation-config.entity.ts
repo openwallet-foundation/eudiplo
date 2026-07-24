@@ -34,6 +34,7 @@ import { WebhookConfig } from "../../../shared/utils/webhook/webhook.dto";
 import { WebhookEndpointEntity } from "../../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { RegistrationCertificateRequest } from "../dto/vp-request.dto";
 import { IsTransactionData } from "../validators/transaction-data.validator";
+import { RevocationCheckMode } from "../../../shared/trust/types";
 
 export enum TrustedAuthorityType {
     ETSI_TL = "etsi_tl",
@@ -273,6 +274,20 @@ export class PresentationConfig {
     @IsOptional()
     @Column("int", { default: 60 })
     skewSeconds?: number;
+
+    /**
+     * Controls how credential status lists (revocation/suspension) are handled during verification.
+     */
+    @ApiPropertyOptional({
+        description:
+            "Status list verification mode for presentations: strict (default), best_effort, or disabled.",
+        enum: RevocationCheckMode,
+        default: RevocationCheckMode.Strict,
+    })
+    @IsEnum(RevocationCheckMode)
+    @IsOptional()
+    @Column("varchar", { default: RevocationCheckMode.Strict })
+    statusCheckMode?: RevocationCheckMode;
 
     /**
      * The DCQL query to be used for the VP request.

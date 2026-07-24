@@ -119,6 +119,28 @@
               </mat-form-field>
 
               <mat-form-field>
+                <mat-label>Status List Check Mode</mat-label>
+                <mat-select formControlName="statusCheckMode">
+                  <mat-select-trigger>{{ selectedStatusCheckModeLabel }}</mat-select-trigger>
+                  @for (mode of statusCheckModeOptions; track mode.value) {
+                    <mat-option [value]="mode.value">
+                      <div fxLayout="column">
+                        <span
+                          ><strong>{{ mode.label }}</strong></span
+                        >
+                        <span class="option-description">{{ mode.hint }}</span>
+                      </div>
+                    </mat-option>
+                  }
+                </mat-select>
+                <mat-icon matSuffix>rule</mat-icon>
+                <mat-hint>
+                  Controls revocation/status checks during presentation verification for both SD-JWT
+                  and mDOC credentials.
+                </mat-hint>
+              </mat-form-field>
+
+              <mat-form-field>
                 <mat-label>Redirect URI (optional)</mat-label>
                 <input
                   matInput

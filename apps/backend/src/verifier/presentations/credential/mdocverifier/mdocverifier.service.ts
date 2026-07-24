@@ -12,6 +12,10 @@ import * as x509 from "@peculiar/x509";
 import { Span } from "nestjs-otel";
 import { PinoLogger } from "nestjs-pino";
 import { VerifierOptions } from "../../../../shared/trust/types";
+import {
+    isStatusListUnavailableError,
+    resolveRevocationPolicy,
+} from "../../../../shared/trust/revocation-policy.util";
 import { mdocContext } from "../../mdoc-context";
 import {
     ChainValidationResult,
@@ -108,6 +112,8 @@ export class MdocverifierService {
         requestedClaimPaths?: RequestedMdocClaimPath[],
     ): Promise<MdocVerificationResult> {
         try {
+            const revocationPolicy = resolveRevocationPolicy(options);
+
             // 1) Decode the device response
             const uint8Array = Buffer.from(vp, "base64url");
             const deviceResponse = DeviceResponse.decode(uint8Array);
@@ -186,29 +192,119 @@ export class MdocverifierService {
             const trustedStatusAnchors = trustedStatusCertBuffers.map(
                 (buffer) => new Uint8Array(buffer),
             );
-            const trustedCertificates =
-                issuerX5Chain && issuerX5Chain.length > 0
+
+            const normalizeDer = (certificate: Uint8Array): Uint8Array => {
+                try {
+                    const parsed = new x509.X509Certificate(certificate as any);
+                    return new Uint8Array(parsed.rawData);
+                } catch {
+                    return certificate;
+                }
+            };
+
+            const buildTrustedCertificates = (attachStatus: boolean) => {
+                const issuanceAnchorsRaw =
+                    trustedAnchors.length > 0
+                        ? trustedAnchors
+                        : (issuerX5Chain ?? []);
+                const issuanceAnchors = issuanceAnchorsRaw.map(normalizeDer);
+
+                const statusAnchorsForMdocRaw =
+                    trustedStatusAnchors.length > 0
+                        ? trustedStatusAnchors
+                        : issuanceAnchorsRaw;
+                const statusAnchorsForMdoc =
+                    statusAnchorsForMdocRaw.map(normalizeDer);
+
+                return issuanceAnchors.length > 0
                     ? [
                           {
-                              issuance: [...issuerX5Chain, ...trustedAnchors],
-                              ...(trustedStatusAnchors.length > 0
-                                  ? { status: trustedStatusAnchors }
+                              // @owf/mdoc maps status anchors back to the trusted
+                              // issuance entry that matched chain validation.
+                              // When LoTE issuance anchors are available, pass only
+                              // those here instead of mixing in the presented x5chain.
+                              issuance: issuanceAnchors,
+                              ...(attachStatus &&
+                              statusAnchorsForMdoc.length > 0
+                                  ? { status: statusAnchorsForMdoc }
                                   : {}),
                           },
                       ]
                     : [];
+            };
 
             // 5) Verify the device response (signature, device binding, etc.)
             // Certificate chain validation is disabled here - we do it separately via CredentialChainValidationService
-            await Verifier.verifyDeviceResponse(
-                {
-                    deviceRequest,
-                    deviceResponse,
-                    sessionTranscript,
-                    trustedCertificates,
-                },
-                mdocContext,
+            // @owf/mdoc requires trusted status certificates when status validation data
+            // is present in the credential. We attach status anchors unconditionally and
+            // use revocation policy only to control fail-open/fail-closed behavior.
+            const includeStatusCheck = revocationPolicy.enabled;
+            const attachStatusAnchorsForMdoc = true;
+            let trustedCertificates = buildTrustedCertificates(
+                attachStatusAnchorsForMdoc,
             );
+
+            if (!revocationPolicy.enabled) {
+                this.logger.debug(
+                    "Revocation policy is disabled, but status anchors are still attached for mDOC library compatibility",
+                );
+            }
+
+            try {
+                await this.logStatusValidationCertificates(
+                    issuerX5Chain,
+                    trustedAnchors,
+                    trustedStatusAnchors,
+                    attachStatusAnchorsForMdoc,
+                );
+            } catch (error: any) {
+                this.logger.debug(
+                    `Skipping mDOC cert identifier debug logging: ${error?.message ?? error}`,
+                );
+            }
+
+            try {
+                await Verifier.verifyDeviceResponse(
+                    {
+                        deviceRequest,
+                        deviceResponse,
+                        sessionTranscript,
+                        trustedCertificates,
+                        disableStatusValidation: !includeStatusCheck,
+                    },
+                    mdocContext,
+                );
+            } catch (error) {
+                if (
+                    !includeStatusCheck ||
+                    revocationPolicy.failClosed ||
+                    !isStatusListUnavailableError(error)
+                ) {
+                    throw error;
+                }
+
+                this.logger.warn(
+                    {
+                        error:
+                            error instanceof Error
+                                ? error.message
+                                : String(error),
+                    },
+                    "Status list unavailable in best-effort mode, retrying mDOC verification without status check",
+                );
+
+                trustedCertificates = buildTrustedCertificates(false);
+                await Verifier.verifyDeviceResponse(
+                    {
+                        deviceRequest,
+                        deviceResponse,
+                        sessionTranscript,
+                        trustedCertificates,
+                        disableStatusValidation: true,
+                    },
+                    mdocContext,
+                );
+            }
 
             // 6) Validate certificate chain using shared CredentialChainValidationService
             // This ensures consistent trust validation with SD-JWT-VC and other formats
@@ -511,6 +607,73 @@ export class MdocverifierService {
         }
 
         return summary;
+    }
+
+    /**
+     * Logs certificate identifiers used by mDOC status verification to help diagnose
+     * trust-anchor / status-anchor mismatches.
+     */
+    private async logStatusValidationCertificates(
+        issuerX5Chain: Uint8Array[] | undefined,
+        trustedIssuanceAnchors: Uint8Array[],
+        trustedStatusAnchors: Uint8Array[],
+        statusAnchorsAttached: boolean,
+    ): Promise<void> {
+        const toDebug = async (certBytes: Uint8Array) => {
+            try {
+                const cert = new x509.X509Certificate(certBytes as any);
+                const thumbprint = hex.encode(
+                    new Uint8Array(await cert.getThumbprint("SHA-256")),
+                );
+                const ski = this.extractExtensionKeyId(
+                    cert.getExtension("2.5.29.14") as any,
+                );
+                const aki = this.extractExtensionKeyId(
+                    cert.getExtension("2.5.29.35") as any,
+                );
+
+                return {
+                    subject: cert.subject,
+                    issuer: cert.issuer,
+                    thumbprint,
+                    ski,
+                    aki,
+                };
+            } catch (error: any) {
+                return {
+                    parseError: error?.message ?? String(error),
+                };
+            }
+        };
+
+        const [issuerChain, issuanceAnchors, statusAnchors] = await Promise.all(
+            [
+                Promise.all((issuerX5Chain ?? []).map((cert) => toDebug(cert))),
+                Promise.all(
+                    trustedIssuanceAnchors.map((cert) => toDebug(cert)),
+                ),
+                Promise.all(trustedStatusAnchors.map((cert) => toDebug(cert))),
+            ],
+        );
+
+        this.logger.debug(
+            {
+                statusAnchorsAttached,
+                issuerChain,
+                trustedIssuanceAnchors: issuanceAnchors,
+                trustedStatusAnchors: statusAnchors,
+            },
+            "mDOC status validation certificate identifiers (SKI/AKI)",
+        );
+    }
+
+    private extractExtensionKeyId(
+        extension: { keyId?: string } | undefined,
+    ): string | undefined {
+        const keyId = extension?.keyId;
+        return typeof keyId === "string" && keyId.length > 0
+            ? keyId.toLowerCase()
+            : undefined;
     }
 
     /**

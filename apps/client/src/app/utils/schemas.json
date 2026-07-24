@@ -1355,7 +1355,7 @@
         },
         "vp_nonce": {
           "type": "string",
-          "description": "Noncce from the Verifiable Presentation request."
+          "description": "Nonce from the Verifiable Presentation request."
         },
         "clientId": {
           "type": "string",
@@ -1392,6 +1392,10 @@
           "items": {
             "$ref": "./TransactionData.schema.json"
           }
+        },
+        "skewSeconds": {
+          "type": "number",
+          "description": "Per-session clock skew tolerance for presentation credential JWT time validation."
         },
         "externalIssuer": {
           "type": "string"
@@ -4967,6 +4971,18 @@
       "title": "PresentationConfig",
       "type": "object",
       "properties": {
+        "skewSeconds": {
+          "type": "number",
+          "description": "Clock skew tolerance for credential JWT time validation, in seconds.",
+          "minimum": 0,
+          "default": 60
+        },
+        "statusCheckMode": {
+          "description": "Status list verification mode for presentations: strict (default), best_effort, or disabled.",
+          "enum": ["strict", "best_effort", "disabled"],
+          "type": "string",
+          "default": "strict"
+        },
         "registrationCertCache": {
           "type": "object",
           "nullable": true,
@@ -5141,6 +5157,18 @@
       "title": "PresentationConfigCreateDto",
       "type": "object",
       "properties": {
+        "skewSeconds": {
+          "type": "number",
+          "description": "Clock skew tolerance for credential JWT time validation, in seconds.",
+          "minimum": 0,
+          "default": 60
+        },
+        "statusCheckMode": {
+          "description": "Status list verification mode for presentations: strict (default), best_effort, or disabled.",
+          "enum": ["strict", "best_effort", "disabled"],
+          "type": "string",
+          "default": "strict"
+        },
         "id": {
           "type": "string",
           "description": "Unique identifier for the VP request."
@@ -5230,6 +5258,18 @@
       "title": "PresentationConfigUpdateDto",
       "type": "object",
       "properties": {
+        "skewSeconds": {
+          "type": "number",
+          "description": "Clock skew tolerance for credential JWT time validation, in seconds.",
+          "minimum": 0,
+          "default": 60
+        },
+        "statusCheckMode": {
+          "description": "Status list verification mode for presentations: strict (default), best_effort, or disabled.",
+          "enum": ["strict", "best_effort", "disabled"],
+          "type": "string",
+          "default": "strict"
+        },
         "id": {
           "type": "string",
           "description": "Unique identifier for the VP request."
@@ -7233,6 +7273,11 @@
           "items": {
             "$ref": "./TransactionData.schema.json"
           }
+        },
+        "skewSeconds": {
+          "type": "number",
+          "description": "Optional clock skew tolerance for this presentation offer, in seconds.\nIf provided, this overrides the presentation configuration for the created session.",
+          "minimum": 0
         }
       },
       "required": ["response_type", "requestId"],

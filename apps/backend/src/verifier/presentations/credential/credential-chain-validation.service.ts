@@ -268,6 +268,8 @@ export class CredentialChainValidationService {
             };
         }
 
+        await this.logChainKeyIdentifiers(path, anchors);
+
         // 7) Check time validity
         const now = new Date();
         for (const cert of path) {
@@ -651,5 +653,44 @@ export class CredentialChainValidationService {
         return Array.from(new Uint8Array(buffer))
             .map((b) => b.toString(16).padStart(2, "0"))
             .join("");
+    }
+
+    private extractExtensionKeyId(
+        extension: { keyId?: string } | undefined,
+    ): string | undefined {
+        const keyId = extension?.keyId;
+        return typeof keyId === "string" && keyId.length > 0
+            ? keyId.toLowerCase()
+            : undefined;
+    }
+
+    private async logChainKeyIdentifiers(
+        path: x509.X509Certificate[],
+        anchors: x509.X509Certificate[],
+    ): Promise<void> {
+        const mapCert = async (cert: x509.X509Certificate) => ({
+            subject: cert.subject,
+            issuer: cert.issuer,
+            thumbprint: await this.getThumbprint(cert),
+            ski: this.extractExtensionKeyId(
+                cert.getExtension("2.5.29.14") as any,
+            ),
+            aki: this.extractExtensionKeyId(
+                cert.getExtension("2.5.29.35") as any,
+            ),
+        });
+
+        const pathCerts = await Promise.all(path.map((cert) => mapCert(cert)));
+        const rootOfTrust = path.at(-1)
+            ? await mapCert(path.at(-1)!)
+            : undefined;
+
+        this.logger.debug(
+            {
+                rootOfTrust,
+                validatedPath: pathCerts,
+            },
+            "X.509 chain identifiers (SKI/AKI) for trust matching",
+        );
     }
 }

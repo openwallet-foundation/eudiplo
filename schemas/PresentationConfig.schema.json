@@ -4,6 +4,22 @@
   "title": "PresentationConfig",
   "type": "object",
   "properties": {
+    "skewSeconds": {
+      "type": "number",
+      "description": "Clock skew tolerance for credential JWT time validation, in seconds.",
+      "minimum": 0,
+      "default": 60
+    },
+    "statusCheckMode": {
+      "description": "Status list verification mode for presentations: strict (default), best_effort, or disabled.",
+      "enum": [
+        "strict",
+        "best_effort",
+        "disabled"
+      ],
+      "type": "string",
+      "default": "strict"
+    },
     "registrationCertCache": {
       "type": "object",
       "nullable": true,
@@ -32,11 +48,6 @@
     "lifeTime": {
       "type": "number",
       "description": "Lifetime how long the presentation request is valid after creation, in seconds."
-    },
-    "skewSeconds": {
-      "type": "number",
-      "description": "Clock skew tolerance for credential JWT time validation, in seconds.",
-      "default": 60
     },
     "dcql_query": {
       "description": "The DCQL query to be used for the VP request.",

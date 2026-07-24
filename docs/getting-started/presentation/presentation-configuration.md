@@ -29,6 +29,7 @@ For creating request payloads and runtime overrides, see
 - `redirectUri`: **OPTIONAL** - URI to redirect the user to after completing the presentation. This is useful for web applications that need to return the user to a specific page after verification. You can use the `{sessionId}` placeholder in the URI, which will be replaced with the actual session ID (e.g., `https://example.com/callback?session={sessionId}`).
 - `transaction_data`: **OPTIONAL** - Array of transaction data objects to include in the OID4VP authorization request. See [Transaction Data](transaction-data.md) for details.
 - `skewSeconds`: **OPTIONAL** - Clock skew tolerance in seconds for credential JWT time validation. Defaults to `60` seconds.
+- `statusCheckMode`: **OPTIONAL** - Controls how credential status list checks are handled during presentation verification. Supported values are `strict` (default), `best_effort`, and `disabled`.
 
 !!! Info
 
@@ -42,6 +43,32 @@ For creating request payloads and runtime overrides, see
     - `redirectUri` in the request overrides `redirectUri` from the presentation configuration
     - `transaction_data` in the request overrides `transaction_data` from the presentation configuration
     - `skewSeconds` in the request overrides `skewSeconds` from the presentation configuration for that session
+
+### statusCheckMode Behavior
+
+`statusCheckMode` applies to credential status list checks during presentation verification
+for both `dc+sd-jwt` and `mso_mdoc` credentials (including ISO 18013-7 mdoc
+presentations).
+
+- `strict` (default): Status checks are enabled and enforced fail-closed. If the
+  status list cannot be fetched/validated, verification fails.
+- `best_effort`: Status checks are attempted first. If status data is temporarily
+  unavailable (for example due to timeout/network fetch issues), verification
+  continues without the status result.
+- `disabled`: Status checks are not performed.
+
+Example:
+
+```json
+{
+    "id": "pid-presentation",
+    "description": "PID presentation with best-effort status checks",
+    "statusCheckMode": "best_effort",
+    "dcql_query": {
+        "credentials": []
+    }
+}
+```
 
 ### registrationCert Structure
 
@@ -113,7 +140,7 @@ During verification, EUDIPLO will:
 1. Fetch the LoTE JWT(s) from the provided URLs
 2. Parse the trusted entities and their certificates
 3. Validate that the credential's issuer certificate chains to one of the trusted entities
-4. Ensure the status list (if present) is signed by the revocation certificate from the **same** trusted entity
+4. If status checks are enabled (`statusCheckMode` is `strict` or `best_effort`), ensure the status list (if present) is signed by the revocation certificate from the **same** trusted entity
 
 !!! warning "Trust validation is opt-in per credential"
 
