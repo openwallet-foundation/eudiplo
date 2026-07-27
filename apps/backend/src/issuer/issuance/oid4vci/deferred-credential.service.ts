@@ -171,6 +171,13 @@ export class DeferredCredentialService {
 
         const issuer = this.getIssuer(tenantId, session.id);
 
+        if (parsedCredentialRequest.proofs.length !== 1) {
+            throw new CredentialRequestException(
+                "invalid_proof",
+                "Deferred issuance requires exactly one key proof",
+            );
+        }
+
         // Verify the first proof to get the holder's public key
         const proof = parsedCredentialRequest.proofs[0];
         if (!proof) {
@@ -181,7 +188,8 @@ export class DeferredCredentialService {
         }
 
         const payload = decodeJwt(proof);
-        const expectedNonce = payload.nonce! as string;
+        const expectedNonce =
+            typeof payload.nonce === "string" ? payload.nonce : undefined;
         if (!expectedNonce) {
             throw new CredentialRequestException(
                 "invalid_proof",
@@ -210,6 +218,13 @@ export class DeferredCredentialService {
             });
             holderCnf = verifiedProof.signer.publicJwk as Jwk;
         } else {
+            const verifiedAttestation =
+                await issuer.verifyCredentialRequestAttestationProof({
+                    expectedNonce,
+                    issuerMetadata,
+                    keyAttestationJwt: proof,
+                });
+
             const issuanceConfig =
                 await this.issuanceService.getIssuanceConfiguration(tenantId);
 
@@ -222,19 +237,18 @@ export class DeferredCredentialService {
                 },
             );
 
-            const verifiedAttestation =
-                await issuer.verifyCredentialRequestAttestationProof({
-                    expectedNonce,
-                    issuerMetadata,
-                    keyAttestationJwt: proof,
-                });
-
             const attestedKeys = verifiedAttestation.payload
                 .attested_keys as Jwk[];
             if (!Array.isArray(attestedKeys) || attestedKeys.length === 0) {
                 throw new CredentialRequestException(
                     "invalid_proof",
                     "Attestation proof does not contain any attested keys",
+                );
+            }
+            if (attestedKeys.length !== 1) {
+                throw new CredentialRequestException(
+                    "invalid_proof",
+                    "Deferred issuance supports exactly one attested key",
                 );
             }
             holderCnf = attestedKeys[0] as Jwk;

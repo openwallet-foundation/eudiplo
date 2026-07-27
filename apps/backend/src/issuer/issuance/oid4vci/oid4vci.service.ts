@@ -1430,6 +1430,13 @@ export class Oid4vciService {
                 continue;
             }
 
+            const verifiedAttestation =
+                await issuer.verifyCredentialRequestAttestationProof({
+                    expectedNonce,
+                    issuerMetadata,
+                    keyAttestationJwt: proofValue,
+                });
+
             await validateAttestationProofTrust(
                 proofValue,
                 issuanceConfig.walletProviderTrustLists ?? [],
@@ -1439,13 +1446,6 @@ export class Oid4vciService {
                 },
             );
 
-            const verifiedAttestation =
-                await issuer.verifyCredentialRequestAttestationProof({
-                    expectedNonce,
-                    issuerMetadata,
-                    keyAttestationJwt: proofValue,
-                });
-
             const attestedKeys = verifiedAttestation.payload
                 .attested_keys as Jwk[];
             if (!Array.isArray(attestedKeys) || attestedKeys.length === 0) {
@@ -1454,26 +1454,31 @@ export class Oid4vciService {
                     "Attestation proof does not contain any attested keys",
                 );
             }
-
-            for (const cnf of attestedKeys) {
-                const cred = await this.credentialsService.getCredential(
-                    credentialConfigurationId,
-                    cnf,
-                    session,
-                    claimsResult?.claims,
-                );
-
-                credentials.push({ credential: cred });
-
-                this.auditLogger.logCredentialIssuance(
-                    logContext,
-                    credentialConfigurationId,
-                    {
-                        credentialSize: cred.length,
-                        proofVerified: true,
-                    },
+            if (attestedKeys.length !== 1) {
+                throw new CredentialRequestException(
+                    "invalid_proof",
+                    "Attestation proof must contain exactly one attested key",
                 );
             }
+
+            const cnf = attestedKeys[0] as Jwk;
+            const cred = await this.credentialsService.getCredential(
+                credentialConfigurationId,
+                cnf,
+                session,
+                claimsResult?.claims,
+            );
+
+            credentials.push({ credential: cred });
+
+            this.auditLogger.logCredentialIssuance(
+                logContext,
+                credentialConfigurationId,
+                {
+                    credentialSize: cred.length,
+                    proofVerified: true,
+                },
+            );
         }
 
         return credentials;

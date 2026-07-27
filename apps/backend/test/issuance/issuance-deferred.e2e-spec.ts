@@ -5,6 +5,7 @@ import {
     JwtSignerJwk,
 } from "@openid4vc/oauth2";
 import {
+    createKeyAttestationJwt,
     type IssuerMetadataResult,
     Openid4vciClient,
 } from "@openid4vc/openid4vci";
@@ -243,6 +244,153 @@ describe("Issuance - Deferred Credential Flow", () => {
         expect(claims.town).toBe(town);
 
         // Verify the webhook was called
+        expect(nock.isDone()).toBe(true);
+    });
+
+    test("deferred credential issuance with attestation proof type", async () => {
+        const pollingInterval = 2;
+
+        nock("http://localhost:8787")
+            .post("/deferred-attestation", () => true)
+            .reply(200, {
+                deferred: true,
+                interval: pollingInterval,
+            });
+
+        const offerResponse = await request(app.getHttpServer())
+            .post("/issuer/offer")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                flow: "pre_authorized_code",
+                response_type: "uri",
+                credentialConfigurationIds: ["citizen"],
+                credentialClaims: {
+                    citizen: {
+                        type: "webhook",
+                        webhook: {
+                            url: "http://localhost:8787/deferred-attestation",
+                            auth: { type: "none" },
+                        },
+                    },
+                },
+            })
+            .expect(201);
+
+        const attestedHolderKeyPair = await generateKeyPair("ES256", {
+            extractable: true,
+        });
+        const attestedHolderPublicJwk = await exportJWK(
+            attestedHolderKeyPair.publicKey,
+        );
+
+        const attestationSignerKeyPair = await generateKeyPair("ES256", {
+            extractable: true,
+        });
+        const attestationSignerPrivateJwk = await exportJWK(
+            attestationSignerKeyPair.privateKey,
+        );
+        const attestationSignerPublicJwk = await exportJWK(
+            attestationSignerKeyPair.publicKey,
+        );
+
+        const client = new Openid4vciClient({
+            callbacks: {
+                ...callbacks,
+                clientAuthentication: clientAuthenticationAnonymous(),
+                signJwt: getSignJwtCallback([attestationSignerPrivateJwk as Jwk]),
+            },
+        });
+
+        const credentialOffer = await client.resolveCredentialOffer(
+            offerResponse.body.uri,
+        );
+
+        const issuerMetadata = await client.resolveIssuerMetadata(
+            credentialOffer.credential_issuer,
+        );
+
+        const { accessTokenResponse } =
+            await client.retrievePreAuthorizedCodeAccessTokenFromOffer({
+                credentialOffer,
+                issuerMetadata,
+            });
+
+        const nonceResponse = await client.requestNonce({ issuerMetadata });
+
+        const attestationJwt = await createKeyAttestationJwt({
+            callbacks: {
+                ...callbacks,
+                signJwt: getSignJwtCallback([
+                    attestationSignerPrivateJwk as Jwk,
+                ]),
+            },
+            signer: {
+                method: "jwk",
+                alg: "ES256",
+                publicJwk: attestationSignerPublicJwk,
+            } as JwtSignerJwk,
+            issuedAt: new Date(),
+            use: "proof_type.attestation",
+            attestedKeys: [attestedHolderPublicJwk as Jwk],
+            nonce: nonceResponse.c_nonce,
+        });
+
+        const credentialResponse = await client.retrieveCredentials({
+            accessToken: accessTokenResponse.access_token,
+            credentialConfigurationId:
+                credentialOffer.credential_configuration_ids[0],
+            issuerMetadata,
+            proofs: {
+                attestation: [attestationJwt],
+            },
+        });
+
+        expect(
+            credentialResponse.credentialResponse.transaction_id,
+        ).toBeDefined();
+        expect(
+            credentialResponse.credentialResponse.credential,
+        ).toBeUndefined();
+
+        const transactionId =
+            credentialResponse.credentialResponse.transaction_id!;
+
+        const deferredResult1 = await retrieveDeferredCredential(
+            app,
+            issuerMetadata,
+            accessTokenResponse.access_token,
+            transactionId,
+        );
+        expect(deferredResult1.statusCode).toBe(400);
+        expect(deferredResult1.body.error).toBe("issuance_pending");
+
+        const town = "Hamburg";
+        await request(app.getHttpServer())
+            .post(`/issuer/deferred/${transactionId}/complete`)
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                claims: {
+                    town,
+                },
+            })
+            .expect(200);
+
+        const deferredResult2 = await retrieveDeferredCredential(
+            app,
+            issuerMetadata,
+            accessTokenResponse.access_token,
+            transactionId,
+        );
+        expect(deferredResult2.statusCode).toBe(200);
+        expect(deferredResult2.body.credential).toBeDefined();
+
+        const claims = await sdjwt.getClaims(
+            deferredResult2.body.credential as string,
+        );
+        expect(claims.town).toBe(town);
+
         expect(nock.isDone()).toBe(true);
     });
 

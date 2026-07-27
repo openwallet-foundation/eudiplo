@@ -524,8 +524,12 @@ export class CredentialConfigCreateComponent implements OnInit {
       keyStorageTypes: (normalizedConfig.config as any)?.keyAttestationsRequired?.key_storage || [],
       userAuthenticationTypes:
         (normalizedConfig.config as any)?.keyAttestationsRequired?.user_authentication || [],
-      proofTypesSupported:
-        (normalizedConfig.config as any)?.proofTypesSupported || this.defaultProofTypesSupported,
+      proofTypesSupported: (() => {
+        const configuredProofTypes = (normalizedConfig.config as any)?.proofTypesSupported;
+        return Array.isArray(configuredProofTypes) && configuredProofTypes.length > 0
+          ? configuredProofTypes
+          : this.defaultProofTypesSupported;
+      })(),
     } as any);
 
     const flatFields = this.flattenFieldDefinitionsForForm(normalizedConfig.fields || []);
