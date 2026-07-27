@@ -12,7 +12,7 @@ export type TrustListInput = TrustListRef;
 
 /**
  * Normalize trust-list input to structured references.
- * Supports legacy string URLs and structured entries with verifier keys.
+ * Enforces structured trust-list references with verifier material.
  */
 export function normalizeTrustListRefs(
     refs: TrustListInput[] | null | undefined,

@@ -4,6 +4,13 @@
   "title": "IssuanceConfig",
   "type": "object",
   "properties": {
+    "walletProviderTrustLists": {
+      "description": "Trust lists containing trusted wallet providers.\nEach entry MUST include either `verifierKey` or `verifierX509Der`.",
+      "type": "array",
+      "items": {
+        "$ref": "./WalletProviderTrustListRefDto.schema.json"
+      }
+    },
     "signingKeyId": {
       "type": "string",
       "description": "Key ID for signing access tokens. If unset, the default signing key is used."
@@ -104,13 +111,6 @@
     "walletAttestationRequired": {
       "type": "boolean",
       "description": "Indicates whether wallet attestation is required for the token endpoint.\nWhen enabled, wallets must provide OAuth-Client-Attestation headers.\nDefault value is false."
-    },
-    "walletProviderTrustLists": {
-      "description": "URLs of trust lists containing trusted wallet providers.\nThe wallet attestation's X.509 certificate will be validated against these trust lists.\nIf empty and walletAttestationRequired is true, all wallet providers are rejected.",
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
     },
     "display": {
       "type": "array",

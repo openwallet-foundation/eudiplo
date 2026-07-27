@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/WalletProviderTrustListRefDto.schema.json",
+  "title": "WalletProviderTrustListRefDto",
+  "type": "object",
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "verifierKey": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "JWK used to verify the trust-list JWT signature."
+    },
+    "verifierX509Der": {
+      "type": "string",
+      "description": "Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature."
+    }
+  },
+  "required": [
+    "url"
+  ],
+  "additionalProperties": false
+}

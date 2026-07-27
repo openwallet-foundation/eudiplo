@@ -581,8 +581,8 @@
                   <div fxLayout="column" fxLayoutGap="16px" class="trust-lists-section">
                     <p class="section-hint">
                       <mat-icon>info</mat-icon>
-                      Add trust list URLs containing trusted wallet providers. The wallet's X.509
-                      certificate will be validated against these lists.
+                      Add trust lists and verification material. Each trust list requires a URL and
+                      either a verifier JWK or a DER-encoded X.509 certificate.
                     </p>
                     <div formArrayName="walletProviderTrustLists">
                       @for (
@@ -590,29 +590,69 @@
                         track $index;
                         let i = $index
                       ) {
-                        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
-                          <mat-form-field fxFlex>
-                            <mat-label>Trust List URL {{ i + 1 }}</mat-label>
+                        <div
+                          [formGroupName]="i"
+                          fxLayout="column"
+                          fxLayoutGap="8px"
+                          class="trust-list-entry"
+                        >
+                          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                            <mat-form-field fxFlex>
+                              <mat-label>Trust List URL {{ i + 1 }}</mat-label>
+                              <input
+                                matInput
+                                [id]="'wallet-trust-url-' + i"
+                                formControlName="url"
+                                placeholder="https://trust-list.example.com/wallet-providers"
+                                type="url"
+                              />
+                              <mat-icon matSuffix>security</mat-icon>
+                              @if (
+                                trustList.get('url')?.invalid && trustList.get('url')?.touched
+                              ) {
+                                <mat-error>Please enter a valid URL</mat-error>
+                              }
+                            </mat-form-field>
+                            <button
+                              matIconButton
+                              type="button"
+                              color="warn"
+                              (click)="removeWalletProviderTrustList(i)"
+                              matTooltip="Remove this trust list"
+                            >
+                              <mat-icon>delete</mat-icon>
+                            </button>
+                          </div>
+
+                          <mat-form-field>
+                            <mat-label>Verifier Key (JWK JSON)</mat-label>
+                            <textarea
+                              matInput
+                              [id]="'wallet-trust-jwk-' + i"
+                              formControlName="verifierKey"
+                              rows="4"
+                              placeholder='{"kty":"EC","crv":"P-256","x":"...","y":"...","alg":"ES256"}'
+                            ></textarea>
+                            <mat-icon matSuffix>vpn_key</mat-icon>
+                          </mat-form-field>
+
+                          <mat-form-field>
+                            <mat-label>Verifier Certificate (Base64 DER)</mat-label>
                             <input
                               matInput
-                              [formControlName]="i"
-                              placeholder="https://trust-list.example.com/wallet-providers"
-                              type="url"
+                              [id]="'wallet-trust-der-' + i"
+                              formControlName="verifierX509Der"
+                              placeholder="MIIB..."
+                              type="text"
                             />
-                            <mat-icon matSuffix>security</mat-icon>
-                            @if (trustList.invalid && trustList.touched) {
-                              <mat-error>Please enter a valid URL</mat-error>
-                            }
+                            <mat-icon matSuffix>verified</mat-icon>
                           </mat-form-field>
-                          <button
-                            matIconButton
-                            type="button"
-                            color="warn"
-                            (click)="removeWalletProviderTrustList(i)"
-                            matTooltip="Remove this trust list"
-                          >
-                            <mat-icon>delete</mat-icon>
-                          </button>
+
+                          @if (trustList.invalid && trustList.touched) {
+                            <mat-error>
+                              Provide at least one verifier method: JWK or DER certificate.
+                            </mat-error>
+                          }
                         </div>
                       }
                     </div>
@@ -622,7 +662,7 @@
                         type="button"
                         (click)="addWalletProviderTrustList()"
                       >
-                        <mat-icon>add</mat-icon> Add Trust List URL
+                        <mat-icon>add</mat-icon> Add Trust List
                       </button>
                     </div>
                     @if (walletProviderTrustLists.length === 0) {
