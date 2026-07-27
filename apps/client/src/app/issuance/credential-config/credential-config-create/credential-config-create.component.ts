@@ -86,6 +86,12 @@ import { getApiErrorMessage } from '../../../utils/error-message';
   styleUrl: './credential-config-create.component.scss',
 })
 export class CredentialConfigCreateComponent implements OnInit {
+  readonly defaultProofTypesSupported: ('attestation' | 'jwt')[] = ['attestation', 'jwt'];
+  readonly proofTypeOptions: { value: 'attestation' | 'jwt'; label: string }[] = [
+    { value: 'attestation', label: 'Attestation (preferred)' },
+    { value: 'jwt', label: 'JWT' },
+  ];
+
   public form: FormGroup;
   public create = true;
   public loading = false;
@@ -189,6 +195,10 @@ export class CredentialConfigCreateComponent implements OnInit {
       keyAttestationEnabled: new FormControl(false),
       keyStorageTypes: new FormControl<string[]>([]),
       userAuthenticationTypes: new FormControl<string[]>([]),
+      proofTypesSupported: new FormControl<('attestation' | 'jwt')[]>(
+        this.defaultProofTypesSupported,
+        [Validators.required, Validators.minLength(1)]
+      ),
     } as { [k in keyof Omit<CredentialConfigCreate, 'config'>]: any });
 
     // Set initial validator for vctString based on default mode
@@ -514,6 +524,8 @@ export class CredentialConfigCreateComponent implements OnInit {
       keyStorageTypes: (normalizedConfig.config as any)?.keyAttestationsRequired?.key_storage || [],
       userAuthenticationTypes:
         (normalizedConfig.config as any)?.keyAttestationsRequired?.user_authentication || [],
+      proofTypesSupported:
+        (normalizedConfig.config as any)?.proofTypesSupported || this.defaultProofTypesSupported,
     } as any);
 
     const flatFields = this.flattenFieldDefinitionsForForm(normalizedConfig.fields || []);
@@ -858,6 +870,10 @@ export class CredentialConfigCreateComponent implements OnInit {
       format: formValue.format,
       display: formValue.displayConfigs,
       scope: formValue.scope || undefined,
+      proofTypesSupported:
+        formValue.proofTypesSupported?.length > 0
+          ? formValue.proofTypesSupported
+          : this.defaultProofTypesSupported,
       // Key attestation requirements (if enabled)
       ...(formValue.keyAttestationEnabled && {
         keyAttestationsRequired: {
@@ -936,6 +952,7 @@ export class CredentialConfigCreateComponent implements OnInit {
     delete formValue.keyAttestationEnabled;
     delete formValue.keyStorageTypes;
     delete formValue.userAuthenticationTypes;
+    delete formValue.proofTypesSupported;
 
     return formValue;
   }
