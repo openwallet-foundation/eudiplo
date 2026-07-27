@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { INestApplication } from "@nestjs/common";
 import {
     clientAuthenticationAnonymous,
@@ -9,13 +10,23 @@ import {
     Openid4vciClient,
 } from "@openid4vc/openid4vci";
 import { digest } from "@owf/crypto";
+import * as x509 from "@peculiar/x509";
+import { X509Certificate, X509CertificateGenerator } from "@peculiar/x509";
 import { SDJwtVcInstance } from "@sd-jwt/sd-jwt-vc";
-import { exportJWK, generateKeyPair } from "jose";
+import {
+    decodeJwt,
+    decodeProtectedHeader,
+    exportJWK,
+    generateKeyPair,
+    importPKCS8,
+    SignJWT,
+} from "jose";
 import nock from "nock";
 import request from "supertest";
 import { App } from "supertest/types";
 import { Agent, setGlobalDispatcher } from "undici";
 import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
+import { IssuanceDto } from "../../src/issuer/configuration/issuance/dto/issuance.dto";
 import {
     callbacks,
     getSignJwtCallback,
@@ -40,6 +51,139 @@ async function resolveCredentialOffer(offerUri: string): Promise<any> {
     });
 
     return client.resolveCredentialOffer(offerUri);
+}
+
+async function generateSelfSignedCertificate() {
+    const keyPair = await globalThis.crypto.subtle.generateKey(
+        {
+            name: "ECDSA",
+            namedCurve: "P-256",
+        },
+        true,
+        ["sign", "verify"],
+    );
+
+    x509.cryptoProvider.set(globalThis.crypto);
+
+    const cert = await X509CertificateGenerator.createSelfSigned({
+        serialNumber: "01",
+        name: "CN=Test Wallet Provider",
+        notBefore: new Date(),
+        notAfter: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+        signingAlgorithm: {
+            name: "ECDSA",
+            hash: "SHA-256",
+        },
+        keys: keyPair,
+    });
+
+    return {
+        certificate: cert,
+        privateKey: keyPair.privateKey,
+        publicKey: keyPair.publicKey,
+    };
+}
+
+async function createMockTrustListJwt(
+    signingCert: {
+        certificate: X509Certificate;
+        privateKey: CryptoKey;
+    },
+    walletProviderCert: X509Certificate,
+): Promise<string> {
+    const privateKeyArrayBuffer = await globalThis.crypto.subtle.exportKey(
+        "pkcs8",
+        signingCert.privateKey,
+    );
+    const privateKeyPem =
+        "-----BEGIN PRIVATE KEY-----\n" +
+        Buffer.from(privateKeyArrayBuffer).toString("base64") +
+        "\n-----END PRIVATE KEY-----";
+    const signingKey = await importPKCS8(privateKeyPem, "ES256");
+
+    const x5c = signingCert.certificate.toString("base64");
+    const walletCertBase64 = walletProviderCert.toString("base64");
+
+    const lotePayload = {
+        LoTE: {
+            ListAndSchemeInformation: {
+                LoTEVersionIdentifier: 1,
+                LoTESequenceNumber: 1,
+                LoTEType:
+                    "http://uri.etsi.org/19602/LoTEType/EUEAAProvidersList",
+                StatusDeterminationApproach:
+                    "http://uri.etsi.org/19602/EUEAAProvidersList/StatusDetn/EU",
+                SchemeTerritory: "EU",
+                NextUpdate: new Date(
+                    Date.now() + 365 * 24 * 60 * 60 * 1000,
+                ).toISOString(),
+                ListIssueDateTime: new Date().toISOString(),
+                SchemeOperatorName: [{ lang: "en", value: "Test Operator" }],
+            },
+            TrustedEntitiesList: [
+                {
+                    TrustedEntityInformation: {
+                        TEName: [{ lang: "en", value: "Test Wallet Provider" }],
+                    },
+                    TrustedEntityServices: [
+                        {
+                            ServiceInformation: {
+                                ServiceTypeIdentifier:
+                                    "http://uri.etsi.org/19602/SvcType/WalletProvider",
+                                ServiceName: [
+                                    {
+                                        lang: "en",
+                                        value: "Wallet Provider Service",
+                                    },
+                                ],
+                                ServiceDigitalIdentity: {
+                                    X509Certificates: [
+                                        { val: walletCertBase64 },
+                                    ],
+                                },
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+    };
+
+    return new SignJWT(lotePayload)
+        .setProtectedHeader({
+            alg: "ES256",
+            typ: "JWT",
+            x5c: [x5c],
+        })
+        .setIssuedAt()
+        .setExpirationTime("1y")
+        .sign(signingKey);
+}
+
+async function addX5cHeaderToKeyAttestationJwt(
+    keyAttestationJwt: string,
+    signerPrivateKey: CryptoKey,
+    signerCertificate: X509Certificate,
+): Promise<string> {
+    const privateKeyArrayBuffer = await globalThis.crypto.subtle.exportKey(
+        "pkcs8",
+        signerPrivateKey,
+    );
+    const privateKeyPem =
+        "-----BEGIN PRIVATE KEY-----\n" +
+        Buffer.from(privateKeyArrayBuffer).toString("base64") +
+        "\n-----END PRIVATE KEY-----";
+    const signingKey = await importPKCS8(privateKeyPem, "ES256");
+
+    const header = decodeProtectedHeader(keyAttestationJwt);
+    const payload = decodeJwt(keyAttestationJwt);
+
+    return new SignJWT(payload)
+        .setProtectedHeader({
+            ...header,
+            x5c: [signerCertificate.toString("base64")],
+        })
+        .sign(signingKey);
 }
 
 describe("Issuance - Pre-authorized Code Flow", () => {
@@ -340,6 +484,261 @@ describe("Issuance - Pre-authorized Code Flow", () => {
                 },
             }),
         ).rejects.toThrow();
+    });
+
+    test("rejects attestation proof without x5c when trust list validation is configured", async () => {
+        const trustListUrl = "http://localhost:8787/key-attestation-trust-list";
+        const currentConfig = await request(app.getHttpServer())
+            .get("/issuer/config")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .expect(200);
+
+        await request(app.getHttpServer())
+            .post("/issuer/config")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                ...currentConfig.body,
+                walletProviderTrustLists: [trustListUrl],
+            } as IssuanceDto)
+            .expect(201);
+
+        try {
+            const offerResponse = await request(app.getHttpServer())
+                .post("/issuer/offer")
+                .trustLocalhost()
+                .set("Authorization", `Bearer ${authToken}`)
+                .send({
+                    response_type: "uri",
+                    credentialConfigurationIds: ["pid-no-key"],
+                    flow: "pre_authorized_code",
+                })
+                .expect(201);
+
+            const attestationSignerKeyPair = await generateKeyPair("ES256", {
+                extractable: true,
+            });
+            const attestationSignerPrivateJwk = await exportJWK(
+                attestationSignerKeyPair.privateKey,
+            );
+            const attestationSignerPublicJwk = await exportJWK(
+                attestationSignerKeyPair.publicKey,
+            );
+            const attestedHolderKeyPair = await generateKeyPair("ES256", {
+                extractable: true,
+            });
+            const attestedHolderPublicJwk = await exportJWK(
+                attestedHolderKeyPair.publicKey,
+            );
+
+            const client = new Openid4vciClient({
+                callbacks: {
+                    ...callbacks,
+                    clientAuthentication: clientAuthenticationAnonymous(),
+                    signJwt: getSignJwtCallback([
+                        attestationSignerPrivateJwk as Jwk,
+                    ]),
+                },
+            });
+            const credentialOffer = await client.resolveCredentialOffer(
+                offerResponse.body.uri,
+            );
+            const issuerMetadata = await client.resolveIssuerMetadata(
+                credentialOffer.credential_issuer,
+            );
+
+            const { accessTokenResponse } =
+                await client.retrievePreAuthorizedCodeAccessTokenFromOffer({
+                    credentialOffer,
+                    issuerMetadata,
+                });
+
+            const nonceResponse = await client.requestNonce({ issuerMetadata });
+
+            const attestationJwt = await createKeyAttestationJwt({
+                callbacks: {
+                    ...callbacks,
+                    signJwt: getSignJwtCallback([
+                        attestationSignerPrivateJwk as Jwk,
+                    ]),
+                },
+                signer: {
+                    method: "jwk",
+                    alg: "ES256",
+                    publicJwk: attestationSignerPublicJwk,
+                } as JwtSignerJwk,
+                issuedAt: new Date(),
+                use: "proof_type.attestation",
+                attestedKeys: [attestedHolderPublicJwk as Jwk],
+                nonce: nonceResponse.c_nonce,
+            });
+
+            await expect(
+                client.retrieveCredentials({
+                    accessToken: accessTokenResponse.access_token,
+                    credentialConfigurationId:
+                        credentialOffer.credential_configuration_ids[0],
+                    issuerMetadata,
+                    proofs: {
+                        attestation: [attestationJwt],
+                    },
+                }),
+            ).rejects.toThrow(
+                "Attestation proof must contain an x5c certificate chain for trust validation",
+            );
+        } finally {
+            await request(app.getHttpServer())
+                .post("/issuer/config")
+                .trustLocalhost()
+                .set("Authorization", `Bearer ${authToken}`)
+                .send(currentConfig.body as IssuanceDto)
+                .expect(201);
+        }
+    });
+
+    test("enforces configured trust list for attestation proof x5c chains", async () => {
+        const trustListUrl = "http://localhost:8787/key-attestation-trust-list";
+        const currentConfig = await request(app.getHttpServer())
+            .get("/issuer/config")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .expect(200);
+
+        await request(app.getHttpServer())
+            .post("/issuer/config")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                ...currentConfig.body,
+                walletProviderTrustLists: [trustListUrl],
+            } as IssuanceDto)
+            .expect(201);
+
+        try {
+            const trustListSigningCert = await generateSelfSignedCertificate();
+            const trustedWalletProviderCert =
+                await generateSelfSignedCertificate();
+            const untrustedWalletProviderCert =
+                await generateSelfSignedCertificate();
+            const trustListJwt = await createMockTrustListJwt(
+                trustListSigningCert,
+                trustedWalletProviderCert.certificate,
+            );
+
+            nock("http://localhost:8787")
+                .persist()
+                .get("/key-attestation-trust-list")
+                .reply(200, trustListJwt, {
+                    "Content-Type": "application/jwt",
+                });
+
+            const issueCredentialWithAttestation = async (attestationCert: {
+                certificate: X509Certificate;
+                privateKey: CryptoKey;
+                publicKey: CryptoKey;
+            }) => {
+                const offerResponse = await request(app.getHttpServer())
+                    .post("/issuer/offer")
+                    .trustLocalhost()
+                    .set("Authorization", `Bearer ${authToken}`)
+                    .send({
+                        response_type: "uri",
+                        credentialConfigurationIds: ["pid-no-key"],
+                        flow: "pre_authorized_code",
+                    })
+                    .expect(201);
+
+                const attestationSignerPrivateJwk = await exportJWK(
+                    attestationCert.privateKey,
+                );
+                const attestationSignerPublicJwk = await exportJWK(
+                    attestationCert.publicKey,
+                );
+                const attestedHolderKeyPair = await generateKeyPair("ES256", {
+                    extractable: true,
+                });
+                const attestedHolderPublicJwk = await exportJWK(
+                    attestedHolderKeyPair.publicKey,
+                );
+
+                const client = new Openid4vciClient({
+                    callbacks: {
+                        ...callbacks,
+                        clientAuthentication: clientAuthenticationAnonymous(),
+                    },
+                });
+                const credentialOffer = await client.resolveCredentialOffer(
+                    offerResponse.body.uri,
+                );
+                const issuerMetadata = await client.resolveIssuerMetadata(
+                    credentialOffer.credential_issuer,
+                );
+
+                const { accessTokenResponse } =
+                    await client.retrievePreAuthorizedCodeAccessTokenFromOffer({
+                        credentialOffer,
+                        issuerMetadata,
+                    });
+
+                const nonceResponse = await client.requestNonce({
+                    issuerMetadata,
+                });
+
+                const attestationJwt = await createKeyAttestationJwt({
+                    callbacks: {
+                        ...callbacks,
+                        signJwt: getSignJwtCallback([
+                            attestationSignerPrivateJwk as Jwk,
+                        ]),
+                    },
+                    signer: {
+                        method: "jwk",
+                        alg: "ES256",
+                        publicJwk: attestationSignerPublicJwk,
+                    } as JwtSignerJwk,
+                    issuedAt: new Date(),
+                    use: "proof_type.attestation",
+                    attestedKeys: [attestedHolderPublicJwk as Jwk],
+                    nonce: nonceResponse.c_nonce,
+                });
+
+                const attestationJwtWithX5c =
+                    await addX5cHeaderToKeyAttestationJwt(
+                        attestationJwt,
+                        attestationCert.privateKey,
+                        attestationCert.certificate,
+                    );
+
+                return client.retrieveCredentials({
+                    accessToken: accessTokenResponse.access_token,
+                    credentialConfigurationId:
+                        credentialOffer.credential_configuration_ids[0],
+                    issuerMetadata,
+                    proofs: {
+                        attestation: [attestationJwtWithX5c],
+                    },
+                });
+            };
+
+            await expect(
+                issueCredentialWithAttestation(untrustedWalletProviderCert),
+            ).rejects.toThrow();
+
+            const credentialResponse = await issueCredentialWithAttestation(
+                trustedWalletProviderCert,
+            );
+            expect(
+                credentialResponse.credentialResponse.credentials?.length,
+            ).toBeGreaterThan(0);
+        } finally {
+            await request(app.getHttpServer())
+                .post("/issuer/config")
+                .trustLocalhost()
+                .set("Authorization", `Bearer ${authToken}`)
+                .send(currentConfig.body as IssuanceDto)
+                .expect(201);
+        }
     });
 
     test("enforces attestation-only proof policy per credential config", async () => {
