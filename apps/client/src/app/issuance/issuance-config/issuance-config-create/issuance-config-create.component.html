@@ -607,9 +607,7 @@
                                 type="url"
                               />
                               <mat-icon matSuffix>security</mat-icon>
-                              @if (
-                                trustList.get('url')?.invalid && trustList.get('url')?.touched
-                              ) {
+                              @if (trustList.get('url')?.invalid && trustList.get('url')?.touched) {
                                 <mat-error>Please enter a valid URL</mat-error>
                               }
                             </mat-form-field>

@@ -64,38 +64,38 @@ import { RegistrarService } from '../../../registrar/registrar.service';
   styleUrl: './issuance-config-create.component.scss',
 })
 export class IssuanceConfigCreateComponent implements OnInit {
-    private trustListVerifierValidator(control: AbstractControl): ValidationErrors | null {
-      const value = control.value as {
-        verifierKey?: unknown;
-        verifierX509Der?: unknown;
-      };
+  private trustListVerifierValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value as {
+      verifierKey?: unknown;
+      verifierX509Der?: unknown;
+    };
 
-      const hasVerifierKey =
-        !!value?.verifierKey && typeof value.verifierKey === 'string' && value.verifierKey.trim();
-      const hasVerifierX509Der =
-        !!value?.verifierX509Der &&
-        typeof value.verifierX509Der === 'string' &&
-        value.verifierX509Der.trim();
+    const hasVerifierKey =
+      !!value?.verifierKey && typeof value.verifierKey === 'string' && value.verifierKey.trim();
+    const hasVerifierX509Der =
+      !!value?.verifierX509Der &&
+      typeof value.verifierX509Der === 'string' &&
+      value.verifierX509Der.trim();
 
-      return hasVerifierKey || hasVerifierX509Der ? null : { missingVerifier: true };
-    }
+    return hasVerifierKey || hasVerifierX509Der ? null : { missingVerifier: true };
+  }
 
-    private createWalletProviderTrustListGroup(value?: {
-      url?: string;
-      verifierKey?: string;
-      verifierX509Der?: string;
-    }): FormGroup {
-      return this.fb.group(
-        {
-          url: [value?.url ?? '', [Validators.required]],
-          verifierKey: [value?.verifierKey ?? ''],
-          verifierX509Der: [value?.verifierX509Der ?? ''],
-        },
-        {
-          validators: [this.trustListVerifierValidator.bind(this)],
-        }
-      );
-    }
+  private createWalletProviderTrustListGroup(value?: {
+    url?: string;
+    verifierKey?: string;
+    verifierX509Der?: string;
+  }): FormGroup {
+    return this.fb.group(
+      {
+        url: [value?.url ?? '', [Validators.required]],
+        verifierKey: [value?.verifierKey ?? ''],
+        verifierX509Der: [value?.verifierX509Der ?? ''],
+      },
+      {
+        validators: [this.trustListVerifierValidator.bind(this)],
+      }
+    );
+  }
 
   public form: FormGroup;
   public loading = false;
