@@ -1508,6 +1508,13 @@ export class Oid4vciService {
         }
 
         if (hasAttestationProofs) {
+            if (attestationProofs.length !== 1) {
+                throw new CredentialRequestException(
+                    "invalid_proof",
+                    "Attestation proof type requires exactly one key attestation JWT",
+                );
+            }
+
             return {
                 proofType: "attestation",
                 values: attestationProofs,
