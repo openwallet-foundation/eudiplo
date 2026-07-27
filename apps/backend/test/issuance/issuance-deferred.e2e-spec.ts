@@ -298,7 +298,9 @@ describe("Issuance - Deferred Credential Flow", () => {
             callbacks: {
                 ...callbacks,
                 clientAuthentication: clientAuthenticationAnonymous(),
-                signJwt: getSignJwtCallback([attestationSignerPrivateJwk as Jwk]),
+                signJwt: getSignJwtCallback([
+                    attestationSignerPrivateJwk as Jwk,
+                ]),
             },
         });
 

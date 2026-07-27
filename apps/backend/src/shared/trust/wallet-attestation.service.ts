@@ -67,7 +67,7 @@ export class WalletAttestationService {
      * @param clientAttestation The client attestation from the request
      * @param authorizationServer The authorization server URL
      * @param walletAttestationRequired Whether wallet attestation is required
-    * @param walletProviderTrustLists Trust lists containing trusted wallet providers
+     * @param walletProviderTrustLists Trust lists containing trusted wallet providers
      * @throws UnauthorizedException if attestation is required but not provided, or if provided but invalid
      */
     @Span("walletAttestation.verify")
