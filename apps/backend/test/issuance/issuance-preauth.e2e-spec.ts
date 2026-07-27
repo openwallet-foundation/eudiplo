@@ -501,11 +501,13 @@ describe("Issuance - Pre-authorized Code Flow", () => {
             .set("Authorization", `Bearer ${authToken}`)
             .send({
                 ...currentConfig.body,
-                walletProviderTrustLists: [{
-                    url: trustListUrl,
-                    verifierX509Der:
-                        trustListSigningCert.certificate.toString("base64"),
-                }],
+                walletProviderTrustLists: [
+                    {
+                        url: trustListUrl,
+                        verifierX509Der:
+                            trustListSigningCert.certificate.toString("base64"),
+                    },
+                ],
             } as IssuanceDto)
             .expect(201);
 
@@ -617,11 +619,13 @@ describe("Issuance - Pre-authorized Code Flow", () => {
             .set("Authorization", `Bearer ${authToken}`)
             .send({
                 ...currentConfig.body,
-                walletProviderTrustLists: [{
-                    url: trustListUrl,
-                    verifierX509Der:
-                        trustListSigningCert.certificate.toString("base64"),
-                }],
+                walletProviderTrustLists: [
+                    {
+                        url: trustListUrl,
+                        verifierX509Der:
+                            trustListSigningCert.certificate.toString("base64"),
+                    },
+                ],
             } as IssuanceDto)
             .expect(201);
 

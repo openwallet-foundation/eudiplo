@@ -40,7 +40,11 @@ export class TrustListJwtService {
 
     private derToPemCertificate(derBase64: string): string {
         const der = Buffer.from(derBase64, "base64");
-        const body = der.toString("base64").match(/.{1,64}/g)?.join("\n") || "";
+        const body =
+            der
+                .toString("base64")
+                .match(/.{1,64}/g)
+                ?.join("\n") || "";
         return `-----BEGIN CERTIFICATE-----\n${body}\n-----END CERTIFICATE-----`;
     }
 
@@ -50,10 +54,7 @@ export class TrustListJwtService {
      * - verifierKey (JWK), or
      * - verifierX509Der (base64 DER X.509 certificate)
      */
-    async verifyTrustListJwt(
-        ref: TrustListRef,
-        jwt: string,
-    ): Promise<void> {
+    async verifyTrustListJwt(ref: TrustListRef, jwt: string): Promise<void> {
         if (!ref.verifierKey && !ref.verifierX509Der) {
             throw new Error(
                 `Trust list JWT verification material missing for ${ref.url}: configure verifierKey or verifierX509Der`,
