@@ -152,12 +152,13 @@ export class DeferredCredentialService {
             anchors,
         );
 
-        const matched = await this.x509ValidationService.pathMatchesTrustedEntities(
-            path,
-            trustStore.entities,
-            "leaf",
-            ServiceTypeIdentifiers.WalletProvider,
-        );
+        const matched =
+            await this.x509ValidationService.pathMatchesTrustedEntities(
+                path,
+                trustStore.entities,
+                "leaf",
+                ServiceTypeIdentifiers.WalletProvider,
+            );
 
         if (!matched) {
             throw new CredentialRequestException(

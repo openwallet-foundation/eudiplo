@@ -4,7 +4,10 @@ import {
     Jwk,
     JwtSignerJwk,
 } from "@openid4vc/oauth2";
-import { createKeyAttestationJwt, Openid4vciClient } from "@openid4vc/openid4vci";
+import {
+    createKeyAttestationJwt,
+    Openid4vciClient,
+} from "@openid4vc/openid4vci";
 import { digest } from "@owf/crypto";
 import { SDJwtVcInstance } from "@sd-jwt/sd-jwt-vc";
 import { exportJWK, generateKeyPair } from "jose";

@@ -1532,12 +1532,13 @@ export class Oid4vciService {
             anchors,
         );
 
-        const matched = await this.x509ValidationService.pathMatchesTrustedEntities(
-            path,
-            trustStore.entities,
-            "leaf",
-            ServiceTypeIdentifiers.WalletProvider,
-        );
+        const matched =
+            await this.x509ValidationService.pathMatchesTrustedEntities(
+                path,
+                trustStore.entities,
+                "leaf",
+                ServiceTypeIdentifiers.WalletProvider,
+            );
 
         if (!matched) {
             throw new CredentialRequestException(
@@ -1563,10 +1564,7 @@ export class Oid4vciService {
         }
 
         const attestationProofs = parsedCredentialRequest?.proofs?.attestation;
-        if (
-            Array.isArray(attestationProofs) &&
-            attestationProofs.length > 0
-        ) {
+        if (Array.isArray(attestationProofs) && attestationProofs.length > 0) {
             return {
                 proofType: "attestation",
                 values: attestationProofs,
@@ -1768,8 +1766,9 @@ export class Oid4vciService {
             );
         }
 
-        const parsedProofs =
-            this.resolveParsedCredentialProofs(parsedCredentialRequest);
+        const parsedProofs = this.resolveParsedCredentialProofs(
+            parsedCredentialRequest,
+        );
 
         // Verify access token
         const tokenPayload = await this.verifyResourceAccessToken(
