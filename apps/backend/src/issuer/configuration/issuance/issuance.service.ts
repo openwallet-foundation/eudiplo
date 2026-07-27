@@ -8,6 +8,7 @@ import { Repository } from "typeorm";
 import { AuditLogService } from "../../../audit-log/audit-log.service";
 import { TokenPayload } from "../../../auth/token.decorator";
 import { RegistrarService } from "../../../registrar/registrar.service";
+import { normalizeRulebookTrustListRefs } from "../../../shared/trust/types";
 import {
     extractRequestMeta,
     getChangedFields,
@@ -370,6 +371,13 @@ export class IssuanceService {
     private sanitizeIssuanceConfigForLog(
         config: IssuanceConfig,
     ): Record<string, unknown> {
+        const walletProviderTrustLists = normalizeRulebookTrustListRefs(
+            config.walletProviderTrustLists,
+        ).map((ref) => ({
+            url: ref.url,
+            hasVerifierKey: !!ref.verifierKey,
+        }));
+
         const registrationCertificate = config.registrationCertificate
             ? {
                   ...config.registrationCertificate,
@@ -391,7 +399,7 @@ export class IssuanceService {
             batchSize: config.batchSize,
             dPopRequired: config.dPopRequired,
             walletAttestationRequired: config.walletAttestationRequired,
-            walletProviderTrustLists: config.walletProviderTrustLists,
+            walletProviderTrustLists,
             signingKeyId: config.signingKeyId,
             authorizationServers: config.authorizationServers,
             federation: config.federation,

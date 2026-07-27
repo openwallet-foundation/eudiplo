@@ -1,6 +1,8 @@
 import { decodeProtectedHeader } from "jose";
 import { TrustStoreService } from "../../../shared/trust/trust-store.service";
 import {
+    normalizeRulebookTrustListRefs,
+    RulebookTrustListInput,
     ServiceTypeIdentifiers,
     TrustListSource,
 } from "../../../shared/trust/types";
@@ -18,10 +20,12 @@ export interface AttestationProofTrustValidationDeps {
  */
 export async function validateAttestationProofTrust(
     keyAttestationJwt: string,
-    trustListUrls: string[],
+    trustListRefsInput: RulebookTrustListInput[],
     deps: AttestationProofTrustValidationDeps,
 ): Promise<void> {
-    if (trustListUrls.length === 0) {
+    const trustListRefs = normalizeRulebookTrustListRefs(trustListRefsInput);
+
+    if (trustListRefs.length === 0) {
         return;
     }
 
@@ -36,7 +40,7 @@ export async function validateAttestationProofTrust(
         }
 
         const trustListSource: TrustListSource = {
-            lotes: trustListUrls.map((url) => ({ url })),
+            lotes: trustListRefs,
             acceptedServiceTypes: [ServiceTypeIdentifiers.WalletProvider],
         };
 

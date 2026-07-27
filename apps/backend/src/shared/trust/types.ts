@@ -7,6 +7,43 @@ export type RulebookTrustListRef = {
     verifierKey?: JWK;
 };
 
+export type RulebookTrustListInput = string | RulebookTrustListRef;
+
+/**
+ * Normalize trust-list input to structured references.
+ * Supports legacy string URLs and structured entries with verifier keys.
+ */
+export function normalizeRulebookTrustListRefs(
+    refs: RulebookTrustListInput[] | null | undefined,
+): RulebookTrustListRef[] {
+    if (!Array.isArray(refs)) {
+        return [];
+    }
+
+    return refs.flatMap((ref) => {
+        if (typeof ref === "string") {
+            const url = ref.trim();
+            return url.length > 0 ? [{ url }] : [];
+        }
+
+        if (!ref || typeof ref !== "object") {
+            return [];
+        }
+
+        const url = typeof ref.url === "string" ? ref.url.trim() : "";
+        if (url.length === 0) {
+            return [];
+        }
+
+        return [
+            {
+                url,
+                verifierKey: ref.verifierKey,
+            },
+        ];
+    });
+}
+
 export type ServiceTypeIdentifier = string;
 
 /** Well-known service type identifiers from ETSI TS 119 602 */

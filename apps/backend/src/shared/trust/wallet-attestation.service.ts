@@ -9,7 +9,12 @@ import { CryptoService } from "../../crypto/crypto.service";
 import { CryptoImplementationService } from "../../crypto/key/crypto-implementation/crypto-implementation.service";
 import { StatusListVerifierService } from "./status-list-verifier.service";
 import { BuiltTrustStore, TrustStoreService } from "./trust-store.service";
-import { ServiceTypeIdentifiers, TrustListSource } from "./types";
+import {
+    normalizeRulebookTrustListRefs,
+    RulebookTrustListInput,
+    ServiceTypeIdentifiers,
+    TrustListSource,
+} from "./types";
 import {
     MatchedTrustedEntity,
     X509ValidationService,
@@ -62,7 +67,7 @@ export class WalletAttestationService {
      * @param clientAttestation The client attestation from the request
      * @param authorizationServer The authorization server URL
      * @param walletAttestationRequired Whether wallet attestation is required
-     * @param walletProviderTrustLists URLs of trust lists containing trusted wallet providers
+    * @param walletProviderTrustLists Trust lists containing trusted wallet providers
      * @throws UnauthorizedException if attestation is required but not provided, or if provided but invalid
      */
     @Span("walletAttestation.verify")
@@ -71,7 +76,7 @@ export class WalletAttestationService {
         clientAttestation: ClientAttestation | undefined,
         authorizationServer: string,
         walletAttestationRequired: boolean,
-        walletProviderTrustLists: string[],
+        walletProviderTrustLists: RulebookTrustListInput[],
     ): Promise<void> {
         if (!clientAttestation) {
             if (walletAttestationRequired) {
@@ -124,18 +129,20 @@ export class WalletAttestationService {
      * Validate the wallet provider's X.509 certificate against configured trust lists.
      * Returns the matched entity and trust store for use in status list verification.
      * @param clientAttestationJwt The wallet attestation JWT
-     * @param trustListUrls URLs of trust lists to validate against
+     * @param trustListInputs Trust lists to validate against
      * @returns The matched entity and trust store (both null if no trust lists configured)
      * @throws UnauthorizedException if certificate is not trusted
      */
     private async validateWalletProviderCertificate(
         clientAttestationJwt: string,
-        trustListUrls: string[],
+        trustListInputs: RulebookTrustListInput[],
     ): Promise<{
         matchedEntity: MatchedTrustedEntity | null;
         trustStore: BuiltTrustStore | null;
     }> {
-        if (trustListUrls.length === 0) {
+        const trustListRefs = normalizeRulebookTrustListRefs(trustListInputs);
+
+        if (trustListRefs.length === 0) {
             // No trust lists configured - accept any valid attestation
             this.logger.warn(
                 "No wallet provider trust lists configured - accepting attestation without certificate validation",
@@ -155,7 +162,7 @@ export class WalletAttestationService {
 
         // Build trust list source from configured URLs
         const trustListSource: TrustListSource = {
-            lotes: trustListUrls.map((url) => ({ url })),
+            lotes: trustListRefs,
             acceptedServiceTypes: [ServiceTypeIdentifiers.WalletProvider],
         };
 

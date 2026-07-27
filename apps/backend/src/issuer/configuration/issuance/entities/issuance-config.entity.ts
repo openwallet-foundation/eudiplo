@@ -42,6 +42,7 @@ import {
     IssuerRegistrationCertificateCache,
     IssuerRegistrationCertificateConfig,
 } from "../dto/issuer-registration-certificate.dto";
+import type { RulebookTrustListInput } from "../../../../shared/trust/types";
 
 /**
  * Entity to manage issuance configs
@@ -99,14 +100,36 @@ export class IssuanceConfig {
     walletAttestationRequired?: boolean;
 
     /**
-     * URLs of trust lists containing trusted wallet providers.
-     * The wallet attestation's X.509 certificate will be validated against these trust lists.
-     * If empty and walletAttestationRequired is true, all wallet providers are rejected.
+     * Trust lists containing trusted wallet providers.
+     * Backward compatible format accepts URL strings.
+     * Structured entries may include `verifierKey` to verify trust-list JWT integrity.
      */
+    @ApiPropertyOptional({
+        type: "array",
+        items: {
+            oneOf: [
+                { type: "string", format: "uri" },
+                {
+                    type: "object",
+                    required: ["url"],
+                    additionalProperties: false,
+                    properties: {
+                        url: { type: "string", format: "uri" },
+                        verifierKey: {
+                            type: "object",
+                            additionalProperties: true,
+                            description:
+                                "JWK used to verify the trust-list JWT signature.",
+                        },
+                    },
+                },
+            ],
+        },
+    })
     @IsArray()
     @IsOptional()
     @Column({ type: "json", nullable: true })
-    walletProviderTrustLists?: string[];
+    walletProviderTrustLists?: RulebookTrustListInput[];
 
     /**
      * Optional key ID to use for signing access tokens.
