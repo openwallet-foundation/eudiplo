@@ -33,7 +33,7 @@ import {
     ParseCredentialRequestReturn,
 } from "@openid4vc/openid4vci";
 import type { Request } from "express";
-import { decodeJwt, decodeProtectedHeader } from "jose";
+import { decodeJwt } from "jose";
 import { Span, TraceService } from "nestjs-otel";
 import { firstValueFrom } from "rxjs";
 import { LessThan, Repository } from "typeorm";
@@ -49,10 +49,6 @@ import { SessionService } from "../../../session/session.service";
 import { FederationTrustService } from "../../../shared/trust/federation-trust.service";
 import { TrustStoreService } from "../../../shared/trust/trust-store.service";
 import { FederationTrustSource } from "../../../shared/trust/types";
-import {
-    ServiceTypeIdentifiers,
-    TrustListSource,
-} from "../../../shared/trust/types";
 import { X509ValidationService } from "../../../shared/trust/x509-validation.service";
 import { AuditLogContext } from "../../../shared/utils/logger/audit-log.service";
 import { SessionLoggerService } from "../../../shared/utils/logger/session-logger.service";
@@ -86,6 +82,7 @@ import {
 import { DeferredTransactionEntity } from "./entities/deferred-transaction.entity";
 import { NonceEntity } from "./entities/nonces.entity";
 import { CredentialRequestException } from "./exceptions";
+import { validateAttestationProofTrust } from "./attestation-proof-trust.util";
 import { getHeadersFromRequest } from "./util";
 
 /**
@@ -1432,9 +1429,13 @@ export class Oid4vciService {
                 continue;
             }
 
-            await this.validateAttestationProofTrust(
+            await validateAttestationProofTrust(
                 proofValue,
-                issuanceConfig,
+                issuanceConfig.walletProviderTrustLists ?? [],
+                {
+                    trustStoreService: this.trustStoreService,
+                    x509ValidationService: this.x509ValidationService,
+                },
             );
 
             const verifiedAttestation =
@@ -1475,77 +1476,6 @@ export class Oid4vciService {
         }
 
         return credentials;
-    }
-
-    /**
-     * Validate attestation proof signer chain against configured trusted wallet providers.
-     * If no trust list is configured, this check is skipped for backward compatibility.
-     */
-    private async validateAttestationProofTrust(
-        keyAttestationJwt: string,
-        issuanceConfig: IssuanceConfig,
-    ): Promise<void> {
-        const trustListUrls = issuanceConfig.walletProviderTrustLists ?? [];
-        if (trustListUrls.length === 0) {
-            return;
-        }
-
-        const header = decodeProtectedHeader(keyAttestationJwt);
-        const x5c = header.x5c;
-        if (!Array.isArray(x5c) || x5c.length === 0) {
-            throw new CredentialRequestException(
-                "invalid_proof",
-                "Attestation proof must contain an x5c certificate chain for trust validation",
-            );
-        }
-
-        const trustListSource: TrustListSource = {
-            lotes: trustListUrls.map((url) => ({ url })),
-            acceptedServiceTypes: [ServiceTypeIdentifiers.WalletProvider],
-        };
-
-        const trustStore =
-            await this.trustStoreService.getTrustStore(trustListSource);
-        if (trustStore.entities.length === 0) {
-            throw new CredentialRequestException(
-                "invalid_proof",
-                "No trusted wallet providers found in configured trust lists",
-            );
-        }
-
-        const presentedChain = this.x509ValidationService.parseX5c(x5c);
-        const leaf = presentedChain[0];
-        if (!leaf) {
-            throw new CredentialRequestException(
-                "invalid_proof",
-                "Attestation proof x5c chain is empty",
-            );
-        }
-
-        const anchors = this.x509ValidationService.parseTrustAnchors(
-            trustStore.entities.flatMap((entity) => entity.services),
-        );
-
-        const path = await this.x509ValidationService.buildPath(
-            leaf,
-            presentedChain,
-            anchors,
-        );
-
-        const matched =
-            await this.x509ValidationService.pathMatchesTrustedEntities(
-                path,
-                trustStore.entities,
-                "leaf",
-                ServiceTypeIdentifiers.WalletProvider,
-            );
-
-        if (!matched) {
-            throw new CredentialRequestException(
-                "invalid_proof",
-                "Attestation proof signer is not trusted by configured wallet provider trust lists",
-            );
-        }
     }
 
     /**
