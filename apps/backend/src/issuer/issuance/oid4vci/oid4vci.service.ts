@@ -33,7 +33,7 @@ import {
     ParseCredentialRequestReturn,
 } from "@openid4vc/openid4vci";
 import type { Request } from "express";
-import { decodeJwt } from "jose";
+import { decodeJwt, decodeProtectedHeader } from "jose";
 import { Span, TraceService } from "nestjs-otel";
 import { firstValueFrom } from "rxjs";
 import { LessThan, Repository } from "typeorm";
@@ -47,7 +47,13 @@ import {
 } from "../../../session/entities/session.entity";
 import { SessionService } from "../../../session/session.service";
 import { FederationTrustService } from "../../../shared/trust/federation-trust.service";
+import { TrustStoreService } from "../../../shared/trust/trust-store.service";
 import { FederationTrustSource } from "../../../shared/trust/types";
+import {
+    ServiceTypeIdentifiers,
+    TrustListSource,
+} from "../../../shared/trust/types";
+import { X509ValidationService } from "../../../shared/trust/x509-validation.service";
 import { AuditLogContext } from "../../../shared/utils/logger/audit-log.service";
 import { SessionLoggerService } from "../../../shared/utils/logger/session-logger.service";
 import { WebhookService } from "../../../shared/utils/webhook/webhook.service";
@@ -125,6 +131,13 @@ interface IssuerInfo {
     data: string;
 }
 
+type SupportedCredentialProofType = "jwt" | "attestation";
+
+interface ParsedCredentialProofs {
+    proofType: SupportedCredentialProofType;
+    values: string[];
+}
+
 /**
  * Service for handling OID4VCI (OpenID 4 Verifiable Credential Issuance) operations.
  */
@@ -141,6 +154,8 @@ export class Oid4vciService {
         private readonly auditLogger: SessionLoggerService,
         private readonly issuanceService: IssuanceService,
         private readonly federationTrustService: FederationTrustService,
+        private readonly trustStoreService: TrustStoreService,
+        private readonly x509ValidationService: X509ValidationService,
         private readonly webhookService: WebhookService,
         private readonly httpService: HttpService,
         private readonly authorizationServersService: AuthorizationServersService,
@@ -641,42 +656,6 @@ export class Oid4vciService {
         } catch {
             return false;
         }
-    }
-
-    private toRegistrationCertificateCredentialFromAttestation(attestation: {
-        format?: string;
-        meta?: Record<string, unknown>;
-    }):
-        | NonNullable<RegistrationCertificateCreation["credentials"]>[number]
-        | undefined {
-        if (!attestation.format) {
-            return undefined;
-        }
-
-        return {
-            format: attestation.format as "dc+sd-jwt" | "mso_mdoc",
-            meta: attestation.meta ?? {},
-        };
-    }
-
-    private buildRegistrationCertificateDcql(
-        credentials: NonNullable<
-            RegistrationCertificateCreation["credentials"]
-        >,
-    ): {
-        credentials: Array<{
-            format: string;
-            claims?: Array<{ path: string[] }>;
-            meta: Record<string, unknown>;
-        }>;
-    } {
-        return {
-            credentials: credentials.map((credential) => ({
-                format: credential.format,
-                claims: credential.claims,
-                meta: credential.meta ?? {},
-            })),
-        };
     }
 
     private async resolveIssuerRegistrationCertificateJwt(
@@ -1350,6 +1329,7 @@ export class Oid4vciService {
      */
     private async validateAndConsumeNonces(
         proofs: string[],
+        proofType: SupportedCredentialProofType,
         tenantId: string,
         logContext: AuditLogContext,
         credentialConfigurationId: string,
@@ -1357,12 +1337,12 @@ export class Oid4vciService {
         // OID4VCI spec Section 8.3.1.2: When the Credential Issuer has a Nonce Endpoint,
         // all key proofs MUST contain a c_nonce value.
         const uniqueNonces = new Set<string>();
-        for (const jwt of proofs) {
-            const payload = decodeJwt(jwt);
+        for (const proofValue of proofs) {
+            const payload = decodeJwt(proofValue);
             if (!payload.nonce) {
                 throw new CredentialRequestException(
                     "invalid_proof",
-                    "All key proofs must contain a nonce when the nonce endpoint is offered",
+                    `All ${proofType} key proofs must contain a nonce when the nonce endpoint is offered`,
                 );
             }
             uniqueNonces.add(payload.nonce as string);
@@ -1407,45 +1387,196 @@ export class Oid4vciService {
      */
     private async issueCredentialsForProofs(
         proofs: string[],
+        proofType: SupportedCredentialProofType,
         issuer: Openid4vciIssuer,
         session: Session,
         credentialConfigurationId: string,
         claimsResult: ClaimsWebhookResult | undefined,
         logContext: AuditLogContext,
+        issuanceConfig: IssuanceConfig,
     ): Promise<{ credential: string }[]> {
         const credentials: { credential: string }[] = [];
 
-        for (const jwt of proofs) {
-            const payload = decodeJwt(jwt);
+        const issuerMetadata = await this.issuerMetadata(session.tenantId);
+
+        for (const proofValue of proofs) {
+            const payload = decodeJwt(proofValue);
             const expectedNonce = payload.nonce! as string;
 
-            const verifiedProof = await issuer.verifyCredentialRequestJwtProof({
-                expectedNonce,
-                issuerMetadata: await this.issuerMetadata(session.tenantId),
-                jwt,
-            });
+            if (proofType === "jwt") {
+                const verifiedProof =
+                    await issuer.verifyCredentialRequestJwtProof({
+                        expectedNonce,
+                        issuerMetadata,
+                        jwt: proofValue,
+                    });
 
-            const cnf = verifiedProof.signer.publicJwk;
-            const cred = await this.credentialsService.getCredential(
-                credentialConfigurationId,
-                cnf,
-                session,
-                claimsResult?.claims,
+                const cnf = verifiedProof.signer.publicJwk;
+                const cred = await this.credentialsService.getCredential(
+                    credentialConfigurationId,
+                    cnf,
+                    session,
+                    claimsResult?.claims,
+                );
+
+                credentials.push({ credential: cred });
+
+                this.auditLogger.logCredentialIssuance(
+                    logContext,
+                    credentialConfigurationId,
+                    {
+                        credentialSize: cred.length,
+                        proofVerified: true,
+                    },
+                );
+                continue;
+            }
+
+            await this.validateAttestationProofTrust(
+                proofValue,
+                issuanceConfig,
             );
 
-            credentials.push({ credential: cred });
+            const verifiedAttestation =
+                await issuer.verifyCredentialRequestAttestationProof({
+                    expectedNonce,
+                    issuerMetadata,
+                    keyAttestationJwt: proofValue,
+                });
 
-            this.auditLogger.logCredentialIssuance(
-                logContext,
-                credentialConfigurationId,
-                {
-                    credentialSize: cred.length,
-                    proofVerified: true,
-                },
-            );
+            const attestedKeys = verifiedAttestation.payload
+                .attested_keys as Jwk[];
+            if (!Array.isArray(attestedKeys) || attestedKeys.length === 0) {
+                throw new CredentialRequestException(
+                    "invalid_proof",
+                    "Attestation proof does not contain any attested keys",
+                );
+            }
+
+            for (const cnf of attestedKeys) {
+                const cred = await this.credentialsService.getCredential(
+                    credentialConfigurationId,
+                    cnf,
+                    session,
+                    claimsResult?.claims,
+                );
+
+                credentials.push({ credential: cred });
+
+                this.auditLogger.logCredentialIssuance(
+                    logContext,
+                    credentialConfigurationId,
+                    {
+                        credentialSize: cred.length,
+                        proofVerified: true,
+                    },
+                );
+            }
         }
 
         return credentials;
+    }
+
+    /**
+     * Validate attestation proof signer chain against configured trusted wallet providers.
+     * If no trust list is configured, this check is skipped for backward compatibility.
+     */
+    private async validateAttestationProofTrust(
+        keyAttestationJwt: string,
+        issuanceConfig: IssuanceConfig,
+    ): Promise<void> {
+        const trustListUrls = issuanceConfig.walletProviderTrustLists ?? [];
+        if (trustListUrls.length === 0) {
+            return;
+        }
+
+        const header = decodeProtectedHeader(keyAttestationJwt);
+        const x5c = header.x5c;
+        if (!Array.isArray(x5c) || x5c.length === 0) {
+            throw new CredentialRequestException(
+                "invalid_proof",
+                "Attestation proof must contain an x5c certificate chain for trust validation",
+            );
+        }
+
+        const trustListSource: TrustListSource = {
+            lotes: trustListUrls.map((url) => ({ url })),
+            acceptedServiceTypes: [ServiceTypeIdentifiers.WalletProvider],
+        };
+
+        const trustStore =
+            await this.trustStoreService.getTrustStore(trustListSource);
+        if (trustStore.entities.length === 0) {
+            throw new CredentialRequestException(
+                "invalid_proof",
+                "No trusted wallet providers found in configured trust lists",
+            );
+        }
+
+        const presentedChain = this.x509ValidationService.parseX5c(x5c);
+        const leaf = presentedChain[0];
+        if (!leaf) {
+            throw new CredentialRequestException(
+                "invalid_proof",
+                "Attestation proof x5c chain is empty",
+            );
+        }
+
+        const anchors = this.x509ValidationService.parseTrustAnchors(
+            trustStore.entities.flatMap((entity) => entity.services),
+        );
+
+        const path = await this.x509ValidationService.buildPath(
+            leaf,
+            presentedChain,
+            anchors,
+        );
+
+        const matched = await this.x509ValidationService.pathMatchesTrustedEntities(
+            path,
+            trustStore.entities,
+            "leaf",
+            ServiceTypeIdentifiers.WalletProvider,
+        );
+
+        if (!matched) {
+            throw new CredentialRequestException(
+                "invalid_proof",
+                "Attestation proof signer is not trusted by configured wallet provider trust lists",
+            );
+        }
+    }
+
+    /**
+     * Resolve supported key proofs from the parsed credential request.
+     * We currently support JWT proof-of-possession and attestation proof types.
+     */
+    private resolveParsedCredentialProofs(
+        parsedCredentialRequest: ParseCredentialRequestReturn,
+    ): ParsedCredentialProofs {
+        const jwtProofs = parsedCredentialRequest?.proofs?.jwt;
+        if (Array.isArray(jwtProofs) && jwtProofs.length > 0) {
+            return {
+                proofType: "jwt",
+                values: jwtProofs,
+            };
+        }
+
+        const attestationProofs = parsedCredentialRequest?.proofs?.attestation;
+        if (
+            Array.isArray(attestationProofs) &&
+            attestationProofs.length > 0
+        ) {
+            return {
+                proofType: "attestation",
+                values: attestationProofs,
+            };
+        }
+
+        throw new CredentialRequestException(
+            "invalid_proof",
+            "The proofs parameter is missing or does not contain supported proof types (jwt, attestation)",
+        );
     }
 
     /**
@@ -1637,12 +1768,8 @@ export class Oid4vciService {
             );
         }
 
-        if (parsedCredentialRequest?.proofs?.jwt === undefined) {
-            throw new CredentialRequestException(
-                "invalid_proof",
-                "The proofs parameter is missing or does not contain required JWT proofs",
-            );
-        }
+        const parsedProofs =
+            this.resolveParsedCredentialProofs(parsedCredentialRequest);
 
         // Verify access token
         const tokenPayload = await this.verifyResourceAccessToken(
@@ -1711,7 +1838,8 @@ export class Oid4vciService {
             "session.id": session.id,
             "session.tenantId": session.tenantId,
             "oid4vci.credentialConfigurationId": credentialConfigurationId,
-            "oid4vci.proofCount": parsedCredentialRequest.proofs.jwt.length,
+            "oid4vci.proofCount": parsedProofs.values.length,
+            "oid4vci.proofType": parsedProofs.proofType,
             "oid4vci.isExternalAs": isExternalAsToken,
             "oid4vci.isChainedAs": isChainedAsToken,
         });
@@ -1726,7 +1854,8 @@ export class Oid4vciService {
 
         this.auditLogger.logFlowStart(logContext, {
             credentialConfigurationId,
-            proofCount: parsedCredentialRequest.proofs.jwt.length,
+            proofCount: parsedProofs.values.length,
+            proofType: parsedProofs.proofType,
             isExternalAs: isExternalAsToken,
             isChainedAs: isChainedAsToken,
         });
@@ -1737,9 +1866,8 @@ export class Oid4vciService {
                 return this.deferredCredentialService.createDeferredTransaction(
                     {
                         parsedCredentialRequest: {
-                            proofs: {
-                                jwt: parsedCredentialRequest.proofs.jwt!,
-                            },
+                            proofs: parsedProofs.values,
+                            proofType: parsedProofs.proofType,
                             credentialConfigurationId,
                         },
                         session,
@@ -1752,7 +1880,8 @@ export class Oid4vciService {
 
             // Validate and consume nonces
             await this.validateAndConsumeNonces(
-                parsedCredentialRequest.proofs.jwt,
+                parsedProofs.values,
+                parsedProofs.proofType,
                 tenantId,
                 logContext,
                 credentialConfigurationId,
@@ -1760,12 +1889,14 @@ export class Oid4vciService {
 
             // Issue credentials for each proof
             const credentials = await this.issueCredentialsForProofs(
-                parsedCredentialRequest.proofs.jwt,
+                parsedProofs.values,
+                parsedProofs.proofType,
                 issuer,
                 session,
                 credentialConfigurationId,
                 claimsResult,
                 logContext,
+                issuanceConfig,
             );
 
             // Update session with notification

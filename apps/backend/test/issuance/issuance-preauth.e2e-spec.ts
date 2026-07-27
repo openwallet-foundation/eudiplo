@@ -4,7 +4,7 @@ import {
     Jwk,
     JwtSignerJwk,
 } from "@openid4vc/oauth2";
-import { Openid4vciClient } from "@openid4vc/openid4vci";
+import { createKeyAttestationJwt, Openid4vciClient } from "@openid4vc/openid4vci";
 import { digest } from "@owf/crypto";
 import { SDJwtVcInstance } from "@sd-jwt/sd-jwt-vc";
 import { exportJWK, generateKeyPair } from "jose";
@@ -152,6 +152,94 @@ describe("Issuance - Pre-authorized Code Flow", () => {
         );
         expect(notificationObj).toBeDefined();
         expect(notificationObj.event).toBe("credential_accepted");
+    });
+
+    test("pre authorized code flow with attestation proof type", async () => {
+        const offerResponse = await request(app.getHttpServer())
+            .post("/issuer/offer")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                response_type: "uri",
+                credentialConfigurationIds: ["pid-no-key"],
+                flow: "pre_authorized_code",
+            })
+            .expect(201);
+
+        const attestationSignerKeyPair = await generateKeyPair("ES256", {
+            extractable: true,
+        });
+        const attestationSignerPrivateJwk = await exportJWK(
+            attestationSignerKeyPair.privateKey,
+        );
+        const attestationSignerPublicJwk = await exportJWK(
+            attestationSignerKeyPair.publicKey,
+        );
+
+        const attestedHolderKeyPair = await generateKeyPair("ES256", {
+            extractable: true,
+        });
+        const attestedHolderPublicJwk = await exportJWK(
+            attestedHolderKeyPair.publicKey,
+        );
+
+        const client = new Openid4vciClient({
+            callbacks: {
+                ...callbacks,
+                clientAuthentication: clientAuthenticationAnonymous(),
+                signJwt: getSignJwtCallback([
+                    attestationSignerPrivateJwk as Jwk,
+                ]),
+            },
+        });
+
+        const credentialOffer = await client.resolveCredentialOffer(
+            offerResponse.body.uri,
+        );
+        const issuerMetadata = await client.resolveIssuerMetadata(
+            credentialOffer.credential_issuer,
+        );
+
+        const { accessTokenResponse } =
+            await client.retrievePreAuthorizedCodeAccessTokenFromOffer({
+                credentialOffer,
+                issuerMetadata,
+            });
+
+        const nonceResponse = await client.requestNonce({ issuerMetadata });
+
+        const attestationJwt = await createKeyAttestationJwt({
+            callbacks: {
+                ...callbacks,
+                signJwt: getSignJwtCallback([
+                    attestationSignerPrivateJwk as Jwk,
+                ]),
+            },
+            signer: {
+                method: "jwk",
+                alg: "ES256",
+                publicJwk: attestationSignerPublicJwk,
+            } as JwtSignerJwk,
+            issuedAt: new Date(),
+            use: "proof_type.attestation",
+            attestedKeys: [attestedHolderPublicJwk as Jwk],
+            nonce: nonceResponse.c_nonce,
+        });
+
+        const credentialResponse = await client.retrieveCredentials({
+            accessToken: accessTokenResponse.access_token,
+            credentialConfigurationId:
+                credentialOffer.credential_configuration_ids[0],
+            issuerMetadata,
+            proofs: {
+                attestation: [attestationJwt],
+            },
+        });
+
+        expect(credentialResponse.credentialResponse.credentials).toBeDefined();
+        expect(
+            credentialResponse.credentialResponse.credentials?.length,
+        ).toBeGreaterThan(0);
     });
 
     test("pre auth flow with webhook claims", async () => {

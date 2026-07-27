@@ -196,6 +196,12 @@ export class CredentialsService {
                 key_attestations_required: { ...keyAttestationsRequired },
             }),
         };
+        const attestationProofType = {
+            proof_signing_alg_values_supported:
+                this.cryptoImplementationService.getAlgs(
+                    CredentialFormat.SD_JWT_VC,
+                ) as string[],
+        };
 
         const config = buildMsoMdocConfig(
             doctype,
@@ -204,6 +210,7 @@ export class CredentialsService {
                 bindingMethods: ["cose_key"],
                 proofTypesSupported: {
                     jwt: jwtProofType,
+                    attestation: attestationProofType,
                 },
             },
             credentialMetadata,
@@ -262,6 +269,9 @@ export class CredentialsService {
                 key_attestations_required: { ...keyAttestationsRequired },
             }),
         };
+        const attestationProofType = {
+            proof_signing_alg_values_supported: algs,
+        };
 
         const config = buildSdJwtDcConfig(
             vct,
@@ -270,6 +280,7 @@ export class CredentialsService {
                 bindingMethods: ["jwk"],
                 proofTypesSupported: {
                     jwt: jwtProofType,
+                    attestation: attestationProofType,
                 },
             },
             credentialMetadata,
