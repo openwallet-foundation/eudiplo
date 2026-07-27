@@ -1486,15 +1486,27 @@ export class Oid4vciService {
         parsedCredentialRequest: ParseCredentialRequestReturn,
     ): ParsedCredentialProofs {
         const jwtProofs = parsedCredentialRequest?.proofs?.jwt;
-        if (Array.isArray(jwtProofs) && jwtProofs.length > 0) {
+        const attestationProofs = parsedCredentialRequest?.proofs?.attestation;
+
+        const hasJwtProofs = Array.isArray(jwtProofs) && jwtProofs.length > 0;
+        const hasAttestationProofs =
+            Array.isArray(attestationProofs) && attestationProofs.length > 0;
+
+        if (hasJwtProofs && hasAttestationProofs) {
+            throw new CredentialRequestException(
+                "invalid_proof",
+                "Credential request must include exactly one supported proof type (jwt or attestation)",
+            );
+        }
+
+        if (hasJwtProofs) {
             return {
                 proofType: "jwt",
                 values: jwtProofs,
             };
         }
 
-        const attestationProofs = parsedCredentialRequest?.proofs?.attestation;
-        if (Array.isArray(attestationProofs) && attestationProofs.length > 0) {
+        if (hasAttestationProofs) {
             return {
                 proofType: "attestation",
                 values: attestationProofs,

@@ -245,6 +245,101 @@ describe("Issuance - Pre-authorized Code Flow", () => {
         ).toBeGreaterThan(0);
     });
 
+    test("rejects credential request containing both jwt and attestation proofs", async () => {
+        const offerResponse = await request(app.getHttpServer())
+            .post("/issuer/offer")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                response_type: "uri",
+                credentialConfigurationIds: ["pid-no-key"],
+                flow: "pre_authorized_code",
+            })
+            .expect(201);
+
+        const holderKeyPair = await generateKeyPair("ES256", {
+            extractable: true,
+        });
+        const holderPrivateKeyJwk = await exportJWK(holderKeyPair.privateKey);
+        const holderPublicKeyJwk = await exportJWK(holderKeyPair.publicKey);
+
+        const attestationSignerKeyPair = await generateKeyPair("ES256", {
+            extractable: true,
+        });
+        const attestationSignerPrivateJwk = await exportJWK(
+            attestationSignerKeyPair.privateKey,
+        );
+        const attestationSignerPublicJwk = await exportJWK(
+            attestationSignerKeyPair.publicKey,
+        );
+
+        const client = new Openid4vciClient({
+            callbacks: {
+                ...callbacks,
+                clientAuthentication: clientAuthenticationAnonymous(),
+                signJwt: getSignJwtCallback([holderPrivateKeyJwk as Jwk]),
+            },
+        });
+
+        const credentialOffer = await client.resolveCredentialOffer(
+            offerResponse.body.uri,
+        );
+        const issuerMetadata = await client.resolveIssuerMetadata(
+            credentialOffer.credential_issuer,
+        );
+
+        const { accessTokenResponse } =
+            await client.retrievePreAuthorizedCodeAccessTokenFromOffer({
+                credentialOffer,
+                issuerMetadata,
+            });
+
+        const nonceResponse = await client.requestNonce({ issuerMetadata });
+
+        const { jwt: proofJwt } = await client.createCredentialRequestJwtProof({
+            issuerMetadata,
+            signer: {
+                method: "jwk",
+                alg: "ES256",
+                publicJwk: holderPublicKeyJwk,
+            } as JwtSignerJwk,
+            clientId,
+            issuedAt: new Date(),
+            credentialConfigurationId:
+                credentialOffer.credential_configuration_ids[0],
+            nonce: nonceResponse.c_nonce,
+        });
+
+        const attestationJwt = await createKeyAttestationJwt({
+            callbacks: {
+                ...callbacks,
+                signJwt: getSignJwtCallback([attestationSignerPrivateJwk as Jwk]),
+            },
+            signer: {
+                method: "jwk",
+                alg: "ES256",
+                publicJwk: attestationSignerPublicJwk,
+            } as JwtSignerJwk,
+            issuedAt: new Date(),
+            use: "proof_type.attestation",
+            attestedKeys: [holderPublicKeyJwk as Jwk],
+            nonce: nonceResponse.c_nonce,
+        });
+
+        await expect(
+            client.retrieveCredentials({
+                accessToken: accessTokenResponse.access_token,
+                credentialConfigurationId:
+                    credentialOffer.credential_configuration_ids[0],
+                issuerMetadata,
+                proofs: {
+                    jwt: [proofJwt],
+                    attestation: [attestationJwt],
+                },
+            }),
+        ).rejects.toThrow();
+    });
+
     test("pre auth flow with webhook claims", async () => {
         const town = "Köln";
         // Mock the webhook server response
