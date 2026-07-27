@@ -39,7 +39,8 @@ export async function validateAttestationProofTrust(
         acceptedServiceTypes: [ServiceTypeIdentifiers.WalletProvider],
     };
 
-    const trustStore = await deps.trustStoreService.getTrustStore(trustListSource);
+    const trustStore =
+        await deps.trustStoreService.getTrustStore(trustListSource);
     if (trustStore.entities.length === 0) {
         throw new CredentialRequestException(
             "invalid_proof",

@@ -7,6 +7,7 @@ import {
 } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
+    ArrayUnique,
     IsArray,
     IsBoolean,
     IsEnum,
@@ -82,6 +83,11 @@ export enum SdJwtTrustFormat {
     FEDERATION = "federation",
 }
 
+export enum CredentialProofType {
+    JWT = "jwt",
+    ATTESTATION = "attestation",
+}
+
 export class IssuerMetadataCredentialConfig {
     @IsEnum(CredentialFormat)
     format!: CredentialFormat;
@@ -112,6 +118,23 @@ export class IssuerMetadataCredentialConfig {
     @Type(() => KeyAttestationsRequired)
     @IsOptional()
     keyAttestationsRequired?: KeyAttestationsRequired;
+
+    /**
+     * Per-credential proof type policy.
+     * If omitted, both proof types are supported with attestation as default preference.
+     */
+    @ApiPropertyOptional({
+        type: [String],
+        enum: CredentialProofType,
+        description:
+            "Supported proof types for this credential configuration. Defaults to ['attestation', 'jwt'].",
+        example: [CredentialProofType.ATTESTATION, CredentialProofType.JWT],
+    })
+    @IsOptional()
+    @IsArray()
+    @ArrayUnique()
+    @IsEnum(CredentialProofType, { each: true })
+    proofTypesSupported?: CredentialProofType[];
 }
 
 @ApiExtraModels(

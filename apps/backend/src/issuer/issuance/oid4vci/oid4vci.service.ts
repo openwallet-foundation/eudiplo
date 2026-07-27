@@ -56,6 +56,7 @@ import { WebhookService } from "../../../shared/utils/webhook/webhook.service";
 import { CredentialsService } from "../../configuration/credentials/credentials.service";
 import { AuthorizationIdentity } from "../../configuration/credentials/dto/authorization-identity";
 import { ClaimsWebhookResult } from "../../configuration/credentials/dto/claims-webhook-result";
+import { CredentialProofType } from "../../configuration/credentials/entities/credential.entity";
 import {
     IssuerProvidedAttestation,
     IssuerRegistrationCertificateConfig,
@@ -1558,6 +1559,25 @@ export class Oid4vciService {
         );
     }
 
+    private async enforceProofTypePolicy(
+        tenantId: string,
+        credentialConfigurationId: string,
+        proofType: SupportedCredentialProofType,
+    ): Promise<void> {
+        const supportedProofTypes =
+            await this.credentialsService.getSupportedProofTypesForCredentialConfig(
+                tenantId,
+                credentialConfigurationId,
+            );
+
+        if (!supportedProofTypes.includes(proofType as CredentialProofType)) {
+            throw new CredentialRequestException(
+                "invalid_proof",
+                `Proof type '${proofType}' is not supported for credential_configuration_id '${credentialConfigurationId}'`,
+            );
+        }
+    }
+
     /**
      * Get a credential for a specific session.
      * @param req The incoming HTTP request
@@ -1763,6 +1783,12 @@ export class Oid4vciService {
         this.enforceAuthorizationDetails(
             tokenPayload,
             credentialConfigurationId,
+        );
+
+        await this.enforceProofTypePolicy(
+            tenantId,
+            credentialConfigurationId,
+            parsedProofs.proofType,
         );
 
         const { session, claimsResult, isExternalAsToken, isChainedAsToken } =

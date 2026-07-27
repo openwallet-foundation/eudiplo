@@ -313,7 +313,9 @@ describe("Issuance - Pre-authorized Code Flow", () => {
         const attestationJwt = await createKeyAttestationJwt({
             callbacks: {
                 ...callbacks,
-                signJwt: getSignJwtCallback([attestationSignerPrivateJwk as Jwk]),
+                signJwt: getSignJwtCallback([
+                    attestationSignerPrivateJwk as Jwk,
+                ]),
             },
             signer: {
                 method: "jwk",
@@ -338,6 +340,108 @@ describe("Issuance - Pre-authorized Code Flow", () => {
                 },
             }),
         ).rejects.toThrow();
+    });
+
+    test("enforces attestation-only proof policy per credential config", async () => {
+        const baseConfigResponse = await request(app.getHttpServer())
+            .get("/issuer/credentials/pid-no-key")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .expect(200);
+
+        const attestationOnlyConfigId = `pid-attestation-only-${Date.now()}`;
+        const baseConfig = baseConfigResponse.body;
+
+        await request(app.getHttpServer())
+            .post("/issuer/credentials")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                id: attestationOnlyConfigId,
+                description: baseConfig.description,
+                config: {
+                    ...baseConfig.config,
+                    proofTypesSupported: ["attestation"],
+                },
+                fields: baseConfig.fields,
+                attributeProviderId: baseConfig.attributeProviderId,
+                webhookEndpointId: baseConfig.webhookEndpointId,
+                vct: baseConfig.vct,
+                keyBinding: baseConfig.keyBinding,
+                keyChainId: baseConfig.keyChainId,
+                embeddedDisclosurePolicy: baseConfig.embeddedDisclosurePolicy,
+                schemaMeta: baseConfig.schemaMeta,
+                iaeActions: baseConfig.iaeActions,
+            })
+            .expect(201);
+
+        try {
+            const offerResponse = await request(app.getHttpServer())
+                .post("/issuer/offer")
+                .trustLocalhost()
+                .set("Authorization", `Bearer ${authToken}`)
+                .send({
+                    response_type: "uri",
+                    credentialConfigurationIds: [attestationOnlyConfigId],
+                    flow: "pre_authorized_code",
+                })
+                .expect(201);
+
+            const holderKeyPair = await generateKeyPair("ES256", {
+                extractable: true,
+            });
+            const holderPrivateKeyJwk = await exportJWK(
+                holderKeyPair.privateKey,
+            );
+            const holderPublicKeyJwk = await exportJWK(holderKeyPair.publicKey);
+
+            const client = new Openid4vciClient({
+                callbacks: {
+                    ...callbacks,
+                    clientAuthentication: clientAuthenticationAnonymous(),
+                    signJwt: getSignJwtCallback([holderPrivateKeyJwk as Jwk]),
+                },
+            });
+
+            const credentialOffer = await client.resolveCredentialOffer(
+                offerResponse.body.uri,
+            );
+            const issuerMetadata = await client.resolveIssuerMetadata(
+                credentialOffer.credential_issuer,
+            );
+
+            const supportedConfig =
+                issuerMetadata.credentialIssuer
+                    .credential_configurations_supported[
+                    attestationOnlyConfigId
+                ];
+            expect(supportedConfig.proof_types_supported.attestation).toBeDefined();
+            expect(supportedConfig.proof_types_supported.jwt).toBeUndefined();
+
+            const nonceResponse = await client.requestNonce({ issuerMetadata });
+
+            await expect(
+                client.createCredentialRequestJwtProof({
+                    issuerMetadata,
+                    signer: {
+                        method: "jwk",
+                        alg: "ES256",
+                        publicJwk: holderPublicKeyJwk,
+                    } as JwtSignerJwk,
+                    clientId,
+                    issuedAt: new Date(),
+                    credentialConfigurationId: attestationOnlyConfigId,
+                    nonce: nonceResponse.c_nonce,
+                }),
+            ).rejects.toThrow();
+        } finally {
+            const deleteResponse = await request(app.getHttpServer())
+                .delete(`/issuer/credentials/${attestationOnlyConfigId}`)
+                .trustLocalhost()
+                .set("Authorization", `Bearer ${authToken}`);
+
+            expect([200, 204]).toContain(deleteResponse.status);
+        }
     });
 
     test("pre auth flow with webhook claims", async () => {
