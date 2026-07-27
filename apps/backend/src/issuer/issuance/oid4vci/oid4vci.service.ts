@@ -1381,7 +1381,7 @@ export class Oid4vciService {
     }
 
     /**
-     * Verify proofs and issue credentials for each JWT proof.
+     * Verify proofs and issue credentials for each provided proof.
      */
     private async issueCredentialsForProofs(
         proofs: string[],

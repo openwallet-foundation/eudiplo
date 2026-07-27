@@ -57,27 +57,38 @@ export async function validateAttestationProofTrust(
         );
     }
 
-    const anchors = deps.x509ValidationService.parseTrustAnchors(
-        trustStore.entities.flatMap((entity) => entity.services),
-    );
+    try {
+        const anchors = deps.x509ValidationService.parseTrustAnchors(
+            trustStore.entities.flatMap((entity) => entity.services),
+        );
 
-    const path = await deps.x509ValidationService.buildPath(
-        leaf,
-        presentedChain,
-        anchors,
-    );
+        const path = await deps.x509ValidationService.buildPath(
+            leaf,
+            presentedChain,
+            anchors,
+        );
 
-    const matched = await deps.x509ValidationService.pathMatchesTrustedEntities(
-        path,
-        trustStore.entities,
-        "leaf",
-        ServiceTypeIdentifiers.WalletProvider,
-    );
+        const matched =
+            await deps.x509ValidationService.pathMatchesTrustedEntities(
+                path,
+                trustStore.entities,
+                "leaf",
+                ServiceTypeIdentifiers.WalletProvider,
+            );
 
-    if (!matched) {
+        if (!matched) {
+            throw new CredentialRequestException(
+                "invalid_proof",
+                "Attestation proof signer is not trusted by configured wallet provider trust lists",
+            );
+        }
+    } catch (error) {
+        if (error instanceof CredentialRequestException) {
+            throw error;
+        }
         throw new CredentialRequestException(
             "invalid_proof",
-            "Attestation proof signer is not trusted by configured wallet provider trust lists",
+            "Attestation proof x5c chain could not be validated",
         );
     }
 }
