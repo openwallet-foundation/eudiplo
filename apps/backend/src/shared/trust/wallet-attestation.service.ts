@@ -10,9 +10,9 @@ import { CryptoImplementationService } from "../../crypto/key/crypto-implementat
 import { StatusListVerifierService } from "./status-list-verifier.service";
 import { BuiltTrustStore, TrustStoreService } from "./trust-store.service";
 import {
-    normalizeRulebookTrustListRefs,
-    RulebookTrustListInput,
+    normalizeTrustListRefs,
     ServiceTypeIdentifiers,
+    TrustListInput,
     TrustListSource,
 } from "./types";
 import {
@@ -76,7 +76,7 @@ export class WalletAttestationService {
         clientAttestation: ClientAttestation | undefined,
         authorizationServer: string,
         walletAttestationRequired: boolean,
-        walletProviderTrustLists: RulebookTrustListInput[],
+        walletProviderTrustLists: TrustListInput[],
     ): Promise<void> {
         if (!clientAttestation) {
             if (walletAttestationRequired) {
@@ -135,12 +135,12 @@ export class WalletAttestationService {
      */
     private async validateWalletProviderCertificate(
         clientAttestationJwt: string,
-        trustListInputs: RulebookTrustListInput[],
+        trustListInputs: TrustListInput[],
     ): Promise<{
         matchedEntity: MatchedTrustedEntity | null;
         trustStore: BuiltTrustStore | null;
     }> {
-        const trustListRefs = normalizeRulebookTrustListRefs(trustListInputs);
+        const trustListRefs = normalizeTrustListRefs(trustListInputs);
 
         if (trustListRefs.length === 0) {
             // No trust lists configured - accept any valid attestation

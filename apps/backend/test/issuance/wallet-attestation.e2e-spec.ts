@@ -427,7 +427,11 @@ describe("Issuance - Wallet Attestation", () => {
             .send({
                 ...currentConfig.body,
                 walletAttestationRequired: true,
-                walletProviderTrustLists: [trustListUrl],
+                walletProviderTrustLists: [{
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                }],
             } as IssuanceDto)
             .expect(201);
 
@@ -547,7 +551,11 @@ describe("Issuance - Wallet Attestation", () => {
             .send({
                 ...currentConfig.body,
                 walletAttestationRequired: true,
-                walletProviderTrustLists: [trustListUrl],
+                walletProviderTrustLists: [{
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                }],
             } as IssuanceDto)
             .expect(201);
 
@@ -613,7 +621,11 @@ describe("Issuance - Wallet Attestation", () => {
             .send({
                 ...currentConfig.body,
                 walletAttestationRequired: true,
-                walletProviderTrustLists: [trustListUrl],
+                walletProviderTrustLists: [{
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                }],
             } as IssuanceDto)
             .expect(201);
 
@@ -796,7 +808,11 @@ describe("Issuance - Wallet Attestation", () => {
             .send({
                 ...currentConfig.body,
                 walletAttestationRequired: true,
-                walletProviderTrustLists: [trustListUrl],
+                walletProviderTrustLists: [{
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                }],
             } as IssuanceDto)
             .expect(201);
 
@@ -932,7 +948,11 @@ describe("Issuance - Wallet Attestation", () => {
             .send({
                 ...currentConfig.body,
                 walletAttestationRequired: true,
-                walletProviderTrustLists: [trustListUrl],
+                walletProviderTrustLists: [{
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                }],
             } as IssuanceDto)
             .expect(201);
 
@@ -1067,7 +1087,11 @@ describe("Issuance - Wallet Attestation", () => {
             .send({
                 ...currentConfig.body,
                 walletAttestationRequired: true,
-                walletProviderTrustLists: [trustListUrl],
+                walletProviderTrustLists: [{
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                }],
             } as IssuanceDto)
             .expect(201);
 
@@ -1211,7 +1235,11 @@ describe("Issuance - Wallet Attestation", () => {
             .send({
                 ...currentConfig.body,
                 walletAttestationRequired: true,
-                walletProviderTrustLists: [trustListUrl],
+                walletProviderTrustLists: [{
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                }],
             } as IssuanceDto)
             .expect(201);
 
@@ -1345,7 +1373,11 @@ describe("Issuance - Wallet Attestation", () => {
             .send({
                 ...currentConfig.body,
                 walletAttestationRequired: true,
-                walletProviderTrustLists: [trustListUrl],
+                walletProviderTrustLists: [{
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                }],
             } as IssuanceDto)
             .expect(201);
 
@@ -1448,7 +1480,11 @@ describe("Issuance - Wallet Attestation", () => {
             .send({
                 ...currentConfig.body,
                 walletAttestationRequired: true,
-                walletProviderTrustLists: [trustListUrl],
+                walletProviderTrustLists: [{
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                }],
             } as IssuanceDto)
             .expect(201);
 
@@ -1553,7 +1589,11 @@ describe("Issuance - Wallet Attestation", () => {
             .send({
                 ...currentConfig.body,
                 walletAttestationRequired: true,
-                walletProviderTrustLists: [trustListUrl],
+                walletProviderTrustLists: [{
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                }],
             } as IssuanceDto)
             .expect(201);
 
@@ -1695,7 +1735,11 @@ describe("Issuance - Wallet Attestation", () => {
             .send({
                 ...currentConfig.body,
                 walletAttestationRequired: true,
-                walletProviderTrustLists: [trustListUrl],
+                walletProviderTrustLists: [{
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                }],
             } as IssuanceDto)
             .expect(201);
 
@@ -1820,7 +1864,11 @@ describe("Issuance - Wallet Attestation", () => {
             .send({
                 ...currentConfig.body,
                 walletAttestationRequired: true,
-                walletProviderTrustLists: [trustListUrl],
+                walletProviderTrustLists: [{
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                }],
             } as IssuanceDto)
             .expect(201);
 

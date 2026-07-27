@@ -488,6 +488,7 @@ describe("Issuance - Pre-authorized Code Flow", () => {
 
     test("rejects attestation proof without x5c when trust list validation is configured", async () => {
         const trustListUrl = "http://localhost:8787/key-attestation-trust-list";
+        const trustListSigningCert = await generateSelfSignedCertificate();
         const currentConfig = await request(app.getHttpServer())
             .get("/issuer/config")
             .trustLocalhost()
@@ -500,7 +501,11 @@ describe("Issuance - Pre-authorized Code Flow", () => {
             .set("Authorization", `Bearer ${authToken}`)
             .send({
                 ...currentConfig.body,
-                walletProviderTrustLists: [trustListUrl],
+                walletProviderTrustLists: [{
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                }],
             } as IssuanceDto)
             .expect(201);
 
@@ -599,6 +604,7 @@ describe("Issuance - Pre-authorized Code Flow", () => {
 
     test("enforces configured trust list for attestation proof x5c chains", async () => {
         const trustListUrl = "http://localhost:8787/key-attestation-trust-list";
+        const trustListSigningCert = await generateSelfSignedCertificate();
         const currentConfig = await request(app.getHttpServer())
             .get("/issuer/config")
             .trustLocalhost()
@@ -611,12 +617,15 @@ describe("Issuance - Pre-authorized Code Flow", () => {
             .set("Authorization", `Bearer ${authToken}`)
             .send({
                 ...currentConfig.body,
-                walletProviderTrustLists: [trustListUrl],
+                walletProviderTrustLists: [{
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                }],
             } as IssuanceDto)
             .expect(201);
 
         try {
-            const trustListSigningCert = await generateSelfSignedCertificate();
             const trustedWalletProviderCert =
                 await generateSelfSignedCertificate();
             const untrustedWalletProviderCert =

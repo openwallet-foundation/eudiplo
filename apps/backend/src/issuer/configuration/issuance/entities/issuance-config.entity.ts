@@ -7,12 +7,15 @@ import {
 } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
+    IsDefined,
     IsArray,
     IsBoolean,
     ArrayMinSize,
     IsNumber,
+    IsObject,
     IsOptional,
     IsString,
+    ValidateIf,
     ValidateNested,
 } from "class-validator";
 import {
@@ -42,7 +45,33 @@ import {
     IssuerRegistrationCertificateCache,
     IssuerRegistrationCertificateConfig,
 } from "../dto/issuer-registration-certificate.dto";
-import type { RulebookTrustListInput } from "../../../../shared/trust/types";
+import type { TrustListInput } from "../../../../shared/trust/types";
+
+class WalletProviderTrustListRefDto {
+    @ApiProperty({ format: "uri" })
+    @IsString()
+    url!: string;
+
+    @ApiPropertyOptional({
+        type: "object",
+        additionalProperties: true,
+        description: "JWK used to verify the trust-list JWT signature.",
+    })
+    @ValidateIf((o: WalletProviderTrustListRefDto) => !o.verifierX509Der)
+    @IsDefined()
+    @IsObject()
+    verifierKey?: Record<string, unknown>;
+
+    @ApiPropertyOptional({
+        type: "string",
+        description:
+            "Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature.",
+    })
+    @ValidateIf((o: WalletProviderTrustListRefDto) => !o.verifierKey)
+    @IsDefined()
+    @IsString()
+    verifierX509Der?: string;
+}
 
 /**
  * Entity to manage issuance configs
@@ -101,35 +130,17 @@ export class IssuanceConfig {
 
     /**
      * Trust lists containing trusted wallet providers.
-     * Backward compatible format accepts URL strings.
-     * Structured entries may include `verifierKey` to verify trust-list JWT integrity.
+     * Each entry MUST include either `verifierKey` or `verifierX509Der`.
      */
     @ApiPropertyOptional({
-        type: "array",
-        items: {
-            oneOf: [
-                { type: "string", format: "uri" },
-                {
-                    type: "object",
-                    required: ["url"],
-                    additionalProperties: false,
-                    properties: {
-                        url: { type: "string", format: "uri" },
-                        verifierKey: {
-                            type: "object",
-                            additionalProperties: true,
-                            description:
-                                "JWK used to verify the trust-list JWT signature.",
-                        },
-                    },
-                },
-            ],
-        },
+        type: [WalletProviderTrustListRefDto],
     })
     @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => WalletProviderTrustListRefDto)
     @IsOptional()
     @Column({ type: "json", nullable: true })
-    walletProviderTrustLists?: RulebookTrustListInput[];
+    walletProviderTrustLists?: TrustListInput[];
 
     /**
      * Optional key ID to use for signing access tokens.

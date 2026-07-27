@@ -1,8 +1,8 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable, Logger } from "@nestjs/common";
-import { importJWK, jwtVerify } from "jose";
+import { importJWK, importX509, jwtVerify } from "jose";
 import { firstValueFrom } from "rxjs";
-import { RulebookTrustListRef } from "./types";
+import { TrustListRef } from "./types";
 
 @Injectable()
 export class TrustListJwtService {
@@ -38,28 +38,36 @@ export class TrustListJwtService {
         }
     }
 
+    private derToPemCertificate(derBase64: string): string {
+        const der = Buffer.from(derBase64, "base64");
+        const body = der.toString("base64").match(/.{1,64}/g)?.join("\n") || "";
+        return `-----BEGIN CERTIFICATE-----\n${body}\n-----END CERTIFICATE-----`;
+    }
+
     /**
-     * Verify the JWT signature/authenticity using the verifier key from the reference.
-     * If no verifier key is provided, verification is skipped (trust on first use).
-     *
-     * @param ref - The trust list reference containing the optional verifier key
-     * @param jwt - The JWT string to verify
-     * @throws Error if verification fails
+     * Verify the JWT signature/authenticity using configured verification material.
+     * Exactly one secure verifier must be configured per trust list reference:
+     * - verifierKey (JWK), or
+     * - verifierX509Der (base64 DER X.509 certificate)
      */
     async verifyTrustListJwt(
-        ref: RulebookTrustListRef,
+        ref: TrustListRef,
         jwt: string,
     ): Promise<void> {
-        if (!ref.verifierKey) {
-            this.logger.debug(
-                `No verifier key provided for ${ref.url}, skipping signature verification`,
+        if (!ref.verifierKey && !ref.verifierX509Der) {
+            throw new Error(
+                `Trust list JWT verification material missing for ${ref.url}: configure verifierKey or verifierX509Der`,
             );
-            return;
         }
 
         try {
-            const alg = ref.verifierKey.alg || "ES256";
-            const publicKey = await importJWK(ref.verifierKey, alg);
+            const alg = ref.verifierKey?.alg || "ES256";
+            const publicKey = ref.verifierKey
+                ? await importJWK(ref.verifierKey, alg)
+                : await importX509(
+                      this.derToPemCertificate(ref.verifierX509Der!),
+                      alg,
+                  );
 
             await jwtVerify(jwt, publicKey, {
                 // Allow some clock skew (5 minutes)

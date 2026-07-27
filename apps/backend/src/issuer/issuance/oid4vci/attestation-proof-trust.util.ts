@@ -1,9 +1,9 @@
 import { decodeProtectedHeader } from "jose";
 import { TrustStoreService } from "../../../shared/trust/trust-store.service";
 import {
-    normalizeRulebookTrustListRefs,
-    RulebookTrustListInput,
+    normalizeTrustListRefs,
     ServiceTypeIdentifiers,
+    TrustListInput,
     TrustListSource,
 } from "../../../shared/trust/types";
 import { X509ValidationService } from "../../../shared/trust/x509-validation.service";
@@ -20,10 +20,10 @@ export interface AttestationProofTrustValidationDeps {
  */
 export async function validateAttestationProofTrust(
     keyAttestationJwt: string,
-    trustListRefsInput: RulebookTrustListInput[],
+    trustListRefsInput: TrustListInput[],
     deps: AttestationProofTrustValidationDeps,
 ): Promise<void> {
-    const trustListRefs = normalizeRulebookTrustListRefs(trustListRefsInput);
+    const trustListRefs = normalizeTrustListRefs(trustListRefsInput);
 
     if (trustListRefs.length === 0) {
         return;

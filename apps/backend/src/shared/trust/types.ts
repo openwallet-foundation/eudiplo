@@ -1,44 +1,49 @@
 import { JWK } from "jose";
 
-export type RulebookTrustListRef = {
+export type TrustListRef = {
     url: string; // e.g. https://.../pid-provider.jwt
-    // material to verify the trustlist JWT (out of scope here)
-    // could be JWK, PEM, kid, etc.
+    // material to verify the trust list JWT.
     verifierKey?: JWK;
+    // DER-encoded X.509 certificate as base64 string.
+    verifierX509Der?: string;
 };
 
-export type RulebookTrustListInput = string | RulebookTrustListRef;
+export type TrustListInput = TrustListRef;
 
 /**
  * Normalize trust-list input to structured references.
  * Supports legacy string URLs and structured entries with verifier keys.
  */
-export function normalizeRulebookTrustListRefs(
-    refs: RulebookTrustListInput[] | null | undefined,
-): RulebookTrustListRef[] {
+export function normalizeTrustListRefs(
+    refs: TrustListInput[] | null | undefined,
+): TrustListRef[] {
     if (!Array.isArray(refs)) {
         return [];
     }
 
     return refs.flatMap((ref) => {
-        if (typeof ref === "string") {
-            const url = ref.trim();
-            return url.length > 0 ? [{ url }] : [];
-        }
-
-        if (!ref || typeof ref !== "object") {
-            return [];
-        }
-
         const url = typeof ref.url === "string" ? ref.url.trim() : "";
         if (url.length === 0) {
             return [];
+        }
+
+        const hasVerifierKey =
+            !!ref.verifierKey && typeof ref.verifierKey === "object";
+        const hasVerifierX509Der =
+            typeof ref.verifierX509Der === "string" &&
+            ref.verifierX509Der.trim().length > 0;
+
+        if (!hasVerifierKey && !hasVerifierX509Der) {
+            throw new Error(
+                `Trust list reference '${url}' must define verifierKey or verifierX509Der`,
+            );
         }
 
         return [
             {
                 url,
                 verifierKey: ref.verifierKey,
+                verifierX509Der: ref.verifierX509Der?.trim(),
             },
         ];
     });
@@ -157,7 +162,7 @@ export type VerifierOptions = {
 };
 
 export type TrustListSource = {
-    lotes: RulebookTrustListRef[];
+    lotes: TrustListRef[];
     // which service types from LoTE you want to accept as issuer identities
     acceptedServiceTypes?: ServiceTypeIdentifier[];
 };
