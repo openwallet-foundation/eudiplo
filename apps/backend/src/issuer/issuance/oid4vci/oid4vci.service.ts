@@ -1797,11 +1797,15 @@ export class Oid4vciService {
             credentialConfigurationId,
         );
 
-        await this.enforceProofTypePolicy(
-            tenantId,
-            credentialConfigurationId,
-            parsedProofs.proofType,
-        );
+        try {
+            await this.enforceProofTypePolicy(
+                tenantId,
+                credentialConfigurationId,
+                parsedProofs.proofType,
+            );
+        } catch (error) {
+            this.mapToCredentialRequestException(error);
+        }
 
         const { session, claimsResult, isExternalAsToken, isChainedAsToken } =
             await this.resolveSessionAndClaims(
