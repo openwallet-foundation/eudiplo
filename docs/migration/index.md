@@ -33,15 +33,17 @@ When upgrading EUDIPLO, follow this general process:
 | 4.x     | Maintained         | Unified Key Chain model, Attribute Providers, `/api/` prefix, @owf ecosystem packages.                                                                                |
 | 5.0     | **Current stable** | Field-based credential configuration model (v2), improved UX for config creation.                                                                                     |
 | 6.0     | Planned            | Authorization server model migration to `authorizationServers` and related issuance config updates.                                                                   |
+| 7.0     | Planned            | Strict trust-list integrity for wallet-provider trust lists (`walletProviderTrustLists`) requiring verifier material.                                                 |
 
 ## Migration Guides
 
-| From | To  | Guide                                                                                    |
-| ---- | --- | ---------------------------------------------------------------------------------------- |
-| 2.x  | 3.0 | No action required — the migration system is backward compatible. Just update and start. |
-| 3.x  | 4.0 | [Migration Guide](3.x-to-4.0.md) — API prefix, Key Chains, Attribute Providers, and more |
-| 4.x  | 5.0 | [Migration Guide](4.x-to-5.0.md) — Field-based credential configuration (v2)             |
-| 5.x  | 6.0 | [Migration Guide](5.x-to-6.0.md) — Authorization server model (`authorizationServers`)   |
+| From | To  | Guide                                                                                                   |
+| ---- | --- | ------------------------------------------------------------------------------------------------------- |
+| 2.x  | 3.0 | No action required — the migration system is backward compatible. Just update and start.                |
+| 3.x  | 4.0 | [Migration Guide](3.x-to-4.0.md) — API prefix, Key Chains, Attribute Providers, and more                |
+| 4.x  | 5.0 | [Migration Guide](4.x-to-5.0.md) — Field-based credential configuration (v2)                            |
+| 5.x  | 6.0 | [Migration Guide](5.x-to-6.0.md) — Authorization server model (`authorizationServers`)                  |
+| 6.x  | 7.0 | [Migration Guide](6.x-to-7.0.md) — Strict trust-list verifier requirements (`walletProviderTrustLists`) |
 
 ## What Can Break Between Versions
 
