@@ -415,7 +415,9 @@ describe("Issuance - Pre-authorized Code Flow", () => {
                     .credential_configurations_supported[
                     attestationOnlyConfigId
                 ];
-            expect(supportedConfig.proof_types_supported.attestation).toBeDefined();
+            expect(
+                supportedConfig.proof_types_supported.attestation,
+            ).toBeDefined();
             expect(supportedConfig.proof_types_supported.jwt).toBeUndefined();
 
             const nonceResponse = await client.requestNonce({ issuerMetadata });
