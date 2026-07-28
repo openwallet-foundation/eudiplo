@@ -25,25 +25,6 @@ import { FlexLayoutModule } from 'ngx-flexible-layout';
 
 let editorInstanceCounter = 0;
 
-function stripDiscriminators(schema: any): any {
-  if (Array.isArray(schema)) {
-    return schema.map(stripDiscriminators);
-  }
-
-  if (!schema || typeof schema !== 'object') {
-    return schema;
-  }
-
-  const sanitized: Record<string, any> = {};
-  for (const [key, value] of Object.entries(schema)) {
-    if (key === 'discriminator') {
-      continue;
-    }
-    sanitized[key] = stripDiscriminators(value);
-  }
-  return sanitized;
-}
-
 /**
  * extact the schema that got added by the editor
  */

@@ -152,7 +152,7 @@ export class MsoMdocCredentialQueryMeta {
 }
 
 // TODO: extend: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-trusted-authorities-query
-export abstract class TrustedAuthorityQuery {
+abstract class TrustedAuthorityQuery {
     declare type: TrustedAuthorityType;
 }
 

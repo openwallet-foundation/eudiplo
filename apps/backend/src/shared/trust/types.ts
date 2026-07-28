@@ -1,4 +1,3 @@
-import { JWK } from "jose";
 import type { TrustListRef } from "../../verifier/presentations/entities/presentation-config.entity";
 
 /**
