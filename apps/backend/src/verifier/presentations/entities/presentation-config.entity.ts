@@ -5,6 +5,7 @@ import {
 } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
+    IsDefined,
     IsArray,
     IsBoolean,
     Matches,
@@ -15,6 +16,7 @@ import {
     IsOptional,
     IsString,
     Min,
+    ValidateIf,
     Validate,
     ValidateNested,
     ValidationArguments,
@@ -41,6 +43,29 @@ export enum TrustedAuthorityType {
     OPENID_FEDERATION = "openid_federation",
 }
 
+export class TrustedAuthorityVerification {
+    @ApiPropertyOptional({
+        type: "object",
+        additionalProperties: true,
+        description:
+            "JWK used to verify trust-list JWT signatures for trusted authority values.",
+    })
+    @ValidateIf((o: TrustedAuthorityVerification) => !o.verifierX509Der)
+    @IsDefined()
+    @IsObject()
+    verifierKey?: Record<string, unknown>;
+
+    @ApiPropertyOptional({
+        type: "string",
+        description:
+            "Base64 DER-encoded X.509 certificate used to verify trust-list JWT signatures for trusted authority values.",
+    })
+    @ValidateIf((o: TrustedAuthorityVerification) => !o.verifierKey)
+    @IsDefined()
+    @IsString()
+    verifierX509Der?: string;
+}
+
 /**
  * Attached attestations
  */
@@ -64,6 +89,11 @@ export class TrustedAuthorityQuery {
     @IsArray()
     @IsString({ each: true })
     values!: string[];
+
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => TrustedAuthorityVerification)
+    verification?: TrustedAuthorityVerification;
 }
 
 @ValidatorConstraint({ name: "claimSetsConsistency", async: false })

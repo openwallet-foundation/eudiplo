@@ -1499,6 +1499,11 @@ export class PresentationsService {
                         lotes:
                             loteAuthorities?.values.map((url) => ({
                                 url: url.replaceAll("<TENANT_URL>", tenantHost),
+                                verifierKey:
+                                    loteAuthorities.verification?.verifierKey,
+                                verifierX509Der:
+                                    loteAuthorities.verification
+                                        ?.verifierX509Der,
                             })) || [],
                         acceptedServiceTypes: [
                             ServiceTypeIdentifier.EaaIssuance,
