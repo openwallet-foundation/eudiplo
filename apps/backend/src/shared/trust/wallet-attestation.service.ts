@@ -12,13 +12,13 @@ import { BuiltTrustStore, TrustStoreService } from "./trust-store.service";
 import {
     normalizeTrustListRefs,
     ServiceTypeIdentifiers,
-    TrustListInput,
     TrustListSource,
 } from "./types";
 import {
     MatchedTrustedEntity,
     X509ValidationService,
 } from "./x509-validation.service";
+import { TrustListRef } from "../../verifier/presentations/entities/presentation-config.entity";
 
 export interface ClientAttestation {
     clientAttestationJwt: string;
@@ -76,7 +76,7 @@ export class WalletAttestationService {
         clientAttestation: ClientAttestation | undefined,
         authorizationServer: string,
         walletAttestationRequired: boolean,
-        walletProviderTrustLists: TrustListInput[],
+        walletProviderTrustLists: TrustListRef[],
     ): Promise<void> {
         if (!clientAttestation) {
             if (walletAttestationRequired) {
@@ -135,7 +135,7 @@ export class WalletAttestationService {
      */
     private async validateWalletProviderCertificate(
         clientAttestationJwt: string,
-        trustListInputs: TrustListInput[],
+        trustListInputs: TrustListRef[],
     ): Promise<{
         matchedEntity: MatchedTrustedEntity | null;
         trustStore: BuiltTrustStore | null;

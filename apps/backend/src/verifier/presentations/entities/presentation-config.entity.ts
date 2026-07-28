@@ -1,10 +1,13 @@
 import {
+    ApiExtraModels,
     ApiHideProperty,
     ApiProperty,
     ApiPropertyOptional,
+    getSchemaPath,
 } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
+    Equals,
     IsDefined,
     IsArray,
     IsBoolean,
@@ -37,31 +40,53 @@ import { WebhookEndpointEntity } from "../../../issuer/configuration/webhook-end
 import { RegistrationCertificateRequest } from "../dto/vp-request.dto";
 import { IsTransactionData } from "../validators/transaction-data.validator";
 import { RevocationCheckMode } from "../../../shared/trust/types";
+import { JWK } from "jose";
 
 export enum TrustedAuthorityType {
     ETSI_TL = "etsi_tl",
     OPENID_FEDERATION = "openid_federation",
 }
 
-export class TrustedAuthorityVerification {
+const DCQL_CREDENTIAL_FORMATS = ["dc+sd-jwt", "mso_mdoc"] as const;
+
+export class TrustListRef {
     @ApiPropertyOptional({
-        type: "object",
-        additionalProperties: true,
+        type: "string",
         description:
-            "JWK used to verify trust-list JWT signatures for trusted authority values.",
+            "Managed local trust-list identifier. When provided, verifier material is resolved server-side from the trust list key chain.",
     })
-    @ValidateIf((o: TrustedAuthorityVerification) => !o.verifierX509Der)
-    @IsDefined()
-    @IsObject()
-    verifierKey?: Record<string, unknown>;
+    @IsOptional()
+    @IsString()
+    trustListId?: string;
 
     @ApiPropertyOptional({
         type: "string",
         description:
-            "Base64 DER-encoded X.509 certificate used to verify trust-list JWT signatures for trusted authority values.",
+            "Trust-list JWT URL. Required for external trust lists when trustListId is not set.",
     })
-    @ValidateIf((o: TrustedAuthorityVerification) => !o.verifierKey)
+    @ValidateIf((o: TrustListRef) => !o.trustListId)
     @IsDefined()
+    @IsString()
+    url!: string;
+
+    @ApiPropertyOptional({
+        type: "object",
+        additionalProperties: true,
+        description:
+            "JWK used to verify trust-list JWT signatures for external trusted authority values.",
+    })
+    @ValidateIf((o: TrustListRef) => !o.trustListId && !o.verifierX509Der)
+    @IsOptional()
+    @IsObject()
+    verifierKey?: JWK;
+
+    @ApiPropertyOptional({
+        type: "string",
+        description:
+            "Base64 DER-encoded X.509 certificate used to verify trust-list JWT signatures for external trusted authority values.",
+    })
+    @ValidateIf((o: TrustListRef) => !o.trustListId && !o.verifierKey)
+    @IsOptional()
     @IsString()
     verifierX509Der?: string;
 }
@@ -80,20 +105,112 @@ export class PresentationAttachment {
     @IsString({ each: true })
     credential_ids?: string[];
 }
-// TODO: extend: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-trusted-authorities-query
-export class TrustedAuthorityQuery {
-    @IsString()
-    @IsEnum(TrustedAuthorityType)
-    type!: TrustedAuthorityType;
 
+export class ClaimsQuery {
+    @IsString()
+    @IsOptional()
+    id?: string;
+
+    @IsArray()
+    path!: string[];
+
+    @IsArray()
+    @IsOptional()
+    values?: string[];
+}
+
+export class MsoMdocClaimsQuery extends ClaimsQuery {
+    @ApiPropertyOptional({
+        type: "boolean",
+        description:
+            "Whether the holder should be allowed to retain the claim in an mso_mdoc response.",
+    })
+    @IsOptional()
+    @IsBoolean()
+    intent_to_retain?: boolean;
+}
+
+export class DcSdJwtCredentialQueryMeta {
+    @ApiProperty({
+        type: "array",
+        items: { type: "string" },
+        description: "VCT identifiers accepted for dc+sd-jwt credentials.",
+    })
+    @IsArray()
+    @IsString({ each: true })
+    vct_values!: string[];
+}
+
+export class MsoMdocCredentialQueryMeta {
+    @ApiProperty({
+        type: "string",
+        description:
+            "Document type identifier accepted for mso_mdoc credentials.",
+    })
+    @IsString()
+    doctype_value!: string;
+}
+
+// TODO: extend: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-trusted-authorities-query
+export abstract class TrustedAuthorityQuery {
+    declare type: TrustedAuthorityType;
+}
+
+export class TrustedAuthorityQueryEtsiTl extends TrustedAuthorityQuery {
+    @ApiProperty({
+        enum: [TrustedAuthorityType.ETSI_TL],
+        default: TrustedAuthorityType.ETSI_TL,
+    })
+    @IsString()
+    @Equals(TrustedAuthorityType.ETSI_TL)
+    type: TrustedAuthorityType.ETSI_TL = TrustedAuthorityType.ETSI_TL;
+
+    @ApiProperty({
+        type: "array",
+        items: {
+            $ref: getSchemaPath(TrustListRef),
+        },
+    })
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => TrustListRef)
+    values!: TrustListRef[];
+}
+
+export class TrustedAuthorityQueryOpenIdFederation extends TrustedAuthorityQuery {
+    @ApiProperty({
+        enum: [TrustedAuthorityType.OPENID_FEDERATION],
+        default: TrustedAuthorityType.OPENID_FEDERATION,
+    })
+    @IsString()
+    @Equals(TrustedAuthorityType.OPENID_FEDERATION)
+    type: TrustedAuthorityType.OPENID_FEDERATION =
+        TrustedAuthorityType.OPENID_FEDERATION;
+
+    @ApiProperty({
+        type: "array",
+        items: { type: "string" },
+    })
     @IsArray()
     @IsString({ each: true })
     values!: string[];
+}
 
+export type TrustedAuthorityQueryValue =
+    | TrustedAuthorityQueryEtsiTl
+    | TrustedAuthorityQueryOpenIdFederation;
+
+export class CredentialSetQuery {
+    @ApiProperty({
+        type: "array",
+        items: { type: "array", items: { type: "string" } },
+    })
+    @IsArray()
+    options!: string[][];
+
+    @IsBoolean()
     @IsOptional()
-    @ValidateNested()
-    @Type(() => TrustedAuthorityVerification)
-    verification?: TrustedAuthorityVerification;
+    required?: boolean;
 }
 
 @ValidatorConstraint({ name: "claimSetsConsistency", async: false })
@@ -103,7 +220,7 @@ class ClaimSetsConsistencyConstraint implements ValidatorConstraintInterface {
             return true;
         }
 
-        const credentialQuery = args.object as CredentialQuery;
+        const credentialQuery = args.object as { claims?: ClaimsQuery[] };
         const claims = credentialQuery.claims;
         if (!claims || claims.length === 0) {
             return false;
@@ -137,7 +254,15 @@ class ClaimSetsConsistencyConstraint implements ValidatorConstraintInterface {
 }
 
 //TODO: extend: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-credential-query
-export class CredentialQuery {
+@ApiExtraModels(
+    TrustListRef,
+    TrustedAuthorityQueryEtsiTl,
+    TrustedAuthorityQueryOpenIdFederation,
+    DcSdJwtCredentialQueryMeta,
+    MsoMdocCredentialQueryMeta,
+    MsoMdocClaimsQuery,
+)
+export abstract class CredentialQuery {
     @IsString()
     @Matches(/^[A-Za-z0-9_-]+$/, {
         message:
@@ -145,7 +270,12 @@ export class CredentialQuery {
     })
     id!: string;
 
+    @ApiProperty({
+        enum: DCQL_CREDENTIAL_FORMATS,
+        description: "Credential format discriminator.",
+    })
     @IsString()
+    @IsEnum(DCQL_CREDENTIAL_FORMATS)
     format!: string;
 
     @IsOptional()
@@ -168,48 +298,143 @@ export class CredentialQuery {
     })
     claim_sets?: string[][];
 
-    @IsObject()
-    meta!: any;
-
     @IsArray()
     @IsOptional()
     @ValidateNested({ each: true })
-    @Type(() => TrustedAuthorityQuery)
-    trusted_authorities?: TrustedAuthorityQuery[];
-}
-
-export class ClaimsQuery {
-    @IsString()
-    @IsOptional()
-    id?: string;
-
-    @IsArray()
-    path!: string[];
-
-    @IsArray()
-    @IsOptional()
-    values?: string[];
-}
-
-//TODO: extend: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-credential-set-query
-export class CredentialSetQuery {
-    @ApiProperty({
+    @ApiPropertyOptional({
         type: "array",
-        items: { type: "array", items: { type: "string" } },
+        description:
+            "Trusted authority constraints (discriminated by type) for this credential query.",
+        items: {
+            oneOf: [
+                { $ref: getSchemaPath(TrustedAuthorityQueryEtsiTl) },
+                {
+                    $ref: getSchemaPath(TrustedAuthorityQueryOpenIdFederation),
+                },
+            ],
+            discriminator: {
+                propertyName: "type",
+                mapping: {
+                    [TrustedAuthorityType.ETSI_TL]: getSchemaPath(
+                        TrustedAuthorityQueryEtsiTl,
+                    ),
+                    [TrustedAuthorityType.OPENID_FEDERATION]: getSchemaPath(
+                        TrustedAuthorityQueryOpenIdFederation,
+                    ),
+                },
+            },
+        },
     })
-    @IsArray()
-    options!: string[][];
-
-    @IsBoolean()
-    @IsOptional()
-    required?: boolean;
+    @Type(() => TrustedAuthorityQuery, {
+        discriminator: {
+            property: "type",
+            subTypes: [
+                {
+                    value: TrustedAuthorityQueryEtsiTl,
+                    name: TrustedAuthorityType.ETSI_TL,
+                },
+                {
+                    value: TrustedAuthorityQueryOpenIdFederation,
+                    name: TrustedAuthorityType.OPENID_FEDERATION,
+                },
+            ],
+        },
+        keepDiscriminatorProperty: true,
+    })
+    trusted_authorities?: TrustedAuthorityQueryValue[];
 }
 
+export class CredentialQueryDcSdJwt extends CredentialQuery {
+    @ApiProperty({
+        enum: ["dc+sd-jwt"],
+        default: "dc+sd-jwt",
+    })
+    @IsString()
+    @Equals("dc+sd-jwt")
+    format = "dc+sd-jwt" as const;
+
+    @ApiProperty({
+        type: DcSdJwtCredentialQueryMeta,
+        description: "dc+sd-jwt schema metadata for the requested credential.",
+    })
+    @IsDefined()
+    @ValidateNested()
+    @Type(() => DcSdJwtCredentialQueryMeta)
+    meta!: DcSdJwtCredentialQueryMeta;
+
+    @IsOptional()
+    @ValidateNested({ each: true })
+    @Type(() => ClaimsQuery)
+    declare claims?: ClaimsQuery[];
+}
+
+export class CredentialQueryMsoMdoc extends CredentialQuery {
+    @ApiProperty({
+        enum: ["mso_mdoc"],
+        default: "mso_mdoc",
+    })
+    @IsString()
+    @Equals("mso_mdoc")
+    format = "mso_mdoc" as const;
+
+    @ApiProperty({
+        type: MsoMdocCredentialQueryMeta,
+        description:
+            "mso_mdoc document type metadata for the requested credential.",
+    })
+    @IsDefined()
+    @ValidateNested()
+    @Type(() => MsoMdocCredentialQueryMeta)
+    meta!: MsoMdocCredentialQueryMeta;
+
+    @IsOptional()
+    @ValidateNested({ each: true })
+    @Type(() => MsoMdocClaimsQuery)
+    declare claims?: MsoMdocClaimsQuery[];
+}
+
+export type CredentialQueryValue =
+    | CredentialQueryDcSdJwt
+    | CredentialQueryMsoMdoc;
+
+@ApiExtraModels(CredentialQueryDcSdJwt, CredentialQueryMsoMdoc)
 export class DCQL {
     @IsArray()
     @ValidateNested({ each: true })
-    @Type(() => CredentialQuery)
-    credentials!: CredentialQuery[];
+    @Type(() => CredentialQuery, {
+        discriminator: {
+            property: "format",
+            subTypes: [
+                {
+                    value: CredentialQueryDcSdJwt,
+                    name: "dc+sd-jwt",
+                },
+                {
+                    value: CredentialQueryMsoMdoc,
+                    name: "mso_mdoc",
+                },
+            ],
+        },
+        keepDiscriminatorProperty: true,
+    })
+    @ApiPropertyOptional({
+        type: "array",
+        description: "Format-discriminated credential queries.",
+        items: {
+            oneOf: [
+                { $ref: getSchemaPath(CredentialQueryDcSdJwt) },
+                { $ref: getSchemaPath(CredentialQueryMsoMdoc) },
+            ],
+            discriminator: {
+                propertyName: "format",
+                mapping: {
+                    "dc+sd-jwt": getSchemaPath(CredentialQueryDcSdJwt),
+                    mso_mdoc: getSchemaPath(CredentialQueryMsoMdoc),
+                },
+            },
+        },
+    })
+    credentials!: CredentialQueryValue[];
 
     @IsArray()
     @IsOptional()

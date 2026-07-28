@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "./TrustedAuthorityQueryEtsiTl.schema.json",
+  "title": "TrustedAuthorityQueryEtsiTl",
+  "type": "object",
+  "properties": {
+    "type": {
+      "enum": [
+        "etsi_tl"
+      ],
+      "type": "string",
+      "default": "etsi_tl"
+    },
+    "values": {
+      "type": "array",
+      "items": {
+        "$ref": "./TrustListRef.schema.json"
+      }
+    }
+  },
+  "required": [
+    "type",
+    "values"
+  ],
+  "additionalProperties": false
+}

@@ -10,6 +10,9 @@ import {
 import {
     ClaimsQuery,
     CredentialQuery,
+    CredentialQueryDcSdJwt,
+    CredentialQueryMsoMdoc,
+    CredentialQueryValue,
     CredentialSetQuery,
 } from "../../../../verifier/presentations/entities/presentation-config.entity";
 
@@ -58,8 +61,17 @@ export class PolicyCredential {
     @IsDefined()
     @IsArray()
     @ValidateNested({ each: true })
-    @Type(() => CredentialQuery)
-    credentials!: CredentialQuery[];
+    @Type(() => CredentialQuery, {
+        discriminator: {
+            property: "format",
+            subTypes: [
+                { value: CredentialQueryDcSdJwt, name: "dc+sd-jwt" },
+                { value: CredentialQueryMsoMdoc, name: "mso_mdoc" },
+            ],
+        },
+        keepDiscriminatorProperty: true,
+    })
+    credentials!: CredentialQueryValue[];
 
     @IsOptional()
     @IsArray()

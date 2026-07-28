@@ -3,11 +3,11 @@ import { TrustStoreService } from "../../../shared/trust/trust-store.service";
 import {
     normalizeTrustListRefs,
     ServiceTypeIdentifiers,
-    TrustListInput,
     TrustListSource,
 } from "../../../shared/trust/types";
 import { X509ValidationService } from "../../../shared/trust/x509-validation.service";
 import { CredentialRequestException } from "./exceptions";
+import { TrustListRef } from "../../../verifier/presentations/entities/presentation-config.entity";
 
 export interface AttestationProofTrustValidationDeps {
     trustStoreService: TrustStoreService;
@@ -20,7 +20,7 @@ export interface AttestationProofTrustValidationDeps {
  */
 export async function validateAttestationProofTrust(
     keyAttestationJwt: string,
-    trustListRefsInput: TrustListInput[],
+    trustListRefsInput: TrustListRef[],
     deps: AttestationProofTrustValidationDeps,
 ): Promise<void> {
     const trustListRefs = normalizeTrustListRefs(trustListRefsInput);

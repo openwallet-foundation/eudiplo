@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "./TrustListRef.schema.json",
+  "title": "TrustListRef",
+  "type": "object",
+  "properties": {
+    "trustListId": {
+      "type": "string",
+      "description": "Managed local trust-list identifier. When provided, verifier material is resolved server-side from the trust list key chain."
+    },
+    "url": {
+      "type": "string",
+      "description": "Trust-list JWT URL. Required for external trust lists when trustListId is not set."
+    },
+    "verifierKey": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "JWK used to verify trust-list JWT signatures for external trusted authority values."
+    },
+    "verifierX509Der": {
+      "type": "string",
+      "description": "Base64 DER-encoded X.509 certificate used to verify trust-list JWT signatures for external trusted authority values."
+    }
+  },
+  "additionalProperties": false
+}

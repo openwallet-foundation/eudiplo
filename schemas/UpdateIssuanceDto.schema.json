@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/UpdateIssuanceDto.schema.json",
+  "$id": "./UpdateIssuanceDto.schema.json",
   "title": "UpdateIssuanceDto",
   "type": "object",
   "properties": {
@@ -37,10 +37,22 @@
         "discriminator": {
           "propertyName": "type",
           "mapping": {
-            "external": "#/components/schemas/ExternalAuthorizationServerConfig",
-            "oid4vp": "#/components/schemas/Oid4VpAuthorizationServerConfig",
-            "chained": "#/components/schemas/ChainedAuthorizationServerConfig",
-            "built-in": "#/components/schemas/BuiltInAuthorizationServerConfig"
+            "external": "./ExternalAuthorizationServerConfig.schema.json",
+            "oid4vp": "./Oid4VpAuthorizationServerConfig.schema.json",
+            "chained": "./ChainedAuthorizationServerConfig.schema.json",
+            "built-in": "./BuiltInAuthorizationServerConfig.schema.json"
+          }
+        },
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "external",
+              "oid4vp",
+              "chained",
+              "built-in"
+            ]
           }
         }
       }

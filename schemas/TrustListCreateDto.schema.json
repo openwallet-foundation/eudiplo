@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/TrustListCreateDto.schema.json",
+  "$id": "./TrustListCreateDto.schema.json",
   "title": "TrustListCreateDto",
   "type": "object",
   "properties": {
@@ -25,8 +25,18 @@
         "discriminator": {
           "propertyName": "type",
           "mapping": {
-            "internal": "#/components/schemas/InternalTrustListEntity",
-            "external": "#/components/schemas/ExternalTrustListEntity"
+            "internal": "./InternalTrustListEntity.schema.json",
+            "external": "./ExternalTrustListEntity.schema.json"
+          }
+        },
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "internal",
+              "external"
+            ]
           }
         }
       }

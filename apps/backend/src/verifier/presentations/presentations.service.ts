@@ -18,7 +18,10 @@ import { PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
 import { AuditLogService } from "../../audit-log/audit-log.service";
 import { TokenPayload } from "../../auth/token.decorator";
-import { ServiceTypeIdentifier } from "../../issuer/trust-list/trustlist.service";
+import {
+    ServiceTypeIdentifier,
+    TrustListService,
+} from "../../issuer/trust-list/trustlist.service";
 import { RegistrarService } from "../../registrar/registrar.service";
 import { Session } from "../../session/entities/session.entity";
 import {
@@ -48,9 +51,12 @@ import { PresentationConfigCreateDto } from "./dto/presentation-config-create.dt
 import { PresentationConfigUpdateDto } from "./dto/presentation-config-update.dto";
 import {
     ClaimsQuery,
-    CredentialQuery,
+    CredentialQueryValue,
     CredentialSetQuery,
     PresentationConfig,
+    TrustListRef,
+    TrustedAuthorityQueryEtsiTl,
+    TrustedAuthorityQueryOpenIdFederation,
     TrustedAuthorityType,
 } from "./entities/presentation-config.entity";
 import { IncompletePresentationException } from "./exceptions/incomplete-presentation.exception";
@@ -190,6 +196,7 @@ export class PresentationsService {
         private readonly mdocverifierService: MdocverifierService,
         private readonly configService: ConfigService,
         private readonly registrarService: RegistrarService,
+        private readonly trustListService: TrustListService,
         private readonly tenantActionLogService: AuditLogService,
         private readonly logger: PinoLogger,
         private readonly traceService: TraceService,
@@ -253,6 +260,54 @@ export class PresentationsService {
             where: { tenantId },
             order: { createdAt: "DESC" },
         });
+    }
+
+    async resolveTrustListRefsForTenant(
+        refs: TrustListRef[] | undefined,
+        tenantId: string,
+        tenantHost: string,
+    ): Promise<TrustListRef[]> {
+        if (!Array.isArray(refs) || refs.length === 0) {
+            return [];
+        }
+
+        return Promise.all(
+            refs.map(async (ref) => {
+                if (ref.trustListId) {
+                    const trustListId = ref.trustListId.trim();
+                    if (trustListId.length === 0) {
+                        throw new BadRequestException(
+                            "trusted_authorities values trustListId must not be empty",
+                        );
+                    }
+
+                    const verifierX509Der =
+                        await this.trustListService.getVerifierX509Der(
+                            tenantId,
+                            trustListId,
+                        );
+
+                    return {
+                        trustListId,
+                        url: `${tenantHost}/trust-list/${encodeURIComponent(trustListId)}`,
+                        verifierX509Der,
+                    };
+                }
+
+                const url = ref.url?.replaceAll("<TENANT_URL>", tenantHost);
+                if (!url) {
+                    throw new BadRequestException(
+                        "trusted_authorities values url is required when trustListId is not set",
+                    );
+                }
+
+                return {
+                    ...ref,
+                    url,
+                    trustListId: undefined,
+                };
+            }),
+        );
     }
 
     /**
@@ -1484,27 +1539,27 @@ export class PresentationsService {
 
                 const loteAuthorities =
                     dcqlCredential.trusted_authorities?.find(
-                        (auth) => auth.type === TrustedAuthorityType.ETSI_TL,
+                        (auth): auth is TrustedAuthorityQueryEtsiTl =>
+                            auth.type === TrustedAuthorityType.ETSI_TL,
                     );
 
                 const federationAuthorities =
                     dcqlCredential.trusted_authorities?.find(
-                        (auth) =>
+                        (auth): auth is TrustedAuthorityQueryOpenIdFederation =>
                             auth.type ===
                             TrustedAuthorityType.OPENID_FEDERATION,
                     );
 
+                const resolvedLoteAuthorities =
+                    await this.resolveTrustListRefsForTenant(
+                        loteAuthorities?.values,
+                        session.tenantId,
+                        tenantHost,
+                    );
+
                 const verifyOptions: VerifierOptions = {
                     trustListSource: {
-                        lotes:
-                            loteAuthorities?.values.map((url) => ({
-                                url: url.replaceAll("<TENANT_URL>", tenantHost),
-                                verifierKey:
-                                    loteAuthorities.verification?.verifierKey,
-                                verifierX509Der:
-                                    loteAuthorities.verification
-                                        ?.verifierX509Der,
-                            })) || [],
+                        lotes: resolvedLoteAuthorities,
                         acceptedServiceTypes: [
                             ServiceTypeIdentifier.EaaIssuance,
                             ServiceTypeIdentifier.PIDIssuance,
@@ -1663,7 +1718,7 @@ export class PresentationsService {
      */
     private validateCredentialCompleteness(
         receivedCredentialIds: string[],
-        requiredCredentials: CredentialQuery[],
+        requiredCredentials: CredentialQueryValue[],
         credentialSets?: CredentialSetQuery[],
     ): void {
         const allCredentialIds = requiredCredentials.map((c) => c.id);
@@ -1798,7 +1853,7 @@ export class PresentationsService {
     }
 
     private getCredentialClaimSelections(
-        credential: CredentialQuery,
+        credential: CredentialQueryValue,
     ): ClaimsQuery[][] {
         const claims = credential.claims ?? [];
 
@@ -1846,7 +1901,7 @@ export class PresentationsService {
             | undefined;
         requestObjectJwkThumbprint: Uint8Array | undefined;
         verifyOptions: VerifierOptions;
-        dcqlCredential: CredentialQuery;
+        dcqlCredential: CredentialQueryValue;
         claimSelections: ClaimsQuery[][];
         hasClaimSets: boolean;
         requiredClaimKeys: string[];
@@ -1879,7 +1934,7 @@ export class PresentationsService {
             | undefined;
         requestObjectJwkThumbprint: Uint8Array | undefined;
         verifyOptions: VerifierOptions;
-        dcqlCredential: CredentialQuery;
+        dcqlCredential: CredentialQueryValue;
         claimSelections: ClaimsQuery[][];
         hasClaimSets: boolean;
     }): Promise<Record<string, unknown>> {
@@ -1946,7 +2001,7 @@ export class PresentationsService {
         attId: string;
         sessionData: MdocSessionDataOid4vp | MdocSessionDataDcApi;
         verifyOptions: VerifierOptions;
-        dcqlCredential: CredentialQuery;
+        dcqlCredential: CredentialQueryValue;
         claimSelections: ClaimsQuery[][];
     }): Promise<Record<string, unknown>> {
         let lastVerificationFailure:
@@ -2026,7 +2081,7 @@ export class PresentationsService {
             | undefined;
         requestObjectJwkThumbprint: Uint8Array | undefined;
         verifyOptions: VerifierOptions;
-        dcqlCredential: CredentialQuery;
+        dcqlCredential: CredentialQueryValue;
         claimSelections: ClaimsQuery[][];
         hasClaimSets: boolean;
         requiredClaimKeys: string[];

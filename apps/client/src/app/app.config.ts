@@ -40,12 +40,128 @@ const transactionDataArraySchema = {
   },
 };
 
+function toEditorFriendlySchema(node: any): any {
+  if (Array.isArray(node)) {
+    return node.map((v) => toEditorFriendlySchema(v));
+  }
+
+  if (!node || typeof node !== 'object') {
+    return node;
+  }
+
+  const out: Record<string, any> = {};
+  for (const [key, value] of Object.entries(node)) {
+    out[key] = toEditorFriendlySchema(value);
+  }
+
+  // Monaco JSON suggestions are more stable with anyOf than oneOf for
+  // discriminated unions while typing incomplete objects.
+  if (Array.isArray(out['oneOf']) && out['discriminator'] && !Array.isArray(out['anyOf'])) {
+    out['anyOf'] = out['oneOf'];
+    delete out['oneOf'];
+  }
+
+  // If a schema already exposes local object properties, flatten trivial allOf
+  // wrappers so Monaco can offer property completion inside nested objects.
+  if (
+    out['type'] === 'object' &&
+    out['properties'] &&
+    Array.isArray(out['allOf']) &&
+    out['allOf'].every((entry: any) => entry && typeof entry === 'object' && '$ref' in entry)
+  ) {
+    delete out['allOf'];
+  }
+
+  return out;
+}
+
+function getCredentialFormat(text: string): 'dc+sd-jwt' | 'mso_mdoc' | undefined {
+  const match = /"format"\s*:\s*"([^"]+)"/.exec(text);
+  const format = match?.[1];
+  return format === 'dc+sd-jwt' || format === 'mso_mdoc' ? format : undefined;
+}
+
+function isInsideMetaObject(model: any, position: any): boolean {
+  const offset = model.getOffsetAt(position);
+  const text = model.getValue();
+  const metaKeyIndex = text.lastIndexOf('"meta"', offset);
+  if (metaKeyIndex === -1) {
+    return false;
+  }
+
+  const metaOpenIndex = text.indexOf('{', metaKeyIndex);
+  if (metaOpenIndex === -1 || offset < metaOpenIndex) {
+    return false;
+  }
+
+  const metaCloseIndex = text.indexOf('}', metaOpenIndex);
+  return metaCloseIndex === -1 || offset <= metaCloseIndex;
+}
+
+function registerBrowserJsonCompletions() {
+  monaco.languages.registerCompletionItemProvider('json', {
+    triggerCharacters: ['"', ':', ',', '{', ' '],
+    provideCompletionItems(model: any, position: any) {
+      const uriValue = String(model.uri?.toString?.() ?? '');
+      const isDcqlSchema = uriValue.includes('DCQL.schema.json');
+      const isCredentialQuerySchema =
+        uriValue.includes('CredentialQueryDcSdJwt.schema.json') ||
+        uriValue.includes('CredentialQueryMsoMdoc.schema.json');
+
+      if (!isDcqlSchema && !isCredentialQuerySchema) {
+        return { suggestions: [] };
+      }
+
+      const text = model.getValue();
+      const format = getCredentialFormat(text);
+      const insideMeta = isInsideMetaObject(model, position);
+
+      if (!insideMeta && !isCredentialQuerySchema) {
+        return { suggestions: [] };
+      }
+
+      const suggestions: any[] = [];
+      const addPropertySuggestion = (label: string, insertText: string, detail: string) => {
+        suggestions.push({
+          label,
+          kind: monaco.languages.CompletionItemKind.Property,
+          insertText,
+          insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+          detail,
+        });
+      };
+
+      if (insideMeta) {
+        if (format === 'mso_mdoc') {
+          addPropertySuggestion('doctype_value', '"doctype_value": "$1"', 'mso_mdoc meta');
+        } else {
+          addPropertySuggestion('vct_values', '"vct_values": [$1]', 'dc+sd-jwt meta');
+        }
+      } else if (isDcqlSchema && format) {
+        addPropertySuggestion('meta', '"meta": {$1}', 'credential metadata');
+      }
+
+      return { suggestions };
+    },
+  });
+}
+
 function onMonacoLoad() {
+  // Expose loaded Monaco instance for components that need URI helpers.
+  (globalThis as any).__eudiploMonaco = monaco;
+
+  const editorSchemas = schemas.map((entry) => ({
+    ...entry,
+    schema: toEditorFriendlySchema(entry.schema),
+  }));
+
   monaco.languages.json.jsonDefaults.diagnosticsOptions.enableSchemaRequest = true;
   monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
     validate: true,
-    schemas: [...schemas, transactionDataArraySchema],
+    schemas: [...editorSchemas, transactionDataArraySchema],
   });
+
+  registerBrowserJsonCompletions();
 }
 
 export const appConfig: ApplicationConfig = {

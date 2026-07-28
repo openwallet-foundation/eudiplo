@@ -109,8 +109,19 @@ Each entry in `trusted_authorities` specifies:
 
 - `type`: The trust framework type. Supported values:
     - `etsi_tl` — ETSI TS 119 602 List of Trusted Entities (LoTE)
-    - `aki` — Authority Key Identifier
-- `values`: Array of trust anchors. For `etsi_tl`, these are URLs pointing to signed LoTE JWTs.
+    - `openid_federation` — OpenID Federation trust anchors
+- `values`: Array of trust anchors.
+
+For `etsi_tl`, each `values` entry is an object in one of these forms:
+
+- Managed local trust list pointer:
+    - `trustListId` (required)
+    - `url`, `verifierKey`, and `verifierX509Der` are resolved server-side
+- External trust list reference:
+    - `url` (required)
+    - plus one verifier material field: `verifierKey` or `verifierX509Der`
+
+For `openid_federation`, `values` remains an array of string entity IDs.
 
 ### Example
 
@@ -129,11 +140,40 @@ Each entry in `trusted_authorities` specifies:
     "trusted_authorities": [
         {
             "type": "etsi_tl",
-            "values": ["https://example.com/trust-list/pid-provider.jwt"]
+            "values": [
+                {
+                    "url": "https://example.com/trust-list/pid-provider.jwt",
+                    "verifierX509Der": "MIIB..."
+                }
+            ]
         }
     ]
 }
 ```
+
+### Managed Trust List Pointer Example
+
+```json
+{
+    "id": "pid-mso-mdoc",
+    "format": "mso_mdoc",
+    "trusted_authorities": [
+        {
+            "type": "etsi_tl",
+            "values": [
+                {
+                    "trustListId": "local-pid-trust-list"
+                }
+            ]
+        }
+    ]
+}
+```
+
+When `trustListId` is used, EUDIPLO resolves:
+
+- LoTE URL as `<TENANT_URL>/trust-list/{trustListId}`
+- verifier certificate from the trust list key chain
 
 During verification, EUDIPLO will:
 

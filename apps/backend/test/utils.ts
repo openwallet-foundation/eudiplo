@@ -790,6 +790,7 @@ export async function setupPresentationTestApp(): Promise<PresentationTestContex
         201,
     );
 
+    console.log("Trust list imported successfully.");
     // Import presentation configs for pid-de and pid
     await expectRequest(
         request(app.getHttpServer())
@@ -803,6 +804,7 @@ export async function setupPresentationTestApp(): Promise<PresentationTestContex
             ),
         201,
     );
+    console.log("Presentation config for pid-de imported successfully.");
 
     await expectRequest(
         request(app.getHttpServer())

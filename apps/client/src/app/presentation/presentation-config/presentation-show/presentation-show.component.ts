@@ -186,6 +186,31 @@ export class PresentationShowComponent implements OnInit {
     return JSON.stringify(value, null, 2);
   }
 
+  isTrustedAuthorityObject(value: unknown): value is {
+    url: string;
+    verifierKey?: unknown;
+    verifierX509Der?: string;
+  } {
+    return (
+      typeof value === 'object' &&
+      value !== null &&
+      'url' in value &&
+      typeof (value as { url?: unknown }).url === 'string'
+    );
+  }
+
+  formatTrustedAuthorityValue(value: unknown): string {
+    if (typeof value === 'string') {
+      return value;
+    }
+
+    if (this.isTrustedAuthorityObject(value)) {
+      return value.url;
+    }
+
+    return JSON.stringify(value, null, 2);
+  }
+
   deletePresentation() {
     if (this.config && confirm('Are you sure you want to delete this presentation?')) {
       this.presentationService

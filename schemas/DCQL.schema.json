@@ -1,13 +1,38 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/DCQL.schema.json",
+  "$id": "./DCQL.schema.json",
   "title": "DCQL",
   "type": "object",
   "properties": {
     "credentials": {
       "type": "array",
+      "description": "Format-discriminated credential queries.",
       "items": {
-        "$ref": "./CredentialQuery.schema.json"
+        "oneOf": [
+          {
+            "$ref": "./CredentialQueryDcSdJwt.schema.json"
+          },
+          {
+            "$ref": "./CredentialQueryMsoMdoc.schema.json"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "format",
+          "mapping": {
+            "dc+sd-jwt": "./CredentialQueryDcSdJwt.schema.json",
+            "mso_mdoc": "./CredentialQueryMsoMdoc.schema.json"
+          }
+        },
+        "type": "object",
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": [
+              "dc+sd-jwt",
+              "mso_mdoc"
+            ]
+          }
+        }
       }
     },
     "credential_sets": {
@@ -17,8 +42,5 @@
       }
     }
   },
-  "required": [
-    "credentials"
-  ],
   "additionalProperties": false
 }

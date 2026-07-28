@@ -25,6 +25,25 @@ import { FlexLayoutModule } from 'ngx-flexible-layout';
 
 let editorInstanceCounter = 0;
 
+function stripDiscriminators(schema: any): any {
+  if (Array.isArray(schema)) {
+    return schema.map(stripDiscriminators);
+  }
+
+  if (!schema || typeof schema !== 'object') {
+    return schema;
+  }
+
+  const sanitized: Record<string, any> = {};
+  for (const [key, value] of Object.entries(schema)) {
+    if (key === 'discriminator') {
+      continue;
+    }
+    sanitized[key] = stripDiscriminators(value);
+  }
+  return sanitized;
+}
+
 /**
  * extact the schema that got added by the editor
  */
@@ -60,16 +79,18 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
   value = '';
   disabled = false;
 
-  private readonly ajv = new Ajv();
+  private readonly ajv = new Ajv({ discriminator: true });
   private validateFn?: ValidateFunction;
   private readonly instanceId = ++editorInstanceCounter;
   private modelVersion = 0;
+  private editorInitialized = false;
 
   constructor() {
     addFormats(this.ajv);
     for (const schema of schemas) {
       const key = (schema.schema as any)['$id'].split('/').pop() || '';
       try {
+        console.log(JSON.stringify(schema.schema, null, 2));
         this.ajv.addSchema(schema.schema, key);
       } catch (error) {
         console.error(`Failed to add schema ${key}:`, error);
@@ -79,17 +100,14 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
 
   // CVA
   writeValue(obj: any): void {
-    // No longer inject $schema - Monaco uses URI-based schema matching via fileMatch
     this.value = obj == null ? '' : typeof obj === 'string' ? obj : JSON.stringify(obj, null, 2);
 
-    // Use unique URI per instance and version to ensure Monaco creates a fresh model
-    // This prevents stale cached models when navigating between pages
-    this.modelVersion++;
-    this.model = {
-      value: this.value,
-      language: this.editorOptions.language,
-      uri: this.schema?.getFileMatchUri(this.instanceId, this.modelVersion),
-    };
+    // Avoid tearing down/recreating Monaco models on every form value write.
+    if (!this.model) {
+      this.rebuildModel();
+    } else {
+      this.model.value = this.value;
+    }
   }
   registerOnChange = (fn: any) => (this._onChange = fn);
   registerOnTouched = (fn: any) => (this._onTouched = fn);
@@ -140,7 +158,21 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
     this._onTouched();
   }
 
+  onEditorInit(): void {
+    this.editorInitialized = true;
+
+    // If URI could not be created before Monaco finished loading,
+    // rebuild once so schema fileMatch can attach for autocomplete.
+    if (this.schema && !this.model?.uri) {
+      this.rebuildModel();
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
+    if ('editorOptions' in changes || 'schema' in changes) {
+      this.rebuildModel();
+    }
+
     if ('schema' in changes) {
       try {
         this.validateFn = this.ajv.getSchema(this.schema?.getSchemaUrl());
@@ -155,4 +187,35 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
   private _onChange: (v: any) => void = () => {};
   private _onTouched: () => void = () => {};
   private _validatorChange?: () => void;
+
+  private rebuildModel(): void {
+    this.modelVersion += 1;
+    const uriString = this.schema?.getFileMatchUri(this.instanceId, this.modelVersion);
+    const uri = uriString ? this.toMonacoUri(uriString) : undefined;
+
+    this.model = {
+      value: this.value,
+      language: this.editorOptions?.language ?? 'json',
+      // URI-based schema matching is required for Monaco JSON autocomplete.
+      uri,
+    };
+  }
+
+  private toMonacoUri(uri: string): any {
+    try {
+      const monacoGlobal = (globalThis as any).__eudiploMonaco ?? (globalThis as any).monaco;
+      if (monacoGlobal?.Uri?.parse) {
+        return monacoGlobal.Uri.parse(uri);
+      }
+    } catch {
+      // Fallback for very early lifecycle calls before Monaco global is ready.
+    }
+
+    // Before Monaco is initialized, return undefined and let onEditorInit rebuild.
+    if (!this.editorInitialized) {
+      return undefined;
+    }
+
+    return undefined;
+  }
 }

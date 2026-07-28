@@ -2,7 +2,7 @@ import { HttpService } from "@nestjs/axios";
 import { Injectable, Logger } from "@nestjs/common";
 import { importJWK, importX509, jwtVerify } from "jose";
 import { firstValueFrom } from "rxjs";
-import { TrustListRef } from "./types";
+import { TrustListRef } from "../../verifier/presentations/entities/presentation-config.entity";
 
 @Injectable()
 export class TrustListJwtService {

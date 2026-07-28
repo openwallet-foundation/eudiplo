@@ -45,7 +45,6 @@ import {
     IssuerRegistrationCertificateCache,
     IssuerRegistrationCertificateConfig,
 } from "../dto/issuer-registration-certificate.dto";
-import type { TrustListInput } from "../../../../shared/trust/types";
 
 class WalletProviderTrustListRefDto {
     @ApiProperty({ format: "uri" })
@@ -140,7 +139,7 @@ export class IssuanceConfig {
     @Type(() => WalletProviderTrustListRefDto)
     @IsOptional()
     @Column({ type: "json", nullable: true })
-    walletProviderTrustLists?: TrustListInput[];
+    walletProviderTrustLists?: WalletProviderTrustListRefDto[];
 
     /**
      * Optional key ID to use for signing access tokens.

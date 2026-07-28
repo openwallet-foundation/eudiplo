@@ -228,8 +228,20 @@
                                     <mat-chip class="authority-type">{{ auth.type }}</mat-chip>
                                   </mat-chip-set>
                                   <div class="authority-values">
-                                    @for (value of auth.values; track value) {
-                                      <code class="authority-value">{{ value }}</code>
+                                    @for (value of auth.values; track $index) {
+                                      <div class="authority-value">
+                                        <code>{{ formatTrustedAuthorityValue(value) }}</code>
+                                        @if (isTrustedAuthorityObject(value)) {
+                                          <mat-chip-set>
+                                            @if (value.verifierKey) {
+                                              <mat-chip>JWK verifier</mat-chip>
+                                            }
+                                            @if (value.verifierX509Der) {
+                                              <mat-chip>X.509 verifier</mat-chip>
+                                            }
+                                          </mat-chip-set>
+                                        }
+                                      </div>
                                     }
                                   </div>
                                 </div>

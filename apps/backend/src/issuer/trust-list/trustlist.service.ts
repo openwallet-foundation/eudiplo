@@ -374,6 +374,19 @@ export class TrustListService {
     }
 
     /**
+     * Resolve verifier certificate material for a managed trust list.
+     * Returns base64 DER (without PEM headers) suitable for `verifierX509Der`.
+     */
+    async getVerifierX509Der(tenantId: string, id: string): Promise<string> {
+        const trustList = await this.findOne(tenantId, id);
+        const cert = await this.certService.getCertificateById(
+            tenantId,
+            trustList.keyChainId,
+        );
+        return this.formatCertEntity(cert);
+    }
+
+    /**
      * Generate a signed JWT for the trust list using @owf/eudi-lote
      * @param trustList The trust list to sign
      * @returns Signed JWT string

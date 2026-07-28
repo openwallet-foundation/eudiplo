@@ -1,21 +1,12 @@
 import { JWK } from "jose";
-
-export type TrustListRef = {
-    url: string; // e.g. https://.../pid-provider.jwt
-    // material to verify the trust list JWT.
-    verifierKey?: JWK;
-    // DER-encoded X.509 certificate as base64 string.
-    verifierX509Der?: string;
-};
-
-export type TrustListInput = TrustListRef;
+import type { TrustListRef } from "../../verifier/presentations/entities/presentation-config.entity";
 
 /**
  * Normalize trust-list input to structured references.
  * Enforces structured trust-list references with verifier material.
  */
 export function normalizeTrustListRefs(
-    refs: TrustListInput[] | null | undefined,
+    refs: TrustListRef[] | null | undefined,
 ): TrustListRef[] {
     if (!Array.isArray(refs)) {
         return [];

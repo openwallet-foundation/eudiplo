@@ -5,6 +5,7 @@
         [options]="editorOptions"
         [(ngModel)]="value"
         [model]="model"
+        (onInit)="onEditorInit()"
         (ngModelChange)="handleChange($event)"
         (blur)="onBlur()"
       ></ngx-monaco-editor>

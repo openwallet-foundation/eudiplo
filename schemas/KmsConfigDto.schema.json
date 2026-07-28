@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/KmsConfigDto.schema.json",
+  "$id": "./KmsConfigDto.schema.json",
   "title": "KmsConfigDto",
   "type": "object",
   "properties": {
@@ -36,12 +36,26 @@
         "discriminator": {
           "propertyName": "type",
           "mapping": {
-            "db": "#/components/schemas/DbKmsConfigDto",
-            "vault": "#/components/schemas/VaultKmsConfigDto",
-            "aws-kms": "#/components/schemas/AwsKmsConfigDto",
-            "pkcs11": "#/components/schemas/Pkcs11KmsConfigDto",
-            "http": "#/components/schemas/HttpKmsConfigDto",
-            "csc": "#/components/schemas/CscKmsConfigDto"
+            "db": "./DbKmsConfigDto.schema.json",
+            "vault": "./VaultKmsConfigDto.schema.json",
+            "aws-kms": "./AwsKmsConfigDto.schema.json",
+            "pkcs11": "./Pkcs11KmsConfigDto.schema.json",
+            "http": "./HttpKmsConfigDto.schema.json",
+            "csc": "./CscKmsConfigDto.schema.json"
+          }
+        },
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "db",
+              "vault",
+              "aws-kms",
+              "pkcs11",
+              "http",
+              "csc"
+            ]
           }
         }
       },

@@ -10,6 +10,9 @@
  * Flags:
  *   --url <string>   OpenAPI endpoint (required)
  *   --out <dir>      Output directory (default: generated)
+ *   --id-base <uri>  Base URI used for generated $id values.
+ *                    Use "./" for local workspace-friendly IDs, or
+ *                    "none" to omit $id entirely.
  *   --no-types       Skip generating TypeScript types
  *
  * Output:
@@ -37,6 +40,10 @@ function arg(name: string, fallback?: string) {
 
 const URL: string = arg("url") || process.env.OPENAPI_URL || "";
 const OUT_ROOT = resolve(arg("out", "generated")!);
+const ID_BASE =
+  arg("id-base") ||
+  process.env.SCHEMA_ID_BASE ||
+  "./";
 
 if (!URL) {
   console.error("Error: --url is required (or set OPENAPI_URL).");
@@ -81,12 +88,23 @@ async function loadAndBundle(specPath: string) {
   return { bundled, version, isOAS31: version.startsWith("3.1") };
 }
 
-function withMeta(schema: AnyObj, name: string, baseUrl = "https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/") {
+function normalizeIdBase(base: string): string {
+  if (base === "none") return base;
+  return base.endsWith("/") ? base : `${base}/`;
+}
+
+function withMeta(schema: AnyObj, name: string, idBase: string) {
   const hasSchema = typeof schema?.$schema === "string";
   const hasId = typeof schema?.$id === "string";
+  const normalizedBase = normalizeIdBase(idBase);
+  const generatedId =
+    normalizedBase === "none"
+      ? {}
+      : { $id: normalizedBase + `${sanitize(name)}.schema.json` };
+
   return {
     ...(hasSchema ? {} : { $schema: "https://json-schema.org/draft/2020-12/schema" }),
-    ...(hasId ? {} : { $id: baseUrl + `${sanitize(name)}.schema.json` }),
+    ...(hasId ? {} : generatedId),
     title: schema?.title ?? name,
     ...schema,
   };
@@ -127,19 +145,118 @@ function rewriteComponentRefs(node: any): any {
   if (Array.isArray(node)) return node.map(rewriteComponentRefs);
 
   const out: AnyObj = {};
+
+  const rewriteComponentPointer = (value: string): string => {
+    const m = value.match(/^#\/components\/schemas\/([^\/#]+)(.*)$/);
+    if (!m) return value;
+    const name = m[1];
+    const tail = m[2] || "";
+    return `./${sanitize(name)}.schema.json${tail}`;
+  };
+
   for (const [k, v] of Object.entries(node)) {
     if (k === "$ref" && typeof v === "string") {
-      // Match exactly: "#/components/schemas/Name" with optional trailing pointer
-      const m = v.match(/^#\/components\/schemas\/([^\/#]+)(.*)$/);
-      if (m) {
-        const name = m[1];
-        const tail = m[2] || "";
-        out[k] = `./${sanitize(name)}.schema.json${tail}`;
-        continue;
-      }
+      out[k] = rewriteComponentPointer(v);
+      continue;
     }
+
+    if (k === "discriminator" && v && typeof v === "object") {
+      const discriminator = rewriteComponentRefs(v);
+      if (discriminator.mapping && typeof discriminator.mapping === "object") {
+        const mapping: AnyObj = {};
+        for (const [mapKey, mapValue] of Object.entries(discriminator.mapping as AnyObj)) {
+          mapping[mapKey] =
+            typeof mapValue === "string" ? rewriteComponentPointer(mapValue) : mapValue;
+        }
+        discriminator.mapping = mapping;
+      }
+      out[k] = discriminator;
+      continue;
+    }
+
     out[k] = rewriteComponentRefs(v);
   }
+  return out;
+}
+
+/**
+ * Normalize discriminator.mapping entries that still point to
+ * OpenAPI component pointers into local sibling schema refs.
+ */
+function rewriteDiscriminatorMappings(node: any): any {
+  if (node == null || typeof node !== "object") return node;
+  if (Array.isArray(node)) return node.map(rewriteDiscriminatorMappings);
+
+  const out: AnyObj = {};
+  for (const [k, v] of Object.entries(node)) {
+    if (k === "discriminator" && v && typeof v === "object") {
+      const discriminator = rewriteDiscriminatorMappings(v);
+      const mapping = (discriminator as AnyObj).mapping;
+      if (mapping && typeof mapping === "object") {
+        const rewritten: AnyObj = {};
+        for (const [mapKey, mapValue] of Object.entries(mapping as AnyObj)) {
+          if (typeof mapValue === "string") {
+            const m = mapValue.match(/^#\/components\/schemas\/([^\/#]+)(.*)$/);
+            rewritten[mapKey] = m
+              ? `./${sanitize(m[1])}.schema.json${m[2] || ""}`
+              : mapValue;
+          } else {
+            rewritten[mapKey] = mapValue;
+          }
+        }
+        (discriminator as AnyObj).mapping = rewritten;
+      }
+      out[k] = discriminator;
+      continue;
+    }
+
+    out[k] = rewriteDiscriminatorMappings(v);
+  }
+
+  return out;
+}
+
+/**
+ * Add editor-friendly hints for discriminated unions by exposing the
+ * discriminator property as an enum alongside oneOf/anyOf.
+ *
+ * This does not force object typing at this wrapper level, so it avoids
+ * over-constraining validation while still improving autocomplete.
+ */
+function addDiscriminatorHints(node: any): any {
+  if (node == null || typeof node !== "object") return node;
+  if (Array.isArray(node)) return node.map(addDiscriminatorHints);
+
+  const out: AnyObj = {};
+  for (const [k, v] of Object.entries(node)) {
+    out[k] = addDiscriminatorHints(v);
+  }
+
+  const discriminator = out.discriminator as AnyObj | undefined;
+  const isUnion = Array.isArray(out.oneOf) || Array.isArray(out.anyOf);
+  if (
+    discriminator &&
+    isUnion &&
+    typeof discriminator.propertyName === "string" &&
+    discriminator.mapping &&
+    typeof discriminator.mapping === "object"
+  ) {
+    const propertyName = discriminator.propertyName;
+    const values = Object.keys(discriminator.mapping as AnyObj);
+    if (values.length > 0) {
+      if (out.type === undefined) {
+        out.type = "object";
+      }
+      out.properties = {
+        ...(out.properties && typeof out.properties === "object" ? out.properties : {}),
+        [propertyName]: {
+          type: "string",
+          enum: values,
+        },
+      };
+    }
+  }
+
   return out;
 }
 
@@ -152,15 +269,86 @@ async function emitComponentSchemas(doc: AnyObj, isOAS31: boolean) {
     const jsonSchema = isOAS31
       ? schema
       : openapiSchemaToJsonSchema(schema, { cloneSchema: true });
-    const withIds = withMeta(jsonSchema, String(name));
+    const withIds = withMeta(jsonSchema, String(name), ID_BASE);
     const rewritten = rewriteComponentRefs(withIds);
-    const finalSchema = strictObjectSchemas(rewritten);
+    const finalSchema = addDiscriminatorHints(
+      rewriteDiscriminatorMappings(strictObjectSchemas(rewritten)),
+    );
+
+/*     if (name === "DCQL") {
+      const credentialsItems = finalSchema?.properties?.credentials?.items;
+      if (credentialsItems && typeof credentialsItems === "object") {
+        credentialsItems.properties = {
+          ...(credentialsItems.properties && typeof credentialsItems.properties === "object"
+            ? credentialsItems.properties
+            : {}),
+          format: {
+            type: "string",
+            enum: ["dc+sd-jwt", "mso_mdoc"],
+          },
+          // Editor-level union hints: Monaco does not fully narrow oneOf by discriminator,
+          // so expose expected keys to keep completion working after selecting format.
+          id: { type: "string" },
+          meta: { type: "object" },
+          claims: { type: "array" },
+          claim_sets: { type: "array" },
+          trusted_authorities: { type: "array" },
+          multiple: { type: "boolean" },
+        };
+      }
+    }
+
+    if (name === "CredentialQueryDcSdJwt") {
+      const meta = finalSchema?.properties?.meta;
+      if (meta && typeof meta === "object") {
+        meta.type = meta.type ?? "object";
+        meta.properties = {
+          ...(meta.properties && typeof meta.properties === "object" ? meta.properties : {}),
+          vct_values: {
+            type: "array",
+            items: { type: "string" },
+          },
+        };
+        meta.defaultSnippets = [
+          {
+            label: "dc+sd-jwt meta",
+            description: "Insert dc+sd-jwt credential metadata",
+            body: {
+              vct_values: [""],
+            },
+          },
+        ];
+      }
+    }
+
+    if (name === "CredentialQueryMsoMdoc") {
+      const meta = finalSchema?.properties?.meta;
+      if (meta && typeof meta === "object") {
+        meta.type = meta.type ?? "object";
+        meta.properties = {
+          ...(meta.properties && typeof meta.properties === "object" ? meta.properties : {}),
+          doctype_value: {
+            type: "string",
+          },
+        };
+        meta.defaultSnippets = [
+          {
+            label: "mso_mdoc meta",
+            description: "Insert mso_mdoc credential metadata",
+            body: {
+              doctype_value: "",
+            },
+          },
+        ];
+      }
+    } */
+
     const out = join(OUT_SCHEMAS, `${sanitize(String(name))}.schema.json`);
     await writeFile(out, JSON.stringify(finalSchema, null, 2), "utf8");
     count++;
 
     schemas.push({
-      uri: finalSchema['$id'],
+      uri: finalSchema["$id"] || `./${sanitize(name)}.schema.json`,
       fileMatch: [`a://b/${sanitize(name)}*.schema.json`],
       schema: finalSchema,
     });

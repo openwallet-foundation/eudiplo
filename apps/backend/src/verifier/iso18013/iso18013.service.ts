@@ -26,7 +26,11 @@ import { revocationModeToPolicy } from "../../shared/trust/revocation-policy.uti
 import { AuditLogService } from "../../shared/utils/logger/audit-log.service";
 import { WebhookService } from "../../shared/utils/webhook/webhook.service";
 import { MdocverifierService } from "../presentations/credential/mdocverifier/mdocverifier.service";
-import { TrustedAuthorityType } from "../presentations/entities/presentation-config.entity";
+import {
+    TrustedAuthorityQueryEtsiTl,
+    TrustedAuthorityQueryOpenIdFederation,
+    TrustedAuthorityType,
+} from "../presentations/entities/presentation-config.entity";
 import { PresentationsService } from "../presentations/presentations.service";
 import {
     buildDeviceRequestCbor,
@@ -261,18 +265,24 @@ export class Iso18013Service {
         const tenantHost = `${host}/issuers/${session.tenantId}`;
 
         const loteAuthorities = mdocCred.trusted_authorities?.find(
-            (auth) => auth.type === TrustedAuthorityType.ETSI_TL,
+            (auth): auth is TrustedAuthorityQueryEtsiTl =>
+                auth.type === TrustedAuthorityType.ETSI_TL,
         );
         const federationAuthorities = mdocCred.trusted_authorities?.find(
-            (auth) => auth.type === TrustedAuthorityType.OPENID_FEDERATION,
+            (auth): auth is TrustedAuthorityQueryOpenIdFederation =>
+                auth.type === TrustedAuthorityType.OPENID_FEDERATION,
         );
+
+        const resolvedLoteAuthorities =
+            await this.presentationsService.resolveTrustListRefsForTenant(
+                loteAuthorities?.values,
+                session.tenantId,
+                tenantHost,
+            );
 
         const verifyOptions: VerifierOptions = {
             trustListSource: {
-                lotes:
-                    loteAuthorities?.values.map((url) => ({
-                        url: url.replaceAll("<TENANT_URL>", tenantHost),
-                    })) ?? [],
+                lotes: resolvedLoteAuthorities,
                 acceptedServiceTypes: [
                     ServiceTypeIdentifier.EaaIssuance,
                     ServiceTypeIdentifier.PIDIssuance,
