@@ -733,7 +733,8 @@ export class OIDFSuite {
             }
 
             if (
-                (logResult?.status && TERMINAL_STATUSES.has(logResult.status)) ||
+                (logResult?.status &&
+                    TERMINAL_STATUSES.has(logResult.status)) ||
                 (logResult?.result && TERMINAL_RESULTS.has(logResult.result))
             ) {
                 return logResult;

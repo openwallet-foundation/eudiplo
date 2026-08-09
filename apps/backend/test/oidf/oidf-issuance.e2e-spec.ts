@@ -80,7 +80,11 @@ const normalizeCertEntryToPem = (certEntry: string): string => {
         throw new Error("Certificate entry decoded to empty DER");
     }
 
-    const body = der.toString("base64").match(/.{1,64}/g)?.join("\n") ?? "";
+    const body =
+        der
+            .toString("base64")
+            .match(/.{1,64}/g)
+            ?.join("\n") ?? "";
     return `-----BEGIN CERTIFICATE-----\n${body}\n-----END CERTIFICATE-----`;
 };
 

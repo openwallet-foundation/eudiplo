@@ -18,6 +18,7 @@ import { OfferRequestDto } from "../../issuer/issuance/oid4vci/dto/offer-request
 import { EncryptedJsonTransformer } from "../../shared/utils/encryption";
 import { WebhookConfig } from "../../shared/utils/webhook/webhook.dto";
 import { TransactionData } from "../../verifier/presentations/entities/presentation-config.entity";
+import { JWK } from "jose";
 
 export enum SessionStatus {
     Active = "active",
@@ -204,7 +205,7 @@ export class Session {
      * wallet responses. Encrypted at rest.
      */
     @Column("text", { nullable: true, transformer: EncryptedJsonTransformer })
-    responseEncryptionPrivateJwk?: Record<string, unknown>;
+    responseEncryptionPrivateJwk?: JWK;
 
     /**
      * Verified credentials from the presentation process.

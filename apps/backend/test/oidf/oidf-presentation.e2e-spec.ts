@@ -52,13 +52,13 @@ const VERIFIER_MODULES_SNAPSHOT: {
         const raw = JSON.parse(readFileSync(SNAPSHOT_PATH, "utf-8"));
         return {
             sd_jwt_vc: Array.isArray(raw?.sd_jwt_vc)
-                ? raw.sd_jwt_vc.filter((v: unknown): v is string =>
-                      typeof v === "string",
+                ? raw.sd_jwt_vc.filter(
+                      (v: unknown): v is string => typeof v === "string",
                   )
                 : [],
             iso_mdl: Array.isArray(raw?.iso_mdl)
-                ? raw.iso_mdl.filter((v: unknown): v is string =>
-                      typeof v === "string",
+                ? raw.iso_mdl.filter(
+                      (v: unknown): v is string => typeof v === "string",
                   )
                 : [],
         };
@@ -221,7 +221,9 @@ describe("OIDF", () => {
     const getSnapshotModulesForVariant = (
         variant: VerifierVariant,
     ): string[] => {
-        return [...new Set(VERIFIER_MODULES_SNAPSHOT[variant.credential_format])];
+        return [
+            ...new Set(VERIFIER_MODULES_SNAPSHOT[variant.credential_format]),
+        ];
     };
 
     type ModuleOutcome =
@@ -469,7 +471,8 @@ describe("OIDF", () => {
         );
 
         //get certificate for the signed request object
-        const request_object_trust_anchor_pem = "-----BEGIN CERTIFICATE----- MIICLzCCAdSgAwIBAgIUHyRjE466YA7tc888k03Ou2QodF4wCgYIKoZIzj0EAwIw KDELMAkGA1UEBhMCREUxGTAXBgNVBAMMEEdlcm1hbiBSZWdpc3RyYXIwHhcNMjYw MTE2MTExNTU0WhcNMjgwMTE2MTExNTU0WjAoMQswCQYDVQQGEwJERTEZMBcGA1UE AwwQR2VybWFuIFJlZ2lzdHJhcjBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABMef Y2X4ixfRkWEvp9grF2i21z6PKZsr8zzBaJ/+GnotCeH2cJ6GtLhxXhHfJjrETsMN IGhVaJoHoHcZTBHJrfyjgdswgdgwHQYDVR0OBBYEFKnCo9ovbaxU7s65TugsySwA g4AzMB8GA1UdIwQYMBaAFKnCo9ovbaxU7s65TugsySwAg4AzMBIGA1UdEwEB/wQI MAYBAf8CAQAwDgYDVR0PAQH/BAQDAgEGMCoGA1UdEgQjMCGGH2h0dHBzOi8vc2Fu ZGJveC5ldWRpLXdhbGxldC5vcmcwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cHM6Ly9z YW5kYm94LmV1ZGktd2FsbGV0Lm9yZy9zdGF0dXMtbWFuYWdlbWVudC9jcmwwCgYI KoZIzj0EAwIDSQAwRgIhAIY7ERpRrDRl0lr5H5uxjJ83JR4qua2sfPKxX+pl4Qw+ AiEA2qL6LXVORA2r2VZjSEknfciwIG7laA12kjnyGAD3V/A= -----END CERTIFICATE-----";
+        const request_object_trust_anchor_pem =
+            "-----BEGIN CERTIFICATE----- MIICLzCCAdSgAwIBAgIUHyRjE466YA7tc888k03Ou2QodF4wCgYIKoZIzj0EAwIw KDELMAkGA1UEBhMCREUxGTAXBgNVBAMMEEdlcm1hbiBSZWdpc3RyYXIwHhcNMjYw MTE2MTExNTU0WhcNMjgwMTE2MTExNTU0WjAoMQswCQYDVQQGEwJERTEZMBcGA1UE AwwQR2VybWFuIFJlZ2lzdHJhcjBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABMef Y2X4ixfRkWEvp9grF2i21z6PKZsr8zzBaJ/+GnotCeH2cJ6GtLhxXhHfJjrETsMN IGhVaJoHoHcZTBHJrfyjgdswgdgwHQYDVR0OBBYEFKnCo9ovbaxU7s65TugsySwA g4AzMB8GA1UdIwQYMBaAFKnCo9ovbaxU7s65TugsySwAg4AzMBIGA1UdEwEB/wQI MAYBAf8CAQAwDgYDVR0PAQH/BAQDAgEGMCoGA1UdEgQjMCGGH2h0dHBzOi8vc2Fu ZGJveC5ldWRpLXdhbGxldC5vcmcwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cHM6Ly9z YW5kYm94LmV1ZGktd2FsbGV0Lm9yZy9zdGF0dXMtbWFuYWdlbWVudC9jcmwwCgYI KoZIzj0EAwIDSQAwRgIhAIY7ERpRrDRl0lr5H5uxjJ83JR4qua2sfPKxX+pl4Qw+ AiEA2qL6LXVORA2r2VZjSEknfciwIG7laA12kjnyGAD3V/A= -----END CERTIFICATE-----";
 
         // Export the active private key as JWK for the OIDF suite
         const signingJwk = attestationEntity.activeJwk;
@@ -479,30 +482,31 @@ describe("OIDF", () => {
         const planName = "oid4vp-1final-verifier-test-plan";
 
         const body = {
-            "browser": [
+            browser: [
                 {
-                    "comment": "capture the suite-served evidence page to fill the verification-result screenshot placeholder without human interaction",
-                    "match": "https://*/test/a/*/verification-evidence",
-                    "tasks": [
+                    comment:
+                        "capture the suite-served evidence page to fill the verification-result screenshot placeholder without human interaction",
+                    match: "https://*/test/a/*/verification-evidence",
+                    tasks: [
                         {
-                            "task": "Capture verification evidence",
-                            "match": "https://*/test/a/*/verification-evidence",
-                            "commands": [
+                            task: "Capture verification evidence",
+                            match: "https://*/test/a/*/verification-evidence",
+                            commands: [
                                 [
                                     "wait",
                                     "xpath",
                                     "//*",
                                     10,
                                     ".*Deferred verification evidence.*",
-                                    "update-image-placeholder"
-                                ]
-                            ]
-                        }
-                    ]
-                }
+                                    "update-image-placeholder",
+                                ],
+                            ],
+                        },
+                    ],
+                },
             ],
             publish: "everything",
-        }
+        };
 
         const sdJwtBody = {
             description: "test plan created via e2e tests",
@@ -513,7 +517,7 @@ describe("OIDF", () => {
                     x5c,
                     alg: "ES256",
                 },
-            },            
+            },
             client: {
                 request_object_trust_anchor_pem,
                 client_id: "TODO: replace with actual client_id for sd_jwt_vc",
@@ -535,9 +539,9 @@ describe("OIDF", () => {
                     alg: "ES256",
                 },
             },
-            client: {                            
+            client: {
                 request_object_trust_anchor_pem,
-                client_id: "lkjlkjlkj",    
+                client_id: "lkjlkjlkj",
                 presentation_definition: {
                     id: "mDL",
                     input_descriptors: [
@@ -573,7 +577,7 @@ describe("OIDF", () => {
                         MDOC_ENCRYPTION_JWK,
                     ],
                 },
-            },            
+            },
             ...body,
         } as const;
 

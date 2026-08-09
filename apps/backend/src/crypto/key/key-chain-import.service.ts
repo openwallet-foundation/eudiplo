@@ -190,7 +190,10 @@ export class KeyChainImportService {
             );
         }
 
-        this.validateRotationRootCertificate(rootCertificate, rootMat.ref.publicJwk);
+        this.validateRotationRootCertificate(
+            rootCertificate,
+            rootMat.ref.publicJwk,
+        );
 
         const activeMat = await adapter.generateKey({
             kid: `${id}-active-${Date.now()}`,
@@ -324,7 +327,12 @@ export class KeyChainImportService {
             format: "jwk",
         }) as JWK;
 
-        if (!this.arePublicJwksEquivalent(certificatePublicJwk, expectedPublicJwk)) {
+        if (
+            !this.arePublicJwksEquivalent(
+                certificatePublicJwk,
+                expectedPublicJwk,
+            )
+        ) {
             throw new BadRequestException(
                 "Invalid rotation root certificate: certificate public key does not match the provided private key",
             );
@@ -340,11 +348,7 @@ export class KeyChainImportService {
         }
 
         if (a.kty === "EC") {
-            return (
-                a.crv === b.crv &&
-                a.x === b.x &&
-                a.y === b.y
-            );
+            return a.crv === b.crv && a.x === b.x && a.y === b.y;
         }
 
         if (a.kty === "RSA") {

@@ -220,10 +220,7 @@ export class Oid4vpService {
             const { publicJwk: responseEncryptionPublicJwk, privateJwk } =
                 await this.encryptionService.generateEphemeralEncryptionKeyPair();
             await this.sessionService.add(session.id, {
-                responseEncryptionPrivateJwk: privateJwk as Record<
-                    string,
-                    unknown
-                >,
+                responseEncryptionPrivateJwk: privateJwk,
             });
 
             // Per OID4VP spec Section 13.3: use walletNonce in wallet-facing URLs
