@@ -2167,14 +2167,6 @@
         }
       },
       "required": ["url"],
-      "anyOf": [
-        {
-          "required": ["verifierKey"]
-        },
-        {
-          "required": ["verifierX509Der"]
-        }
-      ],
       "additionalProperties": false
     }
   },
@@ -5373,20 +5365,6 @@
           "nullable": true,
           "description": "Reference to the webhook endpoint used for notifications.\nOptional: if set, notifications will be sent to this endpoint."
         },
-        "webhookEndpoint": {
-          "$ref": "./WebhookEndpointEntity.schema.json"
-        },
-        "webhook": {
-          "nullable": true,
-          "description": "Optional webhook URL to receive the response.",
-          "deprecated": true,
-          "type": "object",
-          "allOf": [
-            {
-              "$ref": "./WebhookConfig.schema.json"
-            }
-          ]
-        },
         "createdAt": {
           "format": "date-time",
           "type": "string",
@@ -5543,20 +5521,6 @@
           "nullable": true,
           "description": "Reference to the webhook endpoint used for notifications.\nOptional: if set, notifications will be sent to this endpoint."
         },
-        "webhookEndpoint": {
-          "$ref": "./WebhookEndpointEntity.schema.json"
-        },
-        "webhook": {
-          "nullable": true,
-          "description": "Optional webhook URL to receive the response.",
-          "deprecated": true,
-          "type": "object",
-          "allOf": [
-            {
-              "$ref": "./WebhookConfig.schema.json"
-            }
-          ]
-        },
         "attached": {
           "nullable": true,
           "description": "Attestation that should be attached",
@@ -5643,20 +5607,6 @@
           "type": "string",
           "nullable": true,
           "description": "Reference to the webhook endpoint used for notifications.\nOptional: if set, notifications will be sent to this endpoint."
-        },
-        "webhookEndpoint": {
-          "$ref": "./WebhookEndpointEntity.schema.json"
-        },
-        "webhook": {
-          "nullable": true,
-          "description": "Optional webhook URL to receive the response.",
-          "deprecated": true,
-          "type": "object",
-          "allOf": [
-            {
-              "$ref": "./WebhookConfig.schema.json"
-            }
-          ]
         },
         "attached": {
           "nullable": true,
