@@ -1346,6 +1346,10 @@
           "type": "string",
           "description": "Signed presentation auth request."
         },
+        "responseEncryptionPrivateJwk": {
+          "type": "object",
+          "description": "Per-authorization-request private encryption key used to decrypt\nwallet responses. Encrypted at rest."
+        },
         "credentials": {
           "description": "Verified credentials from the presentation process.\nEncrypted at rest - contains personal information.",
           "type": "array",
@@ -3459,6 +3463,10 @@
         "externalKeyId": {
           "type": "string",
           "description": "External key identifier for cloud KMS providers.\nThis field stores the provider-specific key reference for the active signing key."
+        },
+        "rootExternalKeyId": {
+          "type": "string",
+          "description": "External key identifier for cloud KMS providers for the root CA key.\nUsed when rotating internal-chain key chains backed by external KMS."
         },
         "rootJwk": {
           "type": "object"
@@ -7098,7 +7106,7 @@
       "properties": {
         "enabled": {
           "type": "boolean",
-          "description": "Whether rotation is enabled. When true, the imported key becomes a root CA.",
+          "description": "Whether rotation is enabled. When true, the imported key becomes a root CA signer.",
           "default": false
         },
         "intervalDays": {
@@ -7151,7 +7159,7 @@
           "description": "Usage type for this key chain."
         },
         "crt": {
-          "description": "Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import.",
+          "description": "Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import. When rotationPolicy.enabled=true, the last certificate in the chain is treated as the root CA certificate.",
           "type": "array",
           "items": {
             "type": "string"
@@ -7162,7 +7170,7 @@
           "description": "KMS provider to use. Defaults to 'db'."
         },
         "rotationPolicy": {
-          "description": "Rotation policy. When enabled, the imported key becomes a root CA and a new leaf key is generated.",
+          "description": "Rotation policy. When enabled, the imported key becomes a root CA signer and a new leaf key is generated. If crt is provided, the selected root CA certificate must have CA=true and its public key must match the imported private key.",
           "allOf": [
             {
               "$ref": "./RotationPolicyImportDto.schema.json"

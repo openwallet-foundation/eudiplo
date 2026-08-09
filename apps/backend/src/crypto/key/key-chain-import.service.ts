@@ -1,3 +1,4 @@
+import { X509Certificate } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
@@ -172,7 +173,9 @@ export class KeyChainImportService {
         let rootCertificate: string;
         const normalizedCertificates = this.resolveCertificateChain(dto);
         if (normalizedCertificates && normalizedCertificates.length > 0) {
-            rootCertificate = normalizedCertificates[0];
+            // `crt` is modeled as leaf-first. In rotation mode we need the root CA
+            // certificate that will sign newly generated leaf certificates.
+            rootCertificate = normalizedCertificates.at(-1)!;
         } else {
             const rootNotAfter = new Date(
                 now.getTime() + 10 * 365 * 24 * 60 * 60 * 1000,
@@ -186,6 +189,11 @@ export class KeyChainImportService {
                 rootNotAfter,
             );
         }
+
+        this.validateRotationRootCertificate(
+            rootCertificate,
+            rootMat.ref.publicJwk,
+        );
 
         const activeMat = await adapter.generateKey({
             kid: `${id}-active-${Date.now()}`,
@@ -209,6 +217,7 @@ export class KeyChainImportService {
             description: dto.description,
             kmsProvider: adapter.providerId,
             rootJwk: this.storedKeyForEntity(adapter, rootMat.ref),
+            rootExternalKeyId: rootMat.ref.externalKeyId,
             rootCertificate,
             activeJwk: this.storedKeyForEntity(adapter, activeMat.ref),
             activeCertificate: chain.join("\n"),
@@ -293,5 +302,63 @@ export class KeyChainImportService {
             value.includes("-----BEGIN CERTIFICATE-----") &&
             value.includes("-----END CERTIFICATE-----")
         );
+    }
+
+    private validateRotationRootCertificate(
+        rootCertificatePem: string,
+        expectedPublicJwk: JWK,
+    ): void {
+        let certificate: X509Certificate;
+        try {
+            certificate = new X509Certificate(rootCertificatePem);
+        } catch (error) {
+            throw new BadRequestException(
+                `Invalid rotation root certificate: ${String(error)}`,
+            );
+        }
+
+        if (!certificate.ca) {
+            throw new BadRequestException(
+                "Invalid rotation root certificate: certificate must be a CA (basicConstraints CA=true)",
+            );
+        }
+
+        const certificatePublicJwk = certificate.publicKey.export({
+            format: "jwk",
+        }) as JWK;
+
+        if (
+            !this.arePublicJwksEquivalent(
+                certificatePublicJwk,
+                expectedPublicJwk,
+            )
+        ) {
+            throw new BadRequestException(
+                "Invalid rotation root certificate: certificate public key does not match the provided private key",
+            );
+        }
+    }
+
+    private arePublicJwksEquivalent(left: JWK, right: JWK): boolean {
+        const a = left as Record<string, unknown>;
+        const b = right as Record<string, unknown>;
+
+        if (a.kty !== b.kty) {
+            return false;
+        }
+
+        if (a.kty === "EC") {
+            return a.crv === b.crv && a.x === b.x && a.y === b.y;
+        }
+
+        if (a.kty === "RSA") {
+            return a.n === b.n && a.e === b.e;
+        }
+
+        if (a.kty === "OKP") {
+            return a.crv === b.crv && a.x === b.x;
+        }
+
+        return false;
     }
 }
