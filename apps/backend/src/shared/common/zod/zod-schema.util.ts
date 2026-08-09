@@ -13,7 +13,9 @@ type ZodIssueLike = {
     code: string;
 };
 
-function normalizeIssuePath(path: ReadonlyArray<PropertyKey>): Array<string | number> {
+function normalizeIssuePath(
+    path: ReadonlyArray<PropertyKey>,
+): Array<string | number> {
     return path.filter(
         (segment): segment is string | number =>
             typeof segment === "string" || typeof segment === "number",
@@ -48,7 +50,9 @@ export function booleanField(description: string, example?: boolean) {
     });
 }
 
-export function toValidationIssues(issues: ReadonlyArray<ZodIssueLike>): ValidationIssue[] {
+export function toValidationIssues(
+    issues: ReadonlyArray<ZodIssueLike>,
+): ValidationIssue[] {
     return issues.map((issue) => ({
         path: normalizeIssuePath(issue.path),
         message: issue.message,
