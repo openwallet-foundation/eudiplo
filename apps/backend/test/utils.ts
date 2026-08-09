@@ -50,6 +50,7 @@ import { TrustListCreateDto } from "../src/issuer/trust-list/dto/trust-list-crea
 import { PresentationRequest } from "../src/verifier/oid4vp/dto/presentation-request.dto";
 import { PresentationConfigCreateDto } from "../src/verifier/presentations/dto/presentation-config-create.dto";
 import { DEVICE_JWK, mdocContext } from "./utils-mdoc";
+import { CreateWebhookEndpointDto } from "../src/issuer/configuration/webhook-endpoint/dto/create-webhook-endpoint.dto";
 
 export function readConfig<T>(path: string): T {
     return JSON.parse(readFileSync(path, "utf-8"));
@@ -790,7 +791,16 @@ export async function setupPresentationTestApp(): Promise<PresentationTestContex
         201,
     );
 
-    console.log("Trust list imported successfully.");
+    // import webhook endpoint for testing webhook calls
+    await expectRequest(
+        request(app.getHttpServer())
+            .post("/issuer/webhook-endpoints")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send(readConfig<CreateWebhookEndpointDto>(join(configFolder, "haip/webhook-endpoints/notification.json"))),
+        201,
+    );
+    
     // Import presentation configs for pid-de and pid
     await expectRequest(
         request(app.getHttpServer())
@@ -803,8 +813,7 @@ export async function setupPresentationTestApp(): Promise<PresentationTestContex
                 ),
             ),
         201,
-    );
-    console.log("Presentation config for pid-de imported successfully.");
+    );    
 
     await expectRequest(
         request(app.getHttpServer())
