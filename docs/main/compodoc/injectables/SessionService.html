@@ -655,8 +655,8 @@ consumed or the session did not match.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="379"
-                                    class="link-to-prism">src/session/session.service.ts:379</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="380"
+                                    class="link-to-prism">src/session/session.service.ts:380</a></div>
                         </td>
                     </tr>
 
@@ -808,8 +808,8 @@ Returns null if no session matches.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="391"
-                                    class="link-to-prism">src/session/session.service.ts:391</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="392"
+                                    class="link-to-prism">src/session/session.service.ts:392</a></div>
                         </td>
                     </tr>
 
@@ -1781,12 +1781,13 @@ export class SessionService implements OnApplicationBootstrap {
                         auth_queries: undefined,
                         offer: undefined,
                         requestObject: undefined,
+                        responseEncryptionPrivateJwk: undefined,
                     })
                     .where(&quot;tenantId &#x3D; :tenantId&quot;, { tenantId: tenant.id })
                     .andWhere(&quot;createdAt &lt; :cutoffDate&quot;, { cutoffDate })
                     // Only anonymize sessions that still have personal data
                     .andWhere(
-                        &quot;(credentials IS NOT NULL OR credentialPayload IS NOT NULL OR auth_queries IS NOT NULL OR offer IS NOT NULL OR requestObject IS NOT NULL)&quot;,
+                        &quot;(credentials IS NOT NULL OR credentialPayload IS NOT NULL OR auth_queries IS NOT NULL OR offer IS NOT NULL OR requestObject IS NOT NULL OR responseEncryptionPrivateJwk IS NOT NULL)&quot;,
                     )
                     .execute();
                 if (result.affected &amp;&amp; result.affected &gt; 0) {

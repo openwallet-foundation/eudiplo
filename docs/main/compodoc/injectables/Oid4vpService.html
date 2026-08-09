@@ -572,8 +572,8 @@ It initializes the session logging context and logs the start of the flow.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="345"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:345</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="347"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:347</a></div>
                         </td>
                     </tr>
 
@@ -814,8 +814,8 @@ session creation, which is essential for transaction_data hash validation.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="469"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:469</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="471"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:471</a></div>
                         </td>
                     </tr>
 
@@ -908,8 +908,8 @@ from the URL path (not the session ID).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="321"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:321</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="323"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:323</a></div>
                         </td>
                     </tr>
 
@@ -1290,6 +1290,12 @@ export class Oid4vpService {
                 )?.map((td) &#x3D;&gt; base64url.encode(JSON.stringify(td))) ||
                 undefined;
 
+            const { publicJwk: responseEncryptionPublicJwk, privateJwk } &#x3D;
+                await this.encryptionService.generateEphemeralEncryptionKeyPair();
+            await this.sessionService.add(session.id, {
+                responseEncryptionPrivateJwk: privateJwk,
+            });
+
             // Per OID4VP spec Section 13.3: use walletNonce in wallet-facing URLs
             // to separate the wallet-facing identifier (request-id) from the
             // frontend-facing session ID (transaction-id).
@@ -1320,11 +1326,7 @@ export class Oid4vpService {
                     dcql_query,
                     client_metadata: {
                         jwks: {
-                            keys: [
-                                await this.encryptionService.getEncryptionPublicKey(
-                                    session.tenantId,
-                                ),
-                            ],
+                            keys: [responseEncryptionPublicJwk],
                         },
                         vp_formats_supported: {
                             mso_mdoc: {
@@ -1619,10 +1621,14 @@ export class Oid4vpService {
             );
         }
 
-        const decrypted &#x3D; await this.encryptionService.decryptJwe&lt;AuthResponse&gt;(
-            body.response,
-            session.tenantId,
-        );
+        const decrypted &#x3D;
+            await this.encryptionService.decryptJweWithPrivateJwk&lt;AuthResponse&gt;(
+                body.response,
+                session.tenantId,
+                session.responseEncryptionPrivateJwk as
+                    | Record&lt;string, unknown&gt;
+                    | undefined,
+            );
 
         // Validate decrypted response against AuthResponse class
         const res &#x3D; plainToInstance(AuthResponse, decrypted);

@@ -240,6 +240,11 @@ This service provides a compatibility layer for existing consumers.</p>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#toBase64Der" >toBase64Der</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#validateCertificate" >validateCertificate</a>
                             </li>
@@ -355,8 +360,8 @@ This service provides a compatibility layer for existing consumers.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="258"
-                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:258</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="255"
+                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:255</a></div>
                         </td>
                     </tr>
 
@@ -582,8 +587,8 @@ so this just returns the existing one.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="158"
-                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:158</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="162"
+                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:162</a></div>
                         </td>
                     </tr>
 
@@ -592,6 +597,9 @@ so this just returns the existing one.</p>
                 <td class="col-md-4">
                         <div class="io-description"><p>Get the certificate chain as an array of base64-encoded DER certificates.
 Used for the x5c header in JWTs.</p>
+<p>Per JOSE/x5c usage, trust anchors must not be included in the presented
+chain. If a root certificate is configured on the key chain and appears
+as the trailing certificate in the active chain, it is removed.</p>
 </div>
 
                             <div class="io-description">
@@ -652,8 +660,8 @@ Used for the x5c header in JWTs.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="309"
-                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:309</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="306"
+                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:306</a></div>
                         </td>
                     </tr>
 
@@ -807,8 +815,8 @@ Returns the hash as a base64url-encoded string.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="249"
-                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:249</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="246"
+                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:246</a></div>
                         </td>
                     </tr>
 
@@ -846,8 +854,8 @@ Returns the hash as a base64url-encoded string.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="179"
-                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:179</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="185"
+                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:185</a></div>
                         </td>
                     </tr>
 
@@ -918,8 +926,8 @@ Used for x5c headers where only the signing certificate should be included (e.g.
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="287"
-                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:287</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="284"
+                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:284</a></div>
                         </td>
                     </tr>
 
@@ -971,6 +979,75 @@ Used for x5c headers where only the signing certificate should be included (e.g.
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="toBase64Der"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>toBase64Der</b></span>
+                        <a href="#toBase64Der"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>toBase64Der(pem: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="316"
+                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:316</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>pem</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="validateCertificate"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -989,8 +1066,8 @@ Used for x5c headers where only the signing certificate should be included (e.g.
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="196"
-                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:196</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="193"
+                                    class="link-to-prism">src/crypto/key/cert/cert.service.ts:193</a></div>
                         </td>
                     </tr>
 
@@ -1240,22 +1317,28 @@ export class CertService {
     /**
      * Get the certificate chain as an array of base64-encoded DER certificates.
      * Used for the x5c header in JWTs.
+     *
+     * Per JOSE/x5c usage, trust anchors must not be included in the presented
+     * chain. If a root certificate is configured on the key chain and appears
+     * as the trailing certificate in the active chain, it is removed.
      */
     getCertChain(cert: CertificateInfo): string[] {
-        return cert.crt.map((pem) &#x3D;&gt; {
-            try {
-                const x509Cert &#x3D; new x509.X509Certificate(pem);
-                // Convert raw DER bytes to base64 (not base64url)
-                return Buffer.from(x509Cert.rawData).toString(&quot;base64&quot;);
-            } catch {
-                // If parsing fails, try to extract base64 from PEM directly
-                const base64 &#x3D; pem
-                    .replace(&quot;-----BEGIN CERTIFICATE-----&quot;, &quot;&quot;)
-                    .replace(&quot;-----END CERTIFICATE-----&quot;, &quot;&quot;)
-                    .replace(/\s/g, &quot;&quot;);
-                return base64;
-            }
-        });
+        const chain &#x3D; cert.crt.map((pem) &#x3D;&gt; this.toBase64Der(pem));
+        const rootPem &#x3D; cert.keyChain?.rootCertificate;
+
+        if (!rootPem) {
+            return chain;
+        }
+
+        const rootBase64 &#x3D; this.toBase64Der(rootPem);
+        const lastIndex &#x3D; chain.length - 1;
+
+        if (lastIndex &gt;&#x3D; 0 &amp;&amp; chain[lastIndex] &#x3D;&#x3D;&#x3D; rootBase64) {
+            const withoutRoot &#x3D; chain.slice(0, -1);
+            return withoutRoot.length &gt; 0 ? withoutRoot : chain;
+        }
+
+        return chain;
     }
 
     /**
@@ -1264,16 +1347,7 @@ export class CertService {
      */
     getLeafCertBase64(cert: CertificateInfo): string[] {
         const leafPem &#x3D; cert.crt[0];
-        try {
-            const x509Cert &#x3D; new x509.X509Certificate(leafPem);
-            return [Buffer.from(x509Cert.rawData).toString(&quot;base64&quot;)];
-        } catch {
-            const base64 &#x3D; leafPem
-                .replace(&quot;-----BEGIN CERTIFICATE-----&quot;, &quot;&quot;)
-                .replace(&quot;-----END CERTIFICATE-----&quot;, &quot;&quot;)
-                .replace(/\s/g, &quot;&quot;);
-            return [base64];
-        }
+        return [this.toBase64Der(leafPem)];
     }
 
     /**
@@ -1400,6 +1474,20 @@ export class CertService {
             .digest();
         // Return as base64url (no padding)
         return hash.toString(&quot;base64url&quot;);
+    }
+
+    private toBase64Der(pem: string): string {
+        try {
+            const x509Cert &#x3D; new x509.X509Certificate(pem);
+            // Convert raw DER bytes to base64 (not base64url)
+            return Buffer.from(x509Cert.rawData).toString(&quot;base64&quot;);
+        } catch {
+            // If parsing fails, try to extract base64 from PEM directly
+            return pem
+                .replace(&quot;-----BEGIN CERTIFICATE-----&quot;, &quot;&quot;)
+                .replace(&quot;-----END CERTIFICATE-----&quot;, &quot;&quot;)
+                .replace(/\s/g, &quot;&quot;);
+        }
     }
 }
 </code></pre>

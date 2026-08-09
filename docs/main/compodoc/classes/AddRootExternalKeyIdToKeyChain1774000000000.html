@@ -121,12 +121,12 @@
 
 <ol class="breadcrumb">
   <li class="breadcrumb-item">Classes</li>
-  <li class="breadcrumb-item" >RotationPolicyImportDto</li>
+  <li class="breadcrumb-item" >AddRootExternalKeyIdToKeyChain1774000000000</li>
 </ol>
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
     <span class="icon ion-ios-document" aria-hidden="true"></span>
-    <code>src/crypto/key/dto/key-chain-import.dto.ts</code>
+    <code>src/database/migrations/1774000000000-AddRootExternalKeyIdToKeyChain.ts</code>
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -157,16 +157,42 @@
                 <h3>Description</h3>
             </p>
             <p class="comment">
-                <p>Rotation policy for imported key chains.
-When enabled, the imported key becomes the root CA key,
-and a new leaf key is generated for signing.</p>
+                <p>Add rootExternalKeyId to key_chain.</p>
+<p>This stores the external KMS key identifier for the root CA key in
+internal-chain key chains, so later rotations can reference the exact
+root key in external KMS backends without relying on fallback heuristics.</p>
 
             </p>
 
 
+            <p class="comment">
+                <h3>Implements</h3>
+            </p>
+            <p class="comment">
+                        <code>MigrationInterface</code>
+            </p>
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                        <code>MigrationInterface</code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -181,29 +207,7 @@ and a new leaf key is generated for signing.</p>
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier">Optional</span>
-                                <a href="#certValidityDays" >certValidityDays</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                <a href="#enabled" >enabled</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier">Optional</span>
-                                <a href="#intervalDays" >intervalDays</a>
+                                <a href="#name" >name</a>
                             </li>
                         </ul>
                     </td>
@@ -211,6 +215,29 @@ and a new leaf key is generated for signing.</p>
             </tbody>
         </table>
 
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
+                <tr>
+                    <td class="col-md-3">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                    <td class="col-md-9">
+                        <ul class="index-list">
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#down" >down</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#up" >up</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
 
 
@@ -228,115 +255,27 @@ and a new leaf key is generated for signing.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="certValidityDays"></a>
+                    <a name="name"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier">Optional</span>
-                        <span ><b>certValidityDays</b></span>
-                        <a href="#certValidityDays"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>name</b></span>
+                        <a href="#name"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
                     </td>
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @ApiPropertyOptional({description: &#x27;Certificate validity in days.&#x27;, example: 365, minimum: 1, maximum: 3650})<br />@IsNumber()<br />@Min(1)<br />@Max(3650)<br />@IsOptional()<br />
-                        </code>
+                        <i>Default value : </i><code>&quot;AddRootExternalKeyIdToKeyChain1774000000000&quot;</code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/crypto/key/dto/key-chain-import.dto.ts:81</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="enabled"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                        <span ><b>enabled</b></span>
-                        <a href="#enabled"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @ApiProperty({description: &#x27;Whether rotation is enabled. When true, the imported key becomes a root CA signer.&#x27;, default: false})<br />@IsBoolean()<br />
-                        </code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/crypto/key/dto/key-chain-import.dto.ts:57</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="intervalDays"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier">Optional</span>
-                        <span ><b>intervalDays</b></span>
-                        <a href="#intervalDays"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @ApiPropertyOptional({description: &#x27;Rotation interval in days.&#x27;, example: 90, minimum: 1, maximum: 3650})<br />@IsNumber()<br />@Min(1)<br />@Max(3650)<br />@IsOptional()<br />
-                        </code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="69" class="link-to-prism">src/crypto/key/dto/key-chain-import.dto.ts:69</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/database/migrations/1774000000000-AddRootExternalKeyIdToKeyChain.ts:13</a></div>
                         </td>
                     </tr>
 
@@ -345,6 +284,150 @@ and a new leaf key is generated for signing.</p>
     </table>
 </section>
 
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="down"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>down</b></span>
+                        <a href="#down"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>down(queryRunner: QueryRunner)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="36"
+                                    class="link-to-prism">src/database/migrations/1774000000000-AddRootExternalKeyIdToKeyChain.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>queryRunner</td>
+                                            <td>
+                                                        <code>QueryRunner</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="up"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>up</b></span>
+                        <a href="#up"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>up(queryRunner: QueryRunner)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="15"
+                                    class="link-to-prism">src/database/migrations/1774000000000-AddRootExternalKeyIdToKeyChain.ts:15</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>queryRunner</td>
+                                            <td>
+                                                        <code>QueryRunner</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
 
 
 
@@ -355,151 +438,54 @@ and a new leaf key is generated for signing.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
-import {
-    IsBoolean,
-    IsEnum,
-    IsNumber,
-    IsObject,
-    IsOptional,
-    IsString,
-    Max,
-    Min,
-    ValidateNested,
-} from &quot;class-validator&quot;;
-import { JWK } from &quot;jose&quot;;
-import { KeyUsageType } from &quot;../entities/key-chain.entity&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { MigrationInterface, QueryRunner, TableColumn } from &quot;typeorm&quot;;
 
 /**
- * JWK structure for EC keys (P-256).
- */
-class EcJwk implements JWK {
-    @IsString()
-    kty!: string;
-
-    @IsString()
-    x!: string;
-
-    @IsString()
-    y!: string;
-
-    @IsString()
-    crv!: string;
-
-    @IsString()
-    d!: string;
-
-    @IsString()
-    @IsOptional()
-    alg?: string;
-
-    @IsString()
-    @IsOptional()
-    kid?: string;
-}
-
-/**
- * Rotation policy for imported key chains.
- * When enabled, the imported key becomes the root CA key,
- * and a new leaf key is generated for signing.
- */
-class RotationPolicyImportDto {
-    @ApiProperty({
-        description:
-            &quot;Whether rotation is enabled. When true, the imported key becomes a root CA signer.&quot;,
-        default: false,
-    })
-    @IsBoolean()
-    enabled!: boolean;
-
-    @ApiPropertyOptional({
-        description: &quot;Rotation interval in days.&quot;,
-        example: 90,
-        minimum: 1,
-        maximum: 3650,
-    })
-    @IsNumber()
-    @Min(1)
-    @Max(3650)
-    @IsOptional()
-    intervalDays?: number;
-
-    @ApiPropertyOptional({
-        description: &quot;Certificate validity in days.&quot;,
-        example: 365,
-        minimum: 1,
-        maximum: 3650,
-    })
-    @IsNumber()
-    @Min(1)
-    @Max(3650)
-    @IsOptional()
-    certValidityDays?: number;
-}
-
-/**
- * DTO for importing a key chain from file configuration.
+ * Add rootExternalKeyId to key_chain.
  *
- * This format supports importing keys with their certificates.
- * The import can be done in two ways:
- * 1. Combined: key + certificate in single JSON file
- * 2. Separate: key JSON references a certificate JSON via keyId matching
+ * This stores the external KMS key identifier for the root CA key in
+ * internal-chain key chains, so later rotations can reference the exact
+ * root key in external KMS backends without relying on fallback heuristics.
  */
-export class KeyChainImportDto {
-    @ApiPropertyOptional({
-        description:
-            &quot;ID for the key chain. If not provided, a new UUID will be generated.&quot;,
-    })
-    @IsString()
-    @IsOptional()
-    id?: string;
+export class AddRootExternalKeyIdToKeyChain1774000000000
+    implements MigrationInterface
+{
+    name &#x3D; &quot;AddRootExternalKeyIdToKeyChain1774000000000&quot;;
 
-    @ApiProperty({
-        description: &quot;The private key in JWK format.&quot;,
-    })
-    @IsObject()
-    @ValidateNested()
-    @Type(() &#x3D;&gt; EcJwk)
-    key!: EcJwk;
+    async up(queryRunner: QueryRunner): Promise&lt;void&gt; {
+        const table &#x3D; await queryRunner.getTable(&quot;key_chain&quot;);
+        if (!table) return;
 
-    @ApiPropertyOptional({
-        description: &quot;Human-readable description.&quot;,
-    })
-    @IsString()
-    @IsOptional()
-    description?: string;
+        const hasColumn &#x3D; table.columns.some(
+            (col) &#x3D;&gt; col.name &#x3D;&#x3D;&#x3D; &quot;rootExternalKeyId&quot;,
+        );
+        if (hasColumn) {
+            return;
+        }
 
-    @ApiProperty({
-        description: &quot;Usage type for this key chain.&quot;,
-        enum: KeyUsageType,
-    })
-    @IsEnum(KeyUsageType)
-    usageType!: KeyUsageType;
+        await queryRunner.addColumn(
+            &quot;key_chain&quot;,
+            new TableColumn({
+                name: &quot;rootExternalKeyId&quot;,
+                type: &quot;varchar&quot;,
+                isNullable: true,
+            }),
+        );
+    }
 
-    @ApiPropertyOptional({
-        description:
-            &quot;Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import. When rotationPolicy.enabled&#x3D;true, the last certificate in the chain is treated as the root CA certificate.&quot;,
-    })
-    @IsString({ each: true })
-    @IsOptional()
-    crt?: string[];
+    async down(queryRunner: QueryRunner): Promise&lt;void&gt; {
+        const table &#x3D; await queryRunner.getTable(&quot;key_chain&quot;);
+        if (!table) return;
 
-    @ApiPropertyOptional({
-        description: &quot;KMS provider to use. Defaults to &#x27;db&#x27;.&quot;,
-    })
-    @IsString()
-    @IsOptional()
-    kmsProvider?: string;
+        const hasColumn &#x3D; table.columns.some(
+            (col) &#x3D;&gt; col.name &#x3D;&#x3D;&#x3D; &quot;rootExternalKeyId&quot;,
+        );
+        if (!hasColumn) {
+            return;
+        }
 
-    @ApiPropertyOptional({
-        description:
-            &quot;Rotation policy. When enabled, the imported key becomes a root CA signer and a new leaf key is generated. If crt is provided, the selected root CA certificate must have CA&#x3D;true and its public key must match the imported private key.&quot;,
-    })
-    @ValidateNested()
-    @Type(() &#x3D;&gt; RotationPolicyImportDto)
-    @IsOptional()
-    rotationPolicy?: RotationPolicyImportDto;
+        await queryRunner.dropColumn(&quot;key_chain&quot;, &quot;rootExternalKeyId&quot;);
+    }
 }
 </code></pre>
     </div>
@@ -539,7 +525,7 @@ export class KeyChainImportDto {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'RotationPolicyImportDto.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'AddRootExternalKeyIdToKeyChain1774000000000.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

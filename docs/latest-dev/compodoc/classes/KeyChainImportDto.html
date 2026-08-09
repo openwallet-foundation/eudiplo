@@ -283,7 +283,7 @@ The import can be done in two ways:</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import.&#x27;})<br />@IsString({each: true})<br />@IsOptional()<br />
+                            @ApiPropertyOptional({description: &#x27;Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import. When rotationPolicy.enabled&#x3D;true, the last certificate in the chain is treated as the root CA certificate.&#x27;})<br />@IsString({each: true})<br />@IsOptional()<br />
                         </code>
                     </td>
                 </tr>
@@ -479,7 +479,7 @@ The import can be done in two ways:</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Rotation policy. When enabled, the imported key becomes a root CA and a new leaf key is generated.&#x27;})<br />@ValidateNested()<br />@Type(undefined)<br />@IsOptional()<br />
+                            @ApiPropertyOptional({description: &#x27;Rotation policy. When enabled, the imported key becomes a root CA signer and a new leaf key is generated. If crt is provided, the selected root CA certificate must have CA&#x3D;true and its public key must match the imported private key.&#x27;})<br />@ValidateNested()<br />@Type(undefined)<br />@IsOptional()<br />
                         </code>
                     </td>
                 </tr>
@@ -593,7 +593,7 @@ class EcJwk implements JWK {
 class RotationPolicyImportDto {
     @ApiProperty({
         description:
-            &quot;Whether rotation is enabled. When true, the imported key becomes a root CA.&quot;,
+            &quot;Whether rotation is enabled. When true, the imported key becomes a root CA signer.&quot;,
         default: false,
     })
     @IsBoolean()
@@ -665,7 +665,7 @@ export class KeyChainImportDto {
 
     @ApiPropertyOptional({
         description:
-            &quot;Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import.&quot;,
+            &quot;Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import. When rotationPolicy.enabled&#x3D;true, the last certificate in the chain is treated as the root CA certificate.&quot;,
     })
     @IsString({ each: true })
     @IsOptional()
@@ -680,7 +680,7 @@ export class KeyChainImportDto {
 
     @ApiPropertyOptional({
         description:
-            &quot;Rotation policy. When enabled, the imported key becomes a root CA and a new leaf key is generated.&quot;,
+            &quot;Rotation policy. When enabled, the imported key becomes a root CA signer and a new leaf key is generated. If crt is provided, the selected root CA certificate must have CA&#x3D;true and its public key must match the imported private key.&quot;,
     })
     @ValidateNested()
     @Type(() &#x3D;&gt; RotationPolicyImportDto)

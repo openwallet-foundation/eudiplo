@@ -620,22 +620,28 @@ export class CertService {
     /**
      * Get the certificate chain as an array of base64-encoded DER certificates.
      * Used for the x5c header in JWTs.
+     *
+     * Per JOSE/x5c usage, trust anchors must not be included in the presented
+     * chain. If a root certificate is configured on the key chain and appears
+     * as the trailing certificate in the active chain, it is removed.
      */
     getCertChain(cert: CertificateInfo): string[] {
-        return cert.crt.map((pem) &#x3D;&gt; {
-            try {
-                const x509Cert &#x3D; new x509.X509Certificate(pem);
-                // Convert raw DER bytes to base64 (not base64url)
-                return Buffer.from(x509Cert.rawData).toString(&quot;base64&quot;);
-            } catch {
-                // If parsing fails, try to extract base64 from PEM directly
-                const base64 &#x3D; pem
-                    .replace(&quot;-----BEGIN CERTIFICATE-----&quot;, &quot;&quot;)
-                    .replace(&quot;-----END CERTIFICATE-----&quot;, &quot;&quot;)
-                    .replace(/\s/g, &quot;&quot;);
-                return base64;
-            }
-        });
+        const chain &#x3D; cert.crt.map((pem) &#x3D;&gt; this.toBase64Der(pem));
+        const rootPem &#x3D; cert.keyChain?.rootCertificate;
+
+        if (!rootPem) {
+            return chain;
+        }
+
+        const rootBase64 &#x3D; this.toBase64Der(rootPem);
+        const lastIndex &#x3D; chain.length - 1;
+
+        if (lastIndex &gt;&#x3D; 0 &amp;&amp; chain[lastIndex] &#x3D;&#x3D;&#x3D; rootBase64) {
+            const withoutRoot &#x3D; chain.slice(0, -1);
+            return withoutRoot.length &gt; 0 ? withoutRoot : chain;
+        }
+
+        return chain;
     }
 
     /**
@@ -644,16 +650,7 @@ export class CertService {
      */
     getLeafCertBase64(cert: CertificateInfo): string[] {
         const leafPem &#x3D; cert.crt[0];
-        try {
-            const x509Cert &#x3D; new x509.X509Certificate(leafPem);
-            return [Buffer.from(x509Cert.rawData).toString(&quot;base64&quot;)];
-        } catch {
-            const base64 &#x3D; leafPem
-                .replace(&quot;-----BEGIN CERTIFICATE-----&quot;, &quot;&quot;)
-                .replace(&quot;-----END CERTIFICATE-----&quot;, &quot;&quot;)
-                .replace(/\s/g, &quot;&quot;);
-            return [base64];
-        }
+        return [this.toBase64Der(leafPem)];
     }
 
     /**
@@ -780,6 +777,20 @@ export class CertService {
             .digest();
         // Return as base64url (no padding)
         return hash.toString(&quot;base64url&quot;);
+    }
+
+    private toBase64Der(pem: string): string {
+        try {
+            const x509Cert &#x3D; new x509.X509Certificate(pem);
+            // Convert raw DER bytes to base64 (not base64url)
+            return Buffer.from(x509Cert.rawData).toString(&quot;base64&quot;);
+        } catch {
+            // If parsing fails, try to extract base64 from PEM directly
+            return pem
+                .replace(&quot;-----BEGIN CERTIFICATE-----&quot;, &quot;&quot;)
+                .replace(&quot;-----END CERTIFICATE-----&quot;, &quot;&quot;)
+                .replace(/\s/g, &quot;&quot;);
+        }
     }
 }
 </code></pre>

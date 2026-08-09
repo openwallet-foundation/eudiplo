@@ -1057,6 +1057,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/AddRegistrationCertificateDefaultsToRegistrarConfig1755000000000.html" data-type="entity-link" >AddRegistrationCertificateDefaultsToRegistrarConfig1755000000000</a>
                             </li>
                             <li class="link">
+                                <a href="classes/AddRootExternalKeyIdToKeyChain1774000000000.html" data-type="entity-link" >AddRootExternalKeyIdToKeyChain1774000000000</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/AddSchemaMetaToCredentialConfig1761000000000.html" data-type="entity-link" >AddSchemaMetaToCredentialConfig1761000000000</a>
                             </li>
                             <li class="link">
