@@ -71,7 +71,9 @@ export function resolveEnvPlaceholders<T>(value: T): T {
     }
 
     if (Array.isArray(value)) {
-        return value.map((item) => resolveEnvPlaceholders(item)) as unknown as T;
+        return value.map((item) =>
+            resolveEnvPlaceholders(item),
+        ) as unknown as T;
     }
 
     if (value && typeof value === "object") {
