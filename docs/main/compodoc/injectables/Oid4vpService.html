@@ -239,6 +239,12 @@
                                     <span class="modifier">Async</span>
                                 <a href="#resolveSessionByNonce" >resolveSessionByNonce</a>
                             </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#resolveWebhookFromEndpoint" >resolveWebhookFromEndpoint</a>
+                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -257,12 +263,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(logger: PinoLogger, certService: <a href="../injectables/CertService.html" target="_self">CertService</a>, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>, encryptionService: <a href="../injectables/EncryptionService.html" target="_self">EncryptionService</a>, configService: ConfigService, registrarService: <a href="../injectables/RegistrarService.html" target="_self">RegistrarService</a>, presentationsService: <a href="../injectables/PresentationsService.html" target="_self">PresentationsService</a>, sessionService: <a href="../injectables/SessionService.html" target="_self">SessionService</a>, auditLogger: <a href="../injectables/SessionLoggerService.html" target="_self">SessionLoggerService</a>, webhookService: <a href="../injectables/WebhookService.html" target="_self">WebhookService</a>, cryptoImplementationService: <a href="../injectables/CryptoImplementationService.html" target="_self">CryptoImplementationService</a>, traceService: TraceService)</code>
+<code>constructor(logger: PinoLogger, certService: <a href="../injectables/CertService.html" target="_self">CertService</a>, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>, encryptionService: <a href="../injectables/EncryptionService.html" target="_self">EncryptionService</a>, configService: ConfigService, registrarService: <a href="../injectables/RegistrarService.html" target="_self">RegistrarService</a>, presentationsService: <a href="../injectables/PresentationsService.html" target="_self">PresentationsService</a>, sessionService: <a href="../injectables/SessionService.html" target="_self">SessionService</a>, auditLogger: <a href="../injectables/SessionLoggerService.html" target="_self">SessionLoggerService</a>, webhookService: <a href="../injectables/WebhookService.html" target="_self">WebhookService</a>, webhookEndpointRepo: <a href="../entitys/WebhookEndpointEntity.html" target="_self">Repository&lt;WebhookEndpointEntity&gt;</a>, cryptoImplementationService: <a href="../injectables/CryptoImplementationService.html" target="_self">CryptoImplementationService</a>, traceService: TraceService)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:32</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:35</a></div>
                             </td>
                         </tr>
 
@@ -400,6 +406,18 @@
                                                     
                                                 </tr>
                                                 <tr>
+                                                        <td>webhookEndpointRepo</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../entitys/WebhookEndpointEntity.html" target="_self" >Repository&lt;WebhookEndpointEntity&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
                                                         <td>cryptoImplementationService</td>
                                                   
                                                         <td>
@@ -467,8 +485,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="123"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:123</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="158"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:158</a></div>
                         </td>
                     </tr>
 
@@ -572,8 +590,8 @@ It initializes the session logging context and logs the start of the flow.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="356"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:356</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="391"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:391</a></div>
                         </td>
                     </tr>
 
@@ -699,8 +717,8 @@ It initializes the session logging context and logs the start of the flow.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="72"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:72</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="107"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:107</a></div>
                         </td>
                     </tr>
 
@@ -814,8 +832,8 @@ session creation, which is essential for transaction_data hash validation.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="480"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:480</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="521"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:521</a></div>
                         </td>
                     </tr>
 
@@ -908,8 +926,8 @@ from the URL path (not the session ID).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="332"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:332</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="367"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:367</a></div>
                         </td>
                     </tr>
 
@@ -978,8 +996,8 @@ from the URL path (not the session ID).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="55"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:55</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="90"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:90</a></div>
                         </td>
                     </tr>
 
@@ -1006,6 +1024,88 @@ compatibility with sessions created before the walletNonce migration.</p>
                                     <tbody>
                                         <tr>
                                                 <td>nonce</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resolveWebhookFromEndpoint"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>resolveWebhookFromEndpoint</b></span>
+                        <a href="#resolveWebhookFromEndpoint"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resolveWebhookFromEndpoint(webhookEndpointId: string | null | undefined, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="54"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>webhookEndpointId</td>
+                                            <td>
+                                                        <code>string | null | undefined</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
                                             <td>
                                                             <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                             </td>
@@ -1058,7 +1158,7 @@ compatibility with sessions created before the walletNonce migration.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -1074,11 +1174,13 @@ compatibility with sessions created before the walletNonce migration.</p>
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { randomUUID } from &quot;node:crypto&quot;;
 import { BadRequestException, Injectable } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
+import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
 import { plainToInstance } from &quot;class-transformer&quot;;
 import { validateOrReject } from &quot;class-validator&quot;;
 import { base64url } from &quot;jose&quot;;
 import { Span, TraceService } from &quot;nestjs-otel&quot;;
 import { InjectPinoLogger, PinoLogger } from &quot;nestjs-pino&quot;;
+import { Repository } from &quot;typeorm&quot;;
 import { v4 } from &quot;uuid&quot;;
 import { EncryptionService } from &quot;../../crypto/encryption/encryption.service&quot;;
 import { CertService } from &quot;../../crypto/key/cert/cert.service&quot;;
@@ -1086,6 +1188,7 @@ import { CryptoImplementationService } from &quot;../../crypto/key/crypto-implem
 import { KeyUsageType } from &quot;../../crypto/key/entities/key-chain.entity&quot;;
 import { KeyChainService } from &quot;../../crypto/key/key-chain.service&quot;;
 import { CredentialFormat } from &quot;../../issuer/configuration/credentials/entities/credential.entity&quot;;
+import { WebhookEndpointEntity } from &quot;../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity&quot;;
 import { OfferResponse } from &quot;../../issuer/issuance/oid4vci/dto/offer-request.dto&quot;;
 import { RegistrarService } from &quot;../../registrar/registrar.service&quot;;
 import { SessionStatus } from &quot;../../session/entities/session.entity&quot;;
@@ -1115,9 +1218,41 @@ export class Oid4vpService {
         private readonly sessionService: SessionService,
         private readonly auditLogger: SessionLoggerService,
         private readonly webhookService: WebhookService,
+        @InjectRepository(WebhookEndpointEntity)
+        private readonly webhookEndpointRepo: Repository&lt;WebhookEndpointEntity&gt;,
         private readonly cryptoImplementationService: CryptoImplementationService,
         private readonly traceService: TraceService,
     ) {}
+
+    private async resolveWebhookFromEndpoint(
+        webhookEndpointId: string | null | undefined,
+        tenantId: string,
+    ) {
+        if (!webhookEndpointId) {
+            return undefined;
+        }
+
+        const endpoint &#x3D; await this.webhookEndpointRepo.findOneBy({
+            id: webhookEndpointId,
+            tenantId,
+        });
+
+        if (!endpoint) {
+            this.logger.warn(
+                {
+                    tenantId,
+                    webhookEndpointId,
+                },
+                &quot;Webhook endpoint configured on presentation config was not found&quot;,
+            );
+            return undefined;
+        }
+
+        return {
+            url: endpoint.url,
+            auth: endpoint.auth,
+        };
+    }
 
     /**
      * Resolves a session from a wallet-facing nonce.
@@ -1494,11 +1629,17 @@ export class Oid4vpService {
             // Use transaction_data from options if provided, otherwise fall back to config
             const transaction_data &#x3D;
                 values.transaction_data ?? presentationConfig.transaction_data;
+            const endpointWebhook &#x3D; await this.resolveWebhookFromEndpoint(
+                presentationConfig.webhookEndpointId,
+                tenantId,
+            );
 
             const session &#x3D; await this.sessionService.create({
                 id: values.session,
                 walletNonce,
-                parsedWebhook: values.webhook,
+                webhookEndpointId:
+                    presentationConfig.webhookEndpointId ?? undefined,
+                parsedWebhook: values.webhook ?? endpointWebhook,
                 redirectUri:
                     values.redirectUri ??
                     presentationConfig.redirectUri ??
@@ -1668,7 +1809,13 @@ export class Oid4vpService {
                 session.requestId!,
                 session.tenantId,
             );
-        const webhook &#x3D; session.parsedWebhook || presentationConfig.webhook;
+        const webhook &#x3D;
+            session.parsedWebhook ??
+            (await this.resolveWebhookFromEndpoint(
+                session.webhookEndpointId ??
+                    presentationConfig.webhookEndpointId,
+                session.tenantId,
+            ));
 
         this.auditLogger.logFlowStart(logContext, {
             action: &quot;process_presentation_response&quot;,

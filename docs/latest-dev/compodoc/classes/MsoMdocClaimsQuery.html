@@ -273,7 +273,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:130</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="129" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:129</a></div>
                         </td>
                     </tr>
 
@@ -317,7 +317,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/ClaimsQuery.html#source" target="_self" >ClaimsQuery:112</a></code>
+                                <div class="io-line">        <code><a href="../classes/ClaimsQuery.html#source" target="_self" >ClaimsQuery:111</a></code>
 </div>
                         </td>
                     </tr>
@@ -360,7 +360,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/ClaimsQuery.html#source" target="_self" >ClaimsQuery:115</a></code>
+                                <div class="io-line">        <code><a href="../classes/ClaimsQuery.html#source" target="_self" >ClaimsQuery:114</a></code>
 </div>
                         </td>
                     </tr>
@@ -405,7 +405,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/ClaimsQuery.html#source" target="_self" >ClaimsQuery:119</a></code>
+                                <div class="io-line">        <code><a href="../classes/ClaimsQuery.html#source" target="_self" >ClaimsQuery:118</a></code>
 </div>
                         </td>
                     </tr>
@@ -453,6 +453,7 @@ import {
     ValidatorConstraint,
     ValidatorConstraintInterface,
 } from &quot;class-validator&quot;;
+import { JWK } from &quot;jose&quot;;
 import {
     Column,
     CreateDateColumn,
@@ -462,12 +463,10 @@ import {
     UpdateDateColumn,
 } from &quot;typeorm&quot;;
 import { TenantEntity } from &quot;../../../auth/tenant/entitites/tenant.entity&quot;;
-import { WebhookConfig } from &quot;../../../shared/utils/webhook/webhook.dto&quot;;
 import { WebhookEndpointEntity } from &quot;../../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity&quot;;
+import { RevocationCheckMode } from &quot;../../../shared/trust/types&quot;;
 import { RegistrationCertificateRequest } from &quot;../dto/vp-request.dto&quot;;
 import { IsTransactionData } from &quot;../validators/transaction-data.validator&quot;;
-import { RevocationCheckMode } from &quot;../../../shared/trust/types&quot;;
-import { JWK } from &quot;jose&quot;;
 
 export enum TrustedAuthorityType {
     ETSI_TL &#x3D; &quot;etsi_tl&quot;,
@@ -1039,6 +1038,7 @@ export class PresentationConfig {
     @Column(&quot;varchar&quot;, { nullable: true })
     webhookEndpointId?: string | null;
 
+    @ApiHideProperty()
     @ManyToOne(() &#x3D;&gt; WebhookEndpointEntity, {
         createForeignKeyConstraints: false,
     })
@@ -1047,16 +1047,6 @@ export class PresentationConfig {
         { name: &quot;tenantId&quot;, referencedColumnName: &quot;tenantId&quot; },
     ])
     webhookEndpoint?: WebhookEndpointEntity;
-
-    /**
-     * Optional webhook URL to receive the response.
-     * @deprecated This field is deprecated. Use webhookEndpointId and the WebhookEndpoint relationship instead.
-     */
-    @Column(&quot;json&quot;, { nullable: true })
-    @IsOptional()
-    @Validate(WebhookConfig)
-    @Type(() &#x3D;&gt; WebhookConfig)
-    webhook?: WebhookConfig | null;
 
     /**
      * The timestamp when the VP request was created.

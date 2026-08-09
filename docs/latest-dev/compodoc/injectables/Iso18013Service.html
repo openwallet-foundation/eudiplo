@@ -196,6 +196,12 @@
                                     <span class="modifier">Async</span>
                                 <a href="#processResponse" >processResponse</a>
                             </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#resolveWebhookFromEndpoint" >resolveWebhookFromEndpoint</a>
+                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -214,12 +220,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(presentationsService: <a href="../injectables/PresentationsService.html" target="_self">PresentationsService</a>, sessionService: <a href="../injectables/SessionService.html" target="_self">SessionService</a>, encryptionService: <a href="../injectables/EncryptionService.html" target="_self">EncryptionService</a>, mdocverifierService: <a href="../injectables/MdocverifierService.html" target="_self">MdocverifierService</a>, webhookService: <a href="../injectables/WebhookService.html" target="_self">WebhookService</a>, auditLogService: <a href="../injectables/AuditLogService.html" target="_self">AuditLogService</a>, configService: ConfigService, logger: PinoLogger)</code>
+<code>constructor(presentationsService: <a href="../injectables/PresentationsService.html" target="_self">PresentationsService</a>, sessionService: <a href="../injectables/SessionService.html" target="_self">SessionService</a>, encryptionService: <a href="../injectables/EncryptionService.html" target="_self">EncryptionService</a>, mdocverifierService: <a href="../injectables/MdocverifierService.html" target="_self">MdocverifierService</a>, webhookService: <a href="../injectables/WebhookService.html" target="_self">WebhookService</a>, auditLogService: <a href="../injectables/AuditLogService.html" target="_self">AuditLogService</a>, configService: ConfigService, webhookEndpointRepo: <a href="../entitys/WebhookEndpointEntity.html" target="_self">Repository&lt;WebhookEndpointEntity&gt;</a>, logger: PinoLogger)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:54</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:58</a></div>
                             </td>
                         </tr>
 
@@ -321,6 +327,18 @@
                                                     
                                                 </tr>
                                                 <tr>
+                                                        <td>webhookEndpointRepo</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../entitys/WebhookEndpointEntity.html" target="_self" >Repository&lt;WebhookEndpointEntity&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
                                                         <td>logger</td>
                                                   
                                                         <td>
@@ -368,8 +386,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="71"
-                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:71</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="103"
+                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:103</a></div>
                         </td>
                     </tr>
 
@@ -476,8 +494,8 @@ and persist a session for the response phase.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="164"
-                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:164</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="201"
+                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:201</a></div>
                         </td>
                     </tr>
 
@@ -546,6 +564,88 @@ and persist a session for the response phase.</p>
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resolveWebhookFromEndpoint"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>resolveWebhookFromEndpoint</b></span>
+                        <a href="#resolveWebhookFromEndpoint"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resolveWebhookFromEndpoint(webhookEndpointId: string | null | undefined, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="73"
+                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:73</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>webhookEndpointId</td>
+                                            <td>
+                                                        <code>string | null | undefined</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/WebhookConfig.html" target="_self" >Promise&lt;WebhookConfig | undefined&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
 
 
@@ -560,8 +660,11 @@ import {
     NotFoundException,
 } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
+import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
 import { InjectPinoLogger, PinoLogger } from &quot;nestjs-pino&quot;;
+import { Repository } from &quot;typeorm&quot;;
 import { EncryptionService } from &quot;../../crypto/encryption/encryption.service&quot;;
+import { WebhookEndpointEntity } from &quot;../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity&quot;;
 import { ServiceTypeIdentifier } from &quot;../../issuer/trust-list/trustlist.service&quot;;
 import { SessionStatus } from &quot;../../session/entities/session.entity&quot;;
 import { SessionService } from &quot;../../session/session.service&quot;;
@@ -587,6 +690,7 @@ import {
     parseEncryptedResponse,
 } from &quot;./cbor-request&quot;;
 import { hpkeOpen } from &quot;./hpke&quot;;
+import { WebhookConfig } from &quot;../../shared/utils/webhook/webhook.dto&quot;;
 
 export interface Iso18013Offer {
     session: string;
@@ -608,9 +712,37 @@ export class Iso18013Service {
         private readonly webhookService: WebhookService,
         private readonly auditLogService: AuditLogService,
         private readonly configService: ConfigService,
+        @InjectRepository(WebhookEndpointEntity)
+        private readonly webhookEndpointRepo: Repository&lt;WebhookEndpointEntity&gt;,
         @InjectPinoLogger(Iso18013Service.name)
         private readonly logger: PinoLogger,
     ) {}
+
+    private async resolveWebhookFromEndpoint(
+        webhookEndpointId: string | null | undefined,
+        tenantId: string,
+    ): Promise&lt;WebhookConfig | undefined&gt; {
+        if (!webhookEndpointId) {
+            return undefined;
+        }
+
+        const endpoint &#x3D; await this.webhookEndpointRepo.findOneBy({
+            id: webhookEndpointId,
+            tenantId,
+        });
+        if (!endpoint) {
+            this.logger.warn(
+                {
+                    tenantId,
+                    webhookEndpointId,
+                },
+                &quot;Webhook endpoint configured on presentation config was not found&quot;,
+            );
+            return undefined;
+        }
+
+        return { url: endpoint.url, auth: endpoint.auth };
+    }
 
     /**
      * Create an ISO 18013-7 Annex C offer: build DeviceRequest + encryptionInfo
@@ -673,6 +805,10 @@ export class Iso18013Service {
         const expiresAt &#x3D; new Date(
             Date.now() + (config.lifeTime ?? 300) * 1000,
         );
+        const resolvedWebhook &#x3D; await this.resolveWebhookFromEndpoint(
+            config.webhookEndpointId,
+            tenantId,
+        );
 
         await this.sessionService.create({
             id: sessionId,
@@ -682,7 +818,8 @@ export class Iso18013Service {
             dcApiProtocol: &quot;iso-18013-7&quot;,
             browserOrigin: origin,
             vp_nonce: nonce.toString(&quot;hex&quot;),
-            parsedWebhook: config.webhook ?? undefined,
+            webhookEndpointId: config.webhookEndpointId ?? undefined,
+            parsedWebhook: resolvedWebhook,
             redirectUri: config.redirectUri ?? undefined,
             skewSeconds:
                 skewSeconds ??
@@ -910,7 +1047,12 @@ export class Iso18013Service {
             consumedAt: new Date(),
         });
 
-        const webhook &#x3D; session.parsedWebhook;
+        const webhook &#x3D;
+            session.parsedWebhook ??
+            (await this.resolveWebhookFromEndpoint(
+                session.webhookEndpointId,
+                session.tenantId,
+            ));
         if (webhook) {
             const webhookResponse &#x3D; await this.webhookService
                 .sendWebhook({

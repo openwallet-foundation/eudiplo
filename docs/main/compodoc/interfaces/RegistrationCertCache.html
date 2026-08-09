@@ -260,7 +260,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="467" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:467</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="466" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:466</a></div>
                                 </td>
                             </tr>
 
@@ -310,7 +310,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="473" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:473</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="472" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:472</a></div>
                                 </td>
                             </tr>
 
@@ -355,7 +355,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="465" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:465</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="464" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:464</a></div>
                                 </td>
                             </tr>
 
@@ -405,7 +405,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="471" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:471</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="470" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:470</a></div>
                                 </td>
                             </tr>
 
@@ -450,7 +450,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="463" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:463</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="462" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:462</a></div>
                                 </td>
                             </tr>
 
@@ -495,7 +495,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="475" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:475</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="474" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:474</a></div>
                                 </td>
                             </tr>
 
@@ -540,7 +540,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="469" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:469</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="468" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:468</a></div>
                                 </td>
                             </tr>
 
@@ -585,6 +585,7 @@ import {
     ValidatorConstraint,
     ValidatorConstraintInterface,
 } from &quot;class-validator&quot;;
+import { JWK } from &quot;jose&quot;;
 import {
     Column,
     CreateDateColumn,
@@ -594,12 +595,10 @@ import {
     UpdateDateColumn,
 } from &quot;typeorm&quot;;
 import { TenantEntity } from &quot;../../../auth/tenant/entitites/tenant.entity&quot;;
-import { WebhookConfig } from &quot;../../../shared/utils/webhook/webhook.dto&quot;;
 import { WebhookEndpointEntity } from &quot;../../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity&quot;;
+import { RevocationCheckMode } from &quot;../../../shared/trust/types&quot;;
 import { RegistrationCertificateRequest } from &quot;../dto/vp-request.dto&quot;;
 import { IsTransactionData } from &quot;../validators/transaction-data.validator&quot;;
-import { RevocationCheckMode } from &quot;../../../shared/trust/types&quot;;
-import { JWK } from &quot;jose&quot;;
 
 export enum TrustedAuthorityType {
     ETSI_TL &#x3D; &quot;etsi_tl&quot;,
@@ -1171,6 +1170,7 @@ export class PresentationConfig {
     @Column(&quot;varchar&quot;, { nullable: true })
     webhookEndpointId?: string | null;
 
+    @ApiHideProperty()
     @ManyToOne(() &#x3D;&gt; WebhookEndpointEntity, {
         createForeignKeyConstraints: false,
     })
@@ -1179,16 +1179,6 @@ export class PresentationConfig {
         { name: &quot;tenantId&quot;, referencedColumnName: &quot;tenantId&quot; },
     ])
     webhookEndpoint?: WebhookEndpointEntity;
-
-    /**
-     * Optional webhook URL to receive the response.
-     * @deprecated This field is deprecated. Use webhookEndpointId and the WebhookEndpoint relationship instead.
-     */
-    @Column(&quot;json&quot;, { nullable: true })
-    @IsOptional()
-    @Validate(WebhookConfig)
-    @Type(() &#x3D;&gt; WebhookConfig)
-    webhook?: WebhookConfig | null;
 
     /**
      * The timestamp when the VP request was created.

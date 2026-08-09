@@ -1769,6 +1769,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#4-presentation-configs-now-use-webhookendpointid-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Presentation Configs Now Use webhookEndpointId Only
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Presentation Configs Now Use webhookEndpointId Only">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-changed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migration-steps_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3111,6 +3150,45 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#4-presentation-configs-now-use-webhookendpointid-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Presentation Configs Now Use webhookEndpointId Only
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Presentation Configs Now Use webhookEndpointId Only">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-changed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migration-steps_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3180,6 +3258,11 @@
 <td>DCQL trusted authorities</td>
 <td>In <code>dcql_query.credentials[].trusted_authorities</code>, <code>etsi_tl.values</code> is now object-based (<code>url</code> + verifier material) or managed (<code>trustListId</code>) instead of plain URL strings.</td>
 <td><strong>High</strong></td>
+</tr>
+<tr>
+<td>Presentation config webhooks</td>
+<td>Presentation configs no longer accept the deprecated <code>webhook</code> JSON payload. Use <code>webhookEndpointId</code> and the webhook endpoint relationship instead.</td>
+<td><strong>Medium</strong></td>
 </tr>
 </tbody>
 </table>
@@ -3343,6 +3426,18 @@
 <li>For external URLs, add verifier material (<code>verifierKey</code> or <code>verifierX509Der</code>).</li>
 <li>Optionally replace external URLs with managed pointers (<code>trustListId</code>) when using EUDIPLO-managed trust lists.</li>
 <li>Re-test OID4VP and ISO 18013-7 presentation verification flows.</li>
+</ol>
+<hr>
+<h2 id="4-presentation-configs-now-use-webhookendpointid-only">4. Presentation Configs Now Use <code>webhookEndpointId</code> Only<a class="headerlink" href="#4-presentation-configs-now-use-webhookendpointid-only" title="Permanent link">¶</a></h2>
+<h3 id="what-changed_3">What Changed<a class="headerlink" href="#what-changed_3" title="Permanent link">¶</a></h3>
+<p>In v6.x, presentation configs could still carry a deprecated <code>webhook</code> JSON payload.</p>
+<p>In v7, that payload is removed. Presentation configs must reference a reusable webhook endpoint by <code>webhookEndpointId</code> instead.</p>
+<h3 id="migration-steps_2">Migration Steps<a class="headerlink" href="#migration-steps_2" title="Permanent link">¶</a></h3>
+<ol>
+<li>Find any saved presentation configs that still contain a <code>webhook</code> JSON payload.</li>
+<li>Create or reuse a webhook endpoint under the tenant.</li>
+<li>Set <code>webhookEndpointId</code> on the presentation config and remove the old <code>webhook</code> payload.</li>
+<li>Re-test presentation request generation and notification delivery.</li>
 </ol>
 
 
