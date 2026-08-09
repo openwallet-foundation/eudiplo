@@ -11,11 +11,22 @@ import {
     createZodValidationPipe,
     type ZodValidationException,
 } from "nestjs-zod";
-import { isZodDto } from "nestjs-zod/dto";
 import {
     buildValidationBody,
     type ValidationIssue,
 } from "../zod/zod-schema.util";
+
+type ZodDtoLike = {
+    isZodDto?: boolean;
+};
+
+function isZodDto(metatype: unknown): boolean {
+    if (!metatype || typeof metatype !== "function") {
+        return false;
+    }
+
+    return (metatype as ZodDtoLike).isZodDto === true;
+}
 
 function classValidatorErrorsToIssues(
     errors: ValidationError[],

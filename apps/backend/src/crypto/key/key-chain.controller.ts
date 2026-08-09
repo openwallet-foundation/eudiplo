@@ -8,7 +8,13 @@ import {
     Put,
     Query,
 } from "@nestjs/common";
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+    ApiBody,
+    ApiOperation,
+    ApiQuery,
+    ApiResponse,
+    ApiTags,
+} from "@nestjs/swagger";
 import { Role } from "../../auth/roles/role.enum";
 import { Secured } from "../../auth/secure.decorator";
 import { Token, TokenPayload } from "../../auth/token.decorator";
@@ -18,7 +24,7 @@ import { KeyChainImportDto } from "./dto/key-chain-import.dto";
 import { KeyChainResponseDto } from "./dto/key-chain-response.dto";
 import { KeyChainUpdateDto } from "./dto/key-chain-update.dto";
 import { KmsProvidersResponseDto } from "./dto/kms-providers-response.dto";
-import { KmsConfigDto } from "./dto/kms-config.dto";
+import { KmsConfigDto, type KmsConfig } from "./dto/kms-config.dto";
 import { KmsTenantConfigResponseDto } from "./dto/kms-tenant-config-response.dto";
 import { KeyUsageType } from "./entities/key-chain.entity";
 import { KeyChainService } from "./key-chain.service";
@@ -95,6 +101,7 @@ export class KeyChainController {
     @ApiOperation({
         summary: "Create or replace tenant KMS provider configuration",
     })
+    @ApiBody({ type: KmsConfigDto })
     @ApiResponse({
         status: 200,
         description: "Updated tenant KMS config.",
@@ -102,7 +109,7 @@ export class KeyChainController {
     })
     updateTenantKmsConfig(
         @Token() token: TokenPayload,
-        @Body() body: KmsConfigDto,
+        @Body() body: KmsConfig,
     ): KmsTenantConfigResponseDto {
         const tenantId = token.entity!.id;
         const effectiveConfig = this.kmsTenantConfigService.saveTenantConfig(

@@ -7,6 +7,19 @@ export interface ValidationIssue {
     code: string;
 }
 
+type ZodIssueLike = {
+    path: ReadonlyArray<PropertyKey>;
+    message: string;
+    code: string;
+};
+
+function normalizeIssuePath(path: ReadonlyArray<PropertyKey>): Array<string | number> {
+    return path.filter(
+        (segment): segment is string | number =>
+            typeof segment === "string" || typeof segment === "number",
+    );
+}
+
 export function withMeta<T extends z.ZodTypeAny>(
     schema: T,
     metadata: Record<string, unknown>,
@@ -35,9 +48,9 @@ export function booleanField(description: string, example?: boolean) {
     });
 }
 
-export function toValidationIssues(issues: z.ZodIssue[]): ValidationIssue[] {
+export function toValidationIssues(issues: ReadonlyArray<ZodIssueLike>): ValidationIssue[] {
     return issues.map((issue) => ({
-        path: issue.path,
+        path: normalizeIssuePath(issue.path),
         message: issue.message,
         code: issue.code,
     }));
