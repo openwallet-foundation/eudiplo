@@ -120,8 +120,8 @@ export class SdjwtvcIssuerService {
         };
 
         if (!useFederation) {
-            // Include the full cert chain so verifiers can walk up to the root CA
-            // trust anchor stored in the trust list (CA-pinning mode).
+            // Include the presented chain for verification, excluding the
+            // configured trust anchor certificate.
             header.x5c = this.certService.getCertChain(certificate);
         }
 

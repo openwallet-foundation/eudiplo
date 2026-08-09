@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v5
         name: Install pnpm
         with:
           run_install: false
@@ -59,7 +59,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v5
         name: Install pnpm
         with:
           run_install: false
@@ -83,7 +83,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v5
         name: Install pnpm
         with:
           run_install: false
@@ -118,7 +118,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v5
         name: Install pnpm
         with:
           run_install: false
@@ -143,7 +143,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v5
         name: Install pnpm
         with:
           run_install: false
@@ -171,7 +171,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v5
         name: Install pnpm
         with:
           run_install: false
@@ -196,7 +196,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v5
         name: Install pnpm
         with:
           run_install: false
@@ -248,7 +248,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v5
         name: Install pnpm
         with:
           run_install: false
@@ -316,7 +316,7 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
         with:
           artifact_name: github-pages-${{ github.run_attempt }}
 
@@ -332,7 +332,7 @@ jobs:
       - name: Add entry to /etc/hosts
         run: echo "127.0.0.1       host.testcontainers.internal" | sudo tee -a /etc/hosts
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v5
         name: Install pnpm
         with:
           run_install: false
@@ -367,7 +367,7 @@ jobs:
       - name: Add entry to /etc/hosts
         run: echo "127.0.0.1       host.testcontainers.internal" | sudo tee -a /etc/hosts
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v5
         name: Install pnpm
         with:
           run_install: false
@@ -413,7 +413,7 @@ jobs:
       - name: Add entry to /etc/hosts
         run: echo "127.0.0.1       host.testcontainers.internal" | sudo tee -a /etc/hosts
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v5
         name: Install pnpm
         with:
           run_install: false
@@ -937,7 +937,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@v5
         name: Install pnpm
         with:
           run_install: false
