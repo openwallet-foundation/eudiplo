@@ -193,6 +193,7 @@ export class KeyChainService {
 
         return {
             rootJwk: this.storedKeyForEntity(adapter, rootMat.ref),
+            rootExternalKeyId: rootMat.ref.externalKeyId,
             rootCertificate,
             activeJwk: this.storedKeyForEntity(adapter, activeMat.ref),
             activeCertificate: chain.join("\n"),
@@ -446,7 +447,11 @@ export class KeyChainService {
             // The root key already lives in the adapter's backing store.
             // Build a reference to it without re-importing (which would
             // create a duplicate key in external KMS backends).
-            const caRef = this.refForStoredKey(adapter, keyChain.rootJwk!);
+            const caRef = this.refForStoredKey(
+                adapter,
+                keyChain.rootJwk!,
+                keyChain.rootExternalKeyId ?? undefined,
+            );
             const { chain } = await this.certBuilder.createCaSignedCert({
                 caAdapter: adapter,
                 caRef,
