@@ -504,7 +504,7 @@ export class Oid4vciService {
     ): Promise<
         | {
               jwks: { keys: object[] };
-              alg_values_supported: string[];
+              //alg_values_supported: string[];
               enc_values_supported: string[];
               encryption_required: boolean;
           }
@@ -515,7 +515,7 @@ export class Oid4vciService {
 
         return {
             jwks: { keys: [encPublicKey] },
-            alg_values_supported: ["ECDH-ES"],
+            //alg_values_supported: ["ECDH-ES"],
             enc_values_supported: ["A128GCM", "A256GCM"],
             encryption_required: issuanceConfig?.credentialRequestEncryption
                 ? true

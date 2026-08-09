@@ -3,67 +3,6 @@ import { X509CertificateGenerator } from "@peculiar/x509";
 import { exportJWK } from "jose/key/export";
 
 /**
- * Generate a self-signed CA certificate PEM from a JWK.
- * This is used to create trust anchors for the OIDF test runner.
- */
-export async function generateCaCertPem(jwk: {
-    d: string;
-    x: string;
-    y: string;
-    crv?: string;
-}): Promise<string> {
-    const signingAlg = { name: "ECDSA", hash: "SHA-256" };
-
-    // Import the private key
-    const privateKey = await globalThis.crypto.subtle.importKey(
-        "jwk",
-        {
-            kty: "EC",
-            crv: jwk.crv ?? "P-256",
-            d: jwk.d,
-            x: jwk.x,
-            y: jwk.y,
-        },
-        { name: "ECDSA", namedCurve: "P-256" },
-        true,
-        ["sign"],
-    );
-
-    // Import the public key
-    const publicKey = await globalThis.crypto.subtle.importKey(
-        "jwk",
-        {
-            kty: "EC",
-            crv: jwk.crv ?? "P-256",
-            x: jwk.x,
-            y: jwk.y,
-        },
-        { name: "ECDSA", namedCurve: "P-256" },
-        true,
-        ["verify"],
-    );
-
-    // Generate self-signed CA certificate
-    const caCert = await X509CertificateGenerator.createSelfSigned({
-        serialNumber: "01",
-        name: "CN=EUDIPLO Test CA",
-        notBefore: new Date(),
-        notAfter: new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000), // 10 years
-        signingAlgorithm: signingAlg,
-        keys: { privateKey, publicKey },
-        extensions: [
-            new x509.BasicConstraintsExtension(true, undefined, true),
-            new x509.KeyUsagesExtension(
-                x509.KeyUsageFlags.keyCertSign | x509.KeyUsageFlags.cRLSign,
-                true,
-            ),
-        ],
-    });
-
-    return caCert.toString("pem");
-}
-
-/**
  * Generate a CA-signed certificate chain for OIDF testing.
  * Returns a JWK with proper x5c containing [leaf, CA] certificates.
  * The leaf certificate is NOT self-signed (issuer = CA, subject = leaf).
