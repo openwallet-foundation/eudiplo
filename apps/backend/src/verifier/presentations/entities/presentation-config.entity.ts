@@ -26,6 +26,7 @@ import {
     ValidatorConstraint,
     ValidatorConstraintInterface,
 } from "class-validator";
+import { JWK } from "jose";
 import {
     Column,
     CreateDateColumn,
@@ -36,10 +37,9 @@ import {
 } from "typeorm";
 import { TenantEntity } from "../../../auth/tenant/entitites/tenant.entity";
 import { WebhookEndpointEntity } from "../../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
+import { RevocationCheckMode } from "../../../shared/trust/types";
 import { RegistrationCertificateRequest } from "../dto/vp-request.dto";
 import { IsTransactionData } from "../validators/transaction-data.validator";
-import { RevocationCheckMode } from "../../../shared/trust/types";
-import { JWK } from "jose";
 
 export enum TrustedAuthorityType {
     ETSI_TL = "etsi_tl",

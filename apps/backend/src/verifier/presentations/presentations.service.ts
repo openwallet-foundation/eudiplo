@@ -1,5 +1,4 @@
 import { createHash, createVerify, X509Certificate } from "node:crypto";
-import * as x509 from "@peculiar/x509";
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
 import {
@@ -11,6 +10,7 @@ import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as eudiAttestationSchema from "@owf/eudi-attestation-schema";
 import { type AttestationFormat } from "@owf/eudi-attestation-schema";
+import * as x509 from "@peculiar/x509";
 import { plainToClass } from "class-transformer";
 import { Request } from "express";
 import { base64url, decodeJwt, decodeProtectedHeader } from "jose";
@@ -25,11 +25,11 @@ import {
 } from "../../issuer/trust-list/trustlist.service";
 import { RegistrarService } from "../../registrar/registrar.service";
 import { Session } from "../../session/entities/session.entity";
+import { revocationModeToPolicy } from "../../shared/trust/revocation-policy.util";
 import {
     DEFAULT_VERIFIER_SKEW_SECONDS,
     VerifierOptions,
 } from "../../shared/trust/types";
-import { revocationModeToPolicy } from "../../shared/trust/revocation-policy.util";
 import {
     extractRequestMeta,
     getChangedFields,
@@ -55,10 +55,10 @@ import {
     CredentialQueryValue,
     CredentialSetQuery,
     PresentationConfig,
-    TrustListRef,
     TrustedAuthorityQueryEtsiTl,
     TrustedAuthorityQueryOpenIdFederation,
     TrustedAuthorityType,
+    TrustListRef,
 } from "./entities/presentation-config.entity";
 import { IncompletePresentationException } from "./exceptions/incomplete-presentation.exception";
 
