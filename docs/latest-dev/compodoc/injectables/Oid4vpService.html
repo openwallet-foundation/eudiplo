@@ -572,8 +572,8 @@ It initializes the session logging context and logs the start of the flow.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="347"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:347</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="356"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:356</a></div>
                         </td>
                     </tr>
 
@@ -814,8 +814,8 @@ session creation, which is essential for transaction_data hash validation.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="471"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:471</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="480"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:480</a></div>
                         </td>
                     </tr>
 
@@ -908,8 +908,8 @@ from the URL path (not the session ID).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="323"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:323</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="332"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:332</a></div>
                         </td>
                     </tr>
 
@@ -1245,6 +1245,15 @@ export class Oid4vpService {
                     tenantHost,
                 ),
             );
+
+            // Transform internal etsi_tl trusted_authorities (TrustListRef objects)
+            // to the DCQL-compliant aki format (base64url Subject Key Identifier
+            // strings). Wallets must receive string values per OID4VP 1.0 Final §6.
+            dcql_query &#x3D;
+                await this.presentationsService.transformDcqlTrustedAuthoritiesToAki(
+                    dcql_query,
+                    session.tenantId,
+                );
 
             // Some wallets do not yet handle trusted_authorities correctly.
             // VP_REMOVE_TA is an escape hatch to strip it from the DCQL query

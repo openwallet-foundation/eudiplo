@@ -234,7 +234,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:42</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:46</a></div>
                                 </td>
                             </tr>
 
@@ -290,7 +290,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:43</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:47</a></div>
                                 </td>
                             </tr>
 
@@ -329,7 +329,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:40</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:44</a></div>
                                 </td>
                             </tr>
 
@@ -368,7 +368,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:41</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:45</a></div>
                                 </td>
                             </tr>
 
@@ -400,7 +400,11 @@ import { revocationModeToPolicy } from &quot;../../shared/trust/revocation-polic
 import { AuditLogService } from &quot;../../shared/utils/logger/audit-log.service&quot;;
 import { WebhookService } from &quot;../../shared/utils/webhook/webhook.service&quot;;
 import { MdocverifierService } from &quot;../presentations/credential/mdocverifier/mdocverifier.service&quot;;
-import { TrustedAuthorityType } from &quot;../presentations/entities/presentation-config.entity&quot;;
+import {
+    TrustedAuthorityQueryEtsiTl,
+    TrustedAuthorityQueryOpenIdFederation,
+    TrustedAuthorityType,
+} from &quot;../presentations/entities/presentation-config.entity&quot;;
 import { PresentationsService } from &quot;../presentations/presentations.service&quot;;
 import {
     buildDeviceRequestCbor,
@@ -635,18 +639,24 @@ export class Iso18013Service {
         const tenantHost &#x3D; &#x60;${host}/issuers/${session.tenantId}&#x60;;
 
         const loteAuthorities &#x3D; mdocCred.trusted_authorities?.find(
-            (auth) &#x3D;&gt; auth.type &#x3D;&#x3D;&#x3D; TrustedAuthorityType.ETSI_TL,
+            (auth): auth is TrustedAuthorityQueryEtsiTl &#x3D;&gt;
+                auth.type &#x3D;&#x3D;&#x3D; TrustedAuthorityType.ETSI_TL,
         );
         const federationAuthorities &#x3D; mdocCred.trusted_authorities?.find(
-            (auth) &#x3D;&gt; auth.type &#x3D;&#x3D;&#x3D; TrustedAuthorityType.OPENID_FEDERATION,
+            (auth): auth is TrustedAuthorityQueryOpenIdFederation &#x3D;&gt;
+                auth.type &#x3D;&#x3D;&#x3D; TrustedAuthorityType.OPENID_FEDERATION,
         );
+
+        const resolvedLoteAuthorities &#x3D;
+            await this.presentationsService.resolveTrustListRefsForTenant(
+                loteAuthorities?.values,
+                session.tenantId,
+                tenantHost,
+            );
 
         const verifyOptions: VerifierOptions &#x3D; {
             trustListSource: {
-                lotes:
-                    loteAuthorities?.values.map((url) &#x3D;&gt; ({
-                        url: url.replaceAll(&quot;&lt;TENANT_URL&gt;&quot;, tenantHost),
-                    })) ?? [],
+                lotes: resolvedLoteAuthorities,
                 acceptedServiceTypes: [
                     ServiceTypeIdentifier.EaaIssuance,
                     ServiceTypeIdentifier.PIDIssuance,

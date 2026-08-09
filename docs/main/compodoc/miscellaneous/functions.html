@@ -384,6 +384,9 @@
                             <a href="#normalizeDisplayInfo" title="src/issuer/configuration/credentials/utils/derive.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>normalizeDisplayInfo</b>&nbsp;&nbsp;&nbsp;(src/.../derive.ts)</span></a>
                         </li>
                         <li>
+                            <a href="#normalizeTrustListRefs" title="src/shared/trust/types.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>normalizeTrustListRefs</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</span></a>
+                        </li>
+                        <li>
                             <a href="#parseBoolean" title="src/database/postgres-ssl-options.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>parseBoolean</b>&nbsp;&nbsp;&nbsp;(src/.../postgres-ssl-options.ts)</span></a>
                         </li>
                         <li>
@@ -463,6 +466,9 @@
                         </li>
                         <li>
                             <a href="#unwrapEcPoint" title="src/crypto/key/kms/adapters/pkcs11-kms.adapter.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>unwrapEcPoint</b>&nbsp;&nbsp;&nbsp;(src/.../pkcs11-kms.adapter.ts)</span></a>
+                        </li>
+                        <li>
+                            <a href="#validateAttestationProofTrust" title="src/issuer/issuance/oid4vci/attestation-proof-trust.util.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>validateAttestationProofTrust</b>&nbsp;&nbsp;&nbsp;(src/.../attestation-proof-trust.util.ts)</span></a>
                         </li>
                         <li>
                             <a href="#vaultKeyType" title="src/crypto/key/kms/adapters/vault-kms.adapter.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>vaultKeyType</b>&nbsp;&nbsp;&nbsp;(src/.../vault-kms.adapter.ts)</span></a>
@@ -671,6 +677,66 @@
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>    <code>TrustedEntityServiceCert | undefined</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="normalizeTrustListRefs"></a>
+                    <span class="name">
+                        <span ><b>normalizeTrustListRefs</b></span>
+                        <a href="#normalizeTrustListRefs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>normalizeTrustListRefs(refs)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Normalize trust-list input to structured references.
+Enforces structured trust-list references with verifier material.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>refs</td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/TrustListRef.html" target="_self" >TrustListRef[]</a></code>
 
                         </div>
                             <div class="io-description">
@@ -8138,6 +8204,96 @@ native subtle operation — only for signing, and only when the
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>    <code>JWK</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <h3>src/issuer/issuance/oid4vci/attestation-proof-trust.util.ts</h3>
+    <section data-compodoc="block-methods">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateAttestationProofTrust"></a>
+                    <span class="name">
+                        <span ><b>validateAttestationProofTrust</b></span>
+                        <a href="#validateAttestationProofTrust"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>validateAttestationProofTrust(keyAttestationJwt: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, trustListRefsInput, deps: <a href="../interfaces/AttestationProofTrustValidationDeps.html" target="_self">AttestationProofTrustValidationDeps</a>)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Validate attestation proof signer chain against configured trusted wallet providers.
+If no trust list is configured, this check is skipped for backward compatibility.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>keyAttestationJwt</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>trustListRefsInput</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>deps</td>
+                                            <td>
+                                                            <code><a href="../interfaces/AttestationProofTrustValidationDeps.html" target="_self" >AttestationProofTrustValidationDeps</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
 
                         </div>
                             <div class="io-description">

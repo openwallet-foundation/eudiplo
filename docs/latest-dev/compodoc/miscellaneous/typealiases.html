@@ -192,6 +192,9 @@
                             <a href="#CredentialFormatId" title="src/registrar/schema-metadata/dto/schema-metadata.dto.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>CredentialFormatId</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</span></a>
                         </li>
                         <li>
+                            <a href="#CredentialQueryValue" title="src/verifier/presentations/entities/presentation-config.entity.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>CredentialQueryValue</b>&nbsp;&nbsp;&nbsp;(src/.../presentation-config.entity.ts)</span></a>
+                        </li>
+                        <li>
                             <a href="#CredentialRequestErrorCode" title="src/issuer/issuance/oid4vci/exceptions/credential-request.exception.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>CredentialRequestErrorCode</b>&nbsp;&nbsp;&nbsp;(src/.../credential-request.exception.ts)</span></a>
                         </li>
                         <li>
@@ -324,9 +327,6 @@
                             <a href="#ResolvedSchemaMetadataPayload" title="src/verifier/presentations/presentations.service.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>ResolvedSchemaMetadataPayload</b>&nbsp;&nbsp;&nbsp;(src/.../presentations.service.ts)</span></a>
                         </li>
                         <li>
-                            <a href="#RulebookTrustListRef" title="src/shared/trust/types.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>RulebookTrustListRef</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</span></a>
-                        </li>
-                        <li>
                             <a href="#SchemaMetadataCategory" title="src/registrar/schema-metadata/dto/schema-metadata.dto.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>SchemaMetadataCategory</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata.dto.ts)</span></a>
                         </li>
                         <li>
@@ -378,6 +378,9 @@
                             <a href="#StoredObject" title="src/storage/storage.types.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>StoredObject</b>&nbsp;&nbsp;&nbsp;(src/.../storage.types.ts)</span></a>
                         </li>
                         <li>
+                            <a href="#SupportedCredentialProofType" title="src/issuer/issuance/oid4vci/oid4vci.service.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>SupportedCredentialProofType</b>&nbsp;&nbsp;&nbsp;(src/.../oid4vci.service.ts)</span></a>
+                        </li>
+                        <li>
                             <a href="#TenantImportFn" title="src/shared/utils/config-import/config-import-orchestrator.service.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>TenantImportFn</b>&nbsp;&nbsp;&nbsp;(src/.../config-import-orchestrator.service.ts)</span></a>
                         </li>
                         <li>
@@ -394,6 +397,9 @@
                         </li>
                         <li>
                             <a href="#TrustedAuthorityInput" title="src/registrar/schema-metadata/schema-metadata-submission.service.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>TrustedAuthorityInput</b>&nbsp;&nbsp;&nbsp;(src/.../schema-metadata-submission.service.ts)</span></a>
+                        </li>
+                        <li>
+                            <a href="#TrustedAuthorityQueryValue" title="src/verifier/presentations/entities/presentation-config.entity.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>TrustedAuthorityQueryValue</b>&nbsp;&nbsp;&nbsp;(src/.../presentation-config.entity.ts)</span></a>
                         </li>
                         <li>
                             <a href="#TrustedEntity" title="src/shared/trust/types.ts" class="reference-link "><span class="reference-badge reference-badge--typealias" aria-hidden="true">T</span><span class="reference-link-label"><b>TrustedEntity</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</span></a>
@@ -959,6 +965,22 @@ This is distinct from the internal TokenPayload used for authenticated API reque
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="SupportedCredentialProofType"></a>
+                    <span class="name "><b>SupportedCredentialProofType</b><a href="#SupportedCredentialProofType"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>&quot;jwt&quot; | &quot;attestation&quot;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
     <h3>src/issuer/configuration/credentials/types/credential-config-types.ts</h3>
     <section data-compodoc="block-typealias">
@@ -1226,6 +1248,41 @@ Uses RFC 9864 fully-specified algorithm identifiers</p>
         </tbody>
     </table>
 </section>
+    <h3>src/verifier/presentations/entities/presentation-config.entity.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CredentialQueryValue"></a>
+                    <span class="name "><b>CredentialQueryValue</b><a href="#CredentialQueryValue"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>CredentialQueryDcSdJwt | CredentialQueryMsoMdoc</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="TrustedAuthorityQueryValue"></a>
+                    <span class="name "><b>TrustedAuthorityQueryValue</b><a href="#TrustedAuthorityQueryValue"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>TrustedAuthorityQueryEtsiTl | TrustedAuthorityQueryOpenIdFederation</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
     <h3>src/issuer/issuance/oid4vci/exceptions/credential-request.exception.ts</h3>
     <section data-compodoc="block-typealias">
     <table class="table table-sm table-bordered">
@@ -1376,22 +1433,6 @@ Uses RFC 9864 fully-specified algorithm identifiers</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="RulebookTrustListRef"></a>
-                    <span class="name "><b>RulebookTrustListRef</b><a href="#RulebookTrustListRef"><span class="icon ion-ios-link"></span></a></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>    <code>{ url: string; verifierKey?: JWK }</code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="ServiceTypeIdentifier"></a>
                     <span class="name "><b>ServiceTypeIdentifier</b><a href="#ServiceTypeIdentifier"><span class="icon ion-ios-link"></span></a></span>
                 </td>
@@ -1460,7 +1501,7 @@ from the same entity.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>        <code><a href="../entitys/TrustList.html" target="_self" >{ lotes: RulebookTrustListRef[]; acceptedServiceTypes?: ServiceTypeIdentifier[] }</a></code>
+                    <code>        <code><a href="../classes/TrustListRef.html" target="_self" >{ lotes: TrustListRef[]; acceptedServiceTypes?: ServiceTypeIdentifier[] }</a></code>
 </code>
                 </td>
             </tr>

@@ -265,7 +265,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:55</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:56</a></div>
                         </td>
                     </tr>
 
@@ -304,7 +304,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:62</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:63</a></div>
                         </td>
                     </tr>
 
@@ -340,7 +340,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:50</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -376,7 +376,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:52</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:53</a></div>
                         </td>
                     </tr>
 
@@ -415,7 +415,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="66" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:66</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:67</a></div>
                         </td>
                     </tr>
 
@@ -451,7 +451,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:48</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:49</a></div>
                         </td>
                     </tr>
 
@@ -489,7 +489,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:58</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:59</a></div>
                         </td>
                     </tr>
 
@@ -517,6 +517,7 @@
 } from &quot;@nestjs/swagger&quot;;
 import { Type } from &quot;class-transformer&quot;;
 import {
+    ArrayUnique,
     IsArray,
     IsBoolean,
     IsEnum,
@@ -592,6 +593,11 @@ export enum SdJwtTrustFormat {
     FEDERATION &#x3D; &quot;federation&quot;,
 }
 
+export enum CredentialProofType {
+    JWT &#x3D; &quot;jwt&quot;,
+    ATTESTATION &#x3D; &quot;attestation&quot;,
+}
+
 export class IssuerMetadataCredentialConfig {
     @IsEnum(CredentialFormat)
     format!: CredentialFormat;
@@ -622,6 +628,23 @@ export class IssuerMetadataCredentialConfig {
     @Type(() &#x3D;&gt; KeyAttestationsRequired)
     @IsOptional()
     keyAttestationsRequired?: KeyAttestationsRequired;
+
+    /**
+     * Per-credential proof type policy.
+     * If omitted, both proof types are supported with attestation as default preference.
+     */
+    @ApiPropertyOptional({
+        type: [String],
+        enum: CredentialProofType,
+        description:
+            &quot;Supported proof types for this credential configuration. Defaults to [&#x27;attestation&#x27;, &#x27;jwt&#x27;].&quot;,
+        example: [CredentialProofType.ATTESTATION, CredentialProofType.JWT],
+    })
+    @IsOptional()
+    @IsArray()
+    @ArrayUnique()
+    @IsEnum(CredentialProofType, { each: true })
+    proofTypesSupported?: CredentialProofType[];
 }
 
 @ApiExtraModels(

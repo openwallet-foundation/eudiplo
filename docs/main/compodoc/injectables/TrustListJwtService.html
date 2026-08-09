@@ -207,6 +207,11 @@
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#derToPemCertificate" >derToPemCertificate</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#fetchJwt" >fetchJwt</a>
                             </li>
@@ -281,6 +286,75 @@
     <h3 id="methods">
         Methods
     </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="derToPemCertificate"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>derToPemCertificate</b></span>
+                        <a href="#derToPemCertificate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>derToPemCertificate(derBase64: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="41"
+                                    class="link-to-prism">src/shared/trust/trustlist-jwt.service.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>derBase64</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -383,23 +457,27 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>verifyTrustListJwt(ref: <a href="../miscellaneous/typealiases.html#RulebookTrustListRef" target="_self">RulebookTrustListRef</a>, jwt: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>verifyTrustListJwt(ref: <a href="../classes/TrustListRef.html" target="_self">TrustListRef</a>, jwt: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="49"
-                                    class="link-to-prism">src/shared/trust/trustlist-jwt.service.ts:49</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="57"
+                                    class="link-to-prism">src/shared/trust/trustlist-jwt.service.ts:57</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Verify the JWT signature/authenticity using the verifier key from the reference.
-If no verifier key is provided, verification is skipped (trust on first use).</p>
+                        <div class="io-description"><p>Verify the JWT signature/authenticity using configured verification material.
+Exactly one secure verifier must be configured per trust list reference:</p>
+<ul>
+<li>verifierKey (JWK), or</li>
+<li>verifierX509Der (base64 DER X.509 certificate)</li>
+</ul>
 </div>
 
                             <div class="io-description">
@@ -411,14 +489,13 @@ If no verifier key is provided, verification is skipped (trust on first use).</p
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
-                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                                 <td>ref</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#RulebookTrustListRef" target="_self" >RulebookTrustListRef</a></code>
+                                                            <code><a href="../classes/TrustListRef.html" target="_self" >TrustListRef</a></code>
                                             </td>
 
                                             <td>
@@ -426,12 +503,6 @@ If no verifier key is provided, verification is skipped (trust on first use).</p
                                             </td>
 
 
-                                            <td>
-                                                    <ul>
-<li>The trust list reference containing the optional verifier key</li>
-</ul>
-
-                                            </td>
                                         </tr>
                                         <tr>
                                                 <td>jwt</td>
@@ -444,12 +515,6 @@ If no verifier key is provided, verification is skipped (trust on first use).</p
                                             </td>
 
 
-                                            <td>
-                                                    <ul>
-<li>The JWT string to verify</li>
-</ul>
-
-                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -460,13 +525,6 @@ If no verifier key is provided, verification is skipped (trust on first use).</p
                         </div>
                             <div class="io-description">
                                 
-                            </div>
-                            <div class="io-description">
-                                <b>Throws :</b>
-                                <ul>
-                                        <li><p>Error if verification fails</p>
-</li>
-                                </ul>
                             </div>
                 </td>
             </tr>
@@ -520,9 +578,9 @@ If no verifier key is provided, verification is skipped (trust on first use).</p
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpService } from &quot;@nestjs/axios&quot;;
 import { Injectable, Logger } from &quot;@nestjs/common&quot;;
-import { importJWK, jwtVerify } from &quot;jose&quot;;
+import { importJWK, importX509, jwtVerify } from &quot;jose&quot;;
 import { firstValueFrom } from &quot;rxjs&quot;;
-import { RulebookTrustListRef } from &quot;./types&quot;;
+import { TrustListRef } from &quot;../../verifier/presentations/entities/presentation-config.entity&quot;;
 
 @Injectable()
 export class TrustListJwtService {
@@ -558,28 +616,37 @@ export class TrustListJwtService {
         }
     }
 
+    private derToPemCertificate(derBase64: string): string {
+        const der &#x3D; Buffer.from(derBase64, &quot;base64&quot;);
+        const body &#x3D;
+            der
+                .toString(&quot;base64&quot;)
+                .match(/.{1,64}/g)
+                ?.join(&quot;\n&quot;) || &quot;&quot;;
+        return &#x60;-----BEGIN CERTIFICATE-----\n${body}\n-----END CERTIFICATE-----&#x60;;
+    }
+
     /**
-     * Verify the JWT signature/authenticity using the verifier key from the reference.
-     * If no verifier key is provided, verification is skipped (trust on first use).
-     *
-     * @param ref - The trust list reference containing the optional verifier key
-     * @param jwt - The JWT string to verify
-     * @throws Error if verification fails
+     * Verify the JWT signature/authenticity using configured verification material.
+     * Exactly one secure verifier must be configured per trust list reference:
+     * - verifierKey (JWK), or
+     * - verifierX509Der (base64 DER X.509 certificate)
      */
-    async verifyTrustListJwt(
-        ref: RulebookTrustListRef,
-        jwt: string,
-    ): Promise&lt;void&gt; {
-        if (!ref.verifierKey) {
-            this.logger.debug(
-                &#x60;No verifier key provided for ${ref.url}, skipping signature verification&#x60;,
+    async verifyTrustListJwt(ref: TrustListRef, jwt: string): Promise&lt;void&gt; {
+        if (!ref.verifierKey &amp;&amp; !ref.verifierX509Der) {
+            throw new Error(
+                &#x60;Trust list JWT verification material missing for ${ref.url}: configure verifierKey or verifierX509Der&#x60;,
             );
-            return;
         }
 
         try {
-            const alg &#x3D; ref.verifierKey.alg || &quot;ES256&quot;;
-            const publicKey &#x3D; await importJWK(ref.verifierKey, alg);
+            const alg &#x3D; ref.verifierKey?.alg || &quot;ES256&quot;;
+            const publicKey &#x3D; ref.verifierKey
+                ? await importJWK(ref.verifierKey, alg)
+                : await importX509(
+                      this.derToPemCertificate(ref.verifierX509Der!),
+                      alg,
+                  );
 
             await jwtVerify(jwt, publicKey, {
                 // Allow some clock skew (5 minutes)

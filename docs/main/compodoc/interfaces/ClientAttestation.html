@@ -225,7 +225,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/shared/trust/wallet-attestation.service.ts:19</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/shared/trust/wallet-attestation.service.ts:24</a></div>
                                 </td>
                             </tr>
 
@@ -269,7 +269,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/shared/trust/wallet-attestation.service.ts:20</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/shared/trust/wallet-attestation.service.ts:25</a></div>
                                 </td>
                             </tr>
 
@@ -291,11 +291,16 @@ import { CryptoService } from &quot;../../crypto/crypto.service&quot;;
 import { CryptoImplementationService } from &quot;../../crypto/key/crypto-implementation/crypto-implementation.service&quot;;
 import { StatusListVerifierService } from &quot;./status-list-verifier.service&quot;;
 import { BuiltTrustStore, TrustStoreService } from &quot;./trust-store.service&quot;;
-import { ServiceTypeIdentifiers, TrustListSource } from &quot;./types&quot;;
+import {
+    normalizeTrustListRefs,
+    ServiceTypeIdentifiers,
+    TrustListSource,
+} from &quot;./types&quot;;
 import {
     MatchedTrustedEntity,
     X509ValidationService,
 } from &quot;./x509-validation.service&quot;;
+import { TrustListRef } from &quot;../../verifier/presentations/entities/presentation-config.entity&quot;;
 
 export interface ClientAttestation {
     clientAttestationJwt: string;
@@ -344,7 +349,7 @@ export class WalletAttestationService {
      * @param clientAttestation The client attestation from the request
      * @param authorizationServer The authorization server URL
      * @param walletAttestationRequired Whether wallet attestation is required
-     * @param walletProviderTrustLists URLs of trust lists containing trusted wallet providers
+     * @param walletProviderTrustLists Trust lists containing trusted wallet providers
      * @throws UnauthorizedException if attestation is required but not provided, or if provided but invalid
      */
     @Span(&quot;walletAttestation.verify&quot;)
@@ -353,7 +358,7 @@ export class WalletAttestationService {
         clientAttestation: ClientAttestation | undefined,
         authorizationServer: string,
         walletAttestationRequired: boolean,
-        walletProviderTrustLists: string[],
+        walletProviderTrustLists: TrustListRef[],
     ): Promise&lt;void&gt; {
         if (!clientAttestation) {
             if (walletAttestationRequired) {
@@ -406,18 +411,20 @@ export class WalletAttestationService {
      * Validate the wallet provider&#x27;s X.509 certificate against configured trust lists.
      * Returns the matched entity and trust store for use in status list verification.
      * @param clientAttestationJwt The wallet attestation JWT
-     * @param trustListUrls URLs of trust lists to validate against
+     * @param trustListInputs Trust lists to validate against
      * @returns The matched entity and trust store (both null if no trust lists configured)
      * @throws UnauthorizedException if certificate is not trusted
      */
     private async validateWalletProviderCertificate(
         clientAttestationJwt: string,
-        trustListUrls: string[],
+        trustListInputs: TrustListRef[],
     ): Promise&lt;{
         matchedEntity: MatchedTrustedEntity | null;
         trustStore: BuiltTrustStore | null;
     }&gt; {
-        if (trustListUrls.length &#x3D;&#x3D;&#x3D; 0) {
+        const trustListRefs &#x3D; normalizeTrustListRefs(trustListInputs);
+
+        if (trustListRefs.length &#x3D;&#x3D;&#x3D; 0) {
             // No trust lists configured - accept any valid attestation
             this.logger.warn(
                 &quot;No wallet provider trust lists configured - accepting attestation without certificate validation&quot;,
@@ -437,7 +444,7 @@ export class WalletAttestationService {
 
         // Build trust list source from configured URLs
         const trustListSource: TrustListSource &#x3D; {
-            lotes: trustListUrls.map((url) &#x3D;&gt; ({ url })),
+            lotes: trustListRefs,
             acceptedServiceTypes: [ServiceTypeIdentifiers.WalletProvider],
         };
 

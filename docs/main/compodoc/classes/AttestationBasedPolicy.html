@@ -266,7 +266,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/EmbeddedDisclosurePolicy.html#source" target="_self" >EmbeddedDisclosurePolicy:74</a></code>
+                                <div class="io-line">        <code><a href="../classes/EmbeddedDisclosurePolicy.html#source" target="_self" >EmbeddedDisclosurePolicy:86</a></code>
 </div>
                         </td>
                     </tr>
@@ -306,7 +306,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">src/issuer/configuration/credentials/entities/policies.dto.ts:80</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">src/issuer/configuration/credentials/entities/policies.dto.ts:92</a></div>
                         </td>
                     </tr>
 
@@ -337,6 +337,9 @@ import {
 import {
     ClaimsQuery,
     CredentialQuery,
+    CredentialQueryDcSdJwt,
+    CredentialQueryMsoMdoc,
+    CredentialQueryValue,
     CredentialSetQuery,
 } from &quot;../../../../verifier/presentations/entities/presentation-config.entity&quot;;
 
@@ -385,8 +388,17 @@ export class PolicyCredential {
     @IsDefined()
     @IsArray()
     @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; CredentialQuery)
-    credentials!: CredentialQuery[];
+    @Type(() &#x3D;&gt; CredentialQuery, {
+        discriminator: {
+            property: &quot;format&quot;,
+            subTypes: [
+                { value: CredentialQueryDcSdJwt, name: &quot;dc+sd-jwt&quot; },
+                { value: CredentialQueryMsoMdoc, name: &quot;mso_mdoc&quot; },
+            ],
+        },
+        keepDiscriminatorProperty: true,
+    })
+    credentials!: CredentialQueryValue[];
 
     @IsOptional()
     @IsArray()
