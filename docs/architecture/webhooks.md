@@ -114,25 +114,41 @@ result by querying the `/session` endpoint with the `sessionId`.
 
 The **presentation webhook** receives verified claims from the wallet after a presentation flow completes.
 
+Like notification webhooks, presentation webhooks are configured as reusable
+tenant webhook endpoint resources and referenced by ID.
+
+Set `webhookEndpointId` on the presentation configuration:
+
 ```json
 {
-    "webhook": {
-        "url": "http://localhost:8787/notify",
-        "auth": {
-            "type": "apiKey",
-            "config": {
-                "headerName": "x-api-key",
-                "value": "your-api-key"
-            }
-        },
-        "includeRawTokensFor": ["pid"]
+    "id": "my-presentation-config",
+    "webhookEndpointId": "presentation-notify"
+}
+```
+
+Example endpoint resource:
+
+```json
+{
+    "id": "presentation-notify",
+    "name": "Presentation Webhook",
+    "description": "Receives verified presentation claims",
+    "url": "http://localhost:8787/notify",
+    "auth": {
+        "type": "apiKey",
+        "config": {
+            "headerName": "x-api-key",
+            "value": "your-api-key"
+        }
     }
 }
 ```
 
 !!! info "Raw Token Pass-Through"
 
-    By default, EUDIPLO only forwards the extracted claims. If your use case requires the original cryptographic proof, you can use the optional `includeRawTokensFor` array to specify credential IDs. The raw `vp_token` will then be appended to those specific credentials.
+    By default, EUDIPLO only forwards the extracted claims. If your use case requires the original cryptographic proof, you can provide a per-request webhook override in the presentation request with `includeRawTokensFor` for specific credential IDs. The raw `vp_token` will then be appended only to those credentials.
+
+    This option is not part of the persisted webhook endpoint resource referenced by `webhookEndpointId`.
 
 ### Webhook Request Format
 
