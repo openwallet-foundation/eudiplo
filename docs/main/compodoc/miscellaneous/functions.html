@@ -210,6 +210,9 @@
                             <a href="#buildIsoMdocDcApiTranscript" title="src/verifier/iso18013/cbor-request.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>buildIsoMdocDcApiTranscript</b>&nbsp;&nbsp;&nbsp;(src/.../cbor-request.ts)</span></a>
                         </li>
                         <li>
+                            <a href="#buildItemsRequest" title="src/verifier/iso18013/cbor-request.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>buildItemsRequest</b>&nbsp;&nbsp;&nbsp;(src/.../cbor-request.ts)</span></a>
+                        </li>
+                        <li>
                             <a href="#buildJsonSchema" title="src/issuer/configuration/credentials/utils/derive.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>buildJsonSchema</b>&nbsp;&nbsp;&nbsp;(src/.../derive.ts)</span></a>
                         </li>
                         <li>
@@ -226,6 +229,9 @@
                         </li>
                         <li>
                             <a href="#buildPostgresSslOptions" title="src/database/postgres-ssl-options.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>buildPostgresSslOptions</b>&nbsp;&nbsp;&nbsp;(src/.../postgres-ssl-options.ts)</span></a>
+                        </li>
+                        <li>
+                            <a href="#buildReaderAuth" title="src/verifier/iso18013/cbor-request.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>buildReaderAuth</b>&nbsp;&nbsp;&nbsp;(src/.../cbor-request.ts)</span></a>
                         </li>
                         <li>
                             <a href="#buildSdJwtDcConfig" title="src/issuer/configuration/credentials/types/credential-config-types.ts" class="reference-link "><span class="reference-badge reference-badge--function" aria-hidden="true">F</span><span class="reference-link-label"><b>buildSdJwtDcConfig</b>&nbsp;&nbsp;&nbsp;(src/.../credential-config-types.ts)</span></a>
@@ -4762,7 +4768,7 @@ Returns undefined if TLS is not enabled or files are not found.</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>buildDeviceRequestCbor(docType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, namespaces: Record)</code>
+<code>buildDeviceRequestCbor(itemsRequest: ItemsRequest, readerAuth?: ReaderAuth)</code>
                 </td>
             </tr>
 
@@ -4788,9 +4794,9 @@ Returns undefined if TLS is not enabled or files are not found.</p>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>docType</td>
+                                                <td>itemsRequest</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                        <code>ItemsRequest</code>
                                             </td>
 
                                             <td>
@@ -4799,23 +4805,25 @@ Returns undefined if TLS is not enabled or files are not found.</p>
 
 
                                             <td>
-                                                    <p>mDOC document type (e.g. &quot;org.iso.18013.5.1.mDL&quot;)</p>
+                                                    <p>the ItemsRequest from <a href="../miscellaneous/functions.html#buildItemsRequest">buildItemsRequest</a></p>
 
                                             </td>
                                         </tr>
                                         <tr>
-                                                <td>namespaces</td>
+                                                <td>readerAuth</td>
                                             <td>
-                                                        <code>Record</code>
+                                                        <code>ReaderAuth</code>
                                             </td>
 
                                             <td>
-                                                    No
+                                                    Yes
                                             </td>
 
 
                                             <td>
-                                                    <p>Map of namespace → { claimName: intentToRetain }</p>
+                                                    <p>optional detached ReaderAuth (COSE_Sign1) authenticating
+the verifier — see <a href="../miscellaneous/functions.html#buildReaderAuth">buildReaderAuth</a>. When present it
+is embedded in the DocRequest so the wallet can verify it.</p>
 
                                             </td>
                                         </tr>
@@ -5006,6 +5014,219 @@ CBOR exactly as sent in the DC API request</p>
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>        <code><a href="../entitys/Session.html" target="_self" >Promise&lt;{ hpkeInfo: Buffer; sessionTranscript: SessionTranscript }&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildItemsRequest"></a>
+                    <span class="name">
+                        <span ><b>buildItemsRequest</b></span>
+                        <a href="#buildItemsRequest"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildItemsRequest(docType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, namespaces: Record)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Build the ItemsRequest for a single mDOC docType per ISO 18013-5 §8.3.2.1.2.1.</p>
+<p>The same ItemsRequest instance must be embedded in both the DocRequest and the
+ReaderAuthentication structure so the wallet can recompute and verify the
+reader signature — see <a href="../miscellaneous/functions.html#buildReaderAuth">buildReaderAuth</a>.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>docType</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>mDOC document type (e.g. &quot;org.iso.18013.5.1.mDL&quot;)</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>namespaces</td>
+                                            <td>
+                                                        <code>Record</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Map of namespace → { claimName: intentToRetain }</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ItemsRequest</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildReaderAuth"></a>
+                    <span class="name">
+                        <span ><b>buildReaderAuth</b></span>
+                        <a href="#buildReaderAuth"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildReaderAuth(itemsRequest: ItemsRequest, sessionTranscript: <a href="../entitys/Session.html" target="_self">SessionTranscript</a>, signingJwk: Record, certificateChain)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Sign a detached ReaderAuth (COSE_Sign1) authenticating the verifier inside the
+DeviceRequest, per ISO/IEC 18013-5 §9.1.4 / 18013-7 Annex C.</p>
+<p>The signed payload is the CBOR of</p>
+<p>  ReaderAuthentication = [&quot;ReaderAuthentication&quot;, SessionTranscript, ItemsRequestBytes]</p>
+<p>carried as the COSE_Sign1 <em>detached</em> payload (<code>ReaderAuthenticationBytes</code>,
+a Tag-24-wrapped bstr). The verifier&#39;s certificate chain is placed in the
+unprotected <code>x5chain</code> header and ES256 in the protected header — the same
+shape <code>@owf/mdoc</code> produces for IssuerAuth, and the exact bytes its
+<code>ReaderAuth.verify()</code> recomputes.</p>
+<p>The DCAPIHandover SessionTranscript is available already at offer time (it is
+a deterministic function of <code>encryptionInfo</code> + browser origin), so the reader
+signature can be produced when the DeviceRequest is built.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>itemsRequest</td>
+                                            <td>
+                                                        <code>ItemsRequest</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>the same ItemsRequest embedded in the DocRequest</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>sessionTranscript</td>
+                                            <td>
+                                                            <code><a href="../entitys/Session.html" target="_self" >SessionTranscript</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>DCAPIHandover transcript from <a href="../miscellaneous/functions.html#buildIsoMdocDcApiTranscript">buildIsoMdocDcApiTranscript</a></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>signingJwk</td>
+                                            <td>
+                                                        <code>Record</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>verifier Access private JWK (must include <code>d</code>)</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>certificateChain</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>leaf-first DER certificate chain for <code>x5chain</code></p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;ReaderAuth&gt;</code>
 
                         </div>
                             <div class="io-description">

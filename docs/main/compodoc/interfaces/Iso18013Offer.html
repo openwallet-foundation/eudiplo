@@ -234,7 +234,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:50</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:58</a></div>
                                 </td>
                             </tr>
 
@@ -290,7 +290,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:51</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:59</a></div>
                                 </td>
                             </tr>
 
@@ -329,7 +329,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:48</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:56</a></div>
                                 </td>
                             </tr>
 
@@ -368,7 +368,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:49</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:57</a></div>
                                 </td>
                             </tr>
 
@@ -386,20 +386,26 @@ import {
     NotFoundException,
 } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
+import type { ItemsRequest, ReaderAuth } from &quot;@owf/mdoc&quot;;
+import { X509Certificate } from &quot;@peculiar/x509&quot;;
+import { exportJWK } from &quot;jose&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
 import { InjectPinoLogger, PinoLogger } from &quot;nestjs-pino&quot;;
 import { Repository } from &quot;typeorm&quot;;
 import { EncryptionService } from &quot;../../crypto/encryption/encryption.service&quot;;
+import { CertService } from &quot;../../crypto/key/cert/cert.service&quot;;
+import { KeyUsageType } from &quot;../../crypto/key/entities/key-chain.entity&quot;;
+import { KeyChainService } from &quot;../../crypto/key/key-chain.service&quot;;
 import { WebhookEndpointEntity } from &quot;../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity&quot;;
 import { ServiceTypeIdentifier } from &quot;../../issuer/trust-list/trustlist.service&quot;;
 import { SessionStatus } from &quot;../../session/entities/session.entity&quot;;
 import { SessionService } from &quot;../../session/session.service&quot;;
+import { revocationModeToPolicy } from &quot;../../shared/trust/revocation-policy.util&quot;;
 import {
     DEFAULT_VERIFIER_SKEW_SECONDS,
     RevocationCheckMode,
     VerifierOptions,
 } from &quot;../../shared/trust/types&quot;;
-import { revocationModeToPolicy } from &quot;../../shared/trust/revocation-policy.util&quot;;
 import { AuditLogService } from &quot;../../shared/utils/logger/audit-log.service&quot;;
 import { WebhookService } from &quot;../../shared/utils/webhook/webhook.service&quot;;
 import { MdocverifierService } from &quot;../presentations/credential/mdocverifier/mdocverifier.service&quot;;
@@ -413,6 +419,8 @@ import {
     buildDeviceRequestCbor,
     buildEncryptionInfo,
     buildIsoMdocDcApiTranscript,
+    buildItemsRequest,
+    buildReaderAuth,
     parseEncryptedResponse,
 } from &quot;./cbor-request&quot;;
 import { hpkeOpen } from &quot;./hpke&quot;;
@@ -438,6 +446,8 @@ export class Iso18013Service {
         private readonly webhookService: WebhookService,
         private readonly auditLogService: AuditLogService,
         private readonly configService: ConfigService,
+        private readonly certService: CertService,
+        private readonly keyChainService: KeyChainService,
         @InjectRepository(WebhookEndpointEntity)
         private readonly webhookEndpointRepo: Repository&lt;WebhookEndpointEntity&gt;,
         @InjectPinoLogger(Iso18013Service.name)
@@ -521,11 +531,30 @@ export class Iso18013Service {
             namespaces[docType] &#x3D; {};
         }
 
-        const deviceRequestCbor &#x3D; buildDeviceRequestCbor(docType, namespaces);
         const encryptionInfoCbor &#x3D; buildEncryptionInfo(
             pubJwk.x!,
             pubJwk.y!,
             nonce,
+        );
+
+        // A single ItemsRequest instance is shared between the DocRequest and,
+        // when reader authentication is enabled, the ReaderAuthentication that is
+        // signed over it — the wallet recomputes the latter from the former.
+        const itemsRequest &#x3D; buildItemsRequest(docType, namespaces);
+
+        const readerAuth &#x3D; config.readerAuth
+            ? await this.buildReaderAuthForOffer(
+                  tenantId,
+                  config.accessKeyChainId ?? undefined,
+                  itemsRequest,
+                  encryptionInfoCbor.toString(&quot;base64url&quot;),
+                  origin,
+              )
+            : undefined;
+
+        const deviceRequestCbor &#x3D; buildDeviceRequestCbor(
+            itemsRequest,
+            readerAuth,
         );
 
         const expiresAt &#x3D; new Date(
@@ -564,6 +593,62 @@ export class Iso18013Service {
                 encryption_info: encryptionInfoCbor.toString(&quot;base64url&quot;),
             },
         };
+    }
+
+    /**
+     * Build a detached ReaderAuth (COSE_Sign1) for the offer, signing the
+     * ReaderAuthentication structure with the tenant&#x27;s Access key chain.
+     *
+     * The DCAPIHandover SessionTranscript is reconstructed deterministically from
+     * the EncryptionInfo (base64url) and browser origin — identical to the one
+     * the wallet derives — so the reader signature binds to this exact request.
+     *
+     * Note: signing extracts the Access private key as a JWK (mirroring mDOC
+     * issuance), so KMS-backed non-extractable keys are not yet supported for
+     * reader authentication.
+     */
+    private async buildReaderAuthForOffer(
+        tenantId: string,
+        accessKeyChainId: string | undefined,
+        itemsRequest: ItemsRequest,
+        encryptionInfoB64u: string,
+        origin: string,
+    ): Promise&lt;ReaderAuth&gt; {
+        const { sessionTranscript } &#x3D; await buildIsoMdocDcApiTranscript(
+            encryptionInfoB64u,
+            origin,
+        );
+
+        const cert &#x3D; await this.certService.find({
+            tenantId,
+            type: KeyUsageType.Access,
+            certId: accessKeyChainId,
+        });
+
+        const keyChain &#x3D; await this.keyChainService.getEntity(
+            tenantId,
+            cert.keyId,
+        );
+        const signingJwk &#x3D; (await exportJWK(
+            await crypto.subtle.importKey(
+                &quot;jwk&quot;,
+                keyChain.activeJwk,
+                { name: &quot;ECDSA&quot;, namedCurve: &quot;P-256&quot; },
+                true,
+                [&quot;sign&quot;],
+            ),
+        )) as Record&lt;string, unknown&gt;;
+
+        const certificateChain &#x3D; cert.crt.map(
+            (pem) &#x3D;&gt; new Uint8Array(new X509Certificate(pem).rawData),
+        );
+
+        return buildReaderAuth(
+            itemsRequest,
+            sessionTranscript,
+            signingJwk,
+            certificateChain,
+        );
     }
 
     /**

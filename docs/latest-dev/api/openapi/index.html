@@ -25865,9 +25865,10 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-169-30" name="__codelineno-169-30" href="#__codelineno-169-30"></a><span class="w">            </span><span class="p">}</span>
 <a id="__codelineno-169-31" name="__codelineno-169-31" href="#__codelineno-169-31"></a><span class="w">        </span><span class="p">],</span>
 <a id="__codelineno-169-32" name="__codelineno-169-32" href="#__codelineno-169-32"></a><span class="w">        </span><span class="nt">"redirectUri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/callback?session={sessionId}"</span><span class="p">,</span>
-<a id="__codelineno-169-33" name="__codelineno-169-33" href="#__codelineno-169-33"></a><span class="w">        </span><span class="nt">"accessKeyChainId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
-<a id="__codelineno-169-34" name="__codelineno-169-34" href="#__codelineno-169-34"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-169-35" name="__codelineno-169-35" href="#__codelineno-169-35"></a><span class="p">]</span>
+<a id="__codelineno-169-33" name="__codelineno-169-33" href="#__codelineno-169-33"></a><span class="w">        </span><span class="nt">"accessKeyChainId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-169-34" name="__codelineno-169-34" href="#__codelineno-169-34"></a><span class="w">        </span><span class="nt">"readerAuth"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-169-35" name="__codelineno-169-35" href="#__codelineno-169-35"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-169-36" name="__codelineno-169-36" href="#__codelineno-169-36"></a><span class="p">]</span>
 </code></pre></div>
 <span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em><p></p>
 <details class="hint">
@@ -25945,8 +25946,9 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-171-25" name="__codelineno-171-25" href="#__codelineno-171-25"></a><span class="w">        </span><span class="p">}</span>
 <a id="__codelineno-171-26" name="__codelineno-171-26" href="#__codelineno-171-26"></a><span class="w">    </span><span class="p">],</span>
 <a id="__codelineno-171-27" name="__codelineno-171-27" href="#__codelineno-171-27"></a><span class="w">    </span><span class="nt">"redirectUri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/callback?session={sessionId}"</span><span class="p">,</span>
-<a id="__codelineno-171-28" name="__codelineno-171-28" href="#__codelineno-171-28"></a><span class="w">    </span><span class="nt">"accessKeyChainId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
-<a id="__codelineno-171-29" name="__codelineno-171-29" href="#__codelineno-171-29"></a><span class="p">}</span>
+<a id="__codelineno-171-28" name="__codelineno-171-28" href="#__codelineno-171-28"></a><span class="w">    </span><span class="nt">"accessKeyChainId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-171-29" name="__codelineno-171-29" href="#__codelineno-171-29"></a><span class="w">    </span><span class="nt">"readerAuth"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-171-30" name="__codelineno-171-30" href="#__codelineno-171-30"></a><span class="p">}</span>
 </code></pre></div>
 <span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em><p></p>
 <details class="hint">
@@ -26030,13 +26032,18 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-172-77" name="__codelineno-172-77" href="#__codelineno-172-77"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-172-78" name="__codelineno-172-78" href="#__codelineno-172-78"></a><span class="w">            </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-172-79" name="__codelineno-172-79" href="#__codelineno-172-79"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Optional ID of the access certificate to use for signing the presentation request.\nIf not provided, the default access certificate for the tenant will be used.\n\nNote: This is intentionally NOT a TypeORM relationship because CertEntity uses\na composite primary key (id + tenantId), and SQLite cannot create foreign keys\nthat reference only part of a composite primary key. The relationship is handled\nat the application level in the service layer."</span>
-<a id="__codelineno-172-80" name="__codelineno-172-80" href="#__codelineno-172-80"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-172-81" name="__codelineno-172-81" href="#__codelineno-172-81"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-172-82" name="__codelineno-172-82" href="#__codelineno-172-82"></a><span class="w">    </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-172-83" name="__codelineno-172-83" href="#__codelineno-172-83"></a><span class="w">        </span><span class="s2">"id"</span><span class="p">,</span>
-<a id="__codelineno-172-84" name="__codelineno-172-84" href="#__codelineno-172-84"></a><span class="w">        </span><span class="s2">"dcql_query"</span>
-<a id="__codelineno-172-85" name="__codelineno-172-85" href="#__codelineno-172-85"></a><span class="w">    </span><span class="p">]</span>
-<a id="__codelineno-172-86" name="__codelineno-172-86" href="#__codelineno-172-86"></a><span class="p">}</span>
+<a id="__codelineno-172-80" name="__codelineno-172-80" href="#__codelineno-172-80"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-172-81" name="__codelineno-172-81" href="#__codelineno-172-81"></a><span class="w">        </span><span class="nt">"readerAuth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-172-82" name="__codelineno-172-82" href="#__codelineno-172-82"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span>
+<a id="__codelineno-172-83" name="__codelineno-172-83" href="#__codelineno-172-83"></a><span class="w">            </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-172-84" name="__codelineno-172-84" href="#__codelineno-172-84"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.\n\nWhen `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1\nsigned with the tenant's Access key chain (selected by\n{@link accessKeyChainId}), letting the wallet cryptographically\nauthenticate the verifier — the mDOC equivalent of the signed request\nobject used in the OID4VP flow. Defaults to disabled (null/false).\n\nOnly affects `response_type: \"iso-18013-7\"` offers."</span>
+<a id="__codelineno-172-85" name="__codelineno-172-85" href="#__codelineno-172-85"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-172-86" name="__codelineno-172-86" href="#__codelineno-172-86"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-172-87" name="__codelineno-172-87" href="#__codelineno-172-87"></a><span class="w">    </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-172-88" name="__codelineno-172-88" href="#__codelineno-172-88"></a><span class="w">        </span><span class="s2">"id"</span><span class="p">,</span>
+<a id="__codelineno-172-89" name="__codelineno-172-89" href="#__codelineno-172-89"></a><span class="w">        </span><span class="s2">"dcql_query"</span>
+<a id="__codelineno-172-90" name="__codelineno-172-90" href="#__codelineno-172-90"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-172-91" name="__codelineno-172-91" href="#__codelineno-172-91"></a><span class="p">}</span>
 </code></pre></div>
 </details>
 </div>
@@ -26081,8 +26088,9 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-173-29" name="__codelineno-173-29" href="#__codelineno-173-29"></a><span class="w">        </span><span class="p">}</span>
 <a id="__codelineno-173-30" name="__codelineno-173-30" href="#__codelineno-173-30"></a><span class="w">    </span><span class="p">],</span>
 <a id="__codelineno-173-31" name="__codelineno-173-31" href="#__codelineno-173-31"></a><span class="w">    </span><span class="nt">"redirectUri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/callback?session={sessionId}"</span><span class="p">,</span>
-<a id="__codelineno-173-32" name="__codelineno-173-32" href="#__codelineno-173-32"></a><span class="w">    </span><span class="nt">"accessKeyChainId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
-<a id="__codelineno-173-33" name="__codelineno-173-33" href="#__codelineno-173-33"></a><span class="p">}</span>
+<a id="__codelineno-173-32" name="__codelineno-173-32" href="#__codelineno-173-32"></a><span class="w">    </span><span class="nt">"accessKeyChainId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-173-33" name="__codelineno-173-33" href="#__codelineno-173-33"></a><span class="w">    </span><span class="nt">"readerAuth"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-173-34" name="__codelineno-173-34" href="#__codelineno-173-34"></a><span class="p">}</span>
 </code></pre></div>
 <span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em><p></p>
 <details class="hint">
@@ -26192,16 +26200,21 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-174-103" name="__codelineno-174-103" href="#__codelineno-174-103"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-174-104" name="__codelineno-174-104" href="#__codelineno-174-104"></a><span class="w">            </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-174-105" name="__codelineno-174-105" href="#__codelineno-174-105"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Optional ID of the access certificate to use for signing the presentation request.\nIf not provided, the default access certificate for the tenant will be used.\n\nNote: This is intentionally NOT a TypeORM relationship because CertEntity uses\na composite primary key (id + tenantId), and SQLite cannot create foreign keys\nthat reference only part of a composite primary key. The relationship is handled\nat the application level in the service layer."</span>
-<a id="__codelineno-174-106" name="__codelineno-174-106" href="#__codelineno-174-106"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-174-107" name="__codelineno-174-107" href="#__codelineno-174-107"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-174-108" name="__codelineno-174-108" href="#__codelineno-174-108"></a><span class="w">    </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-174-109" name="__codelineno-174-109" href="#__codelineno-174-109"></a><span class="w">        </span><span class="s2">"id"</span><span class="p">,</span>
-<a id="__codelineno-174-110" name="__codelineno-174-110" href="#__codelineno-174-110"></a><span class="w">        </span><span class="s2">"tenant"</span><span class="p">,</span>
-<a id="__codelineno-174-111" name="__codelineno-174-111" href="#__codelineno-174-111"></a><span class="w">        </span><span class="s2">"dcql_query"</span><span class="p">,</span>
-<a id="__codelineno-174-112" name="__codelineno-174-112" href="#__codelineno-174-112"></a><span class="w">        </span><span class="s2">"createdAt"</span><span class="p">,</span>
-<a id="__codelineno-174-113" name="__codelineno-174-113" href="#__codelineno-174-113"></a><span class="w">        </span><span class="s2">"updatedAt"</span>
-<a id="__codelineno-174-114" name="__codelineno-174-114" href="#__codelineno-174-114"></a><span class="w">    </span><span class="p">]</span>
-<a id="__codelineno-174-115" name="__codelineno-174-115" href="#__codelineno-174-115"></a><span class="p">}</span>
+<a id="__codelineno-174-106" name="__codelineno-174-106" href="#__codelineno-174-106"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-174-107" name="__codelineno-174-107" href="#__codelineno-174-107"></a><span class="w">        </span><span class="nt">"readerAuth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-174-108" name="__codelineno-174-108" href="#__codelineno-174-108"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span>
+<a id="__codelineno-174-109" name="__codelineno-174-109" href="#__codelineno-174-109"></a><span class="w">            </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-174-110" name="__codelineno-174-110" href="#__codelineno-174-110"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.\n\nWhen `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1\nsigned with the tenant's Access key chain (selected by\n{@link accessKeyChainId}), letting the wallet cryptographically\nauthenticate the verifier — the mDOC equivalent of the signed request\nobject used in the OID4VP flow. Defaults to disabled (null/false).\n\nOnly affects `response_type: \"iso-18013-7\"` offers."</span>
+<a id="__codelineno-174-111" name="__codelineno-174-111" href="#__codelineno-174-111"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-174-112" name="__codelineno-174-112" href="#__codelineno-174-112"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-174-113" name="__codelineno-174-113" href="#__codelineno-174-113"></a><span class="w">    </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-174-114" name="__codelineno-174-114" href="#__codelineno-174-114"></a><span class="w">        </span><span class="s2">"id"</span><span class="p">,</span>
+<a id="__codelineno-174-115" name="__codelineno-174-115" href="#__codelineno-174-115"></a><span class="w">        </span><span class="s2">"tenant"</span><span class="p">,</span>
+<a id="__codelineno-174-116" name="__codelineno-174-116" href="#__codelineno-174-116"></a><span class="w">        </span><span class="s2">"dcql_query"</span><span class="p">,</span>
+<a id="__codelineno-174-117" name="__codelineno-174-117" href="#__codelineno-174-117"></a><span class="w">        </span><span class="s2">"createdAt"</span><span class="p">,</span>
+<a id="__codelineno-174-118" name="__codelineno-174-118" href="#__codelineno-174-118"></a><span class="w">        </span><span class="s2">"updatedAt"</span>
+<a id="__codelineno-174-119" name="__codelineno-174-119" href="#__codelineno-174-119"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-174-120" name="__codelineno-174-120" href="#__codelineno-174-120"></a><span class="p">}</span>
 </code></pre></div>
 </details>
 </div>
@@ -26531,8 +26544,9 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-181-29" name="__codelineno-181-29" href="#__codelineno-181-29"></a><span class="w">        </span><span class="p">}</span>
 <a id="__codelineno-181-30" name="__codelineno-181-30" href="#__codelineno-181-30"></a><span class="w">    </span><span class="p">],</span>
 <a id="__codelineno-181-31" name="__codelineno-181-31" href="#__codelineno-181-31"></a><span class="w">    </span><span class="nt">"redirectUri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/callback?session={sessionId}"</span><span class="p">,</span>
-<a id="__codelineno-181-32" name="__codelineno-181-32" href="#__codelineno-181-32"></a><span class="w">    </span><span class="nt">"accessKeyChainId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
-<a id="__codelineno-181-33" name="__codelineno-181-33" href="#__codelineno-181-33"></a><span class="p">}</span>
+<a id="__codelineno-181-32" name="__codelineno-181-32" href="#__codelineno-181-32"></a><span class="w">    </span><span class="nt">"accessKeyChainId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-181-33" name="__codelineno-181-33" href="#__codelineno-181-33"></a><span class="w">    </span><span class="nt">"readerAuth"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-181-34" name="__codelineno-181-34" href="#__codelineno-181-34"></a><span class="p">}</span>
 </code></pre></div>
 <span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em><p></p>
 <details class="hint">
@@ -26642,16 +26656,21 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-182-103" name="__codelineno-182-103" href="#__codelineno-182-103"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-182-104" name="__codelineno-182-104" href="#__codelineno-182-104"></a><span class="w">            </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-182-105" name="__codelineno-182-105" href="#__codelineno-182-105"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Optional ID of the access certificate to use for signing the presentation request.\nIf not provided, the default access certificate for the tenant will be used.\n\nNote: This is intentionally NOT a TypeORM relationship because CertEntity uses\na composite primary key (id + tenantId), and SQLite cannot create foreign keys\nthat reference only part of a composite primary key. The relationship is handled\nat the application level in the service layer."</span>
-<a id="__codelineno-182-106" name="__codelineno-182-106" href="#__codelineno-182-106"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-182-107" name="__codelineno-182-107" href="#__codelineno-182-107"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-182-108" name="__codelineno-182-108" href="#__codelineno-182-108"></a><span class="w">    </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-182-109" name="__codelineno-182-109" href="#__codelineno-182-109"></a><span class="w">        </span><span class="s2">"id"</span><span class="p">,</span>
-<a id="__codelineno-182-110" name="__codelineno-182-110" href="#__codelineno-182-110"></a><span class="w">        </span><span class="s2">"tenant"</span><span class="p">,</span>
-<a id="__codelineno-182-111" name="__codelineno-182-111" href="#__codelineno-182-111"></a><span class="w">        </span><span class="s2">"dcql_query"</span><span class="p">,</span>
-<a id="__codelineno-182-112" name="__codelineno-182-112" href="#__codelineno-182-112"></a><span class="w">        </span><span class="s2">"createdAt"</span><span class="p">,</span>
-<a id="__codelineno-182-113" name="__codelineno-182-113" href="#__codelineno-182-113"></a><span class="w">        </span><span class="s2">"updatedAt"</span>
-<a id="__codelineno-182-114" name="__codelineno-182-114" href="#__codelineno-182-114"></a><span class="w">    </span><span class="p">]</span>
-<a id="__codelineno-182-115" name="__codelineno-182-115" href="#__codelineno-182-115"></a><span class="p">}</span>
+<a id="__codelineno-182-106" name="__codelineno-182-106" href="#__codelineno-182-106"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-182-107" name="__codelineno-182-107" href="#__codelineno-182-107"></a><span class="w">        </span><span class="nt">"readerAuth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-182-108" name="__codelineno-182-108" href="#__codelineno-182-108"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span>
+<a id="__codelineno-182-109" name="__codelineno-182-109" href="#__codelineno-182-109"></a><span class="w">            </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-182-110" name="__codelineno-182-110" href="#__codelineno-182-110"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.\n\nWhen `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1\nsigned with the tenant's Access key chain (selected by\n{@link accessKeyChainId}), letting the wallet cryptographically\nauthenticate the verifier — the mDOC equivalent of the signed request\nobject used in the OID4VP flow. Defaults to disabled (null/false).\n\nOnly affects `response_type: \"iso-18013-7\"` offers."</span>
+<a id="__codelineno-182-111" name="__codelineno-182-111" href="#__codelineno-182-111"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-182-112" name="__codelineno-182-112" href="#__codelineno-182-112"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-182-113" name="__codelineno-182-113" href="#__codelineno-182-113"></a><span class="w">    </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-182-114" name="__codelineno-182-114" href="#__codelineno-182-114"></a><span class="w">        </span><span class="s2">"id"</span><span class="p">,</span>
+<a id="__codelineno-182-115" name="__codelineno-182-115" href="#__codelineno-182-115"></a><span class="w">        </span><span class="s2">"tenant"</span><span class="p">,</span>
+<a id="__codelineno-182-116" name="__codelineno-182-116" href="#__codelineno-182-116"></a><span class="w">        </span><span class="s2">"dcql_query"</span><span class="p">,</span>
+<a id="__codelineno-182-117" name="__codelineno-182-117" href="#__codelineno-182-117"></a><span class="w">        </span><span class="s2">"createdAt"</span><span class="p">,</span>
+<a id="__codelineno-182-118" name="__codelineno-182-118" href="#__codelineno-182-118"></a><span class="w">        </span><span class="s2">"updatedAt"</span>
+<a id="__codelineno-182-119" name="__codelineno-182-119" href="#__codelineno-182-119"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-182-120" name="__codelineno-182-120" href="#__codelineno-182-120"></a><span class="p">}</span>
 </code></pre></div>
 </details>
 </div>
@@ -26727,8 +26746,9 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-183-25" name="__codelineno-183-25" href="#__codelineno-183-25"></a><span class="w">        </span><span class="p">}</span>
 <a id="__codelineno-183-26" name="__codelineno-183-26" href="#__codelineno-183-26"></a><span class="w">    </span><span class="p">],</span>
 <a id="__codelineno-183-27" name="__codelineno-183-27" href="#__codelineno-183-27"></a><span class="w">    </span><span class="nt">"redirectUri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/callback?session={sessionId}"</span><span class="p">,</span>
-<a id="__codelineno-183-28" name="__codelineno-183-28" href="#__codelineno-183-28"></a><span class="w">    </span><span class="nt">"accessKeyChainId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
-<a id="__codelineno-183-29" name="__codelineno-183-29" href="#__codelineno-183-29"></a><span class="p">}</span>
+<a id="__codelineno-183-28" name="__codelineno-183-28" href="#__codelineno-183-28"></a><span class="w">    </span><span class="nt">"accessKeyChainId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-183-29" name="__codelineno-183-29" href="#__codelineno-183-29"></a><span class="w">    </span><span class="nt">"readerAuth"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-183-30" name="__codelineno-183-30" href="#__codelineno-183-30"></a><span class="p">}</span>
 </code></pre></div>
 <span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em><p></p>
 <details class="hint">
@@ -26812,9 +26832,14 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-184-77" name="__codelineno-184-77" href="#__codelineno-184-77"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-184-78" name="__codelineno-184-78" href="#__codelineno-184-78"></a><span class="w">            </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-184-79" name="__codelineno-184-79" href="#__codelineno-184-79"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Optional ID of the access certificate to use for signing the presentation request.\nIf not provided, the default access certificate for the tenant will be used.\n\nNote: This is intentionally NOT a TypeORM relationship because CertEntity uses\na composite primary key (id + tenantId), and SQLite cannot create foreign keys\nthat reference only part of a composite primary key. The relationship is handled\nat the application level in the service layer."</span>
-<a id="__codelineno-184-80" name="__codelineno-184-80" href="#__codelineno-184-80"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-184-81" name="__codelineno-184-81" href="#__codelineno-184-81"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-184-82" name="__codelineno-184-82" href="#__codelineno-184-82"></a><span class="p">}</span>
+<a id="__codelineno-184-80" name="__codelineno-184-80" href="#__codelineno-184-80"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-184-81" name="__codelineno-184-81" href="#__codelineno-184-81"></a><span class="w">        </span><span class="nt">"readerAuth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-184-82" name="__codelineno-184-82" href="#__codelineno-184-82"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span>
+<a id="__codelineno-184-83" name="__codelineno-184-83" href="#__codelineno-184-83"></a><span class="w">            </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-184-84" name="__codelineno-184-84" href="#__codelineno-184-84"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.\n\nWhen `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1\nsigned with the tenant's Access key chain (selected by\n{@link accessKeyChainId}), letting the wallet cryptographically\nauthenticate the verifier — the mDOC equivalent of the signed request\nobject used in the OID4VP flow. Defaults to disabled (null/false).\n\nOnly affects `response_type: \"iso-18013-7\"` offers."</span>
+<a id="__codelineno-184-85" name="__codelineno-184-85" href="#__codelineno-184-85"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-184-86" name="__codelineno-184-86" href="#__codelineno-184-86"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-184-87" name="__codelineno-184-87" href="#__codelineno-184-87"></a><span class="p">}</span>
 </code></pre></div>
 </details>
 </div>
@@ -26859,8 +26884,9 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-185-29" name="__codelineno-185-29" href="#__codelineno-185-29"></a><span class="w">        </span><span class="p">}</span>
 <a id="__codelineno-185-30" name="__codelineno-185-30" href="#__codelineno-185-30"></a><span class="w">    </span><span class="p">],</span>
 <a id="__codelineno-185-31" name="__codelineno-185-31" href="#__codelineno-185-31"></a><span class="w">    </span><span class="nt">"redirectUri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/callback?session={sessionId}"</span><span class="p">,</span>
-<a id="__codelineno-185-32" name="__codelineno-185-32" href="#__codelineno-185-32"></a><span class="w">    </span><span class="nt">"accessKeyChainId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
-<a id="__codelineno-185-33" name="__codelineno-185-33" href="#__codelineno-185-33"></a><span class="p">}</span>
+<a id="__codelineno-185-32" name="__codelineno-185-32" href="#__codelineno-185-32"></a><span class="w">    </span><span class="nt">"accessKeyChainId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<a id="__codelineno-185-33" name="__codelineno-185-33" href="#__codelineno-185-33"></a><span class="w">    </span><span class="nt">"readerAuth"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-185-34" name="__codelineno-185-34" href="#__codelineno-185-34"></a><span class="p">}</span>
 </code></pre></div>
 <span class="small-note">⚠️</span>&nbsp;<em class="small-note warning">This example has been generated automatically from the schema and it is not accurate. Refer to the schema for more information.</em><p></p>
 <details class="hint">
@@ -26970,16 +26996,21 @@ Creates a new version for audit and regenerates the JWT</p>
 <a id="__codelineno-186-103" name="__codelineno-186-103" href="#__codelineno-186-103"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
 <a id="__codelineno-186-104" name="__codelineno-186-104" href="#__codelineno-186-104"></a><span class="w">            </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-186-105" name="__codelineno-186-105" href="#__codelineno-186-105"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Optional ID of the access certificate to use for signing the presentation request.\nIf not provided, the default access certificate for the tenant will be used.\n\nNote: This is intentionally NOT a TypeORM relationship because CertEntity uses\na composite primary key (id + tenantId), and SQLite cannot create foreign keys\nthat reference only part of a composite primary key. The relationship is handled\nat the application level in the service layer."</span>
-<a id="__codelineno-186-106" name="__codelineno-186-106" href="#__codelineno-186-106"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-186-107" name="__codelineno-186-107" href="#__codelineno-186-107"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-186-108" name="__codelineno-186-108" href="#__codelineno-186-108"></a><span class="w">    </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-186-109" name="__codelineno-186-109" href="#__codelineno-186-109"></a><span class="w">        </span><span class="s2">"id"</span><span class="p">,</span>
-<a id="__codelineno-186-110" name="__codelineno-186-110" href="#__codelineno-186-110"></a><span class="w">        </span><span class="s2">"tenant"</span><span class="p">,</span>
-<a id="__codelineno-186-111" name="__codelineno-186-111" href="#__codelineno-186-111"></a><span class="w">        </span><span class="s2">"dcql_query"</span><span class="p">,</span>
-<a id="__codelineno-186-112" name="__codelineno-186-112" href="#__codelineno-186-112"></a><span class="w">        </span><span class="s2">"createdAt"</span><span class="p">,</span>
-<a id="__codelineno-186-113" name="__codelineno-186-113" href="#__codelineno-186-113"></a><span class="w">        </span><span class="s2">"updatedAt"</span>
-<a id="__codelineno-186-114" name="__codelineno-186-114" href="#__codelineno-186-114"></a><span class="w">    </span><span class="p">]</span>
-<a id="__codelineno-186-115" name="__codelineno-186-115" href="#__codelineno-186-115"></a><span class="p">}</span>
+<a id="__codelineno-186-106" name="__codelineno-186-106" href="#__codelineno-186-106"></a><span class="w">        </span><span class="p">},</span>
+<a id="__codelineno-186-107" name="__codelineno-186-107" href="#__codelineno-186-107"></a><span class="w">        </span><span class="nt">"readerAuth"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-186-108" name="__codelineno-186-108" href="#__codelineno-186-108"></a><span class="w">            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span>
+<a id="__codelineno-186-109" name="__codelineno-186-109" href="#__codelineno-186-109"></a><span class="w">            </span><span class="nt">"nullable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-186-110" name="__codelineno-186-110" href="#__codelineno-186-110"></a><span class="w">            </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.\n\nWhen `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1\nsigned with the tenant's Access key chain (selected by\n{@link accessKeyChainId}), letting the wallet cryptographically\nauthenticate the verifier — the mDOC equivalent of the signed request\nobject used in the OID4VP flow. Defaults to disabled (null/false).\n\nOnly affects `response_type: \"iso-18013-7\"` offers."</span>
+<a id="__codelineno-186-111" name="__codelineno-186-111" href="#__codelineno-186-111"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-186-112" name="__codelineno-186-112" href="#__codelineno-186-112"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-186-113" name="__codelineno-186-113" href="#__codelineno-186-113"></a><span class="w">    </span><span class="nt">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-186-114" name="__codelineno-186-114" href="#__codelineno-186-114"></a><span class="w">        </span><span class="s2">"id"</span><span class="p">,</span>
+<a id="__codelineno-186-115" name="__codelineno-186-115" href="#__codelineno-186-115"></a><span class="w">        </span><span class="s2">"tenant"</span><span class="p">,</span>
+<a id="__codelineno-186-116" name="__codelineno-186-116" href="#__codelineno-186-116"></a><span class="w">        </span><span class="s2">"dcql_query"</span><span class="p">,</span>
+<a id="__codelineno-186-117" name="__codelineno-186-117" href="#__codelineno-186-117"></a><span class="w">        </span><span class="s2">"createdAt"</span><span class="p">,</span>
+<a id="__codelineno-186-118" name="__codelineno-186-118" href="#__codelineno-186-118"></a><span class="w">        </span><span class="s2">"updatedAt"</span>
+<a id="__codelineno-186-119" name="__codelineno-186-119" href="#__codelineno-186-119"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-186-120" name="__codelineno-186-120" href="#__codelineno-186-120"></a><span class="p">}</span>
 </code></pre></div>
 </details>
 </div>
@@ -33909,6 +33940,19 @@ at the application level in the service layer.</td>
             <td>Lifetime how long the presentation request is valid after creation, in seconds.</td>
         </tr>
         <tr>
+            <td><code>readerAuth</code></td>
+            <td><span class="boolean-type">boolean</span> | <span class="null-type">null</span></td>
+            <td>Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
+
+When `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1
+signed with the tenant's Access key chain (selected by
+{@link accessKeyChainId}), letting the wallet cryptographically
+authenticate the verifier — the mDOC equivalent of the signed request
+object used in the OID4VP flow. Defaults to disabled (null/false).
+
+Only affects `response_type: "iso-18013-7"` offers.</td>
+        </tr>
+        <tr>
             <td><code>redirectUri</code></td>
             <td><span class="string-type">string</span> | <span class="null-type">null</span></td>
             <td>Redirect URI to which the user-agent should be redirected after the presentation is completed.
@@ -34005,6 +34049,19 @@ at the application level in the service layer.</td>
             <td>Lifetime how long the presentation request is valid after creation, in seconds.</td>
         </tr>
         <tr>
+            <td><code>readerAuth</code></td>
+            <td><span class="boolean-type">boolean</span> | <span class="null-type">null</span></td>
+            <td>Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
+
+When `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1
+signed with the tenant's Access key chain (selected by
+{@link accessKeyChainId}), letting the wallet cryptographically
+authenticate the verifier — the mDOC equivalent of the signed request
+object used in the OID4VP flow. Defaults to disabled (null/false).
+
+Only affects `response_type: "iso-18013-7"` offers.</td>
+        </tr>
+        <tr>
             <td><code>redirectUri</code></td>
             <td><span class="string-type">string</span> | <span class="null-type">null</span></td>
             <td>Redirect URI to which the user-agent should be redirected after the presentation is completed.
@@ -34084,6 +34141,19 @@ at the application level in the service layer.</td>
             <td><code>lifeTime</code></td>
             <td><span class="number-type">number</span></td>
             <td>Lifetime how long the presentation request is valid after creation, in seconds.</td>
+        </tr>
+        <tr>
+            <td><code>readerAuth</code></td>
+            <td><span class="boolean-type">boolean</span> | <span class="null-type">null</span></td>
+            <td>Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
+
+When `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1
+signed with the tenant's Access key chain (selected by
+{@link accessKeyChainId}), letting the wallet cryptographically
+authenticate the verifier — the mDOC equivalent of the signed request
+object used in the OID4VP flow. Defaults to disabled (null/false).
+
+Only affects `response_type: "iso-18013-7"` offers.</td>
         </tr>
         <tr>
             <td><code>redirectUri</code></td>
@@ -44262,6 +44332,19 @@ at the application level in the service layer.</td>
             <td>Lifetime how long the presentation request is valid after creation, in seconds.</td>
         </tr>
         <tr>
+            <td><code>readerAuth</code></td>
+            <td><span class="boolean-type">boolean</span> | <span class="null-type">null</span></td>
+            <td>Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
+
+When `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1
+signed with the tenant's Access key chain (selected by
+{@link accessKeyChainId}), letting the wallet cryptographically
+authenticate the verifier — the mDOC equivalent of the signed request
+object used in the OID4VP flow. Defaults to disabled (null/false).
+
+Only affects `response_type: "iso-18013-7"` offers.</td>
+        </tr>
+        <tr>
             <td><code>redirectUri</code></td>
             <td><span class="string-type">string</span> | <span class="null-type">null</span></td>
             <td>Redirect URI to which the user-agent should be redirected after the presentation is completed.
@@ -44358,6 +44441,19 @@ at the application level in the service layer.</td>
             <td>Lifetime how long the presentation request is valid after creation, in seconds.</td>
         </tr>
         <tr>
+            <td><code>readerAuth</code></td>
+            <td><span class="boolean-type">boolean</span> | <span class="null-type">null</span></td>
+            <td>Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
+
+When `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1
+signed with the tenant's Access key chain (selected by
+{@link accessKeyChainId}), letting the wallet cryptographically
+authenticate the verifier — the mDOC equivalent of the signed request
+object used in the OID4VP flow. Defaults to disabled (null/false).
+
+Only affects `response_type: "iso-18013-7"` offers.</td>
+        </tr>
+        <tr>
             <td><code>redirectUri</code></td>
             <td><span class="string-type">string</span> | <span class="null-type">null</span></td>
             <td>Redirect URI to which the user-agent should be redirected after the presentation is completed.
@@ -44437,6 +44533,19 @@ at the application level in the service layer.</td>
             <td><code>lifeTime</code></td>
             <td><span class="number-type">number</span></td>
             <td>Lifetime how long the presentation request is valid after creation, in seconds.</td>
+        </tr>
+        <tr>
+            <td><code>readerAuth</code></td>
+            <td><span class="boolean-type">boolean</span> | <span class="null-type">null</span></td>
+            <td>Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
+
+When `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1
+signed with the tenant's Access key chain (selected by
+{@link accessKeyChainId}), letting the wallet cryptographically
+authenticate the verifier — the mDOC equivalent of the signed request
+object used in the OID4VP flow. Defaults to disabled (null/false).
+
+Only affects `response_type: "iso-18013-7"` offers.</td>
         </tr>
         <tr>
             <td><code>redirectUri</code></td>

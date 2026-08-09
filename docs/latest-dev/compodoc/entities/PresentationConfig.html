@@ -227,6 +227,14 @@
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
+                                <a href="#readerAuth" >readerAuth</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
                                 <a href="#redirectUri" >redirectUri</a>
                             </li>
                             <li>
@@ -636,6 +644,57 @@ at the application level in the service layer.</p>
             <tr>
                 <td class="col-md-4">
                     <div class="io-description"><p>Lifetime how long the presentation request is valid after creation, in seconds.</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="readerAuth"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>readerAuth</b></span>
+                        <a href="#readerAuth"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>boolean | null</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @IsOptional()<br />@IsBoolean()<br />@Column(&#x27;boolean&#x27;, {nullable: true})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="684" class="link-to-prism">src/verifier/presentations/entities/presentation-config.entity.ts:684</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.</p>
+<p>When <code>true</code>, the DeviceRequest embeds a detached <code>readerAuth</code> COSE_Sign1
+signed with the tenant&#39;s Access key chain (selected by
+<a href="accessKeyChainId">accessKeyChainId</a>), letting the wallet cryptographically
+authenticate the verifier — the mDOC equivalent of the signed request
+object used in the OID4VP flow. Defaults to disabled (null/false).</p>
+<p>Only affects <code>response_type: &quot;iso-18013-7&quot;</code> offers.</p>
 </div>
                 </td>
             </tr>
@@ -1156,13 +1215,13 @@ import {
     IsDefined,
     IsArray,
     IsBoolean,
-    Matches,
     IsEnum,
     IsNotEmpty,
     IsNumber,
     IsObject,
     IsOptional,
     IsString,
+    Matches,
     Min,
     ValidateIf,
     Validate,
@@ -1811,6 +1870,22 @@ export class PresentationConfig {
     @IsString()
     @Column(&quot;varchar&quot;, { nullable: true })
     accessKeyChainId?: string | null;
+
+    /**
+     * Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
+     *
+     * When &#x60;true&#x60;, the DeviceRequest embeds a detached &#x60;readerAuth&#x60; COSE_Sign1
+     * signed with the tenant&#x27;s Access key chain (selected by
+     * {@link accessKeyChainId}), letting the wallet cryptographically
+     * authenticate the verifier — the mDOC equivalent of the signed request
+     * object used in the OID4VP flow. Defaults to disabled (null/false).
+     *
+     * Only affects &#x60;response_type: &quot;iso-18013-7&quot;&#x60; offers.
+     */
+    @IsOptional()
+    @IsBoolean()
+    @Column(&quot;boolean&quot;, { nullable: true })
+    readerAuth?: boolean | null;
 }
 </code></pre>
     </div>

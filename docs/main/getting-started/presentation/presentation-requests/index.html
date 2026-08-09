@@ -3184,6 +3184,13 @@ the origin of the page calling <code>navigator.credentials.get()</code>.</p>
 <code>{ "data": "&lt;base64url&gt;" }</code> to <code>POST /presentations/{session}/iso-18013-7</code>.
 Webhook delivery, <code>redirectUri</code>, and single-use semantics behave exactly as
 in the other flows.</p>
+<div class="admonition tip">
+<p class="admonition-title">Reader authentication</p>
+<p>Set <a href="../presentation-configuration/#reader-authentication-iso-18013-7"><code>readerAuth: true</code></a>
+on the presentation configuration to embed a signed <code>readerAuth</code> in the
+<code>device_request</code>, letting the wallet cryptographically authenticate the
+verifier. The request payload here is unchanged.</p>
+</div>
 <hr>
 <h2 id="session-and-result-retrieval">Session and Result Retrieval<a class="headerlink" href="#session-and-result-retrieval" title="Permanent link">¶</a></h2>
 <p>If no webhook is configured, retrieve the result via the <code>/session</code> endpoint

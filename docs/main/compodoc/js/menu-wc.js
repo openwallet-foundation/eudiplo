@@ -1045,6 +1045,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/AddPresentationStatusCheckMode1773000000000.html" data-type="entity-link" >AddPresentationStatusCheckMode1773000000000</a>
                             </li>
                             <li class="link">
+                                <a href="classes/AddReaderAuthToPresentationConfig1774000000000.html" data-type="entity-link" >AddReaderAuthToPresentationConfig1774000000000</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/AddRefreshTokenToChainedAsSession1754000000000.html" data-type="entity-link" >AddRefreshTokenToChainedAsSession1754000000000</a>
                             </li>
                             <li class="link">
