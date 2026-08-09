@@ -869,7 +869,6 @@ export class PresentationsService {
             skewSeconds: config.skewSeconds,
             registration_cert: config.registration_cert,
             registrationCertCache: config.registrationCertCache,
-            webhook: config.webhook,
             attached: config.attached,
             redirectUri: config.redirectUri,
             accessKeyChainId: config.accessKeyChainId,

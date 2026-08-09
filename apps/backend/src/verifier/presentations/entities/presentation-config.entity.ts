@@ -35,7 +35,6 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 import { TenantEntity } from "../../../auth/tenant/entitites/tenant.entity";
-import { WebhookConfig } from "../../../shared/utils/webhook/webhook.dto";
 import { WebhookEndpointEntity } from "../../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { RegistrationCertificateRequest } from "../dto/vp-request.dto";
 import { IsTransactionData } from "../validators/transaction-data.validator";
@@ -612,6 +611,7 @@ export class PresentationConfig {
     @Column("varchar", { nullable: true })
     webhookEndpointId?: string | null;
 
+    @ApiHideProperty()
     @ManyToOne(() => WebhookEndpointEntity, {
         createForeignKeyConstraints: false,
     })
@@ -620,16 +620,6 @@ export class PresentationConfig {
         { name: "tenantId", referencedColumnName: "tenantId" },
     ])
     webhookEndpoint?: WebhookEndpointEntity;
-
-    /**
-     * Optional webhook URL to receive the response.
-     * @deprecated This field is deprecated. Use webhookEndpointId and the WebhookEndpoint relationship instead.
-     */
-    @Column("json", { nullable: true })
-    @IsOptional()
-    @Validate(WebhookConfig)
-    @Type(() => WebhookConfig)
-    webhook?: WebhookConfig | null;
 
     /**
      * The timestamp when the VP request was created.
