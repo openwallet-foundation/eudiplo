@@ -632,6 +632,9 @@
                               placeholder='{"kty":"EC","crv":"P-256","x":"...","y":"...","alg":"ES256"}'
                             ></textarea>
                             <mat-icon matSuffix>vpn_key</mat-icon>
+                            @if (trustList.get('verifierKey')?.invalid && trustList.get('verifierKey')?.touched) {
+                              <mat-error>Please enter a valid JWK JSON object.</mat-error>
+                            }
                           </mat-form-field>
 
                           <mat-form-field>
@@ -646,10 +649,10 @@
                             <mat-icon matSuffix>verified</mat-icon>
                           </mat-form-field>
 
-                          @if (trustList.invalid && trustList.touched) {
-                            <mat-error>
+                          @if (trustList.hasError('missingVerifier') && trustList.touched) {
+                            <p class="trust-list-error">
                               Provide at least one verifier method: JWK or DER certificate.
-                            </mat-error>
+                            </p>
                           }
                         </div>
                       }

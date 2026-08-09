@@ -21,5 +21,17 @@
   "required": [
     "url"
   ],
+  "anyOf": [
+    {
+      "required": [
+        "verifierKey"
+      ]
+    },
+    {
+      "required": [
+        "verifierX509Der"
+      ]
+    }
+  ],
   "additionalProperties": false
 }

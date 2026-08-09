@@ -64,18 +64,30 @@ import { RegistrarService } from '../../../registrar/registrar.service';
   styleUrl: './issuance-config-create.component.scss',
 })
 export class IssuanceConfigCreateComponent implements OnInit {
+  private static jsonValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value as string;
+    if (!value || !value.trim()) return null;
+    try {
+      JSON.parse(value);
+      return null;
+    } catch {
+      return { invalidJson: true };
+    }
+  }
+
   private trustListVerifierValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value as {
       verifierKey?: unknown;
       verifierX509Der?: unknown;
     };
 
+    const keyStr = value?.verifierKey;
     const hasVerifierKey =
-      !!value?.verifierKey && typeof value.verifierKey === 'string' && value.verifierKey.trim();
+      !!keyStr && typeof keyStr === 'string' && keyStr.trim().length > 0;
     const hasVerifierX509Der =
       !!value?.verifierX509Der &&
       typeof value.verifierX509Der === 'string' &&
-      value.verifierX509Der.trim();
+      (value.verifierX509Der as string).trim().length > 0;
 
     return hasVerifierKey || hasVerifierX509Der ? null : { missingVerifier: true };
   }
@@ -88,7 +100,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
     return this.fb.group(
       {
         url: [value?.url ?? '', [Validators.required]],
-        verifierKey: [value?.verifierKey ?? ''],
+        verifierKey: [value?.verifierKey ?? '', [IssuanceConfigCreateComponent.jsonValidator]],
         verifierX509Der: [value?.verifierX509Der ?? ''],
       },
       {
@@ -589,13 +601,11 @@ export class IssuanceConfigCreateComponent implements OnInit {
         formValue.walletProviderTrustLists?.length > 0
           ? formValue.walletProviderTrustLists
               .map((entry: any) => {
+                // JSON.parse is safe here because the jsonValidator on verifierKey
+                // prevents form submission when the value is not valid JSON.
                 let verifierKey: Record<string, unknown> | undefined;
                 if (typeof entry?.verifierKey === 'string' && entry.verifierKey.trim()) {
-                  try {
-                    verifierKey = JSON.parse(entry.verifierKey) as Record<string, unknown>;
-                  } catch {
-                    verifierKey = undefined;
-                  }
+                  verifierKey = JSON.parse(entry.verifierKey) as Record<string, unknown>;
                 }
 
                 return {
@@ -604,10 +614,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
                   verifierX509Der: entry?.verifierX509Der?.trim() || undefined,
                 };
               })
-              .filter(
-                (entry: any) =>
-                  !!entry.url && (entry.verifierKey !== undefined || !!entry.verifierX509Der)
-              )
+              .filter((entry: any) => !!entry.url)
           : undefined,
       federation: this.buildFederationConfig(formValue.federation) ?? undefined,
       registrationCertificate,

@@ -371,9 +371,15 @@ export class IssuanceService {
     private sanitizeIssuanceConfigForLog(
         config: IssuanceConfig,
     ): Record<string, unknown> {
-        const walletProviderTrustLists = normalizeTrustListRefs(
-            config.walletProviderTrustLists,
-        ).map((ref) => ({
+        let walletProviderTrustListsRaw: ReturnType<typeof normalizeTrustListRefs>;
+        try {
+            walletProviderTrustListsRaw = normalizeTrustListRefs(
+                config.walletProviderTrustLists,
+            );
+        } catch {
+            walletProviderTrustListsRaw = [];
+        }
+        const walletProviderTrustLists = walletProviderTrustListsRaw.map((ref) => ({
             url: ref.url,
             hasVerifierKey: !!ref.verifierKey,
             hasVerifierX509Der: !!ref.verifierX509Der,
