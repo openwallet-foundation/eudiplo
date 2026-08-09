@@ -114,6 +114,15 @@ export class KeyChainEntity {
     @Column("varchar", { nullable: true })
     externalKeyId?: string;
 
+    /**
+     * External key identifier for cloud KMS providers for the root CA key.
+     * Used when rotating internal-chain key chains backed by external KMS.
+     */
+    @IsString()
+    @IsOptional()
+    @Column("varchar", { nullable: true })
+    rootExternalKeyId?: string;
+
     // ─────────────────────────────────────────────────────────
     // ROOT CA (optional - for internal certificate chains)
     // ─────────────────────────────────────────────────────────

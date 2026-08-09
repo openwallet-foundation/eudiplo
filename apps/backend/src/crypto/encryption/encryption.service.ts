@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { Injectable } from "@nestjs/common";
 import {
     compactDecrypt,
@@ -60,6 +61,27 @@ export class EncryptionService {
     }
 
     /**
+     * Decrypts a JWE response with a caller-supplied private encryption JWK.
+     * Falls back to the tenant-wide encryption key when none is provided.
+     */
+    async decryptJweWithPrivateJwk<T>(
+        response: string,
+        tenantId: string,
+        privateJwk?: JWK,
+    ): Promise<T> {
+        const jwk =
+            privateJwk ?? (await this.getEncryptionPrivateJwk(tenantId));
+
+        const privateEncryptionKey = (await importJWK(
+            jwk,
+            "ECDH-ES",
+        )) as CryptoKey;
+
+        const res = await jwtDecrypt<T>(response, privateEncryptionKey);
+        return res.payload;
+    }
+
+    /**
      * Retrieves the full (private) encryption JWK for a tenant.
      * Used by ISO 18013-7 HPKE decryption — never expose this JWK externally.
      */
@@ -89,6 +111,32 @@ export class EncryptionService {
         publicKey.use = "enc";
 
         return publicKey;
+    }
+
+    /**
+     * Generates a per-request ephemeral ECDH-ES keypair for OID4VP response encryption.
+     */
+    async generateEphemeralEncryptionKeyPair(): Promise<{
+        publicJwk: JWK;
+        privateJwk: JWK;
+    }> {
+        const keyPair = await generateKeyPair("ECDH-ES", {
+            crv: "P-256",
+            extractable: true,
+        });
+
+        const privateJwk = await exportJWK(keyPair.privateKey);
+        const publicJwk = await exportJWK(keyPair.publicKey);
+
+        const kid = randomUUID();
+        privateJwk.alg = "ECDH-ES";
+        privateJwk.use = "enc";
+        privateJwk.kid = kid;
+        publicJwk.alg = "ECDH-ES";
+        publicJwk.use = "enc";
+        publicJwk.kid = kid;
+
+        return { publicJwk, privateJwk };
     }
 
     /**

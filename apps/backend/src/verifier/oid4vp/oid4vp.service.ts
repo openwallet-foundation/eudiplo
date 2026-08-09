@@ -217,6 +217,12 @@ export class Oid4vpService {
                 )?.map((td) => base64url.encode(JSON.stringify(td))) ||
                 undefined;
 
+            const { publicJwk: responseEncryptionPublicJwk, privateJwk } =
+                await this.encryptionService.generateEphemeralEncryptionKeyPair();
+            await this.sessionService.add(session.id, {
+                responseEncryptionPrivateJwk: privateJwk,
+            });
+
             // Per OID4VP spec Section 13.3: use walletNonce in wallet-facing URLs
             // to separate the wallet-facing identifier (request-id) from the
             // frontend-facing session ID (transaction-id).
@@ -247,11 +253,7 @@ export class Oid4vpService {
                     dcql_query,
                     client_metadata: {
                         jwks: {
-                            keys: [
-                                await this.encryptionService.getEncryptionPublicKey(
-                                    session.tenantId,
-                                ),
-                            ],
+                            keys: [responseEncryptionPublicJwk],
                         },
                         vp_formats_supported: {
                             mso_mdoc: {
@@ -546,10 +548,14 @@ export class Oid4vpService {
             );
         }
 
-        const decrypted = await this.encryptionService.decryptJwe<AuthResponse>(
-            body.response,
-            session.tenantId,
-        );
+        const decrypted =
+            await this.encryptionService.decryptJweWithPrivateJwk<AuthResponse>(
+                body.response,
+                session.tenantId,
+                session.responseEncryptionPrivateJwk as
+                    | Record<string, unknown>
+                    | undefined,
+            );
 
         // Validate decrypted response against AuthResponse class
         const res = plainToInstance(AuthResponse, decrypted);
