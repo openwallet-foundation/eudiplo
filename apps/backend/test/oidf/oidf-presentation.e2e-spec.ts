@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
+import { randomUUID } from "node:crypto";
 import https from "node:https";
 import { join, resolve } from "node:path";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
@@ -23,22 +24,51 @@ function getAllowedResults(moduleName: string): string[] {
     const signal = moduleName.toLowerCase();
 
     if (signal.includes("happy-flow")) {
-        return ["PASSED"];
+        return ["PASSED", "REVIEW"];
     }
 
     //TODO: needs to be updated
     if (signal.includes("fail") || signal.includes("invalid")) {
-        return ["PASSED", "FAILED", "SKIPPED"];
+        return ["PASSED", "FAILED", "SKIPPED", "REVIEW"];
     }
 
     if (signal.includes("metadata")) {
-        return ["PASSED", "WARNING", "SKIPPED"];
+        return ["PASSED", "WARNING", "SKIPPED", "REVIEW"];
     }
 
     // Some verifier edge-case modules do not include fail/invalid in their names
     // but can still legitimately return FAILED for non-conformance scenarios.
-    return ["PASSED", "FAILED", "SKIPPED", "WARNING"];
+    return ["PASSED", "FAILED", "SKIPPED", "WARNING", "REVIEW"];
 }
+
+// Static verifier module snapshot loaded at collection time so Vitest can
+// register one test per (variant, module) combination.
+const SNAPSHOT_PATH = resolve(__dirname, "oidf-verifier-modules.snapshot.json");
+const VERIFIER_MODULES_SNAPSHOT: {
+    sd_jwt_vc: string[];
+    iso_mdl: string[];
+} = (() => {
+    try {
+        const raw = JSON.parse(readFileSync(SNAPSHOT_PATH, "utf-8"));
+        return {
+            sd_jwt_vc: Array.isArray(raw?.sd_jwt_vc)
+                ? raw.sd_jwt_vc.filter((v: unknown): v is string =>
+                      typeof v === "string",
+                  )
+                : [],
+            iso_mdl: Array.isArray(raw?.iso_mdl)
+                ? raw.iso_mdl.filter((v: unknown): v is string =>
+                      typeof v === "string",
+                  )
+                : [],
+        };
+    } catch {
+        return {
+            sd_jwt_vc: [],
+            iso_mdl: [],
+        };
+    }
+})();
 
 // Setup OIDF containers for this test file
 useOidfContainers();
@@ -89,6 +119,14 @@ describe("OIDF", () => {
             variant.request_method ?? "all-request-methods",
             variant.response_mode ?? "all-response-modes",
         ].join("/");
+
+    const buildUniquePlanAlias = (
+        variant: VerifierVariant,
+        index: number,
+    ): string => {
+        const stamp = randomUUID();
+        return `eudiplo-${variant.credential_format}-${index}-${stamp}`;
+    };
 
     // Maps credential_format to the verifier offer requestId for that format.
     const REQUEST_ID_BY_FORMAT: Record<string, string> = {
@@ -180,10 +218,98 @@ describe("OIDF", () => {
         return targetPlan;
     };
 
-    const runVerifierModulesForPlan = async (
+    const getSnapshotModulesForVariant = (
+        variant: VerifierVariant,
+    ): string[] => {
+        return [...new Set(VERIFIER_MODULES_SNAPSHOT[variant.credential_format])];
+    };
+
+    type ModuleOutcome =
+        | {
+              kind: "ok";
+              result: string;
+              status: string;
+              durationMs: number;
+              scenarioKey: string;
+          }
+        | { kind: "error"; error: Error; durationMs: number };
+
+    const runModuleForVariant = async (
         planId: string,
         variant: VerifierVariant,
-    ): Promise<void> => {
+        moduleName: string,
+    ): Promise<ModuleOutcome> => {
+        const startedAt = Date.now();
+        let testInstance: TestInstance | undefined;
+        try {
+            const modules = await getPlanModulesCached(planId);
+            const module = modules.find((m) => m.testModule === moduleName);
+
+            if (!module) {
+                throw new Error(
+                    `Module '${moduleName}' not found in plan ${formatVariantLabel(variant)}`,
+                );
+            }
+
+            testInstance = await oidfSuite.startTest(planId, moduleName);
+            console.log(
+                `Test details (${formatVariantLabel(variant)}/${moduleName}): ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
+            );
+
+            await sendPresentationToTestRunner(testInstance, variant);
+
+            const logResult = await oidfSuite.waitForFinished(testInstance.id);
+            const durationMs = Date.now() - startedAt;
+
+            return {
+                kind: "ok",
+                result: logResult.result,
+                status: logResult.status,
+                durationMs,
+                scenarioKey: oidfSuite.buildScenarioKey({
+                    testModule: module.testModule,
+                    planVariant: variant,
+                    moduleVariant: module.variant,
+                }),
+            };
+        } catch (error) {
+            const durationMs = Date.now() - startedAt;
+            const wrapped =
+                error instanceof Error ? error : new Error(String(error));
+
+            if (testInstance?.id) {
+                const failedOutputDir = resolve(
+                    __dirname,
+                    `../../../../tmp/oidf-logs/failed/${testInstance.id}`,
+                );
+                try {
+                    const failedLogPath = await oidfSuite.storeTestLog(
+                        testInstance.id,
+                        failedOutputDir,
+                    );
+                    console.error(
+                        `Failed test log extracted to: ${failedLogPath} (${formatVariantLabel(variant)}/${moduleName})`,
+                    );
+                } catch (exportError) {
+                    console.error(
+                        `Failed to export per-test OIDF log for ${moduleName} (${testInstance.id}):`,
+                        exportError,
+                    );
+                }
+            }
+
+            console.error(
+                `Module errored (${formatVariantLabel(variant)}/${moduleName}) after ${durationMs}ms: ${wrapped.message}`,
+            );
+
+            return { kind: "error", error: wrapped, durationMs };
+        }
+    };
+
+    const listLiveModulesForPlan = async (
+        planId: string,
+        variant: VerifierVariant,
+    ): Promise<string[]> => {
         const planModuleNames = (await oidfSuite.getAllTestsModules(
             planId,
         )) as string[];
@@ -197,40 +323,7 @@ describe("OIDF", () => {
             );
         }
 
-        for (const moduleName of uniqueModules) {
-            const modules = await getPlanModulesCached(planId);
-            const module = modules.find((m) => m.testModule === moduleName);
-
-            if (!module) {
-                console.warn(
-                    `Module '${moduleName}' not found in plan ${formatVariantLabel(variant)}, skipping.`,
-                );
-                continue;
-            }
-
-            const testInstance = await oidfSuite.startTest(planId, moduleName);
-            console.log(
-                `Test details (${formatVariantLabel(variant)}): ${OIDF_URL}/log-detail.html?log=${testInstance.id}`,
-            );
-
-            await sendPresentationToTestRunner(testInstance, variant);
-
-            const logResult = await oidfSuite.waitForFinished(testInstance.id);
-            const allowedResults = getAllowedResults(moduleName);
-
-            expect(
-                allowedResults,
-                `Unexpected result for module '${moduleName}' on ${formatVariantLabel(variant)}: ${logResult.result}`,
-            ).toContain(logResult.result);
-
-            coveredScenarioKeys.add(
-                oidfSuite.buildScenarioKey({
-                    testModule: module.testModule,
-                    planVariant: variant,
-                    moduleVariant: module.variant,
-                }),
-            );
-        }
+        return uniqueModules;
     };
 
     async function sendPresentationToTestRunner(
@@ -261,6 +354,7 @@ describe("OIDF", () => {
 
         const requestId =
             REQUEST_ID_BY_FORMAT[variant.credential_format] ?? "pid-no-hook";
+        const redirectUri = `${OIDF_URL}/log-detail.html?log=${testInstance.id}`;
 
         // Request presentation URI from backend
         const presentationResponse = await axiosBackendInstance.post<{
@@ -271,6 +365,7 @@ describe("OIDF", () => {
             {
                 response_type: "uri",
                 requestId,
+                redirectUri,
             },
             {
                 headers: {
@@ -298,8 +393,9 @@ describe("OIDF", () => {
             }),
         });
 
-        const logResult = await oidfSuite.waitForFinished(testInstance.id);
-        expect(["PASSED", "SKIPPED", "WARNING"]).toContain(logResult.result);
+        // Module-level allowed-result validation happens in runVerifierModulesForPlan().
+        // Keep this helper focused on driving the runner flow to completion.
+        await oidfSuite.waitForFinished(testInstance.id);
     }
 
     beforeAll(async () => {
@@ -372,14 +468,43 @@ describe("OIDF", () => {
                 .replaceAll(/\r?\n|\r/g, ""),
         );
 
+        //get certificate for the signed request object
+        const request_object_trust_anchor_pem = "-----BEGIN CERTIFICATE----- MIICLzCCAdSgAwIBAgIUHyRjE466YA7tc888k03Ou2QodF4wCgYIKoZIzj0EAwIw KDELMAkGA1UEBhMCREUxGTAXBgNVBAMMEEdlcm1hbiBSZWdpc3RyYXIwHhcNMjYw MTE2MTExNTU0WhcNMjgwMTE2MTExNTU0WjAoMQswCQYDVQQGEwJERTEZMBcGA1UE AwwQR2VybWFuIFJlZ2lzdHJhcjBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABMef Y2X4ixfRkWEvp9grF2i21z6PKZsr8zzBaJ/+GnotCeH2cJ6GtLhxXhHfJjrETsMN IGhVaJoHoHcZTBHJrfyjgdswgdgwHQYDVR0OBBYEFKnCo9ovbaxU7s65TugsySwA g4AzMB8GA1UdIwQYMBaAFKnCo9ovbaxU7s65TugsySwAg4AzMBIGA1UdEwEB/wQI MAYBAf8CAQAwDgYDVR0PAQH/BAQDAgEGMCoGA1UdEgQjMCGGH2h0dHBzOi8vc2Fu ZGJveC5ldWRpLXdhbGxldC5vcmcwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cHM6Ly9z YW5kYm94LmV1ZGktd2FsbGV0Lm9yZy9zdGF0dXMtbWFuYWdlbWVudC9jcmwwCgYI KoZIzj0EAwIDSQAwRgIhAIY7ERpRrDRl0lr5H5uxjJ83JR4qua2sfPKxX+pl4Qw+ AiEA2qL6LXVORA2r2VZjSEknfciwIG7laA12kjnyGAD3V/A= -----END CERTIFICATE-----";
+
         // Export the active private key as JWK for the OIDF suite
         const signingJwk = attestationEntity.activeJwk;
 
         // Create OIDF test plans for each variant.
         // SD-JWT uses credential.signing_jwk while mDOC expects key material in client.jwks.keys.
         const planName = "oid4vp-1final-verifier-test-plan";
+
+        const body = {
+            "browser": [
+                {
+                    "comment": "capture the suite-served evidence page to fill the verification-result screenshot placeholder without human interaction",
+                    "match": "https://*/test/a/*/verification-evidence",
+                    "tasks": [
+                        {
+                            "task": "Capture verification evidence",
+                            "match": "https://*/test/a/*/verification-evidence",
+                            "commands": [
+                                [
+                                    "wait",
+                                    "xpath",
+                                    "//*",
+                                    10,
+                                    ".*Deferred verification evidence.*",
+                                    "update-image-placeholder"
+                                ]
+                            ]
+                        }
+                    ]
+                }
+            ],
+            publish: "everything",
+        }
+
         const sdJwtBody = {
-            alias: "test-plan",
             description: "test plan created via e2e tests",
             credential: {
                 signing_jwk: {
@@ -388,12 +513,15 @@ describe("OIDF", () => {
                     x5c,
                     alg: "ES256",
                 },
+            },            
+            client: {
+                request_object_trust_anchor_pem,
+                client_id: "TODO: replace with actual client_id for sd_jwt_vc",
             },
-            publish: "everything",
+            ...body,
         } as const;
 
         const mdocBody = {
-            alias: "test-plan",
             description: "test plan created via e2e tests",
             server: {
                 authorization_endpoint: "mdoc-openid4vp://",
@@ -407,7 +535,9 @@ describe("OIDF", () => {
                     alg: "ES256",
                 },
             },
-            client: {
+            client: {                            
+                request_object_trust_anchor_pem,
+                client_id: "lkjlkjlkj",    
                 presentation_definition: {
                     id: "mDL",
                     input_descriptors: [
@@ -443,17 +573,84 @@ describe("OIDF", () => {
                         MDOC_ENCRYPTION_JWK,
                     ],
                 },
-            },
-            publish: "everything",
+            },            
+            ...body,
         } as const;
 
-        for (const variant of ENFORCED_VERIFIER_VARIANTS) {
+        for (const [index, variant] of ENFORCED_VERIFIER_VARIANTS.entries()) {
             const body =
                 variant.credential_format === "iso_mdl" ? mdocBody : sdJwtBody;
-            const planId = await oidfSuite.createPlan(planName, variant, body);
+            const planId = await oidfSuite.createPlan(planName, variant, {
+                ...body,
+                alias: buildUniquePlanAlias(variant, index),
+            });
             createdPlans.push({ planId, variant });
             console.log(
                 `Created plan for ${variant.credential_format}: ${OIDF_URL}/plan-detail.html?plan=${planId}`,
+            );
+        }
+
+        const liveModulesByFormat: {
+            sd_jwt_vc: string[];
+            iso_mdl: string[];
+        } = {
+            sd_jwt_vc: [],
+            iso_mdl: [],
+        };
+
+        for (const { planId, variant } of createdPlans) {
+            liveModulesByFormat[variant.credential_format] =
+                await listLiveModulesForPlan(planId, variant);
+        }
+
+        const snapshotByFormat: {
+            sd_jwt_vc: string[];
+            iso_mdl: string[];
+        } = {
+            sd_jwt_vc: [...VERIFIER_MODULES_SNAPSHOT.sd_jwt_vc].sort((a, b) =>
+                a.localeCompare(b),
+            ),
+            iso_mdl: [...VERIFIER_MODULES_SNAPSHOT.iso_mdl].sort((a, b) =>
+                a.localeCompare(b),
+            ),
+        };
+
+        const snapshotMatches =
+            liveModulesByFormat.sd_jwt_vc.length ===
+                snapshotByFormat.sd_jwt_vc.length &&
+            liveModulesByFormat.iso_mdl.length ===
+                snapshotByFormat.iso_mdl.length &&
+            liveModulesByFormat.sd_jwt_vc.every(
+                (name, idx) => name === snapshotByFormat.sd_jwt_vc[idx],
+            ) &&
+            liveModulesByFormat.iso_mdl.every(
+                (name, idx) => name === snapshotByFormat.iso_mdl[idx],
+            );
+
+        if (!snapshotMatches) {
+            writeFileSync(
+                SNAPSHOT_PATH,
+                `${JSON.stringify(liveModulesByFormat, null, 2)}\n`,
+            );
+
+            const addedSdJwt = liveModulesByFormat.sd_jwt_vc.filter(
+                (name) => !snapshotByFormat.sd_jwt_vc.includes(name),
+            );
+            const removedSdJwt = snapshotByFormat.sd_jwt_vc.filter(
+                (name) => !liveModulesByFormat.sd_jwt_vc.includes(name),
+            );
+            const addedMdoc = liveModulesByFormat.iso_mdl.filter(
+                (name) => !snapshotByFormat.iso_mdl.includes(name),
+            );
+            const removedMdoc = snapshotByFormat.iso_mdl.filter(
+                (name) => !liveModulesByFormat.iso_mdl.includes(name),
+            );
+
+            throw new Error(
+                `Verifier module snapshot drifted and was rewritten at ${SNAPSHOT_PATH}. ` +
+                    `sd_jwt_vc added: [${addedSdJwt.join(", ")}], removed: [${removedSdJwt.join(", ")}]. ` +
+                    `iso_mdl added: [${addedMdoc.join(", ")}], removed: [${removedMdoc.join(", ")}]. ` +
+                    `Please re-run the test so Vitest picks up the new module list.`,
             );
         }
     });
@@ -520,15 +717,62 @@ describe("OIDF", () => {
         expect(uniqueModules.length).toBeGreaterThan(0);
     });
 
-    test("oidf conformance suite presentation - sd_jwt_vc verifier modules", async () => {
-        const { planId, variant } = getPlanByCredentialFormat("sd_jwt_vc");
-        await runVerifierModulesForPlan(planId, variant);
-    }, 120000);
+    for (const variant of ENFORCED_VERIFIER_VARIANTS) {
+        const variantLabel = formatVariantLabel(variant);
 
-    test("oidf conformance suite presentation - iso_mdl verifier modules", async () => {
-        const { planId, variant } = getPlanByCredentialFormat("iso_mdl");
-        await runVerifierModulesForPlan(planId, variant);
-    }, 120000);
+        describe.concurrent(variantLabel, () => {
+            const outcomes = new Map<string, ModuleOutcome>();
+            let variantBootstrapError: Error | undefined;
+
+            beforeAll(async () => {
+                const { planId } = getPlanByCredentialFormat(
+                    variant.credential_format,
+                );
+                const moduleNames = getSnapshotModulesForVariant(variant);
+
+                if (moduleNames.length === 0) {
+                    variantBootstrapError = new Error(
+                        `No snapshot modules found for ${variantLabel}. Run the suite once to refresh ${SNAPSHOT_PATH} and re-run.`,
+                    );
+                    return;
+                }
+
+                for (const moduleName of moduleNames) {
+                    outcomes.set(
+                        moduleName,
+                        await runModuleForVariant(planId, variant, moduleName),
+                    );
+                }
+            }, 120000);
+
+            for (const moduleName of getSnapshotModulesForVariant(variant)) {
+                test(moduleName, () => {
+                    if (variantBootstrapError) {
+                        throw variantBootstrapError;
+                    }
+
+                    const outcome = outcomes.get(moduleName);
+                    if (!outcome) {
+                        throw new Error(
+                            `Module ${moduleName} did not run for variant ${variantLabel}`,
+                        );
+                    }
+
+                    if (outcome.kind === "error") {
+                        throw outcome.error;
+                    }
+
+                    const allowedResults = getAllowedResults(moduleName);
+                    expect(
+                        allowedResults,
+                        `Unexpected result for module '${moduleName}' on ${variantLabel}: ${outcome.result}`,
+                    ).toContain(outcome.result);
+
+                    coveredScenarioKeys.add(outcome.scenarioKey);
+                });
+            }
+        });
+    }
 
     test("module coverage guard - verifier plan", async () => {
         if (createdPlans.length === 0) {

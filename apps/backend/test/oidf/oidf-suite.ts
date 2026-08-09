@@ -652,6 +652,17 @@ export class OIDFSuite {
         // particular is reached quickly on failure and used to burn ~30s of
         // wall time per failing module before this returned.
         const TERMINAL_STATUSES = new Set(["FINISHED", "INTERRUPTED"]);
+        // OIDF suite >=5.2 can publish a final result while keeping status
+        // at WAITING, so include known final results as terminal as well.
+        const TERMINAL_RESULTS = new Set([
+            "PASSED",
+            "FAILED",
+            "WARNING",
+            "SKIPPED",
+            "REVIEW",
+            "REVIEWED",
+            "CONDITIONAL",
+        ]);
 
         const maxAttempts =
             options.maxAttempts ??
@@ -721,7 +732,10 @@ export class OIDFSuite {
                 }
             }
 
-            if (logResult?.status && TERMINAL_STATUSES.has(logResult.status)) {
+            if (
+                (logResult?.status && TERMINAL_STATUSES.has(logResult.status)) ||
+                (logResult?.result && TERMINAL_RESULTS.has(logResult.result))
+            ) {
                 return logResult;
             }
 

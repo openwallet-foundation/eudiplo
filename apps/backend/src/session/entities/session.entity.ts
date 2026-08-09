@@ -200,6 +200,13 @@ export class Session {
     requestObject?: string;
 
     /**
+     * Per-authorization-request private encryption key used to decrypt
+     * wallet responses. Encrypted at rest.
+     */
+    @Column("text", { nullable: true, transformer: EncryptedJsonTransformer })
+    responseEncryptionPrivateJwk?: Record<string, unknown>;
+
+    /**
      * Verified credentials from the presentation process.
      * Encrypted at rest - contains personal information.
      */
