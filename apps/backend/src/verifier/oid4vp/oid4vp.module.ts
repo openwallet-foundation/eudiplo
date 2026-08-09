@@ -1,6 +1,8 @@
 import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
 import { CryptoModule } from "../../crypto/crypto.module";
+import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { RegistrarModule } from "../../registrar/registrar.module";
 import { SessionModule } from "../../session/session.module";
 import { OutboundUrlPolicyService } from "../../shared/utils/webhook/outbound-url-policy.service";
@@ -15,6 +17,7 @@ import { Oid4vpService } from "./oid4vp.service";
         RegistrarModule,
         SessionModule,
         HttpModule,
+        TypeOrmModule.forFeature([WebhookEndpointEntity]),
         PresentationsModule,
     ],
     controllers: [Oid4vpController],

@@ -1,7 +1,9 @@
 import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { TypeOrmModule } from "@nestjs/typeorm";
 import { CryptoModule } from "../../crypto/crypto.module";
+import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { SessionModule } from "../../session/session.module";
 import { AuditLogModule } from "../../shared/utils/logger/audit-log.module";
 import { OutboundUrlPolicyService } from "../../shared/utils/webhook/outbound-url-policy.service";
@@ -16,6 +18,7 @@ import { Iso18013Service } from "./iso18013.service";
         CryptoModule,
         SessionModule,
         HttpModule,
+        TypeOrmModule.forFeature([WebhookEndpointEntity]),
         PresentationsModule,
         AuditLogModule,
     ],

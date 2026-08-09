@@ -12,8 +12,11 @@ import {
     NotFoundException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { InjectRepository } from "@nestjs/typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
+import { Repository } from "typeorm";
 import { EncryptionService } from "../../crypto/encryption/encryption.service";
+import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { ServiceTypeIdentifier } from "../../issuer/trust-list/trustlist.service";
 import { SessionStatus } from "../../session/entities/session.entity";
 import { SessionService } from "../../session/session.service";
@@ -39,6 +42,7 @@ import {
     parseEncryptedResponse,
 } from "./cbor-request";
 import { hpkeOpen } from "./hpke";
+import { WebhookConfig } from "../../shared/utils/webhook/webhook.dto";
 
 export interface Iso18013Offer {
     session: string;
@@ -60,9 +64,37 @@ export class Iso18013Service {
         private readonly webhookService: WebhookService,
         private readonly auditLogService: AuditLogService,
         private readonly configService: ConfigService,
+        @InjectRepository(WebhookEndpointEntity)
+        private readonly webhookEndpointRepo: Repository<WebhookEndpointEntity>,
         @InjectPinoLogger(Iso18013Service.name)
         private readonly logger: PinoLogger,
     ) {}
+
+    private async resolveWebhookFromEndpoint(
+        webhookEndpointId: string | null | undefined,
+        tenantId: string,
+    ): Promise<WebhookConfig | undefined> {
+        if (!webhookEndpointId) {
+            return undefined;
+        }
+
+        const endpoint = await this.webhookEndpointRepo.findOneBy({
+            id: webhookEndpointId,
+            tenantId,
+        });
+        if (!endpoint) {
+            this.logger.warn(
+                {
+                    tenantId,
+                    webhookEndpointId,
+                },
+                "Webhook endpoint configured on presentation config was not found",
+            );
+            return undefined;
+        }
+
+        return { url: endpoint.url, auth: endpoint.auth };
+    }
 
     /**
      * Create an ISO 18013-7 Annex C offer: build DeviceRequest + encryptionInfo
@@ -125,6 +157,10 @@ export class Iso18013Service {
         const expiresAt = new Date(
             Date.now() + (config.lifeTime ?? 300) * 1000,
         );
+        const resolvedWebhook = await this.resolveWebhookFromEndpoint(
+            config.webhookEndpointId,
+            tenantId,
+        );
 
         await this.sessionService.create({
             id: sessionId,
@@ -134,7 +170,8 @@ export class Iso18013Service {
             dcApiProtocol: "iso-18013-7",
             browserOrigin: origin,
             vp_nonce: nonce.toString("hex"),
-            parsedWebhook: config.webhook ?? undefined,
+            webhookEndpointId: config.webhookEndpointId ?? undefined,
+            parsedWebhook: resolvedWebhook,
             redirectUri: config.redirectUri ?? undefined,
             skewSeconds:
                 skewSeconds ??
@@ -362,7 +399,12 @@ export class Iso18013Service {
             consumedAt: new Date(),
         });
 
-        const webhook = session.parsedWebhook;
+        const webhook =
+            session.parsedWebhook ??
+            (await this.resolveWebhookFromEndpoint(
+                session.webhookEndpointId,
+                session.tenantId,
+            ));
         if (webhook) {
             const webhookResponse = await this.webhookService
                 .sendWebhook({

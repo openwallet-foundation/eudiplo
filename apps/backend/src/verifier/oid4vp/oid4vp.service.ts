@@ -1,11 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { InjectRepository } from "@nestjs/typeorm";
 import { plainToInstance } from "class-transformer";
 import { validateOrReject } from "class-validator";
 import { base64url } from "jose";
 import { Span, TraceService } from "nestjs-otel";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
+import { Repository } from "typeorm";
 import { v4 } from "uuid";
 import { EncryptionService } from "../../crypto/encryption/encryption.service";
 import { CertService } from "../../crypto/key/cert/cert.service";
@@ -13,6 +15,7 @@ import { CryptoImplementationService } from "../../crypto/key/crypto-implementat
 import { KeyUsageType } from "../../crypto/key/entities/key-chain.entity";
 import { KeyChainService } from "../../crypto/key/key-chain.service";
 import { CredentialFormat } from "../../issuer/configuration/credentials/entities/credential.entity";
+import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { OfferResponse } from "../../issuer/issuance/oid4vci/dto/offer-request.dto";
 import { RegistrarService } from "../../registrar/registrar.service";
 import { SessionStatus } from "../../session/entities/session.entity";
@@ -42,9 +45,41 @@ export class Oid4vpService {
         private readonly sessionService: SessionService,
         private readonly auditLogger: SessionLoggerService,
         private readonly webhookService: WebhookService,
+        @InjectRepository(WebhookEndpointEntity)
+        private readonly webhookEndpointRepo: Repository<WebhookEndpointEntity>,
         private readonly cryptoImplementationService: CryptoImplementationService,
         private readonly traceService: TraceService,
     ) {}
+
+    private async resolveWebhookFromEndpoint(
+        webhookEndpointId: string | null | undefined,
+        tenantId: string,
+    ) {
+        if (!webhookEndpointId) {
+            return undefined;
+        }
+
+        const endpoint = await this.webhookEndpointRepo.findOneBy({
+            id: webhookEndpointId,
+            tenantId,
+        });
+
+        if (!endpoint) {
+            this.logger.warn(
+                {
+                    tenantId,
+                    webhookEndpointId,
+                },
+                "Webhook endpoint configured on presentation config was not found",
+            );
+            return undefined;
+        }
+
+        return {
+            url: endpoint.url,
+            auth: endpoint.auth,
+        };
+    }
 
     /**
      * Resolves a session from a wallet-facing nonce.
@@ -421,11 +456,17 @@ export class Oid4vpService {
             // Use transaction_data from options if provided, otherwise fall back to config
             const transaction_data =
                 values.transaction_data ?? presentationConfig.transaction_data;
+            const endpointWebhook = await this.resolveWebhookFromEndpoint(
+                presentationConfig.webhookEndpointId,
+                tenantId,
+            );
 
             const session = await this.sessionService.create({
                 id: values.session,
                 walletNonce,
-                parsedWebhook: values.webhook,
+                webhookEndpointId:
+                    presentationConfig.webhookEndpointId ?? undefined,
+                parsedWebhook: values.webhook ?? endpointWebhook,
                 redirectUri:
                     values.redirectUri ??
                     presentationConfig.redirectUri ??
@@ -595,7 +636,13 @@ export class Oid4vpService {
                 session.requestId!,
                 session.tenantId,
             );
-        const webhook = session.parsedWebhook || presentationConfig.webhook;
+        const webhook =
+            session.parsedWebhook ??
+            (await this.resolveWebhookFromEndpoint(
+                session.webhookEndpointId ??
+                    presentationConfig.webhookEndpointId,
+                session.tenantId,
+            ));
 
         this.auditLogger.logFlowStart(logContext, {
             action: "process_presentation_response",
