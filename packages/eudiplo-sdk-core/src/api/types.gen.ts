@@ -625,6 +625,13 @@ export type Session = {
      */
     requestObject?: string;
     /**
+     * Per-authorization-request private encryption key used to decrypt
+     * wallet responses. Encrypted at rest.
+     */
+    responseEncryptionPrivateJwk?: {
+        [key: string]: unknown;
+    };
+    /**
      * Verified credentials from the presentation process.
      * Encrypted at rest - contains personal information.
      */
@@ -632,7 +639,7 @@ export type Session = {
         [key: string]: unknown;
     }>;
     /**
-     * Noncce from the Verifiable Presentation request.
+     * Nonce from the Verifiable Presentation request.
      */
     vp_nonce?: string;
     /**
@@ -668,6 +675,10 @@ export type Session = {
      * Can be overridden per-request from the presentation configuration.
      */
     transaction_data?: Array<TransactionData>;
+    /**
+     * Per-session clock skew tolerance for presentation credential JWT time validation.
+     */
+    skewSeconds?: number;
     externalIssuer?: string;
     /**
      * The subject (sub) from the external authorization server token.
@@ -1026,6 +1037,20 @@ export type BuiltInAuthorizationServerConfig = {
     requireDPoP?: boolean;
 };
 
+export type WalletProviderTrustListRefDto = {
+    url: string;
+    /**
+     * JWK used to verify the trust-list JWT signature.
+     */
+    verifierKey?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature.
+     */
+    verifierX509Der?: string;
+};
+
 export type FederationTrustAnchorConfig = {
     /**
      * Entity identifier (sub) of the federation trust anchor.
@@ -1119,6 +1144,11 @@ export type DisplayInfo = {
 
 export type IssuanceConfig = {
     /**
+     * Trust lists containing trusted wallet providers.
+     * Each entry MUST include either `verifierKey` or `verifierX509Der`.
+     */
+    walletProviderTrustLists?: Array<WalletProviderTrustListRefDto>;
+    /**
      * Key ID for signing access tokens. If unset, the default signing key is used.
      */
     signingKeyId?: string;
@@ -1171,12 +1201,6 @@ export type IssuanceConfig = {
      * Default value is false.
      */
     walletAttestationRequired?: boolean;
-    /**
-     * URLs of trust lists containing trusted wallet providers.
-     * The wallet attestation's X.509 certificate will be validated against these trust lists.
-     * If empty and walletAttestationRequired is true, all wallet providers are rejected.
-     */
-    walletProviderTrustLists?: Array<string>;
     display: Array<DisplayInfo>;
     /**
      * The timestamp when the VP request was created.
@@ -1189,6 +1213,11 @@ export type IssuanceConfig = {
 };
 
 export type UpdateIssuanceDto = {
+    /**
+     * Trust lists containing trusted wallet providers.
+     * Each entry MUST include either `verifierKey` or `verifierX509Der`.
+     */
+    walletProviderTrustLists?: Array<WalletProviderTrustListRefDto>;
     /**
      * Key ID for signing access tokens. If unset, the default signing key is used.
      */
@@ -1238,12 +1267,6 @@ export type UpdateIssuanceDto = {
      * Default value is false.
      */
     walletAttestationRequired?: boolean;
-    /**
-     * URLs of trust lists containing trusted wallet providers.
-     * The wallet attestation's X.509 certificate will be validated against these trust lists.
-     * If empty and walletAttestationRequired is true, all wallet providers are rejected.
-     */
-    walletProviderTrustLists?: Array<string>;
     display?: Array<DisplayInfo>;
 };
 
@@ -1253,26 +1276,6 @@ export type ClaimsQuery = {
     values?: Array<string>;
 };
 
-export type TrustedAuthorityQuery = {
-    type: 'etsi_tl' | 'openid_federation';
-    values: Array<string>;
-};
-
-export type CredentialQuery = {
-    /**
-     * Ordered alternative claim combinations for this credential query.
-     */
-    claim_sets?: Array<Array<string>>;
-    id: string;
-    format: string;
-    multiple?: boolean;
-    claims?: Array<ClaimsQuery>;
-    meta: {
-        [key: string]: unknown;
-    };
-    trusted_authorities?: Array<TrustedAuthorityQuery>;
-};
-
 export type CredentialSetQuery = {
     options: Array<Array<string>>;
     required?: boolean;
@@ -1280,7 +1283,9 @@ export type CredentialSetQuery = {
 
 export type PolicyCredential = {
     claims?: Array<ClaimsQuery>;
-    credentials: Array<CredentialQuery>;
+    credentials: Array<{
+        [key: string]: unknown;
+    }>;
     credential_sets?: Array<CredentialSetQuery>;
 };
 
@@ -1477,6 +1482,10 @@ export type IssuerMetadataCredentialConfig = {
      * for this specific credential configuration.
      */
     keyAttestationsRequired?: KeyAttestationsRequired;
+    /**
+     * Supported proof types for this credential configuration. Defaults to ['attestation', 'jwt'].
+     */
+    proofTypesSupported?: Array<'jwt' | 'attestation'>;
     format: 'mso_mdoc' | 'dc+sd-jwt';
     display: Array<Display>;
     scope?: string;
@@ -1588,6 +1597,11 @@ export type KeyChainEntity = {
      * This field stores the provider-specific key reference for the active signing key.
      */
     externalKeyId?: string;
+    /**
+     * External key identifier for cloud KMS providers for the root CA key.
+     * Used when rotating internal-chain key chains backed by external KMS.
+     */
+    rootExternalKeyId?: string;
     rootJwk?: {
         [key: string]: unknown;
     };
@@ -2219,8 +2233,110 @@ export type TrustListVersion = {
     createdAt: string;
 };
 
+export type TrustListRef = {
+    /**
+     * Managed local trust-list identifier. When provided, verifier material is resolved server-side from the trust list key chain.
+     */
+    trustListId?: string;
+    /**
+     * Trust-list JWT URL. Required for external trust lists when trustListId is not set.
+     */
+    url?: string;
+    /**
+     * JWK used to verify trust-list JWT signatures for external trusted authority values.
+     */
+    verifierKey?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Base64 DER-encoded X.509 certificate used to verify trust-list JWT signatures for external trusted authority values.
+     */
+    verifierX509Der?: string;
+};
+
+export type TrustedAuthorityQueryEtsiTl = {
+    type: 'etsi_tl';
+    values: Array<TrustListRef>;
+};
+
+export type TrustedAuthorityQueryOpenIdFederation = {
+    type: 'openid_federation';
+    values: Array<string>;
+};
+
+export type DcSdJwtCredentialQueryMeta = {
+    /**
+     * VCT identifiers accepted for dc+sd-jwt credentials.
+     */
+    vct_values: Array<string>;
+};
+
+export type MsoMdocCredentialQueryMeta = {
+    /**
+     * Document type identifier accepted for mso_mdoc credentials.
+     */
+    doctype_value: string;
+};
+
+export type MsoMdocClaimsQuery = {
+    /**
+     * Whether the holder should be allowed to retain the claim in an mso_mdoc response.
+     */
+    intent_to_retain?: boolean;
+    id?: string;
+    path: Array<string>;
+    values?: Array<string>;
+};
+
+export type CredentialQueryDcSdJwt = {
+    /**
+     * Credential format discriminator.
+     */
+    format: 'dc+sd-jwt';
+    /**
+     * Ordered alternative claim combinations for this credential query.
+     */
+    claim_sets?: Array<Array<string>>;
+    /**
+     * Trusted authority constraints (discriminated by type) for this credential query.
+     */
+    trusted_authorities?: Array<TrustedAuthorityQueryEtsiTl | TrustedAuthorityQueryOpenIdFederation>;
+    /**
+     * dc+sd-jwt schema metadata for the requested credential.
+     */
+    meta: DcSdJwtCredentialQueryMeta;
+    claims?: Array<ClaimsQuery>;
+    id: string;
+    multiple?: boolean;
+};
+
+export type CredentialQueryMsoMdoc = {
+    /**
+     * Credential format discriminator.
+     */
+    format: 'mso_mdoc';
+    /**
+     * Ordered alternative claim combinations for this credential query.
+     */
+    claim_sets?: Array<Array<string>>;
+    /**
+     * Trusted authority constraints (discriminated by type) for this credential query.
+     */
+    trusted_authorities?: Array<TrustedAuthorityQueryEtsiTl | TrustedAuthorityQueryOpenIdFederation>;
+    /**
+     * mso_mdoc document type metadata for the requested credential.
+     */
+    meta: MsoMdocCredentialQueryMeta;
+    claims?: Array<MsoMdocClaimsQuery>;
+    id: string;
+    multiple?: boolean;
+};
+
 export type Dcql = {
-    credentials: Array<CredentialQuery>;
+    /**
+     * Format-discriminated credential queries.
+     */
+    credentials?: Array<CredentialQueryDcSdJwt | CredentialQueryMsoMdoc>;
     credential_sets?: Array<CredentialSetQuery>;
 };
 
@@ -2270,6 +2386,14 @@ export type PresentationAttachment = {
 
 export type PresentationConfig = {
     /**
+     * Clock skew tolerance for credential JWT time validation, in seconds.
+     */
+    skewSeconds?: number;
+    /**
+     * Status list verification mode for presentations: strict (default), best_effort, or disabled.
+     */
+    statusCheckMode?: 'strict' | 'best_effort' | 'disabled';
+    /**
      * Server-managed cache of the materialized registration certificate. Read-only; values supplied by clients are ignored.
      */
     readonly registrationCertCache?: {
@@ -2292,10 +2416,6 @@ export type PresentationConfig = {
      */
     lifeTime?: number;
     /**
-     * Clock skew tolerance for credential JWT time validation, in seconds.
-     */
-    skewSeconds?: number;
-    /**
      * The DCQL query to be used for the VP request.
      */
     dcql_query: Dcql;
@@ -2309,13 +2429,6 @@ export type PresentationConfig = {
      * Optional: if set, notifications will be sent to this endpoint.
      */
     webhookEndpointId?: string;
-    webhookEndpoint?: WebhookEndpointEntity;
-    /**
-     * Optional webhook URL to receive the response.
-     *
-     * @deprecated
-     */
-    webhook?: WebhookConfig;
     /**
      * The timestamp when the VP request was created.
      */
@@ -2368,6 +2481,14 @@ export type ResolveSchemaMetadataJwtDto = {
 
 export type PresentationConfigCreateDto = {
     /**
+     * Clock skew tolerance for credential JWT time validation, in seconds.
+     */
+    skewSeconds?: number;
+    /**
+     * Status list verification mode for presentations: strict (default), best_effort, or disabled.
+     */
+    statusCheckMode?: 'strict' | 'best_effort' | 'disabled';
+    /**
      * Unique identifier for the VP request.
      */
     id: string;
@@ -2379,10 +2500,6 @@ export type PresentationConfigCreateDto = {
      * Lifetime how long the presentation request is valid after creation, in seconds.
      */
     lifeTime?: number;
-    /**
-     * Clock skew tolerance for credential JWT time validation, in seconds.
-     */
-    skewSeconds?: number;
     /**
      * The DCQL query to be used for the VP request.
      */
@@ -2397,13 +2514,6 @@ export type PresentationConfigCreateDto = {
      * Optional: if set, notifications will be sent to this endpoint.
      */
     webhookEndpointId?: string;
-    webhookEndpoint?: WebhookEndpointEntity;
-    /**
-     * Optional webhook URL to receive the response.
-     *
-     * @deprecated
-     */
-    webhook?: WebhookConfig;
     /**
      * Attestation that should be attached
      */
@@ -2427,6 +2537,14 @@ export type PresentationConfigCreateDto = {
 
 export type PresentationConfigUpdateDto = {
     /**
+     * Clock skew tolerance for credential JWT time validation, in seconds.
+     */
+    skewSeconds?: number;
+    /**
+     * Status list verification mode for presentations: strict (default), best_effort, or disabled.
+     */
+    statusCheckMode?: 'strict' | 'best_effort' | 'disabled';
+    /**
      * Unique identifier for the VP request.
      */
     id?: string;
@@ -2438,10 +2556,6 @@ export type PresentationConfigUpdateDto = {
      * Lifetime how long the presentation request is valid after creation, in seconds.
      */
     lifeTime?: number;
-    /**
-     * Clock skew tolerance for credential JWT time validation, in seconds.
-     */
-    skewSeconds?: number;
     /**
      * The DCQL query to be used for the VP request.
      */
@@ -2456,13 +2570,6 @@ export type PresentationConfigUpdateDto = {
      * Optional: if set, notifications will be sent to this endpoint.
      */
     webhookEndpointId?: string;
-    webhookEndpoint?: WebhookEndpointEntity;
-    /**
-     * Optional webhook URL to receive the response.
-     *
-     * @deprecated
-     */
-    webhook?: WebhookConfig;
     /**
      * Attestation that should be attached
      */
@@ -2939,224 +3046,6 @@ export type KmsProvidersResponseDto = {
     default: string;
 };
 
-export type DbKmsConfigDto = {
-    /**
-     * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
-     */
-    id: string;
-    /**
-     * Type of the KMS provider.
-     */
-    type: 'db';
-    /**
-     * Human-readable description of this provider instance.
-     */
-    description?: string;
-};
-
-export type VaultKmsConfigDto = {
-    /**
-     * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
-     */
-    id: string;
-    /**
-     * Type of the KMS provider.
-     */
-    type: 'vault';
-    /**
-     * Human-readable description of this provider instance.
-     */
-    description?: string;
-    /**
-     * URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.
-     */
-    vaultUrl: string;
-    /**
-     * Authentication token for HashiCorp Vault. Supports ${ENV_VAR} placeholders.
-     */
-    vaultToken: string;
-};
-
-export type AwsKmsConfigDto = {
-    /**
-     * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
-     */
-    id: string;
-    /**
-     * Type of the KMS provider.
-     */
-    type: 'aws-kms';
-    /**
-     * Human-readable description of this provider instance.
-     */
-    description?: string;
-    /**
-     * AWS region for KMS. Supports ${ENV_VAR} placeholders.
-     */
-    region: string;
-    /**
-     * AWS access key ID. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.
-     */
-    accessKeyId?: string;
-    /**
-     * AWS secret access key. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.
-     */
-    secretAccessKey?: string;
-};
-
-export type Pkcs11KmsConfigDto = {
-    /**
-     * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
-     */
-    id: string;
-    /**
-     * Type of the KMS provider.
-     */
-    type: 'pkcs11';
-    /**
-     * Human-readable description of this provider instance.
-     */
-    description?: string;
-    /**
-     * Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.
-     */
-    library: string;
-    /**
-     * Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.
-     */
-    slot: {
-        [key: string]: unknown;
-    };
-    /**
-     * User PIN used for C_Login. Supports ${ENV_VAR} placeholders.
-     */
-    pin: string;
-    /**
-     * Open the PKCS#11 session in read-only mode. Defaults to false.
-     */
-    readOnly?: boolean;
-};
-
-export type HttpAuthBaseConfigDto = {
-    /**
-     * Authentication method for the remote KMS service.
-     */
-    type: 'none' | 'bearer' | 'oauth2-client-credentials' | 'mtls';
-};
-
-export type HttpKmsConfigDto = {
-    /**
-     * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
-     */
-    id: string;
-    /**
-     * Type of the KMS provider.
-     */
-    type: 'http';
-    /**
-     * Human-readable description of this provider instance.
-     */
-    description?: string;
-    /**
-     * Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.
-     */
-    baseUrl: string;
-    /**
-     * Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to "none") for unauthenticated services.
-     */
-    auth?: HttpAuthBaseConfigDto;
-    /**
-     * Path prefix for key endpoints on the remote service. Defaults to /keys.
-     */
-    keysPath?: string;
-    /**
-     * Path for the health check endpoint on the remote service. Defaults to /health.
-     */
-    healthPath?: string;
-    /**
-     * Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.
-     */
-    canImport?: boolean;
-};
-
-export type CscAuthorizeAuthDataDto = {
-    /**
-     * Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).
-     */
-    id: string;
-    /**
-     * Authentication factor value sent to CSC credentials/authorize.
-     */
-    value: string;
-};
-
-export type CscKmsConfigDto = {
-    /**
-     * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
-     */
-    id: string;
-    /**
-     * Type of the KMS provider.
-     */
-    type: 'csc';
-    /**
-     * Human-readable description of this provider instance.
-     */
-    description?: string;
-    /**
-     * Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.
-     */
-    baseUrl: string;
-    /**
-     * OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.
-     */
-    tokenUrl: string;
-    /**
-     * OAuth2 client ID. Supports ${ENV_VAR} placeholders.
-     */
-    clientId: string;
-    /**
-     * OAuth2 client secret. Supports ${ENV_VAR} placeholders.
-     */
-    clientSecret: string;
-    /**
-     * OAuth2 scope to request during token acquisition.
-     */
-    scope?: string;
-    /**
-     * Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.
-     */
-    credentialId?: string;
-    /**
-     * Optional CSC user ID used in credentials/list requests.
-     */
-    userId?: string;
-    /**
-     * CSC API path prefix appended to baseUrl. Defaults to /csc/v2.
-     */
-    apiPath?: string;
-    /**
-     * Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.
-     */
-    hashAlgorithmOid?: string;
-    /**
-     * Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.
-     */
-    signAlgorithmOid?: string;
-    /**
-     * Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.
-     */
-    sad?: string;
-    /**
-     * When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.
-     */
-    useAuthorizeEndpoint?: boolean;
-    /**
-     * Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).
-     */
-    authorizeAuthData?: Array<CscAuthorizeAuthDataDto>;
-};
-
 export type KmsConfigDto = {
     /**
      * ID of the default KMS provider. Defaults to "db" if not set.
@@ -3165,7 +3054,254 @@ export type KmsConfigDto = {
     /**
      * List of KMS provider configurations. Each provider must have a unique id and a type.
      */
-    providers: Array<DbKmsConfigDto | VaultKmsConfigDto | AwsKmsConfigDto | Pkcs11KmsConfigDto | HttpKmsConfigDto | CscKmsConfigDto>;
+    providers: Array<{
+        /**
+         * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
+         */
+        id: string;
+        /**
+         * Type of the KMS provider.
+         */
+        type: 'db';
+        /**
+         * Human-readable description of this provider instance.
+         */
+        description?: string;
+    } | {
+        /**
+         * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
+         */
+        id: string;
+        /**
+         * Type of the KMS provider.
+         */
+        type: 'vault';
+        /**
+         * Human-readable description of this provider instance.
+         */
+        description?: string;
+        /**
+         * URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.
+         */
+        vaultUrl: string;
+        /**
+         * Authentication token for HashiCorp Vault. Supports ${ENV_VAR} placeholders.
+         */
+        vaultToken: string;
+    } | {
+        /**
+         * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
+         */
+        id: string;
+        /**
+         * Type of the KMS provider.
+         */
+        type: 'aws-kms';
+        /**
+         * Human-readable description of this provider instance.
+         */
+        description?: string;
+        /**
+         * AWS region for KMS. Supports ${ENV_VAR} placeholders.
+         */
+        region: string;
+        /**
+         * AWS access key ID. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.
+         */
+        accessKeyId?: string;
+        /**
+         * AWS secret access key. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.
+         */
+        secretAccessKey?: string;
+    } | {
+        /**
+         * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
+         */
+        id: string;
+        /**
+         * Type of the KMS provider.
+         */
+        type: 'pkcs11';
+        /**
+         * Human-readable description of this provider instance.
+         */
+        description?: string;
+        /**
+         * Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.
+         */
+        library: string;
+        /**
+         * Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.
+         */
+        slot: number | string;
+        /**
+         * User PIN used for C_Login. Supports ${ENV_VAR} placeholders.
+         */
+        pin: string;
+        /**
+         * Open the PKCS#11 session in read-only mode. Defaults to false.
+         */
+        readOnly?: boolean;
+    } | {
+        /**
+         * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
+         */
+        id: string;
+        /**
+         * Type of the KMS provider.
+         */
+        type: 'http';
+        /**
+         * Human-readable description of this provider instance.
+         */
+        description?: string;
+        /**
+         * Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.
+         */
+        baseUrl: string;
+        /**
+         * Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to "none") for unauthenticated services.
+         */
+        auth?: {
+            /**
+             * No authentication — suitable for services on a trusted private network.
+             */
+            type: 'none';
+        } | {
+            /**
+             * Static Bearer token sent as Authorization: Bearer <token>.
+             */
+            type: 'bearer';
+            /**
+             * Bearer token value. Supports ${ENV_VAR} placeholders.
+             */
+            token: string;
+        } | {
+            /**
+             * OAuth 2.0 Client Credentials — EUDIPLO fetches and caches short-lived tokens.
+             */
+            type: 'oauth2-client-credentials';
+            /**
+             * Token endpoint URL (e.g. Keycloak, Entra ID). Supports ${ENV_VAR} placeholders.
+             */
+            tokenUrl: string;
+            /**
+             * OAuth 2.0 client ID. Supports ${ENV_VAR} placeholders.
+             */
+            clientId: string;
+            /**
+             * OAuth 2.0 client secret. Supports ${ENV_VAR} placeholders.
+             */
+            clientSecret: string;
+            /**
+             * Space-separated list of OAuth 2.0 scopes to request. Optional.
+             */
+            scope?: string;
+        } | {
+            /**
+             * Mutual TLS — EUDIPLO presents a client certificate on every connection.
+             */
+            type: 'mtls';
+            /**
+             * Absolute path to the PEM-encoded client certificate file. Supports ${ENV_VAR} placeholders.
+             */
+            certFile: string;
+            /**
+             * Absolute path to the PEM-encoded private key file for the client certificate. Supports ${ENV_VAR} placeholders.
+             */
+            keyFile: string;
+            /**
+             * Absolute path to the PEM-encoded CA bundle to trust for the remote server's certificate. Omit to use the system CA store.
+             */
+            caFile?: string;
+        };
+        /**
+         * Path prefix for key endpoints on the remote service. Defaults to /keys.
+         */
+        keysPath?: string;
+        /**
+         * Path for the health check endpoint on the remote service. Defaults to /health.
+         */
+        healthPath?: string;
+        /**
+         * Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.
+         */
+        canImport?: boolean;
+    } | {
+        /**
+         * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
+         */
+        id: string;
+        /**
+         * Type of the KMS provider.
+         */
+        type: 'csc';
+        /**
+         * Human-readable description of this provider instance.
+         */
+        description?: string;
+        /**
+         * Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.
+         */
+        baseUrl: string;
+        /**
+         * OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.
+         */
+        tokenUrl: string;
+        /**
+         * OAuth2 client ID. Supports ${ENV_VAR} placeholders.
+         */
+        clientId: string;
+        /**
+         * OAuth2 client secret. Supports ${ENV_VAR} placeholders.
+         */
+        clientSecret: string;
+        /**
+         * OAuth2 scope to request during token acquisition.
+         */
+        scope?: string;
+        /**
+         * Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.
+         */
+        credentialId?: string;
+        /**
+         * Optional CSC user ID used in credentials/list requests.
+         */
+        userId?: string;
+        /**
+         * CSC API path prefix appended to baseUrl. Defaults to /csc/v2.
+         */
+        apiPath?: string;
+        /**
+         * Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.
+         */
+        hashAlgorithmOid?: string;
+        /**
+         * Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.
+         */
+        signAlgorithmOid?: string;
+        /**
+         * Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.
+         */
+        sad?: string;
+        /**
+         * When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.
+         */
+        useAuthorizeEndpoint?: boolean;
+        /**
+         * Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).
+         */
+        authorizeAuthData?: Array<{
+            /**
+             * Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).
+             */
+            id: string;
+            /**
+             * Authentication factor value sent to CSC credentials/authorize.
+             */
+            value: string;
+        }>;
+    }>;
 };
 
 export type KmsTenantConfigResponseDto = {
@@ -3430,7 +3566,7 @@ export type EcJwk = {
 
 export type RotationPolicyImportDto = {
     /**
-     * Whether rotation is enabled. When true, the imported key becomes a root CA.
+     * Whether rotation is enabled. When true, the imported key becomes a root CA signer.
      */
     enabled: boolean;
     /**
@@ -3461,7 +3597,7 @@ export type KeyChainImportDto = {
      */
     usageType: 'access' | 'attestation' | 'trustList' | 'statusList' | 'encrypt';
     /**
-     * Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import.
+     * Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import. When rotationPolicy.enabled=true, the last certificate in the chain is treated as the root CA certificate.
      */
     crt?: Array<string>;
     /**
@@ -3469,7 +3605,7 @@ export type KeyChainImportDto = {
      */
     kmsProvider?: string;
     /**
-     * Rotation policy. When enabled, the imported key becomes a root CA and a new leaf key is generated.
+     * Rotation policy. When enabled, the imported key becomes a root CA signer and a new leaf key is generated. If crt is provided, the selected root CA certificate must have CA=true and its public key must match the imported private key.
      */
     rotationPolicy?: RotationPolicyImportDto;
 };
@@ -3546,6 +3682,11 @@ export type FileUploadDto = {
 
 export type IssuanceConfigWritable = {
     /**
+     * Trust lists containing trusted wallet providers.
+     * Each entry MUST include either `verifierKey` or `verifierX509Der`.
+     */
+    walletProviderTrustLists?: Array<WalletProviderTrustListRefDto>;
+    /**
      * Key ID for signing access tokens. If unset, the default signing key is used.
      */
     signingKeyId?: string;
@@ -3594,12 +3735,6 @@ export type IssuanceConfigWritable = {
      * Default value is false.
      */
     walletAttestationRequired?: boolean;
-    /**
-     * URLs of trust lists containing trusted wallet providers.
-     * The wallet attestation's X.509 certificate will be validated against these trust lists.
-     * If empty and walletAttestationRequired is true, all wallet providers are rejected.
-     */
-    walletProviderTrustLists?: Array<string>;
     display: Array<DisplayInfo>;
     /**
      * The timestamp when the VP request was created.
@@ -3612,6 +3747,11 @@ export type IssuanceConfigWritable = {
 };
 
 export type UpdateIssuanceDtoWritable = {
+    /**
+     * Trust lists containing trusted wallet providers.
+     * Each entry MUST include either `verifierKey` or `verifierX509Der`.
+     */
+    walletProviderTrustLists?: Array<WalletProviderTrustListRefDto>;
     /**
      * Key ID for signing access tokens. If unset, the default signing key is used.
      */
@@ -3657,16 +3797,18 @@ export type UpdateIssuanceDtoWritable = {
      * Default value is false.
      */
     walletAttestationRequired?: boolean;
-    /**
-     * URLs of trust lists containing trusted wallet providers.
-     * The wallet attestation's X.509 certificate will be validated against these trust lists.
-     * If empty and walletAttestationRequired is true, all wallet providers are rejected.
-     */
-    walletProviderTrustLists?: Array<string>;
     display?: Array<DisplayInfo>;
 };
 
 export type PresentationConfigWritable = {
+    /**
+     * Clock skew tolerance for credential JWT time validation, in seconds.
+     */
+    skewSeconds?: number;
+    /**
+     * Status list verification mode for presentations: strict (default), best_effort, or disabled.
+     */
+    statusCheckMode?: 'strict' | 'best_effort' | 'disabled';
     /**
      * Unique identifier for the VP request.
      */
@@ -3697,13 +3839,6 @@ export type PresentationConfigWritable = {
      * Optional: if set, notifications will be sent to this endpoint.
      */
     webhookEndpointId?: string;
-    webhookEndpoint?: WebhookEndpointEntity;
-    /**
-     * Optional webhook URL to receive the response.
-     *
-     * @deprecated
-     */
-    webhook?: WebhookConfig;
     /**
      * The timestamp when the VP request was created.
      */
@@ -4403,8 +4538,10 @@ export type IssuanceConfigControllerReissueRegistrationCertificateResponses = {
     /**
      * Updated issuance configuration
      */
-    201: unknown;
+    201: IssuanceConfig;
 };
+
+export type IssuanceConfigControllerReissueRegistrationCertificateResponse = IssuanceConfigControllerReissueRegistrationCertificateResponses[keyof IssuanceConfigControllerReissueRegistrationCertificateResponses];
 
 export type CredentialConfigControllerGetConfigsData = {
     body?: never;

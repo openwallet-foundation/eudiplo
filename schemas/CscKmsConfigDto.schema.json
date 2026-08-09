@@ -1,92 +1,136 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./CscKmsConfigDto.schema.json",
-  "title": "CscKmsConfigDto",
   "type": "object",
   "properties": {
     "id": {
       "type": "string",
       "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
-      "example": "main-vault"
+      "examples": [
+        "main-vault"
+      ]
     },
     "type": {
-      "enum": [
-        "csc"
-      ],
       "type": "string",
+      "const": "csc",
       "description": "Type of the KMS provider.",
-      "example": "csc"
+      "examples": [
+        "csc"
+      ]
     },
     "description": {
-      "type": "string",
       "description": "Human-readable description of this provider instance.",
-      "example": "Production HashiCorp Vault for signing keys"
+      "examples": [
+        "Production HashiCorp Vault for signing keys"
+      ],
+      "type": "string"
     },
     "baseUrl": {
       "type": "string",
       "description": "Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.",
-      "example": "${CSC_URL}"
+      "examples": [
+        "${CSC_URL}"
+      ]
     },
     "tokenUrl": {
       "type": "string",
-      "format": "uri",
       "description": "OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.",
-      "example": "${CSC_TOKEN_URL}"
+      "examples": [
+        "${CSC_TOKEN_URL}"
+      ]
     },
     "clientId": {
       "type": "string",
       "description": "OAuth2 client ID. Supports ${ENV_VAR} placeholders.",
-      "example": "${CSC_CLIENT_ID}"
+      "examples": [
+        "${CSC_CLIENT_ID}"
+      ]
     },
     "clientSecret": {
       "type": "string",
       "description": "OAuth2 client secret. Supports ${ENV_VAR} placeholders.",
-      "example": "${CSC_CLIENT_SECRET}"
+      "examples": [
+        "${CSC_CLIENT_SECRET}"
+      ]
     },
     "scope": {
-      "type": "string",
       "description": "OAuth2 scope to request during token acquisition.",
-      "example": "service"
+      "examples": [
+        "service"
+      ],
+      "type": "string"
     },
     "credentialId": {
-      "type": "string",
       "description": "Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.",
-      "example": "[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758"
+      "examples": [
+        "[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758"
+      ],
+      "type": "string"
     },
     "userId": {
-      "type": "string",
       "description": "Optional CSC user ID used in credentials/list requests.",
-      "example": "eudiplo_user"
+      "examples": [
+        "eudiplo_user"
+      ],
+      "type": "string"
     },
     "apiPath": {
-      "type": "string",
       "description": "CSC API path prefix appended to baseUrl. Defaults to /csc/v2.",
-      "example": "/csc/v2"
+      "examples": [
+        "/csc/v2"
+      ],
+      "type": "string"
     },
     "hashAlgorithmOid": {
-      "type": "string",
       "description": "Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.",
-      "example": "2.16.840.1.101.3.4.2.1"
+      "examples": [
+        "2.16.840.1.101.3.4.2.1"
+      ],
+      "type": "string"
     },
     "signAlgorithmOid": {
-      "type": "string",
       "description": "Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.",
-      "example": "1.2.840.10045.4.3.2"
+      "examples": [
+        "1.2.840.10045.4.3.2"
+      ],
+      "type": "string"
     },
     "sad": {
-      "type": "string",
-      "description": "Static SAD token. If set, the adapter sends it directly in signatures/signHash requests."
+      "description": "Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.",
+      "type": "string"
     },
     "useAuthorizeEndpoint": {
-      "type": "boolean",
       "description": "When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.",
-      "example": false
+      "examples": [
+        false
+      ],
+      "type": "boolean"
     },
     "authorizeAuthData": {
       "description": "Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).",
       "type": "array",
       "items": {
-        "$ref": "./CscAuthorizeAuthDataDto.schema.json"
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).",
+            "examples": [
+              "PIN"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "description": "Authentication factor value sent to CSC credentials/authorize.",
+            "examples": [
+              "123456"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "value"
+        ],
+        "additionalProperties": false
       }
     }
   },
@@ -98,5 +142,7 @@
     "clientId",
     "clientSecret"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./CscKmsConfigDto.schema.json",
+  "title": "CscKmsConfigDto"
 }

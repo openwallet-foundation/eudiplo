@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { INestApplication, ValidationPipe } from "@nestjs/common";
+import { INestApplication } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
 import request from "supertest";
@@ -9,6 +9,7 @@ import { GenericContainer, StartedTestContainer, Wait } from "testcontainers";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { AppModule } from "../../src/app.module";
 import { KeyChainType } from "../../src/crypto/key/dto/key-chain-create.dto";
+import { createHybridValidationPipe } from "../../src/shared/common/pipes/hybrid-validation.pipe";
 import { getToken } from "../utils";
 
 const VAULT_DEV_ROOT_TOKEN = "test-root-token";
@@ -66,7 +67,7 @@ describe("Key Chain — Vault KMS (e2e)", () => {
         }).compile();
 
         app = moduleFixture.createNestApplication();
-        app.useGlobalPipes(new ValidationPipe());
+        app.useGlobalPipes(createHybridValidationPipe());
         await app.init();
 
         const configService = app.get(ConfigService);

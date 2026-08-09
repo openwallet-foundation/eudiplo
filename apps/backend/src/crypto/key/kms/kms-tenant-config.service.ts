@@ -6,15 +6,12 @@ import {
     writeFileSync,
 } from "node:fs";
 import { dirname, join } from "node:path";
-import {
-    BadRequestException,
-    Injectable,
-    NotFoundException,
-} from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { plainToInstance } from "class-transformer";
-import { validateSync } from "class-validator";
-import { KmsConfigDto } from "../dto/kms-config.dto";
+import {
+    parseRawKmsConfig,
+    type KmsConfig,
+} from "../schemas/kms-config.schema";
 import { KmsProviderRegistry } from "./kms-provider.registry";
 import { KmsConfigService } from "./kms-config.service";
 
@@ -26,19 +23,22 @@ export class KmsTenantConfigService {
         private readonly kmsProviderRegistry: KmsProviderRegistry,
     ) {}
 
-    getTenantConfig(tenantId: string): KmsConfigDto | null {
+    getTenantConfig(tenantId: string): KmsConfig | null {
         const path = this.getTenantConfigPath(tenantId);
         if (!path || !existsSync(path)) {
             return null;
         }
-        return JSON.parse(readFileSync(path, "utf8")) as KmsConfigDto;
+        return parseRawKmsConfig(
+            JSON.parse(readFileSync(path, "utf8")),
+            `tenant '${tenantId}' kms.json`,
+        );
     }
 
-    getEffectiveConfig(tenantId: string): KmsConfigDto {
+    getEffectiveConfig(tenantId: string): KmsConfig {
         return this.kmsConfigService.getConfig(tenantId);
     }
 
-    saveTenantConfig(tenantId: string, config: KmsConfigDto): KmsConfigDto {
+    saveTenantConfig(tenantId: string, config: KmsConfig): KmsConfig {
         const path = this.getTenantConfigPath(tenantId);
         if (!path) {
             throw new NotFoundException("CONFIG_FOLDER is not configured");
@@ -79,21 +79,7 @@ export class KmsTenantConfigService {
         return join(configFolder, tenantId, "kms.json");
     }
 
-    private validateConfig(config: KmsConfigDto): KmsConfigDto {
-        const dto = plainToInstance(KmsConfigDto, config);
-        const errors = validateSync(dto, {
-            whitelist: true,
-            forbidNonWhitelisted: true,
-            stopAtFirstError: false,
-        });
-
-        if (errors.length > 0) {
-            throw new BadRequestException({
-                message: "Invalid KMS configuration",
-                errors,
-            });
-        }
-
-        return dto;
+    private validateConfig(config: KmsConfig): KmsConfig {
+        return parseRawKmsConfig(config, "tenant KMS configuration");
     }
 }

@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import { readFileSync, rmSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { INestApplication, ValidationPipe } from "@nestjs/common";
+import { INestApplication } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
 import {
@@ -38,6 +38,7 @@ import {
     SignJWT,
 } from "jose";
 import request from "supertest";
+import { createHybridValidationPipe } from "../src/shared/common/pipes/hybrid-validation.pipe";
 import { App } from "supertest/types";
 import { AppModule } from "../src/app.module";
 import { Role } from "../src/auth/roles/role.enum";
@@ -456,7 +457,7 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
     }).compile();
 
     const app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(createHybridValidationPipe());
 
     const configService = app.get(ConfigService);
     configService.set("CONFIG_IMPORT", false);
@@ -650,7 +651,7 @@ export async function setupPresentationTestApp(): Promise<PresentationTestContex
 
     const app = moduleFixture.createNestApplication();
     app.useGlobalPipes(
-        new ValidationPipe({
+        createHybridValidationPipe({
             whitelist: true,
             transform: true,
         }),

@@ -1281,6 +1281,10 @@ export const SessionSchema = {
             type: 'string',
             description: 'Signed presentation auth request.'
         },
+        responseEncryptionPrivateJwk: {
+            type: 'object',
+            description: 'Per-authorization-request private encryption key used to decrypt\nwallet responses. Encrypted at rest.'
+        },
         credentials: {
             description: 'Verified credentials from the presentation process.\nEncrypted at rest - contains personal information.',
             type: 'array',
@@ -1290,7 +1294,7 @@ export const SessionSchema = {
         },
         vp_nonce: {
             type: 'string',
-            description: 'Noncce from the Verifiable Presentation request.'
+            description: 'Nonce from the Verifiable Presentation request.'
         },
         clientId: {
             type: 'string',
@@ -1327,6 +1331,10 @@ export const SessionSchema = {
             items: {
                 $ref: '#/components/schemas/TransactionData'
             }
+        },
+        skewSeconds: {
+            type: 'number',
+            description: 'Per-session clock skew tolerance for presentation credential JWT time validation.'
         },
         externalIssuer: {
             type: 'string'
@@ -2021,6 +2029,28 @@ export const BuiltInAuthorizationServerConfigSchema = {
     ]
 } as const;
 
+export const WalletProviderTrustListRefDtoSchema = {
+    type: 'object',
+    properties: {
+        url: {
+            type: 'string',
+            format: 'uri'
+        },
+        verifierKey: {
+            type: 'object',
+            additionalProperties: true,
+            description: 'JWK used to verify the trust-list JWT signature.'
+        },
+        verifierX509Der: {
+            type: 'string',
+            description: 'Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature.'
+        }
+    },
+    required: [
+        'url'
+    ]
+} as const;
+
 export const FederationTrustAnchorConfigSchema = {
     type: 'object',
     properties: {
@@ -2184,6 +2214,13 @@ export const DisplayInfoSchema = {
 export const IssuanceConfigSchema = {
     type: 'object',
     properties: {
+        walletProviderTrustLists: {
+            description: 'Trust lists containing trusted wallet providers.\nEach entry MUST include either `verifierKey` or `verifierX509Der`.',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/WalletProviderTrustListRefDto'
+            }
+        },
         signingKeyId: {
             type: 'string',
             description: 'Key ID for signing access tokens. If unset, the default signing key is used.'
@@ -2285,13 +2322,6 @@ export const IssuanceConfigSchema = {
             type: 'boolean',
             description: 'Indicates whether wallet attestation is required for the token endpoint.\nWhen enabled, wallets must provide OAuth-Client-Attestation headers.\nDefault value is false.'
         },
-        walletProviderTrustLists: {
-            description: 'URLs of trust lists containing trusted wallet providers.\nThe wallet attestation\'s X.509 certificate will be validated against these trust lists.\nIf empty and walletAttestationRequired is true, all wallet providers are rejected.',
-            type: 'array',
-            items: {
-                type: 'string'
-            }
-        },
         display: {
             type: 'array',
             items: {
@@ -2321,6 +2351,13 @@ export const IssuanceConfigSchema = {
 export const UpdateIssuanceDtoSchema = {
     type: 'object',
     properties: {
+        walletProviderTrustLists: {
+            description: 'Trust lists containing trusted wallet providers.\nEach entry MUST include either `verifierKey` or `verifierX509Der`.',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/WalletProviderTrustListRefDto'
+            }
+        },
         signingKeyId: {
             type: 'string',
             description: 'Key ID for signing access tokens. If unset, the default signing key is used.'
@@ -2414,13 +2451,6 @@ export const UpdateIssuanceDtoSchema = {
             type: 'boolean',
             description: 'Indicates whether wallet attestation is required for the token endpoint.\nWhen enabled, wallets must provide OAuth-Client-Attestation headers.\nDefault value is false.'
         },
-        walletProviderTrustLists: {
-            description: 'URLs of trust lists containing trusted wallet providers.\nThe wallet attestation\'s X.509 certificate will be validated against these trust lists.\nIf empty and walletAttestationRequired is true, all wallet providers are rejected.',
-            type: 'array',
-            items: {
-                type: 'string'
-            }
-        },
         display: {
             type: 'array',
             items: {
@@ -2451,75 +2481,6 @@ export const ClaimsQuerySchema = {
     },
     required: [
         'path'
-    ]
-} as const;
-
-export const TrustedAuthorityQuerySchema = {
-    type: 'object',
-    properties: {
-        type: {
-            type: 'string',
-            enum: [
-                'etsi_tl',
-                'openid_federation'
-            ]
-        },
-        values: {
-            type: 'array',
-            items: {
-                type: 'string'
-            }
-        }
-    },
-    required: [
-        'type',
-        'values'
-    ]
-} as const;
-
-export const CredentialQuerySchema = {
-    type: 'object',
-    properties: {
-        claim_sets: {
-            type: 'array',
-            items: {
-                type: 'array',
-                items: {
-                    type: 'string'
-                }
-            },
-            description: 'Ordered alternative claim combinations for this credential query.'
-        },
-        id: {
-            type: 'string',
-            pattern: '^[A-Za-z0-9_-]+$'
-        },
-        format: {
-            type: 'string'
-        },
-        multiple: {
-            type: 'boolean'
-        },
-        claims: {
-            type: 'array',
-            items: {
-                $ref: '#/components/schemas/ClaimsQuery'
-            }
-        },
-        meta: {
-            type: 'object'
-        },
-        trusted_authorities: {
-            type: 'array',
-            items: {
-                $ref: '#/components/schemas/TrustedAuthorityQuery'
-            }
-        }
-    },
-    required: [
-        'id',
-        'format',
-        'meta'
     ]
 } as const;
 
@@ -2556,7 +2517,7 @@ export const PolicyCredentialSchema = {
         credentials: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/CredentialQuery'
+                type: 'object'
             }
         },
         credential_sets: {
@@ -3004,6 +2965,22 @@ export const IssuerMetadataCredentialConfigSchema = {
                 }
             ]
         },
+        proofTypesSupported: {
+            description: 'Supported proof types for this credential configuration. Defaults to [\'attestation\', \'jwt\'].',
+            uniqueItems: true,
+            type: 'array',
+            items: {
+                type: 'string',
+                enum: [
+                    'jwt',
+                    'attestation'
+                ]
+            },
+            example: [
+                'attestation',
+                'jwt'
+            ]
+        },
         format: {
             type: 'string',
             enum: [
@@ -3247,6 +3224,10 @@ export const KeyChainEntitySchema = {
         externalKeyId: {
             type: 'string',
             description: 'External key identifier for cloud KMS providers.\nThis field stores the provider-specific key reference for the active signing key.'
+        },
+        rootExternalKeyId: {
+            type: 'string',
+            description: 'External key identifier for cloud KMS providers for the root CA key.\nUsed when rotating internal-chain key chains backed by external KMS.'
         },
         rootJwk: {
             type: 'object'
@@ -4549,13 +4530,296 @@ export const TrustListVersionSchema = {
     ]
 } as const;
 
+export const TrustListRefSchema = {
+    type: 'object',
+    properties: {
+        trustListId: {
+            type: 'string',
+            description: 'Managed local trust-list identifier. When provided, verifier material is resolved server-side from the trust list key chain.'
+        },
+        url: {
+            type: 'string',
+            description: 'Trust-list JWT URL. Required for external trust lists when trustListId is not set.'
+        },
+        verifierKey: {
+            type: 'object',
+            additionalProperties: true,
+            description: 'JWK used to verify trust-list JWT signatures for external trusted authority values.'
+        },
+        verifierX509Der: {
+            type: 'string',
+            description: 'Base64 DER-encoded X.509 certificate used to verify trust-list JWT signatures for external trusted authority values.'
+        }
+    }
+} as const;
+
+export const TrustedAuthorityQueryEtsiTlSchema = {
+    type: 'object',
+    properties: {
+        type: {
+            enum: [
+                'etsi_tl'
+            ],
+            type: 'string',
+            default: 'etsi_tl'
+        },
+        values: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/TrustListRef'
+            }
+        }
+    },
+    required: [
+        'type',
+        'values'
+    ]
+} as const;
+
+export const TrustedAuthorityQueryOpenIdFederationSchema = {
+    type: 'object',
+    properties: {
+        type: {
+            enum: [
+                'openid_federation'
+            ],
+            type: 'string',
+            default: 'openid_federation'
+        },
+        values: {
+            type: 'array',
+            items: {
+                type: 'string'
+            }
+        }
+    },
+    required: [
+        'type',
+        'values'
+    ]
+} as const;
+
+export const DcSdJwtCredentialQueryMetaSchema = {
+    type: 'object',
+    properties: {
+        vct_values: {
+            type: 'array',
+            items: {
+                type: 'string'
+            },
+            description: 'VCT identifiers accepted for dc+sd-jwt credentials.'
+        }
+    },
+    required: [
+        'vct_values'
+    ]
+} as const;
+
+export const MsoMdocCredentialQueryMetaSchema = {
+    type: 'object',
+    properties: {
+        doctype_value: {
+            type: 'string',
+            description: 'Document type identifier accepted for mso_mdoc credentials.'
+        }
+    },
+    required: [
+        'doctype_value'
+    ]
+} as const;
+
+export const MsoMdocClaimsQuerySchema = {
+    type: 'object',
+    properties: {
+        intent_to_retain: {
+            type: 'boolean',
+            description: 'Whether the holder should be allowed to retain the claim in an mso_mdoc response.'
+        },
+        id: {
+            type: 'string'
+        },
+        path: {
+            type: 'array',
+            items: {
+                type: 'string'
+            }
+        },
+        values: {
+            type: 'array',
+            items: {
+                type: 'string'
+            }
+        }
+    },
+    required: [
+        'path'
+    ]
+} as const;
+
+export const CredentialQueryDcSdJwtSchema = {
+    type: 'object',
+    properties: {
+        format: {
+            type: 'string',
+            default: 'dc+sd-jwt',
+            enum: [
+                'dc+sd-jwt'
+            ],
+            description: 'Credential format discriminator.'
+        },
+        claim_sets: {
+            type: 'array',
+            items: {
+                type: 'array',
+                items: {
+                    type: 'string'
+                }
+            },
+            description: 'Ordered alternative claim combinations for this credential query.'
+        },
+        trusted_authorities: {
+            type: 'array',
+            description: 'Trusted authority constraints (discriminated by type) for this credential query.',
+            items: {
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/TrustedAuthorityQueryEtsiTl'
+                    },
+                    {
+                        $ref: '#/components/schemas/TrustedAuthorityQueryOpenIdFederation'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'type',
+                    mapping: {
+                        etsi_tl: '#/components/schemas/TrustedAuthorityQueryEtsiTl',
+                        openid_federation: '#/components/schemas/TrustedAuthorityQueryOpenIdFederation'
+                    }
+                }
+            }
+        },
+        meta: {
+            description: 'dc+sd-jwt schema metadata for the requested credential.',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/DcSdJwtCredentialQueryMeta'
+                }
+            ]
+        },
+        claims: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/ClaimsQuery'
+            }
+        },
+        id: {
+            type: 'string',
+            pattern: '^[A-Za-z0-9_-]+$'
+        },
+        multiple: {
+            type: 'boolean'
+        }
+    },
+    required: [
+        'format',
+        'meta',
+        'id'
+    ]
+} as const;
+
+export const CredentialQueryMsoMdocSchema = {
+    type: 'object',
+    properties: {
+        format: {
+            type: 'string',
+            default: 'mso_mdoc',
+            enum: [
+                'mso_mdoc'
+            ],
+            description: 'Credential format discriminator.'
+        },
+        claim_sets: {
+            type: 'array',
+            items: {
+                type: 'array',
+                items: {
+                    type: 'string'
+                }
+            },
+            description: 'Ordered alternative claim combinations for this credential query.'
+        },
+        trusted_authorities: {
+            type: 'array',
+            description: 'Trusted authority constraints (discriminated by type) for this credential query.',
+            items: {
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/TrustedAuthorityQueryEtsiTl'
+                    },
+                    {
+                        $ref: '#/components/schemas/TrustedAuthorityQueryOpenIdFederation'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'type',
+                    mapping: {
+                        etsi_tl: '#/components/schemas/TrustedAuthorityQueryEtsiTl',
+                        openid_federation: '#/components/schemas/TrustedAuthorityQueryOpenIdFederation'
+                    }
+                }
+            }
+        },
+        meta: {
+            description: 'mso_mdoc document type metadata for the requested credential.',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/MsoMdocCredentialQueryMeta'
+                }
+            ]
+        },
+        claims: {
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/MsoMdocClaimsQuery'
+            }
+        },
+        id: {
+            type: 'string',
+            pattern: '^[A-Za-z0-9_-]+$'
+        },
+        multiple: {
+            type: 'boolean'
+        }
+    },
+    required: [
+        'format',
+        'meta',
+        'id'
+    ]
+} as const;
+
 export const DCQLSchema = {
     type: 'object',
     properties: {
         credentials: {
             type: 'array',
+            description: 'Format-discriminated credential queries.',
             items: {
-                $ref: '#/components/schemas/CredentialQuery'
+                oneOf: [
+                    {
+                        $ref: '#/components/schemas/CredentialQueryDcSdJwt'
+                    },
+                    {
+                        $ref: '#/components/schemas/CredentialQueryMsoMdoc'
+                    }
+                ],
+                discriminator: {
+                    propertyName: 'format',
+                    mapping: {
+                        'dc+sd-jwt': '#/components/schemas/CredentialQueryDcSdJwt',
+                        mso_mdoc: '#/components/schemas/CredentialQueryMsoMdoc'
+                    }
+                }
             }
         },
         credential_sets: {
@@ -4564,10 +4828,7 @@ export const DCQLSchema = {
                 $ref: '#/components/schemas/CredentialSetQuery'
             }
         }
-    },
-    required: [
-        'credentials'
-    ]
+    }
 } as const;
 
 export const RegistrationCertificatePurposeSchema = {
@@ -4666,6 +4927,22 @@ export const PresentationAttachmentSchema = {
 export const PresentationConfigSchema = {
     type: 'object',
     properties: {
+        skewSeconds: {
+            type: 'number',
+            description: 'Clock skew tolerance for credential JWT time validation, in seconds.',
+            minimum: 0,
+            default: 60
+        },
+        statusCheckMode: {
+            description: 'Status list verification mode for presentations: strict (default), best_effort, or disabled.',
+            enum: [
+                'strict',
+                'best_effort',
+                'disabled'
+            ],
+            type: 'string',
+            default: 'strict'
+        },
         registrationCertCache: {
             type: 'object',
             nullable: true,
@@ -4695,11 +4972,6 @@ export const PresentationConfigSchema = {
             type: 'number',
             description: 'Lifetime how long the presentation request is valid after creation, in seconds.'
         },
-        skewSeconds: {
-            type: 'number',
-            description: 'Clock skew tolerance for credential JWT time validation, in seconds.',
-            default: 60
-        },
         dcql_query: {
             description: 'The DCQL query to be used for the VP request.',
             allOf: [
@@ -4728,20 +5000,6 @@ export const PresentationConfigSchema = {
             type: 'string',
             nullable: true,
             description: 'Reference to the webhook endpoint used for notifications.\nOptional: if set, notifications will be sent to this endpoint.'
-        },
-        webhookEndpoint: {
-            $ref: '#/components/schemas/WebhookEndpointEntity'
-        },
-        webhook: {
-            nullable: true,
-            description: 'Optional webhook URL to receive the response.',
-            deprecated: true,
-            type: 'object',
-            allOf: [
-                {
-                    $ref: '#/components/schemas/WebhookConfig'
-                }
-            ]
         },
         createdAt: {
             format: 'date-time',
@@ -4829,6 +5087,22 @@ export const ResolveSchemaMetadataJwtDtoSchema = {
 export const PresentationConfigCreateDtoSchema = {
     type: 'object',
     properties: {
+        skewSeconds: {
+            type: 'number',
+            description: 'Clock skew tolerance for credential JWT time validation, in seconds.',
+            minimum: 0,
+            default: 60
+        },
+        statusCheckMode: {
+            description: 'Status list verification mode for presentations: strict (default), best_effort, or disabled.',
+            enum: [
+                'strict',
+                'best_effort',
+                'disabled'
+            ],
+            type: 'string',
+            default: 'strict'
+        },
         id: {
             type: 'string',
             description: 'Unique identifier for the VP request.'
@@ -4841,11 +5115,6 @@ export const PresentationConfigCreateDtoSchema = {
         lifeTime: {
             type: 'number',
             description: 'Lifetime how long the presentation request is valid after creation, in seconds.'
-        },
-        skewSeconds: {
-            type: 'number',
-            description: 'Clock skew tolerance for credential JWT time validation, in seconds.',
-            default: 60
         },
         dcql_query: {
             description: 'The DCQL query to be used for the VP request.',
@@ -4875,20 +5144,6 @@ export const PresentationConfigCreateDtoSchema = {
             type: 'string',
             nullable: true,
             description: 'Reference to the webhook endpoint used for notifications.\nOptional: if set, notifications will be sent to this endpoint.'
-        },
-        webhookEndpoint: {
-            $ref: '#/components/schemas/WebhookEndpointEntity'
-        },
-        webhook: {
-            nullable: true,
-            description: 'Optional webhook URL to receive the response.',
-            deprecated: true,
-            type: 'object',
-            allOf: [
-                {
-                    $ref: '#/components/schemas/WebhookConfig'
-                }
-            ]
         },
         attached: {
             nullable: true,
@@ -4919,6 +5174,22 @@ export const PresentationConfigCreateDtoSchema = {
 export const PresentationConfigUpdateDtoSchema = {
     type: 'object',
     properties: {
+        skewSeconds: {
+            type: 'number',
+            description: 'Clock skew tolerance for credential JWT time validation, in seconds.',
+            minimum: 0,
+            default: 60
+        },
+        statusCheckMode: {
+            description: 'Status list verification mode for presentations: strict (default), best_effort, or disabled.',
+            enum: [
+                'strict',
+                'best_effort',
+                'disabled'
+            ],
+            type: 'string',
+            default: 'strict'
+        },
         id: {
             type: 'string',
             description: 'Unique identifier for the VP request.'
@@ -4931,11 +5202,6 @@ export const PresentationConfigUpdateDtoSchema = {
         lifeTime: {
             type: 'number',
             description: 'Lifetime how long the presentation request is valid after creation, in seconds.'
-        },
-        skewSeconds: {
-            type: 'number',
-            description: 'Clock skew tolerance for credential JWT time validation, in seconds.',
-            default: 60
         },
         dcql_query: {
             description: 'The DCQL query to be used for the VP request.',
@@ -4965,20 +5231,6 @@ export const PresentationConfigUpdateDtoSchema = {
             type: 'string',
             nullable: true,
             description: 'Reference to the webhook endpoint used for notifications.\nOptional: if set, notifications will be sent to this endpoint.'
-        },
-        webhookEndpoint: {
-            $ref: '#/components/schemas/WebhookEndpointEntity'
-        },
-        webhook: {
-            nullable: true,
-            description: 'Optional webhook URL to receive the response.',
-            deprecated: true,
-            type: 'object',
-            allOf: [
-                {
-                    $ref: '#/components/schemas/WebhookConfig'
-                }
-            ]
         },
         attached: {
             nullable: true,
@@ -5715,433 +5967,596 @@ export const KmsProvidersResponseDtoSchema = {
     ]
 } as const;
 
-export const DbKmsConfigDtoSchema = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'string',
-            description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
-            example: 'main-vault'
-        },
-        type: {
-            enum: [
-                'db'
-            ],
-            type: 'string',
-            description: 'Type of the KMS provider.',
-            example: 'db'
-        },
-        description: {
-            type: 'string',
-            description: 'Human-readable description of this provider instance.',
-            example: 'Production HashiCorp Vault for signing keys'
-        }
-    },
-    required: [
-        'id',
-        'type'
-    ]
-} as const;
-
-export const VaultKmsConfigDtoSchema = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'string',
-            description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
-            example: 'main-vault'
-        },
-        type: {
-            enum: [
-                'vault'
-            ],
-            type: 'string',
-            description: 'Type of the KMS provider.',
-            example: 'vault'
-        },
-        description: {
-            type: 'string',
-            description: 'Human-readable description of this provider instance.',
-            example: 'Production HashiCorp Vault for signing keys'
-        },
-        vaultUrl: {
-            type: 'string',
-            description: 'URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.',
-            example: '${VAULT_URL}'
-        },
-        vaultToken: {
-            type: 'string',
-            description: 'Authentication token for HashiCorp Vault. Supports ${ENV_VAR} placeholders.',
-            example: '${VAULT_TOKEN}'
-        }
-    },
-    required: [
-        'id',
-        'type',
-        'vaultUrl',
-        'vaultToken'
-    ]
-} as const;
-
-export const AwsKmsConfigDtoSchema = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'string',
-            description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
-            example: 'main-vault'
-        },
-        type: {
-            enum: [
-                'aws-kms'
-            ],
-            type: 'string',
-            description: 'Type of the KMS provider.',
-            example: 'aws-kms'
-        },
-        description: {
-            type: 'string',
-            description: 'Human-readable description of this provider instance.',
-            example: 'Production HashiCorp Vault for signing keys'
-        },
-        region: {
-            type: 'string',
-            description: 'AWS region for KMS. Supports ${ENV_VAR} placeholders.',
-            example: '${AWS_REGION}'
-        },
-        accessKeyId: {
-            type: 'string',
-            description: 'AWS access key ID. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.',
-            example: '${AWS_ACCESS_KEY_ID}'
-        },
-        secretAccessKey: {
-            type: 'string',
-            description: 'AWS secret access key. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.',
-            example: '${AWS_SECRET_ACCESS_KEY}'
-        }
-    },
-    required: [
-        'id',
-        'type',
-        'region'
-    ]
-} as const;
-
-export const Pkcs11KmsConfigDtoSchema = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'string',
-            description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
-            example: 'main-vault'
-        },
-        type: {
-            enum: [
-                'pkcs11'
-            ],
-            type: 'string',
-            description: 'Type of the KMS provider.',
-            example: 'pkcs11'
-        },
-        description: {
-            type: 'string',
-            description: 'Human-readable description of this provider instance.',
-            example: 'Production HashiCorp Vault for signing keys'
-        },
-        library: {
-            type: 'string',
-            description: 'Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.',
-            example: '${PKCS11_LIBRARY}'
-        },
-        slot: {
-            type: 'object',
-            description: 'Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.',
-            example: '${PKCS11_SLOT}'
-        },
-        pin: {
-            type: 'string',
-            description: 'User PIN used for C_Login. Supports ${ENV_VAR} placeholders.',
-            example: '${PKCS11_PIN}'
-        },
-        readOnly: {
-            type: 'boolean',
-            description: 'Open the PKCS#11 session in read-only mode. Defaults to false.',
-            example: false
-        }
-    },
-    required: [
-        'id',
-        'type',
-        'library',
-        'slot',
-        'pin'
-    ]
-} as const;
-
-export const HttpAuthBaseConfigDtoSchema = {
-    type: 'object',
-    properties: {
-        type: {
-            enum: [
-                'none',
-                'bearer',
-                'oauth2-client-credentials',
-                'mtls'
-            ],
-            type: 'string',
-            description: 'Authentication method for the remote KMS service.'
-        }
-    },
-    required: [
-        'type'
-    ]
-} as const;
-
-export const HttpKmsConfigDtoSchema = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'string',
-            description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
-            example: 'main-vault'
-        },
-        type: {
-            enum: [
-                'http'
-            ],
-            type: 'string',
-            description: 'Type of the KMS provider.',
-            example: 'http'
-        },
-        description: {
-            type: 'string',
-            description: 'Human-readable description of this provider instance.',
-            example: 'Production HashiCorp Vault for signing keys'
-        },
-        baseUrl: {
-            type: 'string',
-            description: 'Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.',
-            example: '${KMS_SERVICE_URL}'
-        },
-        auth: {
-            description: 'Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to "none") for unauthenticated services.',
-            allOf: [
-                {
-                    $ref: '#/components/schemas/HttpAuthBaseConfigDto'
-                }
-            ]
-        },
-        keysPath: {
-            type: 'string',
-            description: 'Path prefix for key endpoints on the remote service. Defaults to /keys.',
-            example: '/v1/keys'
-        },
-        healthPath: {
-            type: 'string',
-            description: 'Path for the health check endpoint on the remote service. Defaults to /health.',
-            example: '/health'
-        },
-        canImport: {
-            type: 'boolean',
-            description: 'Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.',
-            example: false
-        }
-    },
-    required: [
-        'id',
-        'type',
-        'baseUrl'
-    ]
-} as const;
-
-export const CscAuthorizeAuthDataDtoSchema = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'string',
-            description: 'Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).',
-            example: 'PIN'
-        },
-        value: {
-            type: 'string',
-            description: 'Authentication factor value sent to CSC credentials/authorize.',
-            example: '123456'
-        }
-    },
-    required: [
-        'id',
-        'value'
-    ]
-} as const;
-
-export const CscKmsConfigDtoSchema = {
-    type: 'object',
-    properties: {
-        id: {
-            type: 'string',
-            description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
-            example: 'main-vault'
-        },
-        type: {
-            enum: [
-                'csc'
-            ],
-            type: 'string',
-            description: 'Type of the KMS provider.',
-            example: 'csc'
-        },
-        description: {
-            type: 'string',
-            description: 'Human-readable description of this provider instance.',
-            example: 'Production HashiCorp Vault for signing keys'
-        },
-        baseUrl: {
-            type: 'string',
-            description: 'Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.',
-            example: '${CSC_URL}'
-        },
-        tokenUrl: {
-            type: 'string',
-            format: 'uri',
-            description: 'OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.',
-            example: '${CSC_TOKEN_URL}'
-        },
-        clientId: {
-            type: 'string',
-            description: 'OAuth2 client ID. Supports ${ENV_VAR} placeholders.',
-            example: '${CSC_CLIENT_ID}'
-        },
-        clientSecret: {
-            type: 'string',
-            description: 'OAuth2 client secret. Supports ${ENV_VAR} placeholders.',
-            example: '${CSC_CLIENT_SECRET}'
-        },
-        scope: {
-            type: 'string',
-            description: 'OAuth2 scope to request during token acquisition.',
-            example: 'service'
-        },
-        credentialId: {
-            type: 'string',
-            description: 'Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.',
-            example: '[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758'
-        },
-        userId: {
-            type: 'string',
-            description: 'Optional CSC user ID used in credentials/list requests.',
-            example: 'eudiplo_user'
-        },
-        apiPath: {
-            type: 'string',
-            description: 'CSC API path prefix appended to baseUrl. Defaults to /csc/v2.',
-            example: '/csc/v2'
-        },
-        hashAlgorithmOid: {
-            type: 'string',
-            description: 'Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.',
-            example: '2.16.840.1.101.3.4.2.1'
-        },
-        signAlgorithmOid: {
-            type: 'string',
-            description: 'Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.',
-            example: '1.2.840.10045.4.3.2'
-        },
-        sad: {
-            type: 'string',
-            description: 'Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.'
-        },
-        useAuthorizeEndpoint: {
-            type: 'boolean',
-            description: 'When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.',
-            example: false
-        },
-        authorizeAuthData: {
-            description: 'Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).',
-            type: 'array',
-            items: {
-                $ref: '#/components/schemas/CscAuthorizeAuthDataDto'
-            }
-        }
-    },
-    required: [
-        'id',
-        'type',
-        'baseUrl',
-        'tokenUrl',
-        'clientId',
-        'clientSecret'
-    ]
-} as const;
-
 export const KmsConfigDtoSchema = {
     type: 'object',
     properties: {
         defaultProvider: {
-            type: 'string',
             description: 'ID of the default KMS provider. Defaults to "db" if not set.',
-            example: 'main-vault'
+            examples: [
+                'main-vault'
+            ],
+            type: 'string'
         },
         providers: {
             type: 'array',
-            description: 'List of KMS provider configurations. Each provider must have a unique id and a type.',
             items: {
                 oneOf: [
                     {
-                        $ref: '#/components/schemas/DbKmsConfigDto'
+                        type: 'object',
+                        properties: {
+                            id: {
+                                type: 'string',
+                                description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
+                                examples: [
+                                    'main-vault'
+                                ]
+                            },
+                            type: {
+                                type: 'string',
+                                const: 'db',
+                                description: 'Type of the KMS provider.',
+                                examples: [
+                                    'db'
+                                ]
+                            },
+                            description: {
+                                description: 'Human-readable description of this provider instance.',
+                                examples: [
+                                    'Production HashiCorp Vault for signing keys'
+                                ],
+                                type: 'string'
+                            }
+                        },
+                        required: [
+                            'id',
+                            'type'
+                        ],
+                        additionalProperties: false
                     },
                     {
-                        $ref: '#/components/schemas/VaultKmsConfigDto'
+                        type: 'object',
+                        properties: {
+                            id: {
+                                type: 'string',
+                                description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
+                                examples: [
+                                    'main-vault'
+                                ]
+                            },
+                            type: {
+                                type: 'string',
+                                const: 'vault',
+                                description: 'Type of the KMS provider.',
+                                examples: [
+                                    'vault'
+                                ]
+                            },
+                            description: {
+                                description: 'Human-readable description of this provider instance.',
+                                examples: [
+                                    'Production HashiCorp Vault for signing keys'
+                                ],
+                                type: 'string'
+                            },
+                            vaultUrl: {
+                                type: 'string',
+                                description: 'URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.',
+                                examples: [
+                                    '${VAULT_URL}'
+                                ]
+                            },
+                            vaultToken: {
+                                type: 'string',
+                                description: 'Authentication token for HashiCorp Vault. Supports ${ENV_VAR} placeholders.',
+                                examples: [
+                                    '${VAULT_TOKEN}'
+                                ]
+                            }
+                        },
+                        required: [
+                            'id',
+                            'type',
+                            'vaultUrl',
+                            'vaultToken'
+                        ],
+                        additionalProperties: false
                     },
                     {
-                        $ref: '#/components/schemas/AwsKmsConfigDto'
+                        type: 'object',
+                        properties: {
+                            id: {
+                                type: 'string',
+                                description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
+                                examples: [
+                                    'main-vault'
+                                ]
+                            },
+                            type: {
+                                type: 'string',
+                                const: 'aws-kms',
+                                description: 'Type of the KMS provider.',
+                                examples: [
+                                    'aws-kms'
+                                ]
+                            },
+                            description: {
+                                description: 'Human-readable description of this provider instance.',
+                                examples: [
+                                    'Production HashiCorp Vault for signing keys'
+                                ],
+                                type: 'string'
+                            },
+                            region: {
+                                type: 'string',
+                                description: 'AWS region for KMS. Supports ${ENV_VAR} placeholders.',
+                                examples: [
+                                    '${AWS_REGION}'
+                                ]
+                            },
+                            accessKeyId: {
+                                description: 'AWS access key ID. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.',
+                                examples: [
+                                    '${AWS_ACCESS_KEY_ID}'
+                                ],
+                                type: 'string'
+                            },
+                            secretAccessKey: {
+                                description: 'AWS secret access key. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.',
+                                examples: [
+                                    '${AWS_SECRET_ACCESS_KEY}'
+                                ],
+                                type: 'string'
+                            }
+                        },
+                        required: [
+                            'id',
+                            'type',
+                            'region'
+                        ],
+                        additionalProperties: false
                     },
                     {
-                        $ref: '#/components/schemas/Pkcs11KmsConfigDto'
+                        type: 'object',
+                        properties: {
+                            id: {
+                                type: 'string',
+                                description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
+                                examples: [
+                                    'main-vault'
+                                ]
+                            },
+                            type: {
+                                type: 'string',
+                                const: 'pkcs11',
+                                description: 'Type of the KMS provider.',
+                                examples: [
+                                    'pkcs11'
+                                ]
+                            },
+                            description: {
+                                description: 'Human-readable description of this provider instance.',
+                                examples: [
+                                    'Production HashiCorp Vault for signing keys'
+                                ],
+                                type: 'string'
+                            },
+                            library: {
+                                type: 'string',
+                                description: 'Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.',
+                                examples: [
+                                    '${PKCS11_LIBRARY}'
+                                ]
+                            },
+                            slot: {
+                                anyOf: [
+                                    {
+                                        type: 'number'
+                                    },
+                                    {
+                                        type: 'string'
+                                    }
+                                ],
+                                description: 'Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.',
+                                examples: [
+                                    '${PKCS11_SLOT}'
+                                ]
+                            },
+                            pin: {
+                                type: 'string',
+                                description: 'User PIN used for C_Login. Supports ${ENV_VAR} placeholders.',
+                                examples: [
+                                    '${PKCS11_PIN}'
+                                ]
+                            },
+                            readOnly: {
+                                description: 'Open the PKCS#11 session in read-only mode. Defaults to false.',
+                                examples: [
+                                    false
+                                ],
+                                type: 'boolean'
+                            }
+                        },
+                        required: [
+                            'id',
+                            'type',
+                            'library',
+                            'slot',
+                            'pin'
+                        ],
+                        additionalProperties: false
                     },
                     {
-                        $ref: '#/components/schemas/HttpKmsConfigDto'
+                        type: 'object',
+                        properties: {
+                            id: {
+                                type: 'string',
+                                description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
+                                examples: [
+                                    'main-vault'
+                                ]
+                            },
+                            type: {
+                                type: 'string',
+                                const: 'http',
+                                description: 'Type of the KMS provider.',
+                                examples: [
+                                    'http'
+                                ]
+                            },
+                            description: {
+                                description: 'Human-readable description of this provider instance.',
+                                examples: [
+                                    'Production HashiCorp Vault for signing keys'
+                                ],
+                                type: 'string'
+                            },
+                            baseUrl: {
+                                type: 'string',
+                                description: 'Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.',
+                                examples: [
+                                    '${KMS_SERVICE_URL}'
+                                ]
+                            },
+                            auth: {
+                                description: 'Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to "none") for unauthenticated services.',
+                                oneOf: [
+                                    {
+                                        type: 'object',
+                                        properties: {
+                                            type: {
+                                                type: 'string',
+                                                const: 'none',
+                                                description: 'No authentication — suitable for services on a trusted private network.',
+                                                examples: [
+                                                    'none'
+                                                ]
+                                            }
+                                        },
+                                        required: [
+                                            'type'
+                                        ],
+                                        additionalProperties: false
+                                    },
+                                    {
+                                        type: 'object',
+                                        properties: {
+                                            type: {
+                                                type: 'string',
+                                                const: 'bearer',
+                                                description: 'Static Bearer token sent as Authorization: Bearer <token>.',
+                                                examples: [
+                                                    'bearer'
+                                                ]
+                                            },
+                                            token: {
+                                                type: 'string',
+                                                description: 'Bearer token value. Supports ${ENV_VAR} placeholders.',
+                                                examples: [
+                                                    '${KMS_API_KEY}'
+                                                ]
+                                            }
+                                        },
+                                        required: [
+                                            'type',
+                                            'token'
+                                        ],
+                                        additionalProperties: false
+                                    },
+                                    {
+                                        type: 'object',
+                                        properties: {
+                                            type: {
+                                                type: 'string',
+                                                const: 'oauth2-client-credentials',
+                                                description: 'OAuth 2.0 Client Credentials — EUDIPLO fetches and caches short-lived tokens.',
+                                                examples: [
+                                                    'oauth2-client-credentials'
+                                                ]
+                                            },
+                                            tokenUrl: {
+                                                type: 'string',
+                                                description: 'Token endpoint URL (e.g. Keycloak, Entra ID). Supports ${ENV_VAR} placeholders.',
+                                                examples: [
+                                                    '${IAM_TOKEN_URL}'
+                                                ]
+                                            },
+                                            clientId: {
+                                                type: 'string',
+                                                description: 'OAuth 2.0 client ID. Supports ${ENV_VAR} placeholders.',
+                                                examples: [
+                                                    '${KMS_CLIENT_ID}'
+                                                ]
+                                            },
+                                            clientSecret: {
+                                                type: 'string',
+                                                description: 'OAuth 2.0 client secret. Supports ${ENV_VAR} placeholders.',
+                                                examples: [
+                                                    '${KMS_CLIENT_SECRET}'
+                                                ]
+                                            },
+                                            scope: {
+                                                description: 'Space-separated list of OAuth 2.0 scopes to request. Optional.',
+                                                examples: [
+                                                    'kms:sign kms:admin'
+                                                ],
+                                                type: 'string'
+                                            }
+                                        },
+                                        required: [
+                                            'type',
+                                            'tokenUrl',
+                                            'clientId',
+                                            'clientSecret'
+                                        ],
+                                        additionalProperties: false
+                                    },
+                                    {
+                                        type: 'object',
+                                        properties: {
+                                            type: {
+                                                type: 'string',
+                                                const: 'mtls',
+                                                description: 'Mutual TLS — EUDIPLO presents a client certificate on every connection.',
+                                                examples: [
+                                                    'mtls'
+                                                ]
+                                            },
+                                            certFile: {
+                                                type: 'string',
+                                                description: 'Absolute path to the PEM-encoded client certificate file. Supports ${ENV_VAR} placeholders.',
+                                                examples: [
+                                                    '/etc/certs/eudiplo.crt'
+                                                ]
+                                            },
+                                            keyFile: {
+                                                type: 'string',
+                                                description: 'Absolute path to the PEM-encoded private key file for the client certificate. Supports ${ENV_VAR} placeholders.',
+                                                examples: [
+                                                    '/etc/certs/eudiplo.key'
+                                                ]
+                                            },
+                                            caFile: {
+                                                description: 'Absolute path to the PEM-encoded CA bundle to trust for the remote server\'s certificate. Omit to use the system CA store.',
+                                                examples: [
+                                                    '/etc/certs/ca.crt'
+                                                ],
+                                                type: 'string'
+                                            }
+                                        },
+                                        required: [
+                                            'type',
+                                            'certFile',
+                                            'keyFile'
+                                        ],
+                                        additionalProperties: false
+                                    }
+                                ]
+                            },
+                            keysPath: {
+                                description: 'Path prefix for key endpoints on the remote service. Defaults to /keys.',
+                                examples: [
+                                    '/v1/keys'
+                                ],
+                                type: 'string'
+                            },
+                            healthPath: {
+                                description: 'Path for the health check endpoint on the remote service. Defaults to /health.',
+                                examples: [
+                                    '/health'
+                                ],
+                                type: 'string'
+                            },
+                            canImport: {
+                                description: 'Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.',
+                                examples: [
+                                    false
+                                ],
+                                type: 'boolean'
+                            }
+                        },
+                        required: [
+                            'id',
+                            'type',
+                            'baseUrl'
+                        ],
+                        additionalProperties: false
                     },
                     {
-                        $ref: '#/components/schemas/CscKmsConfigDto'
+                        type: 'object',
+                        properties: {
+                            id: {
+                                type: 'string',
+                                description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
+                                examples: [
+                                    'main-vault'
+                                ]
+                            },
+                            type: {
+                                type: 'string',
+                                const: 'csc',
+                                description: 'Type of the KMS provider.',
+                                examples: [
+                                    'csc'
+                                ]
+                            },
+                            description: {
+                                description: 'Human-readable description of this provider instance.',
+                                examples: [
+                                    'Production HashiCorp Vault for signing keys'
+                                ],
+                                type: 'string'
+                            },
+                            baseUrl: {
+                                type: 'string',
+                                description: 'Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.',
+                                examples: [
+                                    '${CSC_URL}'
+                                ]
+                            },
+                            tokenUrl: {
+                                type: 'string',
+                                description: 'OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.',
+                                examples: [
+                                    '${CSC_TOKEN_URL}'
+                                ]
+                            },
+                            clientId: {
+                                type: 'string',
+                                description: 'OAuth2 client ID. Supports ${ENV_VAR} placeholders.',
+                                examples: [
+                                    '${CSC_CLIENT_ID}'
+                                ]
+                            },
+                            clientSecret: {
+                                type: 'string',
+                                description: 'OAuth2 client secret. Supports ${ENV_VAR} placeholders.',
+                                examples: [
+                                    '${CSC_CLIENT_SECRET}'
+                                ]
+                            },
+                            scope: {
+                                description: 'OAuth2 scope to request during token acquisition.',
+                                examples: [
+                                    'service'
+                                ],
+                                type: 'string'
+                            },
+                            credentialId: {
+                                description: 'Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.',
+                                examples: [
+                                    '[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758'
+                                ],
+                                type: 'string'
+                            },
+                            userId: {
+                                description: 'Optional CSC user ID used in credentials/list requests.',
+                                examples: [
+                                    'eudiplo_user'
+                                ],
+                                type: 'string'
+                            },
+                            apiPath: {
+                                description: 'CSC API path prefix appended to baseUrl. Defaults to /csc/v2.',
+                                examples: [
+                                    '/csc/v2'
+                                ],
+                                type: 'string'
+                            },
+                            hashAlgorithmOid: {
+                                description: 'Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.',
+                                examples: [
+                                    '2.16.840.1.101.3.4.2.1'
+                                ],
+                                type: 'string'
+                            },
+                            signAlgorithmOid: {
+                                description: 'Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.',
+                                examples: [
+                                    '1.2.840.10045.4.3.2'
+                                ],
+                                type: 'string'
+                            },
+                            sad: {
+                                description: 'Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.',
+                                type: 'string'
+                            },
+                            useAuthorizeEndpoint: {
+                                description: 'When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.',
+                                examples: [
+                                    false
+                                ],
+                                type: 'boolean'
+                            },
+                            authorizeAuthData: {
+                                description: 'Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).',
+                                type: 'array',
+                                items: {
+                                    type: 'object',
+                                    properties: {
+                                        id: {
+                                            type: 'string',
+                                            description: 'Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).',
+                                            examples: [
+                                                'PIN'
+                                            ]
+                                        },
+                                        value: {
+                                            type: 'string',
+                                            description: 'Authentication factor value sent to CSC credentials/authorize.',
+                                            examples: [
+                                                '123456'
+                                            ]
+                                        }
+                                    },
+                                    required: [
+                                        'id',
+                                        'value'
+                                    ],
+                                    additionalProperties: false
+                                }
+                            }
+                        },
+                        required: [
+                            'id',
+                            'type',
+                            'baseUrl',
+                            'tokenUrl',
+                            'clientId',
+                            'clientSecret'
+                        ],
+                        additionalProperties: false
                     }
-                ],
-                discriminator: {
-                    propertyName: 'type',
-                    mapping: {
-                        db: '#/components/schemas/DbKmsConfigDto',
-                        vault: '#/components/schemas/VaultKmsConfigDto',
-                        'aws-kms': '#/components/schemas/AwsKmsConfigDto',
-                        pkcs11: '#/components/schemas/Pkcs11KmsConfigDto',
-                        http: '#/components/schemas/HttpKmsConfigDto',
-                        csc: '#/components/schemas/CscKmsConfigDto'
-                    }
-                }
+                ]
             },
-            example: [
-                {
-                    id: 'db',
-                    type: 'db',
-                    description: 'Default database provider'
-                },
-                {
-                    id: 'main-vault',
-                    type: 'vault',
-                    description: 'Production Vault',
-                    vaultUrl: '${VAULT_URL}',
-                    vaultToken: '${VAULT_TOKEN}'
-                },
-                {
-                    id: 'aws',
-                    type: 'aws-kms',
-                    description: 'AWS KMS',
-                    region: '${AWS_REGION}'
-                }
+            description: 'List of KMS provider configurations. Each provider must have a unique id and a type.',
+            examples: [
+                [
+                    {
+                        id: 'db',
+                        type: 'db',
+                        description: 'Default database provider'
+                    },
+                    {
+                        id: 'main-vault',
+                        type: 'vault',
+                        description: 'Production Vault',
+                        vaultUrl: '${VAULT_URL}',
+                        vaultToken: '${VAULT_TOKEN}'
+                    },
+                    {
+                        id: 'aws',
+                        type: 'aws-kms',
+                        description: 'AWS KMS',
+                        region: '${AWS_REGION}'
+                    }
+                ]
             ]
         }
     },
     required: [
         'providers'
-    ]
+    ],
+    additionalProperties: false
 } as const;
 
 export const KmsTenantConfigResponseDtoSchema = {
@@ -6608,7 +7023,7 @@ export const RotationPolicyImportDtoSchema = {
     properties: {
         enabled: {
             type: 'boolean',
-            description: 'Whether rotation is enabled. When true, the imported key becomes a root CA.',
+            description: 'Whether rotation is enabled. When true, the imported key becomes a root CA signer.',
             default: false
         },
         intervalDays: {
@@ -6662,7 +7077,7 @@ export const KeyChainImportDtoSchema = {
             description: 'Usage type for this key chain.'
         },
         crt: {
-            description: 'Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import.',
+            description: 'Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import. When rotationPolicy.enabled=true, the last certificate in the chain is treated as the root CA certificate.',
             type: 'array',
             items: {
                 type: 'string'
@@ -6673,7 +7088,7 @@ export const KeyChainImportDtoSchema = {
             description: 'KMS provider to use. Defaults to \'db\'.'
         },
         rotationPolicy: {
-            description: 'Rotation policy. When enabled, the imported key becomes a root CA and a new leaf key is generated.',
+            description: 'Rotation policy. When enabled, the imported key becomes a root CA signer and a new leaf key is generated. If crt is provided, the selected root CA certificate must have CA=true and its public key must match the imported private key.',
             allOf: [
                 {
                     $ref: '#/components/schemas/RotationPolicyImportDto'
@@ -6773,7 +7188,8 @@ export const PresentationRequestSchema = {
         },
         skewSeconds: {
             type: 'number',
-            description: 'Optional clock skew tolerance for this presentation offer, in seconds.\nIf provided, this overrides the presentation configuration for the created session.'
+            description: 'Optional clock skew tolerance for this presentation offer, in seconds.\nIf provided, this overrides the presentation configuration for the created session.',
+            minimum: 0
         }
     },
     required: [
@@ -6798,6 +7214,13 @@ export const FileUploadDtoSchema = {
 export const IssuanceConfigWritableSchema = {
     type: 'object',
     properties: {
+        walletProviderTrustLists: {
+            description: 'Trust lists containing trusted wallet providers.\nEach entry MUST include either `verifierKey` or `verifierX509Der`.',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/WalletProviderTrustListRefDto'
+            }
+        },
         signingKeyId: {
             type: 'string',
             description: 'Key ID for signing access tokens. If unset, the default signing key is used.'
@@ -6888,13 +7311,6 @@ export const IssuanceConfigWritableSchema = {
             type: 'boolean',
             description: 'Indicates whether wallet attestation is required for the token endpoint.\nWhen enabled, wallets must provide OAuth-Client-Attestation headers.\nDefault value is false.'
         },
-        walletProviderTrustLists: {
-            description: 'URLs of trust lists containing trusted wallet providers.\nThe wallet attestation\'s X.509 certificate will be validated against these trust lists.\nIf empty and walletAttestationRequired is true, all wallet providers are rejected.',
-            type: 'array',
-            items: {
-                type: 'string'
-            }
-        },
         display: {
             type: 'array',
             items: {
@@ -6924,6 +7340,13 @@ export const IssuanceConfigWritableSchema = {
 export const UpdateIssuanceDtoWritableSchema = {
     type: 'object',
     properties: {
+        walletProviderTrustLists: {
+            description: 'Trust lists containing trusted wallet providers.\nEach entry MUST include either `verifierKey` or `verifierX509Der`.',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/WalletProviderTrustListRefDto'
+            }
+        },
         signingKeyId: {
             type: 'string',
             description: 'Key ID for signing access tokens. If unset, the default signing key is used.'
@@ -7006,13 +7429,6 @@ export const UpdateIssuanceDtoWritableSchema = {
             type: 'boolean',
             description: 'Indicates whether wallet attestation is required for the token endpoint.\nWhen enabled, wallets must provide OAuth-Client-Attestation headers.\nDefault value is false.'
         },
-        walletProviderTrustLists: {
-            description: 'URLs of trust lists containing trusted wallet providers.\nThe wallet attestation\'s X.509 certificate will be validated against these trust lists.\nIf empty and walletAttestationRequired is true, all wallet providers are rejected.',
-            type: 'array',
-            items: {
-                type: 'string'
-            }
-        },
         display: {
             type: 'array',
             items: {
@@ -7025,6 +7441,22 @@ export const UpdateIssuanceDtoWritableSchema = {
 export const PresentationConfigWritableSchema = {
     type: 'object',
     properties: {
+        skewSeconds: {
+            type: 'number',
+            description: 'Clock skew tolerance for credential JWT time validation, in seconds.',
+            minimum: 0,
+            default: 60
+        },
+        statusCheckMode: {
+            description: 'Status list verification mode for presentations: strict (default), best_effort, or disabled.',
+            enum: [
+                'strict',
+                'best_effort',
+                'disabled'
+            ],
+            type: 'string',
+            default: 'strict'
+        },
         id: {
             type: 'string',
             description: 'Unique identifier for the VP request.'
@@ -7074,20 +7506,6 @@ export const PresentationConfigWritableSchema = {
             type: 'string',
             nullable: true,
             description: 'Reference to the webhook endpoint used for notifications.\nOptional: if set, notifications will be sent to this endpoint.'
-        },
-        webhookEndpoint: {
-            $ref: '#/components/schemas/WebhookEndpointEntity'
-        },
-        webhook: {
-            nullable: true,
-            description: 'Optional webhook URL to receive the response.',
-            deprecated: true,
-            type: 'object',
-            allOf: [
-                {
-                    $ref: '#/components/schemas/WebhookConfig'
-                }
-            ]
         },
         createdAt: {
             format: 'date-time',

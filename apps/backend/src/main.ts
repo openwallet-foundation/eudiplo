@@ -2,7 +2,6 @@
 // Auto-instrumentations patch Node built-ins at import time.
 
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
@@ -13,6 +12,7 @@ import { AllExceptionsFilter } from "./all-exceptions.filter";
 import { AppModule } from "./app.module";
 import { filterOpenApiPaths, GLOBAL_PREFIX_EXCLUSIONS } from "./main.helpers";
 import { ValidationErrorFilter } from "./shared/common/filters/validation-error.filter";
+import { createHybridValidationPipe } from "./shared/common/pipes/hybrid-validation.pipe";
 import { registerTolerantX509Extensions } from "./shared/utils/x509-tolerant-extensions";
 import { NextFunction, Request, Response } from "express";
 
@@ -131,16 +131,7 @@ async function bootstrap() {
     // This ensures LOG_LEVEL env var is respected across all services
     app.useLogger(app.get(Logger));
 
-    app.useGlobalPipes(
-        new ValidationPipe({
-            transform: true, // required for discriminator instantiation
-            whitelist: true,
-            forbidUnknownValues: false, // avoid false positives on plain objects
-            forbidNonWhitelisted: false,
-            stopAtFirstError: false,
-            validateCustomDecorators: true,
-        }),
-    );
+    app.useGlobalPipes(createHybridValidationPipe());
 
     const configService = app.get(ConfigService);
     const publicUrl = configService.getOrThrow<string>("PUBLIC_URL");

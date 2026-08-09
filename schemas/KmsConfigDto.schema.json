@@ -1,88 +1,594 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./KmsConfigDto.schema.json",
-  "title": "KmsConfigDto",
   "type": "object",
   "properties": {
     "defaultProvider": {
-      "type": "string",
       "description": "ID of the default KMS provider. Defaults to \"db\" if not set.",
-      "example": "main-vault"
+      "examples": [
+        "main-vault"
+      ],
+      "type": "string"
     },
     "providers": {
       "type": "array",
-      "description": "List of KMS provider configurations. Each provider must have a unique id and a type.",
       "items": {
         "oneOf": [
           {
-            "$ref": "./DbKmsConfigDto.schema.json"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+                "examples": [
+                  "main-vault"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "db",
+                "description": "Type of the KMS provider.",
+                "examples": [
+                  "db"
+                ]
+              },
+              "description": {
+                "description": "Human-readable description of this provider instance.",
+                "examples": [
+                  "Production HashiCorp Vault for signing keys"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "type"
+            ],
+            "additionalProperties": false
           },
           {
-            "$ref": "./VaultKmsConfigDto.schema.json"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+                "examples": [
+                  "main-vault"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "vault",
+                "description": "Type of the KMS provider.",
+                "examples": [
+                  "vault"
+                ]
+              },
+              "description": {
+                "description": "Human-readable description of this provider instance.",
+                "examples": [
+                  "Production HashiCorp Vault for signing keys"
+                ],
+                "type": "string"
+              },
+              "vaultUrl": {
+                "type": "string",
+                "description": "URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.",
+                "examples": [
+                  "${VAULT_URL}"
+                ]
+              },
+              "vaultToken": {
+                "type": "string",
+                "description": "Authentication token for HashiCorp Vault. Supports ${ENV_VAR} placeholders.",
+                "examples": [
+                  "${VAULT_TOKEN}"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "vaultUrl",
+              "vaultToken"
+            ],
+            "additionalProperties": false
           },
           {
-            "$ref": "./AwsKmsConfigDto.schema.json"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+                "examples": [
+                  "main-vault"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "aws-kms",
+                "description": "Type of the KMS provider.",
+                "examples": [
+                  "aws-kms"
+                ]
+              },
+              "description": {
+                "description": "Human-readable description of this provider instance.",
+                "examples": [
+                  "Production HashiCorp Vault for signing keys"
+                ],
+                "type": "string"
+              },
+              "region": {
+                "type": "string",
+                "description": "AWS region for KMS. Supports ${ENV_VAR} placeholders.",
+                "examples": [
+                  "${AWS_REGION}"
+                ]
+              },
+              "accessKeyId": {
+                "description": "AWS access key ID. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.",
+                "examples": [
+                  "${AWS_ACCESS_KEY_ID}"
+                ],
+                "type": "string"
+              },
+              "secretAccessKey": {
+                "description": "AWS secret access key. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.",
+                "examples": [
+                  "${AWS_SECRET_ACCESS_KEY}"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "region"
+            ],
+            "additionalProperties": false
           },
           {
-            "$ref": "./Pkcs11KmsConfigDto.schema.json"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+                "examples": [
+                  "main-vault"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "pkcs11",
+                "description": "Type of the KMS provider.",
+                "examples": [
+                  "pkcs11"
+                ]
+              },
+              "description": {
+                "description": "Human-readable description of this provider instance.",
+                "examples": [
+                  "Production HashiCorp Vault for signing keys"
+                ],
+                "type": "string"
+              },
+              "library": {
+                "type": "string",
+                "description": "Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.",
+                "examples": [
+                  "${PKCS11_LIBRARY}"
+                ]
+              },
+              "slot": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "description": "Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.",
+                "examples": [
+                  "${PKCS11_SLOT}"
+                ]
+              },
+              "pin": {
+                "type": "string",
+                "description": "User PIN used for C_Login. Supports ${ENV_VAR} placeholders.",
+                "examples": [
+                  "${PKCS11_PIN}"
+                ]
+              },
+              "readOnly": {
+                "description": "Open the PKCS#11 session in read-only mode. Defaults to false.",
+                "examples": [
+                  false
+                ],
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "library",
+              "slot",
+              "pin"
+            ],
+            "additionalProperties": false
           },
           {
-            "$ref": "./HttpKmsConfigDto.schema.json"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+                "examples": [
+                  "main-vault"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "http",
+                "description": "Type of the KMS provider.",
+                "examples": [
+                  "http"
+                ]
+              },
+              "description": {
+                "description": "Human-readable description of this provider instance.",
+                "examples": [
+                  "Production HashiCorp Vault for signing keys"
+                ],
+                "type": "string"
+              },
+              "baseUrl": {
+                "type": "string",
+                "description": "Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.",
+                "examples": [
+                  "${KMS_SERVICE_URL}"
+                ]
+              },
+              "auth": {
+                "description": "Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to \"none\") for unauthenticated services.",
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "none",
+                        "description": "No authentication — suitable for services on a trusted private network.",
+                        "examples": [
+                          "none"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "bearer",
+                        "description": "Static Bearer token sent as Authorization: Bearer <token>.",
+                        "examples": [
+                          "bearer"
+                        ]
+                      },
+                      "token": {
+                        "type": "string",
+                        "description": "Bearer token value. Supports ${ENV_VAR} placeholders.",
+                        "examples": [
+                          "${KMS_API_KEY}"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "token"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "oauth2-client-credentials",
+                        "description": "OAuth 2.0 Client Credentials — EUDIPLO fetches and caches short-lived tokens.",
+                        "examples": [
+                          "oauth2-client-credentials"
+                        ]
+                      },
+                      "tokenUrl": {
+                        "type": "string",
+                        "description": "Token endpoint URL (e.g. Keycloak, Entra ID). Supports ${ENV_VAR} placeholders.",
+                        "examples": [
+                          "${IAM_TOKEN_URL}"
+                        ]
+                      },
+                      "clientId": {
+                        "type": "string",
+                        "description": "OAuth 2.0 client ID. Supports ${ENV_VAR} placeholders.",
+                        "examples": [
+                          "${KMS_CLIENT_ID}"
+                        ]
+                      },
+                      "clientSecret": {
+                        "type": "string",
+                        "description": "OAuth 2.0 client secret. Supports ${ENV_VAR} placeholders.",
+                        "examples": [
+                          "${KMS_CLIENT_SECRET}"
+                        ]
+                      },
+                      "scope": {
+                        "description": "Space-separated list of OAuth 2.0 scopes to request. Optional.",
+                        "examples": [
+                          "kms:sign kms:admin"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "tokenUrl",
+                      "clientId",
+                      "clientSecret"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "mtls",
+                        "description": "Mutual TLS — EUDIPLO presents a client certificate on every connection.",
+                        "examples": [
+                          "mtls"
+                        ]
+                      },
+                      "certFile": {
+                        "type": "string",
+                        "description": "Absolute path to the PEM-encoded client certificate file. Supports ${ENV_VAR} placeholders.",
+                        "examples": [
+                          "/etc/certs/eudiplo.crt"
+                        ]
+                      },
+                      "keyFile": {
+                        "type": "string",
+                        "description": "Absolute path to the PEM-encoded private key file for the client certificate. Supports ${ENV_VAR} placeholders.",
+                        "examples": [
+                          "/etc/certs/eudiplo.key"
+                        ]
+                      },
+                      "caFile": {
+                        "description": "Absolute path to the PEM-encoded CA bundle to trust for the remote server's certificate. Omit to use the system CA store.",
+                        "examples": [
+                          "/etc/certs/ca.crt"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "certFile",
+                      "keyFile"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "keysPath": {
+                "description": "Path prefix for key endpoints on the remote service. Defaults to /keys.",
+                "examples": [
+                  "/v1/keys"
+                ],
+                "type": "string"
+              },
+              "healthPath": {
+                "description": "Path for the health check endpoint on the remote service. Defaults to /health.",
+                "examples": [
+                  "/health"
+                ],
+                "type": "string"
+              },
+              "canImport": {
+                "description": "Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.",
+                "examples": [
+                  false
+                ],
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "baseUrl"
+            ],
+            "additionalProperties": false
           },
           {
-            "$ref": "./CscKmsConfigDto.schema.json"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+                "examples": [
+                  "main-vault"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "csc",
+                "description": "Type of the KMS provider.",
+                "examples": [
+                  "csc"
+                ]
+              },
+              "description": {
+                "description": "Human-readable description of this provider instance.",
+                "examples": [
+                  "Production HashiCorp Vault for signing keys"
+                ],
+                "type": "string"
+              },
+              "baseUrl": {
+                "type": "string",
+                "description": "Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.",
+                "examples": [
+                  "${CSC_URL}"
+                ]
+              },
+              "tokenUrl": {
+                "type": "string",
+                "description": "OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.",
+                "examples": [
+                  "${CSC_TOKEN_URL}"
+                ]
+              },
+              "clientId": {
+                "type": "string",
+                "description": "OAuth2 client ID. Supports ${ENV_VAR} placeholders.",
+                "examples": [
+                  "${CSC_CLIENT_ID}"
+                ]
+              },
+              "clientSecret": {
+                "type": "string",
+                "description": "OAuth2 client secret. Supports ${ENV_VAR} placeholders.",
+                "examples": [
+                  "${CSC_CLIENT_SECRET}"
+                ]
+              },
+              "scope": {
+                "description": "OAuth2 scope to request during token acquisition.",
+                "examples": [
+                  "service"
+                ],
+                "type": "string"
+              },
+              "credentialId": {
+                "description": "Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.",
+                "examples": [
+                  "[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758"
+                ],
+                "type": "string"
+              },
+              "userId": {
+                "description": "Optional CSC user ID used in credentials/list requests.",
+                "examples": [
+                  "eudiplo_user"
+                ],
+                "type": "string"
+              },
+              "apiPath": {
+                "description": "CSC API path prefix appended to baseUrl. Defaults to /csc/v2.",
+                "examples": [
+                  "/csc/v2"
+                ],
+                "type": "string"
+              },
+              "hashAlgorithmOid": {
+                "description": "Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.",
+                "examples": [
+                  "2.16.840.1.101.3.4.2.1"
+                ],
+                "type": "string"
+              },
+              "signAlgorithmOid": {
+                "description": "Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.",
+                "examples": [
+                  "1.2.840.10045.4.3.2"
+                ],
+                "type": "string"
+              },
+              "sad": {
+                "description": "Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.",
+                "type": "string"
+              },
+              "useAuthorizeEndpoint": {
+                "description": "When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.",
+                "examples": [
+                  false
+                ],
+                "type": "boolean"
+              },
+              "authorizeAuthData": {
+                "description": "Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).",
+                      "examples": [
+                        "PIN"
+                      ]
+                    },
+                    "value": {
+                      "type": "string",
+                      "description": "Authentication factor value sent to CSC credentials/authorize.",
+                      "examples": [
+                        "123456"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "value"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "baseUrl",
+              "tokenUrl",
+              "clientId",
+              "clientSecret"
+            ],
+            "additionalProperties": false
           }
-        ],
-        "discriminator": {
-          "propertyName": "type",
-          "mapping": {
-            "db": "./DbKmsConfigDto.schema.json",
-            "vault": "./VaultKmsConfigDto.schema.json",
-            "aws-kms": "./AwsKmsConfigDto.schema.json",
-            "pkcs11": "./Pkcs11KmsConfigDto.schema.json",
-            "http": "./HttpKmsConfigDto.schema.json",
-            "csc": "./CscKmsConfigDto.schema.json"
-          }
-        },
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "db",
-              "vault",
-              "aws-kms",
-              "pkcs11",
-              "http",
-              "csc"
-            ]
-          }
-        }
+        ]
       },
-      "example": [
-        {
-          "id": "db",
-          "type": "db",
-          "description": "Default database provider"
-        },
-        {
-          "id": "main-vault",
-          "type": "vault",
-          "description": "Production Vault",
-          "vaultUrl": "${VAULT_URL}",
-          "vaultToken": "${VAULT_TOKEN}"
-        },
-        {
-          "id": "aws",
-          "type": "aws-kms",
-          "description": "AWS KMS",
-          "region": "${AWS_REGION}"
-        }
+      "description": "List of KMS provider configurations. Each provider must have a unique id and a type.",
+      "examples": [
+        [
+          {
+            "id": "db",
+            "type": "db",
+            "description": "Default database provider"
+          },
+          {
+            "id": "main-vault",
+            "type": "vault",
+            "description": "Production Vault",
+            "vaultUrl": "${VAULT_URL}",
+            "vaultToken": "${VAULT_TOKEN}"
+          },
+          {
+            "id": "aws",
+            "type": "aws-kms",
+            "description": "AWS KMS",
+            "region": "${AWS_REGION}"
+          }
+        ]
       ]
     }
   },
   "required": [
     "providers"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./KmsConfigDto.schema.json",
+  "title": "KmsConfigDto"
 }

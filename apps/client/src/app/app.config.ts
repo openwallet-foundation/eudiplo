@@ -61,6 +61,10 @@ function toEditorFriendlySchema(node: any): any {
     delete out['oneOf'];
   }
 
+  if (out['discriminator']) {
+    delete out['discriminator'];
+  }
+
   // If a schema already exposes local object properties, flatten trivial allOf
   // wrappers so Monaco can offer property completion inside nested objects.
   if (

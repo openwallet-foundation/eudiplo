@@ -2,7 +2,11 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import type { KmsConfigDto, KmsProviderConfigDto } from "../dto/kms-config.dto";
+import {
+    parseResolvedKmsConfig,
+    type KmsConfig,
+    type KmsProviderConfig,
+} from "../schemas/kms-config.schema";
 
 const DEFAULT_PROVIDER_ID = "db";
 
@@ -17,8 +21,8 @@ const DEFAULT_PROVIDER_ID = "db";
 @Injectable()
 export class KmsConfigService {
     private readonly logger = new Logger(KmsConfigService.name);
-    private readonly globalConfig: KmsConfigDto;
-    private readonly tenantConfigCache = new Map<string, KmsConfigDto>();
+    private readonly globalConfig: KmsConfig;
+    private readonly tenantConfigCache = new Map<string, KmsConfig>();
 
     constructor(private readonly configService: ConfigService) {
         this.globalConfig = this.loadGlobalConfig();
@@ -28,11 +32,11 @@ export class KmsConfigService {
         return this.getConfig(tenantId).defaultProvider || DEFAULT_PROVIDER_ID;
     }
 
-    getProviders(tenantId?: string): KmsProviderConfigDto[] {
+    getProviders(tenantId?: string): KmsProviderConfig[] {
         return this.getConfig(tenantId).providers;
     }
 
-    getConfig(tenantId?: string): KmsConfigDto {
+    getConfig(tenantId?: string): KmsConfig {
         if (!tenantId) {
             return this.globalConfig;
         }
@@ -58,7 +62,7 @@ export class KmsConfigService {
         this.tenantConfigCache.clear();
     }
 
-    private loadGlobalConfig(): KmsConfigDto {
+    private loadGlobalConfig(): KmsConfig {
         const globalPath = this.resolveConfigPath();
         if (!globalPath) {
             return defaultConfig();
@@ -66,17 +70,18 @@ export class KmsConfigService {
 
         try {
             const raw = readFileSync(globalPath, "utf8");
-            const parsed = JSON.parse(raw) as KmsConfigDto;
-            return resolveEnvPlaceholders(parsed) as KmsConfigDto;
+            return parseResolvedKmsConfig(JSON.parse(raw), "global kms.json");
         } catch (err) {
             this.logger.warn(
-                `Failed to read kms.json, using default config: ${String(err)}`,
+                `Failed to read global kms.json at ${globalPath}: ${
+                    err instanceof Error ? err.message : String(err)
+                }`,
             );
-            return defaultConfig();
+            throw err;
         }
     }
 
-    private loadTenantConfig(tenantId: string): KmsConfigDto | null {
+    private loadTenantConfig(tenantId: string): KmsConfig | null {
         const tenantPath = this.resolveConfigPath(tenantId);
         if (!tenantPath) {
             return null;
@@ -84,13 +89,17 @@ export class KmsConfigService {
 
         try {
             const raw = readFileSync(tenantPath, "utf8");
-            const parsed = JSON.parse(raw) as KmsConfigDto;
-            return resolveEnvPlaceholders(parsed) as KmsConfigDto;
+            return parseResolvedKmsConfig(
+                JSON.parse(raw),
+                `tenant '${tenantId}' kms.json`,
+            );
         } catch (err) {
             this.logger.warn(
-                `Failed to read tenant kms.json for '${tenantId}', using global config: ${String(err)}`,
+                `Failed to read tenant kms.json for '${tenantId}' at ${tenantPath}: ${
+                    err instanceof Error ? err.message : String(err)
+                }`,
             );
-            return null;
+            throw err;
         }
     }
 
@@ -108,7 +117,7 @@ export class KmsConfigService {
     }
 }
 
-function defaultConfig(): KmsConfigDto {
+function defaultConfig(): KmsConfig {
     return {
         defaultProvider: DEFAULT_PROVIDER_ID,
         providers: [
@@ -121,11 +130,8 @@ function defaultConfig(): KmsConfigDto {
     };
 }
 
-function mergeConfigs(
-    global: KmsConfigDto,
-    tenant: KmsConfigDto,
-): KmsConfigDto {
-    const mergedProviders = new Map<string, KmsProviderConfigDto>();
+function mergeConfigs(global: KmsConfig, tenant: KmsConfig): KmsConfig {
+    const mergedProviders = new Map<string, KmsProviderConfig>();
 
     for (const provider of global.providers ?? []) {
         mergedProviders.set(provider.id, provider);
@@ -139,24 +145,4 @@ function mergeConfigs(
         defaultProvider: tenant.defaultProvider || global.defaultProvider,
         providers: [...mergedProviders.values()],
     };
-}
-
-function resolveEnvPlaceholders<T>(value: T): T {
-    if (typeof value === "string") {
-        return value.replace(
-            /\$\{([A-Z0-9_]+)\}/g,
-            (_, name: string) => process.env[name] ?? "",
-        ) as unknown as T;
-    }
-    if (Array.isArray(value)) {
-        return value.map((v) => resolveEnvPlaceholders(v)) as unknown as T;
-    }
-    if (value && typeof value === "object") {
-        const out: Record<string, unknown> = {};
-        for (const [k, v] of Object.entries(value)) {
-            out[k] = resolveEnvPlaceholders(v);
-        }
-        return out as T;
-    }
-    return value;
 }

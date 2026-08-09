@@ -60,7 +60,7 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
   value = '';
   disabled = false;
 
-  private readonly ajv = new Ajv({ discriminator: true });
+  private readonly ajv = new Ajv();
   private validateFn?: ValidateFunction;
   private readonly instanceId = ++editorInstanceCounter;
   private modelVersion = 0;
@@ -71,7 +71,6 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
     for (const schema of schemas) {
       const key = (schema.schema as any)['$id'].split('/').pop() || '';
       try {
-        console.log(JSON.stringify(schema.schema, null, 2));
         this.ajv.addSchema(schema.schema, key);
       } catch (error) {
         console.error(`Failed to add schema ${key}:`, error);
@@ -157,8 +156,7 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
     if ('schema' in changes) {
       try {
         this.validateFn = this.ajv.getSchema(this.schema?.getSchemaUrl());
-      } catch (error) {
-        console.log(error);
+      } catch {
         this.validateFn = undefined;
       }
       this._validatorChange?.();

@@ -1,36 +1,42 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./VaultKmsConfigDto.schema.json",
-  "title": "VaultKmsConfigDto",
   "type": "object",
   "properties": {
     "id": {
       "type": "string",
       "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
-      "example": "main-vault"
+      "examples": [
+        "main-vault"
+      ]
     },
     "type": {
-      "enum": [
-        "vault"
-      ],
       "type": "string",
+      "const": "vault",
       "description": "Type of the KMS provider.",
-      "example": "vault"
+      "examples": [
+        "vault"
+      ]
     },
     "description": {
-      "type": "string",
       "description": "Human-readable description of this provider instance.",
-      "example": "Production HashiCorp Vault for signing keys"
+      "examples": [
+        "Production HashiCorp Vault for signing keys"
+      ],
+      "type": "string"
     },
     "vaultUrl": {
       "type": "string",
       "description": "URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.",
-      "example": "${VAULT_URL}"
+      "examples": [
+        "${VAULT_URL}"
+      ]
     },
     "vaultToken": {
       "type": "string",
       "description": "Authentication token for HashiCorp Vault. Supports ${ENV_VAR} placeholders.",
-      "example": "${VAULT_TOKEN}"
+      "examples": [
+        "${VAULT_TOKEN}"
+      ]
     }
   },
   "required": [
@@ -39,5 +45,7 @@
     "vaultUrl",
     "vaultToken"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./VaultKmsConfigDto.schema.json",
+  "title": "VaultKmsConfigDto"
 }

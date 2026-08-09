@@ -1,10 +1,11 @@
-import { INestApplication, ValidationPipe } from "@nestjs/common";
+import { INestApplication } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { AppModule } from "../../src/app.module";
 import { KeyChainType } from "../../src/crypto/key/dto/key-chain-create.dto";
+import { createHybridValidationPipe } from "../../src/shared/common/pipes/hybrid-validation.pipe";
 import { getToken } from "../utils";
 
 describe("Key Chain — KMS provider lifecycle (e2e)", () => {
@@ -26,7 +27,7 @@ describe("Key Chain — KMS provider lifecycle (e2e)", () => {
         }).compile();
 
         app = moduleFixture.createNestApplication();
-        app.useGlobalPipes(new ValidationPipe());
+        app.useGlobalPipes(createHybridValidationPipe());
         await app.init();
 
         const configService = app.get(ConfigService);

@@ -9,13 +9,14 @@ import {
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { INestApplication, ValidationPipe } from "@nestjs/common";
+import { INestApplication } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { AppModule } from "../../src/app.module";
 import { KeyChainType } from "../../src/crypto/key/dto/key-chain-create.dto";
+import { createHybridValidationPipe } from "../../src/shared/common/pipes/hybrid-validation.pipe";
 import { getToken } from "../utils";
 
 const PROVIDER_ID = "kms-reference";
@@ -224,7 +225,7 @@ describe("Key Chain — HTTP KMS adapter (e2e)", () => {
         }).compile();
 
         app = moduleFixture.createNestApplication();
-        app.useGlobalPipes(new ValidationPipe());
+        app.useGlobalPipes(createHybridValidationPipe());
         await app.init();
 
         const configService = app.get(ConfigService);

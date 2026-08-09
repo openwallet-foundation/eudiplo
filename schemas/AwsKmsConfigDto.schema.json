@@ -1,41 +1,49 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./AwsKmsConfigDto.schema.json",
-  "title": "AwsKmsConfigDto",
   "type": "object",
   "properties": {
     "id": {
       "type": "string",
       "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
-      "example": "main-vault"
+      "examples": [
+        "main-vault"
+      ]
     },
     "type": {
-      "enum": [
-        "aws-kms"
-      ],
       "type": "string",
+      "const": "aws-kms",
       "description": "Type of the KMS provider.",
-      "example": "aws-kms"
+      "examples": [
+        "aws-kms"
+      ]
     },
     "description": {
-      "type": "string",
       "description": "Human-readable description of this provider instance.",
-      "example": "Production HashiCorp Vault for signing keys"
+      "examples": [
+        "Production HashiCorp Vault for signing keys"
+      ],
+      "type": "string"
     },
     "region": {
       "type": "string",
       "description": "AWS region for KMS. Supports ${ENV_VAR} placeholders.",
-      "example": "${AWS_REGION}"
+      "examples": [
+        "${AWS_REGION}"
+      ]
     },
     "accessKeyId": {
-      "type": "string",
       "description": "AWS access key ID. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.",
-      "example": "${AWS_ACCESS_KEY_ID}"
+      "examples": [
+        "${AWS_ACCESS_KEY_ID}"
+      ],
+      "type": "string"
     },
     "secretAccessKey": {
-      "type": "string",
       "description": "AWS secret access key. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.",
-      "example": "${AWS_SECRET_ACCESS_KEY}"
+      "examples": [
+        "${AWS_SECRET_ACCESS_KEY}"
+      ],
+      "type": "string"
     }
   },
   "required": [
@@ -43,5 +51,7 @@
     "type",
     "region"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./AwsKmsConfigDto.schema.json",
+  "title": "AwsKmsConfigDto"
 }

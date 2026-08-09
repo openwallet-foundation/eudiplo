@@ -1,7 +1,9 @@
 [
   {
     "uri": "./GrafanaConfigDto.schema.json",
-    "fileMatch": ["a://b/GrafanaConfigDto*.schema.json"],
+    "fileMatch": [
+      "a://b/GrafanaConfigDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./GrafanaConfigDto.schema.json",
@@ -24,13 +26,18 @@
           "example": "loki"
         }
       },
-      "required": ["tempoUid", "lokiUid"],
+      "required": [
+        "tempoUid",
+        "lokiUid"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./FrontendConfigResponseDto.schema.json",
-    "fileMatch": ["a://b/FrontendConfigResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/FrontendConfigResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./FrontendConfigResponseDto.schema.json",
@@ -46,13 +53,17 @@
           ]
         }
       },
-      "required": ["grafana"],
+      "required": [
+        "grafana"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./RoleDto.schema.json",
-    "fileMatch": ["a://b/RoleDto*.schema.json"],
+    "fileMatch": [
+      "a://b/RoleDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./RoleDto.schema.json",
@@ -75,13 +86,17 @@
           "example": "issuance:manage"
         }
       },
-      "required": ["role"],
+      "required": [
+        "role"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ClientCredentialsDto.schema.json",
-    "fileMatch": ["a://b/ClientCredentialsDto*.schema.json"],
+    "fileMatch": [
+      "a://b/ClientCredentialsDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ClientCredentialsDto.schema.json",
@@ -99,13 +114,18 @@
           "type": "string"
         }
       },
-      "required": ["client_id", "client_secret"],
+      "required": [
+        "client_id",
+        "client_secret"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./TokenResponse.schema.json",
-    "fileMatch": ["a://b/TokenResponse*.schema.json"],
+    "fileMatch": [
+      "a://b/TokenResponse*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./TokenResponse.schema.json",
@@ -128,13 +148,20 @@
           "type": "string"
         }
       },
-      "required": ["access_token", "token_type", "expires_in", "state"],
+      "required": [
+        "access_token",
+        "token_type",
+        "expires_in",
+        "state"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ImportTenantDto.schema.json",
-    "fileMatch": ["a://b/ImportTenantDto*.schema.json"],
+    "fileMatch": [
+      "a://b/ImportTenantDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ImportTenantDto.schema.json",
@@ -150,13 +177,17 @@
           "description": "The description of the tenant."
         }
       },
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./SessionStorageConfig.schema.json",
-    "fileMatch": ["a://b/SessionStorageConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/SessionStorageConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./SessionStorageConfig.schema.json",
@@ -172,7 +203,10 @@
         "cleanupMode": {
           "type": "string",
           "description": "Cleanup mode: 'full' deletes everything, 'anonymize' keeps metadata but removes PII.",
-          "enum": ["full", "anonymize"],
+          "enum": [
+            "full",
+            "anonymize"
+          ],
           "default": "full"
         }
       },
@@ -181,7 +215,9 @@
   },
   {
     "uri": "./StatusListConfig.schema.json",
-    "fileMatch": ["a://b/StatusListConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/StatusListConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./StatusListConfig.schema.json",
@@ -197,7 +233,12 @@
         "bits": {
           "type": "number",
           "description": "Bits per status entry: 1 (valid/revoked), 2 (with suspended), 4/8 (extended). If not set, uses global STATUS_BITS.",
-          "enum": [1, 2, 4, 8],
+          "enum": [
+            1,
+            2,
+            4,
+            8
+          ],
           "default": 1
         },
         "ttl": {
@@ -222,7 +263,9 @@
   },
   {
     "uri": "./TenantEntity.schema.json",
-    "fileMatch": ["a://b/TenantEntity*.schema.json"],
+    "fileMatch": [
+      "a://b/TenantEntity*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./TenantEntity.schema.json",
@@ -273,13 +316,20 @@
           }
         }
       },
-      "required": ["id", "name", "status", "clients"],
+      "required": [
+        "id",
+        "name",
+        "status",
+        "clients"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ClientEntity.schema.json",
-    "fileMatch": ["a://b/ClientEntity*.schema.json"],
+    "fileMatch": [
+      "a://b/ClientEntity*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ClientEntity.schema.json",
@@ -289,7 +339,10 @@
         "allowedPresentationConfigs": {
           "nullable": true,
           "description": "List of presentation config IDs this client can use. If empty/null, all configs are allowed.",
-          "example": ["age-verification", "kyc-basic"],
+          "example": [
+            "age-verification",
+            "kyc-basic"
+          ],
           "type": "array",
           "items": {
             "type": "string"
@@ -298,7 +351,10 @@
         "allowedIssuanceConfigs": {
           "nullable": true,
           "description": "List of issuance config IDs this client can use. If empty/null, all configs are allowed.",
-          "example": ["pid", "mdl"],
+          "example": [
+            "pid",
+            "mdl"
+          ],
           "type": "array",
           "items": {
             "type": "string"
@@ -346,13 +402,18 @@
           ]
         }
       },
-      "required": ["clientId", "roles"],
+      "required": [
+        "clientId",
+        "roles"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./CreateTenantDto.schema.json",
-    "fileMatch": ["a://b/CreateTenantDto*.schema.json"],
+    "fileMatch": [
+      "a://b/CreateTenantDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CreateTenantDto.schema.json",
@@ -406,13 +467,18 @@
           }
         }
       },
-      "required": ["id", "name"],
+      "required": [
+        "id",
+        "name"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./UpdateTenantDto.schema.json",
-    "fileMatch": ["a://b/UpdateTenantDto*.schema.json"],
+    "fileMatch": [
+      "a://b/UpdateTenantDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./UpdateTenantDto.schema.json",
@@ -467,7 +533,9 @@
   },
   {
     "uri": "./AuditLogResponseDto.schema.json",
-    "fileMatch": ["a://b/AuditLogResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/AuditLogResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./AuditLogResponseDto.schema.json",
@@ -504,7 +572,11 @@
           "type": "string"
         },
         "actorType": {
-          "enum": ["user", "client", "system"],
+          "enum": [
+            "user",
+            "client",
+            "system"
+          ],
           "type": "string"
         },
         "actorId": {
@@ -535,13 +607,21 @@
           "type": "string"
         }
       },
-      "required": ["id", "tenantId", "actionType", "actorType", "timestamp"],
+      "required": [
+        "id",
+        "tenantId",
+        "actionType",
+        "actorType",
+        "timestamp"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ClientSecretResponseDto.schema.json",
-    "fileMatch": ["a://b/ClientSecretResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/ClientSecretResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ClientSecretResponseDto.schema.json",
@@ -552,13 +632,17 @@
           "type": "string"
         }
       },
-      "required": ["secret"],
+      "required": [
+        "secret"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./UpdateClientDto.schema.json",
-    "fileMatch": ["a://b/UpdateClientDto*.schema.json"],
+    "fileMatch": [
+      "a://b/UpdateClientDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./UpdateClientDto.schema.json",
@@ -568,7 +652,10 @@
         "allowedPresentationConfigs": {
           "nullable": true,
           "description": "List of presentation config IDs this client can use. If empty/null, all configs are allowed.",
-          "example": ["age-verification", "kyc-basic"],
+          "example": [
+            "age-verification",
+            "kyc-basic"
+          ],
           "type": "array",
           "items": {
             "type": "string"
@@ -577,7 +664,10 @@
         "allowedIssuanceConfigs": {
           "nullable": true,
           "description": "List of issuance config IDs this client can use. If empty/null, all configs are allowed.",
-          "example": ["pid", "mdl"],
+          "example": [
+            "pid",
+            "mdl"
+          ],
           "type": "array",
           "items": {
             "type": "string"
@@ -605,13 +695,17 @@
           }
         }
       },
-      "required": ["roles"],
+      "required": [
+        "roles"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./CreateClientDto.schema.json",
-    "fileMatch": ["a://b/CreateClientDto*.schema.json"],
+    "fileMatch": [
+      "a://b/CreateClientDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CreateClientDto.schema.json",
@@ -621,7 +715,10 @@
         "allowedPresentationConfigs": {
           "nullable": true,
           "description": "List of presentation config IDs this client can use. If empty/null, all configs are allowed.",
-          "example": ["age-verification", "kyc-basic"],
+          "example": [
+            "age-verification",
+            "kyc-basic"
+          ],
           "type": "array",
           "items": {
             "type": "string"
@@ -630,7 +727,10 @@
         "allowedIssuanceConfigs": {
           "nullable": true,
           "description": "List of issuance config IDs this client can use. If empty/null, all configs are allowed.",
-          "example": ["pid", "mdl"],
+          "example": [
+            "pid",
+            "mdl"
+          ],
           "type": "array",
           "items": {
             "type": "string"
@@ -666,13 +766,18 @@
           }
         }
       },
-      "required": ["clientId", "roles"],
+      "required": [
+        "clientId",
+        "roles"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./StatusListImportDto.schema.json",
-    "fileMatch": ["a://b/StatusListImportDto*.schema.json"],
+    "fileMatch": [
+      "a://b/StatusListImportDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./StatusListImportDto.schema.json",
@@ -702,18 +807,27 @@
         },
         "bits": {
           "description": "Bits per status value. If not provided, uses tenant or global defaults.",
-          "enum": [1, 2, 4, 8],
+          "enum": [
+            1,
+            2,
+            4,
+            8
+          ],
           "type": "number",
           "example": 1
         }
       },
-      "required": ["id"],
+      "required": [
+        "id"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./StatusListAggregationDto.schema.json",
-    "fileMatch": ["a://b/StatusListAggregationDto*.schema.json"],
+    "fileMatch": [
+      "a://b/StatusListAggregationDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./StatusListAggregationDto.schema.json",
@@ -732,13 +846,17 @@
           }
         }
       },
-      "required": ["status_lists"],
+      "required": [
+        "status_lists"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./UpdateStatusListConfigDto.schema.json",
-    "fileMatch": ["a://b/UpdateStatusListConfigDto*.schema.json"],
+    "fileMatch": [
+      "a://b/UpdateStatusListConfigDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./UpdateStatusListConfigDto.schema.json",
@@ -755,7 +873,12 @@
         "bits": {
           "nullable": true,
           "description": "Bits per status entry. Set to null to reset to global default.",
-          "enum": [1, 2, 4, 8],
+          "enum": [
+            1,
+            2,
+            4,
+            8
+          ],
           "type": "number"
         },
         "ttl": {
@@ -781,7 +904,9 @@
   },
   {
     "uri": "./StatusListResponseDto.schema.json",
-    "fileMatch": ["a://b/StatusListResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/StatusListResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./StatusListResponseDto.schema.json",
@@ -812,7 +937,12 @@
         },
         "bits": {
           "description": "Bits per status value",
-          "enum": [1, 2, 4, 8],
+          "enum": [
+            1,
+            2,
+            4,
+            8
+          ],
           "type": "number",
           "example": 1
         },
@@ -865,7 +995,9 @@
   },
   {
     "uri": "./CreateStatusListDto.schema.json",
-    "fileMatch": ["a://b/CreateStatusListDto*.schema.json"],
+    "fileMatch": [
+      "a://b/CreateStatusListDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CreateStatusListDto.schema.json",
@@ -884,7 +1016,12 @@
         },
         "bits": {
           "description": "Bits per status value. More bits allow more status states. Defaults to tenant configuration.",
-          "enum": [1, 2, 4, 8],
+          "enum": [
+            1,
+            2,
+            4,
+            8
+          ],
           "type": "number",
           "example": 1
         },
@@ -900,7 +1037,9 @@
   },
   {
     "uri": "./UpdateStatusListDto.schema.json",
-    "fileMatch": ["a://b/UpdateStatusListDto*.schema.json"],
+    "fileMatch": [
+      "a://b/UpdateStatusListDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./UpdateStatusListDto.schema.json",
@@ -925,7 +1064,9 @@
   },
   {
     "uri": "./AuthorizeQueries.schema.json",
-    "fileMatch": ["a://b/AuthorizeQueries*.schema.json"],
+    "fileMatch": [
+      "a://b/AuthorizeQueries*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./AuthorizeQueries.schema.json",
@@ -978,7 +1119,9 @@
   },
   {
     "uri": "./OfferRequestDto.schema.json",
-    "fileMatch": ["a://b/OfferRequestDto*.schema.json"],
+    "fileMatch": [
+      "a://b/OfferRequestDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./OfferRequestDto.schema.json",
@@ -986,7 +1129,11 @@
       "type": "object",
       "properties": {
         "response_type": {
-          "enum": ["uri", "dc-api", "iso-18013-7"],
+          "enum": [
+            "uri",
+            "dc-api",
+            "iso-18013-7"
+          ],
           "type": "string",
           "examples": [
             {
@@ -1009,14 +1156,19 @@
                 "properties": {
                   "type": {
                     "type": "string",
-                    "enum": ["inline"]
+                    "enum": [
+                      "inline"
+                    ]
                   },
                   "claims": {
                     "type": "object",
                     "additionalProperties": true
                   }
                 },
-                "required": ["type", "claims"],
+                "required": [
+                  "type",
+                  "claims"
+                ],
                 "additionalProperties": false
               },
               {
@@ -1024,13 +1176,18 @@
                 "properties": {
                   "type": {
                     "type": "string",
-                    "enum": ["attributeProvider"]
+                    "enum": [
+                      "attributeProvider"
+                    ]
                   },
                   "attributeProviderId": {
                     "type": "string"
                   }
                 },
-                "required": ["type", "attributeProviderId"],
+                "required": [
+                  "type",
+                  "attributeProviderId"
+                ],
                 "additionalProperties": false
               },
               {
@@ -1038,7 +1195,9 @@
                 "properties": {
                   "type": {
                     "type": "string",
-                    "enum": ["webhook"]
+                    "enum": [
+                      "webhook"
+                    ]
                   },
                   "webhook": {
                     "type": "object",
@@ -1050,11 +1209,16 @@
                         "type": "object"
                       }
                     },
-                    "required": ["url"],
+                    "required": [
+                      "url"
+                    ],
                     "additionalProperties": false
                   }
                 },
-                "required": ["type", "webhook"],
+                "required": [
+                  "type",
+                  "webhook"
+                ],
                 "additionalProperties": false
               }
             ]
@@ -1072,7 +1236,10 @@
         },
         "flow": {
           "description": "The flow type for the offer request.",
-          "enum": ["authorization_code", "pre_authorized_code"],
+          "enum": [
+            "authorization_code",
+            "pre_authorized_code"
+          ],
           "type": "string"
         },
         "tx_code": {
@@ -1095,13 +1262,19 @@
           "description": "ID of the webhook endpoint to notify about the status of the issuance process."
         }
       },
-      "required": ["response_type", "flow", "credentialConfigurationIds"],
+      "required": [
+        "response_type",
+        "flow",
+        "credentialConfigurationIds"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./WebHookAuthConfigNone.schema.json",
-    "fileMatch": ["a://b/WebHookAuthConfigNone*.schema.json"],
+    "fileMatch": [
+      "a://b/WebHookAuthConfigNone*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./WebHookAuthConfigNone.schema.json",
@@ -1111,16 +1284,22 @@
         "type": {
           "type": "string",
           "description": "The type of authentication used for the webhook.",
-          "enum": ["none"]
+          "enum": [
+            "none"
+          ]
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ApiKeyConfig.schema.json",
-    "fileMatch": ["a://b/ApiKeyConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/ApiKeyConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ApiKeyConfig.schema.json",
@@ -1136,13 +1315,18 @@
           "description": "The value of the API key to be sent in the header."
         }
       },
-      "required": ["headerName", "value"],
+      "required": [
+        "headerName",
+        "value"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./WebHookAuthConfigHeader.schema.json",
-    "fileMatch": ["a://b/WebHookAuthConfigHeader*.schema.json"],
+    "fileMatch": [
+      "a://b/WebHookAuthConfigHeader*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./WebHookAuthConfigHeader.schema.json",
@@ -1152,7 +1336,9 @@
         "type": {
           "type": "string",
           "description": "The type of authentication used for the webhook.",
-          "enum": ["apiKey"]
+          "enum": [
+            "apiKey"
+          ]
         },
         "config": {
           "description": "Configuration for API key authentication.\nThis is required if the type is 'apiKey'.",
@@ -1163,13 +1349,18 @@
           ]
         }
       },
-      "required": ["type", "config"],
+      "required": [
+        "type",
+        "config"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./WebhookConfig.schema.json",
-    "fileMatch": ["a://b/WebhookConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/WebhookConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./WebhookConfig.schema.json",
@@ -1199,13 +1390,18 @@
           "description": "The URL to which the webhook will send notifications."
         }
       },
-      "required": ["auth", "url"],
+      "required": [
+        "auth",
+        "url"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./TransactionData.schema.json",
-    "fileMatch": ["a://b/TransactionData*.schema.json"],
+    "fileMatch": [
+      "a://b/TransactionData*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./TransactionData.schema.json",
@@ -1222,13 +1418,18 @@
           }
         }
       },
-      "required": ["type", "credential_ids"],
+      "required": [
+        "type",
+        "credential_ids"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./Session.schema.json",
-    "fileMatch": ["a://b/Session*.schema.json"],
+    "fileMatch": [
+      "a://b/Session*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./Session.schema.json",
@@ -1237,7 +1438,13 @@
       "properties": {
         "status": {
           "description": "Status of the session.",
-          "enum": ["active", "fetched", "completed", "expired", "failed"],
+          "enum": [
+            "active",
+            "fetched",
+            "completed",
+            "expired",
+            "failed"
+          ],
           "type": "string"
         },
         "id": {
@@ -1443,7 +1650,9 @@
   },
   {
     "uri": "./PaginatedSessionResponseDto.schema.json",
-    "fileMatch": ["a://b/PaginatedSessionResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/PaginatedSessionResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./PaginatedSessionResponseDto.schema.json",
@@ -1474,13 +1683,21 @@
           "description": "Total number of pages"
         }
       },
-      "required": ["items", "total", "page", "pageSize", "totalPages"],
+      "required": [
+        "items",
+        "total",
+        "page",
+        "pageSize",
+        "totalPages"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./SessionLogEntryResponseDto.schema.json",
-    "fileMatch": ["a://b/SessionLogEntryResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/SessionLogEntryResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./SessionLogEntryResponseDto.schema.json",
@@ -1503,7 +1720,11 @@
         "level": {
           "type": "string",
           "description": "Log level",
-          "enum": ["info", "warn", "error"]
+          "enum": [
+            "info",
+            "warn",
+            "error"
+          ]
         },
         "stage": {
           "type": "string",
@@ -1519,13 +1740,21 @@
           "description": "Additional structured detail"
         }
       },
-      "required": ["id", "sessionId", "timestamp", "level", "message"],
+      "required": [
+        "id",
+        "sessionId",
+        "timestamp",
+        "level",
+        "message"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./StatusUpdateDto.schema.json",
-    "fileMatch": ["a://b/StatusUpdateDto*.schema.json"],
+    "fileMatch": [
+      "a://b/StatusUpdateDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./StatusUpdateDto.schema.json",
@@ -1545,13 +1774,18 @@
           "description": "The status of the credential\n0 = valid, 1 = revoked, 2 = suspended"
         }
       },
-      "required": ["sessionId", "status"],
+      "required": [
+        "sessionId",
+        "status"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./UpdateSessionConfigDto.schema.json",
-    "fileMatch": ["a://b/UpdateSessionConfigDto*.schema.json"],
+    "fileMatch": [
+      "a://b/UpdateSessionConfigDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./UpdateSessionConfigDto.schema.json",
@@ -1567,7 +1801,10 @@
         },
         "cleanupMode": {
           "description": "Cleanup mode: 'full' deletes everything, 'anonymize' keeps metadata but removes PII.",
-          "enum": ["full", "anonymize"],
+          "enum": [
+            "full",
+            "anonymize"
+          ],
           "type": "string",
           "default": "full"
         }
@@ -1577,7 +1814,9 @@
   },
   {
     "uri": "./ManagedUserDto.schema.json",
-    "fileMatch": ["a://b/ManagedUserDto*.schema.json"],
+    "fileMatch": [
+      "a://b/ManagedUserDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ManagedUserDto.schema.json",
@@ -1626,13 +1865,20 @@
           "description": "One-time temporary password returned only on user creation."
         }
       },
-      "required": ["id", "username", "enabled", "roles"],
+      "required": [
+        "id",
+        "username",
+        "enabled",
+        "roles"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./CreateUserDto.schema.json",
-    "fileMatch": ["a://b/CreateUserDto*.schema.json"],
+    "fileMatch": [
+      "a://b/CreateUserDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CreateUserDto.schema.json",
@@ -1674,13 +1920,18 @@
           "example": true
         }
       },
-      "required": ["username", "roles"],
+      "required": [
+        "username",
+        "roles"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./UpdateUserDto.schema.json",
-    "fileMatch": ["a://b/UpdateUserDto*.schema.json"],
+    "fileMatch": [
+      "a://b/UpdateUserDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./UpdateUserDto.schema.json",
@@ -1732,7 +1983,9 @@
   },
   {
     "uri": "./AuthenticationMethodNone.schema.json",
-    "fileMatch": ["a://b/AuthenticationMethodNone*.schema.json"],
+    "fileMatch": [
+      "a://b/AuthenticationMethodNone*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./AuthenticationMethodNone.schema.json",
@@ -1741,16 +1994,22 @@
       "properties": {
         "method": {
           "type": "string",
-          "enum": ["none"]
+          "enum": [
+            "none"
+          ]
         }
       },
-      "required": ["method"],
+      "required": [
+        "method"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./AuthenticationUrlConfig.schema.json",
-    "fileMatch": ["a://b/AuthenticationUrlConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/AuthenticationUrlConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./AuthenticationUrlConfig.schema.json",
@@ -1770,13 +2029,17 @@
           ]
         }
       },
-      "required": ["url"],
+      "required": [
+        "url"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./AuthenticationMethodAuth.schema.json",
-    "fileMatch": ["a://b/AuthenticationMethodAuth*.schema.json"],
+    "fileMatch": [
+      "a://b/AuthenticationMethodAuth*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./AuthenticationMethodAuth.schema.json",
@@ -1785,19 +2048,26 @@
       "properties": {
         "method": {
           "type": "string",
-          "enum": ["auth"]
+          "enum": [
+            "auth"
+          ]
         },
         "config": {
           "$ref": "./AuthenticationUrlConfig.schema.json"
         }
       },
-      "required": ["method", "config"],
+      "required": [
+        "method",
+        "config"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./PresentationDuringIssuanceConfig.schema.json",
-    "fileMatch": ["a://b/PresentationDuringIssuanceConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/PresentationDuringIssuanceConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./PresentationDuringIssuanceConfig.schema.json",
@@ -1809,13 +2079,17 @@
           "description": "Link to the presentation configuration that is relevant for the issuance process"
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./AuthenticationMethodPresentation.schema.json",
-    "fileMatch": ["a://b/AuthenticationMethodPresentation*.schema.json"],
+    "fileMatch": [
+      "a://b/AuthenticationMethodPresentation*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./AuthenticationMethodPresentation.schema.json",
@@ -1824,19 +2098,26 @@
       "properties": {
         "method": {
           "type": "string",
-          "enum": ["presentationDuringIssuance"]
+          "enum": [
+            "presentationDuringIssuance"
+          ]
         },
         "config": {
           "$ref": "./PresentationDuringIssuanceConfig.schema.json"
         }
       },
-      "required": ["method", "config"],
+      "required": [
+        "method",
+        "config"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ManagedAuthorizationServerConfig.schema.json",
-    "fileMatch": ["a://b/ManagedAuthorizationServerConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/ManagedAuthorizationServerConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ManagedAuthorizationServerConfig.schema.json",
@@ -1844,7 +2125,12 @@
       "type": "object",
       "properties": {
         "type": {
-          "enum": ["external", "oid4vp", "chained", "built-in"],
+          "enum": [
+            "external",
+            "oid4vp",
+            "chained",
+            "built-in"
+          ],
           "type": "string",
           "description": "Authorization server implementation type",
           "example": "external"
@@ -1865,13 +2151,18 @@
           "default": true
         }
       },
-      "required": ["type", "id"],
+      "required": [
+        "type",
+        "id"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ExternalAuthorizationServerConfig.schema.json",
-    "fileMatch": ["a://b/ExternalAuthorizationServerConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/ExternalAuthorizationServerConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ExternalAuthorizationServerConfig.schema.json",
@@ -1879,7 +2170,9 @@
       "type": "object",
       "properties": {
         "type": {
-          "enum": ["external"],
+          "enum": [
+            "external"
+          ],
           "type": "string",
           "description": "Authorization server implementation type",
           "example": "external"
@@ -1906,13 +2199,19 @@
           "example": "https://auth.example.com"
         }
       },
-      "required": ["type", "id", "issuer"],
+      "required": [
+        "type",
+        "id",
+        "issuer"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ChainedAsTokenConfig.schema.json",
-    "fileMatch": ["a://b/ChainedAsTokenConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/ChainedAsTokenConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ChainedAsTokenConfig.schema.json",
@@ -1946,7 +2245,9 @@
   },
   {
     "uri": "./Oid4VpAuthorizationServerConfig.schema.json",
-    "fileMatch": ["a://b/Oid4VpAuthorizationServerConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/Oid4VpAuthorizationServerConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./Oid4VpAuthorizationServerConfig.schema.json",
@@ -1954,7 +2255,9 @@
       "type": "object",
       "properties": {
         "type": {
-          "enum": ["oid4vp"],
+          "enum": [
+            "oid4vp"
+          ],
           "type": "string",
           "description": "Authorization server implementation type",
           "example": "oid4vp"
@@ -1998,13 +2301,19 @@
           "default": false
         }
       },
-      "required": ["type", "id", "presentationConfigId"],
+      "required": [
+        "type",
+        "id",
+        "presentationConfigId"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./UpstreamOidcConfig.schema.json",
-    "fileMatch": ["a://b/UpstreamOidcConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/UpstreamOidcConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./UpstreamOidcConfig.schema.json",
@@ -2028,20 +2337,28 @@
         },
         "scopes": {
           "description": "Scopes to request from the upstream provider",
-          "default": ["openid", "profile"],
+          "default": [
+            "openid",
+            "profile"
+          ],
           "type": "array",
           "items": {
             "type": "string"
           }
         }
       },
-      "required": ["issuer", "clientId"],
+      "required": [
+        "issuer",
+        "clientId"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ChainedAuthorizationServerConfig.schema.json",
-    "fileMatch": ["a://b/ChainedAuthorizationServerConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/ChainedAuthorizationServerConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ChainedAuthorizationServerConfig.schema.json",
@@ -2049,7 +2366,9 @@
       "type": "object",
       "properties": {
         "type": {
-          "enum": ["chained"],
+          "enum": [
+            "chained"
+          ],
           "type": "string",
           "description": "Authorization server implementation type",
           "example": "chained"
@@ -2091,13 +2410,19 @@
           "default": false
         }
       },
-      "required": ["type", "id", "upstream"],
+      "required": [
+        "type",
+        "id",
+        "upstream"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./BuiltInAuthorizationServerConfig.schema.json",
-    "fileMatch": ["a://b/BuiltInAuthorizationServerConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/BuiltInAuthorizationServerConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./BuiltInAuthorizationServerConfig.schema.json",
@@ -2105,7 +2430,9 @@
       "type": "object",
       "properties": {
         "type": {
-          "enum": ["built-in"],
+          "enum": [
+            "built-in"
+          ],
           "type": "string",
           "description": "Authorization server implementation type",
           "example": "built-in"
@@ -2139,13 +2466,18 @@
           "default": false
         }
       },
-      "required": ["type", "id"],
+      "required": [
+        "type",
+        "id"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./WalletProviderTrustListRefDto.schema.json",
-    "fileMatch": ["a://b/WalletProviderTrustListRefDto*.schema.json"],
+    "fileMatch": [
+      "a://b/WalletProviderTrustListRefDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./WalletProviderTrustListRefDto.schema.json",
@@ -2166,13 +2498,17 @@
           "description": "Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature."
         }
       },
-      "required": ["url"],
+      "required": [
+        "url"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./FederationTrustAnchorConfig.schema.json",
-    "fileMatch": ["a://b/FederationTrustAnchorConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/FederationTrustAnchorConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./FederationTrustAnchorConfig.schema.json",
@@ -2190,13 +2526,18 @@
           "example": "https://ta.example.org/.well-known/openid-federation"
         }
       },
-      "required": ["entityId", "entityConfigurationUri"],
+      "required": [
+        "entityId",
+        "entityConfigurationUri"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./FederationConfig.schema.json",
-    "fileMatch": ["a://b/FederationConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/FederationConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./FederationConfig.schema.json",
@@ -2204,13 +2545,20 @@
       "type": "object",
       "properties": {
         "role": {
-          "enum": ["trust_anchor", "intermediate", "leaf"],
+          "enum": [
+            "trust_anchor",
+            "intermediate",
+            "leaf"
+          ],
           "type": "string",
           "description": "Role this tenant plays in the OpenID Federation topology.",
           "default": "leaf"
         },
         "mode": {
-          "enum": ["federation-only", "hybrid"],
+          "enum": [
+            "federation-only",
+            "hybrid"
+          ],
           "type": "string",
           "description": "Trust decision strategy when both LoTE trust lists and OpenID Federation are configured.",
           "default": "hybrid"
@@ -2238,13 +2586,17 @@
           }
         }
       },
-      "required": ["trustAnchors"],
+      "required": [
+        "trustAnchors"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./IssuerRegistrationCertificateConfig.schema.json",
-    "fileMatch": ["a://b/IssuerRegistrationCertificateConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/IssuerRegistrationCertificateConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./IssuerRegistrationCertificateConfig.schema.json",
@@ -2257,7 +2609,10 @@
           "default": false
         },
         "mode": {
-          "enum": ["import", "generate"],
+          "enum": [
+            "import",
+            "generate"
+          ],
           "type": "string",
           "description": "import: use an existing JWT, generate: create via registrar using attestation data derived from configured credential configurations.",
           "default": "generate"
@@ -2282,7 +2637,9 @@
   },
   {
     "uri": "./IssuerRegistrationCertificateCache.schema.json",
-    "fileMatch": ["a://b/IssuerRegistrationCertificateCache*.schema.json"],
+    "fileMatch": [
+      "a://b/IssuerRegistrationCertificateCache*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./IssuerRegistrationCertificateCache.schema.json",
@@ -2315,7 +2672,9 @@
   },
   {
     "uri": "./DisplayLogo.schema.json",
-    "fileMatch": ["a://b/DisplayLogo*.schema.json"],
+    "fileMatch": [
+      "a://b/DisplayLogo*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./DisplayLogo.schema.json",
@@ -2329,13 +2688,17 @@
           "type": "string"
         }
       },
-      "required": ["uri"],
+      "required": [
+        "uri"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./DisplayInfo.schema.json",
-    "fileMatch": ["a://b/DisplayInfo*.schema.json"],
+    "fileMatch": [
+      "a://b/DisplayInfo*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./DisplayInfo.schema.json",
@@ -2357,7 +2720,9 @@
   },
   {
     "uri": "./IssuanceConfig.schema.json",
-    "fileMatch": ["a://b/IssuanceConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/IssuanceConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./IssuanceConfig.schema.json",
@@ -2407,7 +2772,12 @@
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["external", "oid4vp", "chained", "built-in"]
+                "enum": [
+                  "external",
+                  "oid4vp",
+                  "chained",
+                  "built-in"
+                ]
               }
             }
           }
@@ -2496,13 +2866,21 @@
           "description": "The timestamp when the VP request was last updated."
         }
       },
-      "required": ["authorizationServers", "tenant", "display", "createdAt", "updatedAt"],
+      "required": [
+        "authorizationServers",
+        "tenant",
+        "display",
+        "createdAt",
+        "updatedAt"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./UpdateIssuanceDto.schema.json",
-    "fileMatch": ["a://b/UpdateIssuanceDto*.schema.json"],
+    "fileMatch": [
+      "a://b/UpdateIssuanceDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./UpdateIssuanceDto.schema.json",
@@ -2552,7 +2930,12 @@
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["external", "oid4vp", "chained", "built-in"]
+                "enum": [
+                  "external",
+                  "oid4vp",
+                  "chained",
+                  "built-in"
+                ]
               }
             }
           }
@@ -2628,7 +3011,9 @@
   },
   {
     "uri": "./ClaimsQuery.schema.json",
-    "fileMatch": ["a://b/ClaimsQuery*.schema.json"],
+    "fileMatch": [
+      "a://b/ClaimsQuery*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ClaimsQuery.schema.json",
@@ -2651,13 +3036,17 @@
           }
         }
       },
-      "required": ["path"],
+      "required": [
+        "path"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./CredentialSetQuery.schema.json",
-    "fileMatch": ["a://b/CredentialSetQuery*.schema.json"],
+    "fileMatch": [
+      "a://b/CredentialSetQuery*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CredentialSetQuery.schema.json",
@@ -2677,13 +3066,17 @@
           "type": "boolean"
         }
       },
-      "required": ["options"],
+      "required": [
+        "options"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./PolicyCredential.schema.json",
-    "fileMatch": ["a://b/PolicyCredential*.schema.json"],
+    "fileMatch": [
+      "a://b/PolicyCredential*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./PolicyCredential.schema.json",
@@ -2709,13 +3102,17 @@
           }
         }
       },
-      "required": ["credentials"],
+      "required": [
+        "credentials"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./AttestationBasedPolicy.schema.json",
-    "fileMatch": ["a://b/AttestationBasedPolicy*.schema.json"],
+    "fileMatch": [
+      "a://b/AttestationBasedPolicy*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./AttestationBasedPolicy.schema.json",
@@ -2724,7 +3121,9 @@
       "properties": {
         "policy": {
           "type": "string",
-          "enum": ["attestationBased"]
+          "enum": [
+            "attestationBased"
+          ]
         },
         "values": {
           "type": "array",
@@ -2733,13 +3132,18 @@
           }
         }
       },
-      "required": ["policy", "values"],
+      "required": [
+        "policy",
+        "values"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./NoneTrustPolicy.schema.json",
-    "fileMatch": ["a://b/NoneTrustPolicy*.schema.json"],
+    "fileMatch": [
+      "a://b/NoneTrustPolicy*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./NoneTrustPolicy.schema.json",
@@ -2748,16 +3152,22 @@
       "properties": {
         "policy": {
           "type": "string",
-          "enum": ["none"]
+          "enum": [
+            "none"
+          ]
         }
       },
-      "required": ["policy"],
+      "required": [
+        "policy"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./AllowListPolicy.schema.json",
-    "fileMatch": ["a://b/AllowListPolicy*.schema.json"],
+    "fileMatch": [
+      "a://b/AllowListPolicy*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./AllowListPolicy.schema.json",
@@ -2766,7 +3176,9 @@
       "properties": {
         "policy": {
           "type": "string",
-          "enum": ["allowList"]
+          "enum": [
+            "allowList"
+          ]
         },
         "values": {
           "type": "array",
@@ -2775,13 +3187,18 @@
           }
         }
       },
-      "required": ["policy", "values"],
+      "required": [
+        "policy",
+        "values"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./RootOfTrustPolicy.schema.json",
-    "fileMatch": ["a://b/RootOfTrustPolicy*.schema.json"],
+    "fileMatch": [
+      "a://b/RootOfTrustPolicy*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./RootOfTrustPolicy.schema.json",
@@ -2790,19 +3207,26 @@
       "properties": {
         "policy": {
           "type": "string",
-          "enum": ["rootOfTrust"]
+          "enum": [
+            "rootOfTrust"
+          ]
         },
         "values": {
           "type": "string"
         }
       },
-      "required": ["policy", "values"],
+      "required": [
+        "policy",
+        "values"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./VCT.schema.json",
-    "fileMatch": ["a://b/VCT*.schema.json"],
+    "fileMatch": [
+      "a://b/VCT*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./VCT.schema.json",
@@ -2836,7 +3260,9 @@
   },
   {
     "uri": "./IaeActionOpenid4vpPresentation.schema.json",
-    "fileMatch": ["a://b/IaeActionOpenid4vpPresentation*.schema.json"],
+    "fileMatch": [
+      "a://b/IaeActionOpenid4vpPresentation*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./IaeActionOpenid4vpPresentation.schema.json",
@@ -2844,7 +3270,9 @@
       "type": "object",
       "properties": {
         "type": {
-          "enum": ["openid4vp_presentation"],
+          "enum": [
+            "openid4vp_presentation"
+          ],
           "type": "string",
           "description": "Action type discriminator",
           "example": "openid4vp_presentation"
@@ -2860,13 +3288,18 @@
           "example": "pid-presentation-config"
         }
       },
-      "required": ["type", "presentationConfigId"],
+      "required": [
+        "type",
+        "presentationConfigId"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./IaeActionRedirectToWeb.schema.json",
-    "fileMatch": ["a://b/IaeActionRedirectToWeb*.schema.json"],
+    "fileMatch": [
+      "a://b/IaeActionRedirectToWeb*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./IaeActionRedirectToWeb.schema.json",
@@ -2874,7 +3307,9 @@
       "type": "object",
       "properties": {
         "type": {
-          "enum": ["redirect_to_web"],
+          "enum": [
+            "redirect_to_web"
+          ],
           "type": "string",
           "description": "Action type discriminator",
           "example": "redirect_to_web"
@@ -2902,13 +3337,18 @@
           "example": "Please complete the identity verification form"
         }
       },
-      "required": ["type", "url"],
+      "required": [
+        "type",
+        "url"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./WebhookEndpointEntity.schema.json",
-    "fileMatch": ["a://b/WebhookEndpointEntity*.schema.json"],
+    "fileMatch": [
+      "a://b/WebhookEndpointEntity*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./WebhookEndpointEntity.schema.json",
@@ -2946,13 +3386,22 @@
           "type": "string"
         }
       },
-      "required": ["id", "auth", "tenantId", "tenant", "name", "url"],
+      "required": [
+        "id",
+        "auth",
+        "tenantId",
+        "tenant",
+        "name",
+        "url"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./SchemaUriEntry.schema.json",
-    "fileMatch": ["a://b/SchemaUriEntry*.schema.json"],
+    "fileMatch": [
+      "a://b/SchemaUriEntry*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./SchemaUriEntry.schema.json",
@@ -2984,7 +3433,9 @@
   },
   {
     "uri": "./TrustAuthorityEntry.schema.json",
-    "fileMatch": ["a://b/TrustAuthorityEntry*.schema.json"],
+    "fileMatch": [
+      "a://b/TrustAuthorityEntry*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./TrustAuthorityEntry.schema.json",
@@ -2996,7 +3447,11 @@
           "description": "Trust list ID to resolve from the database. When set, frameworkType, value, and verificationMethod are derived automatically."
         },
         "frameworkType": {
-          "enum": ["aki", "etsi_tl", "openid_federation"],
+          "enum": [
+            "aki",
+            "etsi_tl",
+            "openid_federation"
+          ],
           "type": "string",
           "description": "Trust framework type (ignored when trustListId is set)"
         },
@@ -3023,7 +3478,9 @@
   },
   {
     "uri": "./SchemaMetaConfig.schema.json",
-    "fileMatch": ["a://b/SchemaMetaConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/SchemaMetaConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./SchemaMetaConfig.schema.json",
@@ -3061,7 +3518,12 @@
           "description": "Attestation Level of Security"
         },
         "bindingType": {
-          "enum": ["claim", "key", "biometric", "none"],
+          "enum": [
+            "claim",
+            "key",
+            "biometric",
+            "none"
+          ],
           "type": "string",
           "description": "Cryptographic binding type"
         },
@@ -3085,7 +3547,9 @@
   },
   {
     "uri": "./EmbeddedDisclosurePolicy.schema.json",
-    "fileMatch": ["a://b/EmbeddedDisclosurePolicy*.schema.json"],
+    "fileMatch": [
+      "a://b/EmbeddedDisclosurePolicy*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./EmbeddedDisclosurePolicy.schema.json",
@@ -3096,13 +3560,17 @@
           "type": "string"
         }
       },
-      "required": ["policy"],
+      "required": [
+        "policy"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./KeyAttestationsRequired.schema.json",
-    "fileMatch": ["a://b/KeyAttestationsRequired*.schema.json"],
+    "fileMatch": [
+      "a://b/KeyAttestationsRequired*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./KeyAttestationsRequired.schema.json",
@@ -3111,7 +3579,10 @@
       "properties": {
         "key_storage": {
           "description": "List of required key storage types (e.g., iso_18045_high, iso_18045_moderate)",
-          "example": ["iso_18045_high", "iso_18045_moderate"],
+          "example": [
+            "iso_18045_high",
+            "iso_18045_moderate"
+          ],
           "type": "array",
           "items": {
             "type": "string"
@@ -3119,7 +3590,10 @@
         },
         "user_authentication": {
           "description": "List of required user authentication types (e.g., iso_18045_high, iso_18045_moderate)",
-          "example": ["iso_18045_high", "iso_18045_moderate"],
+          "example": [
+            "iso_18045_high",
+            "iso_18045_moderate"
+          ],
           "type": "array",
           "items": {
             "type": "string"
@@ -3131,7 +3605,9 @@
   },
   {
     "uri": "./DisplayImage.schema.json",
-    "fileMatch": ["a://b/DisplayImage*.schema.json"],
+    "fileMatch": [
+      "a://b/DisplayImage*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./DisplayImage.schema.json",
@@ -3142,13 +3618,17 @@
           "type": "string"
         }
       },
-      "required": ["uri"],
+      "required": [
+        "uri"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./Display.schema.json",
-    "fileMatch": ["a://b/Display*.schema.json"],
+    "fileMatch": [
+      "a://b/Display*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./Display.schema.json",
@@ -3177,13 +3657,19 @@
           "$ref": "./DisplayImage.schema.json"
         }
       },
-      "required": ["name", "description", "locale"],
+      "required": [
+        "name",
+        "description",
+        "locale"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./IssuerMetadataCredentialConfig.schema.json",
-    "fileMatch": ["a://b/IssuerMetadataCredentialConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/IssuerMetadataCredentialConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./IssuerMetadataCredentialConfig.schema.json",
@@ -3204,13 +3690,22 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["jwt", "attestation"]
+            "enum": [
+              "jwt",
+              "attestation"
+            ]
           },
-          "example": ["attestation", "jwt"]
+          "example": [
+            "attestation",
+            "jwt"
+          ]
         },
         "format": {
           "type": "string",
-          "enum": ["mso_mdoc", "dc+sd-jwt"]
+          "enum": [
+            "mso_mdoc",
+            "dc+sd-jwt"
+          ]
         },
         "display": {
           "type": "array",
@@ -3226,13 +3721,18 @@
           "description": "Document type for mDOC credentials (e.g., \"org.iso.18013.5.1.mDL\").\nOnly applicable when format is \"mso_mdoc\"."
         }
       },
-      "required": ["format", "display"],
+      "required": [
+        "format",
+        "display"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./FieldDisplayDto.schema.json",
-    "fileMatch": ["a://b/FieldDisplayDto*.schema.json"],
+    "fileMatch": [
+      "a://b/FieldDisplayDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./FieldDisplayDto.schema.json",
@@ -3255,13 +3755,18 @@
           "example": "Primary first name"
         }
       },
-      "required": ["locale", "name"],
+      "required": [
+        "locale",
+        "name"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ClaimFieldDefinitionDto.schema.json",
-    "fileMatch": ["a://b/ClaimFieldDefinitionDto*.schema.json"],
+    "fileMatch": [
+      "a://b/ClaimFieldDefinitionDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ClaimFieldDefinitionDto.schema.json",
@@ -3271,7 +3776,10 @@
         "path": {
           "type": "array",
           "description": "Path to claim value. For nested child fields this can be relative to the parent path.",
-          "example": ["address", "locality"],
+          "example": [
+            "address",
+            "locality"
+          ],
           "items": {
             "oneOf": [
               {
@@ -3287,7 +3795,14 @@
           }
         },
         "type": {
-          "enum": ["string", "number", "integer", "boolean", "object", "array"],
+          "enum": [
+            "string",
+            "number",
+            "integer",
+            "boolean",
+            "object",
+            "array"
+          ],
           "type": "string",
           "description": "Claim value type"
         },
@@ -3348,13 +3863,18 @@
           }
         }
       },
-      "required": ["path", "type"],
+      "required": [
+        "path",
+        "type"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./AttributeProviderEntity.schema.json",
-    "fileMatch": ["a://b/AttributeProviderEntity*.schema.json"],
+    "fileMatch": [
+      "a://b/AttributeProviderEntity*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./AttributeProviderEntity.schema.json",
@@ -3391,13 +3911,22 @@
           "type": "string"
         }
       },
-      "required": ["auth", "id", "tenantId", "tenant", "name", "url"],
+      "required": [
+        "auth",
+        "id",
+        "tenantId",
+        "tenant",
+        "name",
+        "url"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./KeyChainEntity.schema.json",
-    "fileMatch": ["a://b/KeyChainEntity*.schema.json"],
+    "fileMatch": [
+      "a://b/KeyChainEntity*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./KeyChainEntity.schema.json",
@@ -3427,12 +3956,21 @@
         "usageType": {
           "type": "string",
           "description": "The purpose/role of this key chain in the system.",
-          "enum": ["access", "attestation", "trustList", "statusList", "encrypt"]
+          "enum": [
+            "access",
+            "attestation",
+            "trustList",
+            "statusList",
+            "encrypt"
+          ]
         },
         "usage": {
           "type": "string",
           "description": "The usage type of the keys (sign or encrypt).",
-          "enum": ["sign", "encrypt"]
+          "enum": [
+            "sign",
+            "encrypt"
+          ]
         },
         "kmsProvider": {
           "type": "string",
@@ -3516,7 +4054,9 @@
   },
   {
     "uri": "./CredentialConfig.schema.json",
-    "fileMatch": ["a://b/CredentialConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/CredentialConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CredentialConfig.schema.json",
@@ -3643,20 +4183,30 @@
         "sdJwtTrustFormat": {
           "nullable": true,
           "description": "For SD-JWT credentials: determines whether to include certificate chain (x5c)\nor use federation-based trust (iss claim).\nDefault: \"x5c\" (federation must be explicitly selected)",
-          "enum": ["x5c", "federation"],
+          "enum": [
+            "x5c",
+            "federation"
+          ],
           "type": "string"
         },
         "lifeTime": {
           "type": "number"
         }
       },
-      "required": ["id", "tenant", "config", "fields"],
+      "required": [
+        "id",
+        "tenant",
+        "config",
+        "fields"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./CredentialConfigCreate.schema.json",
-    "fileMatch": ["a://b/CredentialConfigCreate*.schema.json"],
+    "fileMatch": [
+      "a://b/CredentialConfigCreate*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CredentialConfigCreate.schema.json",
@@ -3766,20 +4316,29 @@
         "sdJwtTrustFormat": {
           "nullable": true,
           "description": "For SD-JWT credentials: determines whether to include certificate chain (x5c)\nor use federation-based trust (iss claim).\nDefault: \"x5c\" (federation must be explicitly selected)",
-          "enum": ["x5c", "federation"],
+          "enum": [
+            "x5c",
+            "federation"
+          ],
           "type": "string"
         },
         "lifeTime": {
           "type": "number"
         }
       },
-      "required": ["id", "config", "fields"],
+      "required": [
+        "id",
+        "config",
+        "fields"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./CredentialConfigUpdate.schema.json",
-    "fileMatch": ["a://b/CredentialConfigUpdate*.schema.json"],
+    "fileMatch": [
+      "a://b/CredentialConfigUpdate*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CredentialConfigUpdate.schema.json",
@@ -3889,7 +4448,10 @@
         "sdJwtTrustFormat": {
           "nullable": true,
           "description": "For SD-JWT credentials: determines whether to include certificate chain (x5c)\nor use federation-based trust (iss claim).\nDefault: \"x5c\" (federation must be explicitly selected)",
-          "enum": ["x5c", "federation"],
+          "enum": [
+            "x5c",
+            "federation"
+          ],
           "type": "string"
         },
         "lifeTime": {
@@ -3901,7 +4463,9 @@
   },
   {
     "uri": "./SignSchemaMetaConfigDto.schema.json",
-    "fileMatch": ["a://b/SignSchemaMetaConfigDto*.schema.json"],
+    "fileMatch": [
+      "a://b/SignSchemaMetaConfigDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./SignSchemaMetaConfigDto.schema.json",
@@ -3921,19 +4485,27 @@
           "description": "ID of the credential config to link back after submission. When provided, schemaMeta.id on the credential config is updated with the reserved attestation ID."
         },
         "pinMode": {
-          "enum": ["keep_current", "update_to_new_version", "replace_id"],
+          "enum": [
+            "keep_current",
+            "update_to_new_version",
+            "replace_id"
+          ],
           "type": "string",
           "description": "How to update credential config pinning after publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to a different schema id.",
           "default": "keep_current"
         }
       },
-      "required": ["config"],
+      "required": [
+        "config"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./SignVersionSchemaMetaConfigDto.schema.json",
-    "fileMatch": ["a://b/SignVersionSchemaMetaConfigDto*.schema.json"],
+    "fileMatch": [
+      "a://b/SignVersionSchemaMetaConfigDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./SignVersionSchemaMetaConfigDto.schema.json",
@@ -3953,19 +4525,27 @@
           "description": "Optional credential config to update pinning for after successful version publish."
         },
         "pinMode": {
-          "enum": ["keep_current", "update_to_new_version", "replace_id"],
+          "enum": [
+            "keep_current",
+            "update_to_new_version",
+            "replace_id"
+          ],
           "type": "string",
           "description": "How to update credential config pinning after version publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to config.id.",
           "default": "keep_current"
         }
       },
-      "required": ["config"],
+      "required": [
+        "config"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./VocabularyEntryDto.schema.json",
-    "fileMatch": ["a://b/VocabularyEntryDto*.schema.json"],
+    "fileMatch": [
+      "a://b/VocabularyEntryDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./VocabularyEntryDto.schema.json",
@@ -3981,7 +4561,10 @@
           "description": "Display label for UI rendering."
         },
         "status": {
-          "enum": ["active", "deprecated"],
+          "enum": [
+            "active",
+            "deprecated"
+          ],
           "type": "string",
           "description": "Vocabulary lifecycle status."
         },
@@ -3990,13 +4573,19 @@
           "description": "Replacement code when status is deprecated."
         }
       },
-      "required": ["code", "label", "status"],
+      "required": [
+        "code",
+        "label",
+        "status"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./SchemaMetadataVocabulariesDto.schema.json",
-    "fileMatch": ["a://b/SchemaMetadataVocabulariesDto*.schema.json"],
+    "fileMatch": [
+      "a://b/SchemaMetadataVocabulariesDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./SchemaMetadataVocabulariesDto.schema.json",
@@ -4022,13 +4611,19 @@
           }
         }
       },
-      "required": ["version", "categories", "tags"],
+      "required": [
+        "version",
+        "categories",
+        "tags"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./MetadataSchemaDto.schema.json",
-    "fileMatch": ["a://b/MetadataSchemaDto*.schema.json"],
+    "fileMatch": [
+      "a://b/MetadataSchemaDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./MetadataSchemaDto.schema.json",
@@ -4040,7 +4635,10 @@
           "description": "Unique identifier for this schema entry"
         },
         "formatIdentifier": {
-          "enum": ["dc+sd-jwt", "mso_mdoc"],
+          "enum": [
+            "dc+sd-jwt",
+            "mso_mdoc"
+          ],
           "type": "string",
           "description": "The credential format identifier"
         },
@@ -4058,13 +4656,18 @@
           "description": "Subresource Integrity hash for the schema"
         }
       },
-      "required": ["id", "formatIdentifier"],
+      "required": [
+        "id",
+        "formatIdentifier"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./TrustAuthorityDto.schema.json",
-    "fileMatch": ["a://b/TrustAuthorityDto*.schema.json"],
+    "fileMatch": [
+      "a://b/TrustAuthorityDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./TrustAuthorityDto.schema.json",
@@ -4078,7 +4681,9 @@
         "frameworkType": {
           "type": "string",
           "description": "Type of trust framework",
-          "enum": ["etsi_tl"]
+          "enum": [
+            "etsi_tl"
+          ]
         },
         "value": {
           "type": "string",
@@ -4090,13 +4695,19 @@
           "description": "Verification method for the trust list signature (e.g., JWK)"
         }
       },
-      "required": ["id", "frameworkType", "value"],
+      "required": [
+        "id",
+        "frameworkType",
+        "value"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./IssuerOfferEntryDto.schema.json",
-    "fileMatch": ["a://b/IssuerOfferEntryDto*.schema.json"],
+    "fileMatch": [
+      "a://b/IssuerOfferEntryDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./IssuerOfferEntryDto.schema.json",
@@ -4112,13 +4723,18 @@
           "description": "Human-readable description explaining when this issuer offer is relevant for the user."
         }
       },
-      "required": ["credentialOfferUrl", "description"],
+      "required": [
+        "credentialOfferUrl",
+        "description"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./AccessCertificateRefDto.schema.json",
-    "fileMatch": ["a://b/AccessCertificateRefDto*.schema.json"],
+    "fileMatch": [
+      "a://b/AccessCertificateRefDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./AccessCertificateRefDto.schema.json",
@@ -4141,13 +4757,21 @@
           "type": "string"
         }
       },
-      "required": ["id", "relyingPartyId", "certificate", "revoked", "createdAt"],
+      "required": [
+        "id",
+        "relyingPartyId",
+        "certificate",
+        "revoked",
+        "createdAt"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./SchemaMetadataResponseDto.schema.json",
-    "fileMatch": ["a://b/SchemaMetadataResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/SchemaMetadataResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./SchemaMetadataResponseDto.schema.json",
@@ -4181,7 +4805,12 @@
           "description": "Level of security (LoS) of this attestation"
         },
         "bindingType": {
-          "enum": ["claim", "key", "biometric", "none"],
+          "enum": [
+            "claim",
+            "key",
+            "biometric",
+            "none"
+          ],
           "type": "string",
           "description": "Required binding type between attestation and holder"
         },
@@ -4189,7 +4818,10 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["dc+sd-jwt", "mso_mdoc"]
+            "enum": [
+              "dc+sd-jwt",
+              "mso_mdoc"
+            ]
           },
           "description": "Credential formats in which this attestation is available"
         },
@@ -4208,7 +4840,15 @@
           }
         },
         "category": {
-          "enum": ["identity", "health", "finance", "education", "mobility", "employment", "other"],
+          "enum": [
+            "identity",
+            "health",
+            "finance",
+            "education",
+            "mobility",
+            "employment",
+            "other"
+          ],
           "type": "string",
           "description": "Domain category for filtering"
         },
@@ -4296,7 +4936,9 @@
   },
   {
     "uri": "./UpdateIssuerOfferDto.schema.json",
-    "fileMatch": ["a://b/UpdateIssuerOfferDto*.schema.json"],
+    "fileMatch": [
+      "a://b/UpdateIssuerOfferDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./UpdateIssuerOfferDto.schema.json",
@@ -4317,7 +4959,9 @@
   },
   {
     "uri": "./UpdateSchemaMetadataDto.schema.json",
-    "fileMatch": ["a://b/UpdateSchemaMetadataDto*.schema.json"],
+    "fileMatch": [
+      "a://b/UpdateSchemaMetadataDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./UpdateSchemaMetadataDto.schema.json",
@@ -4325,7 +4969,15 @@
       "type": "object",
       "properties": {
         "category": {
-          "enum": ["identity", "health", "finance", "education", "mobility", "employment", "other"],
+          "enum": [
+            "identity",
+            "health",
+            "finance",
+            "education",
+            "mobility",
+            "employment",
+            "other"
+          ],
           "type": "string",
           "description": "Domain category for filtering"
         },
@@ -4365,7 +5017,9 @@
   },
   {
     "uri": "./DeprecateSchemaMetadataDto.schema.json",
-    "fileMatch": ["a://b/DeprecateSchemaMetadataDto*.schema.json"],
+    "fileMatch": [
+      "a://b/DeprecateSchemaMetadataDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./DeprecateSchemaMetadataDto.schema.json",
@@ -4385,13 +5039,17 @@
           "description": "The version that supersedes this one"
         }
       },
-      "required": ["deprecated"],
+      "required": [
+        "deprecated"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./CreateAttributeProviderDto.schema.json",
-    "fileMatch": ["a://b/CreateAttributeProviderDto*.schema.json"],
+    "fileMatch": [
+      "a://b/CreateAttributeProviderDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CreateAttributeProviderDto.schema.json",
@@ -4422,13 +5080,20 @@
           "type": "string"
         }
       },
-      "required": ["auth", "id", "name", "url"],
+      "required": [
+        "auth",
+        "id",
+        "name",
+        "url"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./UpdateAttributeProviderDto.schema.json",
-    "fileMatch": ["a://b/UpdateAttributeProviderDto*.schema.json"],
+    "fileMatch": [
+      "a://b/UpdateAttributeProviderDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./UpdateAttributeProviderDto.schema.json",
@@ -4464,7 +5129,9 @@
   },
   {
     "uri": "./CreateWebhookEndpointDto.schema.json",
-    "fileMatch": ["a://b/CreateWebhookEndpointDto*.schema.json"],
+    "fileMatch": [
+      "a://b/CreateWebhookEndpointDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CreateWebhookEndpointDto.schema.json",
@@ -4496,13 +5163,20 @@
           "type": "string"
         }
       },
-      "required": ["id", "auth", "name", "url"],
+      "required": [
+        "id",
+        "auth",
+        "name",
+        "url"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./UpdateWebhookEndpointDto.schema.json",
-    "fileMatch": ["a://b/UpdateWebhookEndpointDto*.schema.json"],
+    "fileMatch": [
+      "a://b/UpdateWebhookEndpointDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./UpdateWebhookEndpointDto.schema.json",
@@ -4539,7 +5213,9 @@
   },
   {
     "uri": "./TrustListEntityInfo.schema.json",
-    "fileMatch": ["a://b/TrustListEntityInfo*.schema.json"],
+    "fileMatch": [
+      "a://b/TrustListEntityInfo*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./TrustListEntityInfo.schema.json",
@@ -4571,13 +5247,17 @@
           "type": "string"
         }
       },
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./InternalTrustListEntity.schema.json",
-    "fileMatch": ["a://b/InternalTrustListEntity*.schema.json"],
+    "fileMatch": [
+      "a://b/InternalTrustListEntity*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./InternalTrustListEntity.schema.json",
@@ -4586,7 +5266,9 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["internal"]
+          "enum": [
+            "internal"
+          ]
         },
         "issuerKeyChainId": {
           "type": "string"
@@ -4598,13 +5280,20 @@
           "$ref": "./TrustListEntityInfo.schema.json"
         }
       },
-      "required": ["type", "issuerKeyChainId", "revocationKeyChainId", "info"],
+      "required": [
+        "type",
+        "issuerKeyChainId",
+        "revocationKeyChainId",
+        "info"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ExternalTrustListEntity.schema.json",
-    "fileMatch": ["a://b/ExternalTrustListEntity*.schema.json"],
+    "fileMatch": [
+      "a://b/ExternalTrustListEntity*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ExternalTrustListEntity.schema.json",
@@ -4613,7 +5302,9 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["external"]
+          "enum": [
+            "external"
+          ]
         },
         "issuerCertPem": {
           "type": "string"
@@ -4625,13 +5316,20 @@
           "$ref": "./TrustListEntityInfo.schema.json"
         }
       },
-      "required": ["type", "issuerCertPem", "revocationCertPem", "info"],
+      "required": [
+        "type",
+        "issuerCertPem",
+        "revocationCertPem",
+        "info"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./TrustListCreateDto.schema.json",
-    "fileMatch": ["a://b/TrustListCreateDto*.schema.json"],
+    "fileMatch": [
+      "a://b/TrustListCreateDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./TrustListCreateDto.schema.json",
@@ -4667,7 +5365,10 @@
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["internal", "external"]
+                "enum": [
+                  "internal",
+                  "external"
+                ]
               }
             }
           }
@@ -4679,13 +5380,17 @@
           "type": "string"
         }
       },
-      "required": ["entities"],
+      "required": [
+        "entities"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./TrustList.schema.json",
-    "fileMatch": ["a://b/TrustList*.schema.json"],
+    "fileMatch": [
+      "a://b/TrustList*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./TrustList.schema.json",
@@ -4761,7 +5466,9 @@
   },
   {
     "uri": "./TrustListVersion.schema.json",
-    "fileMatch": ["a://b/TrustListVersion*.schema.json"],
+    "fileMatch": [
+      "a://b/TrustListVersion*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./TrustListVersion.schema.json",
@@ -4816,7 +5523,9 @@
   },
   {
     "uri": "./TrustListRef.schema.json",
-    "fileMatch": ["a://b/TrustListRef*.schema.json"],
+    "fileMatch": [
+      "a://b/TrustListRef*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./TrustListRef.schema.json",
@@ -4846,7 +5555,9 @@
   },
   {
     "uri": "./TrustedAuthorityQueryEtsiTl.schema.json",
-    "fileMatch": ["a://b/TrustedAuthorityQueryEtsiTl*.schema.json"],
+    "fileMatch": [
+      "a://b/TrustedAuthorityQueryEtsiTl*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./TrustedAuthorityQueryEtsiTl.schema.json",
@@ -4854,7 +5565,9 @@
       "type": "object",
       "properties": {
         "type": {
-          "enum": ["etsi_tl"],
+          "enum": [
+            "etsi_tl"
+          ],
           "type": "string",
           "default": "etsi_tl"
         },
@@ -4865,13 +5578,18 @@
           }
         }
       },
-      "required": ["type", "values"],
+      "required": [
+        "type",
+        "values"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./TrustedAuthorityQueryOpenIdFederation.schema.json",
-    "fileMatch": ["a://b/TrustedAuthorityQueryOpenIdFederation*.schema.json"],
+    "fileMatch": [
+      "a://b/TrustedAuthorityQueryOpenIdFederation*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./TrustedAuthorityQueryOpenIdFederation.schema.json",
@@ -4879,7 +5597,9 @@
       "type": "object",
       "properties": {
         "type": {
-          "enum": ["openid_federation"],
+          "enum": [
+            "openid_federation"
+          ],
           "type": "string",
           "default": "openid_federation"
         },
@@ -4890,13 +5610,18 @@
           }
         }
       },
-      "required": ["type", "values"],
+      "required": [
+        "type",
+        "values"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./DcSdJwtCredentialQueryMeta.schema.json",
-    "fileMatch": ["a://b/DcSdJwtCredentialQueryMeta*.schema.json"],
+    "fileMatch": [
+      "a://b/DcSdJwtCredentialQueryMeta*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./DcSdJwtCredentialQueryMeta.schema.json",
@@ -4911,13 +5636,17 @@
           "description": "VCT identifiers accepted for dc+sd-jwt credentials."
         }
       },
-      "required": ["vct_values"],
+      "required": [
+        "vct_values"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./MsoMdocCredentialQueryMeta.schema.json",
-    "fileMatch": ["a://b/MsoMdocCredentialQueryMeta*.schema.json"],
+    "fileMatch": [
+      "a://b/MsoMdocCredentialQueryMeta*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./MsoMdocCredentialQueryMeta.schema.json",
@@ -4929,13 +5658,17 @@
           "description": "Document type identifier accepted for mso_mdoc credentials."
         }
       },
-      "required": ["doctype_value"],
+      "required": [
+        "doctype_value"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./MsoMdocClaimsQuery.schema.json",
-    "fileMatch": ["a://b/MsoMdocClaimsQuery*.schema.json"],
+    "fileMatch": [
+      "a://b/MsoMdocClaimsQuery*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./MsoMdocClaimsQuery.schema.json",
@@ -4962,13 +5695,17 @@
           }
         }
       },
-      "required": ["path"],
+      "required": [
+        "path"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./CredentialQueryDcSdJwt.schema.json",
-    "fileMatch": ["a://b/CredentialQueryDcSdJwt*.schema.json"],
+    "fileMatch": [
+      "a://b/CredentialQueryDcSdJwt*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CredentialQueryDcSdJwt.schema.json",
@@ -4978,7 +5715,9 @@
         "format": {
           "type": "string",
           "default": "dc+sd-jwt",
-          "enum": ["dc+sd-jwt"],
+          "enum": [
+            "dc+sd-jwt"
+          ],
           "description": "Credential format discriminator."
         },
         "claim_sets": {
@@ -5014,7 +5753,10 @@
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["etsi_tl", "openid_federation"]
+                "enum": [
+                  "etsi_tl",
+                  "openid_federation"
+                ]
               }
             }
           }
@@ -5041,13 +5783,19 @@
           "type": "boolean"
         }
       },
-      "required": ["format", "meta", "id"],
+      "required": [
+        "format",
+        "meta",
+        "id"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./CredentialQueryMsoMdoc.schema.json",
-    "fileMatch": ["a://b/CredentialQueryMsoMdoc*.schema.json"],
+    "fileMatch": [
+      "a://b/CredentialQueryMsoMdoc*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CredentialQueryMsoMdoc.schema.json",
@@ -5057,7 +5805,9 @@
         "format": {
           "type": "string",
           "default": "mso_mdoc",
-          "enum": ["mso_mdoc"],
+          "enum": [
+            "mso_mdoc"
+          ],
           "description": "Credential format discriminator."
         },
         "claim_sets": {
@@ -5093,7 +5843,10 @@
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["etsi_tl", "openid_federation"]
+                "enum": [
+                  "etsi_tl",
+                  "openid_federation"
+                ]
               }
             }
           }
@@ -5120,13 +5873,19 @@
           "type": "boolean"
         }
       },
-      "required": ["format", "meta", "id"],
+      "required": [
+        "format",
+        "meta",
+        "id"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./DCQL.schema.json",
-    "fileMatch": ["a://b/DCQL*.schema.json"],
+    "fileMatch": [
+      "a://b/DCQL*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./DCQL.schema.json",
@@ -5156,7 +5915,10 @@
             "properties": {
               "format": {
                 "type": "string",
-                "enum": ["dc+sd-jwt", "mso_mdoc"]
+                "enum": [
+                  "dc+sd-jwt",
+                  "mso_mdoc"
+                ]
               }
             }
           }
@@ -5173,7 +5935,9 @@
   },
   {
     "uri": "./RegistrationCertificatePurpose.schema.json",
-    "fileMatch": ["a://b/RegistrationCertificatePurpose*.schema.json"],
+    "fileMatch": [
+      "a://b/RegistrationCertificatePurpose*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./RegistrationCertificatePurpose.schema.json",
@@ -5187,13 +5951,18 @@
           "type": "string"
         }
       },
-      "required": ["lang", "content"],
+      "required": [
+        "lang",
+        "content"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./RegistrationCertificateBody.schema.json",
-    "fileMatch": ["a://b/RegistrationCertificateBody*.schema.json"],
+    "fileMatch": [
+      "a://b/RegistrationCertificateBody*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./RegistrationCertificateBody.schema.json",
@@ -5233,7 +6002,9 @@
   },
   {
     "uri": "./RegistrationCertificateRequest.schema.json",
-    "fileMatch": ["a://b/RegistrationCertificateRequest*.schema.json"],
+    "fileMatch": [
+      "a://b/RegistrationCertificateRequest*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./RegistrationCertificateRequest.schema.json",
@@ -5262,7 +6033,9 @@
   },
   {
     "uri": "./PresentationAttachment.schema.json",
-    "fileMatch": ["a://b/PresentationAttachment*.schema.json"],
+    "fileMatch": [
+      "a://b/PresentationAttachment*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./PresentationAttachment.schema.json",
@@ -5282,13 +6055,18 @@
           }
         }
       },
-      "required": ["format", "data"],
+      "required": [
+        "format",
+        "data"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./PresentationConfig.schema.json",
-    "fileMatch": ["a://b/PresentationConfig*.schema.json"],
+    "fileMatch": [
+      "a://b/PresentationConfig*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./PresentationConfig.schema.json",
@@ -5303,7 +6081,11 @@
         },
         "statusCheckMode": {
           "description": "Status list verification mode for presentations: strict (default), best_effort, or disabled.",
-          "enum": ["strict", "best_effort", "disabled"],
+          "enum": [
+            "strict",
+            "best_effort",
+            "disabled"
+          ],
           "type": "string",
           "default": "strict"
         },
@@ -5395,13 +6177,21 @@
           "description": "Optional ID of the access certificate to use for signing the presentation request.\nIf not provided, the default access certificate for the tenant will be used.\n\nNote: This is intentionally NOT a TypeORM relationship because CertEntity uses\na composite primary key (id + tenantId), and SQLite cannot create foreign keys\nthat reference only part of a composite primary key. The relationship is handled\nat the application level in the service layer."
         }
       },
-      "required": ["id", "tenant", "dcql_query", "createdAt", "updatedAt"],
+      "required": [
+        "id",
+        "tenant",
+        "dcql_query",
+        "createdAt",
+        "updatedAt"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ResolveIssuerMetadataDto.schema.json",
-    "fileMatch": ["a://b/ResolveIssuerMetadataDto*.schema.json"],
+    "fileMatch": [
+      "a://b/ResolveIssuerMetadataDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ResolveIssuerMetadataDto.schema.json",
@@ -5415,13 +6205,17 @@
           "example": "https://issuer.example.com/issuers/tenant-a"
         }
       },
-      "required": ["issuerUrl"],
+      "required": [
+        "issuerUrl"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ResolveSchemaMetadataDto.schema.json",
-    "fileMatch": ["a://b/ResolveSchemaMetadataDto*.schema.json"],
+    "fileMatch": [
+      "a://b/ResolveSchemaMetadataDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ResolveSchemaMetadataDto.schema.json",
@@ -5435,13 +6229,17 @@
           "example": "https://registrar.example.com/schema-metadata/5c0d7dbb-ef2e-448b-b84f-b8103575947b"
         }
       },
-      "required": ["schemaMetadataUrl"],
+      "required": [
+        "schemaMetadataUrl"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ResolveSchemaMetadataJwtDto.schema.json",
-    "fileMatch": ["a://b/ResolveSchemaMetadataJwtDto*.schema.json"],
+    "fileMatch": [
+      "a://b/ResolveSchemaMetadataJwtDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ResolveSchemaMetadataJwtDto.schema.json",
@@ -5454,13 +6252,17 @@
           "example": "eyJ0eXAiOiJhdHRlc3RhdGlvbi1zY2hlbWErand0IiwiYWxnIjoiRVMyNTYiLCJ4NWMiOlsiTUlJQ01qQ0NBZGlnQXdJQkFnSVVDa0hwaTlPWHQ0QUJTY2NWbEl3UlJRdlE5cU1Rd0NnWUlLb1pJemowRUF3SXdLREVMTUFrR0ExVUVCaE1DUkVVeEdUQVhCZ05WQkFNTUVFZGxjbTFoYmlCU1pXZHBjM1J5WVhJd0hoY05Nall3TVRFMk1UQXdOVEE0V2hjTk1qZ3dNVEUyTVRBd05UQTRXakFvTVFzd0NRWURWUVFHRXdKRVJURVpNQmNHQTFVRUF3d1FSMlZ5YldGdUlGSmxaMmx6ZEhKaGNqQlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDlBd0VIQTBJQUJBUXQrK1dGQnJkVVJjYXkycmtyMG9pdW9zMDE2dlVLT2tsWVNJUVF4K1cvclcyOVc4bkE3SFMrNHMrNW0zWW5tUmRRcXphYWZDT3ZHYXhjSUd5UXFjQ2pnZDh3Z2R3d0hRWURWUjBPQkJZRUZQNGwyNXhUZWxBbnNEa0U2QXFlc09zd3pxWWxNQjhHQTFVZEl3UVlNQmFBRlA0bDI1eFRlbEFuc0RrRTZBcWVzT3N3enFZbE1CSUdBMVVkRXdFQi93UUlNQVlCQWY4Q0FRQXdEZ1lEVlIwUEFRSC9CQVFEQWdFR01Dd0dBMVVkRWdRbE1DT0dJV2gwZEhCek9pOHZjbVZuYVhOMGNtRnlMbVYxWkdrdGQyRnNiR1YwTG1SbGRqQklCZ05WSFI4RVFUQS9NRDJnTzZBNWhqZG9kSFJ3Y3pvdkwzSmxaMmx6ZEhKaGNpNWxkV1JwTFhkaGJHeGxkQzVrWlhZdmMzUmhkSFZ6TFcxaGJtRm5aVzFsYm5RdlkzSnNNQW9HQ0NxR1NNNDlCQU1DQTBnQU1FVUNJRFcxTXA0ZDc3a2oxWVVIWHlhVU1mMmNpbGtxTmpkL2RpdWpud3A4Ti9ISkFpRUF2WXlaK1IyUXFuUUJJUnZBL281aEVjVHJuNTNMQ2ZEQWZnWGt1OWxzZUIwPSJdIn0.eyJpZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwMS9zY2hlbWEtbWV0YWRhdGEvNWMzNzFhMjEtZWIxOC00NzY3LTk4MTktMGIwMGY2NTQzY2QzIiwidmVyc2lvbiI6IjEuMC4wIn0.signature"
         }
       },
-      "required": ["signedJwt"],
+      "required": [
+        "signedJwt"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./PresentationConfigCreateDto.schema.json",
-    "fileMatch": ["a://b/PresentationConfigCreateDto*.schema.json"],
+    "fileMatch": [
+      "a://b/PresentationConfigCreateDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./PresentationConfigCreateDto.schema.json",
@@ -5475,7 +6277,11 @@
         },
         "statusCheckMode": {
           "description": "Status list verification mode for presentations: strict (default), best_effort, or disabled.",
-          "enum": ["strict", "best_effort", "disabled"],
+          "enum": [
+            "strict",
+            "best_effort",
+            "disabled"
+          ],
           "type": "string",
           "default": "strict"
         },
@@ -5541,13 +6347,18 @@
           "description": "Optional ID of the access certificate to use for signing the presentation request.\nIf not provided, the default access certificate for the tenant will be used.\n\nNote: This is intentionally NOT a TypeORM relationship because CertEntity uses\na composite primary key (id + tenantId), and SQLite cannot create foreign keys\nthat reference only part of a composite primary key. The relationship is handled\nat the application level in the service layer."
         }
       },
-      "required": ["id", "dcql_query"],
+      "required": [
+        "id",
+        "dcql_query"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./PresentationConfigUpdateDto.schema.json",
-    "fileMatch": ["a://b/PresentationConfigUpdateDto*.schema.json"],
+    "fileMatch": [
+      "a://b/PresentationConfigUpdateDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./PresentationConfigUpdateDto.schema.json",
@@ -5562,7 +6373,11 @@
         },
         "statusCheckMode": {
           "description": "Status list verification mode for presentations: strict (default), best_effort, or disabled.",
-          "enum": ["strict", "best_effort", "disabled"],
+          "enum": [
+            "strict",
+            "best_effort",
+            "disabled"
+          ],
           "type": "string",
           "default": "strict"
         },
@@ -5633,7 +6448,9 @@
   },
   {
     "uri": "./RegistrationCertificateDefaults.schema.json",
-    "fileMatch": ["a://b/RegistrationCertificateDefaults*.schema.json"],
+    "fileMatch": [
+      "a://b/RegistrationCertificateDefaults*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./RegistrationCertificateDefaults.schema.json",
@@ -5656,7 +6473,9 @@
   },
   {
     "uri": "./RegistrarConfigResponseDto.schema.json",
-    "fileMatch": ["a://b/RegistrarConfigResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/RegistrarConfigResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./RegistrarConfigResponseDto.schema.json",
@@ -5704,13 +6523,21 @@
           "example": true
         }
       },
-      "required": ["registrarUrl", "oidcUrl", "clientId", "username", "hasPassword"],
+      "required": [
+        "registrarUrl",
+        "oidcUrl",
+        "clientId",
+        "username",
+        "hasPassword"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./CreateRegistrarConfigDto.schema.json",
-    "fileMatch": ["a://b/CreateRegistrarConfigDto*.schema.json"],
+    "fileMatch": [
+      "a://b/CreateRegistrarConfigDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CreateRegistrarConfigDto.schema.json",
@@ -5757,13 +6584,21 @@
           ]
         }
       },
-      "required": ["registrarUrl", "oidcUrl", "clientId", "username", "password"],
+      "required": [
+        "registrarUrl",
+        "oidcUrl",
+        "clientId",
+        "username",
+        "password"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./UpdateRegistrarConfigDto.schema.json",
-    "fileMatch": ["a://b/UpdateRegistrarConfigDto*.schema.json"],
+    "fileMatch": [
+      "a://b/UpdateRegistrarConfigDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./UpdateRegistrarConfigDto.schema.json",
@@ -5815,7 +6650,9 @@
   },
   {
     "uri": "./CreateAccessCertificateDto.schema.json",
-    "fileMatch": ["a://b/CreateAccessCertificateDto*.schema.json"],
+    "fileMatch": [
+      "a://b/CreateAccessCertificateDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CreateAccessCertificateDto.schema.json",
@@ -5828,13 +6665,17 @@
           "example": "my-signing-key"
         }
       },
-      "required": ["keyId"],
+      "required": [
+        "keyId"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./DeferredCredentialRequestDto.schema.json",
-    "fileMatch": ["a://b/DeferredCredentialRequestDto*.schema.json"],
+    "fileMatch": [
+      "a://b/DeferredCredentialRequestDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./DeferredCredentialRequestDto.schema.json",
@@ -5847,13 +6688,17 @@
           "example": "8xLOxBtZp8"
         }
       },
-      "required": ["transaction_id"],
+      "required": [
+        "transaction_id"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./NotificationRequestDto.schema.json",
-    "fileMatch": ["a://b/NotificationRequestDto*.schema.json"],
+    "fileMatch": [
+      "a://b/NotificationRequestDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./NotificationRequestDto.schema.json",
@@ -5865,16 +6710,25 @@
         },
         "event": {
           "type": "string",
-          "enum": ["credential_accepted", "credential_failure", "credential_deleted"]
+          "enum": [
+            "credential_accepted",
+            "credential_failure",
+            "credential_deleted"
+          ]
         }
       },
-      "required": ["notification_id", "event"],
+      "required": [
+        "notification_id",
+        "event"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./OfferResponse.schema.json",
-    "fileMatch": ["a://b/OfferResponse*.schema.json"],
+    "fileMatch": [
+      "a://b/OfferResponse*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./OfferResponse.schema.json",
@@ -5892,13 +6746,18 @@
           "type": "string"
         }
       },
-      "required": ["uri", "session"],
+      "required": [
+        "uri",
+        "session"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./CompleteDeferredDto.schema.json",
-    "fileMatch": ["a://b/CompleteDeferredDto*.schema.json"],
+    "fileMatch": [
+      "a://b/CompleteDeferredDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CompleteDeferredDto.schema.json",
@@ -5916,13 +6775,17 @@
           }
         }
       },
-      "required": ["claims"],
+      "required": [
+        "claims"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./DeferredOperationResponse.schema.json",
-    "fileMatch": ["a://b/DeferredOperationResponse*.schema.json"],
+    "fileMatch": [
+      "a://b/DeferredOperationResponse*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./DeferredOperationResponse.schema.json",
@@ -5935,7 +6798,13 @@
         },
         "status": {
           "description": "The new status of the transaction",
-          "enum": ["pending", "ready", "retrieved", "expired", "failed"],
+          "enum": [
+            "pending",
+            "ready",
+            "retrieved",
+            "expired",
+            "failed"
+          ],
           "type": "string"
         },
         "message": {
@@ -5943,13 +6812,18 @@
           "description": "Optional message"
         }
       },
-      "required": ["transactionId", "status"],
+      "required": [
+        "transactionId",
+        "status"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./FailDeferredDto.schema.json",
-    "fileMatch": ["a://b/FailDeferredDto*.schema.json"],
+    "fileMatch": [
+      "a://b/FailDeferredDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./FailDeferredDto.schema.json",
@@ -5967,7 +6841,9 @@
   },
   {
     "uri": "./EC_Public.schema.json",
-    "fileMatch": ["a://b/EC_Public*.schema.json"],
+    "fileMatch": [
+      "a://b/EC_Public*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./EC_Public.schema.json",
@@ -5991,13 +6867,20 @@
           "description": "The y coordinate of the EC public key."
         }
       },
-      "required": ["kty", "crv", "x", "y"],
+      "required": [
+        "kty",
+        "crv",
+        "x",
+        "y"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./JwksResponseDto.schema.json",
-    "fileMatch": ["a://b/JwksResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/JwksResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./JwksResponseDto.schema.json",
@@ -6012,13 +6895,17 @@
           }
         }
       },
-      "required": ["keys"],
+      "required": [
+        "keys"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./AuthorizationResponse.schema.json",
-    "fileMatch": ["a://b/AuthorizationResponse*.schema.json"],
+    "fileMatch": [
+      "a://b/AuthorizationResponse*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./AuthorizationResponse.schema.json",
@@ -6054,7 +6941,9 @@
   },
   {
     "uri": "./Object.schema.json",
-    "fileMatch": ["a://b/Object*.schema.json"],
+    "fileMatch": [
+      "a://b/Object*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./Object.schema.json",
@@ -6066,7 +6955,9 @@
   },
   {
     "uri": "./ParResponseDto.schema.json",
-    "fileMatch": ["a://b/ParResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/ParResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ParResponseDto.schema.json",
@@ -6082,13 +6973,18 @@
           "description": "The expiration time for the request URI in seconds."
         }
       },
-      "required": ["request_uri", "expires_in"],
+      "required": [
+        "request_uri",
+        "expires_in"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./InteractiveAuthorizationRequestDto.schema.json",
-    "fileMatch": ["a://b/InteractiveAuthorizationRequestDto*.schema.json"],
+    "fileMatch": [
+      "a://b/InteractiveAuthorizationRequestDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./InteractiveAuthorizationRequestDto.schema.json",
@@ -6161,7 +7057,9 @@
   },
   {
     "uri": "./InteractiveAuthorizationCodeResponseDto.schema.json",
-    "fileMatch": ["a://b/InteractiveAuthorizationCodeResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/InteractiveAuthorizationCodeResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./InteractiveAuthorizationCodeResponseDto.schema.json",
@@ -6179,13 +7077,18 @@
           "example": "auth-code-123"
         }
       },
-      "required": ["status", "code"],
+      "required": [
+        "status",
+        "code"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./InteractiveAuthorizationErrorResponseDto.schema.json",
-    "fileMatch": ["a://b/InteractiveAuthorizationErrorResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/InteractiveAuthorizationErrorResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./InteractiveAuthorizationErrorResponseDto.schema.json",
@@ -6203,13 +7106,17 @@
           "example": "Missing required parameter: interaction_types_supported"
         }
       },
-      "required": ["error"],
+      "required": [
+        "error"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ChainedAsParResponseDto.schema.json",
-    "fileMatch": ["a://b/ChainedAsParResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/ChainedAsParResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ChainedAsParResponseDto.schema.json",
@@ -6227,13 +7134,18 @@
           "example": 600
         }
       },
-      "required": ["request_uri", "expires_in"],
+      "required": [
+        "request_uri",
+        "expires_in"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ChainedAsErrorResponseDto.schema.json",
-    "fileMatch": ["a://b/ChainedAsErrorResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/ChainedAsErrorResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ChainedAsErrorResponseDto.schema.json",
@@ -6250,13 +7162,17 @@
           "description": "Human-readable error description"
         }
       },
-      "required": ["error"],
+      "required": [
+        "error"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ChainedAsTokenRequestDto.schema.json",
-    "fileMatch": ["a://b/ChainedAsTokenRequestDto*.schema.json"],
+    "fileMatch": [
+      "a://b/ChainedAsTokenRequestDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ChainedAsTokenRequestDto.schema.json",
@@ -6289,13 +7205,17 @@
           "description": "PKCE code verifier"
         }
       },
-      "required": ["grant_type"],
+      "required": [
+        "grant_type"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ChainedAsTokenResponseDto.schema.json",
-    "fileMatch": ["a://b/ChainedAsTokenResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/ChainedAsTokenResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ChainedAsTokenResponseDto.schema.json",
@@ -6340,13 +7260,19 @@
           "description": "Refresh token (issued when refresh tokens are enabled)"
         }
       },
-      "required": ["access_token", "token_type", "expires_in"],
+      "required": [
+        "access_token",
+        "token_type",
+        "expires_in"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./KmsProviderCapabilitiesDto.schema.json",
-    "fileMatch": ["a://b/KmsProviderCapabilitiesDto*.schema.json"],
+    "fileMatch": [
+      "a://b/KmsProviderCapabilitiesDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./KmsProviderCapabilitiesDto.schema.json",
@@ -6370,7 +7296,9 @@
         },
         "supportedAlgs": {
           "description": "Signing algorithms supported by the provider.",
-          "example": ["ES256"],
+          "example": [
+            "ES256"
+          ],
           "type": "array",
           "items": {
             "type": "string"
@@ -6382,13 +7310,21 @@
           "example": "ES256"
         }
       },
-      "required": ["canImport", "canCreate", "canDelete", "supportedAlgs", "defaultAlg"],
+      "required": [
+        "canImport",
+        "canCreate",
+        "canDelete",
+        "supportedAlgs",
+        "defaultAlg"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./KmsProviderInfoDto.schema.json",
-    "fileMatch": ["a://b/KmsProviderInfoDto*.schema.json"],
+    "fileMatch": [
+      "a://b/KmsProviderInfoDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./KmsProviderInfoDto.schema.json",
@@ -6419,13 +7355,19 @@
           ]
         }
       },
-      "required": ["name", "type", "capabilities"],
+      "required": [
+        "name",
+        "type",
+        "capabilities"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./KmsProvidersResponseDto.schema.json",
-    "fileMatch": ["a://b/KmsProvidersResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/KmsProvidersResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./KmsProvidersResponseDto.schema.json",
@@ -6445,459 +7387,618 @@
           "example": "db"
         }
       },
-      "required": ["providers", "default"],
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "./DbKmsConfigDto.schema.json",
-    "fileMatch": ["a://b/DbKmsConfigDto*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "./DbKmsConfigDto.schema.json",
-      "title": "DbKmsConfigDto",
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
-          "example": "main-vault"
-        },
-        "type": {
-          "enum": ["db"],
-          "type": "string",
-          "description": "Type of the KMS provider.",
-          "example": "db"
-        },
-        "description": {
-          "type": "string",
-          "description": "Human-readable description of this provider instance.",
-          "example": "Production HashiCorp Vault for signing keys"
-        }
-      },
-      "required": ["id", "type"],
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "./VaultKmsConfigDto.schema.json",
-    "fileMatch": ["a://b/VaultKmsConfigDto*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "./VaultKmsConfigDto.schema.json",
-      "title": "VaultKmsConfigDto",
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
-          "example": "main-vault"
-        },
-        "type": {
-          "enum": ["vault"],
-          "type": "string",
-          "description": "Type of the KMS provider.",
-          "example": "vault"
-        },
-        "description": {
-          "type": "string",
-          "description": "Human-readable description of this provider instance.",
-          "example": "Production HashiCorp Vault for signing keys"
-        },
-        "vaultUrl": {
-          "type": "string",
-          "description": "URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.",
-          "example": "${VAULT_URL}"
-        },
-        "vaultToken": {
-          "type": "string",
-          "description": "Authentication token for HashiCorp Vault. Supports ${ENV_VAR} placeholders.",
-          "example": "${VAULT_TOKEN}"
-        }
-      },
-      "required": ["id", "type", "vaultUrl", "vaultToken"],
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "./AwsKmsConfigDto.schema.json",
-    "fileMatch": ["a://b/AwsKmsConfigDto*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "./AwsKmsConfigDto.schema.json",
-      "title": "AwsKmsConfigDto",
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
-          "example": "main-vault"
-        },
-        "type": {
-          "enum": ["aws-kms"],
-          "type": "string",
-          "description": "Type of the KMS provider.",
-          "example": "aws-kms"
-        },
-        "description": {
-          "type": "string",
-          "description": "Human-readable description of this provider instance.",
-          "example": "Production HashiCorp Vault for signing keys"
-        },
-        "region": {
-          "type": "string",
-          "description": "AWS region for KMS. Supports ${ENV_VAR} placeholders.",
-          "example": "${AWS_REGION}"
-        },
-        "accessKeyId": {
-          "type": "string",
-          "description": "AWS access key ID. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.",
-          "example": "${AWS_ACCESS_KEY_ID}"
-        },
-        "secretAccessKey": {
-          "type": "string",
-          "description": "AWS secret access key. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.",
-          "example": "${AWS_SECRET_ACCESS_KEY}"
-        }
-      },
-      "required": ["id", "type", "region"],
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "./Pkcs11KmsConfigDto.schema.json",
-    "fileMatch": ["a://b/Pkcs11KmsConfigDto*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "./Pkcs11KmsConfigDto.schema.json",
-      "title": "Pkcs11KmsConfigDto",
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
-          "example": "main-vault"
-        },
-        "type": {
-          "enum": ["pkcs11"],
-          "type": "string",
-          "description": "Type of the KMS provider.",
-          "example": "pkcs11"
-        },
-        "description": {
-          "type": "string",
-          "description": "Human-readable description of this provider instance.",
-          "example": "Production HashiCorp Vault for signing keys"
-        },
-        "library": {
-          "type": "string",
-          "description": "Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.",
-          "example": "${PKCS11_LIBRARY}"
-        },
-        "slot": {
-          "type": "object",
-          "description": "Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.",
-          "example": "${PKCS11_SLOT}"
-        },
-        "pin": {
-          "type": "string",
-          "description": "User PIN used for C_Login. Supports ${ENV_VAR} placeholders.",
-          "example": "${PKCS11_PIN}"
-        },
-        "readOnly": {
-          "type": "boolean",
-          "description": "Open the PKCS#11 session in read-only mode. Defaults to false.",
-          "example": false
-        }
-      },
-      "required": ["id", "type", "library", "slot", "pin"],
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "./HttpAuthBaseConfigDto.schema.json",
-    "fileMatch": ["a://b/HttpAuthBaseConfigDto*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "./HttpAuthBaseConfigDto.schema.json",
-      "title": "HttpAuthBaseConfigDto",
-      "type": "object",
-      "properties": {
-        "type": {
-          "enum": ["none", "bearer", "oauth2-client-credentials", "mtls"],
-          "type": "string",
-          "description": "Authentication method for the remote KMS service."
-        }
-      },
-      "required": ["type"],
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "./HttpKmsConfigDto.schema.json",
-    "fileMatch": ["a://b/HttpKmsConfigDto*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "./HttpKmsConfigDto.schema.json",
-      "title": "HttpKmsConfigDto",
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
-          "example": "main-vault"
-        },
-        "type": {
-          "enum": ["http"],
-          "type": "string",
-          "description": "Type of the KMS provider.",
-          "example": "http"
-        },
-        "description": {
-          "type": "string",
-          "description": "Human-readable description of this provider instance.",
-          "example": "Production HashiCorp Vault for signing keys"
-        },
-        "baseUrl": {
-          "type": "string",
-          "description": "Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.",
-          "example": "${KMS_SERVICE_URL}"
-        },
-        "auth": {
-          "description": "Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to \"none\") for unauthenticated services.",
-          "allOf": [
-            {
-              "$ref": "./HttpAuthBaseConfigDto.schema.json"
-            }
-          ]
-        },
-        "keysPath": {
-          "type": "string",
-          "description": "Path prefix for key endpoints on the remote service. Defaults to /keys.",
-          "example": "/v1/keys"
-        },
-        "healthPath": {
-          "type": "string",
-          "description": "Path for the health check endpoint on the remote service. Defaults to /health.",
-          "example": "/health"
-        },
-        "canImport": {
-          "type": "boolean",
-          "description": "Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.",
-          "example": false
-        }
-      },
-      "required": ["id", "type", "baseUrl"],
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "./CscAuthorizeAuthDataDto.schema.json",
-    "fileMatch": ["a://b/CscAuthorizeAuthDataDto*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "./CscAuthorizeAuthDataDto.schema.json",
-      "title": "CscAuthorizeAuthDataDto",
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).",
-          "example": "PIN"
-        },
-        "value": {
-          "type": "string",
-          "description": "Authentication factor value sent to CSC credentials/authorize.",
-          "example": "123456"
-        }
-      },
-      "required": ["id", "value"],
-      "additionalProperties": false
-    }
-  },
-  {
-    "uri": "./CscKmsConfigDto.schema.json",
-    "fileMatch": ["a://b/CscKmsConfigDto*.schema.json"],
-    "schema": {
-      "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "./CscKmsConfigDto.schema.json",
-      "title": "CscKmsConfigDto",
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
-          "example": "main-vault"
-        },
-        "type": {
-          "enum": ["csc"],
-          "type": "string",
-          "description": "Type of the KMS provider.",
-          "example": "csc"
-        },
-        "description": {
-          "type": "string",
-          "description": "Human-readable description of this provider instance.",
-          "example": "Production HashiCorp Vault for signing keys"
-        },
-        "baseUrl": {
-          "type": "string",
-          "description": "Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.",
-          "example": "${CSC_URL}"
-        },
-        "tokenUrl": {
-          "type": "string",
-          "format": "uri",
-          "description": "OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.",
-          "example": "${CSC_TOKEN_URL}"
-        },
-        "clientId": {
-          "type": "string",
-          "description": "OAuth2 client ID. Supports ${ENV_VAR} placeholders.",
-          "example": "${CSC_CLIENT_ID}"
-        },
-        "clientSecret": {
-          "type": "string",
-          "description": "OAuth2 client secret. Supports ${ENV_VAR} placeholders.",
-          "example": "${CSC_CLIENT_SECRET}"
-        },
-        "scope": {
-          "type": "string",
-          "description": "OAuth2 scope to request during token acquisition.",
-          "example": "service"
-        },
-        "credentialId": {
-          "type": "string",
-          "description": "Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.",
-          "example": "[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758"
-        },
-        "userId": {
-          "type": "string",
-          "description": "Optional CSC user ID used in credentials/list requests.",
-          "example": "eudiplo_user"
-        },
-        "apiPath": {
-          "type": "string",
-          "description": "CSC API path prefix appended to baseUrl. Defaults to /csc/v2.",
-          "example": "/csc/v2"
-        },
-        "hashAlgorithmOid": {
-          "type": "string",
-          "description": "Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.",
-          "example": "2.16.840.1.101.3.4.2.1"
-        },
-        "signAlgorithmOid": {
-          "type": "string",
-          "description": "Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.",
-          "example": "1.2.840.10045.4.3.2"
-        },
-        "sad": {
-          "type": "string",
-          "description": "Static SAD token. If set, the adapter sends it directly in signatures/signHash requests."
-        },
-        "useAuthorizeEndpoint": {
-          "type": "boolean",
-          "description": "When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.",
-          "example": false
-        },
-        "authorizeAuthData": {
-          "description": "Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).",
-          "type": "array",
-          "items": {
-            "$ref": "./CscAuthorizeAuthDataDto.schema.json"
-          }
-        }
-      },
-      "required": ["id", "type", "baseUrl", "tokenUrl", "clientId", "clientSecret"],
+      "required": [
+        "providers",
+        "default"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./KmsConfigDto.schema.json",
-    "fileMatch": ["a://b/KmsConfigDto*.schema.json"],
+    "fileMatch": [
+      "a://b/KmsConfigDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
-      "$id": "./KmsConfigDto.schema.json",
-      "title": "KmsConfigDto",
       "type": "object",
       "properties": {
         "defaultProvider": {
-          "type": "string",
           "description": "ID of the default KMS provider. Defaults to \"db\" if not set.",
-          "example": "main-vault"
+          "examples": [
+            "main-vault"
+          ],
+          "type": "string"
         },
         "providers": {
           "type": "array",
-          "description": "List of KMS provider configurations. Each provider must have a unique id and a type.",
           "items": {
             "oneOf": [
               {
-                "$ref": "./DbKmsConfigDto.schema.json"
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+                    "examples": [
+                      "main-vault"
+                    ]
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "db",
+                    "description": "Type of the KMS provider.",
+                    "examples": [
+                      "db"
+                    ]
+                  },
+                  "description": {
+                    "description": "Human-readable description of this provider instance.",
+                    "examples": [
+                      "Production HashiCorp Vault for signing keys"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "type"
+                ],
+                "additionalProperties": false
               },
               {
-                "$ref": "./VaultKmsConfigDto.schema.json"
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+                    "examples": [
+                      "main-vault"
+                    ]
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "vault",
+                    "description": "Type of the KMS provider.",
+                    "examples": [
+                      "vault"
+                    ]
+                  },
+                  "description": {
+                    "description": "Human-readable description of this provider instance.",
+                    "examples": [
+                      "Production HashiCorp Vault for signing keys"
+                    ],
+                    "type": "string"
+                  },
+                  "vaultUrl": {
+                    "type": "string",
+                    "description": "URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.",
+                    "examples": [
+                      "${VAULT_URL}"
+                    ]
+                  },
+                  "vaultToken": {
+                    "type": "string",
+                    "description": "Authentication token for HashiCorp Vault. Supports ${ENV_VAR} placeholders.",
+                    "examples": [
+                      "${VAULT_TOKEN}"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "type",
+                  "vaultUrl",
+                  "vaultToken"
+                ],
+                "additionalProperties": false
               },
               {
-                "$ref": "./AwsKmsConfigDto.schema.json"
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+                    "examples": [
+                      "main-vault"
+                    ]
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "aws-kms",
+                    "description": "Type of the KMS provider.",
+                    "examples": [
+                      "aws-kms"
+                    ]
+                  },
+                  "description": {
+                    "description": "Human-readable description of this provider instance.",
+                    "examples": [
+                      "Production HashiCorp Vault for signing keys"
+                    ],
+                    "type": "string"
+                  },
+                  "region": {
+                    "type": "string",
+                    "description": "AWS region for KMS. Supports ${ENV_VAR} placeholders.",
+                    "examples": [
+                      "${AWS_REGION}"
+                    ]
+                  },
+                  "accessKeyId": {
+                    "description": "AWS access key ID. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.",
+                    "examples": [
+                      "${AWS_ACCESS_KEY_ID}"
+                    ],
+                    "type": "string"
+                  },
+                  "secretAccessKey": {
+                    "description": "AWS secret access key. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.",
+                    "examples": [
+                      "${AWS_SECRET_ACCESS_KEY}"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "type",
+                  "region"
+                ],
+                "additionalProperties": false
               },
               {
-                "$ref": "./Pkcs11KmsConfigDto.schema.json"
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+                    "examples": [
+                      "main-vault"
+                    ]
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "pkcs11",
+                    "description": "Type of the KMS provider.",
+                    "examples": [
+                      "pkcs11"
+                    ]
+                  },
+                  "description": {
+                    "description": "Human-readable description of this provider instance.",
+                    "examples": [
+                      "Production HashiCorp Vault for signing keys"
+                    ],
+                    "type": "string"
+                  },
+                  "library": {
+                    "type": "string",
+                    "description": "Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.",
+                    "examples": [
+                      "${PKCS11_LIBRARY}"
+                    ]
+                  },
+                  "slot": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ],
+                    "description": "Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.",
+                    "examples": [
+                      "${PKCS11_SLOT}"
+                    ]
+                  },
+                  "pin": {
+                    "type": "string",
+                    "description": "User PIN used for C_Login. Supports ${ENV_VAR} placeholders.",
+                    "examples": [
+                      "${PKCS11_PIN}"
+                    ]
+                  },
+                  "readOnly": {
+                    "description": "Open the PKCS#11 session in read-only mode. Defaults to false.",
+                    "examples": [
+                      false
+                    ],
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "id",
+                  "type",
+                  "library",
+                  "slot",
+                  "pin"
+                ],
+                "additionalProperties": false
               },
               {
-                "$ref": "./HttpKmsConfigDto.schema.json"
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+                    "examples": [
+                      "main-vault"
+                    ]
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "http",
+                    "description": "Type of the KMS provider.",
+                    "examples": [
+                      "http"
+                    ]
+                  },
+                  "description": {
+                    "description": "Human-readable description of this provider instance.",
+                    "examples": [
+                      "Production HashiCorp Vault for signing keys"
+                    ],
+                    "type": "string"
+                  },
+                  "baseUrl": {
+                    "type": "string",
+                    "description": "Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.",
+                    "examples": [
+                      "${KMS_SERVICE_URL}"
+                    ]
+                  },
+                  "auth": {
+                    "description": "Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to \"none\") for unauthenticated services.",
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "none",
+                            "description": "No authentication — suitable for services on a trusted private network.",
+                            "examples": [
+                              "none"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "bearer",
+                            "description": "Static Bearer token sent as Authorization: Bearer <token>.",
+                            "examples": [
+                              "bearer"
+                            ]
+                          },
+                          "token": {
+                            "type": "string",
+                            "description": "Bearer token value. Supports ${ENV_VAR} placeholders.",
+                            "examples": [
+                              "${KMS_API_KEY}"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "token"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "oauth2-client-credentials",
+                            "description": "OAuth 2.0 Client Credentials — EUDIPLO fetches and caches short-lived tokens.",
+                            "examples": [
+                              "oauth2-client-credentials"
+                            ]
+                          },
+                          "tokenUrl": {
+                            "type": "string",
+                            "description": "Token endpoint URL (e.g. Keycloak, Entra ID). Supports ${ENV_VAR} placeholders.",
+                            "examples": [
+                              "${IAM_TOKEN_URL}"
+                            ]
+                          },
+                          "clientId": {
+                            "type": "string",
+                            "description": "OAuth 2.0 client ID. Supports ${ENV_VAR} placeholders.",
+                            "examples": [
+                              "${KMS_CLIENT_ID}"
+                            ]
+                          },
+                          "clientSecret": {
+                            "type": "string",
+                            "description": "OAuth 2.0 client secret. Supports ${ENV_VAR} placeholders.",
+                            "examples": [
+                              "${KMS_CLIENT_SECRET}"
+                            ]
+                          },
+                          "scope": {
+                            "description": "Space-separated list of OAuth 2.0 scopes to request. Optional.",
+                            "examples": [
+                              "kms:sign kms:admin"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "tokenUrl",
+                          "clientId",
+                          "clientSecret"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "mtls",
+                            "description": "Mutual TLS — EUDIPLO presents a client certificate on every connection.",
+                            "examples": [
+                              "mtls"
+                            ]
+                          },
+                          "certFile": {
+                            "type": "string",
+                            "description": "Absolute path to the PEM-encoded client certificate file. Supports ${ENV_VAR} placeholders.",
+                            "examples": [
+                              "/etc/certs/eudiplo.crt"
+                            ]
+                          },
+                          "keyFile": {
+                            "type": "string",
+                            "description": "Absolute path to the PEM-encoded private key file for the client certificate. Supports ${ENV_VAR} placeholders.",
+                            "examples": [
+                              "/etc/certs/eudiplo.key"
+                            ]
+                          },
+                          "caFile": {
+                            "description": "Absolute path to the PEM-encoded CA bundle to trust for the remote server's certificate. Omit to use the system CA store.",
+                            "examples": [
+                              "/etc/certs/ca.crt"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "certFile",
+                          "keyFile"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "keysPath": {
+                    "description": "Path prefix for key endpoints on the remote service. Defaults to /keys.",
+                    "examples": [
+                      "/v1/keys"
+                    ],
+                    "type": "string"
+                  },
+                  "healthPath": {
+                    "description": "Path for the health check endpoint on the remote service. Defaults to /health.",
+                    "examples": [
+                      "/health"
+                    ],
+                    "type": "string"
+                  },
+                  "canImport": {
+                    "description": "Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.",
+                    "examples": [
+                      false
+                    ],
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "id",
+                  "type",
+                  "baseUrl"
+                ],
+                "additionalProperties": false
               },
               {
-                "$ref": "./CscKmsConfigDto.schema.json"
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+                    "examples": [
+                      "main-vault"
+                    ]
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "csc",
+                    "description": "Type of the KMS provider.",
+                    "examples": [
+                      "csc"
+                    ]
+                  },
+                  "description": {
+                    "description": "Human-readable description of this provider instance.",
+                    "examples": [
+                      "Production HashiCorp Vault for signing keys"
+                    ],
+                    "type": "string"
+                  },
+                  "baseUrl": {
+                    "type": "string",
+                    "description": "Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.",
+                    "examples": [
+                      "${CSC_URL}"
+                    ]
+                  },
+                  "tokenUrl": {
+                    "type": "string",
+                    "description": "OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.",
+                    "examples": [
+                      "${CSC_TOKEN_URL}"
+                    ]
+                  },
+                  "clientId": {
+                    "type": "string",
+                    "description": "OAuth2 client ID. Supports ${ENV_VAR} placeholders.",
+                    "examples": [
+                      "${CSC_CLIENT_ID}"
+                    ]
+                  },
+                  "clientSecret": {
+                    "type": "string",
+                    "description": "OAuth2 client secret. Supports ${ENV_VAR} placeholders.",
+                    "examples": [
+                      "${CSC_CLIENT_SECRET}"
+                    ]
+                  },
+                  "scope": {
+                    "description": "OAuth2 scope to request during token acquisition.",
+                    "examples": [
+                      "service"
+                    ],
+                    "type": "string"
+                  },
+                  "credentialId": {
+                    "description": "Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.",
+                    "examples": [
+                      "[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758"
+                    ],
+                    "type": "string"
+                  },
+                  "userId": {
+                    "description": "Optional CSC user ID used in credentials/list requests.",
+                    "examples": [
+                      "eudiplo_user"
+                    ],
+                    "type": "string"
+                  },
+                  "apiPath": {
+                    "description": "CSC API path prefix appended to baseUrl. Defaults to /csc/v2.",
+                    "examples": [
+                      "/csc/v2"
+                    ],
+                    "type": "string"
+                  },
+                  "hashAlgorithmOid": {
+                    "description": "Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.",
+                    "examples": [
+                      "2.16.840.1.101.3.4.2.1"
+                    ],
+                    "type": "string"
+                  },
+                  "signAlgorithmOid": {
+                    "description": "Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.",
+                    "examples": [
+                      "1.2.840.10045.4.3.2"
+                    ],
+                    "type": "string"
+                  },
+                  "sad": {
+                    "description": "Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.",
+                    "type": "string"
+                  },
+                  "useAuthorizeEndpoint": {
+                    "description": "When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.",
+                    "examples": [
+                      false
+                    ],
+                    "type": "boolean"
+                  },
+                  "authorizeAuthData": {
+                    "description": "Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).",
+                          "examples": [
+                            "PIN"
+                          ]
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "Authentication factor value sent to CSC credentials/authorize.",
+                          "examples": [
+                            "123456"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "value"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "type",
+                  "baseUrl",
+                  "tokenUrl",
+                  "clientId",
+                  "clientSecret"
+                ],
+                "additionalProperties": false
               }
-            ],
-            "discriminator": {
-              "propertyName": "type",
-              "mapping": {
-                "db": "./DbKmsConfigDto.schema.json",
-                "vault": "./VaultKmsConfigDto.schema.json",
-                "aws-kms": "./AwsKmsConfigDto.schema.json",
-                "pkcs11": "./Pkcs11KmsConfigDto.schema.json",
-                "http": "./HttpKmsConfigDto.schema.json",
-                "csc": "./CscKmsConfigDto.schema.json"
-              }
-            },
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": ["db", "vault", "aws-kms", "pkcs11", "http", "csc"]
-              }
-            }
+            ]
           },
-          "example": [
-            {
-              "id": "db",
-              "type": "db",
-              "description": "Default database provider"
-            },
-            {
-              "id": "main-vault",
-              "type": "vault",
-              "description": "Production Vault",
-              "vaultUrl": "${VAULT_URL}",
-              "vaultToken": "${VAULT_TOKEN}"
-            },
-            {
-              "id": "aws",
-              "type": "aws-kms",
-              "description": "AWS KMS",
-              "region": "${AWS_REGION}"
-            }
+          "description": "List of KMS provider configurations. Each provider must have a unique id and a type.",
+          "examples": [
+            [
+              {
+                "id": "db",
+                "type": "db",
+                "description": "Default database provider"
+              },
+              {
+                "id": "main-vault",
+                "type": "vault",
+                "description": "Production Vault",
+                "vaultUrl": "${VAULT_URL}",
+                "vaultToken": "${VAULT_TOKEN}"
+              },
+              {
+                "id": "aws",
+                "type": "aws-kms",
+                "description": "AWS KMS",
+                "region": "${AWS_REGION}"
+              }
+            ]
           ]
         }
       },
-      "required": ["providers"],
-      "additionalProperties": false
+      "required": [
+        "providers"
+      ],
+      "additionalProperties": false,
+      "$id": "./KmsConfigDto.schema.json",
+      "title": "KmsConfigDto"
     }
   },
   {
     "uri": "./KmsTenantConfigResponseDto.schema.json",
-    "fileMatch": ["a://b/KmsTenantConfigResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/KmsTenantConfigResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./KmsTenantConfigResponseDto.schema.json",
@@ -6923,13 +8024,17 @@
           ]
         }
       },
-      "required": ["effectiveConfig"],
+      "required": [
+        "effectiveConfig"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./CertificateInfoDto.schema.json",
-    "fileMatch": ["a://b/CertificateInfoDto*.schema.json"],
+    "fileMatch": [
+      "a://b/CertificateInfoDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./CertificateInfoDto.schema.json",
@@ -6963,13 +8068,17 @@
           "description": "Serial number."
         }
       },
-      "required": ["pem"],
+      "required": [
+        "pem"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./PublicKeyInfoDto.schema.json",
-    "fileMatch": ["a://b/PublicKeyInfoDto*.schema.json"],
+    "fileMatch": [
+      "a://b/PublicKeyInfoDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./PublicKeyInfoDto.schema.json",
@@ -6996,13 +8105,17 @@
           "example": "P-256"
         }
       },
-      "required": ["kty"],
+      "required": [
+        "kty"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./RotationPolicyResponseDto.schema.json",
-    "fileMatch": ["a://b/RotationPolicyResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/RotationPolicyResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./RotationPolicyResponseDto.schema.json",
@@ -7027,13 +8140,17 @@
           "description": "Next scheduled rotation date."
         }
       },
-      "required": ["enabled"],
+      "required": [
+        "enabled"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./KeyChainResponseDto.schema.json",
-    "fileMatch": ["a://b/KeyChainResponseDto*.schema.json"],
+    "fileMatch": [
+      "a://b/KeyChainResponseDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./KeyChainResponseDto.schema.json",
@@ -7045,12 +8162,21 @@
           "description": "Unique identifier for the key chain."
         },
         "usageType": {
-          "enum": ["access", "attestation", "trustList", "statusList", "encrypt"],
+          "enum": [
+            "access",
+            "attestation",
+            "trustList",
+            "statusList",
+            "encrypt"
+          ],
           "type": "string",
           "description": "Usage type of the key chain."
         },
         "type": {
-          "enum": ["standalone", "internalChain"],
+          "enum": [
+            "standalone",
+            "internalChain"
+          ],
           "type": "string",
           "description": "Type of key chain (standalone or internalChain)."
         },
@@ -7141,7 +8267,9 @@
   },
   {
     "uri": "./ExportEcJwk.schema.json",
-    "fileMatch": ["a://b/ExportEcJwk*.schema.json"],
+    "fileMatch": [
+      "a://b/ExportEcJwk*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ExportEcJwk.schema.json",
@@ -7180,13 +8308,21 @@
           "description": "Key ID"
         }
       },
-      "required": ["kty", "crv", "x", "y", "d"],
+      "required": [
+        "kty",
+        "crv",
+        "x",
+        "y",
+        "d"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./ExportRotationPolicyDto.schema.json",
-    "fileMatch": ["a://b/ExportRotationPolicyDto*.schema.json"],
+    "fileMatch": [
+      "a://b/ExportRotationPolicyDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./ExportRotationPolicyDto.schema.json",
@@ -7206,13 +8342,17 @@
           "description": "Certificate validity in days."
         }
       },
-      "required": ["enabled"],
+      "required": [
+        "enabled"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./KeyChainExportDto.schema.json",
-    "fileMatch": ["a://b/KeyChainExportDto*.schema.json"],
+    "fileMatch": [
+      "a://b/KeyChainExportDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./KeyChainExportDto.schema.json",
@@ -7228,7 +8368,13 @@
           "description": "Human-readable description."
         },
         "usageType": {
-          "enum": ["access", "attestation", "trustList", "statusList", "encrypt"],
+          "enum": [
+            "access",
+            "attestation",
+            "trustList",
+            "statusList",
+            "encrypt"
+          ],
           "type": "string",
           "description": "Usage type for this key chain."
         },
@@ -7260,13 +8406,19 @@
           ]
         }
       },
-      "required": ["id", "usageType", "key"],
+      "required": [
+        "id",
+        "usageType",
+        "key"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./RotationPolicyCreateDto.schema.json",
-    "fileMatch": ["a://b/RotationPolicyCreateDto*.schema.json"],
+    "fileMatch": [
+      "a://b/RotationPolicyCreateDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./RotationPolicyCreateDto.schema.json",
@@ -7293,13 +8445,17 @@
           "example": 365
         }
       },
-      "required": ["enabled"],
+      "required": [
+        "enabled"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./KeyChainCreateDto.schema.json",
-    "fileMatch": ["a://b/KeyChainCreateDto*.schema.json"],
+    "fileMatch": [
+      "a://b/KeyChainCreateDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./KeyChainCreateDto.schema.json",
@@ -7307,13 +8463,22 @@
       "type": "object",
       "properties": {
         "usageType": {
-          "enum": ["access", "attestation", "trustList", "statusList", "encrypt"],
+          "enum": [
+            "access",
+            "attestation",
+            "trustList",
+            "statusList",
+            "encrypt"
+          ],
           "type": "string",
           "description": "Usage type determines the purpose of this key chain (access, attestation, etc.).",
           "example": "attestation"
         },
         "type": {
-          "enum": ["standalone", "internalChain"],
+          "enum": [
+            "standalone",
+            "internalChain"
+          ],
           "type": "string",
           "description": "Type of key chain to create.",
           "example": "internalChain"
@@ -7337,13 +8502,18 @@
           ]
         }
       },
-      "required": ["usageType", "type"],
+      "required": [
+        "usageType",
+        "type"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./EcJwk.schema.json",
-    "fileMatch": ["a://b/EcJwk*.schema.json"],
+    "fileMatch": [
+      "a://b/EcJwk*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./EcJwk.schema.json",
@@ -7372,13 +8542,21 @@
           "type": "string"
         }
       },
-      "required": ["kty", "x", "y", "crv", "d"],
+      "required": [
+        "kty",
+        "x",
+        "y",
+        "crv",
+        "d"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./RotationPolicyImportDto.schema.json",
-    "fileMatch": ["a://b/RotationPolicyImportDto*.schema.json"],
+    "fileMatch": [
+      "a://b/RotationPolicyImportDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./RotationPolicyImportDto.schema.json",
@@ -7405,13 +8583,17 @@
           "example": 365
         }
       },
-      "required": ["enabled"],
+      "required": [
+        "enabled"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./KeyChainImportDto.schema.json",
-    "fileMatch": ["a://b/KeyChainImportDto*.schema.json"],
+    "fileMatch": [
+      "a://b/KeyChainImportDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./KeyChainImportDto.schema.json",
@@ -7435,7 +8617,13 @@
           "description": "Human-readable description."
         },
         "usageType": {
-          "enum": ["access", "attestation", "trustList", "statusList", "encrypt"],
+          "enum": [
+            "access",
+            "attestation",
+            "trustList",
+            "statusList",
+            "encrypt"
+          ],
           "type": "string",
           "description": "Usage type for this key chain."
         },
@@ -7459,13 +8647,18 @@
           ]
         }
       },
-      "required": ["key", "usageType"],
+      "required": [
+        "key",
+        "usageType"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./RotationPolicyUpdateDto.schema.json",
-    "fileMatch": ["a://b/RotationPolicyUpdateDto*.schema.json"],
+    "fileMatch": [
+      "a://b/RotationPolicyUpdateDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./RotationPolicyUpdateDto.schema.json",
@@ -7494,7 +8687,9 @@
   },
   {
     "uri": "./KeyChainUpdateDto.schema.json",
-    "fileMatch": ["a://b/KeyChainUpdateDto*.schema.json"],
+    "fileMatch": [
+      "a://b/KeyChainUpdateDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./KeyChainUpdateDto.schema.json",
@@ -7523,7 +8718,9 @@
   },
   {
     "uri": "./PresentationRequest.schema.json",
-    "fileMatch": ["a://b/PresentationRequest*.schema.json"],
+    "fileMatch": [
+      "a://b/PresentationRequest*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./PresentationRequest.schema.json",
@@ -7533,7 +8730,11 @@
         "response_type": {
           "type": "string",
           "description": "The type of response expected from the presentation request.",
-          "enum": ["uri", "dc-api", "iso-18013-7"]
+          "enum": [
+            "uri",
+            "dc-api",
+            "iso-18013-7"
+          ]
         },
         "requestId": {
           "type": "string",
@@ -7569,13 +8770,18 @@
           "minimum": 0
         }
       },
-      "required": ["response_type", "requestId"],
+      "required": [
+        "response_type",
+        "requestId"
+      ],
       "additionalProperties": false
     }
   },
   {
     "uri": "./FileUploadDto.schema.json",
-    "fileMatch": ["a://b/FileUploadDto*.schema.json"],
+    "fileMatch": [
+      "a://b/FileUploadDto*.schema.json"
+    ],
     "schema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "$id": "./FileUploadDto.schema.json",
@@ -7587,8 +8793,609 @@
           "format": "binary"
         }
       },
-      "required": ["file"],
+      "required": [
+        "file"
+      ],
       "additionalProperties": false
+    }
+  },
+  {
+    "uri": "./DbKmsConfigDto.schema.json",
+    "fileMatch": [
+      "a://b/DbKmsConfigDto*.schema.json"
+    ],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+          "examples": [
+            "main-vault"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "const": "db",
+          "description": "Type of the KMS provider.",
+          "examples": [
+            "db"
+          ]
+        },
+        "description": {
+          "description": "Human-readable description of this provider instance.",
+          "examples": [
+            "Production HashiCorp Vault for signing keys"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "type"
+      ],
+      "additionalProperties": false,
+      "$id": "./DbKmsConfigDto.schema.json",
+      "title": "DbKmsConfigDto"
+    }
+  },
+  {
+    "uri": "./VaultKmsConfigDto.schema.json",
+    "fileMatch": [
+      "a://b/VaultKmsConfigDto*.schema.json"
+    ],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+          "examples": [
+            "main-vault"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "const": "vault",
+          "description": "Type of the KMS provider.",
+          "examples": [
+            "vault"
+          ]
+        },
+        "description": {
+          "description": "Human-readable description of this provider instance.",
+          "examples": [
+            "Production HashiCorp Vault for signing keys"
+          ],
+          "type": "string"
+        },
+        "vaultUrl": {
+          "type": "string",
+          "description": "URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.",
+          "examples": [
+            "${VAULT_URL}"
+          ]
+        },
+        "vaultToken": {
+          "type": "string",
+          "description": "Authentication token for HashiCorp Vault. Supports ${ENV_VAR} placeholders.",
+          "examples": [
+            "${VAULT_TOKEN}"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "vaultUrl",
+        "vaultToken"
+      ],
+      "additionalProperties": false,
+      "$id": "./VaultKmsConfigDto.schema.json",
+      "title": "VaultKmsConfigDto"
+    }
+  },
+  {
+    "uri": "./AwsKmsConfigDto.schema.json",
+    "fileMatch": [
+      "a://b/AwsKmsConfigDto*.schema.json"
+    ],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+          "examples": [
+            "main-vault"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "const": "aws-kms",
+          "description": "Type of the KMS provider.",
+          "examples": [
+            "aws-kms"
+          ]
+        },
+        "description": {
+          "description": "Human-readable description of this provider instance.",
+          "examples": [
+            "Production HashiCorp Vault for signing keys"
+          ],
+          "type": "string"
+        },
+        "region": {
+          "type": "string",
+          "description": "AWS region for KMS. Supports ${ENV_VAR} placeholders.",
+          "examples": [
+            "${AWS_REGION}"
+          ]
+        },
+        "accessKeyId": {
+          "description": "AWS access key ID. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.",
+          "examples": [
+            "${AWS_ACCESS_KEY_ID}"
+          ],
+          "type": "string"
+        },
+        "secretAccessKey": {
+          "description": "AWS secret access key. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.",
+          "examples": [
+            "${AWS_SECRET_ACCESS_KEY}"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "region"
+      ],
+      "additionalProperties": false,
+      "$id": "./AwsKmsConfigDto.schema.json",
+      "title": "AwsKmsConfigDto"
+    }
+  },
+  {
+    "uri": "./Pkcs11KmsConfigDto.schema.json",
+    "fileMatch": [
+      "a://b/Pkcs11KmsConfigDto*.schema.json"
+    ],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+          "examples": [
+            "main-vault"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "const": "pkcs11",
+          "description": "Type of the KMS provider.",
+          "examples": [
+            "pkcs11"
+          ]
+        },
+        "description": {
+          "description": "Human-readable description of this provider instance.",
+          "examples": [
+            "Production HashiCorp Vault for signing keys"
+          ],
+          "type": "string"
+        },
+        "library": {
+          "type": "string",
+          "description": "Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.",
+          "examples": [
+            "${PKCS11_LIBRARY}"
+          ]
+        },
+        "slot": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.",
+          "examples": [
+            "${PKCS11_SLOT}"
+          ]
+        },
+        "pin": {
+          "type": "string",
+          "description": "User PIN used for C_Login. Supports ${ENV_VAR} placeholders.",
+          "examples": [
+            "${PKCS11_PIN}"
+          ]
+        },
+        "readOnly": {
+          "description": "Open the PKCS#11 session in read-only mode. Defaults to false.",
+          "examples": [
+            false
+          ],
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "library",
+        "slot",
+        "pin"
+      ],
+      "additionalProperties": false,
+      "$id": "./Pkcs11KmsConfigDto.schema.json",
+      "title": "Pkcs11KmsConfigDto"
+    }
+  },
+  {
+    "uri": "./HttpKmsConfigDto.schema.json",
+    "fileMatch": [
+      "a://b/HttpKmsConfigDto*.schema.json"
+    ],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+          "examples": [
+            "main-vault"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "const": "http",
+          "description": "Type of the KMS provider.",
+          "examples": [
+            "http"
+          ]
+        },
+        "description": {
+          "description": "Human-readable description of this provider instance.",
+          "examples": [
+            "Production HashiCorp Vault for signing keys"
+          ],
+          "type": "string"
+        },
+        "baseUrl": {
+          "type": "string",
+          "description": "Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.",
+          "examples": [
+            "${KMS_SERVICE_URL}"
+          ]
+        },
+        "auth": {
+          "description": "Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to \"none\") for unauthenticated services.",
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "none",
+                  "description": "No authentication — suitable for services on a trusted private network.",
+                  "examples": [
+                    "none"
+                  ]
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "bearer",
+                  "description": "Static Bearer token sent as Authorization: Bearer <token>.",
+                  "examples": [
+                    "bearer"
+                  ]
+                },
+                "token": {
+                  "type": "string",
+                  "description": "Bearer token value. Supports ${ENV_VAR} placeholders.",
+                  "examples": [
+                    "${KMS_API_KEY}"
+                  ]
+                }
+              },
+              "required": [
+                "type",
+                "token"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "oauth2-client-credentials",
+                  "description": "OAuth 2.0 Client Credentials — EUDIPLO fetches and caches short-lived tokens.",
+                  "examples": [
+                    "oauth2-client-credentials"
+                  ]
+                },
+                "tokenUrl": {
+                  "type": "string",
+                  "description": "Token endpoint URL (e.g. Keycloak, Entra ID). Supports ${ENV_VAR} placeholders.",
+                  "examples": [
+                    "${IAM_TOKEN_URL}"
+                  ]
+                },
+                "clientId": {
+                  "type": "string",
+                  "description": "OAuth 2.0 client ID. Supports ${ENV_VAR} placeholders.",
+                  "examples": [
+                    "${KMS_CLIENT_ID}"
+                  ]
+                },
+                "clientSecret": {
+                  "type": "string",
+                  "description": "OAuth 2.0 client secret. Supports ${ENV_VAR} placeholders.",
+                  "examples": [
+                    "${KMS_CLIENT_SECRET}"
+                  ]
+                },
+                "scope": {
+                  "description": "Space-separated list of OAuth 2.0 scopes to request. Optional.",
+                  "examples": [
+                    "kms:sign kms:admin"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "tokenUrl",
+                "clientId",
+                "clientSecret"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "mtls",
+                  "description": "Mutual TLS — EUDIPLO presents a client certificate on every connection.",
+                  "examples": [
+                    "mtls"
+                  ]
+                },
+                "certFile": {
+                  "type": "string",
+                  "description": "Absolute path to the PEM-encoded client certificate file. Supports ${ENV_VAR} placeholders.",
+                  "examples": [
+                    "/etc/certs/eudiplo.crt"
+                  ]
+                },
+                "keyFile": {
+                  "type": "string",
+                  "description": "Absolute path to the PEM-encoded private key file for the client certificate. Supports ${ENV_VAR} placeholders.",
+                  "examples": [
+                    "/etc/certs/eudiplo.key"
+                  ]
+                },
+                "caFile": {
+                  "description": "Absolute path to the PEM-encoded CA bundle to trust for the remote server's certificate. Omit to use the system CA store.",
+                  "examples": [
+                    "/etc/certs/ca.crt"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "certFile",
+                "keyFile"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "keysPath": {
+          "description": "Path prefix for key endpoints on the remote service. Defaults to /keys.",
+          "examples": [
+            "/v1/keys"
+          ],
+          "type": "string"
+        },
+        "healthPath": {
+          "description": "Path for the health check endpoint on the remote service. Defaults to /health.",
+          "examples": [
+            "/health"
+          ],
+          "type": "string"
+        },
+        "canImport": {
+          "description": "Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.",
+          "examples": [
+            false
+          ],
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "baseUrl"
+      ],
+      "additionalProperties": false,
+      "$id": "./HttpKmsConfigDto.schema.json",
+      "title": "HttpKmsConfigDto"
+    }
+  },
+  {
+    "uri": "./CscKmsConfigDto.schema.json",
+    "fileMatch": [
+      "a://b/CscKmsConfigDto*.schema.json"
+    ],
+    "schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
+          "examples": [
+            "main-vault"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "const": "csc",
+          "description": "Type of the KMS provider.",
+          "examples": [
+            "csc"
+          ]
+        },
+        "description": {
+          "description": "Human-readable description of this provider instance.",
+          "examples": [
+            "Production HashiCorp Vault for signing keys"
+          ],
+          "type": "string"
+        },
+        "baseUrl": {
+          "type": "string",
+          "description": "Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.",
+          "examples": [
+            "${CSC_URL}"
+          ]
+        },
+        "tokenUrl": {
+          "type": "string",
+          "description": "OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.",
+          "examples": [
+            "${CSC_TOKEN_URL}"
+          ]
+        },
+        "clientId": {
+          "type": "string",
+          "description": "OAuth2 client ID. Supports ${ENV_VAR} placeholders.",
+          "examples": [
+            "${CSC_CLIENT_ID}"
+          ]
+        },
+        "clientSecret": {
+          "type": "string",
+          "description": "OAuth2 client secret. Supports ${ENV_VAR} placeholders.",
+          "examples": [
+            "${CSC_CLIENT_SECRET}"
+          ]
+        },
+        "scope": {
+          "description": "OAuth2 scope to request during token acquisition.",
+          "examples": [
+            "service"
+          ],
+          "type": "string"
+        },
+        "credentialId": {
+          "description": "Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.",
+          "examples": [
+            "[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758"
+          ],
+          "type": "string"
+        },
+        "userId": {
+          "description": "Optional CSC user ID used in credentials/list requests.",
+          "examples": [
+            "eudiplo_user"
+          ],
+          "type": "string"
+        },
+        "apiPath": {
+          "description": "CSC API path prefix appended to baseUrl. Defaults to /csc/v2.",
+          "examples": [
+            "/csc/v2"
+          ],
+          "type": "string"
+        },
+        "hashAlgorithmOid": {
+          "description": "Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.",
+          "examples": [
+            "2.16.840.1.101.3.4.2.1"
+          ],
+          "type": "string"
+        },
+        "signAlgorithmOid": {
+          "description": "Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.",
+          "examples": [
+            "1.2.840.10045.4.3.2"
+          ],
+          "type": "string"
+        },
+        "sad": {
+          "description": "Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.",
+          "type": "string"
+        },
+        "useAuthorizeEndpoint": {
+          "description": "When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.",
+          "examples": [
+            false
+          ],
+          "type": "boolean"
+        },
+        "authorizeAuthData": {
+          "description": "Optional authData array passed to credentials/authorize (e.g., PIN/OTP factors).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).",
+                "examples": [
+                  "PIN"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "description": "Authentication factor value sent to CSC credentials/authorize.",
+                "examples": [
+                  "123456"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "baseUrl",
+        "tokenUrl",
+        "clientId",
+        "clientSecret"
+      ],
+      "additionalProperties": false,
+      "$id": "./CscKmsConfigDto.schema.json",
+      "title": "CscKmsConfigDto"
     }
   }
 ]

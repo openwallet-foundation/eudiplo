@@ -1,46 +1,63 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./Pkcs11KmsConfigDto.schema.json",
-  "title": "Pkcs11KmsConfigDto",
   "type": "object",
   "properties": {
     "id": {
       "type": "string",
       "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
-      "example": "main-vault"
+      "examples": [
+        "main-vault"
+      ]
     },
     "type": {
-      "enum": [
-        "pkcs11"
-      ],
       "type": "string",
+      "const": "pkcs11",
       "description": "Type of the KMS provider.",
-      "example": "pkcs11"
+      "examples": [
+        "pkcs11"
+      ]
     },
     "description": {
-      "type": "string",
       "description": "Human-readable description of this provider instance.",
-      "example": "Production HashiCorp Vault for signing keys"
+      "examples": [
+        "Production HashiCorp Vault for signing keys"
+      ],
+      "type": "string"
     },
     "library": {
       "type": "string",
       "description": "Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.",
-      "example": "${PKCS11_LIBRARY}"
+      "examples": [
+        "${PKCS11_LIBRARY}"
+      ]
     },
     "slot": {
-      "type": "object",
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        }
+      ],
       "description": "Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.",
-      "example": "${PKCS11_SLOT}"
+      "examples": [
+        "${PKCS11_SLOT}"
+      ]
     },
     "pin": {
       "type": "string",
       "description": "User PIN used for C_Login. Supports ${ENV_VAR} placeholders.",
-      "example": "${PKCS11_PIN}"
+      "examples": [
+        "${PKCS11_PIN}"
+      ]
     },
     "readOnly": {
-      "type": "boolean",
       "description": "Open the PKCS#11 session in read-only mode. Defaults to false.",
-      "example": false
+      "examples": [
+        false
+      ],
+      "type": "boolean"
     }
   },
   "required": [
@@ -50,5 +67,7 @@
     "slot",
     "pin"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./Pkcs11KmsConfigDto.schema.json",
+  "title": "Pkcs11KmsConfigDto"
 }

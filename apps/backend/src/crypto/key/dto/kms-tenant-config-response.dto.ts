@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { KmsConfigDto } from "./kms-config.dto";
+import type { KmsConfig } from "../schemas/kms-config.schema";
 
 export class KmsTenantConfigResponseDto {
     @ApiPropertyOptional({
@@ -7,12 +8,12 @@ export class KmsTenantConfigResponseDto {
             "Tenant-specific KMS configuration from <CONFIG_FOLDER>/<tenantId>/kms.json. Null when no tenant file exists.",
         type: KmsConfigDto,
     })
-    tenantConfig?: KmsConfigDto | null;
+    tenantConfig?: KmsConfig | null;
 
     @ApiProperty({
         description:
             "Effective configuration used at runtime for the tenant (global + tenant merge).",
         type: KmsConfigDto,
     })
-    effectiveConfig!: KmsConfigDto;
+    effectiveConfig!: KmsConfig;
 }
