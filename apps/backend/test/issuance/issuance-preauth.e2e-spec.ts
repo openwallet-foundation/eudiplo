@@ -12,10 +12,7 @@ import {
 import { digest } from "@owf/crypto";
 import { X509Certificate } from "@peculiar/x509";
 import { SDJwtVcInstance } from "@sd-jwt/sd-jwt-vc";
-import {
-    exportJWK,
-    generateKeyPair,
-} from "jose";
+import { exportJWK, generateKeyPair } from "jose";
 import nock from "nock";
 import request from "supertest";
 import { App } from "supertest/types";

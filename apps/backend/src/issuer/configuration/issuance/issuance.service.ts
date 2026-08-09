@@ -371,7 +371,9 @@ export class IssuanceService {
     private sanitizeIssuanceConfigForLog(
         config: IssuanceConfig,
     ): Record<string, unknown> {
-        let walletProviderTrustListsRaw: ReturnType<typeof normalizeTrustListRefs>;
+        let walletProviderTrustListsRaw: ReturnType<
+            typeof normalizeTrustListRefs
+        >;
         try {
             walletProviderTrustListsRaw = normalizeTrustListRefs(
                 config.walletProviderTrustLists,
@@ -379,11 +381,13 @@ export class IssuanceService {
         } catch {
             walletProviderTrustListsRaw = [];
         }
-        const walletProviderTrustLists = walletProviderTrustListsRaw.map((ref) => ({
-            url: ref.url,
-            hasVerifierKey: !!ref.verifierKey,
-            hasVerifierX509Der: !!ref.verifierX509Der,
-        }));
+        const walletProviderTrustLists = walletProviderTrustListsRaw.map(
+            (ref) => ({
+                url: ref.url,
+                hasVerifierKey: !!ref.verifierKey,
+                hasVerifierX509Der: !!ref.verifierX509Der,
+            }),
+        );
 
         const registrationCertificate = config.registrationCertificate
             ? {

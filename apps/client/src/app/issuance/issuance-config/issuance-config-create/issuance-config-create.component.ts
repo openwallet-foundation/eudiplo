@@ -82,8 +82,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
     };
 
     const keyStr = value?.verifierKey;
-    const hasVerifierKey =
-      !!keyStr && typeof keyStr === 'string' && keyStr.trim().length > 0;
+    const hasVerifierKey = !!keyStr && typeof keyStr === 'string' && keyStr.trim().length > 0;
     const hasVerifierX509Der =
       !!value?.verifierX509Der &&
       typeof value.verifierX509Der === 'string' &&

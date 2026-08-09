@@ -5,12 +5,7 @@
  */
 import * as x509 from "@peculiar/x509";
 import { X509Certificate, X509CertificateGenerator } from "@peculiar/x509";
-import {
-    decodeJwt,
-    decodeProtectedHeader,
-    importPKCS8,
-    SignJWT,
-} from "jose";
+import { decodeJwt, decodeProtectedHeader, importPKCS8, SignJWT } from "jose";
 
 export async function generateSelfSignedCertificate(): Promise<{
     certificate: X509Certificate;

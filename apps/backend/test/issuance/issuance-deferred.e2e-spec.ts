@@ -856,7 +856,9 @@ describe("Issuance - Deferred Credential Flow", () => {
             nock("http://localhost:8787")
                 .persist()
                 .get("/deferred-key-attestation-trust-list-chain")
-                .reply(200, trustListJwt, { "Content-Type": "application/jwt" });
+                .reply(200, trustListJwt, {
+                    "Content-Type": "application/jwt",
+                });
 
             const deferredIssuanceWithAttestation = async (
                 attestationCert: {
@@ -950,13 +952,15 @@ describe("Issuance - Deferred Credential Flow", () => {
                     );
 
                 if (expectSuccess) {
-                    const credentialResponse = await client.retrieveCredentials({
-                        accessToken: accessTokenResponse.access_token,
-                        credentialConfigurationId:
-                            credentialOffer.credential_configuration_ids[0],
-                        issuerMetadata,
-                        proofs: { attestation: [attestationJwtWithX5c] },
-                    });
+                    const credentialResponse = await client.retrieveCredentials(
+                        {
+                            accessToken: accessTokenResponse.access_token,
+                            credentialConfigurationId:
+                                credentialOffer.credential_configuration_ids[0],
+                            issuerMetadata,
+                            proofs: { attestation: [attestationJwtWithX5c] },
+                        },
+                    );
                     expect(
                         credentialResponse.credentialResponse.transaction_id,
                     ).toBeDefined();

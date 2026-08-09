@@ -632,7 +632,10 @@
                               placeholder='{"kty":"EC","crv":"P-256","x":"...","y":"...","alg":"ES256"}'
                             ></textarea>
                             <mat-icon matSuffix>vpn_key</mat-icon>
-                            @if (trustList.get('verifierKey')?.invalid && trustList.get('verifierKey')?.touched) {
+                            @if (
+                              trustList.get('verifierKey')?.invalid &&
+                              trustList.get('verifierKey')?.touched
+                            ) {
                               <mat-error>Please enter a valid JWK JSON object.</mat-error>
                             }
                           </mat-form-field>
