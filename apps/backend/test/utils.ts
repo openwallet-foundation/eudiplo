@@ -797,10 +797,17 @@ export async function setupPresentationTestApp(): Promise<PresentationTestContex
             .post("/issuer/webhook-endpoints")
             .trustLocalhost()
             .set("Authorization", `Bearer ${authToken}`)
-            .send(readConfig<CreateWebhookEndpointDto>(join(configFolder, "haip/webhook-endpoints/notification.json"))),
+            .send(
+                readConfig<CreateWebhookEndpointDto>(
+                    join(
+                        configFolder,
+                        "haip/webhook-endpoints/notification.json",
+                    ),
+                ),
+            ),
         201,
     );
-    
+
     // Import presentation configs for pid-de and pid
     await expectRequest(
         request(app.getHttpServer())
@@ -813,7 +820,7 @@ export async function setupPresentationTestApp(): Promise<PresentationTestContex
                 ),
             ),
         201,
-    );    
+    );
 
     await expectRequest(
         request(app.getHttpServer())
