@@ -123,6 +123,29 @@ For `etsi_tl`, each `values` entry is an object in one of these forms:
 
 For `openid_federation`, `values` remains an array of string entity IDs.
 
+!!! info "Automatic transformation to `aki` in authorization requests"
+
+    The `etsi_tl` format with `TrustListRef` objects is an **internal configuration format** only.
+    When EUDIPLO builds the OID4VP authorization request sent to wallets, it automatically
+    transforms each `etsi_tl` entry into the DCQL-compliant `aki` (Authority Key Identifier)
+    format required by [OID4VP 1.0 Final §6](https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-trusted-authorities-query).
+
+    The transformation extracts the Subject Key Identifier (SKI, OID 2.5.29.14) from the
+    trust anchor certificate and encodes it as a base64url string. A wallet can match
+    credentials locally by checking whether any certificate in a credential's chain was
+    signed by a CA whose key identifier equals one of the `aki` values — without fetching
+    external trust-list resources.
+
+    **Configuration format** (stored in EUDIPLO):
+    ```json
+    { "type": "etsi_tl", "values": [{ "trustListId": "my-list" }] }
+    ```
+
+    **Wire format** (sent to wallets):
+    ```json
+    { "type": "aki", "values": ["<base64url-encoded-SKI>"] }
+    ```
+
 ### Example
 
 ```json
