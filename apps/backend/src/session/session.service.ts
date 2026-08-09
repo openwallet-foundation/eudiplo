@@ -324,12 +324,13 @@ export class SessionService implements OnApplicationBootstrap {
                         auth_queries: undefined,
                         offer: undefined,
                         requestObject: undefined,
+                        responseEncryptionPrivateJwk: undefined,
                     })
                     .where("tenantId = :tenantId", { tenantId: tenant.id })
                     .andWhere("createdAt < :cutoffDate", { cutoffDate })
                     // Only anonymize sessions that still have personal data
                     .andWhere(
-                        "(credentials IS NOT NULL OR credentialPayload IS NOT NULL OR auth_queries IS NOT NULL OR offer IS NOT NULL OR requestObject IS NOT NULL)",
+                        "(credentials IS NOT NULL OR credentialPayload IS NOT NULL OR auth_queries IS NOT NULL OR offer IS NOT NULL OR requestObject IS NOT NULL OR responseEncryptionPrivateJwk IS NOT NULL)",
                     )
                     .execute();
                 if (result.affected && result.affected > 0) {

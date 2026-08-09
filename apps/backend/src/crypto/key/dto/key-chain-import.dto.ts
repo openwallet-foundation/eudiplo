@@ -50,7 +50,7 @@ class EcJwk implements JWK {
 class RotationPolicyImportDto {
     @ApiProperty({
         description:
-            "Whether rotation is enabled. When true, the imported key becomes a root CA.",
+            "Whether rotation is enabled. When true, the imported key becomes a root CA signer.",
         default: false,
     })
     @IsBoolean()
@@ -122,7 +122,7 @@ export class KeyChainImportDto {
 
     @ApiPropertyOptional({
         description:
-            "Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import.",
+            "Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import. When rotationPolicy.enabled=true, the last certificate in the chain is treated as the root CA certificate.",
     })
     @IsString({ each: true })
     @IsOptional()
@@ -137,7 +137,7 @@ export class KeyChainImportDto {
 
     @ApiPropertyOptional({
         description:
-            "Rotation policy. When enabled, the imported key becomes a root CA and a new leaf key is generated.",
+            "Rotation policy. When enabled, the imported key becomes a root CA signer and a new leaf key is generated. If crt is provided, the selected root CA certificate must have CA=true and its public key must match the imported private key.",
     })
     @ValidateNested()
     @Type(() => RotationPolicyImportDto)
