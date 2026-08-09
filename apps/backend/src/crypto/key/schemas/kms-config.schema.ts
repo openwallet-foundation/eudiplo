@@ -18,9 +18,7 @@ const KMS_PROVIDER_TYPES = [
     "csc",
 ] as const;
 
-export type { ValidationIssue } from "../../../shared/common/zod/zod-schema.util";
-
-export const HttpAuthNoneConfigSchema = z.strictObject({
+const HttpAuthNoneConfigSchema = z.strictObject({
     type: withMeta(z.literal("none"), {
         description:
             "No authentication — suitable for services on a trusted private network.",
@@ -91,7 +89,7 @@ export const HttpKmsAuthConfigSchema = z.discriminatedUnion("type", [
     HttpAuthMtlsConfigSchema,
 ]);
 
-export const BaseKmsProviderConfigSchema = z.strictObject({
+const BaseKmsProviderConfigSchema = z.strictObject({
     id: textField(
         "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
         "main-vault",
@@ -199,12 +197,11 @@ export const HttpKmsConfigSchema = BaseKmsProviderConfigSchema.extend({
     ),
 });
 
-export type HttpKmsAuthConfig = z.infer<typeof HttpKmsAuthConfigSchema>;
 export type KmsProviderType = z.infer<
     typeof BaseKmsProviderConfigSchema.shape.type
 >;
 
-export const CscAuthorizeAuthDataSchema = z.strictObject({
+const CscAuthorizeAuthDataSchema = z.strictObject({
     id: textField(
         "Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).",
         "PIN",
@@ -325,7 +322,7 @@ export const KmsConfigSchema = z
             const previousIndex = providerIds.get(provider.id);
             if (previousIndex !== undefined) {
                 ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: "custom",
                     path: ["providers", index, "id"],
                     message: `Duplicate KMS provider id '${provider.id}' already used at providers[${previousIndex}]`,
                 });
@@ -340,7 +337,7 @@ export const KmsConfigSchema = z
             !providerIds.has(config.defaultProvider)
         ) {
             ctx.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: "custom",
                 path: ["defaultProvider"],
                 message: `defaultProvider '${config.defaultProvider}' does not match any configured provider id`,
             });

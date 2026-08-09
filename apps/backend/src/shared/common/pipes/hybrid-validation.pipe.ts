@@ -95,7 +95,7 @@ const ZodValidationPipeClass = createZodValidationPipe({
 });
 
 @Injectable()
-export class HybridValidationPipe implements PipeTransform {
+class HybridValidationPipe implements PipeTransform {
     private readonly classValidationPipe: ValidationPipe;
     private readonly zodValidationPipe: PipeTransform;
 

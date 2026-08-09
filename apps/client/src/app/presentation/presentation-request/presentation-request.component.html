@@ -129,12 +129,22 @@
                   </div>
                 }
 
-                @if (selectedConfig.webhook) {
+                @if ($any(selectedConfig).webhookEndpointId) {
                   <div class="preview-item">
-                    <strong>Webhook URL:</strong>
-                    <span>{{ selectedConfig.webhook.url }}</span>
+                    <strong>Webhook Endpoint:</strong>
+                    <span>{{ $any(selectedConfig).webhookEndpointId }}</span>
+                  </div>
+                } @else {
+                  <div class="preview-item">
+                    <strong>Webhook Endpoint:</strong>
+                    <span>No endpoint configured for this presentation config.</span>
                   </div>
                 }
+
+                <div class="preview-item">
+                  <strong>Webhook configuration:</strong>
+                  <a [routerLink]="['/webhook-endpoints']">Open webhook endpoints</a>
+                </div>
 
                 @if (selectedConfig.registration_cert) {
                   <div class="preview-item">
