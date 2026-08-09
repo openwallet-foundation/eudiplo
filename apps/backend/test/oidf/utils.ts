@@ -2,7 +2,6 @@ import * as x509 from "@peculiar/x509";
 import { X509CertificateGenerator } from "@peculiar/x509";
 import { exportJWK } from "jose/key/export";
 
-
 /**
  * Generate a CA-signed certificate chain for OIDF testing.
  * Returns a JWK with proper x5c containing [leaf, CA] certificates.
