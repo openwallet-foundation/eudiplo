@@ -32,4 +32,3 @@ export const StatusListConfigSchema = z
     .describe(
         "Tenant defaults for status list generation and publishing behavior.",
     );
-

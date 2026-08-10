@@ -1,11 +1,7 @@
 import { z } from "zod";
 import { allRoles } from "../../roles/role.enum";
-import {
-    SessionStorageConfigSchema,
-} from "./session-storage-config.schema";
-import {
-    StatusListConfigSchema,
-} from "./status-list-config.schema";
+import { SessionStorageConfigSchema } from "./session-storage-config.schema";
+import { StatusListConfigSchema } from "./status-list-config.schema";
 
 const RoleSchema = z.enum(
     allRoles as [(typeof allRoles)[number], ...(typeof allRoles)[number][]],

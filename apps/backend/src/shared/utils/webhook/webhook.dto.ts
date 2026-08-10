@@ -75,7 +75,6 @@ export const WebHookAuthConfigSchema = z.discriminatedUnion("type", [
     WebHookAuthConfigHeaderSchema,
 ]);
 
-
 export const WebhookConfigSchema = z
     .object({
         url: z.string(),
