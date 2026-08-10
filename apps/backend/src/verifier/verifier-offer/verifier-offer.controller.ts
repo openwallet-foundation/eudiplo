@@ -94,6 +94,7 @@ export class VerifierOfferController {
                 user.entity!.id,
                 origin,
                 body.skewSeconds,
+                body.webhook,
             );
             return res.status(201).json(offer);
         }
