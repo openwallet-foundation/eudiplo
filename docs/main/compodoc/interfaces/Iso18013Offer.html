@@ -407,6 +407,7 @@ import {
     VerifierOptions,
 } from &quot;../../shared/trust/types&quot;;
 import { AuditLogService } from &quot;../../shared/utils/logger/audit-log.service&quot;;
+import { WebhookConfig } from &quot;../../shared/utils/webhook/webhook.dto&quot;;
 import { WebhookService } from &quot;../../shared/utils/webhook/webhook.service&quot;;
 import { MdocverifierService } from &quot;../presentations/credential/mdocverifier/mdocverifier.service&quot;;
 import {
@@ -424,7 +425,6 @@ import {
     parseEncryptedResponse,
 } from &quot;./cbor-request&quot;;
 import { hpkeOpen } from &quot;./hpke&quot;;
-import { WebhookConfig } from &quot;../../shared/utils/webhook/webhook.dto&quot;;
 
 export interface Iso18013Offer {
     session: string;
@@ -489,6 +489,7 @@ export class Iso18013Service {
         tenantId: string,
         origin: string,
         skewSeconds?: number,
+        webhook?: WebhookConfig,
     ): Promise&lt;Iso18013Offer&gt; {
         const config &#x3D; await this.presentationsService.getPresentationConfig(
             requestId,
@@ -560,10 +561,11 @@ export class Iso18013Service {
         const expiresAt &#x3D; new Date(
             Date.now() + (config.lifeTime ?? 300) * 1000,
         );
-        const resolvedWebhook &#x3D; await this.resolveWebhookFromEndpoint(
+        const endpointWebhook &#x3D; await this.resolveWebhookFromEndpoint(
             config.webhookEndpointId,
             tenantId,
         );
+        const resolvedWebhook &#x3D; webhook ?? endpointWebhook;
 
         await this.sessionService.create({
             id: sessionId,

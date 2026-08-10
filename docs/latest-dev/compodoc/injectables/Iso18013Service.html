@@ -417,8 +417,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="236"
-                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:236</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="238"
+                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:238</a></div>
                         </td>
                     </tr>
 
@@ -536,7 +536,7 @@ reader authentication.</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>createOffer(requestId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, skewSeconds?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                    <code>createOffer(requestId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, origin: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, skewSeconds?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, webhook?: <a href="../classes/WebhookConfig.html" target="_self">WebhookConfig</a>)</code>
                 </td>
             </tr>
 
@@ -615,6 +615,18 @@ and persist a session for the response phase.</p>
 
 
                                         </tr>
+                                        <tr>
+                                                <td>webhook</td>
+                                            <td>
+                                                            <code><a href="../classes/WebhookConfig.html" target="_self" >WebhookConfig</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -651,8 +663,8 @@ and persist a session for the response phase.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="286"
-                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:286</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="288"
+                                    class="link-to-prism">src/verifier/iso18013/iso18013.service.ts:288</a></div>
                         </td>
                     </tr>
 
@@ -838,6 +850,7 @@ import {
     VerifierOptions,
 } from &quot;../../shared/trust/types&quot;;
 import { AuditLogService } from &quot;../../shared/utils/logger/audit-log.service&quot;;
+import { WebhookConfig } from &quot;../../shared/utils/webhook/webhook.dto&quot;;
 import { WebhookService } from &quot;../../shared/utils/webhook/webhook.service&quot;;
 import { MdocverifierService } from &quot;../presentations/credential/mdocverifier/mdocverifier.service&quot;;
 import {
@@ -855,7 +868,6 @@ import {
     parseEncryptedResponse,
 } from &quot;./cbor-request&quot;;
 import { hpkeOpen } from &quot;./hpke&quot;;
-import { WebhookConfig } from &quot;../../shared/utils/webhook/webhook.dto&quot;;
 
 export interface Iso18013Offer {
     session: string;
@@ -920,6 +932,7 @@ export class Iso18013Service {
         tenantId: string,
         origin: string,
         skewSeconds?: number,
+        webhook?: WebhookConfig,
     ): Promise&lt;Iso18013Offer&gt; {
         const config &#x3D; await this.presentationsService.getPresentationConfig(
             requestId,
@@ -991,10 +1004,11 @@ export class Iso18013Service {
         const expiresAt &#x3D; new Date(
             Date.now() + (config.lifeTime ?? 300) * 1000,
         );
-        const resolvedWebhook &#x3D; await this.resolveWebhookFromEndpoint(
+        const endpointWebhook &#x3D; await this.resolveWebhookFromEndpoint(
             config.webhookEndpointId,
             tenantId,
         );
+        const resolvedWebhook &#x3D; webhook ?? endpointWebhook;
 
         await this.sessionService.create({
             id: sessionId,
