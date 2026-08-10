@@ -11,6 +11,7 @@ import {
     Res,
 } from "@nestjs/common";
 import {
+    ApiBody,
     ApiConsumes,
     ApiHeader,
     ApiOperation,
@@ -23,6 +24,7 @@ import { Public } from "../../../../../auth/public.decorator";
 import {
     ChainedAsAuthorizeQueryDto,
     ChainedAsErrorResponseDto,
+    ChainedAsParRequestDto,
     ChainedAsParResponseDto,
     ChainedAsTokenRequestDto,
     ChainedAsTokenResponseDto,
@@ -56,11 +58,12 @@ export class ChainedAsVpController {
         required: false,
         description: "Wallet attestation proof-of-possession JWT",
     })
+    @ApiBody({ type: ChainedAsParRequestDto })
     @ApiResponse({ status: 201, type: ChainedAsParResponseDto })
     @ApiResponse({ status: 400, type: ChainedAsErrorResponseDto })
     async par(
         @Param("tenantId") tenantId: string,
-        @Body() body: any,
+        @Body() body: ChainedAsParRequestDto,
         @Headers("dpop") dpopJwt?: string,
         @Headers("oauth-client-attestation") clientAttestationJwt?: string,
         @Headers("oauth-client-attestation-pop")
@@ -91,6 +94,12 @@ export class ChainedAsVpController {
     @ApiResponse({
         status: 302,
         description: "Redirect to OID4VP wallet invocation",
+        headers: {
+            Location: {
+                description: "Redirect target",
+                schema: { type: "string" },
+            },
+        },
     })
     @ApiResponse({ status: 400, type: ChainedAsErrorResponseDto })
     async authorize(
@@ -119,6 +128,12 @@ export class ChainedAsVpController {
     @ApiResponse({
         status: 302,
         description: "Redirect to wallet with authorization code",
+        headers: {
+            Location: {
+                description: "Redirect target",
+                schema: { type: "string" },
+            },
+        },
     })
     @ApiResponse({ status: 400, type: ChainedAsErrorResponseDto })
     async vpCallback(

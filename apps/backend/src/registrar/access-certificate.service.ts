@@ -2,9 +2,9 @@ import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { CertService } from "../crypto/key/cert/cert.service";
 import { KeyChainService } from "../crypto/key/key-chain.service";
-import { CreateAccessCertificateDto } from "./dto/create-access-certificate.dto";
 import { accessCertificateControllerRegister } from "./generated";
 import { RegistrarAuthService } from "./registrar-auth.service";
+import type { CreateAccessCertificate } from "./schemas/registrar.schema";
 
 /**
  * Handles creation of access certificates via the registrar API and their
@@ -32,7 +32,7 @@ export class AccessCertificateService {
      */
     async createAccessCertificate(
         tenantId: string,
-        dto: CreateAccessCertificateDto,
+        dto: CreateAccessCertificate,
     ): Promise<{ id: string; certId: string; crt: string }> {
         const client = await this.authService.getClient(tenantId);
         const relyingPartyId =

@@ -1,6 +1,5 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { BitsPerStatus } from "@owf/token-status-list";
-import { IsBoolean, IsIn, IsInt, IsOptional, Min } from "class-validator";
 
 /**
  * Configuration for status list behavior per tenant.
@@ -16,9 +15,6 @@ export class StatusListConfig {
         example: 10000,
         minimum: 100,
     })
-    @IsOptional()
-    @IsInt()
-    @Min(100)
     capacity?: number;
 
     /**
@@ -34,8 +30,6 @@ export class StatusListConfig {
         enum: [1, 2, 4, 8],
         default: 1,
     })
-    @IsOptional()
-    @IsIn([1, 2, 4, 8])
     bits?: BitsPerStatus;
 
     /**
@@ -50,9 +44,6 @@ export class StatusListConfig {
         example: 3600,
         minimum: 60,
     })
-    @IsOptional()
-    @IsInt()
-    @Min(60)
     ttl?: number;
 
     /**
@@ -65,8 +56,6 @@ export class StatusListConfig {
             "If true, regenerate JWT immediately on status changes. If false (default), use lazy regeneration on TTL expiry.",
         default: false,
     })
-    @IsOptional()
-    @IsBoolean()
     immediateUpdate?: boolean;
 
     /**
@@ -81,7 +70,5 @@ export class StatusListConfig {
             "If true, include aggregation_uri in status list JWTs for pre-fetching support (default: true).",
         default: true,
     })
-    @IsOptional()
-    @IsBoolean()
     enableAggregation?: boolean;
 }

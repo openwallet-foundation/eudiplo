@@ -1,13 +1,20 @@
-import { IsObject, IsOptional, IsString } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
+
+export const AuthResponseSchema = z
+    .object({
+        vp_token: z.record(z.string(), z.string()),
+        state: z.string().optional(),
+    })
+    .strict();
 
 /**
  * AuthResponse DTO
  */
-export class AuthResponse {
+export class AuthResponse extends createZodDto(AuthResponseSchema) {
     /**
      * The VP token containing the presentation data.
      */
-    @IsObject()
     vp_token!: {
         /**
          * Key-value pairs representing the VP token data.
@@ -17,7 +24,5 @@ export class AuthResponse {
     /**
      * The state parameter to maintain state between the request and callback.
      */
-    @IsString()
-    @IsOptional()
     state?: string;
 }

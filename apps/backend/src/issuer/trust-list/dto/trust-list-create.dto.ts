@@ -4,43 +4,26 @@ import {
     getSchemaPath,
     OmitType,
 } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsOptional, IsString, ValidateNested } from "class-validator";
 import { TrustList } from "../entities/trust-list.entity";
 
 /**
  * Entity information for certificates (metadata for TEInformation)
  */
 export class TrustListEntityInfo {
-    @IsString()
     name!: string;
 
-    @IsString()
-    @IsOptional()
     lang?: string;
 
-    @IsString()
-    @IsOptional()
     uri?: string;
 
-    @IsString()
-    @IsOptional()
     country?: string;
 
-    @IsString()
-    @IsOptional()
     locality?: string;
 
-    @IsString()
-    @IsOptional()
     postalCode?: string;
 
-    @IsString()
-    @IsOptional()
     streetAddress?: string;
 
-    @IsString()
-    @IsOptional()
     contactUri?: string;
 }
 
@@ -49,17 +32,12 @@ export class TrustListEntityInfo {
  */
 class InternalTrustListEntity {
     @ApiProperty({ enum: ["internal"] })
-    @IsString()
     type!: "internal";
 
-    @IsString()
     issuerKeyChainId!: string;
 
-    @IsString()
     revocationKeyChainId!: string;
 
-    @ValidateNested()
-    @Type(() => TrustListEntityInfo)
     info!: TrustListEntityInfo;
 }
 
@@ -68,17 +46,12 @@ class InternalTrustListEntity {
  */
 class ExternalTrustListEntity {
     @ApiProperty({ enum: ["external"] })
-    @IsString()
     type!: "external";
 
-    @IsString()
     issuerCertPem!: string;
 
-    @IsString()
     revocationCertPem!: string;
 
-    @ValidateNested()
-    @Type(() => TrustListEntityInfo)
     info!: TrustListEntityInfo;
 }
 
@@ -100,20 +73,12 @@ export class TrustListCreateDto extends OmitType(TrustList, [
     "entityConfig",
     "id",
 ] as const) {
-    @IsString()
-    @IsOptional()
     id?: string;
 
-    @IsString()
-    @IsOptional()
     description?: string;
 
-    @IsString()
-    @IsOptional()
     keyChainId?: string;
 
-    @IsOptional()
-    @ValidateNested({ each: true })
     @ApiProperty({
         type: "array",
         items: {
@@ -129,16 +94,6 @@ export class TrustListCreateDto extends OmitType(TrustList, [
                 },
             },
         },
-    })
-    @Type(() => Object, {
-        discriminator: {
-            property: "type",
-            subTypes: [
-                { value: InternalTrustListEntity, name: "internal" },
-                { value: ExternalTrustListEntity, name: "external" },
-            ],
-        },
-        keepDiscriminatorProperty: true,
     })
     entities!: TrustListEntity[];
 }

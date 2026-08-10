@@ -1,38 +1,72 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsOptional, IsString } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
+
+const AuthorizationDetailsSchema = z
+    .object({
+        type: z.string(),
+        format: z.string().optional(),
+        vct: z.string().optional(),
+        credential_configuration_id: z.string().optional(),
+    })
+    .strict();
+
+const InteractiveAuthorizationRequestSchema = z
+    .object({
+        response_type: z.string().optional(),
+        client_id: z.string().optional(),
+        interaction_types_supported: z.string().optional(),
+        redirect_uri: z.string().optional(),
+        scope: z.string().optional(),
+        code_challenge: z.string().optional(),
+        code_challenge_method: z.string().optional(),
+        authorization_details: z
+            .union([z.array(AuthorizationDetailsSchema), z.string()])
+            .optional(),
+        state: z.string().optional(),
+        issuer_state: z.string().optional(),
+        auth_session: z.string().optional(),
+        openid4vp_response: z.string().optional(),
+        code_verifier: z.string().optional(),
+        request: z.string().optional(),
+        request_uri: z.string().optional(),
+    })
+    .strict();
+
+const Openid4vpRequestSchema = z
+    .object({
+        request: z.string(),
+        client_id: z.string().optional(),
+    })
+    .strict();
 
 /**
  * Authorization details for a credential request.
  */
-export class AuthorizationDetailsDto {
+export class AuthorizationDetailsDto extends createZodDto(
+    AuthorizationDetailsSchema,
+) {
     @ApiProperty({
         description: "Type of authorization details",
         example: "openid_credential",
     })
-    @IsString()
     type!: string;
 
     @ApiPropertyOptional({
         description: "Credential format",
         example: "vc+sd-jwt",
     })
-    @IsOptional()
-    @IsString()
     format?: string;
 
     @ApiPropertyOptional({
         description: "Verifiable Credential Type",
         example: "IdentityCredential",
     })
-    @IsOptional()
-    @IsString()
     vct?: string;
 
     @ApiPropertyOptional({
         description: "Credential configuration ID",
     })
-    @IsOptional()
-    @IsString()
     credential_configuration_id?: string;
 }
 
@@ -40,128 +74,98 @@ export class AuthorizationDetailsDto {
  * Combined Interactive Authorization Request DTO.
  * Can be either an initial request or a follow-up request.
  */
-export class InteractiveAuthorizationRequestDto {
+export class InteractiveAuthorizationRequestDto extends createZodDto(
+    InteractiveAuthorizationRequestSchema,
+) {
     @ApiPropertyOptional({
         description: "Response type (for initial request)",
     })
-    @IsOptional()
-    @IsString()
     response_type?: string;
 
     @ApiPropertyOptional({
         description: "Client identifier (for initial request)",
     })
-    @IsOptional()
-    @IsString()
     client_id?: string;
 
     @ApiPropertyOptional({
         description:
             "Comma-separated list of supported interaction types (for initial request)",
     })
-    @IsOptional()
-    @IsString()
     interaction_types_supported?: string;
 
     @ApiPropertyOptional({
         description: "Redirect URI (for initial request)",
     })
-    @IsOptional()
-    @IsString()
     redirect_uri?: string;
 
     @ApiPropertyOptional({
         description: "OAuth scope",
     })
-    @IsOptional()
-    @IsString()
     scope?: string;
 
     @ApiPropertyOptional({
         description: "PKCE code challenge",
     })
-    @IsOptional()
-    @IsString()
     code_challenge?: string;
 
     @ApiPropertyOptional({
         description: "PKCE code challenge method",
     })
-    @IsOptional()
-    @IsString()
     code_challenge_method?: string;
 
     @ApiPropertyOptional({
         description: "Authorization details",
     })
-    @IsOptional()
     authorization_details?: AuthorizationDetailsDto[] | string;
 
     @ApiPropertyOptional({
         description: "State parameter",
     })
-    @IsOptional()
-    @IsString()
     state?: string;
 
     @ApiPropertyOptional({
         description: "Issuer state from credential offer",
     })
-    @IsOptional()
-    @IsString()
     issuer_state?: string;
 
     @ApiPropertyOptional({
         description: "Auth session identifier (for follow-up request)",
     })
-    @IsOptional()
-    @IsString()
     auth_session?: string;
 
     @ApiPropertyOptional({
         description: "OpenID4VP response (for follow-up request)",
     })
-    @IsOptional()
-    @IsString()
     openid4vp_response?: string;
 
     @ApiPropertyOptional({
         description: "PKCE code verifier (for follow-up request)",
     })
-    @IsOptional()
-    @IsString()
     code_verifier?: string;
 
     @ApiPropertyOptional({
         description: "JAR request JWT (by value)",
     })
-    @IsOptional()
-    @IsString()
     request?: string;
 
     @ApiPropertyOptional({
         description: "JAR request URI (by reference)",
     })
-    @IsOptional()
-    @IsString()
     request_uri?: string;
 }
 
 /**
  * OpenID4VP request object in interactive authorization response.
  */
-export class Openid4vpRequestDto {
+export class Openid4vpRequestDto extends createZodDto(Openid4vpRequestSchema) {
     @ApiProperty({
         description: "JAR request JWT",
     })
-    @IsString()
     request!: string;
 
     @ApiPropertyOptional({
         description: "Client ID",
     })
-    @IsOptional()
-    @IsString()
     client_id?: string;
 }
 

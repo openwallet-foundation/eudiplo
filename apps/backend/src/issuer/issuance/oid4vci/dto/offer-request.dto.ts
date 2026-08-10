@@ -1,57 +1,122 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { plainToClass, Transform, Type } from "class-transformer";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 import {
-    IsArray,
-    IsEnum,
-    IsIn,
-    IsObject,
-    IsOptional,
-    IsString,
-    Validate,
-    ValidateNested,
-    ValidationArguments,
-    ValidatorConstraint,
-    ValidatorConstraintInterface,
-} from "class-validator";
-import { WebhookConfig } from "../../../../shared/utils/webhook/webhook.dto";
-import { ResponseType } from "../../../../verifier/oid4vp/dto/presentation-request.dto";
+    WebhookConfig,
+    WebhookConfigSchema,
+} from "../../../../shared/utils/webhook/webhook.dto";
+import {
+    ResponseType,
+    type ResponseTypeValue,
+} from "../../../../verifier/oid4vp/dto/presentation-request.dto";
 
-export enum FlowType {
-    AUTH_CODE = "authorization_code",
-    PRE_AUTH_CODE = "pre_authorized_code",
-}
+export const FlowType = {
+    AUTH_CODE: "authorization_code",
+    PRE_AUTH_CODE: "pre_authorized_code",
+} as const;
+
+export type FlowType = (typeof FlowType)[keyof typeof FlowType];
 
 /**
  * Inline claims source - claims provided directly in the request.
  */
 class InlineClaimsSource {
-    @IsIn(["inline"])
     type!: "inline";
 
-    @IsObject()
     claims!: Record<string, any>;
 }
 
-/**
- * Attribute provider claims source - claims fetched dynamically via a configured attribute provider.
- */
+const InlineClaimsSourceSchema = z
+    .object({
+        type: z.literal("inline"),
+        claims: z.record(z.string(), z.unknown()),
+    })
+    .strict();
+
+const AttributeProviderClaimsSourceSchema = z
+    .object({
+        type: z.literal("attributeProvider"),
+        attributeProviderId: z.string(),
+    })
+    .strict();
+
+const WebhookClaimsSourceSchema = z
+    .object({
+        type: z.literal("webhook"),
+        webhook: WebhookConfigSchema,
+    })
+    .strict();
+
+const ClaimsSourceSchema = z.union([
+    InlineClaimsSourceSchema,
+    AttributeProviderClaimsSourceSchema,
+    WebhookClaimsSourceSchema,
+]);
+
+const OfferRequestSchema = z
+    .object({
+        response_type: z.union([
+            z.literal(ResponseType.URI),
+            z.literal(ResponseType.DC_API),
+            z.literal(ResponseType.ISO_18013_7),
+        ]),
+        flow: z.union([
+            z.literal(FlowType.AUTH_CODE),
+            z.literal(FlowType.PRE_AUTH_CODE),
+        ]),
+        tx_code: z.string().optional(),
+        tx_code_description: z.string().optional(),
+        credentialConfigurationIds: z.array(z.string()),
+        authorization_server: z.string().optional(),
+        credentialClaims: z.record(z.string(), ClaimsSourceSchema).optional(),
+        webhookEndpointId: z.string().optional(),
+    })
+    .strict()
+    .superRefine((data, ctx) => {
+        if (!data.credentialClaims) {
+            return;
+        }
+
+        const allowed = new Set(data.credentialConfigurationIds);
+        const invalidKeys = Object.keys(data.credentialClaims).filter(
+            (key) => !allowed.has(key),
+        );
+
+        if (invalidKeys.length > 0) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ["credentialClaims"],
+                message: `credentialClaims contains keys [${invalidKeys.join(", ")}] that are not in credentialConfigurationIds [${data.credentialConfigurationIds.join(", ")}]`,
+            });
+        }
+    });
+
+interface OfferRequestData {
+    response_type: ResponseTypeValue;
+    flow: FlowType;
+    tx_code?: string;
+    tx_code_description?: string;
+    credentialConfigurationIds: string[];
+    authorization_server?: string;
+    credentialClaims?: Record<string, ClaimsSource>;
+    webhookEndpointId?: string;
+}
+
+type OfferRequestConstructor = new () => OfferRequestData;
+
+const OfferRequestBase: OfferRequestConstructor = createZodDto(
+    OfferRequestSchema,
+) as OfferRequestConstructor;
+
 class AttributeProviderClaimsSource {
-    @IsIn(["attributeProvider"])
     type!: "attributeProvider";
 
-    @IsString()
     attributeProviderId!: string;
 }
 
-/**
- * Webhook claims source - claims fetched dynamically via an inline webhook configuration.
- */
 class WebhookClaimsSource {
-    @IsIn(["webhook"])
     type!: "webhook";
 
-    @ValidateNested()
-    @Type(() => WebhookConfig)
     webhook!: WebhookConfig;
 }
 
@@ -63,52 +128,7 @@ export type ClaimsSource =
     | AttributeProviderClaimsSource
     | WebhookClaimsSource;
 
-/**
- * Custom validator to ensure credentialClaims keys are subset of credentialConfigurationIds
- */
-@ValidatorConstraint({ name: "credentialClaimsMatchIds", async: false })
-class CredentialClaimsMatchIdsConstraint
-    implements ValidatorConstraintInterface
-{
-    validate(
-        credentialClaims: Record<string, any> | undefined,
-        args: ValidationArguments,
-    ) {
-        if (!credentialClaims) return true; // Optional field
-
-        const object = args.object as OfferRequestDto;
-        const credentialConfigurationIds = object.credentialConfigurationIds;
-
-        if (
-            !credentialConfigurationIds ||
-            !Array.isArray(credentialConfigurationIds)
-        ) {
-            return false;
-        }
-
-        // Check that all keys in credentialClaims exist in credentialConfigurationIds
-        const claimsKeys = Object.keys(credentialClaims);
-        return claimsKeys.every((key) =>
-            credentialConfigurationIds.includes(key),
-        );
-    }
-
-    defaultMessage(args: ValidationArguments) {
-        const object = args.object as OfferRequestDto;
-        const credentialClaims = args.value as Record<string, any>;
-        const credentialConfigurationIds =
-            object.credentialConfigurationIds || [];
-
-        const claimsKeys = Object.keys(credentialClaims || {});
-        const invalidKeys = claimsKeys.filter(
-            (key) => !credentialConfigurationIds.includes(key),
-        );
-
-        return `credentialClaims contains keys [${invalidKeys.join(", ")}] that are not in credentialConfigurationIds [${credentialConfigurationIds.join(", ")}]`;
-    }
-}
-
-export class OfferRequestDto {
+export class OfferRequestDto extends OfferRequestBase {
     @ApiProperty({
         examples: [
             {
@@ -117,33 +137,26 @@ export class OfferRequestDto {
         ],
         description: "The type of response expected for the offer request.",
     })
-    @IsEnum(ResponseType)
-    response_type!: ResponseType;
+    response_type!: ResponseTypeValue;
 
     /**
      * The flow type for the offer request.
      */
-    @IsEnum(FlowType)
     flow!: FlowType;
 
     /**
      * Transaction code for pre-authorized code flow.
      */
-    @IsString()
-    @IsOptional()
     tx_code?: string;
 
     /**
      * Description for the transaction code (e.g., "Please enter the PIN sent to your email").
      */
-    @IsString()
-    @IsOptional()
     tx_code_description?: string;
 
     /**
      * List of credential configuration ids to be included in the offer.
      */
-    @IsArray()
     credentialConfigurationIds!: string[];
 
     /**
@@ -154,8 +167,6 @@ export class OfferRequestDto {
             "Authorization server id from issuer configuration. If omitted, the first enabled server is used.",
         example: "issuer-built-in",
     })
-    @IsString()
-    @IsOptional()
     authorization_server?: string;
 
     /**
@@ -218,37 +229,11 @@ export class OfferRequestDto {
             },
         },
     })
-    @IsObject()
-    @IsOptional()
-    @Validate(CredentialClaimsMatchIdsConstraint)
-    @Transform(({ value }) => {
-        if (!value) return value;
-        const result: Record<string, ClaimsSource> = {};
-        for (const [key, val] of Object.entries(value)) {
-            const source = val as any;
-            if (source.type === "inline") {
-                result[key] = plainToClass(InlineClaimsSource, val, {
-                    enableImplicitConversion: true,
-                });
-            } else if (source.type === "attributeProvider") {
-                result[key] = plainToClass(AttributeProviderClaimsSource, val, {
-                    enableImplicitConversion: true,
-                });
-            } else if (source.type === "webhook") {
-                result[key] = plainToClass(WebhookClaimsSource, val, {
-                    enableImplicitConversion: true,
-                });
-            }
-        }
-        return result;
-    })
     credentialClaims?: Record<string, ClaimsSource>;
 
     /**
      * ID of the webhook endpoint to notify about the status of the issuance process.
      */
-    @IsString()
-    @IsOptional()
     webhookEndpointId?: string;
 }
 

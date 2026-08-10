@@ -1,11 +1,21 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 import { SessionCleanupMode } from "../../auth/tenant/entitites/session-storage-config";
+
+const UpdateSessionConfigSchema = z
+    .object({
+        ttlSeconds: z.coerce.number().int().min(60).nullable().optional(),
+        cleanupMode: z.enum(SessionCleanupMode).optional(),
+    })
+    .strict();
 
 /**
  * DTO for updating session storage configuration.
  */
-export class UpdateSessionConfigDto {
+export class UpdateSessionConfigDto extends createZodDto(
+    UpdateSessionConfigSchema,
+) {
     /**
      * Time-to-live for sessions in seconds.
      * After this period, sessions are eligible for cleanup.
@@ -17,9 +27,6 @@ export class UpdateSessionConfigDto {
         example: 86400,
         minimum: 60,
     })
-    @IsOptional()
-    @IsInt()
-    @Min(60)
     ttlSeconds?: number | null;
 
     /**
@@ -33,7 +40,5 @@ export class UpdateSessionConfigDto {
         enum: SessionCleanupMode,
         default: SessionCleanupMode.Full,
     })
-    @IsOptional()
-    @IsEnum(SessionCleanupMode)
     cleanupMode?: SessionCleanupMode;
 }

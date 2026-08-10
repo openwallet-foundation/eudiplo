@@ -1,15 +1,6 @@
-import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsOptional, IsString } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { ClientCredentialsSchema } from "./client-credentials.schema";
 
-export class ClientCredentialsDto {
-    @ApiPropertyOptional({ default: "client_credentials" })
-    @IsOptional()
-    @IsString()
-    grant_type?: string;
-
-    @IsString()
-    client_id!: string;
-
-    @IsString()
-    client_secret!: string;
-}
+export class ClientCredentialsDto extends createZodDto(
+    ClientCredentialsSchema,
+) {}

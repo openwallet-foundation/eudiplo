@@ -9,7 +9,7 @@ import { GenericContainer, StartedTestContainer, Wait } from "testcontainers";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { AppModule } from "../../src/app.module";
 import { KeyChainType } from "../../src/crypto/key/dto/key-chain-create.dto";
-import { createHybridValidationPipe } from "../../src/shared/common/pipes/hybrid-validation.pipe";
+import { createAppValidationPipe } from "../../src/shared/common/zod/zod-schema.util";
 import { getToken } from "../utils";
 
 const VAULT_DEV_ROOT_TOKEN = "test-root-token";
@@ -67,7 +67,7 @@ describe("Key Chain — Vault KMS (e2e)", () => {
         }).compile();
 
         app = moduleFixture.createNestApplication();
-        app.useGlobalPipes(createHybridValidationPipe());
+        app.useGlobalPipes(createAppValidationPipe());
         await app.init();
 
         const configService = app.get(ConfigService);
@@ -132,7 +132,7 @@ describe("Key Chain — Vault KMS (e2e)", () => {
         await request(app.getHttpServer())
             .delete(`/key-chain/${keyChainId}`)
             .set("Authorization", `Bearer ${authToken}`)
-            .expect(200);
+            .expect(204);
 
         // Confirm deleted
         await request(app.getHttpServer())

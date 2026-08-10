@@ -6,20 +6,22 @@ import {
     Get,
     HttpException,
     HttpStatus,
+    HttpCode,
     Inject,
     Param,
     Patch,
     Post,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Role } from "../roles/role.enum";
 import { Secured } from "../secure.decorator";
 import { Token, TokenPayload } from "../token.decorator";
 import { requireTenantContext } from "../tenant-context.util";
 import { CLIENTS_PROVIDER, ClientsProvider } from "./client.provider";
-import { ClientSecretResponseDto } from "./dto/client-secret-response.dto";
 import { CreateClientDto } from "./dto/create-client.dto";
+import { ClientSecretResponseDto } from "./dto/client-secret-response.dto";
 import { UpdateClientDto } from "./dto/update-client.dto";
+import { ClientEntity } from "./entities/client.entity";
 
 /**
  * Controller to manage clients.
@@ -37,6 +39,8 @@ export class ClientController {
      * @returns
      */
     @Secured([Role.Clients])
+    @ApiOperation({ summary: "Get all clients for the current tenant" })
+    @ApiResponse({ status: 200, type: [ClientEntity] })
     @Get()
     getClients(@Token() user: TokenPayload) {
         const tenantId = requireTenantContext(user);
@@ -50,6 +54,9 @@ export class ClientController {
      * @returns
      */
     @Secured([Role.Clients])
+    @ApiOperation({ summary: "Get a client by its id" })
+    @ApiResponse({ status: 200, type: ClientEntity })
+    @ApiResponse({ status: 404, description: "Client not found" })
     @Get(":id")
     getClient(@Param("id") id: string, @Token() user: TokenPayload) {
         const tenantId = requireTenantContext(user);
@@ -109,6 +116,10 @@ export class ClientController {
      * @returns
      */
     @Secured([Role.Clients])
+    @ApiOperation({ summary: "Update a client by its id" })
+    @ApiBody({ type: UpdateClientDto })
+    @ApiResponse({ status: 200, type: ClientEntity })
+    @ApiResponse({ status: 404, description: "Client not found" })
     @Patch(":id")
     updateClient(
         @Param("id") id: string,
@@ -135,6 +146,9 @@ export class ClientController {
      * @returns
      */
     @Secured([Role.Clients])
+    @ApiOperation({ summary: "Create a new client" })
+    @ApiBody({ type: CreateClientDto })
+    @ApiResponse({ status: 201, type: ClientEntity })
     @Post()
     createClient(
         @Body() createClientDto: CreateClientDto,
@@ -160,7 +174,10 @@ export class ClientController {
      * @returns
      */
     @Secured([Role.Clients])
+    @ApiOperation({ summary: "Delete a client" })
+    @ApiResponse({ status: 204, description: "Client deleted" })
     @Delete(":id")
+    @HttpCode(204)
     deleteClient(@Param("id") id: string, @Token() user: TokenPayload) {
         const tenantId = requireTenantContext(user);
         return this.clients.removeClient(tenantId, id);

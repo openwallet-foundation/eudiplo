@@ -20,7 +20,7 @@ import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
 import { EncryptionService } from "../../crypto/encryption/encryption.service";
 import { CertService } from "../../crypto/key/cert/cert.service";
-import { KeyUsageType } from "../../crypto/key/entities/key-chain.entity";
+import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
 import { KeyChainService } from "../../crypto/key/key-chain.service";
 import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { ServiceTypeIdentifier } from "../../issuer/trust-list/trustlist.service";

@@ -1,13 +1,20 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsUrl } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
-export class ResolveIssuerMetadataDto {
+const ResolveIssuerMetadataSchema = z
+    .object({
+        issuerUrl: z.url(),
+    })
+    .strict();
+
+export class ResolveIssuerMetadataDto extends createZodDto(
+    ResolveIssuerMetadataSchema,
+) {
     @ApiProperty({
         description:
             "Issuer URL or full OpenID4VCI metadata URL to resolve server-side.",
         example: "https://issuer.example.com/issuers/tenant-a",
     })
-    @IsString()
-    @IsUrl({ require_tld: false })
     issuerUrl!: string;
 }

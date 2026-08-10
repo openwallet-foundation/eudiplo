@@ -1,7 +1,4 @@
-import { OmitType } from "@nestjs/swagger";
-import { TENANT_RELATION_FIELDS } from "../../../shared/utils/dto-omit-fields";
-import { ClientEntity } from "../entities/client.entity";
+import { createZodDto } from "nestjs-zod";
+import { CreateClientSchema } from "../schemas/client.schema";
 
-export class CreateClientDto extends OmitType(ClientEntity, [
-    ...TENANT_RELATION_FIELDS,
-] as const) {}
+export class CreateClientDto extends createZodDto(CreateClientSchema) {}

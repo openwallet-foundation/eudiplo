@@ -5,19 +5,6 @@ import {
     ApiPropertyOptional,
     getSchemaPath,
 } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import {
-    IsDefined,
-    IsArray,
-    IsBoolean,
-    ArrayMinSize,
-    IsNumber,
-    IsObject,
-    IsOptional,
-    IsString,
-    ValidateIf,
-    ValidateNested,
-} from "class-validator";
 import {
     Column,
     CreateDateColumn,
@@ -48,7 +35,6 @@ import {
 
 class WalletProviderTrustListRefDto {
     @ApiProperty({ format: "uri" })
-    @IsString()
     url!: string;
 
     @ApiPropertyOptional({
@@ -56,9 +42,6 @@ class WalletProviderTrustListRefDto {
         additionalProperties: true,
         description: "JWK used to verify the trust-list JWT signature.",
     })
-    @ValidateIf((o: WalletProviderTrustListRefDto) => !o.verifierX509Der)
-    @IsDefined()
-    @IsObject()
     verifierKey?: Record<string, unknown>;
 
     @ApiPropertyOptional({
@@ -66,9 +49,6 @@ class WalletProviderTrustListRefDto {
         description:
             "Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature.",
     })
-    @ValidateIf((o: WalletProviderTrustListRefDto) => !o.verifierKey)
-    @IsDefined()
-    @IsString()
     verifierX509Der?: string;
 }
 
@@ -104,16 +84,12 @@ export class IssuanceConfig {
      * Value to determine the amount of credentials that are issued in a batch.
      * Default is 1.
      */
-    @IsNumber()
-    @IsOptional()
     @Column("int", { default: 1 })
     batchSize?: number;
 
     /**
      * Indicates whether DPoP is required for the issuance process. Default value is true.
      */
-    @IsBoolean()
-    @IsOptional()
     @Column("boolean", { default: true })
     dPopRequired?: boolean;
 
@@ -122,8 +98,6 @@ export class IssuanceConfig {
      * When enabled, wallets must provide OAuth-Client-Attestation headers.
      * Default value is false.
      */
-    @IsBoolean()
-    @IsOptional()
     @Column("boolean", { default: false })
     walletAttestationRequired?: boolean;
 
@@ -134,10 +108,6 @@ export class IssuanceConfig {
     @ApiPropertyOptional({
         type: [WalletProviderTrustListRefDto],
     })
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => WalletProviderTrustListRefDto)
-    @IsOptional()
     @Column({ type: "json", nullable: true })
     walletProviderTrustLists?: WalletProviderTrustListRefDto[];
 
@@ -150,8 +120,6 @@ export class IssuanceConfig {
         description:
             "Key ID for signing access tokens. If unset, the default signing key is used.",
     })
-    @IsOptional()
-    @IsString()
     @Column({ type: "varchar", nullable: true })
     signingKeyId?: string;
 
@@ -182,20 +150,6 @@ export class IssuanceConfig {
             },
         },
     })
-    @ArrayMinSize(1)
-    @ValidateNested({ each: true })
-    @Type(() => ManagedAuthorizationServerConfig, {
-        keepDiscriminatorProperty: true,
-        discriminator: {
-            property: "type",
-            subTypes: [
-                { name: "external", value: ExternalAuthorizationServerConfig },
-                { name: "oid4vp", value: Oid4VpAuthorizationServerConfig },
-                { name: "chained", value: ChainedAuthorizationServerConfig },
-                { name: "built-in", value: BuiltInAuthorizationServerConfig },
-            ],
-        },
-    })
     @Column({ type: "json", nullable: true })
     authorizationServers!: ManagedAuthorizationServerConfig[];
 
@@ -204,9 +158,6 @@ export class IssuanceConfig {
      * When omitted, trust checks rely on existing LoTE trust-list behavior.
      */
     @ApiPropertyOptional({ type: () => FederationConfig })
-    @ValidateNested()
-    @Type(() => FederationConfig)
-    @IsOptional()
     @Column({ type: "json", nullable: true })
     federation?: FederationConfig | null;
 
@@ -215,9 +166,6 @@ export class IssuanceConfig {
      * Supports importing an existing JWT or generating one via registrar.
      */
     @ApiPropertyOptional({ type: () => IssuerRegistrationCertificateConfig })
-    @ValidateNested()
-    @Type(() => IssuerRegistrationCertificateConfig)
-    @IsOptional()
     @Column({ type: "json", nullable: true })
     registrationCertificate?: IssuerRegistrationCertificateConfig | null;
 
@@ -228,14 +176,9 @@ export class IssuanceConfig {
         type: () => IssuerRegistrationCertificateCache,
         readOnly: true,
     })
-    @ValidateNested()
-    @Type(() => IssuerRegistrationCertificateCache)
-    @IsOptional()
     @Column({ type: "json", nullable: true })
     registrationCertificateCache?: IssuerRegistrationCertificateCache | null;
 
-    @ValidateNested({ each: true })
-    @Type(() => DisplayInfo)
     @Column("json", { nullable: true })
     display!: DisplayInfo[];
 
@@ -252,8 +195,6 @@ export class IssuanceConfig {
             "Whether `credential_response_encryption` should be advertised in the credential issuer metadata.",
         default: false,
     })
-    @IsBoolean()
-    @IsOptional()
     @Column("boolean", { default: false })
     credentialResponseEncryption?: boolean;
 
@@ -268,8 +209,6 @@ export class IssuanceConfig {
             "Whether `credential_request_encryption` should be advertised in the credential issuer metadata.",
         default: false,
     })
-    @IsBoolean()
-    @IsOptional()
     @Column("boolean", { default: false })
     credentialRequestEncryption?: boolean;
 
@@ -285,8 +224,6 @@ export class IssuanceConfig {
         default: 5,
         nullable: true,
     })
-    @IsNumber()
-    @IsOptional()
     @Column("int", { nullable: true })
     txCodeMaxAttempts?: number;
 

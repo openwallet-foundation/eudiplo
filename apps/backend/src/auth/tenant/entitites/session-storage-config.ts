@@ -1,5 +1,4 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
 
 /**
  * Cleanup mode when sessions expire.
@@ -31,9 +30,6 @@ export class SessionStorageConfig {
         example: 86400,
         minimum: 60,
     })
-    @IsOptional()
-    @IsInt()
-    @Min(60)
     ttlSeconds?: number;
 
     /**
@@ -47,7 +43,5 @@ export class SessionStorageConfig {
         enum: SessionCleanupMode,
         default: SessionCleanupMode.Full,
     })
-    @IsOptional()
-    @IsEnum(SessionCleanupMode)
     cleanupMode?: SessionCleanupMode;
 }

@@ -1,14 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { TenantEntity } from "../auth/tenant/entitites/tenant.entity";
 import { AccessCertificateService } from "./access-certificate.service";
-import { CreateAccessCertificateDto } from "./dto/create-access-certificate.dto";
-import { CreateRegistrarConfigDto } from "./dto/create-registrar-config.dto";
-import { UpdateRegistrarConfigDto } from "./dto/update-registrar-config.dto";
 import { RegistrarConfigEntity } from "./entities/registrar-config.entity";
 import { type RegistrationCertificateCreation } from "./generated";
 import { RegistrarConfigService } from "./registrar-config.service";
 import { RegistrationCertificateService } from "./registration-certificate.service";
 import { SchemaMetadataService } from "./schema-metadata/schema-metadata.service";
+import type {
+    CreateAccessCertificate,
+    CreateRegistrarConfig,
+    UpdateRegistrarConfig,
+} from "./schemas/registrar.schema";
 
 /**
  * Facade that preserves the original public API of the registrar domain.
@@ -45,14 +47,14 @@ export class RegistrarService {
 
     saveConfig(
         tenantId: string,
-        dto: CreateRegistrarConfigDto,
+        dto: CreateRegistrarConfig,
     ): Promise<RegistrarConfigEntity> {
         return this.configSvc.saveConfig(tenantId, dto);
     }
 
     updateConfig(
         tenantId: string,
-        dto: UpdateRegistrarConfigDto,
+        dto: UpdateRegistrarConfig,
     ): Promise<RegistrarConfigEntity> {
         return this.configSvc.updateConfig(tenantId, dto);
     }
@@ -67,7 +69,7 @@ export class RegistrarService {
 
     createAccessCertificate(
         tenantId: string,
-        dto: CreateAccessCertificateDto,
+        dto: CreateAccessCertificate,
     ): Promise<{ id: string; certId: string; crt: string }> {
         return this.accessCertSvc.createAccessCertificate(tenantId, dto);
     }

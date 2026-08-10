@@ -1,7 +1,4 @@
-import { PickType } from "@nestjs/swagger";
-import { CreateTenantDto } from "./create-tenant.dto";
+import { createZodDto } from "nestjs-zod";
+import { ImportTenantSchema } from "../schemas/create-tenant.schema";
 
-export class ImportTenantDto extends PickType(CreateTenantDto, [
-    "name",
-    "description",
-] as const) {}
+export class ImportTenantDto extends createZodDto(ImportTenantSchema) {}

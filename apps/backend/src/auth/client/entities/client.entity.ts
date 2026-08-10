@@ -1,5 +1,8 @@
-import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsArray, IsEnum, IsOptional, IsString } from "class-validator";
+import {
+    ApiHideProperty,
+    ApiProperty,
+    ApiPropertyOptional,
+} from "@nestjs/swagger";
 import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { Role } from "../../roles/role.enum";
 import { TenantEntity } from "../../tenant/entitites/tenant.entity";
@@ -12,36 +15,40 @@ export class ClientEntity {
     /**
      * The unique identifier for the client.
      */
-    @IsString()
+    @ApiProperty({ description: "Unique client identifier" })
     @PrimaryColumn("varchar")
     clientId!: string;
 
     /**
      * The secret key for the client.
      */
-    @IsString()
-    @IsOptional()
+    @ApiHideProperty()
     @Column("varchar", { nullable: true })
     secret?: string;
 
     /**
      * The unique identifier for the tenant that the client belongs to. Only null for accounts that manage tenants, that do not belong to a client
      */
+    @ApiPropertyOptional({
+        description: "Tenant identifier the client belongs to",
+    })
     @Column("varchar", { nullable: true })
     tenantId?: string;
 
     /**
      * The description of the client.
      */
-    @IsString()
-    @IsOptional()
+    @ApiPropertyOptional({ description: "Client description" })
     @Column("varchar", { nullable: true })
     description?: string;
 
     /**
      * The roles assigned to the client.
      */
-    @IsEnum(Role, { each: true })
+    @ApiProperty({
+        description: "Roles assigned to the client",
+        type: [String],
+    })
     @Column({ type: "json" })
     roles!: Role[];
 
@@ -56,9 +63,6 @@ export class ClientEntity {
             "List of presentation config IDs this client can use. If empty/null, all configs are allowed.",
         example: ["age-verification", "kyc-basic"],
     })
-    @IsOptional()
-    @IsArray()
-    @IsString({ each: true })
     @Column({ type: "json", nullable: true })
     allowedPresentationConfigs?: string[] | null;
 
@@ -73,15 +77,13 @@ export class ClientEntity {
             "List of issuance config IDs this client can use. If empty/null, all configs are allowed.",
         example: ["pid", "mdl"],
     })
-    @IsOptional()
-    @IsArray()
-    @IsString({ each: true })
     @Column({ type: "json", nullable: true })
     allowedIssuanceConfigs?: string[] | null;
 
     /**
      * The tenant that the client belongs to.
      */
+    @ApiHideProperty()
     @ManyToOne(
         () => TenantEntity,
         (tenant) => tenant.clients,

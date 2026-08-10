@@ -1,12 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import {
-    IsArray,
-    IsEnum,
-    IsOptional,
-    IsString,
-    ValidateNested,
-} from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 import type {
     AccessCertificate,
     MetadataSchema,
@@ -59,25 +53,48 @@ export type SchemaMetadataTag = (typeof TAG_VALUES)[number];
 const VOCABULARY_STATUS_VALUES = ["active", "deprecated"] as const;
 export type VocabularyStatus = (typeof VOCABULARY_STATUS_VALUES)[number];
 
+const UpdateIssuerOfferSchema = z
+    .object({
+        credentialOfferUrl: z.string().optional(),
+        description: z.string().optional(),
+    })
+    .strict();
+
+const UpdateSchemaMetadataSchema = z
+    .object({
+        category: z.enum(CATEGORY_VALUES).optional(),
+        tags: z.array(z.enum(TAG_VALUES)).optional(),
+        displayName: z.string().optional(),
+        issuerOffers: z.array(UpdateIssuerOfferSchema).optional(),
+    })
+    .strict();
+
+const DeprecateSchemaMetadataSchema = z
+    .object({
+        deprecated: z.boolean(),
+        message: z.string().optional(),
+        supersededByVersion: z.string().optional(),
+    })
+    .strict();
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Request bodies
 // ─────────────────────────────────────────────────────────────────────────────
 
-export class UpdateIssuerOfferDto implements GeneratedUpdateIssuerOfferDto {
+export class UpdateIssuerOfferDto
+    extends createZodDto(UpdateIssuerOfferSchema)
+    implements GeneratedUpdateIssuerOfferDto
+{
     @ApiPropertyOptional({
         description:
             "URL where the user can receive a credential offer from this issuer.",
     })
-    @IsOptional()
-    @IsString()
     credentialOfferUrl?: string;
 
     @ApiPropertyOptional({
         description:
             "Human-readable description to help users choose the right issuer.",
     })
-    @IsOptional()
-    @IsString()
     description?: string;
 }
 
@@ -85,14 +102,13 @@ export class UpdateIssuerOfferDto implements GeneratedUpdateIssuerOfferDto {
  * Request body for `PATCH /registrar/schema-metadata/:id`.
  */
 export class UpdateSchemaMetadataDto
+    extends createZodDto(UpdateSchemaMetadataSchema)
     implements GeneratedUpdateSchemaMetadataDto
 {
     @ApiPropertyOptional({
         description: "Domain category for filtering",
         enum: CATEGORY_VALUES,
     })
-    @IsOptional()
-    @IsEnum(CATEGORY_VALUES)
     category?: SchemaMetadataCategory;
 
     @ApiPropertyOptional({
@@ -100,17 +116,12 @@ export class UpdateSchemaMetadataDto
         type: [String],
         enum: TAG_VALUES,
     })
-    @IsOptional()
-    @IsArray()
-    @IsEnum(TAG_VALUES, { each: true })
     tags?: SchemaMetadataTag[];
 
     @ApiPropertyOptional({
         description:
             "Optional human-readable schema name for UI display and search",
     })
-    @IsOptional()
-    @IsString()
     displayName?: string;
 
     @ApiPropertyOptional({
@@ -118,10 +129,6 @@ export class UpdateSchemaMetadataDto
             "Issuer offer entries shown to users, each with credential-offer URL and description",
         type: [UpdateIssuerOfferDto],
     })
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => UpdateIssuerOfferDto)
     issuerOffers?: UpdateIssuerOfferDto[];
 }
 
@@ -160,8 +167,6 @@ export class SchemaMetadataVocabulariesDto {
             "Allowed category values that can be used when updating schema metadata category.",
         type: [VocabularyEntryDto],
     })
-    @ValidateNested({ each: true })
-    @Type(() => VocabularyEntryDto)
     categories!: VocabularyEntryDto[];
 
     @ApiProperty({
@@ -169,8 +174,6 @@ export class SchemaMetadataVocabulariesDto {
             "Allowed tag values that can be used when updating schema metadata tags.",
         type: [VocabularyEntryDto],
     })
-    @ValidateNested({ each: true })
-    @Type(() => VocabularyEntryDto)
     tags!: VocabularyEntryDto[];
 }
 
@@ -329,8 +332,6 @@ export class SchemaMetadataResponseDto implements SchemaMetadataResponseBase {
         description: "Format-specific schema URIs for this schema metadata",
         type: [MetadataSchemaDto],
     })
-    @ValidateNested({ each: true })
-    @Type(() => MetadataSchemaDto)
     schemaURIs!: MetadataSchemaDto[];
 
     @ApiProperty({
@@ -338,8 +339,6 @@ export class SchemaMetadataResponseDto implements SchemaMetadataResponseBase {
             "Trust frameworks / trust anchors applicable to this schema metadata",
         type: [TrustAuthorityDto],
     })
-    @ValidateNested({ each: true })
-    @Type(() => TrustAuthorityDto)
     trustedAuthorities!: TrustAuthorityDto[];
 
     @ApiPropertyOptional({
@@ -365,8 +364,6 @@ export class SchemaMetadataResponseDto implements SchemaMetadataResponseBase {
             "Issuer offer entries for this schema metadata. Each entry provides a credential offer URL and user-facing description.",
         type: [IssuerOfferEntryDto],
     })
-    @ValidateNested({ each: true })
-    @Type(() => IssuerOfferEntryDto)
     issuerOffers!: IssuerOfferEntryDto[];
 
     @ApiProperty({ description: "The original signed JWT" })
@@ -379,8 +376,6 @@ export class SchemaMetadataResponseDto implements SchemaMetadataResponseBase {
         description: "The access certificate used to sign this schema metadata",
         type: AccessCertificateRefDto,
     })
-    @ValidateNested()
-    @Type(() => AccessCertificateRefDto)
     signerCertificate?: AccessCertificateRefDto;
 
     @ApiProperty({
@@ -416,21 +411,19 @@ export class SchemaMetadataResponseDto implements SchemaMetadataResponseBase {
 /**
  * Request body for `PATCH /registrar/schema-metadata/:id/versions/:version/deprecation`.
  */
-export class DeprecateSchemaMetadataDto {
+export class DeprecateSchemaMetadataDto extends createZodDto(
+    DeprecateSchemaMetadataSchema,
+) {
     @ApiProperty({ description: "Whether to mark this version as deprecated" })
     deprecated!: boolean;
 
     @ApiPropertyOptional({
         description: "Deprecation message shown to consumers",
     })
-    @IsOptional()
-    @IsString()
     message?: string;
 
     @ApiPropertyOptional({
         description: "The version that supersedes this one",
     })
-    @IsOptional()
-    @IsString()
     supersededByVersion?: string;
 }

@@ -3,7 +3,6 @@ import { readFileSync } from "node:fs";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
-import { plainToClass } from "class-transformer";
 import type { JWK } from "jose";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
@@ -57,7 +56,7 @@ export class KeyChainImportService {
                 resourceType: "key-chain",
                 loadData: (filePath) => {
                     const payload = JSON.parse(readFileSync(filePath, "utf8"));
-                    return plainToClass(KeyChainImportDto, payload);
+                    return payload as KeyChainImportDto;
                 },
                 checkExists: async (tid, data) => {
                     return await this.keyChainRepository

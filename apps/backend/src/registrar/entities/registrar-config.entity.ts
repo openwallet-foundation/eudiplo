@@ -1,5 +1,4 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsObject, IsOptional, IsString } from "class-validator";
 import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { TenantEntity } from "../../auth/tenant/entitites/tenant.entity";
 
@@ -13,8 +12,6 @@ export class RegistrationCertificateDefaults {
             "Default privacy policy URL for registration certificate creation.",
         example: "https://verifier.example/privacy",
     })
-    @IsOptional()
-    @IsString()
     privacy_policy?: string;
 
     @ApiPropertyOptional({
@@ -22,8 +19,6 @@ export class RegistrationCertificateDefaults {
             "Default support contact URI for registration certificate creation.",
         example: "mailto:support@verifier.example",
     })
-    @IsOptional()
-    @IsString()
     support_uri?: string;
 }
 
@@ -57,7 +52,6 @@ export class RegistrarConfigEntity {
         description: "The base URL of the registrar API",
         example: "https://sandbox.eudi-wallet.org/api",
     })
-    @IsString()
     @Column("varchar")
     registrarUrl!: string;
 
@@ -71,7 +65,6 @@ export class RegistrarConfigEntity {
             "The OIDC issuer URL for authentication (e.g., Keycloak realm URL)",
         example: "https://auth.example.com/realms/my-realm",
     })
-    @IsString()
     @Column("varchar")
     oidcUrl!: string;
 
@@ -83,7 +76,6 @@ export class RegistrarConfigEntity {
         description: "The OIDC client ID for the registrar",
         example: "registrar-client",
     })
-    @IsString()
     @Column("varchar")
     clientId!: string;
 
@@ -94,8 +86,6 @@ export class RegistrarConfigEntity {
         description:
             "The OIDC client secret (optional, for confidential clients)",
     })
-    @IsOptional()
-    @IsString()
     @Column("varchar", { nullable: true })
     clientSecret?: string;
 
@@ -106,7 +96,6 @@ export class RegistrarConfigEntity {
         description: "The username for OIDC login",
         example: "admin@example.com",
     })
-    @IsString()
     @Column("varchar")
     username!: string;
 
@@ -117,7 +106,6 @@ export class RegistrarConfigEntity {
     @ApiProperty({
         description: "The password for OIDC login (stored in plaintext)",
     })
-    @IsString()
     @Column("varchar")
     password!: string;
 
@@ -131,8 +119,6 @@ export class RegistrarConfigEntity {
         type: () => RegistrationCertificateDefaults,
         additionalProperties: true,
     })
-    @IsOptional()
-    @IsObject()
     @Column("json", { nullable: true })
     registrationCertificateDefaults?: RegistrationCertificateDefaults | null;
 }

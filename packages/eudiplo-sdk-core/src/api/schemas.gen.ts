@@ -5029,6 +5029,11 @@ export const PresentationConfigSchema = {
             type: 'string',
             nullable: true,
             description: 'Optional ID of the access certificate to use for signing the presentation request.\nIf not provided, the default access certificate for the tenant will be used.\n\nNote: This is intentionally NOT a TypeORM relationship because CertEntity uses\na composite primary key (id + tenantId), and SQLite cannot create foreign keys\nthat reference only part of a composite primary key. The relationship is handled\nat the application level in the service layer.'
+        },
+        readerAuth: {
+            type: 'boolean',
+            nullable: true,
+            description: 'Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.\n\nWhen `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1\nsigned with the tenant\'s Access key chain (selected by\n{@link accessKeyChainId}), letting the wallet cryptographically\nauthenticate the verifier — the mDOC equivalent of the signed request\nobject used in the OID4VP flow. Defaults to disabled (null/false).\n\nOnly affects `response_type: "iso-18013-7"` offers.'
         }
     },
     required: [
@@ -5163,6 +5168,11 @@ export const PresentationConfigCreateDtoSchema = {
             type: 'string',
             nullable: true,
             description: 'Optional ID of the access certificate to use for signing the presentation request.\nIf not provided, the default access certificate for the tenant will be used.\n\nNote: This is intentionally NOT a TypeORM relationship because CertEntity uses\na composite primary key (id + tenantId), and SQLite cannot create foreign keys\nthat reference only part of a composite primary key. The relationship is handled\nat the application level in the service layer.'
+        },
+        readerAuth: {
+            type: 'boolean',
+            nullable: true,
+            description: 'Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.\n\nWhen `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1\nsigned with the tenant\'s Access key chain (selected by\n{@link accessKeyChainId}), letting the wallet cryptographically\nauthenticate the verifier — the mDOC equivalent of the signed request\nobject used in the OID4VP flow. Defaults to disabled (null/false).\n\nOnly affects `response_type: "iso-18013-7"` offers.'
         }
     },
     required: [
@@ -5250,6 +5260,11 @@ export const PresentationConfigUpdateDtoSchema = {
             type: 'string',
             nullable: true,
             description: 'Optional ID of the access certificate to use for signing the presentation request.\nIf not provided, the default access certificate for the tenant will be used.\n\nNote: This is intentionally NOT a TypeORM relationship because CertEntity uses\na composite primary key (id + tenantId), and SQLite cannot create foreign keys\nthat reference only part of a composite primary key. The relationship is handled\nat the application level in the service layer.'
+        },
+        readerAuth: {
+            type: 'boolean',
+            nullable: true,
+            description: 'Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.\n\nWhen `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1\nsigned with the tenant\'s Access key chain (selected by\n{@link accessKeyChainId}), letting the wallet cryptographically\nauthenticate the verifier — the mDOC equivalent of the signed request\nobject used in the OID4VP flow. Defaults to disabled (null/false).\n\nOnly affects `response_type: "iso-18013-7"` offers.'
         }
     }
 } as const;
@@ -5975,7 +5990,16 @@ export const KmsConfigDtoSchema = {
             examples: [
                 'main-vault'
             ],
-            type: 'string'
+            anyOf: [
+                {
+                    type: 'string',
+                    minLength: 1
+                },
+                {
+                    type: 'string',
+                    pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                }
+            ]
         },
         providers: {
             type: 'array',
@@ -5985,7 +6009,16 @@ export const KmsConfigDtoSchema = {
                         type: 'object',
                         properties: {
                             id: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
                                 examples: [
                                     'main-vault'
@@ -6004,7 +6037,16 @@ export const KmsConfigDtoSchema = {
                                 examples: [
                                     'Production HashiCorp Vault for signing keys'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             }
                         },
                         required: [
@@ -6017,7 +6059,16 @@ export const KmsConfigDtoSchema = {
                         type: 'object',
                         properties: {
                             id: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
                                 examples: [
                                     'main-vault'
@@ -6036,17 +6087,44 @@ export const KmsConfigDtoSchema = {
                                 examples: [
                                     'Production HashiCorp Vault for signing keys'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             vaultUrl: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        format: 'uri'
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.',
                                 examples: [
                                     '${VAULT_URL}'
                                 ]
                             },
                             vaultToken: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'Authentication token for HashiCorp Vault. Supports ${ENV_VAR} placeholders.',
                                 examples: [
                                     '${VAULT_TOKEN}'
@@ -6065,7 +6143,16 @@ export const KmsConfigDtoSchema = {
                         type: 'object',
                         properties: {
                             id: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
                                 examples: [
                                     'main-vault'
@@ -6084,10 +6171,28 @@ export const KmsConfigDtoSchema = {
                                 examples: [
                                     'Production HashiCorp Vault for signing keys'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             region: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'AWS region for KMS. Supports ${ENV_VAR} placeholders.',
                                 examples: [
                                     '${AWS_REGION}'
@@ -6098,14 +6203,32 @@ export const KmsConfigDtoSchema = {
                                 examples: [
                                     '${AWS_ACCESS_KEY_ID}'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             secretAccessKey: {
                                 description: 'AWS secret access key. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.',
                                 examples: [
                                     '${AWS_SECRET_ACCESS_KEY}'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             }
                         },
                         required: [
@@ -6119,7 +6242,16 @@ export const KmsConfigDtoSchema = {
                         type: 'object',
                         properties: {
                             id: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
                                 examples: [
                                     'main-vault'
@@ -6138,10 +6270,28 @@ export const KmsConfigDtoSchema = {
                                 examples: [
                                     'Production HashiCorp Vault for signing keys'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             library: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.',
                                 examples: [
                                     '${PKCS11_LIBRARY}'
@@ -6162,7 +6312,16 @@ export const KmsConfigDtoSchema = {
                                 ]
                             },
                             pin: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'User PIN used for C_Login. Supports ${ENV_VAR} placeholders.',
                                 examples: [
                                     '${PKCS11_PIN}'
@@ -6189,7 +6348,16 @@ export const KmsConfigDtoSchema = {
                         type: 'object',
                         properties: {
                             id: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
                                 examples: [
                                     'main-vault'
@@ -6208,10 +6376,28 @@ export const KmsConfigDtoSchema = {
                                 examples: [
                                     'Production HashiCorp Vault for signing keys'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             baseUrl: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        format: 'uri'
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.',
                                 examples: [
                                     '${KMS_SERVICE_URL}'
@@ -6249,7 +6435,16 @@ export const KmsConfigDtoSchema = {
                                                 ]
                                             },
                                             token: {
-                                                type: 'string',
+                                                anyOf: [
+                                                    {
+                                                        type: 'string',
+                                                        minLength: 1
+                                                    },
+                                                    {
+                                                        type: 'string',
+                                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                                    }
+                                                ],
                                                 description: 'Bearer token value. Supports ${ENV_VAR} placeholders.',
                                                 examples: [
                                                     '${KMS_API_KEY}'
@@ -6274,21 +6469,48 @@ export const KmsConfigDtoSchema = {
                                                 ]
                                             },
                                             tokenUrl: {
-                                                type: 'string',
+                                                anyOf: [
+                                                    {
+                                                        type: 'string',
+                                                        format: 'uri'
+                                                    },
+                                                    {
+                                                        type: 'string',
+                                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                                    }
+                                                ],
                                                 description: 'Token endpoint URL (e.g. Keycloak, Entra ID). Supports ${ENV_VAR} placeholders.',
                                                 examples: [
                                                     '${IAM_TOKEN_URL}'
                                                 ]
                                             },
                                             clientId: {
-                                                type: 'string',
+                                                anyOf: [
+                                                    {
+                                                        type: 'string',
+                                                        minLength: 1
+                                                    },
+                                                    {
+                                                        type: 'string',
+                                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                                    }
+                                                ],
                                                 description: 'OAuth 2.0 client ID. Supports ${ENV_VAR} placeholders.',
                                                 examples: [
                                                     '${KMS_CLIENT_ID}'
                                                 ]
                                             },
                                             clientSecret: {
-                                                type: 'string',
+                                                anyOf: [
+                                                    {
+                                                        type: 'string',
+                                                        minLength: 1
+                                                    },
+                                                    {
+                                                        type: 'string',
+                                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                                    }
+                                                ],
                                                 description: 'OAuth 2.0 client secret. Supports ${ENV_VAR} placeholders.',
                                                 examples: [
                                                     '${KMS_CLIENT_SECRET}'
@@ -6299,7 +6521,16 @@ export const KmsConfigDtoSchema = {
                                                 examples: [
                                                     'kms:sign kms:admin'
                                                 ],
-                                                type: 'string'
+                                                anyOf: [
+                                                    {
+                                                        type: 'string',
+                                                        minLength: 1
+                                                    },
+                                                    {
+                                                        type: 'string',
+                                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                                    }
+                                                ]
                                             }
                                         },
                                         required: [
@@ -6322,14 +6553,32 @@ export const KmsConfigDtoSchema = {
                                                 ]
                                             },
                                             certFile: {
-                                                type: 'string',
+                                                anyOf: [
+                                                    {
+                                                        type: 'string',
+                                                        minLength: 1
+                                                    },
+                                                    {
+                                                        type: 'string',
+                                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                                    }
+                                                ],
                                                 description: 'Absolute path to the PEM-encoded client certificate file. Supports ${ENV_VAR} placeholders.',
                                                 examples: [
                                                     '/etc/certs/eudiplo.crt'
                                                 ]
                                             },
                                             keyFile: {
-                                                type: 'string',
+                                                anyOf: [
+                                                    {
+                                                        type: 'string',
+                                                        minLength: 1
+                                                    },
+                                                    {
+                                                        type: 'string',
+                                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                                    }
+                                                ],
                                                 description: 'Absolute path to the PEM-encoded private key file for the client certificate. Supports ${ENV_VAR} placeholders.',
                                                 examples: [
                                                     '/etc/certs/eudiplo.key'
@@ -6340,7 +6589,16 @@ export const KmsConfigDtoSchema = {
                                                 examples: [
                                                     '/etc/certs/ca.crt'
                                                 ],
-                                                type: 'string'
+                                                anyOf: [
+                                                    {
+                                                        type: 'string',
+                                                        minLength: 1
+                                                    },
+                                                    {
+                                                        type: 'string',
+                                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                                    }
+                                                ]
                                             }
                                         },
                                         required: [
@@ -6357,14 +6615,32 @@ export const KmsConfigDtoSchema = {
                                 examples: [
                                     '/v1/keys'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             healthPath: {
                                 description: 'Path for the health check endpoint on the remote service. Defaults to /health.',
                                 examples: [
                                     '/health'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             canImport: {
                                 description: 'Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.',
@@ -6385,7 +6661,16 @@ export const KmsConfigDtoSchema = {
                         type: 'object',
                         properties: {
                             id: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'Unique identifier for this provider instance. Used when generating keys to specify which provider to use.',
                                 examples: [
                                     'main-vault'
@@ -6404,31 +6689,76 @@ export const KmsConfigDtoSchema = {
                                 examples: [
                                     'Production HashiCorp Vault for signing keys'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             baseUrl: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        format: 'uri'
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.',
                                 examples: [
                                     '${CSC_URL}'
                                 ]
                             },
                             tokenUrl: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        format: 'uri'
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.',
                                 examples: [
                                     '${CSC_TOKEN_URL}'
                                 ]
                             },
                             clientId: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'OAuth2 client ID. Supports ${ENV_VAR} placeholders.',
                                 examples: [
                                     '${CSC_CLIENT_ID}'
                                 ]
                             },
                             clientSecret: {
-                                type: 'string',
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ],
                                 description: 'OAuth2 client secret. Supports ${ENV_VAR} placeholders.',
                                 examples: [
                                     '${CSC_CLIENT_SECRET}'
@@ -6439,46 +6769,109 @@ export const KmsConfigDtoSchema = {
                                 examples: [
                                     'service'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             credentialId: {
                                 description: 'Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.',
                                 examples: [
                                     '[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             userId: {
                                 description: 'Optional CSC user ID used in credentials/list requests.',
                                 examples: [
                                     'eudiplo_user'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             apiPath: {
                                 description: 'CSC API path prefix appended to baseUrl. Defaults to /csc/v2.',
                                 examples: [
                                     '/csc/v2'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             hashAlgorithmOid: {
                                 description: 'Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.',
                                 examples: [
                                     '2.16.840.1.101.3.4.2.1'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             signAlgorithmOid: {
                                 description: 'Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.',
                                 examples: [
                                     '1.2.840.10045.4.3.2'
                                 ],
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             sad: {
                                 description: 'Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.',
-                                type: 'string'
+                                anyOf: [
+                                    {
+                                        type: 'string',
+                                        minLength: 1
+                                    },
+                                    {
+                                        type: 'string',
+                                        pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                    }
+                                ]
                             },
                             useAuthorizeEndpoint: {
                                 description: 'When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.',
@@ -6494,14 +6887,32 @@ export const KmsConfigDtoSchema = {
                                     type: 'object',
                                     properties: {
                                         id: {
-                                            type: 'string',
+                                            anyOf: [
+                                                {
+                                                    type: 'string',
+                                                    minLength: 1
+                                                },
+                                                {
+                                                    type: 'string',
+                                                    pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                                }
+                                            ],
                                             description: 'Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).',
                                             examples: [
                                                 'PIN'
                                             ]
                                         },
                                         value: {
-                                            type: 'string',
+                                            anyOf: [
+                                                {
+                                                    type: 'string',
+                                                    minLength: 1
+                                                },
+                                                {
+                                                    type: 'string',
+                                                    pattern: '^\\$\\{([A-Z0-9_]+)\\}$'
+                                                }
+                                            ],
                                             description: 'Authentication factor value sent to CSC credentials/authorize.',
                                             examples: [
                                                 '123456'
@@ -7535,6 +7946,11 @@ export const PresentationConfigWritableSchema = {
             type: 'string',
             nullable: true,
             description: 'Optional ID of the access certificate to use for signing the presentation request.\nIf not provided, the default access certificate for the tenant will be used.\n\nNote: This is intentionally NOT a TypeORM relationship because CertEntity uses\na composite primary key (id + tenantId), and SQLite cannot create foreign keys\nthat reference only part of a composite primary key. The relationship is handled\nat the application level in the service layer.'
+        },
+        readerAuth: {
+            type: 'boolean',
+            nullable: true,
+            description: 'Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.\n\nWhen `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1\nsigned with the tenant\'s Access key chain (selected by\n{@link accessKeyChainId}), letting the wallet cryptographically\nauthenticate the verifier — the mDOC equivalent of the signed request\nobject used in the OID4VP flow. Defaults to disabled (null/false).\n\nOnly affects `response_type: "iso-18013-7"` offers.'
         }
     },
     required: [

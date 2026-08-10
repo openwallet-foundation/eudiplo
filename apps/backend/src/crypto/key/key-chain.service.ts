@@ -18,11 +18,8 @@ import {
 } from "./dto/key-chain-response.dto";
 import { KeyChainUpdateDto } from "./dto/key-chain-update.dto";
 import { KmsProvidersResponseDto } from "./dto/kms-providers-response.dto";
-import {
-    KeyChainEntity,
-    KeyUsage,
-    KeyUsageType,
-} from "./entities/key-chain.entity";
+import { KeyChainEntity, KeyUsage } from "./entities/key-chain.entity";
+import { KeyUsageType } from "./types/key-usage-type";
 import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "./kms/kms-adapter";
 import { KmsProviderRegistry } from "./kms/kms-provider.registry";
 import { KeyChainImportService } from "./key-chain-import.service";

@@ -12,8 +12,8 @@
     "clean": "pnpm -r clean",
     "release:dry": "set -a && source .env && set +a && npx semantic-release --dry-run 2>&1",
     "release:version": "set -a && source .env && set +a && npx semantic-release --dry-run 2>&1 | sed -n 's/.*next release version is \\([0-9]*\\.[0-9]*\\.[0-9]*\\).*/\\1/p' | head -1 || echo 'No release pending'",
-    "gen:api": "ts-node scripts/generate-from-openapi.ts --url http://localhost:3000/api/docs-json --out schemas --id-base ./ --no-type && pnpm --filter @eudiplo/backend exec tsx scripts/generate-schemas.ts",
-    "gen:api:hosted": "ts-node scripts/generate-from-openapi.ts --url http://localhost:3000/api/docs-json --out schemas --id-base https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/ --no-type && pnpm --filter @eudiplo/backend exec tsx scripts/generate-schemas.ts",
+    "gen:api": "pnpm exec tsx scripts/generate-schemas.ts",
+    "gen:api:hosted": "pnpm exec tsx scripts/generate-schemas.ts",
     "gen:sdk": "pnpm --filter @eudiplo/sdk-core generate",
     "gen:all": "pnpm run gen:api && pnpm run gen:sdk",
     "migrate:configs:v2": "tsx --tsconfig tsconfig.scripts.json scripts/migrate-configs-v2.ts",
@@ -37,9 +37,7 @@
     "knip": "knip"
   },
   "devDependencies": {
-    "@apidevtools/json-schema-ref-parser": "^15.5.1",
     "@codedependant/semantic-release-docker": "^7.0.0",
-    "@openapi-contrib/openapi-schema-to-json-schema": "^5.1.0",
     "@semantic-release/changelog": "^7.0.0",
     "@semantic-release/exec": "^7.1.0",
     "@semantic-release/git": "^11.0.1",
@@ -52,9 +50,10 @@
     "joi": "^18.2.3",
     "knip": "^6.32.0",
     "markdownlint-cli": "^0.49.1",
+    "reflect-metadata": "^0.2.2",
     "semantic-release": "^25.0.9",
-    "ts-node": "^10.9.2",
     "tsx": "^4.23.11",
+    "zod": "^4.4.3",
     "typescript": "^5.9.3",
     "unzipper": "^0.12.5"
   },

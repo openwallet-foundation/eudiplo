@@ -1,39 +1,15 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./UpdateClientDto.schema.json",
-  "title": "UpdateClientDto",
   "type": "object",
   "properties": {
-    "allowedPresentationConfigs": {
-      "nullable": true,
-      "description": "List of presentation config IDs this client can use. If empty/null, all configs are allowed.",
-      "example": [
-        "age-verification",
-        "kyc-basic"
-      ],
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "allowedIssuanceConfigs": {
-      "nullable": true,
-      "description": "List of issuance config IDs this client can use. If empty/null, all configs are allowed.",
-      "example": [
-        "pid",
-        "mdl"
-      ],
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
     "description": {
+      "description": "Optional updated description.",
       "type": "string",
-      "description": "The description of the client."
+      "minLength": 1
     },
     "roles": {
-      "description": "The roles assigned to the client.",
+      "description": "Optional replacement roles for the client.",
+      "minItems": 1,
       "type": "array",
       "items": {
         "type": "string",
@@ -48,10 +24,25 @@
           "registrar:manage"
         ]
       }
+    },
+    "allowedPresentationConfigs": {
+      "description": "Optional replacement allow-list of presentation config ids.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "allowedIssuanceConfigs": {
+      "description": "Optional replacement allow-list of issuance config ids.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     }
   },
-  "required": [
-    "roles"
-  ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./UpdateClientDto.schema.json",
+  "title": "UpdateClientDto"
 }

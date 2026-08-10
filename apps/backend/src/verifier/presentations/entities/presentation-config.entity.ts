@@ -5,27 +5,6 @@ import {
     ApiPropertyOptional,
     getSchemaPath,
 } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import {
-    Equals,
-    IsDefined,
-    IsArray,
-    IsBoolean,
-    IsEnum,
-    IsNotEmpty,
-    IsNumber,
-    IsObject,
-    IsOptional,
-    IsString,
-    Matches,
-    Min,
-    ValidateIf,
-    Validate,
-    ValidateNested,
-    ValidationArguments,
-    ValidatorConstraint,
-    ValidatorConstraintInterface,
-} from "class-validator";
 import { JWK } from "jose";
 import {
     Column,
@@ -39,7 +18,6 @@ import { TenantEntity } from "../../../auth/tenant/entitites/tenant.entity";
 import { WebhookEndpointEntity } from "../../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { RevocationCheckMode } from "../../../shared/trust/types";
 import { RegistrationCertificateRequest } from "../dto/vp-request.dto";
-import { IsTransactionData } from "../validators/transaction-data.validator";
 
 export enum TrustedAuthorityType {
     ETSI_TL = "etsi_tl",
@@ -54,8 +32,6 @@ export class TrustListRef {
         description:
             "Managed local trust-list identifier. When provided, verifier material is resolved server-side from the trust list key chain.",
     })
-    @IsOptional()
-    @IsString()
     trustListId?: string;
 
     @ApiPropertyOptional({
@@ -63,9 +39,6 @@ export class TrustListRef {
         description:
             "Trust-list JWT URL. Required for external trust lists when trustListId is not set.",
     })
-    @ValidateIf((o: TrustListRef) => !o.trustListId)
-    @IsDefined()
-    @IsString()
     url!: string;
 
     @ApiPropertyOptional({
@@ -74,9 +47,6 @@ export class TrustListRef {
         description:
             "JWK used to verify trust-list JWT signatures for external trusted authority values.",
     })
-    @ValidateIf((o: TrustListRef) => !o.trustListId && !o.verifierX509Der)
-    @IsOptional()
-    @IsObject()
     verifierKey?: JWK;
 
     @ApiPropertyOptional({
@@ -84,9 +54,6 @@ export class TrustListRef {
         description:
             "Base64 DER-encoded X.509 certificate used to verify trust-list JWT signatures for external trusted authority values.",
     })
-    @ValidateIf((o: TrustListRef) => !o.trustListId && !o.verifierKey)
-    @IsOptional()
-    @IsString()
     verifierX509Der?: string;
 }
 
@@ -94,27 +61,18 @@ export class TrustListRef {
  * Attached attestations
  */
 export class PresentationAttachment {
-    @IsString()
     format!: string;
 
-    @IsNotEmpty()
     data!: any;
 
-    @IsOptional()
-    @IsString({ each: true })
     credential_ids?: string[];
 }
 
 export class ClaimsQuery {
-    @IsString()
-    @IsOptional()
     id?: string;
 
-    @IsArray()
     path!: string[];
 
-    @IsArray()
-    @IsOptional()
     values?: string[];
 }
 
@@ -124,8 +82,6 @@ export class MsoMdocClaimsQuery extends ClaimsQuery {
         description:
             "Whether the holder should be allowed to retain the claim in an mso_mdoc response.",
     })
-    @IsOptional()
-    @IsBoolean()
     intent_to_retain?: boolean;
 }
 
@@ -135,8 +91,6 @@ export class DcSdJwtCredentialQueryMeta {
         items: { type: "string" },
         description: "VCT identifiers accepted for dc+sd-jwt credentials.",
     })
-    @IsArray()
-    @IsString({ each: true })
     vct_values!: string[];
 }
 
@@ -146,7 +100,6 @@ export class MsoMdocCredentialQueryMeta {
         description:
             "Document type identifier accepted for mso_mdoc credentials.",
     })
-    @IsString()
     doctype_value!: string;
 }
 
@@ -160,8 +113,6 @@ export class TrustedAuthorityQueryEtsiTl extends TrustedAuthorityQuery {
         enum: [TrustedAuthorityType.ETSI_TL],
         default: TrustedAuthorityType.ETSI_TL,
     })
-    @IsString()
-    @Equals(TrustedAuthorityType.ETSI_TL)
     type: TrustedAuthorityType.ETSI_TL = TrustedAuthorityType.ETSI_TL;
 
     @ApiProperty({
@@ -170,9 +121,6 @@ export class TrustedAuthorityQueryEtsiTl extends TrustedAuthorityQuery {
             $ref: getSchemaPath(TrustListRef),
         },
     })
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => TrustListRef)
     values!: TrustListRef[];
 }
 
@@ -181,8 +129,6 @@ export class TrustedAuthorityQueryOpenIdFederation extends TrustedAuthorityQuery
         enum: [TrustedAuthorityType.OPENID_FEDERATION],
         default: TrustedAuthorityType.OPENID_FEDERATION,
     })
-    @IsString()
-    @Equals(TrustedAuthorityType.OPENID_FEDERATION)
     type: TrustedAuthorityType.OPENID_FEDERATION =
         TrustedAuthorityType.OPENID_FEDERATION;
 
@@ -190,12 +136,10 @@ export class TrustedAuthorityQueryOpenIdFederation extends TrustedAuthorityQuery
         type: "array",
         items: { type: "string" },
     })
-    @IsArray()
-    @IsString({ each: true })
     values!: string[];
 }
 
-export type TrustedAuthorityQueryValue =
+type TrustedAuthorityQueryValue =
     | TrustedAuthorityQueryEtsiTl
     | TrustedAuthorityQueryOpenIdFederation;
 
@@ -204,52 +148,9 @@ export class CredentialSetQuery {
         type: "array",
         items: { type: "array", items: { type: "string" } },
     })
-    @IsArray()
     options!: string[][];
 
-    @IsBoolean()
-    @IsOptional()
     required?: boolean;
-}
-
-@ValidatorConstraint({ name: "claimSetsConsistency", async: false })
-class ClaimSetsConsistencyConstraint implements ValidatorConstraintInterface {
-    validate(claimSets: string[][] | undefined, args: ValidationArguments) {
-        if (!claimSets || claimSets.length === 0) {
-            return true;
-        }
-
-        const credentialQuery = args.object as { claims?: ClaimsQuery[] };
-        const claims = credentialQuery.claims;
-        if (!claims || claims.length === 0) {
-            return false;
-        }
-
-        const claimIds = claims.map((claim) => claim.id);
-        if (claimIds.some((id) => typeof id !== "string" || id.trim() === "")) {
-            return false;
-        }
-
-        if (new Set(claimIds).size !== claimIds.length) {
-            return false;
-        }
-
-        const claimIdSet = new Set(claimIds);
-        return claimSets.every(
-            (claimSet) =>
-                Array.isArray(claimSet) &&
-                claimSet.length > 0 &&
-                new Set(claimSet).size === claimSet.length &&
-                claimSet.every(
-                    (claimId) =>
-                        typeof claimId === "string" && claimIdSet.has(claimId),
-                ),
-        );
-    }
-
-    defaultMessage() {
-        return "claim_sets requires claims to be present, each claim to define a unique id, and every claim_set entry to reference ids from claims.";
-    }
 }
 
 //TODO: extend: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-credential-query
@@ -261,34 +162,19 @@ class ClaimSetsConsistencyConstraint implements ValidatorConstraintInterface {
     MsoMdocCredentialQueryMeta,
     MsoMdocClaimsQuery,
 )
-export abstract class CredentialQuery {
-    @IsString()
-    @Matches(/^[A-Za-z0-9_-]+$/, {
-        message:
-            "id must be a non-empty string containing only alphanumeric characters, underscores, or hyphens",
-    })
+abstract class CredentialQuery {
     id!: string;
 
     @ApiProperty({
         enum: DCQL_CREDENTIAL_FORMATS,
         description: "Credential format discriminator.",
     })
-    @IsString()
-    @IsEnum(DCQL_CREDENTIAL_FORMATS)
     format!: string;
 
-    @IsOptional()
-    @IsBoolean()
     multiple?: boolean;
 
-    @IsOptional()
-    @ValidateNested({ each: true })
-    @Type(() => ClaimsQuery)
     claims?: ClaimsQuery[];
 
-    @IsOptional()
-    @IsArray()
-    @Validate(ClaimSetsConsistencyConstraint)
     @ApiPropertyOptional({
         type: "array",
         items: { type: "array", items: { type: "string" } },
@@ -297,9 +183,6 @@ export abstract class CredentialQuery {
     })
     claim_sets?: string[][];
 
-    @IsArray()
-    @IsOptional()
-    @ValidateNested({ each: true })
     @ApiPropertyOptional({
         type: "array",
         description:
@@ -324,56 +207,30 @@ export abstract class CredentialQuery {
             },
         },
     })
-    @Type(() => TrustedAuthorityQuery, {
-        discriminator: {
-            property: "type",
-            subTypes: [
-                {
-                    value: TrustedAuthorityQueryEtsiTl,
-                    name: TrustedAuthorityType.ETSI_TL,
-                },
-                {
-                    value: TrustedAuthorityQueryOpenIdFederation,
-                    name: TrustedAuthorityType.OPENID_FEDERATION,
-                },
-            ],
-        },
-        keepDiscriminatorProperty: true,
-    })
     trusted_authorities?: TrustedAuthorityQueryValue[];
 }
 
-export class CredentialQueryDcSdJwt extends CredentialQuery {
+class CredentialQueryDcSdJwt extends CredentialQuery {
     @ApiProperty({
         enum: ["dc+sd-jwt"],
         default: "dc+sd-jwt",
     })
-    @IsString()
-    @Equals("dc+sd-jwt")
     format = "dc+sd-jwt" as const;
 
     @ApiProperty({
         type: DcSdJwtCredentialQueryMeta,
         description: "dc+sd-jwt schema metadata for the requested credential.",
     })
-    @IsDefined()
-    @ValidateNested()
-    @Type(() => DcSdJwtCredentialQueryMeta)
     meta!: DcSdJwtCredentialQueryMeta;
 
-    @IsOptional()
-    @ValidateNested({ each: true })
-    @Type(() => ClaimsQuery)
     declare claims?: ClaimsQuery[];
 }
 
-export class CredentialQueryMsoMdoc extends CredentialQuery {
+class CredentialQueryMsoMdoc extends CredentialQuery {
     @ApiProperty({
         enum: ["mso_mdoc"],
         default: "mso_mdoc",
     })
-    @IsString()
-    @Equals("mso_mdoc")
     format = "mso_mdoc" as const;
 
     @ApiProperty({
@@ -381,14 +238,8 @@ export class CredentialQueryMsoMdoc extends CredentialQuery {
         description:
             "mso_mdoc document type metadata for the requested credential.",
     })
-    @IsDefined()
-    @ValidateNested()
-    @Type(() => MsoMdocCredentialQueryMeta)
     meta!: MsoMdocCredentialQueryMeta;
 
-    @IsOptional()
-    @ValidateNested({ each: true })
-    @Type(() => MsoMdocClaimsQuery)
     declare claims?: MsoMdocClaimsQuery[];
 }
 
@@ -398,24 +249,6 @@ export type CredentialQueryValue =
 
 @ApiExtraModels(CredentialQueryDcSdJwt, CredentialQueryMsoMdoc)
 export class DCQL {
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => CredentialQuery, {
-        discriminator: {
-            property: "format",
-            subTypes: [
-                {
-                    value: CredentialQueryDcSdJwt,
-                    name: "dc+sd-jwt",
-                },
-                {
-                    value: CredentialQueryMsoMdoc,
-                    name: "mso_mdoc",
-                },
-            ],
-        },
-        keepDiscriminatorProperty: true,
-    })
     @ApiPropertyOptional({
         type: "array",
         description: "Format-discriminated credential queries.",
@@ -435,18 +268,11 @@ export class DCQL {
     })
     credentials!: CredentialQueryValue[];
 
-    @IsArray()
-    @IsOptional()
-    @ValidateNested({ each: true })
-    @Type(() => CredentialSetQuery)
     credential_sets?: CredentialSetQuery[];
 }
 
 export class TransactionData {
-    @IsString()
     type!: string;
-    @IsArray()
-    @IsString({ each: true })
     credential_ids!: string[];
     [key: string]: any;
 }
@@ -483,7 +309,6 @@ export class PresentationConfig {
      * Unique identifier for the VP request.
      */
     @Column("varchar", { primary: true })
-    @IsString()
     id!: string;
 
     /**
@@ -503,15 +328,11 @@ export class PresentationConfig {
      * Description of the presentation configuration.
      */
     @Column("varchar", { nullable: true })
-    @IsOptional()
-    @IsString()
     description?: string | null;
 
     /**
      * Lifetime how long the presentation request is valid after creation, in seconds.
      */
-    @IsNumber()
-    @IsOptional()
     @Column("int", { default: 300 })
     lifeTime?: number;
 
@@ -523,9 +344,6 @@ export class PresentationConfig {
             "Clock skew tolerance for credential JWT time validation, in seconds.",
         default: 60,
     })
-    @IsNumber()
-    @Min(0)
-    @IsOptional()
     @Column("int", { default: 60 })
     skewSeconds?: number;
 
@@ -538,8 +356,6 @@ export class PresentationConfig {
         enum: RevocationCheckMode,
         default: RevocationCheckMode.Strict,
     })
-    @IsEnum(RevocationCheckMode)
-    @IsOptional()
     @Column("varchar", { default: RevocationCheckMode.Strict })
     statusCheckMode?: RevocationCheckMode;
 
@@ -547,26 +363,17 @@ export class PresentationConfig {
      * The DCQL query to be used for the VP request.
      */
     @Column("json")
-    @ValidateNested()
-    @Type(() => DCQL)
     dcql_query!: DCQL;
 
     /**
      *
      */
     @Column("json", { nullable: true })
-    @IsOptional()
-    @IsArray()
-    @IsTransactionData()
-    @Type(() => TransactionData)
     transaction_data?: TransactionData[];
 
     /**
      * The registration certificate request containing the necessary details.
      */
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => RegistrationCertificateRequest)
     @Column("json", { nullable: true })
     registration_cert?: RegistrationCertificateRequest | null;
 
@@ -597,8 +404,6 @@ export class PresentationConfig {
         additionalProperties: true,
         nullable: true,
     })
-    @IsOptional()
-    @IsObject()
     @Column("json", { nullable: true })
     registrationCertCache?: RegistrationCertCache | null;
 
@@ -606,8 +411,6 @@ export class PresentationConfig {
      * Reference to the webhook endpoint used for notifications.
      * Optional: if set, notifications will be sent to this endpoint.
      */
-    @IsOptional()
-    @IsString()
     @Column("varchar", { nullable: true })
     webhookEndpointId?: string | null;
 
@@ -636,10 +439,6 @@ export class PresentationConfig {
     /**
      * Attestation that should be attached
      */
-    @IsOptional()
-    @IsArray()
-    @ValidateNested()
-    @Type(() => PresentationAttachment)
     @Column("json", { nullable: true })
     attached?: PresentationAttachment[] | null;
 
@@ -648,8 +447,6 @@ export class PresentationConfig {
      * You can use the `{sessionId}` placeholder in the URI, which will be replaced with the actual session ID.
      * @example "https://example.com/callback?session={sessionId}"
      */
-    @IsOptional()
-    @IsString()
     @Column("varchar", { nullable: true })
     redirectUri?: string | null;
 
@@ -662,8 +459,6 @@ export class PresentationConfig {
      * that reference only part of a composite primary key. The relationship is handled
      * at the application level in the service layer.
      */
-    @IsOptional()
-    @IsString()
     @Column("varchar", { nullable: true })
     accessKeyChainId?: string | null;
 
@@ -678,8 +473,6 @@ export class PresentationConfig {
      *
      * Only affects `response_type: "iso-18013-7"` offers.
      */
-    @IsOptional()
-    @IsBoolean()
     @Column("boolean", { nullable: true })
     readerAuth?: boolean | null;
 }

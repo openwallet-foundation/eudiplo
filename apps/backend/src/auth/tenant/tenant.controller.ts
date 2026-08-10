@@ -7,16 +7,27 @@ import {
     Patch,
     Post,
     Req,
+    HttpCode,
 } from "@nestjs/common";
-import { ApiExtraModels, ApiTags } from "@nestjs/swagger";
+import {
+    ApiBody,
+    ApiExtraModels,
+    ApiOperation,
+    ApiResponse,
+    ApiTags,
+} from "@nestjs/swagger";
 import { Request } from "express";
 import { Role } from "../roles/role.enum";
 import { Secured } from "../secure.decorator";
 import { Token, TokenPayload } from "../token.decorator";
-import { CreateTenantDto } from "./dto/create-tenant.dto";
 import { ImportTenantDto } from "./dto/import-tenant.dto";
-import { UpdateTenantDto } from "./dto/update-tenant.dto";
 import { TenantService } from "./tenant.service";
+import { CreateTenantDto } from "./dto/create-tenant.dto";
+import { UpdateTenantDto } from "./dto/update-tenant.dto";
+import {
+    TenantCreateResponseDto,
+    TenantResponseDto,
+} from "./dto/tenant-response.dto";
 
 /**
  * Tenant management controller
@@ -32,8 +43,10 @@ export class TenantController {
      * Get all tenants
      * @returns
      */
+    @ApiOperation({ summary: "Get all tenants" })
+    @ApiResponse({ status: 200, type: [TenantResponseDto] })
     @Get()
-    getTenants() {
+    getTenants(): Promise<TenantResponseDto[]> {
         return this.tenantService.getAll();
     }
 
@@ -42,6 +55,9 @@ export class TenantController {
      * @param data
      * @returns
      */
+    @ApiOperation({ summary: "Initialize a tenant" })
+    @ApiBody({ type: CreateTenantDto })
+    @ApiResponse({ status: 201, type: TenantCreateResponseDto })
     @Post()
     initTenant(
         @Body() data: CreateTenantDto,
@@ -56,8 +72,10 @@ export class TenantController {
      * @param id The ID of the tenant
      * @returns The tenant
      */
+    @ApiOperation({ summary: "Get a tenant by ID" })
+    @ApiResponse({ status: 200, type: TenantResponseDto })
     @Get(":id")
-    getTenant(@Param("id") id: string) {
+    getTenant(@Param("id") id: string): Promise<TenantResponseDto> {
         return this.tenantService.getTenant(id);
     }
 
@@ -67,6 +85,9 @@ export class TenantController {
      * @param data The updated tenant data
      * @returns The updated tenant
      */
+    @ApiOperation({ summary: "Update a tenant by ID" })
+    @ApiBody({ type: UpdateTenantDto })
+    @ApiResponse({ status: 200, type: TenantResponseDto })
     @Patch(":id")
     updateTenant(
         @Param("id") id: string,
@@ -81,7 +102,10 @@ export class TenantController {
      * Deletes a tenant by ID
      * @param id The ID of the tenant to delete
      */
+    @ApiOperation({ summary: "Delete a tenant by ID" })
+    @ApiResponse({ status: 204, description: "Tenant deleted" })
     @Delete(":id")
+    @HttpCode(204)
     deleteTenant(
         @Param("id") id: string,
         @Token() token: TokenPayload,

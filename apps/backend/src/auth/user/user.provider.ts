@@ -1,6 +1,5 @@
-import { CreateUserDto } from "./dto/create-user.dto";
 import { ManagedUserDto } from "./dto/managed-user.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
+import type { CreateUser, UpdateUser } from "./schemas/create-user.schema";
 
 export const USERS_PROVIDER = "USERS_PROVIDER";
 
@@ -11,13 +10,13 @@ export abstract class UsersProvider {
 
     abstract addUser(
         tenantId: string,
-        dto: CreateUserDto,
+        dto: CreateUser,
     ): Promise<ManagedUserDto>;
 
     abstract updateUser(
         tenantId: string,
         userId: string,
-        dto: UpdateUserDto,
+        dto: UpdateUser,
     ): Promise<ManagedUserDto>;
 
     abstract removeUser(tenantId: string, userId: string): Promise<void>;

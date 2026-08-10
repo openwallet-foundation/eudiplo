@@ -2456,6 +2456,18 @@ export type PresentationConfig = {
      * at the application level in the service layer.
      */
     accessKeyChainId?: string;
+    /**
+     * Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
+     *
+     * When `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1
+     * signed with the tenant's Access key chain (selected by
+     * {@link accessKeyChainId}), letting the wallet cryptographically
+     * authenticate the verifier — the mDOC equivalent of the signed request
+     * object used in the OID4VP flow. Defaults to disabled (null/false).
+     *
+     * Only affects `response_type: "iso-18013-7"` offers.
+     */
+    readerAuth?: boolean;
 };
 
 export type ResolveIssuerMetadataDto = {
@@ -2533,6 +2545,18 @@ export type PresentationConfigCreateDto = {
      * at the application level in the service layer.
      */
     accessKeyChainId?: string;
+    /**
+     * Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
+     *
+     * When `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1
+     * signed with the tenant's Access key chain (selected by
+     * {@link accessKeyChainId}), letting the wallet cryptographically
+     * authenticate the verifier — the mDOC equivalent of the signed request
+     * object used in the OID4VP flow. Defaults to disabled (null/false).
+     *
+     * Only affects `response_type: "iso-18013-7"` offers.
+     */
+    readerAuth?: boolean;
 };
 
 export type PresentationConfigUpdateDto = {
@@ -2589,6 +2613,18 @@ export type PresentationConfigUpdateDto = {
      * at the application level in the service layer.
      */
     accessKeyChainId?: string;
+    /**
+     * Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
+     *
+     * When `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1
+     * signed with the tenant's Access key chain (selected by
+     * {@link accessKeyChainId}), letting the wallet cryptographically
+     * authenticate the verifier — the mDOC equivalent of the signed request
+     * object used in the OID4VP flow. Defaults to disabled (null/false).
+     *
+     * Only affects `response_type: "iso-18013-7"` offers.
+     */
+    readerAuth?: boolean;
 };
 
 export type RegistrationCertificateDefaults = {
@@ -3050,7 +3086,7 @@ export type KmsConfigDto = {
     /**
      * ID of the default KMS provider. Defaults to "db" if not set.
      */
-    defaultProvider?: string;
+    defaultProvider?: string | string;
     /**
      * List of KMS provider configurations. Each provider must have a unique id and a type.
      */
@@ -3058,7 +3094,7 @@ export type KmsConfigDto = {
         /**
          * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
          */
-        id: string;
+        id: string | string;
         /**
          * Type of the KMS provider.
          */
@@ -3066,12 +3102,12 @@ export type KmsConfigDto = {
         /**
          * Human-readable description of this provider instance.
          */
-        description?: string;
+        description?: string | string;
     } | {
         /**
          * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
          */
-        id: string;
+        id: string | string;
         /**
          * Type of the KMS provider.
          */
@@ -3079,20 +3115,20 @@ export type KmsConfigDto = {
         /**
          * Human-readable description of this provider instance.
          */
-        description?: string;
+        description?: string | string;
         /**
          * URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.
          */
-        vaultUrl: string;
+        vaultUrl: string | string;
         /**
          * Authentication token for HashiCorp Vault. Supports ${ENV_VAR} placeholders.
          */
-        vaultToken: string;
+        vaultToken: string | string;
     } | {
         /**
          * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
          */
-        id: string;
+        id: string | string;
         /**
          * Type of the KMS provider.
          */
@@ -3100,24 +3136,24 @@ export type KmsConfigDto = {
         /**
          * Human-readable description of this provider instance.
          */
-        description?: string;
+        description?: string | string;
         /**
          * AWS region for KMS. Supports ${ENV_VAR} placeholders.
          */
-        region: string;
+        region: string | string;
         /**
          * AWS access key ID. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.
          */
-        accessKeyId?: string;
+        accessKeyId?: string | string;
         /**
          * AWS secret access key. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.
          */
-        secretAccessKey?: string;
+        secretAccessKey?: string | string;
     } | {
         /**
          * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
          */
-        id: string;
+        id: string | string;
         /**
          * Type of the KMS provider.
          */
@@ -3125,11 +3161,11 @@ export type KmsConfigDto = {
         /**
          * Human-readable description of this provider instance.
          */
-        description?: string;
+        description?: string | string;
         /**
          * Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.
          */
-        library: string;
+        library: string | string;
         /**
          * Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.
          */
@@ -3137,7 +3173,7 @@ export type KmsConfigDto = {
         /**
          * User PIN used for C_Login. Supports ${ENV_VAR} placeholders.
          */
-        pin: string;
+        pin: string | string;
         /**
          * Open the PKCS#11 session in read-only mode. Defaults to false.
          */
@@ -3146,7 +3182,7 @@ export type KmsConfigDto = {
         /**
          * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
          */
-        id: string;
+        id: string | string;
         /**
          * Type of the KMS provider.
          */
@@ -3154,11 +3190,11 @@ export type KmsConfigDto = {
         /**
          * Human-readable description of this provider instance.
          */
-        description?: string;
+        description?: string | string;
         /**
          * Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.
          */
-        baseUrl: string;
+        baseUrl: string | string;
         /**
          * Authentication method for the remote KMS service. Supports bearer token, OAuth 2.0 client credentials, and mutual TLS. Omit (or set type to "none") for unauthenticated services.
          */
@@ -3175,7 +3211,7 @@ export type KmsConfigDto = {
             /**
              * Bearer token value. Supports ${ENV_VAR} placeholders.
              */
-            token: string;
+            token: string | string;
         } | {
             /**
              * OAuth 2.0 Client Credentials — EUDIPLO fetches and caches short-lived tokens.
@@ -3184,19 +3220,19 @@ export type KmsConfigDto = {
             /**
              * Token endpoint URL (e.g. Keycloak, Entra ID). Supports ${ENV_VAR} placeholders.
              */
-            tokenUrl: string;
+            tokenUrl: string | string;
             /**
              * OAuth 2.0 client ID. Supports ${ENV_VAR} placeholders.
              */
-            clientId: string;
+            clientId: string | string;
             /**
              * OAuth 2.0 client secret. Supports ${ENV_VAR} placeholders.
              */
-            clientSecret: string;
+            clientSecret: string | string;
             /**
              * Space-separated list of OAuth 2.0 scopes to request. Optional.
              */
-            scope?: string;
+            scope?: string | string;
         } | {
             /**
              * Mutual TLS — EUDIPLO presents a client certificate on every connection.
@@ -3205,24 +3241,24 @@ export type KmsConfigDto = {
             /**
              * Absolute path to the PEM-encoded client certificate file. Supports ${ENV_VAR} placeholders.
              */
-            certFile: string;
+            certFile: string | string;
             /**
              * Absolute path to the PEM-encoded private key file for the client certificate. Supports ${ENV_VAR} placeholders.
              */
-            keyFile: string;
+            keyFile: string | string;
             /**
              * Absolute path to the PEM-encoded CA bundle to trust for the remote server's certificate. Omit to use the system CA store.
              */
-            caFile?: string;
+            caFile?: string | string;
         };
         /**
          * Path prefix for key endpoints on the remote service. Defaults to /keys.
          */
-        keysPath?: string;
+        keysPath?: string | string;
         /**
          * Path for the health check endpoint on the remote service. Defaults to /health.
          */
-        healthPath?: string;
+        healthPath?: string | string;
         /**
          * Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.
          */
@@ -3231,7 +3267,7 @@ export type KmsConfigDto = {
         /**
          * Unique identifier for this provider instance. Used when generating keys to specify which provider to use.
          */
-        id: string;
+        id: string | string;
         /**
          * Type of the KMS provider.
          */
@@ -3239,51 +3275,51 @@ export type KmsConfigDto = {
         /**
          * Human-readable description of this provider instance.
          */
-        description?: string;
+        description?: string | string;
         /**
          * Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.
          */
-        baseUrl: string;
+        baseUrl: string | string;
         /**
          * OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.
          */
-        tokenUrl: string;
+        tokenUrl: string | string;
         /**
          * OAuth2 client ID. Supports ${ENV_VAR} placeholders.
          */
-        clientId: string;
+        clientId: string | string;
         /**
          * OAuth2 client secret. Supports ${ENV_VAR} placeholders.
          */
-        clientSecret: string;
+        clientSecret: string | string;
         /**
          * OAuth2 scope to request during token acquisition.
          */
-        scope?: string;
+        scope?: string | string;
         /**
          * Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.
          */
-        credentialId?: string;
+        credentialId?: string | string;
         /**
          * Optional CSC user ID used in credentials/list requests.
          */
-        userId?: string;
+        userId?: string | string;
         /**
          * CSC API path prefix appended to baseUrl. Defaults to /csc/v2.
          */
-        apiPath?: string;
+        apiPath?: string | string;
         /**
          * Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.
          */
-        hashAlgorithmOid?: string;
+        hashAlgorithmOid?: string | string;
         /**
          * Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.
          */
-        signAlgorithmOid?: string;
+        signAlgorithmOid?: string | string;
         /**
          * Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.
          */
-        sad?: string;
+        sad?: string | string;
         /**
          * When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.
          */
@@ -3295,11 +3331,11 @@ export type KmsConfigDto = {
             /**
              * Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).
              */
-            id: string;
+            id: string | string;
             /**
              * Authentication factor value sent to CSC credentials/authorize.
              */
-            value: string;
+            value: string | string;
         }>;
     }>;
 };
@@ -3866,6 +3902,18 @@ export type PresentationConfigWritable = {
      * at the application level in the service layer.
      */
     accessKeyChainId?: string;
+    /**
+     * Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
+     *
+     * When `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1
+     * signed with the tenant's Access key chain (selected by
+     * {@link accessKeyChainId}), letting the wallet cryptographically
+     * authenticate the verifier — the mDOC equivalent of the signed request
+     * object used in the OID4VP flow. Defaults to disabled (null/false).
+     *
+     * Only affects `response_type: "iso-18013-7"` offers.
+     */
+    readerAuth?: boolean;
 };
 
 export type ObjectWritable = {

@@ -1,31 +1,28 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./RotationPolicyCreateDto.schema.json",
-  "title": "RotationPolicyCreateDto",
   "type": "object",
   "properties": {
     "enabled": {
       "type": "boolean",
-      "description": "Whether automatic key rotation is enabled.",
-      "default": false
+      "description": "Enable or disable automatic key rotation."
     },
     "intervalDays": {
+      "description": "Rotation interval in days.",
       "type": "number",
       "minimum": 1,
-      "maximum": 3650,
-      "description": "Rotation interval in days. Required when enabled is true.",
-      "example": 90
+      "maximum": 3650
     },
     "certValidityDays": {
+      "description": "Certificate validity period in days for generated leaf certificates.",
       "type": "number",
       "minimum": 1,
-      "maximum": 3650,
-      "description": "Certificate validity in days. Defaults to rotation interval + 30 days grace period.",
-      "example": 365
+      "maximum": 3650
     }
   },
   "required": [
     "enabled"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./RotationPolicyCreateDto.schema.json",
+  "title": "RotationPolicyCreateDto"
 }

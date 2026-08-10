@@ -1,44 +1,85 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./UpdateStatusListConfigDto.schema.json",
-  "title": "UpdateStatusListConfigDto",
   "type": "object",
   "properties": {
     "capacity": {
-      "type": "number",
-      "nullable": true,
-      "description": "The capacity of the status list. Set to null to reset to global default.",
-      "minimum": 100,
-      "example": 10000
+      "description": "Capacity override. Set null to reset to defaults.",
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "bits": {
-      "nullable": true,
-      "description": "Bits per status entry. Set to null to reset to global default.",
-      "enum": [
-        1,
-        2,
-        4,
-        8
-      ],
-      "type": "number"
+      "description": "Bits-per-status override. Set null to reset to defaults.",
+      "anyOf": [
+        {
+          "anyOf": [
+            {
+              "type": "number",
+              "const": 1
+            },
+            {
+              "type": "number",
+              "const": 2
+            },
+            {
+              "type": "number",
+              "const": 4
+            },
+            {
+              "type": "number",
+              "const": 8
+            }
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "ttl": {
-      "type": "number",
-      "nullable": true,
-      "description": "TTL in seconds for the status list JWT. Set to null to reset to global default.",
-      "minimum": 60,
-      "example": 3600
+      "description": "JWT TTL override in seconds. Set null to reset.",
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "immediateUpdate": {
-      "type": "boolean",
-      "nullable": true,
-      "description": "If true, regenerate JWT on every status change. Set to null to reset to default (false)."
+      "description": "Immediate regeneration toggle. Set null to reset.",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "enableAggregation": {
-      "type": "boolean",
-      "nullable": true,
-      "description": "If true, include aggregation_uri in status list JWTs for pre-fetching support. Set to null to reset to default (true)."
+      "description": "Aggregation URI toggle. Set null to reset.",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./UpdateStatusListConfigDto.schema.json",
+  "title": "UpdateStatusListConfigDto"
 }

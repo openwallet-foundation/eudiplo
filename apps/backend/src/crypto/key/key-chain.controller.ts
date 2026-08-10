@@ -3,6 +3,7 @@ import {
     Controller,
     Delete,
     Get,
+    HttpCode,
     Param,
     Post,
     Put,
@@ -20,13 +21,15 @@ import { Secured } from "../../auth/secure.decorator";
 import { Token, TokenPayload } from "../../auth/token.decorator";
 import { KeyChainCreateDto } from "./dto/key-chain-create.dto";
 import { KeyChainExportDto } from "./dto/key-chain-export.dto";
+import { KeyChainIdResponseDto } from "./dto/key-chain-id-response.dto";
 import { KeyChainImportDto } from "./dto/key-chain-import.dto";
 import { KeyChainResponseDto } from "./dto/key-chain-response.dto";
 import { KeyChainUpdateDto } from "./dto/key-chain-update.dto";
+import { ProviderHealthResponseDto } from "./dto/provider-health-response.dto";
 import { KmsProvidersResponseDto } from "./dto/kms-providers-response.dto";
-import { KmsConfigDto, type KmsConfig } from "./dto/kms-config.dto";
+import { KmsConfigDto } from "./dto/kms-config.dto";
 import { KmsTenantConfigResponseDto } from "./dto/kms-tenant-config-response.dto";
-import { KeyUsageType } from "./entities/key-chain.entity";
+import { KeyUsageType } from "./types/key-usage-type";
 import { KeyChainService } from "./key-chain.service";
 import { KmsTenantConfigService } from "./kms/kms-tenant-config.service";
 
@@ -70,8 +73,11 @@ export class KeyChainController {
         status: 200,
         description:
             "Per-provider health result (ok, latencyMs, optional error).",
+        type: [ProviderHealthResponseDto],
     })
-    getProvidersHealth(@Token() token: TokenPayload) {
+    getProvidersHealth(
+        @Token() token: TokenPayload,
+    ): Promise<ProviderHealthResponseDto[]> {
         return this.keyChainService.getProviderHealth(token.entity!.id);
     }
 
@@ -109,7 +115,7 @@ export class KeyChainController {
     })
     updateTenantKmsConfig(
         @Token() token: TokenPayload,
-        @Body() body: KmsConfig,
+        @Body() body: KmsConfigDto,
     ): KmsTenantConfigResponseDto {
         const tenantId = token.entity!.id;
         const effectiveConfig = this.kmsTenantConfigService.saveTenantConfig(
@@ -130,9 +136,10 @@ export class KeyChainController {
             "Removes <CONFIG_FOLDER>/<tenantId>/kms.json and falls back to global KMS config.",
     })
     @ApiResponse({
-        status: 200,
+        status: 204,
         description: "Tenant-specific KMS config removed.",
     })
+    @HttpCode(204)
     deleteTenantKmsConfig(@Token() token: TokenPayload): void {
         this.kmsTenantConfigService.deleteTenantConfig(token.entity!.id);
     }
@@ -210,11 +217,12 @@ export class KeyChainController {
     @ApiResponse({
         status: 201,
         description: "Key chain created successfully",
+        type: KeyChainIdResponseDto,
     })
     async create(
         @Token() token: TokenPayload,
         @Body() body: KeyChainCreateDto,
-    ): Promise<{ id: string }> {
+    ): Promise<KeyChainIdResponseDto> {
         const id = await this.keyChainService.create(token.entity!.id, body);
         return { id };
     }
@@ -227,11 +235,12 @@ export class KeyChainController {
     @ApiResponse({
         status: 201,
         description: "Key chain imported successfully",
+        type: KeyChainIdResponseDto,
     })
     async import(
         @Token() token: TokenPayload,
         @Body() body: KeyChainImportDto,
-    ): Promise<{ id: string }> {
+    ): Promise<KeyChainIdResponseDto> {
         const id = await this.keyChainService.importKeyChain(
             token.entity!.id,
             body,
@@ -244,8 +253,9 @@ export class KeyChainController {
      */
     @Put(":id")
     @ApiOperation({ summary: "Update key chain metadata and rotation policy" })
-    @ApiResponse({ status: 200, description: "Key chain updated successfully" })
+    @ApiResponse({ status: 204, description: "Key chain updated successfully" })
     @ApiResponse({ status: 404, description: "Key chain not found" })
+    @HttpCode(204)
     async update(
         @Token() token: TokenPayload,
         @Param("id") id: string,
@@ -259,8 +269,9 @@ export class KeyChainController {
      */
     @Delete(":id")
     @ApiOperation({ summary: "Delete a key chain" })
-    @ApiResponse({ status: 200, description: "Key chain deleted successfully" })
+    @ApiResponse({ status: 204, description: "Key chain deleted successfully" })
     @ApiResponse({ status: 404, description: "Key chain not found" })
+    @HttpCode(204)
     async delete(
         @Token() token: TokenPayload,
         @Param("id") id: string,
@@ -273,8 +284,9 @@ export class KeyChainController {
      */
     @Post(":id/rotate")
     @ApiOperation({ summary: "Rotate the signing key in a key chain" })
-    @ApiResponse({ status: 200, description: "Key chain rotated successfully" })
+    @ApiResponse({ status: 204, description: "Key chain rotated successfully" })
     @ApiResponse({ status: 404, description: "Key chain not found" })
+    @HttpCode(204)
     async rotate(
         @Token() token: TokenPayload,
         @Param("id") id: string,

@@ -1,8 +1,6 @@
-import { OmitType } from "@nestjs/swagger";
-import { TENANT_RELATION_FIELDS } from "../../../../shared/utils/dto-omit-fields";
-import { AttributeProviderEntity } from "../entities/attribute-provider.entity";
+import { createZodDto } from "nestjs-zod";
+import { CreateAttributeProviderSchema } from "../schemas/attribute-provider.schema";
 
-export class CreateAttributeProviderDto extends OmitType(
-    AttributeProviderEntity,
-    TENANT_RELATION_FIELDS,
+export class CreateAttributeProviderDto extends createZodDto(
+    CreateAttributeProviderSchema,
 ) {}

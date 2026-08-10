@@ -1,11 +1,12 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { BitsPerStatus } from "@owf/token-status-list";
-import { IsIn, IsInt, IsOptional, IsString, Min } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { CreateStatusListSchema } from "./status-list.schema";
 
 /**
  * DTO for creating a new status list.
  */
-export class CreateStatusListDto {
+export class CreateStatusListDto extends createZodDto(CreateStatusListSchema) {
     /**
      * Optional credential configuration ID to bind this list exclusively to.
      * If not provided, the list will be shared and available for any credential configuration.
@@ -15,8 +16,6 @@ export class CreateStatusListDto {
             "Credential configuration ID to bind this list exclusively to. Leave empty for a shared list.",
         example: "org.iso.18013.5.1.mDL",
     })
-    @IsOptional()
-    @IsString()
     credentialConfigurationId?: string;
 
     /**
@@ -28,8 +27,6 @@ export class CreateStatusListDto {
             "Key chain ID to use for signing. Leave empty to use the tenant's default StatusList key chain.",
         example: "my-status-list-keychain",
     })
-    @IsOptional()
-    @IsString()
     keyChainId?: string;
 
     /**
@@ -42,8 +39,6 @@ export class CreateStatusListDto {
         enum: [1, 2, 4, 8],
         example: 1,
     })
-    @IsOptional()
-    @IsIn([1, 2, 4, 8])
     bits?: BitsPerStatus;
 
     /**
@@ -55,8 +50,5 @@ export class CreateStatusListDto {
             "Maximum number of credential status entries. Defaults to tenant configuration.",
         example: 100000,
     })
-    @IsOptional()
-    @IsInt()
-    @Min(1000)
     capacity?: number;
 }

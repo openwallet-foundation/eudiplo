@@ -1,24 +1,24 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./SessionStorageConfig.schema.json",
-  "title": "SessionStorageConfig",
   "type": "object",
   "properties": {
     "ttlSeconds": {
-      "type": "number",
-      "description": "Time-to-live for sessions in seconds. If not set, uses global SESSION_TTL.",
-      "example": 86400,
-      "minimum": 60
+      "description": "Session time-to-live in seconds.",
+      "type": "integer",
+      "minimum": 60,
+      "maximum": 9007199254740991
     },
     "cleanupMode": {
+      "description": "Whether to fully delete or anonymize expired sessions.",
       "type": "string",
-      "description": "Cleanup mode: 'full' deletes everything, 'anonymize' keeps metadata but removes PII.",
       "enum": [
         "full",
         "anonymize"
-      ],
-      "default": "full"
+      ]
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "description": "Tenant session storage configuration.",
+  "$id": "./SessionStorageConfig.schema.json",
+  "title": "SessionStorageConfig"
 }

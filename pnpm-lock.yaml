@@ -9,15 +9,9 @@ importers:
 
   .:
     devDependencies:
-      '@apidevtools/json-schema-ref-parser':
-        specifier: ^15.5.1
-        version: 15.5.1(@types/json-schema@7.0.15)
       '@codedependant/semantic-release-docker':
         specifier: ^7.0.0
         version: 7.0.0(supports-color@10.2.2)
-      '@openapi-contrib/openapi-schema-to-json-schema':
-        specifier: ^5.1.0
-        version: 5.1.0
       '@semantic-release/changelog':
         specifier: ^7.0.0
         version: 7.0.0(semantic-release@25.0.9(supports-color@10.2.2)(typescript@5.9.3))
@@ -54,12 +48,12 @@ importers:
       markdownlint-cli:
         specifier: ^0.49.1
         version: 0.49.1(supports-color@10.2.2)
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
       semantic-release:
         specifier: ^25.0.9
         version: 25.0.9(supports-color@10.2.2)(typescript@5.9.3)
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.15.47)(@types/node@26.2.0)(typescript@5.9.3)
       tsx:
         specifier: ^4.23.11
         version: 4.23.11
@@ -69,6 +63,9 @@ importers:
       unzipper:
         specifier: ^0.12.5
         version: 0.12.5
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
 
   apps/backend:
     dependencies:
@@ -225,12 +222,6 @@ importers:
       better-sqlite3:
         specifier: ^13.0.3
         version: 13.0.3
-      class-transformer:
-        specifier: ^0.5.1
-        version: 0.5.1
-      class-validator:
-        specifier: ^0.15.1
-        version: 0.15.1
       joi:
         specifier: ^18.2.3
         version: 18.2.3
@@ -845,12 +836,6 @@ packages:
       '@angular/core': 22.1.1
       '@angular/platform-browser': 22.1.1
       rxjs: ^6.5.3 || ^7.4.0
-
-  '@apidevtools/json-schema-ref-parser@15.5.1':
-    resolution: {integrity: sha512-69KDKWQvk5jfDQfSTzAUHkI731X7CaJLwQxlS87AXyFHoJzsd/Pufrqsz7PqXMgrtAA99D9Y6NujkEkzli6kVA==}
-    engines: {node: '>=20'}
-    peerDependencies:
-      '@types/json-schema': ^7.0.15
 
   '@arr/every@1.0.1':
     resolution: {integrity: sha512-UQFQ6SgyJ6LX42W8rHCs8KVc0JS0tzVL9ct4XYedJukskYVWTo49tNiMEK9C2HTyarbNiT/RVIRSY82vH+6sTg==}
@@ -1826,10 +1811,6 @@ packages:
   '@eslint/plugin-kit@0.7.2':
     resolution: {integrity: sha512-+CNAzxglkrpNf/kKywqQfk74QjtceuOE7Qm+AF8miRvPF/wmmK5+OJOgVh3AVTT3RP2mH3+FOaxlE5v72owk0A==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
-
-  '@fastify/busboy@2.1.1':
-    resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
-    engines: {node: '>=14'}
 
   '@fontsource/roboto@5.3.0':
     resolution: {integrity: sha512-BapRJOWYP+LZ21zp+wBQjfpPYKRoxc4LspJ/RLuI+HSMBD5u/X4O+ESDrSvEqDSy0rAl7GwBJ+09mdc16cVQ1Q==}
@@ -2925,11 +2906,6 @@ packages:
 
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
-
-  '@openapi-contrib/openapi-schema-to-json-schema@5.1.0':
-    resolution: {integrity: sha512-MJnq+CxD8JAufiJoa8RK6D/8P45MEBe0teUi30TNoHRrI6MZRNgetK2Y2IfDXWGLTHMopb1d9GHonqlV2Yvztg==}
-    engines: {node: '>=14.0.0'}
-    hasBin: true
 
   '@openid4vc/oauth2@0.5.4':
     resolution: {integrity: sha512-wEK7fDk/n+c0d2AbCTBIR8Tstf/+Yr4ckmOa0nlTv0V9cOd1WMiR3+OY5vXG9FVsV275q1DgLZr20EPqlWhtVg==}
@@ -4644,9 +4620,6 @@ packages:
   '@types/katex@0.16.8':
     resolution: {integrity: sha512-trgaNyfU+Xh2Tc+ABIb44a5AYUpicB3uwirOioeOkNPPbmgRNtcWyDeeFRzjPZENO9Vq8gvVqfhaaXWLlevVwg==}
 
-  '@types/lodash@4.17.25':
-    resolution: {integrity: sha512-+K1NIO8I+F9/wNulfVvu23QYd0Pe9/OCqRrim4NoYIf1VoEDL90Ve4ClzpyqBLc7NpGGWRvYNCKZ1BE/Jpf8dQ==}
-
   '@types/luxon@3.7.4':
     resolution: {integrity: sha512-V536ZAd6ZJztrrBlLcDFaaZrXNAL2E5uGmssWf/dpSiLkmkLScXUYhUBnWPmtW+cIqnNHzf6//TCMpIc9SCRRQ==}
 
@@ -4667,9 +4640,6 @@ packages:
 
   '@types/node@18.19.130':
     resolution: {integrity: sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg==}
-
-  '@types/node@20.19.43':
-    resolution: {integrity: sha512-6oYBAi5ikg4Pl+kGsoYtawUMBT2zZMCvPNF7pVLnHZfd1zf38DRiWn/gT01RYCdUqkv7Fhr+C9ot4/tb+2sVvA==}
 
   '@types/node@26.2.0':
     resolution: {integrity: sha512-5IviulTZeRNp2vAJ514cc/HUlY5nZ9fCbq9DMyC52BrhFZACo3nI0R7qBxhQmo/d27NFe96ur/b7Wwxklda+kg==}
@@ -6661,12 +6631,6 @@ packages:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
     deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
-  globalyzer@0.1.0:
-    resolution: {integrity: sha512-40oNTM9UfG6aBmuKxk/giHn5nQ8RVz/SS4Ir6zgzOv9/qC3kKZ9v4etGTcJbEl/NyVQH7FGU7d+X1egr57Md2Q==}
-
-  globrex@0.1.2:
-    resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
-
   google-logging-utils@1.1.3:
     resolution: {integrity: sha512-eAmLkjDjAFCVXg7A1unxHsLf961m6y17QFqXqAXGj/gVkKFrEICfStRfwUlGNfeCEjNRa32JEWOUTlYXPyyKvA==}
     engines: {node: '>=14'}
@@ -7612,11 +7576,6 @@ packages:
     engines: {node: '>=4.0.0'}
     hasBin: true
 
-  mime@3.0.0:
-    resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==}
-    engines: {node: '>=10.0.0'}
-    hasBin: true
-
   mime@4.1.0:
     resolution: {integrity: sha512-X5ju04+cAzsojXKes0B/S4tcYtFAJ6tTMuSPBEn9CPGlrWr8Fiw7qYeLT0XyH80HSoAoqWCaz+MWKh22P7G1cw==}
     engines: {node: '>=16'}
@@ -8020,11 +7979,6 @@ packages:
   open@11.0.0:
     resolution: {integrity: sha512-smsWv2LzFjP03xmvFoJ331ss6h+jixfA4UUV/Bsiyuu4YJPfN+FIQGOIiv4w9/+MoHkfkJ22UIaQWRVFRfH6Vw==}
     engines: {node: '>=20'}
-
-  openapi-typescript@5.4.2:
-    resolution: {integrity: sha512-tHeRv39Yh7brqJpbUntdjtUaXrTHmC4saoyTLU/0J2I8LEFQYDXRLgnmWTMiMOB2GXugJiqHa5n9sAyd6BRqiA==}
-    engines: {node: '>= 14.0.0'}
-    hasBin: true
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -8432,11 +8386,6 @@ packages:
   prettier-linter-helpers@1.0.1:
     resolution: {integrity: sha512-SxToR7P8Y2lWmv/kTzVLC1t/GDI2WGjMwNhLLE9qtH8Q13C+aEmuRlzDst4Up4s0Wc8sF2M+J57iB3cMLqftfg==}
     engines: {node: '>=6.0.0'}
-
-  prettier@2.8.8:
-    resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
-    engines: {node: '>=10.13.0'}
-    hasBin: true
 
   prettier@3.9.6:
     resolution: {integrity: sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==}
@@ -9210,9 +9159,6 @@ packages:
     resolution: {integrity: sha512-75voc/9G4rDIJleOo4jPvN4/YC4GRZrY8yy1uU4lwrB3XEQbWve8zXoO5No4eFrGcTAMYyoY67p8jRQdtA1HbA==}
     engines: {node: '>=12'}
 
-  tiny-glob@0.2.9:
-    resolution: {integrity: sha512-g/55ssRPUjShh+xkfx9UPDXqhckHEsHr4Vd9zX55oSdGZc/MD0m3sferOkwWtp98bv+kcVfEHtRJgBVJzelrzg==}
-
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
 
@@ -9497,15 +9443,8 @@ packages:
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
-  undici-types@6.21.0:
-    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
-
   undici-types@8.3.0:
     resolution: {integrity: sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ==}
-
-  undici@5.29.0:
-    resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
-    engines: {node: '>=14.0'}
 
   undici@6.28.0:
     resolution: {integrity: sha512-LIY910g9TI13YS95lrMFrs8Rm/u/irgHeTWoKCoteeJ04CUJ92eEfj0rVn+7VKMPBpUPiUoBKfhNyLI23EE/KA==}
@@ -10328,12 +10267,6 @@ snapshots:
       '@angular/platform-browser': 22.1.1(@angular/common@22.1.1(@angular/core@22.1.1(@angular/compiler@22.1.1)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.1.1(@angular/compiler@22.1.1)(rxjs@7.8.2)(zone.js@0.16.2))
       rxjs: 7.8.2
       tslib: 2.8.1
-
-  '@apidevtools/json-schema-ref-parser@15.5.1(@types/json-schema@7.0.15)':
-    dependencies:
-      '@types/json-schema': 7.0.15
-      js-yaml: 5.2.3
-      undici: 6.28.0
 
   '@arr/every@1.0.1': {}
 
@@ -11302,8 +11235,6 @@ snapshots:
     dependencies:
       '@eslint/core': 1.2.1
       levn: 0.4.1
-
-  '@fastify/busboy@2.1.1': {}
 
   '@fontsource/roboto@5.3.0': {}
 
@@ -12336,16 +12267,6 @@ snapshots:
       outvariant: 1.4.3
 
   '@open-draft/until@2.1.0': {}
-
-  '@openapi-contrib/openapi-schema-to-json-schema@5.1.0':
-    dependencies:
-      '@types/json-schema': 7.0.15
-      '@types/lodash': 4.17.25
-      '@types/node': 20.19.43
-      fast-deep-equal: 3.1.3
-      lodash: 4.18.1
-      openapi-typescript: 5.4.2
-      yargs: 17.7.3
 
   '@openid4vc/oauth2@0.5.4':
     dependencies:
@@ -14121,8 +14042,6 @@ snapshots:
 
   '@types/katex@0.16.8': {}
 
-  '@types/lodash@4.17.25': {}
-
   '@types/luxon@3.7.4': {}
 
   '@types/memcached@2.2.10':
@@ -14144,10 +14063,6 @@ snapshots:
   '@types/node@18.19.130':
     dependencies:
       undici-types: 5.26.5
-
-  '@types/node@20.19.43':
-    dependencies:
-      undici-types: 6.21.0
 
   '@types/node@26.2.0':
     dependencies:
@@ -14244,7 +14159,8 @@ snapshots:
     dependencies:
       '@types/node': 26.2.0
 
-  '@types/validator@13.15.10': {}
+  '@types/validator@13.15.10':
+    optional: true
 
   '@types/ws@8.18.1':
     dependencies:
@@ -15234,13 +15150,15 @@ snapshots:
 
   cjs-module-lexer@2.2.0: {}
 
-  class-transformer@0.5.1: {}
+  class-transformer@0.5.1:
+    optional: true
 
   class-validator@0.15.1:
     dependencies:
       '@types/validator': 13.15.10
       libphonenumber-js: 1.13.10
       validator: 13.15.35
+    optional: true
 
   clean-stack@2.2.0: {}
 
@@ -16436,10 +16354,6 @@ snapshots:
       once: 1.4.0
       path-is-absolute: 1.0.1
 
-  globalyzer@0.1.0: {}
-
-  globrex@0.1.2: {}
-
   google-logging-utils@1.1.3: {}
 
   gopd@1.2.0: {}
@@ -16977,7 +16891,8 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  libphonenumber-js@1.13.10: {}
+  libphonenumber-js@1.13.10:
+    optional: true
 
   lightningcss-android-arm64@1.33.0:
     optional: true
@@ -17477,8 +17392,6 @@ snapshots:
 
   mime@2.6.0: {}
 
-  mime@3.0.0: {}
-
   mime@4.1.0: {}
 
   mimic-fn@2.1.0: {}
@@ -17802,15 +17715,6 @@ snapshots:
       is-inside-container: 1.0.0
       powershell-utils: 0.1.0
       wsl-utils: 0.3.1
-
-  openapi-typescript@5.4.2:
-    dependencies:
-      js-yaml: 4.3.1
-      mime: 3.0.0
-      prettier: 2.8.8
-      tiny-glob: 0.2.9
-      undici: 5.29.0
-      yargs-parser: 21.1.1
 
   optionator@0.9.4:
     dependencies:
@@ -18273,8 +18177,6 @@ snapshots:
   prettier-linter-helpers@1.0.1:
     dependencies:
       fast-diff: 1.3.0
-
-  prettier@2.8.8: {}
 
   prettier@3.9.6: {}
 
@@ -19249,11 +19151,6 @@ snapshots:
     dependencies:
       convert-hrtime: 5.0.0
 
-  tiny-glob@0.2.9:
-    dependencies:
-      globalyzer: 0.1.0
-      globrex: 0.1.2
-
   tinybench@2.9.0: {}
 
   tinyduration@3.4.1: {}
@@ -19506,13 +19403,7 @@ snapshots:
 
   undici-types@5.26.5: {}
 
-  undici-types@6.21.0: {}
-
   undici-types@8.3.0: {}
-
-  undici@5.29.0:
-    dependencies:
-      '@fastify/busboy': 2.1.1
 
   undici@6.28.0: {}
 
@@ -19597,7 +19488,8 @@ snapshots:
 
   validate-npm-package-name@8.0.0: {}
 
-  validator@13.15.35: {}
+  validator@13.15.35:
+    optional: true
 
   vary@1.1.2: {}
 

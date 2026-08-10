@@ -1,4 +1,3 @@
-import { IsObject, IsOptional, IsString } from "class-validator";
 import {
     Column,
     CreateDateColumn,
@@ -19,12 +18,9 @@ export class TrustList {
     /**
      * Unique identifier for the trust list
      * */
-    @IsString()
     @Column("varchar", { primary: true })
     id!: string;
 
-    @IsString()
-    @IsOptional()
     @Column("varchar", { nullable: true })
     description?: string;
 
@@ -57,8 +53,6 @@ export class TrustList {
      * The full trust list JSON (generated LoTE structure)
      */
     @Column({ type: "json", nullable: true })
-    @IsObject()
-    @IsOptional()
     data?: object;
 
     /**
@@ -66,7 +60,6 @@ export class TrustList {
      * Stored for round-tripping when editing.
      */
     @Column({ type: "json", nullable: true })
-    @IsOptional()
     entityConfig?: TrustListEntity[];
 
     /**

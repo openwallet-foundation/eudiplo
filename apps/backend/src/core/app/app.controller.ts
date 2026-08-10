@@ -8,6 +8,7 @@ import {
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../auth/auth.guard";
 import { FrontendConfigResponseDto } from "./dto/frontend-config-response.dto";
+import { VersionResponseDto } from "./dto/version-response.dto";
 
 /**
  * Main application controller
@@ -36,8 +37,12 @@ export class AppController {
     @UseGuards(JwtAuthGuard)
     @ApiSecurity("oauth2")
     @ApiOperation({ summary: "Get service version" })
-    @ApiResponse({ status: 200, description: "Service version info" })
-    getVersion() {
+    @ApiResponse({
+        status: 200,
+        description: "Service version info",
+        type: VersionResponseDto,
+    })
+    getVersion(): VersionResponseDto {
         return {
             version: process.env.VERSION ?? "main",
         };

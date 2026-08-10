@@ -1,79 +1,79 @@
-import { Type } from "class-transformer";
-import {
-    IsArray,
-    IsObject,
-    IsOptional,
-    IsString,
-    ValidateIf,
-    ValidateNested,
-} from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
-export class RegistrationCertificatePurpose {
-    @IsString()
+const RegistrationCertificatePurposeSchema = z
+    .object({
+        lang: z.string(),
+        content: z.string(),
+    })
+    .strict();
+
+const RegistrationCertificateBodySchema = z
+    .object({
+        privacy_policy: z.string().optional(),
+        support_uri: z.string().optional(),
+        intermediary: z.string().optional(),
+        purpose: z.array(RegistrationCertificatePurposeSchema).optional(),
+        credentials: z.array(z.record(z.string(), z.unknown())).optional(),
+        provided_attestations: z
+            .array(z.record(z.string(), z.unknown()))
+            .optional(),
+    })
+    .strict();
+
+export const RegistrationCertificateRequestSchema = z
+    .object({
+        id: z.string().optional(),
+        body: RegistrationCertificateBodySchema.optional(),
+        jwt: z.string().optional(),
+    })
+    .strict();
+
+export class RegistrationCertificatePurpose extends createZodDto(
+    RegistrationCertificatePurposeSchema,
+) {
     lang!: string;
 
-    @IsString()
     content!: string;
 }
 
-export class RegistrationCertificateBody {
-    @IsOptional()
-    @IsString()
+export class RegistrationCertificateBody extends createZodDto(
+    RegistrationCertificateBodySchema,
+) {
     privacy_policy?: string;
 
-    @IsOptional()
-    @IsString()
     support_uri?: string;
 
-    @IsOptional()
-    @IsString()
     intermediary?: string;
 
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => RegistrationCertificatePurpose)
     purpose?: RegistrationCertificatePurpose[];
 
-    @IsOptional()
-    @IsArray()
-    @IsObject({ each: true })
     credentials?: Record<string, unknown>[];
 
-    @IsOptional()
-    @IsArray()
-    @IsObject({ each: true })
     provided_attestations?: Record<string, unknown>[];
 }
 
 /**
  * RegistrationCertificateRequest DTO
  */
-export class RegistrationCertificateRequest {
+export class RegistrationCertificateRequest extends createZodDto(
+    RegistrationCertificateRequestSchema,
+) {
     /**
      * Optional registrar-side certificate identifier.
      * If provided and still valid, EUDIPLO reuses it instead of creating a new certificate.
      */
-    @IsOptional()
-    @IsString()
     id?: string;
 
     /**
      * Registration certificate creation payload.
      * This is merged with tenant-level registrar defaults when a certificate is created.
      */
-    @ValidateIf((o) => !o.jwt)
-    @IsObject()
-    @ValidateNested()
-    @Type(() => RegistrationCertificateBody)
     body?: RegistrationCertificateBody;
 
     /**
      * Optional pre-existing registration certificate JWT.
      * If provided, EUDIPLO forwards it as-is and does not create a new one.
      */
-    @ValidateIf((o) => !o.body)
-    @IsOptional()
-    @IsString()
     jwt?: string;
 }

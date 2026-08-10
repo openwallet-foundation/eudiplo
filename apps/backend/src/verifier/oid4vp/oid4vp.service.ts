@@ -2,8 +2,6 @@ import { randomUUID } from "node:crypto";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
-import { plainToInstance } from "class-transformer";
-import { validateOrReject } from "class-validator";
 import { base64url } from "jose";
 import { Span, TraceService } from "nestjs-otel";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
@@ -12,7 +10,7 @@ import { v4 } from "uuid";
 import { EncryptionService } from "../../crypto/encryption/encryption.service";
 import { CertService } from "../../crypto/key/cert/cert.service";
 import { CryptoImplementationService } from "../../crypto/key/crypto-implementation/crypto-implementation.service";
-import { KeyUsageType } from "../../crypto/key/entities/key-chain.entity";
+import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
 import { KeyChainService } from "../../crypto/key/key-chain.service";
 import { CredentialFormat } from "../../issuer/configuration/credentials/entities/credential.entity";
 import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
@@ -24,7 +22,10 @@ import { DEFAULT_VERIFIER_SKEW_SECONDS } from "../../shared/trust/types";
 import { AuditLogContext } from "../../shared/utils/logger/audit-log.service";
 import { SessionLoggerService } from "../../shared/utils/logger/session-logger.service";
 import { WebhookService } from "../../shared/utils/webhook/webhook.service";
-import { AuthResponse } from "../presentations/dto/auth-response.dto";
+import {
+    AuthResponse,
+    AuthResponseSchema,
+} from "../presentations/dto/auth-response.dto";
 import { IncompletePresentationException } from "../presentations/exceptions/incomplete-presentation.exception";
 import { PresentationsService } from "../presentations/presentations.service";
 import { applyTrustedAuthoritiesPolicy } from "./dcql-trusted-authorities.util";
@@ -607,19 +608,19 @@ export class Oid4vpService {
                     | undefined,
             );
 
-        // Validate decrypted response against AuthResponse class
-        const res = plainToInstance(AuthResponse, decrypted);
+        // Validate decrypted response against the Zod schema
+        const parsed = AuthResponseSchema.safeParse(decrypted);
+        if (!parsed.success) {
+            throw new BadRequestException(
+                `Invalid authorization response: ${JSON.stringify(parsed.error.issues)}`,
+            );
+        }
+
+        const res: AuthResponse = parsed.data;
         this.logger.trace(
             { decryptedResponse: decrypted },
             "[TRACE] Decrypted OID4VP authorization response",
         );
-        try {
-            await validateOrReject(res);
-        } catch (errors) {
-            throw new BadRequestException(
-                `Invalid authorization response: ${JSON.stringify(errors)}`,
-            );
-        }
 
         //for dc api the state is no longer included in the res, see: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-request
 

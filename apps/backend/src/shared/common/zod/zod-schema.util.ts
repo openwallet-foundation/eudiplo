@@ -1,4 +1,8 @@
 import { BadRequestException } from "@nestjs/common";
+import {
+    createZodValidationPipe,
+    type ZodValidationException,
+} from "nestjs-zod";
 import { z } from "zod";
 
 export interface ValidationIssue {
@@ -12,6 +16,8 @@ type ZodIssueLike = {
     message: string;
     code: string;
 };
+
+const ENV_PLACEHOLDER_REGEX = /^\$\{([A-Z0-9_]+)\}$/;
 
 function normalizeIssuePath(
     path: ReadonlyArray<PropertyKey>,
@@ -29,15 +35,46 @@ export function withMeta<T extends z.ZodTypeAny>(
     return schema.meta(metadata);
 }
 
+function envPlaceholderSchema() {
+    return z.string().regex(ENV_PLACEHOLDER_REGEX);
+}
+
+function nonEmptyStringSchema() {
+    return z.string().trim().min(1);
+}
+
+function stringOrEnvPlaceholderSchema() {
+    return z.union([nonEmptyStringSchema(), envPlaceholderSchema()]);
+}
+
+function optionalStringOrEnvPlaceholderSchema() {
+    return stringOrEnvPlaceholderSchema().optional();
+}
+
+function urlSchema() {
+    return z.string().trim().url();
+}
+
+function urlOrEnvPlaceholderSchema() {
+    return z.union([urlSchema(), envPlaceholderSchema()]);
+}
+
 export function textField(description: string, example?: string) {
-    return withMeta(z.string(), {
+    return withMeta(stringOrEnvPlaceholderSchema(), {
         description,
         ...(example ? { examples: [example] } : {}),
     });
 }
 
 export function optionalTextField(description: string, example?: string) {
-    return withMeta(z.string().optional(), {
+    return withMeta(optionalStringOrEnvPlaceholderSchema(), {
+        description,
+        ...(example ? { examples: [example] } : {}),
+    });
+}
+
+export function urlField(description: string, example?: string) {
+    return withMeta(urlOrEnvPlaceholderSchema(), {
         description,
         ...(example ? { examples: [example] } : {}),
     });
@@ -60,7 +97,7 @@ export function toValidationIssues(
     }));
 }
 
-export function buildValidationBody(
+function buildValidationBody(
     issues: ValidationIssue[],
     message = "Validation failed",
 ) {
@@ -77,6 +114,84 @@ export function createValidationException(
     message?: string,
 ) {
     return new BadRequestException(buildValidationBody(issues, message));
+}
+
+function zodErrorToValidationIssues(error: unknown): ValidationIssue[] {
+    const zodError =
+        (error as ZodValidationException | undefined)?.getZodError?.() ?? error;
+
+    if (Array.isArray(zodError)) {
+        return zodError.map((issue: any) => ({
+            path: issue.path ?? [],
+            message: issue.message ?? "Invalid value",
+            code: issue.code ?? "custom",
+        }));
+    }
+
+    const issues = (
+        zodError as
+            | {
+                  issues?: Array<{
+                      path: Array<string | number>;
+                      message: string;
+                      code: string;
+                  }>;
+              }
+            | undefined
+    )?.issues;
+    if (!Array.isArray(issues)) {
+        return [];
+    }
+
+    return issues.map((issue) => ({
+        path: issue.path,
+        message: issue.message,
+        code: issue.code,
+    }));
+}
+
+export function createAppValidationPipe() {
+    const ZodValidationPipeClass = createZodValidationPipe({
+        createValidationException: (error) =>
+            createValidationException(zodErrorToValidationIssues(error)),
+    });
+
+    return new ZodValidationPipeClass();
+}
+
+export function findMissingEnvPlaceholderIssues(
+    value: unknown,
+    path: Array<string | number> = [],
+): ValidationIssue[] {
+    if (typeof value === "string") {
+        const issues: ValidationIssue[] = [];
+        for (const match of value.matchAll(/\$\{([A-Z0-9_]+)\}/g)) {
+            const variableName = match[1];
+            const variableValue = process.env[variableName];
+            if (variableValue === undefined || variableValue === "") {
+                issues.push({
+                    path,
+                    message: `Missing environment variable '${variableName}'`,
+                    code: "missing_environment_variable",
+                });
+            }
+        }
+        return issues;
+    }
+
+    if (Array.isArray(value)) {
+        return value.flatMap((item, index) =>
+            findMissingEnvPlaceholderIssues(item, [...path, index]),
+        );
+    }
+
+    if (value && typeof value === "object") {
+        return Object.entries(value).flatMap(([key, item]) =>
+            findMissingEnvPlaceholderIssues(item, [...path, key]),
+        );
+    }
+
+    return [];
 }
 
 export function resolveEnvPlaceholders<T>(value: T): T {

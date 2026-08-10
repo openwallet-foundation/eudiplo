@@ -128,6 +128,12 @@ export class ChainedAsController {
     @ApiResponse({
         status: 302,
         description: "Redirect to upstream OIDC provider",
+        headers: {
+            Location: {
+                description: "Redirect target",
+                schema: { type: "string" },
+            },
+        },
     })
     @ApiResponse({
         status: 400,
@@ -162,6 +168,12 @@ export class ChainedAsController {
     @ApiResponse({
         status: 302,
         description: "Redirect to wallet with authorization code",
+        headers: {
+            Location: {
+                description: "Redirect target",
+                schema: { type: "string" },
+            },
+        },
     })
     @ApiResponse({
         status: 400,

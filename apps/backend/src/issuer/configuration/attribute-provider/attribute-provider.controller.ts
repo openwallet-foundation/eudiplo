@@ -7,6 +7,7 @@ import {
     Patch,
     Post,
     Req,
+    HttpCode,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Request } from "express";
@@ -16,6 +17,7 @@ import { Token, TokenPayload } from "../../../auth/token.decorator";
 import { AttributeProviderService } from "./attribute-provider.service";
 import { CreateAttributeProviderDto } from "./dto/create-attribute-provider.dto";
 import { UpdateAttributeProviderDto } from "./dto/update-attribute-provider.dto";
+import { AttributeProviderEntity } from "./entities/attribute-provider.entity";
 
 @ApiTags("Issuer")
 @Secured([Role.Issuances])
@@ -25,14 +27,22 @@ export class AttributeProviderController {
 
     @Get()
     @ApiOperation({ summary: "List all attribute providers" })
-    @ApiResponse({ status: 200, description: "List of attribute providers" })
+    @ApiResponse({
+        status: 200,
+        description: "List of attribute providers",
+        type: [AttributeProviderEntity],
+    })
     getAll(@Token() user: TokenPayload) {
         return this.service.getAll(user.entity!.id);
     }
 
     @Get(":id")
     @ApiOperation({ summary: "Get an attribute provider by ID" })
-    @ApiResponse({ status: 200, description: "The attribute provider" })
+    @ApiResponse({
+        status: 200,
+        description: "The attribute provider",
+        type: AttributeProviderEntity,
+    })
     @ApiResponse({ status: 404, description: "Attribute provider not found" })
     getById(@Param("id") id: string, @Token() user: TokenPayload) {
         return this.service.getById(user.entity!.id, id);
@@ -40,7 +50,11 @@ export class AttributeProviderController {
 
     @Post()
     @ApiOperation({ summary: "Create a new attribute provider" })
-    @ApiResponse({ status: 201, description: "Attribute provider created" })
+    @ApiResponse({
+        status: 201,
+        description: "Attribute provider created",
+        type: AttributeProviderEntity,
+    })
     @ApiBody({ type: CreateAttributeProviderDto })
     create(
         @Body() dto: CreateAttributeProviderDto,
@@ -52,7 +66,11 @@ export class AttributeProviderController {
 
     @Patch(":id")
     @ApiOperation({ summary: "Update an attribute provider" })
-    @ApiResponse({ status: 200, description: "Attribute provider updated" })
+    @ApiResponse({
+        status: 200,
+        description: "Attribute provider updated",
+        type: AttributeProviderEntity,
+    })
     @ApiResponse({ status: 404, description: "Attribute provider not found" })
     @ApiBody({ type: UpdateAttributeProviderDto })
     update(
@@ -66,8 +84,9 @@ export class AttributeProviderController {
 
     @Delete(":id")
     @ApiOperation({ summary: "Delete an attribute provider" })
-    @ApiResponse({ status: 200, description: "Attribute provider deleted" })
+    @ApiResponse({ status: 204, description: "Attribute provider deleted" })
     @ApiResponse({ status: 404, description: "Attribute provider not found" })
+    @HttpCode(204)
     delete(
         @Param("id") id: string,
         @Token() user: TokenPayload,

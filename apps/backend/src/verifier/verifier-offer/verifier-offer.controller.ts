@@ -11,7 +11,6 @@ import { Request, Response } from "express";
 import { Role } from "../../auth/roles/role.enum";
 import { Secured } from "../../auth/secure.decorator";
 import { Token, TokenPayload } from "../../auth/token.decorator";
-import { OfferResponse } from "../../issuer/issuance/oid4vci/dto/offer-request.dto";
 import { Iso18013Service } from "../iso18013/iso18013.service";
 import {
     PresentationRequest,
@@ -36,10 +35,10 @@ export class VerifierOfferController {
     @ApiResponse({
         description: "JSON response",
         status: 201,
-        //TODO: do not use type, otherwise the response can not deal with both JSON and PNG.
-        type: OfferResponse,
         content: {
-            "application/json": { schema: { type: "object" } },
+            "application/json": {
+                schema: { $ref: "#/components/schemas/OfferResponse" },
+            },
             "image/png": { schema: { type: "string", format: "binary" } },
         },
     })

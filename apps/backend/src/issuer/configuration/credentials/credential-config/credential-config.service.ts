@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import { AuditLogService } from "../../../../audit-log/audit-log.service";
 import { TokenPayload } from "../../../../auth/token.decorator";
 import { CertService } from "../../../../crypto/key/cert/cert.service";
-import { KeyUsageType } from "../../../../crypto/key/entities/key-chain.entity";
+import { KeyUsageType } from "../../../../crypto/key/types/key-usage-type";
 import {
     extractRequestMeta,
     getChangedFields,

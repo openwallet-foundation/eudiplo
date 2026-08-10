@@ -7,6 +7,7 @@ import {
     Patch,
     Post,
     Req,
+    HttpCode,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Request } from "express";
@@ -41,7 +42,11 @@ export class WebhookEndpointController {
 
     @Get(":id")
     @ApiOperation({ summary: "Get a webhook endpoint by ID" })
-    @ApiResponse({ status: 200, description: "The webhook endpoint" })
+    @ApiResponse({
+        status: 200,
+        description: "The webhook endpoint",
+        type: WebhookEndpointEntity,
+    })
     @ApiResponse({ status: 404, description: "Webhook endpoint not found" })
     getById(@Param("id") id: string, @Token() user: TokenPayload) {
         return this.service.getById(user.entity!.id, id);
@@ -49,7 +54,11 @@ export class WebhookEndpointController {
 
     @Post()
     @ApiOperation({ summary: "Create a new webhook endpoint" })
-    @ApiResponse({ status: 201, description: "Webhook endpoint created" })
+    @ApiResponse({
+        status: 201,
+        description: "Webhook endpoint created",
+        type: WebhookEndpointEntity,
+    })
     @ApiBody({ type: CreateWebhookEndpointDto })
     create(
         @Body() dto: CreateWebhookEndpointDto,
@@ -61,7 +70,11 @@ export class WebhookEndpointController {
 
     @Patch(":id")
     @ApiOperation({ summary: "Update a webhook endpoint" })
-    @ApiResponse({ status: 200, description: "Webhook endpoint updated" })
+    @ApiResponse({
+        status: 200,
+        description: "Webhook endpoint updated",
+        type: WebhookEndpointEntity,
+    })
     @ApiResponse({ status: 404, description: "Webhook endpoint not found" })
     @ApiBody({ type: UpdateWebhookEndpointDto })
     update(
@@ -75,8 +88,9 @@ export class WebhookEndpointController {
 
     @Delete(":id")
     @ApiOperation({ summary: "Delete a webhook endpoint" })
-    @ApiResponse({ status: 200, description: "Webhook endpoint deleted" })
+    @ApiResponse({ status: 204, description: "Webhook endpoint deleted" })
     @ApiResponse({ status: 404, description: "Webhook endpoint not found" })
+    @HttpCode(204)
     delete(
         @Param("id") id: string,
         @Token() user: TokenPayload,

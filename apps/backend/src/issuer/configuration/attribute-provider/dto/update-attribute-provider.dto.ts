@@ -1,6 +1,6 @@
-import { PartialType } from "@nestjs/swagger";
-import { CreateAttributeProviderDto } from "./create-attribute-provider.dto";
+import { createZodDto } from "nestjs-zod";
+import { UpdateAttributeProviderSchema } from "../schemas/attribute-provider.schema";
 
-export class UpdateAttributeProviderDto extends PartialType(
-    CreateAttributeProviderDto,
+export class UpdateAttributeProviderDto extends createZodDto(
+    UpdateAttributeProviderSchema,
 ) {}

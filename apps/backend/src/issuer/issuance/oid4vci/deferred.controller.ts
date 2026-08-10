@@ -107,7 +107,6 @@ export class DeferredController {
     })
     @ApiBody({
         type: FailDeferredDto,
-        required: false,
         examples: {
             example: {
                 summary: "Fail with error message",

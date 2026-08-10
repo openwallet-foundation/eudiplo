@@ -1,6 +1,4 @@
-import { ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsOptional, IsString, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 import { ClientEntity } from "../../client/entities/client.entity";
 import { SessionStorageConfig } from "./session-storage-config";
@@ -16,28 +14,28 @@ export class TenantEntity {
     /**
      * The unique identifier for the tenant.
      */
-    @IsString()
+    @ApiProperty({ description: "Unique tenant identifier" })
     @PrimaryColumn()
     id!: string;
 
     /**
      * The name of the tenant.
      */
-    @IsString()
+    @ApiProperty({ description: "Tenant display name" })
     @Column({ default: "EUDIPLO" })
     name!: string;
 
     /**
      * The description of the tenant.
      */
-    @IsString()
-    @IsOptional()
+    @ApiPropertyOptional({ description: "Tenant description" })
     @Column({ nullable: true })
     description?: string;
 
     /**
      * The current status of the tenant.
      */
+    @ApiProperty({ description: "Tenant status", example: "active" })
     @Column("varchar", { nullable: true })
     status!: TenantStatus;
 
@@ -50,9 +48,6 @@ export class TenantEntity {
             "Session storage configuration for this tenant. Controls TTL and cleanup behavior.",
         type: () => SessionStorageConfig,
     })
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => SessionStorageConfig)
     @Column("json", { nullable: true })
     sessionConfig?: SessionStorageConfig | null;
 
@@ -65,15 +60,16 @@ export class TenantEntity {
             "Status list configuration for this tenant. Only affects newly created status lists.",
         type: () => StatusListConfig,
     })
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => StatusListConfig)
     @Column("json", { nullable: true })
     statusListConfig?: StatusListConfig | null;
 
     /**
      * The clients associated with the tenant.
      */
+    @ApiPropertyOptional({
+        description: "Clients associated with the tenant",
+        type: [ClientEntity],
+    })
     @OneToMany(
         () => ClientEntity,
         (client) => client.tenant,

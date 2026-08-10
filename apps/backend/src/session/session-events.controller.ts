@@ -8,7 +8,13 @@ import {
     Sse,
     UnauthorizedException,
 } from "@nestjs/common";
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
+import {
+    ApiOperation,
+    ApiParam,
+    ApiQuery,
+    ApiResponse,
+    ApiTags,
+} from "@nestjs/swagger";
 import { Observable, startWith } from "rxjs";
 import { JwtService } from "../auth/jwt.service";
 import { SessionService } from "./session.service";
@@ -88,6 +94,19 @@ export class SessionEventsController {
         description: "JWT access token for authentication",
         required: true,
         type: String,
+    })
+    @ApiResponse({
+        status: 200,
+        description: "Server-Sent Events stream of session updates",
+        content: {
+            "text/event-stream": {
+                schema: {
+                    type: "string",
+                    example:
+                        'event: message\ndata: {"id":"session-1","status":"active","updatedAt":"2026-01-01T00:00:00.000Z"}\n\n',
+                },
+            },
+        },
     })
     async subscribeToSessionEvents(
         @Param("id") id: string,

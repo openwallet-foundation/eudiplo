@@ -1,11 +1,24 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsObject, IsOptional, IsString } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 import { DeferredTransactionStatus } from "../entities/deferred-transaction.entity";
+
+const CompleteDeferredSchema = z
+    .object({
+        claims: z.record(z.string(), z.unknown()),
+    })
+    .strict();
+
+const FailDeferredSchema = z
+    .object({
+        error: z.string().optional(),
+    })
+    .strict();
 
 /**
  * DTO for completing a deferred transaction
  */
-export class CompleteDeferredDto {
+export class CompleteDeferredDto extends createZodDto(CompleteDeferredSchema) {
     /**
      * Claims to include in the credential.
      * The structure should match the credential configuration's expected claims.
@@ -19,14 +32,13 @@ export class CompleteDeferredDto {
             birthdate: "1990-01-15",
         },
     })
-    @IsObject()
     claims!: Record<string, unknown>;
 }
 
 /**
  * DTO for failing a deferred transaction
  */
-export class FailDeferredDto {
+export class FailDeferredDto extends createZodDto(FailDeferredSchema) {
     /**
      * Optional error message explaining why the issuance failed
      */
@@ -36,8 +48,6 @@ export class FailDeferredDto {
         required: false,
         example: "Identity verification failed",
     })
-    @IsOptional()
-    @IsString()
     error?: string;
 }
 

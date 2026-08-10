@@ -37,12 +37,13 @@
 - Use **Dependency Injection** everywhere in NestJS — never instantiate services manually.
 - Use **`@InjectRepository`** for TypeORM repositories — never use `getRepository` helpers.
 - Never return raw entities from controllers — always map to DTOs.
-- Use **class-validator** for input validation (primary validation library in this project).
+- Use **Zod** for input validation (primary validation library in this project).
 - Prefer **Composition over Inheritance** for features and providers.
 
 ## Rules for Backend Code
 - When creating a module, always generate `<feature>.module.ts`, `<feature>.controller.ts`, `<feature>.service.ts` and create subfolders: `dto/`, `entities/`, `exceptions/` as needed.
 - Always add Swagger annotations (`@ApiTags`, `@ApiOperation`, `@ApiResponse`, `@ApiBody`) on all controller endpoints.
+- For controller request boundaries, prefer Zod-backed DTOs via `createZodDto(...)` and keep schema definitions as the source of truth.
 - Use the **Pino logger** (`nestjs-pino` / `PinoLogger`). For audit logging (compliance events persisted to DB), use `AuditLogService`.
 - Always wrap external calls in `try/catch` and throw domain-specific exceptions from the module's `exceptions/` folder.
 - Custom exceptions must extend NestJS `HttpException` — there is no custom base exception class.

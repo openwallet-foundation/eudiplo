@@ -3,6 +3,7 @@ import {
     Controller,
     Delete,
     Get,
+    HttpCode,
     Param,
     Patch,
     Post,
@@ -13,11 +14,15 @@ import { Request } from "express";
 import { Role } from "../../auth/roles/role.enum";
 import { Secured } from "../../auth/secure.decorator";
 import { Token, TokenPayload } from "../../auth/token.decorator";
+import { CredentialIssuerMetadataDto } from "../../issuer/issuance/oid4vci/well-known/dto/credential-issuer-metadata.dto";
+import { SchemaMetadataResponseDto } from "../../registrar/schema-metadata/dto/schema-metadata.dto";
 import { PresentationConfigCreateDto } from "./dto/presentation-config-create.dto";
+import { ResolvedSchemaMetadataResponseDto } from "./dto/resolved-schema-metadata-response.dto";
 import { PresentationConfigUpdateDto } from "./dto/presentation-config-update.dto";
 import { ResolveIssuerMetadataDto } from "./dto/resolve-issuer-metadata.dto";
 import { ResolveSchemaMetadataDto } from "./dto/resolve-schema-metadata.dto";
 import { ResolveSchemaMetadataJwtDto } from "./dto/resolve-schema-metadata-jwt.dto";
+import { PresentationConfig } from "./entities/presentation-config.entity";
 import { PresentationsService } from "./presentations.service";
 
 @ApiTags("Verifier")
@@ -52,6 +57,7 @@ export class PresentationManagementController {
     @ApiResponse({
         status: 200,
         description: "Resolved credential issuer metadata",
+        type: CredentialIssuerMetadataDto,
     })
     @ApiResponse({
         status: 400,
@@ -79,6 +85,7 @@ export class PresentationManagementController {
     @ApiResponse({
         status: 200,
         description: "Resolved schema metadata import payload",
+        type: ResolvedSchemaMetadataResponseDto,
     })
     @ApiResponse({
         status: 400,
@@ -107,6 +114,7 @@ export class PresentationManagementController {
     @ApiResponse({
         status: 200,
         description: "Resolved schema metadata import payload",
+        type: ResolvedSchemaMetadataResponseDto,
     })
     @ApiResponse({
         status: 400,
@@ -132,6 +140,7 @@ export class PresentationManagementController {
     @ApiResponse({
         status: 200,
         description: "Catalog entries from the registrar",
+        type: [SchemaMetadataResponseDto],
     })
     listSchemaMetadataCatalog(@Token() user: TokenPayload) {
         return this.presentationsService.listSchemaMetadataCatalog(
@@ -146,6 +155,7 @@ export class PresentationManagementController {
      */
     @Secured([Role.Presentations])
     @Post()
+    @ApiResponse({ status: 201, type: PresentationConfig })
     storePresentationConfig(
         @Body() config: PresentationConfigCreateDto,
         @Token() user: TokenPayload,
@@ -167,6 +177,7 @@ export class PresentationManagementController {
      */
     @Secured([Role.Presentations, Role.PresentationRequest])
     @Get(":id")
+    @ApiResponse({ status: 200, type: PresentationConfig })
     getConfiguration(@Param("id") id: string, @Token() user: TokenPayload) {
         return this.presentationsService.getPresentationConfig(
             id,
@@ -183,6 +194,7 @@ export class PresentationManagementController {
      */
     @Secured([Role.Presentations])
     @Patch(":id")
+    @ApiResponse({ status: 200, type: PresentationConfig })
     updateConfiguration(
         @Param("id") id: string,
         @Body() config: PresentationConfigUpdateDto,
@@ -205,6 +217,11 @@ export class PresentationManagementController {
      */
     @Secured([Role.Presentations])
     @Delete(":id")
+    @ApiResponse({
+        status: 204,
+        description: "Presentation configuration deleted",
+    })
+    @HttpCode(204)
     deleteConfiguration(
         @Param("id") id: string,
         @Token() user: TokenPayload,
@@ -232,6 +249,7 @@ export class PresentationManagementController {
     @ApiResponse({
         status: 200,
         description: "Updated presentation configuration",
+        type: PresentationConfig,
     })
     @ApiResponse({
         status: 400,

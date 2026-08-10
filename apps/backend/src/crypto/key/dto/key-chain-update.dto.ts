@@ -1,24 +1,19 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
+import { createZodDto } from "nestjs-zod";
 import {
-    IsBoolean,
-    IsNumber,
-    IsOptional,
-    IsString,
-    Max,
-    Min,
-    ValidateNested,
-} from "class-validator";
+    KeyChainUpdateSchema,
+    RotationPolicyUpdateSchema,
+} from "../schemas/key-chain.schema";
 
 /**
  * DTO for updating rotation policy.
  */
-export class RotationPolicyUpdateDto {
+export class RotationPolicyUpdateDto extends createZodDto(
+    RotationPolicyUpdateSchema,
+) {
     @ApiPropertyOptional({
         description: "Whether automatic key rotation is enabled.",
     })
-    @IsBoolean()
-    @IsOptional()
     enabled?: boolean;
 
     @ApiPropertyOptional({
@@ -26,10 +21,6 @@ export class RotationPolicyUpdateDto {
         minimum: 1,
         maximum: 3650,
     })
-    @IsNumber()
-    @Min(1)
-    @Max(3650)
-    @IsOptional()
     intervalDays?: number;
 
     @ApiPropertyOptional({
@@ -37,10 +28,6 @@ export class RotationPolicyUpdateDto {
         minimum: 1,
         maximum: 3650,
     })
-    @IsNumber()
-    @Min(1)
-    @Max(3650)
-    @IsOptional()
     certValidityDays?: number;
 }
 
@@ -50,28 +37,21 @@ export class RotationPolicyUpdateDto {
  * Only metadata and rotation policy can be updated.
  * Key material and certificates are managed internally.
  */
-export class KeyChainUpdateDto {
+export class KeyChainUpdateDto extends createZodDto(KeyChainUpdateSchema) {
     @ApiPropertyOptional({
         description: "Human-readable description for the key chain.",
     })
-    @IsString()
-    @IsOptional()
     description?: string;
 
     @ApiPropertyOptional({
         description: "Rotation policy configuration.",
         type: RotationPolicyUpdateDto,
     })
-    @ValidateNested()
-    @Type(() => RotationPolicyUpdateDto)
-    @IsOptional()
     rotationPolicy?: RotationPolicyUpdateDto;
 
     @ApiPropertyOptional({
         description:
             "Active certificate chain in PEM format. Used for external certificate updates.",
     })
-    @IsString()
-    @IsOptional()
     activeCertificate?: string;
 }

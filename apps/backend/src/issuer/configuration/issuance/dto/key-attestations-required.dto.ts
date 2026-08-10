@@ -1,5 +1,13 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsArray, IsOptional, IsString } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
+
+const KeyAttestationsRequiredSchema = z
+    .object({
+        key_storage: z.array(z.string()).optional(),
+        user_authentication: z.array(z.string()).optional(),
+    })
+    .strict();
 
 /**
  * Represents the key attestations required for issuing credentials.
@@ -8,7 +16,9 @@ import { IsArray, IsOptional, IsString } from "class-validator";
  *
  * @see https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html#appendix-F
  */
-export class KeyAttestationsRequired {
+export class KeyAttestationsRequired extends createZodDto(
+    KeyAttestationsRequiredSchema,
+) {
     /**
      * List of key storage types required.
      * Common values for HAIP:
@@ -23,9 +33,6 @@ export class KeyAttestationsRequired {
         type: [String],
         example: ["iso_18045_high", "iso_18045_moderate"],
     })
-    @IsArray()
-    @IsString({ each: true })
-    @IsOptional()
     key_storage?: string[];
 
     /**
@@ -42,8 +49,5 @@ export class KeyAttestationsRequired {
         type: [String],
         example: ["iso_18045_high", "iso_18045_moderate"],
     })
-    @IsArray()
-    @IsString({ each: true })
-    @IsOptional()
     user_authentication?: string[];
 }

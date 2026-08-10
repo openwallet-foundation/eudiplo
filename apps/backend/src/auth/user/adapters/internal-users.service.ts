@@ -1,7 +1,6 @@
 import { Injectable, NotImplementedException } from "@nestjs/common";
-import { CreateUserDto } from "../dto/create-user.dto";
 import { ManagedUserDto } from "../dto/managed-user.dto";
-import { UpdateUserDto } from "../dto/update-user.dto";
+import type { CreateUser, UpdateUser } from "../schemas/create-user.schema";
 import { UsersProvider } from "../user.provider";
 
 @Injectable()
@@ -20,14 +19,14 @@ export class InternalUsersProvider extends UsersProvider {
         this.unsupported();
     }
 
-    addUser(_tenantId: string, _dto: CreateUserDto): Promise<ManagedUserDto> {
+    addUser(_tenantId: string, _dto: CreateUser): Promise<ManagedUserDto> {
         this.unsupported();
     }
 
     updateUser(
         _tenantId: string,
         _userId: string,
-        _dto: UpdateUserDto,
+        _dto: UpdateUser,
     ): Promise<ManagedUserDto> {
         this.unsupported();
     }

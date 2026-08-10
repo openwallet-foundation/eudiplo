@@ -8,8 +8,6 @@ import {
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import type { UpDownCounter } from "@opentelemetry/api";
-import { plainToClass } from "class-transformer";
-import { validate } from "class-validator";
 import { Request } from "express";
 import { MetricService } from "nestjs-otel";
 import { Repository } from "typeorm";
@@ -26,9 +24,13 @@ import { FilesService } from "../../storage/files.service";
 import { CLIENTS_PROVIDER, ClientsProvider } from "../client/client.provider";
 import { Role } from "../roles/role.enum";
 import { TokenPayload } from "../token.decorator";
-import { CreateTenantDto } from "./dto/create-tenant.dto";
-import { ImportTenantDto } from "./dto/import-tenant.dto";
 import { TenantEntity } from "./entitites/tenant.entity";
+import { ImportTenantSchema } from "./schemas/create-tenant.schema";
+import type {
+    CreateTenant,
+    ImportTenant,
+    UpdateTenant,
+} from "./schemas/create-tenant.schema";
 @Injectable()
 export class TenantService implements OnApplicationBootstrap {
     private readonly logger = new Logger(TenantService.name);
@@ -98,22 +100,15 @@ export class TenantService implements OnApplicationBootstrap {
             const configFile = readFileSync(file, "utf-8");
             const payload = JSON.parse(configFile);
 
-            // Validate the payload against ImportTenantDto (name, description only)
-            const tenantDto = plainToClass(ImportTenantDto, payload);
-            const validationErrors = await validate(tenantDto, {
-                whitelist: true,
-                forbidUnknownValues: false,
-                forbidNonWhitelisted: false,
-                stopAtFirstError: false,
-            });
+            const validationResult = ImportTenantSchema.safeParse(payload);
 
-            if (validationErrors.length > 0) {
+            if (!validationResult.success) {
                 this.logger.error(
                     {
-                        errors: validationErrors.map((error) => ({
-                            property: error.property,
-                            constraints: error.constraints,
-                            value: error.value,
+                        errors: validationResult.error.issues.map((issue) => ({
+                            path: issue.path.join("."),
+                            message: issue.message,
+                            code: issue.code,
                         })),
                     },
                     `[${tenantId}] Validation failed for tenant config`,
@@ -122,7 +117,10 @@ export class TenantService implements OnApplicationBootstrap {
             }
 
             // ID is always derived from folder name, not from config file
-            await this.createTenant({ ...tenantDto, id: tenantId });
+            await this.createTenant({
+                ...validationResult.data,
+                id: tenantId,
+            } as CreateTenant);
             return true;
         } catch (error: any) {
             this.logger.error(
@@ -146,25 +144,24 @@ export class TenantService implements OnApplicationBootstrap {
      * @returns The created tenant with optional client credentials (if roles were specified)
      */
     async createTenant(
-        data: ImportTenantDto | CreateTenantDto,
+        data: ImportTenant | CreateTenant,
         actorToken?: TokenPayload,
         req?: Request,
     ) {
-        const tenant = await this.tenantRepository.save(data);
+        const tenant = (await this.tenantRepository.save(
+            data as any,
+        )) as TenantEntity;
         await this.setUpTenant(tenant);
 
         let clientCredentials:
             | { clientId: string; clientSecret: string }
             | undefined;
 
-        if ((data as CreateTenantDto).roles) {
+        if ((data as CreateTenant).roles) {
             const client = await this.clients.addClient(tenant.id, {
                 clientId: `${tenant.id}-admin`,
                 description: `auto generated admin client for tenant ${tenant.id}`,
-                roles: [
-                    Role.Clients,
-                    ...((data as CreateTenantDto).roles || []),
-                ],
+                roles: [Role.Clients, ...((data as CreateTenant).roles || [])],
             });
             // Return the client credentials for one-time display
             clientCredentials = {
@@ -226,12 +223,12 @@ export class TenantService implements OnApplicationBootstrap {
      */
     async updateTenant(
         id: string,
-        data: Partial<Omit<TenantEntity, "id" | "clients" | "status">>,
+        data: UpdateTenant,
         actorToken?: TokenPayload,
         req?: Request,
     ): Promise<TenantEntity> {
         const existing = await this.getTenant(id);
-        await this.tenantRepository.update({ id }, data);
+        await this.tenantRepository.update({ id }, data as any);
         const updated = await this.getTenant(id);
 
         if (actorToken) {

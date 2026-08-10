@@ -1,13 +1,16 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { BitsPerStatus } from "@owf/token-status-list";
-import { IsBoolean, IsIn, IsInt, IsOptional, Min } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { UpdateStatusListConfigSchema } from "./status-list.schema";
 
 /**
  * DTO for updating status list configuration.
  * All fields are optional - only provided fields will be updated.
  * Set a field to null to reset it to the global default.
  */
-export class UpdateStatusListConfigDto {
+export class UpdateStatusListConfigDto extends createZodDto(
+    UpdateStatusListConfigSchema,
+) {
     /**
      * The capacity of the status list (number of entries).
      * Set to null to reset to global default.
@@ -19,9 +22,6 @@ export class UpdateStatusListConfigDto {
         minimum: 100,
         nullable: true,
     })
-    @IsOptional()
-    @IsInt()
-    @Min(100)
     capacity?: number | null;
 
     /**
@@ -34,8 +34,6 @@ export class UpdateStatusListConfigDto {
         enum: [1, 2, 4, 8],
         nullable: true,
     })
-    @IsOptional()
-    @IsIn([1, 2, 4, 8, null])
     bits?: BitsPerStatus | null;
 
     /**
@@ -49,9 +47,6 @@ export class UpdateStatusListConfigDto {
         minimum: 60,
         nullable: true,
     })
-    @IsOptional()
-    @IsInt()
-    @Min(60)
     ttl?: number | null;
 
     /**
@@ -63,8 +58,6 @@ export class UpdateStatusListConfigDto {
             "If true, regenerate JWT on every status change. Set to null to reset to default (false).",
         nullable: true,
     })
-    @IsOptional()
-    @IsBoolean()
     immediateUpdate?: boolean | null;
 
     /**
@@ -76,7 +69,5 @@ export class UpdateStatusListConfigDto {
             "If true, include aggregation_uri in status list JWTs for pre-fetching support. Set to null to reset to default (true).",
         nullable: true,
     })
-    @IsOptional()
-    @IsBoolean()
     enableAggregation?: boolean | null;
 }

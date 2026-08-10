@@ -1,6 +1,6 @@
-import { PartialType } from "@nestjs/swagger";
-import { CreateWebhookEndpointDto } from "./create-webhook-endpoint.dto";
+import { createZodDto } from "nestjs-zod";
+import { UpdateWebhookEndpointSchema } from "../schemas/webhook-endpoint.schema";
 
-export class UpdateWebhookEndpointDto extends PartialType(
-    CreateWebhookEndpointDto,
+export class UpdateWebhookEndpointDto extends createZodDto(
+    UpdateWebhookEndpointSchema,
 ) {}

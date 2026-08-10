@@ -1,24 +1,33 @@
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
-export class StatusUpdateDto {
-    /**
-     * The session ID of the user
-     */
-    @IsString()
-    sessionId!: string;
+const StatusUpdateSchema = z
+    .object({
+        sessionId: z
+            .string()
+            .min(1)
+            .describe(
+                "Session identifier used to locate credentials for status updates.",
+            ),
+        credentialConfigurationId: z
+            .string()
+            .min(1)
+            .optional()
+            .describe(
+                "Optional credential configuration id. If omitted, all credentials linked to the session are updated.",
+            ),
+        status: z
+            .number()
+            .int()
+            .min(0)
+            .max(2)
+            .describe(
+                "New credential status: 0 = valid, 1 = revoked, 2 = suspended.",
+            ),
+    })
+    .describe(
+        "Request payload for updating credential status entries by session.",
+    )
+    .strict();
 
-    /**
-     * The ID of the credential configuration
-     * This is optional, if not provided, all credentials will be revoked of the session.
-     */
-    @IsString()
-    @IsOptional()
-    credentialConfigurationId?: string;
-
-    /**
-     * The status of the credential
-     * 0 = valid, 1 = revoked, 2 = suspended
-     */
-    @IsNumber()
-    status!: number;
-}
+export class StatusUpdateDto extends createZodDto(StatusUpdateSchema) {}

@@ -1,28 +1,25 @@
 import { ApiExtraModels, ApiProperty, getSchemaPath } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import {
-    IsArray,
-    IsEnum,
-    IsIn,
-    IsObject,
-    IsOptional,
-    IsString,
-    ValidateNested,
-} from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
 /**
  * Configuration for API key authentication in webhooks.
  */
-export class ApiKeyConfig {
+const ApiKeyConfigSchema = z
+    .object({
+        headerName: z.string(),
+        value: z.string(),
+    })
+    .strict();
+
+export class ApiKeyConfig extends createZodDto(ApiKeyConfigSchema) {
     /**
      * The name of the header where the API key will be sent.
      */
-    @IsString()
     headerName!: string;
     /**
      * The value of the API key to be sent in the header.
      */
-    @IsString()
     value!: string;
 }
 
@@ -37,84 +34,82 @@ export enum AuthConfig {
 /**
  * Configuration for webhook authentication.
  */
-export class WebHookAuthConfigHeader implements WebHookAuthConfig {
+const WebHookAuthConfigHeaderSchema = z
+    .object({
+        type: z.literal(AuthConfig.API_KEY),
+        config: ApiKeyConfigSchema,
+    })
+    .strict();
+
+export class WebHookAuthConfigHeader extends createZodDto(
+    WebHookAuthConfigHeaderSchema,
+) {
     /**
      * The type of authentication used for the webhook.
      */
-    @IsIn([AuthConfig.API_KEY])
-    @IsString()
     type!: AuthConfig.API_KEY;
     /**
      * Configuration for API key authentication.
      * This is required if the type is 'apiKey'.
      */
-    @Type(() => ApiKeyConfig)
-    @IsObject()
     config!: ApiKeyConfig;
 }
 
-export class WebHookAuthConfigNone implements WebHookAuthConfig {
+const WebHookAuthConfigNoneSchema = z
+    .object({
+        type: z.literal(AuthConfig.NONE),
+    })
+    .strict();
+
+export class WebHookAuthConfigNone extends createZodDto(
+    WebHookAuthConfigNoneSchema,
+) {
     /**
      * The type of authentication used for the webhook.
      */
-    @IsIn([AuthConfig.NONE])
-    @IsString()
     type!: AuthConfig.NONE;
 }
 
-export class WebHookAuthConfig {
-    @IsEnum(AuthConfig)
-    type!: AuthConfig;
-}
+export const WebHookAuthConfigSchema = z.discriminatedUnion("type", [
+    WebHookAuthConfigNoneSchema,
+    WebHookAuthConfigHeaderSchema,
+]);
+
+
+export const WebhookConfigSchema = z
+    .object({
+        url: z.string(),
+        auth: WebHookAuthConfigSchema,
+        includeRawTokensFor: z.array(z.string()).optional(),
+    })
+    .strict();
 
 /**
  * Configuration for webhooks used in various services.
  */
 @ApiExtraModels(WebHookAuthConfigNone, WebHookAuthConfigHeader)
-export class WebhookConfig {
+export class WebhookConfig extends createZodDto(WebhookConfigSchema) {
     /**
      * The URL to which the webhook will send notifications.
      */
-    @IsString()
     url!: string;
     /**
      * Optional authentication configuration for the webhook.
      * If not provided, no authentication will be used.
      */
-    @ValidateNested()
     @ApiProperty({
         oneOf: [
             { $ref: getSchemaPath(WebHookAuthConfigNone) },
             { $ref: getSchemaPath(WebHookAuthConfigHeader) },
         ],
     })
-    @Type(() => WebHookAuthConfig, {
-        discriminator: {
-            property: "type",
-            subTypes: [
-                {
-                    name: AuthConfig.NONE,
-                    value: WebHookAuthConfigNone,
-                },
-                {
-                    name: AuthConfig.API_KEY,
-                    value: WebHookAuthConfigHeader,
-                },
-            ],
-        },
-        keepDiscriminatorProperty: true,
-    })
-    @IsObject()
-    auth!: WebHookAuthConfigNone | WebHookAuthConfigHeader;
+    auth!: z.infer<typeof WebHookAuthConfigSchema>;
 
     /**
      * Optional array of credential configuration IDs.
      * If provided, the webhook payload will include the raw cryptographic
      * presentation (e.g., vp_token) for these specific credentials.
      */
-    @IsOptional()
-    @IsArray()
-    @IsString({ each: true })
     @ApiProperty({
         required: false,
         type: [String],

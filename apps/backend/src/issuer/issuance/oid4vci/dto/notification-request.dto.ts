@@ -1,10 +1,22 @@
 import { NotificationEvent } from "@openid4vc/openid4vci";
-import { IsEnum, IsString } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
-export class NotificationRequestDto {
-    @IsString()
+const NotificationRequestSchema = z
+    .object({
+        notification_id: z.string(),
+        event: z.enum([
+            "credential_accepted",
+            "credential_failure",
+            "credential_deleted",
+        ]),
+    })
+    .strict();
+
+export class NotificationRequestDto extends createZodDto(
+    NotificationRequestSchema,
+) {
     notification_id!: string;
 
-    @IsEnum(["credential_accepted", "credential_revoked"])
     event!: NotificationEvent;
 }

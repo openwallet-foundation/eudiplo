@@ -1,26 +1,59 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./KeyChainImportDto.schema.json",
-  "title": "KeyChainImportDto",
   "type": "object",
   "properties": {
     "id": {
-      "type": "string",
-      "description": "ID for the key chain. If not provided, a new UUID will be generated."
+      "description": "Optional key chain id. If omitted, one is generated.",
+      "type": "string"
     },
     "key": {
-      "description": "The private key in JWK format.",
-      "allOf": [
-        {
-          "$ref": "./EcJwk.schema.json"
+      "type": "object",
+      "properties": {
+        "kty": {
+          "type": "string",
+          "description": "Key type (for example EC)."
+        },
+        "x": {
+          "type": "string",
+          "description": "Elliptic curve public x coordinate."
+        },
+        "y": {
+          "type": "string",
+          "description": "Elliptic curve public y coordinate."
+        },
+        "crv": {
+          "type": "string",
+          "description": "Elliptic curve name."
+        },
+        "d": {
+          "type": "string",
+          "description": "Private key value."
+        },
+        "alg": {
+          "description": "Optional algorithm hint.",
+          "type": "string"
+        },
+        "kid": {
+          "description": "Optional key identifier.",
+          "type": "string"
         }
-      ]
+      },
+      "required": [
+        "kty",
+        "x",
+        "y",
+        "crv",
+        "d"
+      ],
+      "additionalProperties": false,
+      "description": "Private key material in JWK format."
     },
     "description": {
-      "type": "string",
-      "description": "Human-readable description."
+      "description": "Optional key chain description.",
+      "type": "string"
     },
     "usageType": {
+      "type": "string",
       "enum": [
         "access",
         "attestation",
@@ -28,32 +61,51 @@
         "statusList",
         "encrypt"
       ],
-      "type": "string",
-      "description": "Usage type for this key chain."
+      "description": "Key usage category for the imported key chain."
     },
     "crt": {
-      "description": "Certificate chain (leaf first). Each entry may be PEM or base64-encoded DER; values are normalized to PEM during import. When rotationPolicy.enabled=true, the last certificate in the chain is treated as the root CA certificate.",
+      "description": "Optional certificate chain values in PEM or base64 DER.",
       "type": "array",
       "items": {
         "type": "string"
       }
     },
     "kmsProvider": {
-      "type": "string",
-      "description": "KMS provider to use. Defaults to 'db'."
+      "description": "Optional KMS provider id.",
+      "type": "string"
     },
     "rotationPolicy": {
-      "description": "Rotation policy. When enabled, the imported key becomes a root CA signer and a new leaf key is generated. If crt is provided, the selected root CA certificate must have CA=true and its public key must match the imported private key.",
-      "allOf": [
-        {
-          "$ref": "./RotationPolicyImportDto.schema.json"
+      "description": "Optional rotation policy for imported key chains.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable automatic rotation for imported key chains."
+        },
+        "intervalDays": {
+          "description": "Rotation interval in days.",
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3650
+        },
+        "certValidityDays": {
+          "description": "Certificate validity period in days.",
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3650
         }
-      ]
+      },
+      "required": [
+        "enabled"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [
     "key",
     "usageType"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./KeyChainImportDto.schema.json",
+  "title": "KeyChainImportDto"
 }

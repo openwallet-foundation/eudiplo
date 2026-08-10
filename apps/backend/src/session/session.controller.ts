@@ -3,6 +3,7 @@ import {
     Controller,
     Delete,
     Get,
+    HttpCode,
     Param,
     Post,
     Query,
@@ -63,6 +64,8 @@ export class SessionController {
      * @returns
      */
     @Delete(":id")
+    @ApiResponse({ status: 204, description: "Session deleted" })
+    @HttpCode(204)
     deleteSession(
         @Param("id") id: string,
         @Token() user: TokenPayload,
@@ -92,6 +95,8 @@ export class SessionController {
      * @returns
      */
     @Post("revoke")
+    @ApiResponse({ status: 204, description: "All sessions revoked" })
+    @HttpCode(204)
     revokeAll(@Body() value: StatusUpdateDto, @Token() user: TokenPayload) {
         return this.statusListService.updateStatus(value, user.entity!.id);
     }

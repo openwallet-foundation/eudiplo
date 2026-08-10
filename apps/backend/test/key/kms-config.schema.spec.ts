@@ -108,7 +108,6 @@ function expectInvalid(
         };
     },
     value: unknown,
-    path: Array<string | number>,
 ) {
     const result = schema.safeParse(value);
     expect(result.success).toBe(false);
@@ -228,6 +227,49 @@ describe("KMS Zod schemas", () => {
         ]);
     });
 
+    it("rejects empty strings for required values", () => {
+        expectInvalid(DbKmsConfigSchema, { id: "", type: "db" }, ["id"]);
+        expectInvalid(
+            VaultKmsConfigSchema,
+            {
+                id: "vault",
+                type: "vault",
+                vaultUrl: "",
+                vaultToken: "token",
+            },
+            ["vaultUrl"],
+        );
+        expectInvalid(
+            HttpAuthBearerConfigSchema,
+            {
+                type: "bearer",
+                token: "",
+            },
+            ["token"],
+        );
+    });
+
+    it("rejects malformed URLs", () => {
+        expectInvalid(
+            VaultKmsConfigSchema,
+            {
+                ...validVaultProvider(),
+                vaultUrl: "not-a-url",
+            },
+            ["vaultUrl"],
+        );
+        expectInvalid(
+            HttpAuthOauth2ConfigSchema,
+            {
+                type: "oauth2-client-credentials",
+                tokenUrl: "not-a-url",
+                clientId: "client-id",
+                clientSecret: "client-secret",
+            },
+            ["tokenUrl"],
+        );
+    });
+
     it("rejects duplicate provider ids", () => {
         const result = KmsConfigSchema.safeParse({
             defaultProvider: "vault",
@@ -301,6 +343,36 @@ describe("KMS Zod schemas", () => {
         });
     });
 
+    it("rejects missing environment variables with a clear configuration error", () => {
+        try {
+            parseResolvedKmsConfig({
+                defaultProvider: "vault",
+                providers: [
+                    {
+                        id: "vault",
+                        type: "vault",
+                        vaultUrl: "${VAULT_URL}",
+                        vaultToken: "${VAULT_TOKEN}",
+                    },
+                ],
+            });
+            expect.unreachable("expected missing env vars to fail");
+        } catch (error) {
+            expect(error).toHaveProperty("getResponse");
+            const response = (
+                error as { getResponse: () => any }
+            ).getResponse();
+            expect(response.message).toContain("Missing environment variables");
+            expect(response.errors).toEqual(
+                expect.arrayContaining([
+                    expect.objectContaining({
+                        message: expect.stringContaining("VAULT_URL"),
+                    }),
+                ]),
+            );
+        }
+    });
+
     it("generates a standard Draft 2020-12 JSON Schema without OpenAPI discriminator keywords", () => {
         const generated = z.toJSONSchema(KmsConfigSchema, {
             target: "draft-2020-12",
@@ -320,6 +392,17 @@ describe("KMS Zod schemas", () => {
         );
 
         const ajv = new Ajv({ strict: true });
+        ajv.addFormat("uri", {
+            type: "string",
+            validate: (value: string) => {
+                try {
+                    new URL(value);
+                    return true;
+                } catch {
+                    return false;
+                }
+            },
+        });
         const validate = ajv.compile(generated);
 
         expect(validate(validKmsConfig())).toBe(true);

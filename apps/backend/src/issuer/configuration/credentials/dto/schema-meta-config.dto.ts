@@ -1,19 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { SchemaURIMeta } from "@owf/eudi-attestation-schema";
-import { Type } from "class-transformer";
-import {
-    IsArray,
-    IsEnum,
-    IsObject,
-    IsOptional,
-    IsString,
-    ValidateNested,
-} from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
 /**
  * Attestation Level of Security (LoS) as defined in TS11.
  */
-enum AttestationLoS {
+export enum AttestationLoS {
     HIGH = "iso_18045_high",
     MODERATE = "iso_18045_moderate",
     ENHANCED_BASIC = "iso_18045_enhanced-basic",
@@ -23,7 +16,7 @@ enum AttestationLoS {
 /**
  * Cryptographic binding type as defined in TS11.
  */
-enum SchemaMetaBindingType {
+export enum SchemaMetaBindingType {
     CLAIM = "claim",
     KEY = "key",
     BIOMETRIC = "biometric",
@@ -45,18 +38,65 @@ export enum SchemaMetadataPinMode {
     REPLACE_ID = "replace_id",
 }
 
+const SchemaUriEntrySchema = z
+    .object({
+        credentialConfigId: z.string().optional(),
+        format: z.string().optional(),
+        uri: z.string().optional(),
+        meta: z.record(z.string(), z.unknown()).optional(),
+    })
+    .strict();
+
+const TrustAuthorityEntrySchema = z
+    .object({
+        trustListId: z.string().optional(),
+        frameworkType: z.enum(SchemaMetaFrameworkType).optional(),
+        value: z.string().optional(),
+        verificationMethod: z
+            .union([z.record(z.string(), z.unknown()), z.string()])
+            .optional(),
+    })
+    .strict();
+
+const SchemaMetaConfigSchema = z
+    .object({
+        id: z.string().optional(),
+        name: z.string().optional(),
+        version: z.string(),
+        rulebookURI: z.string().optional(),
+        attestationLoS: z.enum(AttestationLoS),
+        bindingType: z.enum(SchemaMetaBindingType),
+        schemaURIs: z.array(SchemaUriEntrySchema).optional(),
+        trustedAuthorities: z.array(TrustAuthorityEntrySchema).optional(),
+    })
+    .strict();
+
+const SignSchemaMetaConfigSchema = z
+    .object({
+        config: SchemaMetaConfigSchema,
+        credentialConfigId: z.string().optional(),
+        pinMode: z.enum(SchemaMetadataPinMode).optional(),
+    })
+    .strict();
+
+const SignVersionSchemaMetaConfigSchema = z
+    .object({
+        config: SchemaMetaConfigSchema,
+        credentialConfigId: z.string().optional(),
+        pinMode: z.enum(SchemaMetadataPinMode).optional(),
+    })
+    .strict();
+
 /**
  * Schema URI entry per attestation format.
  */
-export class SchemaUriEntry {
+export class SchemaUriEntry extends createZodDto(SchemaUriEntrySchema) {
     @ApiPropertyOptional({
         description:
             "Credential config ID to resolve and upload its schema content. " +
             "When set, uri can be omitted and is resolved server-side.",
         example: "pid_de_credential_config",
     })
-    @IsOptional()
-    @IsString()
     credentialConfigId?: string;
 
     @ApiPropertyOptional({
@@ -64,15 +104,11 @@ export class SchemaUriEntry {
             "Attestation format this schema URI applies to (e.g. dc+sd-jwt, mso_mdoc)",
         example: "dc+sd-jwt",
     })
-    @IsOptional()
-    @IsString()
     format?: string;
 
     @ApiPropertyOptional({
         description: "URI pointing to the schema document for this format",
     })
-    @IsOptional()
-    @IsString()
     uri?: string;
 
     @ApiProperty({
@@ -81,38 +117,32 @@ export class SchemaUriEntry {
         type: "object",
         additionalProperties: true,
     })
-    @IsOptional()
-    @IsObject()
     meta?: SchemaURIMeta;
 }
 
 /**
  * Trust authority entry for TS11 SchemaMeta.
  */
-export class TrustAuthorityEntry {
+export class TrustAuthorityEntry extends createZodDto(
+    TrustAuthorityEntrySchema,
+) {
     @ApiPropertyOptional({
         description:
             "Trust list ID to resolve from the database. " +
             "When set, frameworkType, value, and verificationMethod are derived automatically.",
     })
-    @IsOptional()
-    @IsString()
     trustListId?: string;
 
     @ApiPropertyOptional({
         enum: SchemaMetaFrameworkType,
         description: "Trust framework type (ignored when trustListId is set)",
     })
-    @IsOptional()
-    @IsEnum(SchemaMetaFrameworkType)
     frameworkType?: SchemaMetaFrameworkType;
 
     @ApiPropertyOptional({
         description:
             "URI of the trust list or trust anchor (ignored when trustListId is set)",
     })
-    @IsOptional()
-    @IsString()
     value?: string;
 
     @ApiPropertyOptional({
@@ -131,7 +161,6 @@ export class TrustAuthorityEntry {
             },
         ],
     })
-    @IsOptional()
     verificationMethod?: Record<string, unknown> | string;
 }
 
@@ -145,15 +174,13 @@ export class TrustAuthorityEntry {
  *
  * @experimental The underlying TS11 specification is not yet finalized.
  */
-export class SchemaMetaConfig {
+export class SchemaMetaConfig extends createZodDto(SchemaMetaConfigSchema) {
     @ApiPropertyOptional({
         description:
             "Optional override for the schema ID (attestation identifier URI). " +
             "When not set, derived from vct (dc+sd-jwt) or docType (mso_mdoc).",
         example: "https://example.com/attestations/my-credential",
     })
-    @IsOptional()
-    @IsString()
     id?: string;
 
     @ApiPropertyOptional({
@@ -161,15 +188,12 @@ export class SchemaMetaConfig {
             "Human-readable name of the schema metadata entry. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.",
         example: "German PID",
     })
-    @IsOptional()
-    @IsString()
     name?: string;
 
     @ApiPropertyOptional({
         description: "Schema version in SemVer format",
         example: "1.0.0",
     })
-    @IsString()
     version!: string;
 
     @ApiPropertyOptional({
@@ -177,22 +201,18 @@ export class SchemaMetaConfig {
             "URI of the Attestation Rulebook. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.",
         example: "https://example.com/rulebooks/my-credential/1.0.0.md",
     })
-    @IsOptional()
-    @IsString()
     rulebookURI?: string;
 
     @ApiPropertyOptional({
         enum: AttestationLoS,
         description: "Attestation Level of Security",
     })
-    @IsEnum(AttestationLoS)
     attestationLoS!: AttestationLoS;
 
     @ApiPropertyOptional({
         enum: SchemaMetaBindingType,
         description: "Cryptographic binding type",
     })
-    @IsEnum(SchemaMetaBindingType)
     bindingType!: SchemaMetaBindingType;
 
     @ApiPropertyOptional({
@@ -201,20 +221,12 @@ export class SchemaMetaConfig {
             "Schema URIs per attestation format. " +
             "When omitted, the format is derived from the credential config format field.",
     })
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => SchemaUriEntry)
     schemaURIs?: SchemaUriEntry[];
 
     @ApiPropertyOptional({
         type: () => [TrustAuthorityEntry],
         description: "Trust authorities for this attestation schema",
     })
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => TrustAuthorityEntry)
     trustedAuthorities?: TrustAuthorityEntry[];
 }
 
@@ -224,14 +236,14 @@ export class SchemaMetaConfig {
  * The registrar builds and signs schema metadata from the submitted values.
  * EUDIPLO no longer performs local SchemaMetadata JWT signing for this flow.
  */
-export class SignSchemaMetaConfigDto {
+export class SignSchemaMetaConfigDto extends createZodDto(
+    SignSchemaMetaConfigSchema,
+) {
     @ApiProperty({
         type: () => SchemaMetaConfig,
         description:
             "The schema metadata configuration to submit. Registrar builds and signs the final schema metadata.",
     })
-    @ValidateNested()
-    @Type(() => SchemaMetaConfig)
     config!: SchemaMetaConfig;
 
     @ApiPropertyOptional({
@@ -239,8 +251,6 @@ export class SignSchemaMetaConfigDto {
             "ID of the credential config to link back after submission. " +
             "When provided, schemaMeta.id on the credential config is updated with the reserved attestation ID.",
     })
-    @IsOptional()
-    @IsString()
     credentialConfigId?: string;
 
     @ApiPropertyOptional({
@@ -249,8 +259,6 @@ export class SignSchemaMetaConfigDto {
             "How to update credential config pinning after publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to a different schema id.",
         default: SchemaMetadataPinMode.KEEP_CURRENT,
     })
-    @IsOptional()
-    @IsEnum(SchemaMetadataPinMode)
     pinMode?: SchemaMetadataPinMode;
 }
 
@@ -259,22 +267,20 @@ export class SignSchemaMetaConfigDto {
  *
  * The registrar builds and signs the new version.
  */
-export class SignVersionSchemaMetaConfigDto {
+export class SignVersionSchemaMetaConfigDto extends createZodDto(
+    SignVersionSchemaMetaConfigSchema,
+) {
     @ApiProperty({
         type: () => SchemaMetaConfig,
         description:
             "The schema metadata configuration to submit as a new version. Must include the existing id.",
     })
-    @ValidateNested()
-    @Type(() => SchemaMetaConfig)
     config!: SchemaMetaConfig;
 
     @ApiPropertyOptional({
         description:
             "Optional credential config to update pinning for after successful version publish.",
     })
-    @IsOptional()
-    @IsString()
     credentialConfigId?: string;
 
     @ApiPropertyOptional({
@@ -283,7 +289,5 @@ export class SignVersionSchemaMetaConfigDto {
             "How to update credential config pinning after version publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to config.id.",
         default: SchemaMetadataPinMode.KEEP_CURRENT,
     })
-    @IsOptional()
-    @IsEnum(SchemaMetadataPinMode)
     pinMode?: SchemaMetadataPinMode;
 }

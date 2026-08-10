@@ -12,7 +12,7 @@ import { AllExceptionsFilter } from "./all-exceptions.filter";
 import { AppModule } from "./app.module";
 import { filterOpenApiPaths, GLOBAL_PREFIX_EXCLUSIONS } from "./main.helpers";
 import { ValidationErrorFilter } from "./shared/common/filters/validation-error.filter";
-import { createHybridValidationPipe } from "./shared/common/pipes/hybrid-validation.pipe";
+import { createAppValidationPipe } from "./shared/common/zod/zod-schema.util";
 import { registerTolerantX509Extensions } from "./shared/utils/x509-tolerant-extensions";
 import { NextFunction, Request, Response } from "express";
 
@@ -131,7 +131,7 @@ async function bootstrap() {
     // This ensures LOG_LEVEL env var is respected across all services
     app.useLogger(app.get(Logger));
 
-    app.useGlobalPipes(createHybridValidationPipe());
+    app.useGlobalPipes(createAppValidationPipe());
 
     const configService = app.get(ConfigService);
     const publicUrl = configService.getOrThrow<string>("PUBLIC_URL");

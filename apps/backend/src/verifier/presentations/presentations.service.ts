@@ -11,7 +11,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import * as eudiAttestationSchema from "@owf/eudi-attestation-schema";
 import { type AttestationFormat } from "@owf/eudi-attestation-schema";
 import * as x509 from "@peculiar/x509";
-import { plainToClass } from "class-transformer";
 import { Request } from "express";
 import { base64url, decodeJwt, decodeProtectedHeader } from "jose";
 import { Span, TraceService } from "nestjs-otel";
@@ -231,7 +230,7 @@ export class PresentationsService {
                         "",
                     );
                     payload.id = id;
-                    return plainToClass(PresentationConfigCreateDto, payload);
+                    return payload as unknown as PresentationConfigCreateDto;
                 },
                 checkExists: (tid, data) => {
                     return this.getPresentationConfig(data.id, tid)

@@ -1,37 +1,54 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import {
-    IsArray,
-    IsBoolean,
-    IsIn,
-    IsObject,
-    IsOptional,
-    IsString,
-    ValidateNested,
-} from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
-export class FieldDisplayDto {
-    @ApiProperty({
-        description: "Locale code based on BCP47 (RFC 5646)",
-        example: "en-US",
+const FieldDisplaySchema = z
+    .object({
+        locale: z.string(),
+        name: z.string(),
+        description: z.string().optional(),
     })
-    @IsString()
+    .strict();
+
+const ClaimFieldDefinitionSchema: z.ZodType<any> = z.lazy(() =>
+    z
+        .object({
+            path: z.array(z.union([z.string(), z.number(), z.null()])),
+            type: z.enum([
+                "string",
+                "number",
+                "integer",
+                "boolean",
+                "object",
+                "array",
+            ]),
+            defaultValue: z.unknown().optional(),
+            mandatory: z.boolean().optional(),
+            disclosable: z.boolean().optional(),
+            namespace: z.string().optional(),
+            display: z.array(FieldDisplaySchema).optional(),
+            constraints: z.record(z.string(), z.unknown()).optional(),
+            children: z.array(ClaimFieldDefinitionSchema).optional(),
+        })
+        .strict(),
+);
+
+export class FieldDisplayDto extends createZodDto(FieldDisplaySchema) {
     locale!: string;
 
     @ApiProperty({ description: "Display name", example: "Given Name" })
-    @IsString()
     name!: string;
 
     @ApiPropertyOptional({
         description: "Optional display description",
         example: "Primary first name",
     })
-    @IsOptional()
-    @IsString()
     description?: string;
 }
 
-export class ClaimFieldDefinitionDto {
+export class ClaimFieldDefinitionDto extends createZodDto(
+    ClaimFieldDefinitionSchema,
+) {
     @ApiProperty({
         description:
             "Path to claim value. For nested child fields this can be relative to the parent path.",
@@ -41,15 +58,12 @@ export class ClaimFieldDefinitionDto {
             oneOf: [{ type: "string" }, { type: "number" }, { type: "null" }],
         },
     })
-    @IsArray()
     path!: Array<string | number | null>;
 
     @ApiProperty({
         description: "Claim value type",
         enum: ["string", "number", "integer", "boolean", "object", "array"],
     })
-    @IsString()
-    @IsIn(["string", "number", "integer", "boolean", "object", "array"])
     type!: "string" | "number" | "integer" | "boolean" | "object" | "array";
 
     @ApiPropertyOptional({
@@ -63,19 +77,14 @@ export class ClaimFieldDefinitionDto {
             { type: "null" },
         ],
     })
-    @IsOptional()
     defaultValue?: unknown;
 
     @ApiPropertyOptional({ description: "Whether claim is mandatory" })
-    @IsOptional()
-    @IsBoolean()
     mandatory?: boolean;
 
     @ApiPropertyOptional({
         description: "Whether claim is disclosable in SD-JWT",
     })
-    @IsOptional()
-    @IsBoolean()
     disclosable?: boolean;
 
     @ApiPropertyOptional({
@@ -83,23 +92,15 @@ export class ClaimFieldDefinitionDto {
             "Namespace for mDOC field. Optional when the namespace is already present as the first path segment.",
         example: "eu.europa.ec.eudi.pid.1",
     })
-    @IsOptional()
-    @IsString()
     namespace?: string;
 
     @ApiPropertyOptional({ type: () => [FieldDisplayDto] })
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => FieldDisplayDto)
     display?: FieldDisplayDto[];
 
     @ApiPropertyOptional({
         description: "Additional JSON schema constraints for this field",
         type: Object,
     })
-    @IsOptional()
-    @IsObject()
     constraints?: Record<string, unknown>;
 
     @ApiPropertyOptional({
@@ -107,9 +108,5 @@ export class ClaimFieldDefinitionDto {
             "Optional nested child fields. Child paths may be specified relative to the parent field path.",
         type: () => [ClaimFieldDefinitionDto],
     })
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => ClaimFieldDefinitionDto)
     children?: ClaimFieldDefinitionDto[];
 }

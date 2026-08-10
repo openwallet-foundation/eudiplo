@@ -1,9 +1,4 @@
-import { OmitType } from "@nestjs/swagger";
-import { ClientEntity } from "../entities/client.entity";
+import { createZodDto } from "nestjs-zod";
+import { UpdateClientSchema } from "../schemas/client.schema";
 
-export class UpdateClientDto extends OmitType(ClientEntity, [
-    "clientId",
-    "tenant",
-    "tenantId",
-    "secret",
-] as const) {}
+export class UpdateClientDto extends createZodDto(UpdateClientSchema) {}

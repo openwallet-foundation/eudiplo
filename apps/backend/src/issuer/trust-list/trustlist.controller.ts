@@ -4,11 +4,12 @@ import {
     Controller,
     Delete,
     Get,
+    HttpCode,
     Param,
     Post,
     Put,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Role } from "../../auth/roles/role.enum";
 import { Secured } from "../../auth/secure.decorator";
 import { Token, TokenPayload } from "../../auth/token.decorator";
@@ -145,6 +146,8 @@ export class TrustListController {
      * @returns
      */
     @Delete(":id")
+    @ApiResponse({ status: 204, description: "Trust list deleted" })
+    @HttpCode(204)
     deleteTrustList(@Param("id") id: string, @Token() token: TokenPayload) {
         return this.trustListService.remove(token.entity!.id, id);
     }

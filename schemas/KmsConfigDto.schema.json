@@ -7,7 +7,16 @@
       "examples": [
         "main-vault"
       ],
-      "type": "string"
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "string",
+          "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+        }
+      ]
     },
     "providers": {
       "type": "array",
@@ -17,7 +26,16 @@
             "type": "object",
             "properties": {
               "id": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
                 "examples": [
                   "main-vault"
@@ -36,7 +54,16 @@
                 "examples": [
                   "Production HashiCorp Vault for signing keys"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               }
             },
             "required": [
@@ -49,7 +76,16 @@
             "type": "object",
             "properties": {
               "id": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
                 "examples": [
                   "main-vault"
@@ -68,17 +104,44 @@
                 "examples": [
                   "Production HashiCorp Vault for signing keys"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "vaultUrl": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.",
                 "examples": [
                   "${VAULT_URL}"
                 ]
               },
               "vaultToken": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "Authentication token for HashiCorp Vault. Supports ${ENV_VAR} placeholders.",
                 "examples": [
                   "${VAULT_TOKEN}"
@@ -97,7 +160,16 @@
             "type": "object",
             "properties": {
               "id": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
                 "examples": [
                   "main-vault"
@@ -116,10 +188,28 @@
                 "examples": [
                   "Production HashiCorp Vault for signing keys"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "region": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "AWS region for KMS. Supports ${ENV_VAR} placeholders.",
                 "examples": [
                   "${AWS_REGION}"
@@ -130,14 +220,32 @@
                 "examples": [
                   "${AWS_ACCESS_KEY_ID}"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "secretAccessKey": {
                 "description": "AWS secret access key. Optional — uses SDK credential chain if not provided. Supports ${ENV_VAR} placeholders.",
                 "examples": [
                   "${AWS_SECRET_ACCESS_KEY}"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               }
             },
             "required": [
@@ -151,7 +259,16 @@
             "type": "object",
             "properties": {
               "id": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
                 "examples": [
                   "main-vault"
@@ -170,10 +287,28 @@
                 "examples": [
                   "Production HashiCorp Vault for signing keys"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "library": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "Absolute path to the PKCS#11 module library (.so/.dll/.dylib). Supports ${ENV_VAR} placeholders.",
                 "examples": [
                   "${PKCS11_LIBRARY}"
@@ -194,7 +329,16 @@
                 ]
               },
               "pin": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "User PIN used for C_Login. Supports ${ENV_VAR} placeholders.",
                 "examples": [
                   "${PKCS11_PIN}"
@@ -221,7 +365,16 @@
             "type": "object",
             "properties": {
               "id": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
                 "examples": [
                   "main-vault"
@@ -240,10 +393,28 @@
                 "examples": [
                   "Production HashiCorp Vault for signing keys"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "baseUrl": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.",
                 "examples": [
                   "${KMS_SERVICE_URL}"
@@ -281,7 +452,16 @@
                         ]
                       },
                       "token": {
-                        "type": "string",
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                          }
+                        ],
                         "description": "Bearer token value. Supports ${ENV_VAR} placeholders.",
                         "examples": [
                           "${KMS_API_KEY}"
@@ -306,21 +486,48 @@
                         ]
                       },
                       "tokenUrl": {
-                        "type": "string",
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "uri"
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                          }
+                        ],
                         "description": "Token endpoint URL (e.g. Keycloak, Entra ID). Supports ${ENV_VAR} placeholders.",
                         "examples": [
                           "${IAM_TOKEN_URL}"
                         ]
                       },
                       "clientId": {
-                        "type": "string",
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                          }
+                        ],
                         "description": "OAuth 2.0 client ID. Supports ${ENV_VAR} placeholders.",
                         "examples": [
                           "${KMS_CLIENT_ID}"
                         ]
                       },
                       "clientSecret": {
-                        "type": "string",
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                          }
+                        ],
                         "description": "OAuth 2.0 client secret. Supports ${ENV_VAR} placeholders.",
                         "examples": [
                           "${KMS_CLIENT_SECRET}"
@@ -331,7 +538,16 @@
                         "examples": [
                           "kms:sign kms:admin"
                         ],
-                        "type": "string"
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                          }
+                        ]
                       }
                     },
                     "required": [
@@ -354,14 +570,32 @@
                         ]
                       },
                       "certFile": {
-                        "type": "string",
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                          }
+                        ],
                         "description": "Absolute path to the PEM-encoded client certificate file. Supports ${ENV_VAR} placeholders.",
                         "examples": [
                           "/etc/certs/eudiplo.crt"
                         ]
                       },
                       "keyFile": {
-                        "type": "string",
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                          }
+                        ],
                         "description": "Absolute path to the PEM-encoded private key file for the client certificate. Supports ${ENV_VAR} placeholders.",
                         "examples": [
                           "/etc/certs/eudiplo.key"
@@ -372,7 +606,16 @@
                         "examples": [
                           "/etc/certs/ca.crt"
                         ],
-                        "type": "string"
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          {
+                            "type": "string",
+                            "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                          }
+                        ]
                       }
                     },
                     "required": [
@@ -382,21 +625,60 @@
                     ],
                     "additionalProperties": false
                   }
-                ]
+                ],
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "none",
+                      "bearer",
+                      "oauth2-client-credentials",
+                      "mtls"
+                    ]
+                  }
+                },
+                "discriminator": {
+                  "propertyName": "type",
+                  "mapping": {
+                    "none": "#/oneOf/0",
+                    "bearer": "#/oneOf/1",
+                    "oauth2-client-credentials": "#/oneOf/2",
+                    "mtls": "#/oneOf/3"
+                  }
+                }
               },
               "keysPath": {
                 "description": "Path prefix for key endpoints on the remote service. Defaults to /keys.",
                 "examples": [
                   "/v1/keys"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "healthPath": {
                 "description": "Path for the health check endpoint on the remote service. Defaults to /health.",
                 "examples": [
                   "/health"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "canImport": {
                 "description": "Whether the remote service supports key import via POST {keysPath}/{kid}/import. Defaults to false.",
@@ -417,7 +699,16 @@
             "type": "object",
             "properties": {
               "id": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "Unique identifier for this provider instance. Used when generating keys to specify which provider to use.",
                 "examples": [
                   "main-vault"
@@ -436,31 +727,76 @@
                 "examples": [
                   "Production HashiCorp Vault for signing keys"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "baseUrl": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.",
                 "examples": [
                   "${CSC_URL}"
                 ]
               },
               "tokenUrl": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.",
                 "examples": [
                   "${CSC_TOKEN_URL}"
                 ]
               },
               "clientId": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "OAuth2 client ID. Supports ${ENV_VAR} placeholders.",
                 "examples": [
                   "${CSC_CLIENT_ID}"
                 ]
               },
               "clientSecret": {
-                "type": "string",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ],
                 "description": "OAuth2 client secret. Supports ${ENV_VAR} placeholders.",
                 "examples": [
                   "${CSC_CLIENT_SECRET}"
@@ -471,46 +807,109 @@
                 "examples": [
                   "service"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "credentialId": {
                 "description": "Default CSC credential ID. If omitted, the adapter calls credentials/list and picks the first entry.",
                 "examples": [
                   "[INTESIQCSEALEC]_SEAL_351_SIGN_1781018892758"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "userId": {
                 "description": "Optional CSC user ID used in credentials/list requests.",
                 "examples": [
                   "eudiplo_user"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "apiPath": {
                 "description": "CSC API path prefix appended to baseUrl. Defaults to /csc/v2.",
                 "examples": [
                   "/csc/v2"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "hashAlgorithmOid": {
                 "description": "Hash algorithm OID for signatures/signHash and credentials/authorize. Defaults to SHA-256 OID.",
                 "examples": [
                   "2.16.840.1.101.3.4.2.1"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "signAlgorithmOid": {
                 "description": "Signature algorithm OID for signatures/signHash. Defaults to ecdsa-with-SHA256 OID.",
                 "examples": [
                   "1.2.840.10045.4.3.2"
                 ],
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "sad": {
                 "description": "Static SAD token. If set, the adapter sends it directly in signatures/signHash requests.",
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                  }
+                ]
               },
               "useAuthorizeEndpoint": {
                 "description": "When true and no static SAD is provided, the adapter calls credentials/authorize to obtain SAD before signatures/signHash.",
@@ -526,14 +925,32 @@
                   "type": "object",
                   "properties": {
                     "id": {
-                      "type": "string",
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                        }
+                      ],
                       "description": "Authentication factor identifier expected by the CSC provider (e.g., PIN, OTP).",
                       "examples": [
                         "PIN"
                       ]
                     },
                     "value": {
-                      "type": "string",
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\$\\{([A-Z0-9_]+)\\}$"
+                        }
+                      ],
                       "description": "Authentication factor value sent to CSC credentials/authorize.",
                       "examples": [
                         "123456"
@@ -558,7 +975,32 @@
             ],
             "additionalProperties": false
           }
-        ]
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "db",
+              "vault",
+              "aws-kms",
+              "pkcs11",
+              "http",
+              "csc"
+            ]
+          }
+        },
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "db": "#/oneOf/0",
+            "vault": "#/oneOf/1",
+            "aws-kms": "#/oneOf/2",
+            "pkcs11": "#/oneOf/3",
+            "http": "#/oneOf/4",
+            "csc": "#/oneOf/5"
+          }
+        }
       },
       "description": "List of KMS provider configurations. Each provider must have a unique id and a type.",
       "examples": [

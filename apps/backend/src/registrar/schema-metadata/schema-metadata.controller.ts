@@ -3,10 +3,12 @@ import {
     Controller,
     Delete,
     Get,
+    Header,
     Param,
     Patch,
     Post,
     Query,
+    HttpCode,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Role } from "../../auth/roles/role.enum";
@@ -63,6 +65,7 @@ export class SchemaMetadataController {
         status: 201,
         description:
             "Registrar metadata entry for the freshly submitted schema metadata.",
+        type: SchemaMetadataResponseDto,
     })
     @ApiResponse({
         status: 400,
@@ -90,6 +93,7 @@ export class SchemaMetadataController {
         status: 201,
         description:
             "Registrar metadata entry for the freshly submitted schema metadata.",
+        type: SchemaMetadataResponseDto,
     })
     @ApiBody({ type: SignSchemaMetaConfigDto })
     async signSchemaMetaConfig(
@@ -119,6 +123,7 @@ export class SchemaMetadataController {
         status: 201,
         description:
             "Registrar metadata entry for the newly submitted version.",
+        type: SchemaMetadataResponseDto,
     })
     @ApiResponse({
         status: 400,
@@ -147,6 +152,7 @@ export class SchemaMetadataController {
         status: 201,
         description:
             "Registrar metadata entry for the newly submitted version.",
+        type: SchemaMetadataResponseDto,
     })
     @ApiBody({ type: SignVersionSchemaMetaConfigDto })
     async signVersionSchemaMetaConfig(
@@ -221,7 +227,8 @@ export class SchemaMetadataController {
 
     @Delete(":id/versions/:version")
     @ApiOperation({ summary: "Delete schema metadata" })
-    @ApiResponse({ status: 200, description: "Deleted" })
+    @ApiResponse({ status: 204, description: "Deleted" })
+    @HttpCode(204)
     remove(
         @Token() token: TokenPayload,
         @Param("id") id: string,
@@ -255,8 +262,14 @@ export class SchemaMetadataController {
     @ApiResponse({
         status: 200,
         description: "Compact-serialization JWS string",
-        schema: { type: "string" },
+        content: {
+            "application/jwt": {
+                schema: { type: "string" },
+            },
+        },
     })
+    @HttpCode(200)
+    @Header("Content-Type", "application/jwt")
     getJwt(
         @Token() token: TokenPayload,
         @Param("id") id: string,

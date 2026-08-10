@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Put } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Role } from "../auth/roles/role.enum";
 import { Secured } from "../auth/secure.decorator";
@@ -68,9 +68,10 @@ export class SessionConfigController {
             "Resets the session storage configuration to use global defaults.",
     })
     @ApiResponse({
-        status: 200,
+        status: 204,
         description: "Configuration reset successfully",
     })
+    @HttpCode(204)
     resetConfig(@Token() token: TokenPayload): Promise<void> {
         return this.sessionConfigService.resetConfig(token.entity!.id);
     }

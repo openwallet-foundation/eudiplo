@@ -1,11 +1,13 @@
 import { z } from "zod";
 import {
     booleanField,
+    findMissingEnvPlaceholderIssues,
     createValidationException,
     optionalTextField,
     resolveEnvPlaceholders,
     textField,
     toValidationIssues,
+    urlField,
     withMeta,
 } from "../../../shared/common/zod/zod-schema.util";
 
@@ -44,7 +46,7 @@ export const HttpAuthOauth2ConfigSchema = z.strictObject({
             "OAuth 2.0 Client Credentials — EUDIPLO fetches and caches short-lived tokens.",
         examples: ["oauth2-client-credentials"],
     }),
-    tokenUrl: textField(
+    tokenUrl: urlField(
         "Token endpoint URL (e.g. Keycloak, Entra ID). Supports ${ENV_VAR} placeholders.",
         "${IAM_TOKEN_URL}",
     ),
@@ -117,7 +119,7 @@ export const VaultKmsConfigSchema = BaseKmsProviderConfigSchema.extend({
         description: "Type of the KMS provider.",
         examples: ["vault"],
     }),
-    vaultUrl: textField(
+    vaultUrl: urlField(
         "URL of the HashiCorp Vault instance. Supports ${ENV_VAR} placeholders.",
         "${VAULT_URL}",
     ),
@@ -175,7 +177,7 @@ export const HttpKmsConfigSchema = BaseKmsProviderConfigSchema.extend({
         description: "Type of the KMS provider.",
         examples: ["http"],
     }),
-    baseUrl: textField(
+    baseUrl: urlField(
         "Base URL of the remote KMS microservice (no trailing slash). Supports ${ENV_VAR} placeholders.",
         "${KMS_SERVICE_URL}",
     ),
@@ -217,11 +219,11 @@ export const CscKmsConfigSchema = BaseKmsProviderConfigSchema.extend({
         description: "Type of the KMS provider.",
         examples: ["csc"],
     }),
-    baseUrl: textField(
+    baseUrl: urlField(
         "Base URL of the CSC service (without trailing slash). Supports ${ENV_VAR} placeholders.",
         "${CSC_URL}",
     ),
-    tokenUrl: textField(
+    tokenUrl: urlField(
         "OAuth2 token endpoint URL for client-credentials flow. Supports ${ENV_VAR} placeholders.",
         "${CSC_TOKEN_URL}",
     ),
@@ -367,6 +369,21 @@ export function parseResolvedKmsConfig(
     source = "KMS configuration",
 ): KmsConfig {
     const raw = parseRawKmsConfig(input, source);
+    const missingEnvIssues = findMissingEnvPlaceholderIssues(raw);
+    if (missingEnvIssues.length > 0) {
+        const missingVariables = [
+            ...new Set(
+                missingEnvIssues
+                    .map((issue) => issue.message.match(/'([^']+)'/)?.[1])
+                    .filter((value): value is string => value !== undefined),
+            ),
+        ];
+        throw createValidationException(
+            missingEnvIssues,
+            `${source}: Missing environment variables: ${missingVariables.join(", ")}`,
+        );
+    }
+
     const resolved = resolveEnvPlaceholders(raw);
     const parsed = KmsConfigSchema.safeParse(resolved);
 

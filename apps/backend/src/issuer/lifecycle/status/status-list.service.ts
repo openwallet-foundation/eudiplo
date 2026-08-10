@@ -26,7 +26,7 @@ import { IsNull, Repository } from "typeorm";
 import { v4 } from "uuid";
 import { TenantEntity } from "../../../auth/tenant/entitites/tenant.entity";
 import { CertService } from "../../../crypto/key/cert/cert.service";
-import { KeyUsageType } from "../../../crypto/key/entities/key-chain.entity";
+import { KeyUsageType } from "../../../crypto/key/types/key-usage-type";
 import { KeyChainService } from "../../../crypto/key/key-chain.service";
 import { Session } from "../../../session/entities/session.entity";
 import { ConfigImportService } from "../../../shared/utils/config-import/config-import.service";

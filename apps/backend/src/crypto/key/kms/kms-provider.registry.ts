@@ -7,9 +7,9 @@ import {
 } from "@nestjs/common";
 import * as x509 from "@peculiar/x509";
 import type {
-    KmsProviderConfigDto,
+    KmsProviderConfig,
     KmsProviderType,
-} from "../dto/kms-config.dto";
+} from "../schemas/kms-config.schema";
 import { KmsConfigService } from "./kms-config.service";
 import { KmsCryptoProvider } from "./kms-crypto-provider";
 import type { KmsProviderInfoDto } from "../dto/kms-provider-capabilities.dto";
@@ -172,14 +172,14 @@ export class KmsProviderRegistry implements OnModuleInit {
         this.tenantBundles.delete(tenantId);
     }
 
-    private instantiate(provider: KmsProviderConfigDto): KmsAdapter {
+    private instantiate(provider: KmsProviderConfig): KmsAdapter {
         const type: KmsProviderType = provider.type;
         switch (type) {
             case "db":
                 return new DbKmsAdapter(provider.id);
             case "vault": {
                 const p = provider as Extract<
-                    KmsProviderConfigDto,
+                    KmsProviderConfig,
                     { type: "vault" }
                 >;
                 return new VaultKmsAdapter(
@@ -193,7 +193,7 @@ export class KmsProviderRegistry implements OnModuleInit {
             }
             case "aws-kms": {
                 const p = provider as Extract<
-                    KmsProviderConfigDto,
+                    KmsProviderConfig,
                     { type: "aws-kms" }
                 >;
                 return new AwsKmsAdapter({
@@ -205,7 +205,7 @@ export class KmsProviderRegistry implements OnModuleInit {
             }
             case "pkcs11": {
                 const p = provider as Extract<
-                    KmsProviderConfigDto,
+                    KmsProviderConfig,
                     { type: "pkcs11" }
                 >;
                 const slot =
@@ -222,7 +222,7 @@ export class KmsProviderRegistry implements OnModuleInit {
             }
             case "http": {
                 const p = provider as Extract<
-                    KmsProviderConfigDto,
+                    KmsProviderConfig,
                     { type: "http" }
                 >;
                 return new HttpKmsAdapter(
@@ -239,7 +239,7 @@ export class KmsProviderRegistry implements OnModuleInit {
             }
             case "csc": {
                 const p = provider as Extract<
-                    KmsProviderConfigDto,
+                    KmsProviderConfig,
                     { type: "csc" }
                 >;
                 return new CscKmsAdapter(

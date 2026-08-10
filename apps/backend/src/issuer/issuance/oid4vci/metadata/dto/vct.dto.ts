@@ -1,28 +1,28 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmpty, IsOptional, IsString } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
-export class VCT {
+const VctSchema = z
+    .object({
+        vct: z.string().optional(),
+        name: z.string().optional(),
+        description: z.string().optional(),
+        extends: z.string().optional(),
+        "extends#integrity": z.string().optional(),
+        schema_uri: z.string().optional(),
+        "schema_uri#integrity": z.string().optional(),
+    })
+    .strict();
+
+export class VCT extends createZodDto(VctSchema) {
     @ApiProperty({
         required: false,
     })
-    @IsEmpty()
     vct?: string;
-    @IsOptional()
-    @IsString()
     name?: string;
-    @IsOptional()
-    @IsString()
     description?: string;
-    @IsOptional()
-    @IsString()
     extends?: string;
-    @IsOptional()
-    @IsString()
     "extends#integrity"?: string;
-    @IsOptional()
-    @IsString()
     schema_uri?: string;
-    @IsOptional()
-    @IsString()
     "schema_uri#integrity"?: string;
 }

@@ -2,9 +2,8 @@ import {
     ConfigImportOrchestratorService,
     ImportPhase,
 } from "../../shared/utils/config-import/config-import-orchestrator.service";
-import { CreateClientDto } from "./dto/create-client.dto";
-import { UpdateClientDto } from "./dto/update-client.dto";
 import { ClientEntity } from "./entities/client.entity";
+import type { CreateClient, UpdateClient } from "./schemas/client.schema";
 
 export const CLIENTS_PROVIDER = "CLIENTS_PROVIDER";
 
@@ -12,7 +11,7 @@ export abstract class ClientsProvider {
     abstract updateClient(
         tenantId: string,
         clientId: string,
-        updateClientDto: UpdateClientDto,
+        updateClientDto: UpdateClient,
     ): unknown;
 
     /**
@@ -42,7 +41,7 @@ export abstract class ClientsProvider {
 
     abstract addClient(
         tenantId: string,
-        dto: CreateClientDto,
+        dto: CreateClient,
     ): Promise<ClientEntity>;
     abstract removeClient(tenantId: string, clientId: string): Promise<void>;
     abstract importForTenant(tenantId: string): Promise<void>;

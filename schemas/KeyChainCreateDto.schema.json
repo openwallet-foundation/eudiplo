@@ -1,10 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./KeyChainCreateDto.schema.json",
-  "title": "KeyChainCreateDto",
   "type": "object",
   "properties": {
     "usageType": {
+      "type": "string",
       "enum": [
         "access",
         "attestation",
@@ -12,41 +11,56 @@
         "statusList",
         "encrypt"
       ],
-      "type": "string",
-      "description": "Usage type determines the purpose of this key chain (access, attestation, etc.).",
-      "example": "attestation"
+      "description": "Key usage category for the key chain."
     },
     "type": {
+      "type": "string",
       "enum": [
         "standalone",
         "internalChain"
       ],
-      "type": "string",
-      "description": "Type of key chain to create.",
-      "example": "internalChain"
+      "description": "Key chain mode."
     },
     "description": {
-      "type": "string",
-      "description": "Human-readable description for the key chain.",
-      "example": "Production credential signing key"
+      "description": "Optional key chain description.",
+      "type": "string"
     },
     "kmsProvider": {
-      "type": "string",
-      "description": "KMS provider to use (defaults to the configured default provider).",
-      "example": "vault"
+      "description": "Optional KMS provider id for key storage operations.",
+      "type": "string"
     },
     "rotationPolicy": {
-      "description": "Rotation policy configuration. Only applicable for the signing key (root CA never rotates).",
-      "allOf": [
-        {
-          "$ref": "./RotationPolicyCreateDto.schema.json"
+      "description": "Optional rotation policy.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable or disable automatic key rotation."
+        },
+        "intervalDays": {
+          "description": "Rotation interval in days.",
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3650
+        },
+        "certValidityDays": {
+          "description": "Certificate validity period in days for generated leaf certificates.",
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3650
         }
-      ]
+      },
+      "required": [
+        "enabled"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [
     "usageType",
     "type"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./KeyChainCreateDto.schema.json",
+  "title": "KeyChainCreateDto"
 }

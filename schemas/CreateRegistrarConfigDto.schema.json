@@ -1,45 +1,49 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./CreateRegistrarConfigDto.schema.json",
-  "title": "CreateRegistrarConfigDto",
   "type": "object",
   "properties": {
     "registrarUrl": {
       "type": "string",
-      "description": "The base URL of the registrar API",
-      "example": "https://sandbox.eudi-wallet.org/api"
+      "format": "uri",
+      "description": "Base URL of the registrar service."
     },
     "oidcUrl": {
       "type": "string",
-      "description": "The OIDC issuer URL for authentication (e.g., Keycloak realm URL)",
-      "example": "https://auth.example.com/realms/my-realm"
+      "format": "uri",
+      "description": "OIDC discovery or issuer URL used for authentication."
     },
     "clientId": {
       "type": "string",
-      "description": "The OIDC client ID for the registrar",
-      "example": "registrar-client"
+      "minLength": 1,
+      "description": "OAuth client ID used against the registrar."
     },
     "clientSecret": {
+      "description": "Optional OAuth client secret for registrar authentication.",
       "type": "string",
-      "description": "The OIDC client secret (optional, for confidential clients)"
+      "minLength": 1
     },
     "username": {
       "type": "string",
-      "description": "The username for OIDC login",
-      "example": "admin@example.com"
+      "minLength": 1,
+      "description": "Username used for registrar authentication."
     },
     "password": {
       "type": "string",
-      "description": "The password for OIDC login (stored in plaintext)"
+      "minLength": 1,
+      "description": "Password used for registrar authentication."
     },
     "registrationCertificateDefaults": {
-      "nullable": true,
-      "description": "Optional default values merged into registration certificate creation requests (for example privacy_policy, support_uri)",
-      "additionalProperties": true,
-      "type": "object",
-      "allOf": [
+      "description": "Optional default registration certificate values.",
+      "anyOf": [
         {
-          "$ref": "./RegistrationCertificateDefaults.schema.json"
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        },
+        {
+          "type": "null"
         }
       ]
     }
@@ -51,5 +55,7 @@
     "username",
     "password"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./CreateRegistrarConfigDto.schema.json",
+  "title": "CreateRegistrarConfigDto"
 }

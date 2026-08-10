@@ -1,90 +1,658 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./PresentationConfigCreateDto.schema.json",
-  "title": "PresentationConfigCreateDto",
   "type": "object",
   "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Presentation configuration identifier."
+    },
+    "description": {
+      "description": "Optional presentation configuration description.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "lifeTime": {
+      "description": "Presentation request lifetime in seconds.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
     "skewSeconds": {
-      "type": "number",
-      "description": "Clock skew tolerance for credential JWT time validation, in seconds.",
+      "description": "Clock skew tolerance in seconds.",
+      "type": "integer",
       "minimum": 0,
-      "default": 60
+      "maximum": 9007199254740991
     },
     "statusCheckMode": {
-      "description": "Status list verification mode for presentations: strict (default), best_effort, or disabled.",
+      "description": "Revocation/status check mode.",
+      "type": "string",
       "enum": [
         "strict",
         "best_effort",
         "disabled"
-      ],
-      "type": "string",
-      "default": "strict"
-    },
-    "id": {
-      "type": "string",
-      "description": "Unique identifier for the VP request."
-    },
-    "description": {
-      "type": "string",
-      "nullable": true,
-      "description": "Description of the presentation configuration."
-    },
-    "lifeTime": {
-      "type": "number",
-      "description": "Lifetime how long the presentation request is valid after creation, in seconds."
-    },
-    "dcql_query": {
-      "description": "The DCQL query to be used for the VP request.",
-      "allOf": [
-        {
-          "$ref": "./DCQL.schema.json"
-        }
       ]
     },
+    "dcql_query": {
+      "type": "object",
+      "properties": {
+        "credentials": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Credential query identifier."
+                  },
+                  "multiple": {
+                    "description": "Allow multiple matching credentials.",
+                    "type": "boolean"
+                  },
+                  "claim_sets": {
+                    "description": "Optional claim set constraints.",
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "trusted_authorities": {
+                    "description": "Optional trusted authority constraints.",
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "const": "etsi_tl",
+                              "description": "Trusted authority type discriminator for ETSI trust lists."
+                            },
+                            "values": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "trustListId": {
+                                    "description": "Optional trust list id reference.",
+                                    "type": "string"
+                                  },
+                                  "url": {
+                                    "description": "Optional trust list URL reference.",
+                                    "type": "string",
+                                    "format": "uri"
+                                  },
+                                  "verifierKey": {
+                                    "description": "Optional verifier key material.",
+                                    "type": "object",
+                                    "propertyNames": {
+                                      "type": "string"
+                                    },
+                                    "additionalProperties": {}
+                                  },
+                                  "verifierX509Der": {
+                                    "description": "Optional verifier certificate in DER/base64 form.",
+                                    "type": "string"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "description": "Trust list references for ETSI TL verification."
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "values"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "const": "openid_federation",
+                              "description": "Trusted authority type discriminator for OpenID Federation."
+                            },
+                            "values": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "description": "OpenID Federation authority identifiers."
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "values"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ],
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "etsi_tl",
+                            "openid_federation"
+                          ]
+                        }
+                      },
+                      "discriminator": {
+                        "propertyName": "type",
+                        "mapping": {
+                          "etsi_tl": "#/oneOf/0",
+                          "openid_federation": "#/oneOf/1"
+                        }
+                      }
+                    }
+                  },
+                  "format": {
+                    "type": "string",
+                    "const": "dc+sd-jwt",
+                    "description": "Credential format discriminator."
+                  },
+                  "meta": {
+                    "type": "object",
+                    "properties": {
+                      "vct_values": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Accepted VCT values."
+                      }
+                    },
+                    "required": [
+                      "vct_values"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "claims": {
+                    "description": "Optional claim-level constraints.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "description": "Optional claim query id.",
+                          "type": "string"
+                        },
+                        "path": {
+                          "type": "array",
+                          "items": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "number"
+                              }
+                            ]
+                          },
+                          "description": "Path to the claim value in presented credentials."
+                        },
+                        "values": {
+                          "description": "Optional allowed values for the claim.",
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "format",
+                  "meta"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Credential query identifier."
+                  },
+                  "multiple": {
+                    "description": "Allow multiple matching credentials.",
+                    "type": "boolean"
+                  },
+                  "claim_sets": {
+                    "description": "Optional claim set constraints.",
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "trusted_authorities": {
+                    "description": "Optional trusted authority constraints.",
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "const": "etsi_tl",
+                              "description": "Trusted authority type discriminator for ETSI trust lists."
+                            },
+                            "values": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "trustListId": {
+                                    "description": "Optional trust list id reference.",
+                                    "type": "string"
+                                  },
+                                  "url": {
+                                    "description": "Optional trust list URL reference.",
+                                    "type": "string",
+                                    "format": "uri"
+                                  },
+                                  "verifierKey": {
+                                    "description": "Optional verifier key material.",
+                                    "type": "object",
+                                    "propertyNames": {
+                                      "type": "string"
+                                    },
+                                    "additionalProperties": {}
+                                  },
+                                  "verifierX509Der": {
+                                    "description": "Optional verifier certificate in DER/base64 form.",
+                                    "type": "string"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "description": "Trust list references for ETSI TL verification."
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "values"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "const": "openid_federation",
+                              "description": "Trusted authority type discriminator for OpenID Federation."
+                            },
+                            "values": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "description": "OpenID Federation authority identifiers."
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "values"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ],
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "etsi_tl",
+                            "openid_federation"
+                          ]
+                        }
+                      },
+                      "discriminator": {
+                        "propertyName": "type",
+                        "mapping": {
+                          "etsi_tl": "#/oneOf/0",
+                          "openid_federation": "#/oneOf/1"
+                        }
+                      }
+                    }
+                  },
+                  "format": {
+                    "type": "string",
+                    "const": "mso_mdoc",
+                    "description": "Credential format discriminator."
+                  },
+                  "meta": {
+                    "type": "object",
+                    "properties": {
+                      "doctype_value": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Expected mDoc doctype value."
+                      }
+                    },
+                    "required": [
+                      "doctype_value"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "claims": {
+                    "description": "Optional mDoc claim-level constraints.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "description": "Optional claim query id.",
+                          "type": "string"
+                        },
+                        "path": {
+                          "type": "array",
+                          "items": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "number"
+                              }
+                            ]
+                          },
+                          "description": "Path to the claim value in presented credentials."
+                        },
+                        "values": {
+                          "description": "Optional allowed values for the claim.",
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "intent_to_retain": {
+                          "description": "Whether relying party intends to retain the claim.",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "format",
+                  "meta"
+                ],
+                "additionalProperties": false
+              }
+            ],
+            "type": "object",
+            "properties": {
+              "format": {
+                "type": "string",
+                "enum": [
+                  "dc+sd-jwt",
+                  "mso_mdoc"
+                ]
+              }
+            },
+            "discriminator": {
+              "propertyName": "format",
+              "mapping": {
+                "dc+sd-jwt": "#/oneOf/0",
+                "mso_mdoc": "#/oneOf/1"
+              }
+            }
+          },
+          "description": "Credential queries requested by the verifier."
+        },
+        "credential_sets": {
+          "description": "Optional higher-level credential set requirements.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "options": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "description": "Alternative credential query id combinations."
+              },
+              "required": {
+                "description": "Whether this credential set is mandatory.",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "options"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "credentials"
+      ],
+      "additionalProperties": false,
+      "description": "DCQL query defining requested credentials and claims."
+    },
     "transaction_data": {
+      "description": "Optional transaction data descriptors.",
       "type": "array",
       "items": {
-        "$ref": "./TransactionData.schema.json"
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Transaction data type identifier."
+          },
+          "credential_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Credential query ids this transaction data applies to."
+          }
+        },
+        "required": [
+          "type",
+          "credential_ids"
+        ],
+        "additionalProperties": {}
       }
     },
     "registration_cert": {
-      "nullable": true,
-      "description": "The registration certificate request containing the necessary details.",
-      "type": "object",
-      "allOf": [
+      "description": "Optional registration certificate request settings.",
+      "anyOf": [
         {
-          "$ref": "./RegistrationCertificateRequest.schema.json"
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "body": {
+              "type": "object",
+              "properties": {
+                "privacy_policy": {
+                  "type": "string"
+                },
+                "support_uri": {
+                  "type": "string"
+                },
+                "intermediary": {
+                  "type": "string"
+                },
+                "purpose": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "lang": {
+                        "type": "string"
+                      },
+                      "content": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "lang",
+                      "content"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "credentials": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
+                },
+                "provided_attestations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
+            "jwt": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
         }
       ]
     },
     "webhookEndpointId": {
-      "type": "string",
-      "nullable": true,
-      "description": "Reference to the webhook endpoint used for notifications.\nOptional: if set, notifications will be sent to this endpoint."
+      "description": "Optional webhook endpoint id for presentation callbacks.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "attached": {
-      "nullable": true,
-      "description": "Attestation that should be attached",
-      "type": "array",
-      "items": {
-        "$ref": "./PresentationAttachment.schema.json"
-      }
+      "description": "Optional attachments included with presentation requests.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "format": {
+                "type": "string",
+                "description": "Attachment format identifier."
+              },
+              "data": {
+                "description": "Attachment payload."
+              },
+              "credential_ids": {
+                "description": "Optional credential query ids bound to this attachment.",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "format",
+              "data"
+            ],
+            "additionalProperties": false
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "redirectUri": {
-      "type": "string",
-      "nullable": true,
-      "description": "Redirect URI to which the user-agent should be redirected after the presentation is completed.\nYou can use the `{sessionId}` placeholder in the URI, which will be replaced with the actual session ID.",
-      "example": "https://example.com/callback?session={sessionId}"
+      "description": "Optional redirect URI after presentation completion.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "accessKeyChainId": {
-      "type": "string",
-      "nullable": true,
-      "description": "Optional ID of the access certificate to use for signing the presentation request.\nIf not provided, the default access certificate for the tenant will be used.\n\nNote: This is intentionally NOT a TypeORM relationship because CertEntity uses\na composite primary key (id + tenantId), and SQLite cannot create foreign keys\nthat reference only part of a composite primary key. The relationship is handled\nat the application level in the service layer."
+      "description": "Optional key chain id for access token/auth operations.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "readerAuth": {
+      "description": "Whether reader authentication is required for mDoc requests.",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
     }
   },
   "required": [
     "id",
     "dcql_query"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./PresentationConfigCreateDto.schema.json",
+  "title": "PresentationConfigCreateDto"
 }

@@ -9,7 +9,6 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
-import { plainToClass } from "class-transformer";
 import { decodeJwt } from "jose";
 import { Repository } from "typeorm";
 import { ConfigImportService } from "../../../shared/utils/config-import/config-import.service";
@@ -109,7 +108,7 @@ export class KeycloakClientsProvider
                 resourceType: "client config",
                 loadData: (filePath) => {
                     const payload = JSON.parse(readFileSync(filePath, "utf8"));
-                    return plainToClass(ClientEntity, payload);
+                    return payload as ClientEntity;
                 },
                 checkExists: async (currentTenantId, data) => {
                     return this.getClientById((data as any).clientId)

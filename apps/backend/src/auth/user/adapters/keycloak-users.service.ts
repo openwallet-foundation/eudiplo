@@ -9,9 +9,8 @@ import {
 import { ConfigService } from "@nestjs/config";
 import { decodeJwt } from "jose";
 import { allRoles, Role } from "../../roles/role.enum";
-import { CreateUserDto } from "../dto/create-user.dto";
 import { ManagedUserDto } from "../dto/managed-user.dto";
-import { UpdateUserDto } from "../dto/update-user.dto";
+import type { CreateUser, UpdateUser } from "../schemas/create-user.schema";
 import { UsersProvider } from "../user.provider";
 
 @Injectable()
@@ -68,10 +67,7 @@ export class KeycloakUsersProvider extends UsersProvider {
         return this.mapUser(user);
     }
 
-    async addUser(
-        tenantId: string,
-        dto: CreateUserDto,
-    ): Promise<ManagedUserDto> {
+    async addUser(tenantId: string, dto: CreateUser): Promise<ManagedUserDto> {
         const existing = (
             await this.kc.users.find({ username: dto.username, exact: true })
         )[0];
@@ -128,7 +124,7 @@ export class KeycloakUsersProvider extends UsersProvider {
     async updateUser(
         tenantId: string,
         userId: string,
-        dto: UpdateUserDto,
+        dto: UpdateUser,
     ): Promise<ManagedUserDto> {
         const user = await this.kc.users.findOne({ id: userId });
         if (!user?.id) {

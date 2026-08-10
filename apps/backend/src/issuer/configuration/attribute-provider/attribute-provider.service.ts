@@ -17,8 +17,11 @@ import {
 } from "../../../shared/utils/config-import/config-import-orchestrator.service";
 import { OutboundUrlPolicyService } from "../../../shared/utils/webhook/outbound-url-policy.service";
 import { CreateAttributeProviderDto } from "./dto/create-attribute-provider.dto";
-import { UpdateAttributeProviderDto } from "./dto/update-attribute-provider.dto";
 import { AttributeProviderEntity } from "./entities/attribute-provider.entity";
+import type {
+    CreateAttributeProvider,
+    UpdateAttributeProvider,
+} from "./schemas/attribute-provider.schema";
 
 @Injectable()
 export class AttributeProviderService {
@@ -76,13 +79,16 @@ export class AttributeProviderService {
 
     async create(
         tenantId: string,
-        dto: CreateAttributeProviderDto,
+        dto: CreateAttributeProvider,
         actorToken?: TokenPayload,
         req?: Request,
     ) {
         await this.outboundUrlPolicyService.assertSafeUrl(dto.url);
 
-        const saved = await this.repo.save({ ...dto, tenantId });
+        const saved = (await this.repo.save({
+            ...dto,
+            tenantId,
+        } as any)) as AttributeProviderEntity;
 
         if (actorToken) {
             await this.tenantActionLogService.record({
@@ -104,7 +110,7 @@ export class AttributeProviderService {
     async update(
         tenantId: string,
         id: string,
-        dto: UpdateAttributeProviderDto,
+        dto: UpdateAttributeProvider,
         actorToken?: TokenPayload,
         req?: Request,
     ) {
@@ -114,12 +120,12 @@ export class AttributeProviderService {
             await this.outboundUrlPolicyService.assertSafeUrl(dto.url);
         }
 
-        const saved = await this.repo.save({
+        const saved = (await this.repo.save({
             ...existing,
             ...dto,
             id,
             tenantId,
-        });
+        } as any)) as AttributeProviderEntity;
 
         if (actorToken) {
             await this.tenantActionLogService.record({

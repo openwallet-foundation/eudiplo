@@ -1,11 +1,11 @@
-import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsOptional, IsString, ValidateNested } from "class-validator";
+import {
+    ApiProperty,
+    ApiPropertyOptional,
+    getSchemaPath,
+} from "@nestjs/swagger";
 import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { TenantEntity } from "../../../../auth/tenant/entitites/tenant.entity";
 import {
-    AuthConfig,
-    WebHookAuthConfig,
     WebHookAuthConfigHeader,
     WebHookAuthConfigNone,
 } from "../../../../shared/utils/webhook/webhook.dto";
@@ -23,45 +23,33 @@ export class WebhookEndpointEntity {
     @ApiProperty({
         description: "Unique identifier for the webhook endpoint",
     })
-    @IsString()
     @PrimaryColumn("varchar")
     id!: string;
 
+    @ApiProperty({ description: "Tenant identifier" })
     @Column("varchar", { primary: true })
     tenantId!: string;
 
     @ManyToOne(() => TenantEntity, { cascade: true, onDelete: "CASCADE" })
     tenant!: TenantEntity;
 
-    @IsString()
+    @ApiProperty({ description: "Webhook endpoint name" })
     @Column("varchar")
     name!: string;
 
-    @IsOptional()
-    @IsString()
+    @ApiPropertyOptional({ description: "Webhook endpoint description" })
     @Column("varchar", { nullable: true })
     description?: string | null;
 
-    @IsString()
+    @ApiProperty({ description: "Webhook endpoint URL" })
     @Column("varchar")
     url!: string;
 
-    @ValidateNested()
     @ApiProperty({
         oneOf: [
             { $ref: getSchemaPath(WebHookAuthConfigNone) },
             { $ref: getSchemaPath(WebHookAuthConfigHeader) },
         ],
-    })
-    @Type(() => WebHookAuthConfig, {
-        discriminator: {
-            property: "type",
-            subTypes: [
-                { name: AuthConfig.NONE, value: WebHookAuthConfigNone },
-                { name: AuthConfig.API_KEY, value: WebHookAuthConfigHeader },
-            ],
-        },
-        keepDiscriminatorProperty: true,
     })
     @Column("json")
     auth!: WebHookAuthConfigNone | WebHookAuthConfigHeader;

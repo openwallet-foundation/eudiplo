@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Req } from "@nestjs/common";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Request } from "express";
 import { Role } from "../../../auth/roles/role.enum";
 import { Secured } from "../../../auth/secure.decorator";
@@ -20,6 +20,8 @@ export class IssuanceConfigController {
      * @returns
      */
     @Get()
+    @ApiOperation({ summary: "Get issuance configuration" })
+    @ApiResponse({ status: 200, type: IssuanceConfig })
     getIssuanceConfigurations(
         @Token() user: TokenPayload,
     ): Promise<IssuanceConfig> {
@@ -39,6 +41,9 @@ export class IssuanceConfigController {
      * @returns
      */
     @Post()
+    @ApiOperation({ summary: "Create or replace issuance configuration" })
+    @ApiBody({ type: UpdateIssuanceDto })
+    @ApiResponse({ status: 200, type: IssuanceConfig })
     storeIssuanceConfiguration(
         @Body() config: UpdateIssuanceDto,
         @Token() user: TokenPayload,

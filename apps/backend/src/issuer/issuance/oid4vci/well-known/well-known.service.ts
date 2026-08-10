@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { CertService } from "../../../../crypto/key/cert/cert.service";
 import { CryptoImplementationService } from "../../../../crypto/key/crypto-implementation/crypto-implementation.service";
-import { KeyUsageType } from "../../../../crypto/key/entities/key-chain.entity";
+import { KeyUsageType } from "../../../../crypto/key/types/key-usage-type";
 import { KeyChainService } from "../../../../crypto/key/key-chain.service";
 import { MediaType } from "../../../../shared/utils/mediaType/media-type.enum";
 import { IssuanceService } from "../../../configuration/issuance/issuance.service";

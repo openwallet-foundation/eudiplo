@@ -1,7 +1,6 @@
-import { OmitType } from "@nestjs/swagger";
-import { TENANT_RELATION_FIELDS } from "../../../../shared/utils/dto-omit-fields";
-import { WebhookEndpointEntity } from "../entities/webhook-endpoint.entity";
+import { createZodDto } from "nestjs-zod";
+import { CreateWebhookEndpointSchema } from "../schemas/webhook-endpoint.schema";
 
-export class CreateWebhookEndpointDto extends OmitType(WebhookEndpointEntity, [
-    ...TENANT_RELATION_FIELDS,
-]) {}
+export class CreateWebhookEndpointDto extends createZodDto(
+    CreateWebhookEndpointSchema,
+) {}

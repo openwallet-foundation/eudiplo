@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsEnum, IsIn, IsInt, IsOptional, Max, Min } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 import { SessionStatus } from "../entities/session.entity";
 
 export type SessionSortBy = "id" | "status" | "createdAt" | "requestId";
@@ -8,10 +8,21 @@ export type SessionSortOrder = "asc" | "desc";
 
 export type SessionType = "issuance" | "presentation";
 
+const SessionQuerySchema = z
+    .object({
+        page: z.coerce.number().int().min(1).default(1),
+        pageSize: z.coerce.number().int().min(1).max(100).default(25),
+        status: z.enum(SessionStatus).optional(),
+        type: z.enum(["issuance", "presentation"]).optional(),
+        sortBy: z.enum(["id", "status", "createdAt", "requestId"]).optional(),
+        sortOrder: z.enum(["asc", "desc"]).optional(),
+    })
+    .strict();
+
 /**
  * Query parameters for filtering and paginating the session list.
  */
-export class SessionQueryDto {
+export class SessionQueryDto extends createZodDto(SessionQuerySchema) {
     /**
      * Page number (1-based).
      */
@@ -20,10 +31,6 @@ export class SessionQueryDto {
         default: 1,
         minimum: 1,
     })
-    @IsOptional()
-    @IsInt()
-    @Min(1)
-    @Type(() => Number)
     page: number = 1;
 
     /**
@@ -35,11 +42,6 @@ export class SessionQueryDto {
         minimum: 1,
         maximum: 100,
     })
-    @IsOptional()
-    @IsInt()
-    @Min(1)
-    @Max(100)
-    @Type(() => Number)
     pageSize: number = 25;
 
     /**
@@ -49,8 +51,6 @@ export class SessionQueryDto {
         enum: SessionStatus,
         description: "Filter by session status",
     })
-    @IsOptional()
-    @IsEnum(SessionStatus)
     status?: SessionStatus;
 
     /**
@@ -60,8 +60,6 @@ export class SessionQueryDto {
         enum: ["issuance", "presentation"],
         description: "Filter by session type",
     })
-    @IsOptional()
-    @IsEnum(["issuance", "presentation"])
     type?: SessionType;
 
     /**
@@ -71,8 +69,6 @@ export class SessionQueryDto {
         enum: ["id", "status", "createdAt", "requestId"],
         description: "Field to sort by",
     })
-    @IsOptional()
-    @IsIn(["id", "status", "createdAt", "requestId"])
     sortBy?: SessionSortBy;
 
     /**
@@ -82,7 +78,5 @@ export class SessionQueryDto {
         enum: ["asc", "desc"],
         description: "Sort direction",
     })
-    @IsOptional()
-    @IsIn(["asc", "desc"])
     sortOrder?: SessionSortOrder;
 }

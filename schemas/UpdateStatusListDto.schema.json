@@ -1,21 +1,33 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./UpdateStatusListDto.schema.json",
-  "title": "UpdateStatusListDto",
   "type": "object",
   "properties": {
     "credentialConfigurationId": {
-      "type": "string",
-      "nullable": true,
-      "description": "Credential configuration ID to bind this list exclusively to. Set to null to make this a shared list.",
-      "example": "org.iso.18013.5.1.mDL"
+      "description": "Updated credential configuration binding. Null means shared list.",
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "keyChainId": {
-      "type": "string",
-      "nullable": true,
-      "description": "Key chain ID to use for signing. Set to null to use the tenant's default StatusList key chain.",
-      "example": "my-status-list-keychain"
+      "description": "Updated key chain id. Null means use tenant default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./UpdateStatusListDto.schema.json",
+  "title": "UpdateStatusListDto"
 }

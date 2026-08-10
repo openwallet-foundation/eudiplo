@@ -1,44 +1,61 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./StatusListImportDto.schema.json",
-  "title": "StatusListImportDto",
   "type": "object",
   "properties": {
     "id": {
       "type": "string",
-      "description": "Unique identifier for the status list"
+      "minLength": 1,
+      "description": "Status list identifier."
     },
     "credentialConfigurationId": {
-      "type": "string",
-      "nullable": true,
-      "description": "Credential configuration ID to bind this list exclusively to. Leave empty for a shared list.",
-      "example": "org.iso.18013.5.1.mDL"
+      "description": "Optional credential configuration binding. Null means shared list.",
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "keyChainId": {
+      "description": "Optional key chain used for signing this status list.",
       "type": "string",
-      "description": "Key chain ID to use for signing. Leave empty to use the tenant's default StatusList key chain.",
-      "example": "my-status-list-keychain"
+      "minLength": 1
     },
     "capacity": {
-      "type": "number",
-      "description": "Capacity of the status list. If not provided, uses tenant or global defaults.",
+      "description": "Optional list capacity override.",
+      "type": "integer",
       "minimum": 100,
-      "example": 10000
+      "maximum": 9007199254740991
     },
     "bits": {
-      "description": "Bits per status value. If not provided, uses tenant or global defaults.",
-      "enum": [
-        1,
-        2,
-        4,
-        8
-      ],
-      "type": "number",
-      "example": 1
+      "description": "Optional bits-per-status override.",
+      "anyOf": [
+        {
+          "type": "number",
+          "const": 1
+        },
+        {
+          "type": "number",
+          "const": 2
+        },
+        {
+          "type": "number",
+          "const": 4
+        },
+        {
+          "type": "number",
+          "const": 8
+        }
+      ]
     }
   },
   "required": [
     "id"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./StatusListImportDto.schema.json",
+  "title": "StatusListImportDto"
 }

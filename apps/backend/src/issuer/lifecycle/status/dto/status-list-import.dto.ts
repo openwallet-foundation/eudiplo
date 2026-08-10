@@ -1,13 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { BitsPerStatus } from "@owf/token-status-list";
-import {
-    IsIn,
-    IsInt,
-    IsOptional,
-    IsString,
-    Min,
-    ValidateIf,
-} from "class-validator";
 
 /**
  * DTO for importing a status list configuration from a JSON file.
@@ -21,7 +13,6 @@ export class StatusListImportDto {
     @ApiProperty({
         description: "Unique identifier for the status list",
     })
-    @IsString()
     id!: string;
 
     /**
@@ -33,9 +24,6 @@ export class StatusListImportDto {
             "Credential configuration ID to bind this list exclusively to. Leave empty for a shared list.",
         example: "org.iso.18013.5.1.mDL",
     })
-    @IsOptional()
-    @ValidateIf((o) => o.credentialConfigurationId !== null)
-    @IsString()
     credentialConfigurationId?: string | null;
 
     /**
@@ -47,8 +35,6 @@ export class StatusListImportDto {
             "Key chain ID to use for signing. Leave empty to use the tenant's default StatusList key chain.",
         example: "my-status-list-keychain",
     })
-    @IsOptional()
-    @IsString()
     keyChainId?: string;
 
     /**
@@ -61,9 +47,6 @@ export class StatusListImportDto {
         example: 10000,
         minimum: 100,
     })
-    @IsOptional()
-    @IsInt()
-    @Min(100)
     capacity?: number;
 
     /**
@@ -76,7 +59,5 @@ export class StatusListImportDto {
         enum: [1, 2, 4, 8],
         example: 1,
     })
-    @IsOptional()
-    @IsIn([1, 2, 4, 8])
     bits?: BitsPerStatus;
 }

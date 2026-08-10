@@ -1,93 +1,70 @@
-import { Type } from "class-transformer";
-import {
-    IsArray,
-    IsDefined,
-    IsIn,
-    IsOptional,
-    IsString,
-    ValidateNested,
-} from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 import {
     ClaimsQuery,
-    CredentialQuery,
-    CredentialQueryDcSdJwt,
-    CredentialQueryMsoMdoc,
     CredentialQueryValue,
     CredentialSetQuery,
 } from "../../../../verifier/presentations/entities/presentation-config.entity";
 
-export class EmbeddedDisclosurePolicy {
-    @IsString()
+const EmbeddedDisclosurePolicySchema = z
+    .object({
+        policy: z.string(),
+    })
+    .strict();
+
+const PolicyCredentialSchema = z
+    .object({
+        claims: z.array(z.any()).optional(),
+        credentials: z.array(z.any()),
+        credential_sets: z.array(z.any()).optional(),
+    })
+    .strict();
+
+const AttestationBasedPolicySchema = z
+    .object({
+        policy: z.literal("attestationBased"),
+        values: z.array(PolicyCredentialSchema),
+    })
+    .strict();
+
+export class EmbeddedDisclosurePolicy extends createZodDto(
+    EmbeddedDisclosurePolicySchema,
+) {
     policy!: string;
 }
 
 /** allowList */
 export class AllowListPolicy extends EmbeddedDisclosurePolicy {
-    @IsString()
-    @IsIn(["allowList"])
     declare policy: "allowList";
 
-    @IsDefined()
-    @IsString({ each: true })
     values!: string[];
 }
 
 /** rootOfTrust */
 export class RootOfTrustPolicy extends EmbeddedDisclosurePolicy {
-    @IsString()
-    @IsIn(["rootOfTrust"])
     declare policy: "rootOfTrust";
 
     // adapt as needed if you want an array instead
-    @IsDefined()
-    @IsString()
     values!: string;
 }
 
 /** none */
 export class NoneTrustPolicy extends EmbeddedDisclosurePolicy {
-    @IsString()
-    @IsIn(["none"])
     declare policy: "none";
 }
 /** attestationBased */
-export class PolicyCredential {
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => ClaimsQuery)
+export class PolicyCredential extends createZodDto(PolicyCredentialSchema) {
     claims?: ClaimsQuery[];
 
-    @IsDefined()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => CredentialQuery, {
-        discriminator: {
-            property: "format",
-            subTypes: [
-                { value: CredentialQueryDcSdJwt, name: "dc+sd-jwt" },
-                { value: CredentialQueryMsoMdoc, name: "mso_mdoc" },
-            ],
-        },
-        keepDiscriminatorProperty: true,
-    })
     credentials!: CredentialQueryValue[];
 
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => CredentialSetQuery)
     credential_sets?: CredentialSetQuery[];
 }
 
-export class AttestationBasedPolicy extends EmbeddedDisclosurePolicy {
-    @IsString()
-    @IsIn(["attestationBased"])
+export class AttestationBasedPolicy extends createZodDto(
+    AttestationBasedPolicySchema,
+) {
     declare policy: "attestationBased";
 
-    @IsDefined()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => PolicyCredential)
     values!: PolicyCredential[];
 }

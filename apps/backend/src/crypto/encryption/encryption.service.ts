@@ -8,7 +8,7 @@ import {
     JWK,
     jwtDecrypt,
 } from "jose";
-import { KeyUsageType } from "../key/entities/key-chain.entity";
+import { KeyUsageType } from "../key/types/key-usage-type";
 import { KeyChainService } from "../key/key-chain.service";
 
 /**

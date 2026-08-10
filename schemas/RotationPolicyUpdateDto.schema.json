@@ -1,25 +1,25 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./RotationPolicyUpdateDto.schema.json",
-  "title": "RotationPolicyUpdateDto",
   "type": "object",
   "properties": {
     "enabled": {
-      "type": "boolean",
-      "description": "Whether automatic key rotation is enabled."
+      "description": "Optional replacement for rotation enabled flag.",
+      "type": "boolean"
     },
     "intervalDays": {
+      "description": "Optional replacement for rotation interval in days.",
       "type": "number",
       "minimum": 1,
-      "maximum": 3650,
-      "description": "Rotation interval in days."
+      "maximum": 3650
     },
     "certValidityDays": {
+      "description": "Optional replacement for certificate validity period in days.",
       "type": "number",
       "minimum": 1,
-      "maximum": 3650,
-      "description": "Certificate validity in days."
+      "maximum": 3650
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./RotationPolicyUpdateDto.schema.json",
+  "title": "RotationPolicyUpdateDto"
 }

@@ -2,8 +2,6 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { ClassConstructor, plainToClass } from "class-transformer";
-import { ValidationError, validate } from "class-validator";
 import { ImportOptions, TenantImportOptions } from "./import-options";
 
 @Injectable()
@@ -59,7 +57,7 @@ export class ConfigImportService {
                 // Replace placeholders like ${ENV_VAR} or ${ENV_VAR:default}
                 data = this.replacePlaceholders(data);
 
-                // Validate if validation class is provided
+                // Validate if validation schema is provided
                 if (options.validationClass) {
                     const validationResult = await this.validateConfig(
                         file,
@@ -74,7 +72,7 @@ export class ConfigImportService {
                         continue; // Skip invalid config
                     }
 
-                    data = validationResult.data;
+                    data = validationResult.data as T;
                 }
 
                 // Check if exists
@@ -190,7 +188,7 @@ export class ConfigImportService {
                             continue; // Skip invalid config
                         }
 
-                        data = validationResult.data;
+                        data = validationResult.data as T;
                     }
 
                     // Check if exists
@@ -302,73 +300,69 @@ export class ConfigImportService {
     }
 
     /**
-     * Validate configuration against a class
+     * Validate configuration against a Zod schema or parse-capable DTO.
      */
     async validateConfig<T extends object>(
         file: string,
         payload: any,
-        cls: ClassConstructor<T>,
+        schemaOrDto: any,
         tenant: { name: string },
         resourceType: string,
-        formatError?: (error: ValidationError) => any,
+        formatError?: (error: unknown) => any,
     ): Promise<{ isValid: boolean; data: T }> {
-        const config = plainToClass(cls, payload);
+        const schema =
+            schemaOrDto &&
+            typeof schemaOrDto === "object" &&
+            "schema" in schemaOrDto
+                ? schemaOrDto.schema
+                : null;
+        const parsed = schema
+            ? schema.safeParse(payload)
+            : { success: true as const, data: payload as T };
 
-        const validationErrors = await validate(config as object, {
-            whitelist: true,
-            forbidUnknownValues: false,
-            forbidNonWhitelisted: false,
-            stopAtFirstError: false,
-        });
-
-        if (validationErrors.length > 0) {
+        if (!parsed.success) {
             const formatter =
                 formatError ||
-                ((error: ValidationError) => ({
-                    property: error.property,
-                    constraints: error.constraints,
-                    value: error.value,
-                }));
+                ((error: unknown) => {
+                    if (
+                        error &&
+                        typeof error === "object" &&
+                        "path" in error &&
+                        "message" in error
+                    ) {
+                        return error;
+                    }
+                    return { message: "Invalid config" };
+                });
 
             this.logger.error(
-                { errors: validationErrors.map(formatter) },
+                { errors: parsed.error.issues.map(formatter) },
                 `[${tenant.name}] Validation failed for ${resourceType} ${file}`,
             );
 
-            return { isValid: false, data: config };
+            return { isValid: false, data: payload };
         }
 
-        return { isValid: true, data: config };
+        return { isValid: true, data: parsed.data as T };
     }
 
     /**
      * Extract nested error messages from validation errors
      */
-    extractErrorMessages(error: ValidationError): string[] {
-        const messages: string[] = [];
-
-        if (error.constraints) {
-            messages.push(
-                ...Object.values(error.constraints as Record<string, string>),
-            );
+    extractErrorMessages(error: unknown): string[] {
+        if (
+            error &&
+            typeof error === "object" &&
+            "message" in error &&
+            typeof (error as { message?: unknown }).message === "string"
+        ) {
+            return [(error as { message: string }).message];
         }
 
-        if (error.children && error.children.length > 0) {
-            for (const child of error.children) {
-                messages.push(...this.extractErrorMessages(child));
-            }
-        }
-
-        return messages;
+        return ["Invalid config"];
     }
 
-    /**
-     * Format validation errors with nested messages
-     */
-    formatNestedValidationError(error: ValidationError): string {
-        const messages = this.extractErrorMessages(error);
-        return messages.length > 0
-            ? `${error.property}: ${messages.join(", ")}`
-            : error.property;
+    formatNestedValidationError(error: unknown): string {
+        return this.extractErrorMessages(error).join(", ");
     }
 }

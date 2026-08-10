@@ -1,10 +1,3 @@
-import {
-    IsBoolean,
-    IsEnum,
-    IsNumber,
-    IsOptional,
-    IsString,
-} from "class-validator";
 import { JWK } from "jose";
 import {
     Column,
@@ -15,28 +8,13 @@ import {
 } from "typeorm";
 import { TenantEntity } from "../../../auth/tenant/entitites/tenant.entity";
 import { EncryptedJsonTransformer } from "../../../shared/utils/encryption";
+import { KeyUsageType } from "../types/key-usage-type";
 
 /**
  * Key usage types for cryptographic operations.
  */
 export enum KeyUsage {
     Sign = "sign",
-    Encrypt = "encrypt",
-}
-
-/**
- * Key usage types for different purposes in the system.
- */
-export enum KeyUsageType {
-    /** Used for OAuth/OIDC access token signing and authentication */
-    Access = "access",
-    /** Used for credential/attestation signing (SD-JWT VC, mDOC, etc.) */
-    Attestation = "attestation",
-    /** Used for trust list signing */
-    TrustList = "trustList",
-    /** Used for status list (credential revocation) signing */
-    StatusList = "statusList",
-    /** Used for encryption (JWE) */
     Encrypt = "encrypt",
 }
 
@@ -59,7 +37,6 @@ export class KeyChainEntity {
      * Unique identifier for the key chain.
      * This is the ID referenced by other entities (e.g., issuance config's signingKeyId).
      */
-    @IsString()
     @Column("varchar", { primary: true })
     id!: string;
 
@@ -78,22 +55,18 @@ export class KeyChainEntity {
     /**
      * Human-readable description of the key chain.
      */
-    @IsString()
-    @IsOptional()
     @Column("varchar", { nullable: true })
     description?: string;
 
     /**
      * The purpose/role of this key chain in the system.
      */
-    @IsEnum(KeyUsageType)
     @Column("varchar")
     usageType!: KeyUsageType;
 
     /**
      * The usage type of the keys (sign or encrypt).
      */
-    @IsEnum(KeyUsage)
     @Column("varchar", { default: "sign" })
     usage!: KeyUsage;
 
@@ -101,7 +74,6 @@ export class KeyChainEntity {
      * The KMS provider used for this key chain.
      * References a configured KMS provider name.
      */
-    @IsString()
     @Column("varchar", { default: "db" })
     kmsProvider!: string;
 
@@ -109,8 +81,6 @@ export class KeyChainEntity {
      * External key identifier for cloud KMS providers.
      * This field stores the provider-specific key reference for the active signing key.
      */
-    @IsString()
-    @IsOptional()
     @Column("varchar", { nullable: true })
     externalKeyId?: string;
 
@@ -118,8 +88,6 @@ export class KeyChainEntity {
      * External key identifier for cloud KMS providers for the root CA key.
      * Used when rotating internal-chain key chains backed by external KMS.
      */
-    @IsString()
-    @IsOptional()
     @Column("varchar", { nullable: true })
     rootExternalKeyId?: string;
 
@@ -142,8 +110,6 @@ export class KeyChainEntity {
      * Root CA certificate in PEM format.
      * Self-signed certificate for the root CA key.
      */
-    @IsString()
-    @IsOptional()
     @Column("text", { nullable: true })
     rootCertificate?: string;
 
@@ -163,7 +129,6 @@ export class KeyChainEntity {
      * Certificate for the active signing key in PEM format.
      * Either CA-signed (if rootKey exists) or self-signed.
      */
-    @IsString()
     @Column("text")
     activeCertificate!: string;
 
@@ -174,23 +139,18 @@ export class KeyChainEntity {
     /**
      * Whether automatic key rotation is enabled.
      */
-    @IsBoolean()
     @Column("boolean", { default: false })
     rotationEnabled!: boolean;
 
     /**
      * Rotation interval in days. Key material will be rotated after this many days.
      */
-    @IsNumber()
-    @IsOptional()
     @Column("int", { nullable: true })
     rotationIntervalDays?: number;
 
     /**
      * Certificate validity in days when generating new certificates.
      */
-    @IsNumber()
-    @IsOptional()
     @Column("int", { nullable: true })
     certValidityDays?: number;
 
@@ -218,8 +178,6 @@ export class KeyChainEntity {
     /**
      * Certificate for the previous signing key in PEM format.
      */
-    @IsString()
-    @IsOptional()
     @Column("text", { nullable: true })
     previousCertificate?: string;
 

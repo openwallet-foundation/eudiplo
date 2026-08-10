@@ -1,38 +1,116 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./CreateAttributeProviderDto.schema.json",
-  "title": "CreateAttributeProviderDto",
   "type": "object",
   "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique attribute provider identifier."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Display name of the attribute provider."
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Optional attribute provider description."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Base URL of the attribute provider endpoint."
+    },
     "auth": {
       "oneOf": [
         {
-          "$ref": "./WebHookAuthConfigNone.schema.json"
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "none",
+              "description": "Disable authentication for attribute provider calls."
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "description": "No authentication variant."
         },
         {
-          "$ref": "./WebHookAuthConfigHeader.schema.json"
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "apiKey",
+              "description": "Use API key authentication."
+            },
+            "config": {
+              "type": "object",
+              "properties": {
+                "headerName": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "HTTP header name carrying the API key."
+                },
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "API key value."
+                }
+              },
+              "required": [
+                "headerName",
+                "value"
+              ],
+              "additionalProperties": false,
+              "description": "API key authentication settings."
+            }
+          },
+          "required": [
+            "type",
+            "config"
+          ],
+          "additionalProperties": false,
+          "description": "API key authentication variant."
         }
-      ]
-    },
-    "id": {
-      "type": "string"
-    },
-    "name": {
-      "type": "string"
-    },
-    "description": {
-      "type": "string",
-      "nullable": true
-    },
-    "url": {
-      "type": "string"
+      ],
+      "description": "Authentication configuration for outbound provider requests.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "none",
+            "apiKey"
+          ]
+        }
+      },
+      "discriminator": {
+        "propertyName": "type",
+        "mapping": {
+          "none": "#/oneOf/0",
+          "apiKey": "#/oneOf/1"
+        }
+      }
     }
   },
   "required": [
-    "auth",
     "id",
     "name",
-    "url"
+    "url",
+    "auth"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./CreateAttributeProviderDto.schema.json",
+  "title": "CreateAttributeProviderDto"
 }

@@ -38,7 +38,7 @@ import {
     SignJWT,
 } from "jose";
 import request from "supertest";
-import { createHybridValidationPipe } from "../src/shared/common/pipes/hybrid-validation.pipe";
+import { createAppValidationPipe } from "../src/shared/common/zod/zod-schema.util";
 import { App } from "supertest/types";
 import { AppModule } from "../src/app.module";
 import { Role } from "../src/auth/roles/role.enum";
@@ -457,7 +457,7 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
     }).compile();
 
     const app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(createHybridValidationPipe());
+    app.useGlobalPipes(createAppValidationPipe());
 
     const configService = app.get(ConfigService);
     configService.set("CONFIG_IMPORT", false);
@@ -650,12 +650,7 @@ export async function setupPresentationTestApp(): Promise<PresentationTestContex
     }).compile();
 
     const app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(
-        createHybridValidationPipe({
-            whitelist: true,
-            transform: true,
-        }),
-    );
+    app.useGlobalPipes(createAppValidationPipe());
 
     const configService = app.get(ConfigService);
     const configFolder = resolve(__dirname + "/fixtures");

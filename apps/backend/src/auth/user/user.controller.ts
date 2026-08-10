@@ -4,6 +4,7 @@ import {
     Delete,
     ForbiddenException,
     Get,
+    HttpCode,
     Inject,
     Param,
     Patch,
@@ -90,9 +91,10 @@ export class UserController {
     }
 
     @ApiOperation({ summary: "Delete a managed user" })
-    @ApiResponse({ status: 200 })
+    @ApiResponse({ status: 204, description: "User deleted" })
     @Secured([Role.Users])
     @Delete(":id")
+    @HttpCode(204)
     deleteUser(@Param("id") id: string, @Token() user: TokenPayload) {
         const tenantId = requireTenantContext(user);
         return this.users.removeUser(tenantId, id);

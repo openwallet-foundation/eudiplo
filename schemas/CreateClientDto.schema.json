@@ -1,47 +1,24 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./CreateClientDto.schema.json",
-  "title": "CreateClientDto",
   "type": "object",
   "properties": {
-    "allowedPresentationConfigs": {
-      "nullable": true,
-      "description": "List of presentation config IDs this client can use. If empty/null, all configs are allowed.",
-      "example": [
-        "age-verification",
-        "kyc-basic"
-      ],
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "allowedIssuanceConfigs": {
-      "nullable": true,
-      "description": "List of issuance config IDs this client can use. If empty/null, all configs are allowed.",
-      "example": [
-        "pid",
-        "mdl"
-      ],
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
     "clientId": {
       "type": "string",
-      "description": "The unique identifier for the client."
+      "minLength": 1,
+      "description": "Unique client identifier."
     },
     "secret": {
+      "description": "Optional client secret for confidential clients.",
       "type": "string",
-      "description": "The secret key for the client."
+      "minLength": 1
     },
     "description": {
+      "description": "Optional human-readable client description.",
       "type": "string",
-      "description": "The description of the client."
+      "minLength": 1
     },
     "roles": {
-      "description": "The roles assigned to the client.",
+      "minItems": 1,
       "type": "array",
       "items": {
         "type": "string",
@@ -55,6 +32,23 @@
           "tenants:manage",
           "registrar:manage"
         ]
+      },
+      "description": "Roles assigned to the client. At least one role is required."
+    },
+    "allowedPresentationConfigs": {
+      "description": "Optional allow-list of presentation config ids this client can use.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "allowedIssuanceConfigs": {
+      "description": "Optional allow-list of issuance config ids this client can use.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
       }
     }
   },
@@ -62,5 +56,7 @@
     "clientId",
     "roles"
   ],
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./CreateClientDto.schema.json",
+  "title": "CreateClientDto"
 }

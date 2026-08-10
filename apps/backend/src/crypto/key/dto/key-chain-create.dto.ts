@@ -1,26 +1,21 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
+import { createZodDto } from "nestjs-zod";
+import { KeyUsageType } from "../types/key-usage-type";
 import {
-    IsBoolean,
-    IsEnum,
-    IsNumber,
-    IsOptional,
-    IsString,
-    Max,
-    Min,
-    ValidateNested,
-} from "class-validator";
-import { KeyUsageType } from "../entities/key-chain.entity";
+    KeyChainCreateSchema,
+    RotationPolicyCreateSchema,
+} from "../schemas/key-chain.schema";
 
 /**
  * DTO for rotation policy configuration.
  */
-export class RotationPolicyCreateDto {
+export class RotationPolicyCreateDto extends createZodDto(
+    RotationPolicyCreateSchema,
+) {
     @ApiProperty({
         description: "Whether automatic key rotation is enabled.",
         default: false,
     })
-    @IsBoolean()
     enabled!: boolean;
 
     @ApiPropertyOptional({
@@ -30,10 +25,6 @@ export class RotationPolicyCreateDto {
         minimum: 1,
         maximum: 3650,
     })
-    @IsNumber()
-    @Min(1)
-    @Max(3650)
-    @IsOptional()
     intervalDays?: number;
 
     @ApiPropertyOptional({
@@ -43,10 +34,6 @@ export class RotationPolicyCreateDto {
         minimum: 1,
         maximum: 3650,
     })
-    @IsNumber()
-    @Min(1)
-    @Max(3650)
-    @IsOptional()
     certValidityDays?: number;
 }
 
@@ -67,14 +54,13 @@ export enum KeyChainType {
  * - For standalone type: A single key with a self-signed certificate
  * - For internalChain type: An internal root CA + signing key with CA-signed certificate
  */
-export class KeyChainCreateDto {
+export class KeyChainCreateDto extends createZodDto(KeyChainCreateSchema) {
     @ApiProperty({
         description:
             "Usage type determines the purpose of this key chain (access, attestation, etc.).",
         enum: KeyUsageType,
         example: "attestation",
     })
-    @IsEnum(KeyUsageType)
     usageType!: KeyUsageType;
 
     @ApiProperty({
@@ -82,15 +68,12 @@ export class KeyChainCreateDto {
         enum: KeyChainType,
         example: "internalChain",
     })
-    @IsEnum(KeyChainType)
     type!: KeyChainType;
 
     @ApiPropertyOptional({
         description: "Human-readable description for the key chain.",
         example: "Production credential signing key",
     })
-    @IsString()
-    @IsOptional()
     description?: string;
 
     @ApiPropertyOptional({
@@ -98,8 +81,6 @@ export class KeyChainCreateDto {
             "KMS provider to use (defaults to the configured default provider).",
         example: "vault",
     })
-    @IsString()
-    @IsOptional()
     kmsProvider?: string;
 
     @ApiPropertyOptional({
@@ -107,8 +88,5 @@ export class KeyChainCreateDto {
             "Rotation policy configuration. Only applicable for the signing key (root CA never rotates).",
         type: RotationPolicyCreateDto,
     })
-    @ValidateNested()
-    @Type(() => RotationPolicyCreateDto)
-    @IsOptional()
     rotationPolicy?: RotationPolicyCreateDto;
 }

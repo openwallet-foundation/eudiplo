@@ -1,10 +1,11 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsOptional, IsString, ValidateIf } from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { UpdateStatusListSchema } from "./status-list.schema";
 
 /**
  * DTO for updating a status list's binding.
  */
-export class UpdateStatusListDto {
+export class UpdateStatusListDto extends createZodDto(UpdateStatusListSchema) {
     /**
      * Credential configuration ID to bind this list exclusively to.
      * Set to null to make this a shared list.
@@ -15,9 +16,6 @@ export class UpdateStatusListDto {
         example: "org.iso.18013.5.1.mDL",
         nullable: true,
     })
-    @IsOptional()
-    @ValidateIf((o) => o.credentialConfigurationId !== null)
-    @IsString()
     credentialConfigurationId?: string | null;
 
     /**
@@ -30,8 +28,5 @@ export class UpdateStatusListDto {
         example: "my-status-list-keychain",
         nullable: true,
     })
-    @IsOptional()
-    @ValidateIf((o) => o.keyChainId !== null)
-    @IsString()
     keyChainId?: string | null;
 }

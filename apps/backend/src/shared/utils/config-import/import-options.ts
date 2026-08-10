@@ -1,6 +1,3 @@
-import { ClassConstructor } from "class-transformer";
-import { ValidationError } from "class-validator";
-
 export interface ImportOptions<T extends object> {
     /**
      * Subfolder within each tenant directory (e.g., "issuance", "keys", "images")
@@ -15,7 +12,7 @@ export interface ImportOptions<T extends object> {
     /**
      * Class constructor for validation (if applicable)
      */
-    validationClass?: ClassConstructor<T>;
+    validationClass?: unknown;
 
     /**
      * Check if item already exists
@@ -40,7 +37,7 @@ export interface ImportOptions<T extends object> {
     /**
      * Custom validation error formatter
      */
-    formatValidationError?: (error: ValidationError) => any;
+    formatValidationError?: (error: unknown) => any;
 
     /**
      * Resource type name for logging (e.g., "credential config", "key", "image")

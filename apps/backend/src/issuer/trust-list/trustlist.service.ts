@@ -16,7 +16,7 @@ import {
     CertificateInfo,
     CertService,
 } from "../../crypto/key/cert/cert.service";
-import { KeyUsageType } from "../../crypto/key/entities/key-chain.entity";
+import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
 import { KeyChainService } from "../../crypto/key/key-chain.service";
 import { loadConfigDto } from "../../shared/utils/config-file-loader.util";
 import { ConfigImportService } from "../../shared/utils/config-import/config-import.service";

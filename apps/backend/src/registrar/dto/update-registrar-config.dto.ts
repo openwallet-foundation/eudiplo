@@ -1,10 +1,10 @@
-import { PartialType } from "@nestjs/swagger";
-import { CreateRegistrarConfigDto } from "./create-registrar-config.dto";
+import { createZodDto } from "nestjs-zod";
+import { UpdateRegistrarConfigSchema } from "../schemas/registrar.schema";
 
 /**
  * DTO for updating a registrar configuration.
  * All fields are optional.
  */
-export class UpdateRegistrarConfigDto extends PartialType(
-    CreateRegistrarConfigDto,
+export class UpdateRegistrarConfigDto extends createZodDto(
+    UpdateRegistrarConfigSchema,
 ) {}

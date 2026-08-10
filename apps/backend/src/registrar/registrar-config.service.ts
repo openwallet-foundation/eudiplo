@@ -1,19 +1,22 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
-import { plainToClass } from "class-transformer";
 import { Repository } from "typeorm";
 import { TenantEntity } from "../auth/tenant/entitites/tenant.entity";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
 } from "../shared/utils/config-import/config-import-orchestrator.service";
+import { loadConfigDto } from "../shared/utils/config-file-loader.util";
 import { CreateRegistrarConfigDto } from "./dto/create-registrar-config.dto";
-import { UpdateRegistrarConfigDto } from "./dto/update-registrar-config.dto";
 import { RegistrarConfigEntity } from "./entities/registrar-config.entity";
 import { RegistrarAuthService } from "./registrar-auth.service";
+import type {
+    CreateRegistrarConfig,
+    UpdateRegistrarConfig,
+} from "./schemas/registrar.schema";
 
 /**
  * Manages per-tenant registrar configuration: CRUD, file-based import, and
@@ -66,8 +69,7 @@ export class RegistrarConfigService {
                 await this.configRepository.delete({ tenantId });
             }
 
-            const payload = JSON.parse(readFileSync(filePath, "utf8"));
-            const config = plainToClass(CreateRegistrarConfigDto, payload);
+            const config = loadConfigDto(filePath, CreateRegistrarConfigDto);
 
             await this.configRepository.save({ tenantId, ...config });
 
@@ -106,7 +108,7 @@ export class RegistrarConfigService {
      */
     async saveConfig(
         tenantId: string,
-        dto: CreateRegistrarConfigDto,
+        dto: CreateRegistrarConfig,
     ): Promise<RegistrarConfigEntity> {
         await this.authService.testCredentials(dto);
 
@@ -126,7 +128,7 @@ export class RegistrarConfigService {
      */
     async updateConfig(
         tenantId: string,
-        dto: UpdateRegistrarConfigDto,
+        dto: UpdateRegistrarConfig,
     ): Promise<RegistrarConfigEntity> {
         const existing = await this.configRepository.findOneBy({ tenantId });
         if (!existing) {

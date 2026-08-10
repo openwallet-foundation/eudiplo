@@ -2,6 +2,7 @@ import { Body, Controller, Get, Headers, Post } from "@nestjs/common";
 import {
     ApiBody,
     ApiExtraModels,
+    ApiConsumes,
     ApiOperation,
     ApiResponse,
     ApiTags,
@@ -10,6 +11,7 @@ import { KeyResponseDto } from "../crypto/key/dto/key-response.dto";
 import { AuthService } from "./auth.service";
 import { ClientCredentialsDto } from "./dto/client-credentials.dto";
 import { OidcDiscoveryDto } from "./dto/oidc-discovery.dto";
+import { OAuthTokenErrorResponseDto } from "./dto/oauth-token-error-response.dto";
 import { RoleDto } from "./dto/role.dto";
 import { TokenResponse } from "./dto/token-response.dto";
 
@@ -30,6 +32,7 @@ export class AuthController {
      * @returns
      */
     @Post("api/oauth2/token")
+    @ApiConsumes("application/x-www-form-urlencoded")
     @ApiBody({
         type: ClientCredentialsDto,
         examples: {
@@ -62,9 +65,10 @@ export class AuthController {
     @ApiResponse({
         status: 401,
         description: "Invalid client credentials",
+        type: OAuthTokenErrorResponseDto,
     })
     getOAuth2Token(
-        @Body() body: any,
+        @Body() body: ClientCredentialsDto,
         @Headers() headers: any,
     ): Promise<TokenResponse> {
         return this.authService.getOAuth2Token(body, headers);
@@ -84,6 +88,7 @@ export class AuthController {
     @ApiResponse({
         status: 200,
         description: "OIDC Discovery Configuration",
+        schema: { type: "object", additionalProperties: true },
     })
     getOidcDiscovery(): OidcDiscoveryDto {
         return this.authService.getOidcDiscovery();
@@ -101,6 +106,7 @@ export class AuthController {
     @ApiResponse({
         status: 200,
         description: "JSON Web Key Set",
+        type: KeyResponseDto,
     })
     getGlobalJwks(): KeyResponseDto {
         // For now, return an empty key set since the actual keys are tenant-specific

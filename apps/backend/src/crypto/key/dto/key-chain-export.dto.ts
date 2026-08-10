@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { KeyUsageType } from "../entities/key-chain.entity";
+import { KeyUsageType } from "../types/key-usage-type";
 
 /**
  * EC JWK including private key material for export.

@@ -2,7 +2,8 @@ import { createHash } from "node:crypto";
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as x509 from "@peculiar/x509";
-import { KeyChainEntity, KeyUsageType } from "../entities/key-chain.entity";
+import { KeyChainEntity } from "../entities/key-chain.entity";
+import { KeyUsageType } from "../types/key-usage-type";
 import { KeyChainService } from "../key-chain.service";
 import { CrlValidationService } from "./crl-validation.service";
 

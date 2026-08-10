@@ -1,25 +1,40 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./KeyChainUpdateDto.schema.json",
-  "title": "KeyChainUpdateDto",
   "type": "object",
   "properties": {
     "description": {
-      "type": "string",
-      "description": "Human-readable description for the key chain."
+      "description": "Optional replacement description.",
+      "type": "string"
     },
     "rotationPolicy": {
-      "description": "Rotation policy configuration.",
-      "allOf": [
-        {
-          "$ref": "./RotationPolicyUpdateDto.schema.json"
+      "description": "Optional rotation policy updates.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Optional replacement for rotation enabled flag.",
+          "type": "boolean"
+        },
+        "intervalDays": {
+          "description": "Optional replacement for rotation interval in days.",
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3650
+        },
+        "certValidityDays": {
+          "description": "Optional replacement for certificate validity period in days.",
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3650
         }
-      ]
+      },
+      "additionalProperties": false
     },
     "activeCertificate": {
-      "type": "string",
-      "description": "Active certificate chain in PEM format. Used for external certificate updates."
+      "description": "Optional active certificate override.",
+      "type": "string"
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$id": "./KeyChainUpdateDto.schema.json",
+  "title": "KeyChainUpdateDto"
 }

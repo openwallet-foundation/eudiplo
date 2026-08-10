@@ -5,17 +5,6 @@ import {
     ApiPropertyOptional,
     getSchemaPath,
 } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import {
-    ArrayUnique,
-    IsArray,
-    IsBoolean,
-    IsEnum,
-    IsNumber,
-    IsOptional,
-    IsString,
-    ValidateNested,
-} from "class-validator";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { TenantEntity } from "../../../../auth/tenant/entitites/tenant.entity";
 import { KeyChainEntity } from "../../../../crypto/key/entities/key-chain.entity";
@@ -27,10 +16,8 @@ import { ClaimFieldDefinitionDto } from "../dto/claim-field-definition.dto";
 import { SchemaMetaConfig } from "../dto/schema-meta-config.dto";
 import {
     IaeAction,
-    IaeActionBase,
     IaeActionOpenid4vpPresentation,
     IaeActionRedirectToWeb,
-    IaeActionType,
 } from "./iae-action.dto";
 import {
     AllowListPolicy,
@@ -41,29 +28,15 @@ import {
 } from "./policies.dto";
 
 export class DisplayImage {
-    @IsString()
     uri!: string;
 }
 export class Display {
-    @IsString()
     name!: string;
-    @IsString()
     description!: string;
-    @IsString()
     locale!: string;
-    @IsOptional()
-    @IsString()
     background_color?: string;
-    @IsOptional()
-    @IsString()
     text_color?: string;
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => DisplayImage)
     background_image?: DisplayImage;
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => DisplayImage)
     logo?: DisplayImage;
 }
 
@@ -89,21 +62,14 @@ export enum CredentialProofType {
 }
 
 export class IssuerMetadataCredentialConfig {
-    @IsEnum(CredentialFormat)
     format!: CredentialFormat;
-    @ValidateNested()
-    @Type(() => Display)
     display!: Display[];
-    @IsOptional()
-    @IsString()
     scope?: string;
 
     /**
      * Document type for mDOC credentials (e.g., "org.iso.18013.5.1.mDL").
      * Only applicable when format is "mso_mdoc".
      */
-    @IsOptional()
-    @IsString()
     docType?: string;
 
     /**
@@ -114,9 +80,6 @@ export class IssuerMetadataCredentialConfig {
      * @see https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html#appendix-F
      */
     @ApiPropertyOptional({ type: () => KeyAttestationsRequired })
-    @ValidateNested()
-    @Type(() => KeyAttestationsRequired)
-    @IsOptional()
     keyAttestationsRequired?: KeyAttestationsRequired;
 
     /**
@@ -130,10 +93,6 @@ export class IssuerMetadataCredentialConfig {
             "Supported proof types for this credential configuration. Defaults to ['attestation', 'jwt'].",
         example: [CredentialProofType.ATTESTATION, CredentialProofType.JWT],
     })
-    @IsOptional()
-    @IsArray()
-    @ArrayUnique()
-    @IsEnum(CredentialProofType, { each: true })
     proofTypesSupported?: CredentialProofType[];
 }
 
@@ -149,11 +108,9 @@ export class IssuerMetadataCredentialConfig {
 )
 @Entity()
 export class CredentialConfig {
-    @IsString()
     @Column("varchar", { primary: true })
     id!: string;
 
-    @IsString()
     @Column("varchar", { nullable: true })
     description?: string | null;
 
@@ -168,22 +125,15 @@ export class CredentialConfig {
     tenant!: TenantEntity;
 
     @Column("json")
-    @ValidateNested()
-    @Type(() => IssuerMetadataCredentialConfig)
     config!: IssuerMetadataCredentialConfig;
 
     @Column("json")
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => ClaimFieldDefinitionDto)
     fields!: ClaimFieldDefinitionDto[];
 
     /**
      * Reference to the attribute provider used for fetching claims.
      * Optional: if set, claims will be fetched from this provider during issuance.
      */
-    @IsOptional()
-    @IsString()
     @Column("varchar", { nullable: true })
     attributeProviderId?: string | null;
 
@@ -200,8 +150,6 @@ export class CredentialConfig {
      * Reference to the webhook endpoint used for notifications.
      * Optional: if set, notifications will be sent to this endpoint.
      */
-    @IsOptional()
-    @IsString()
     @Column("varchar", { nullable: true })
     webhookEndpointId?: string | null;
 
@@ -214,7 +162,6 @@ export class CredentialConfig {
     ])
     webhookEndpoint?: WebhookEndpointEntity;
 
-    @IsOptional()
     @ApiPropertyOptional({
         description:
             "VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT",
@@ -227,17 +174,13 @@ export class CredentialConfig {
     @Column("json", { nullable: true })
     vct?: string | VCT | null;
 
-    @IsOptional()
     @Column("boolean", { default: false })
-    @IsBoolean()
     keyBinding?: boolean;
 
     /**
      * Reference to the key chain used for signing.
      * Optional: if not specified, the default attestation key chain will be used.
      */
-    @IsOptional()
-    @IsString()
     @Column("varchar", { nullable: true })
     keyChainId?: string;
 
@@ -248,9 +191,7 @@ export class CredentialConfig {
     ])
     keyChain?: KeyChainEntity;
 
-    @IsOptional()
     @Column("boolean", { default: false })
-    @IsBoolean()
     statusManagement?: boolean;
 
     /**
@@ -269,25 +210,6 @@ export class CredentialConfig {
      *   { "type": "redirect_to_web", "url": "https://example.com/verify", "label": "Additional Verification" }
      * ]
      */
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => IaeActionBase, {
-        discriminator: {
-            property: "type",
-            subTypes: [
-                {
-                    name: IaeActionType.OPENID4VP_PRESENTATION,
-                    value: IaeActionOpenid4vpPresentation,
-                },
-                {
-                    name: IaeActionType.REDIRECT_TO_WEB,
-                    value: IaeActionRedirectToWeb,
-                },
-            ],
-        },
-        keepDiscriminatorProperty: true,
-    })
     @ApiProperty({
         description:
             "List of IAE actions to execute before credential issuance",
@@ -309,14 +231,10 @@ export class CredentialConfig {
      * or use federation-based trust (iss claim).
      * Default: "x5c" (federation must be explicitly selected)
      */
-    @IsOptional()
-    @IsEnum(SdJwtTrustFormat)
     @Column("varchar", { nullable: true, default: "x5c" })
     sdJwtTrustFormat?: SdJwtTrustFormat | null;
 
-    @IsOptional()
     @Column("int", { nullable: true })
-    @IsNumber()
     lifeTime?: number;
 
     /**
@@ -327,20 +245,14 @@ export class CredentialConfig {
      *
      * @experimental The underlying TS11 specification is not yet finalized.
      */
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => SchemaMetaConfig)
     @ApiPropertyOptional({ type: () => SchemaMetaConfig })
     @Column("json", { nullable: true })
     schemaMeta?: SchemaMetaConfig | null;
 
     /**
      * Embedded disclosure policy (discriminated union by `policy`).
-     * The discriminator makes class-transformer instantiate the right subclass,
-     * and then class-validator runs that subclass’s rules.
+     * The discriminator metadata is retained for OpenAPI schema generation.
      */
-    @IsOptional()
-    @ValidateNested()
     @ApiProperty({
         oneOf: [
             { $ref: getSchemaPath(AttestationBasedPolicy) },
@@ -348,21 +260,6 @@ export class CredentialConfig {
             { $ref: getSchemaPath(AllowListPolicy) },
             { $ref: getSchemaPath(RootOfTrustPolicy) },
         ],
-    })
-    @Type(() => AttestationBasedPolicy, {
-        discriminator: {
-            property: "policy",
-            subTypes: [
-                { name: "none", value: NoneTrustPolicy },
-                { name: "allowList", value: AllowListPolicy },
-                { name: "rootOfTrust", value: RootOfTrustPolicy },
-                {
-                    name: "attestationBased",
-                    value: AttestationBasedPolicy,
-                },
-            ],
-        },
-        keepDiscriminatorProperty: true, // keep `policy` on the instance
     })
     @Column("json", { nullable: true })
     embeddedDisclosurePolicy?: EmbeddedDisclosurePolicy | null;

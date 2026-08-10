@@ -1,20 +1,47 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import {
-    IsBoolean,
-    IsNumber,
-    IsOptional,
-    IsString,
-    IsUrl,
-    Min,
-    ValidateNested,
-} from "class-validator";
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
+
+export const UpstreamOidcConfigSchema = z
+    .object({
+        issuer: z.string(),
+        clientId: z.string(),
+        clientSecret: z.string().optional(),
+        scopes: z.array(z.string()).optional(),
+    })
+    .strict();
+
+export const ChainedAsTokenConfigSchema = z
+    .object({
+        lifetimeSeconds: z.number().min(60).optional(),
+        signingKeyId: z.string().optional(),
+        refreshTokenEnabled: z.boolean().optional(),
+        refreshTokenExpiresInSeconds: z.number().min(60).optional(),
+    })
+    .strict();
+
+const ChainedAsVpConfigSchema = z
+    .object({
+        enabled: z.boolean(),
+        presentationConfigId: z.string(),
+    })
+    .strict();
+
+const ChainedAsConfigSchema = z
+    .object({
+        enabled: z.boolean(),
+        upstream: UpstreamOidcConfigSchema.optional(),
+        vp: ChainedAsVpConfigSchema.optional(),
+        token: ChainedAsTokenConfigSchema.optional(),
+        requireDPoP: z.boolean().optional(),
+    })
+    .strict();
 
 /**
  * Configuration for the upstream OIDC provider (e.g., Keycloak).
  * EUDIPLO will delegate user authentication to this provider.
  */
-export class UpstreamOidcConfig {
+export class UpstreamOidcConfig extends createZodDto(UpstreamOidcConfigSchema) {
     /**
      * The OIDC issuer URL of the upstream provider.
      * @example "https://auth.example.com/realms/myrealm"
@@ -23,7 +50,6 @@ export class UpstreamOidcConfig {
         description: "The OIDC issuer URL of the upstream provider",
         example: "https://auth.example.com/realms/myrealm",
     })
-    @IsUrl({ require_tld: false })
     issuer!: string;
 
     /**
@@ -33,7 +59,6 @@ export class UpstreamOidcConfig {
         description: "The client ID registered with the upstream provider",
         example: "eudiplo-chained-as",
     })
-    @IsString()
     clientId!: string;
 
     /**
@@ -43,8 +68,6 @@ export class UpstreamOidcConfig {
     @ApiPropertyOptional({
         description: "The client secret for confidential clients",
     })
-    @IsOptional()
-    @IsString()
     clientSecret?: string;
 
     /**
@@ -55,15 +78,15 @@ export class UpstreamOidcConfig {
         description: "Scopes to request from the upstream provider",
         default: ["openid", "profile"],
     })
-    @IsOptional()
-    @IsString({ each: true })
     scopes?: string[];
 }
 
 /**
  * Configuration for the tokens issued by EUDIPLO in chained AS mode.
  */
-export class ChainedAsTokenConfig {
+export class ChainedAsTokenConfig extends createZodDto(
+    ChainedAsTokenConfigSchema,
+) {
     /**
      * The lifetime of access tokens in seconds.
      * @default 3600 (1 hour)
@@ -72,9 +95,6 @@ export class ChainedAsTokenConfig {
         description: "Access token lifetime in seconds",
         default: 3600,
     })
-    @IsOptional()
-    @IsNumber()
-    @Min(60)
     lifetimeSeconds?: number;
 
     /**
@@ -84,8 +104,6 @@ export class ChainedAsTokenConfig {
     @ApiPropertyOptional({
         description: "Key ID for token signing",
     })
-    @IsOptional()
-    @IsString()
     signingKeyId?: string;
 
     /**
@@ -96,8 +114,6 @@ export class ChainedAsTokenConfig {
         description: "Whether refresh tokens should be issued",
         default: true,
     })
-    @IsOptional()
-    @IsBoolean()
     refreshTokenEnabled?: boolean;
 
     /**
@@ -108,9 +124,6 @@ export class ChainedAsTokenConfig {
         description: "Refresh token lifetime in seconds",
         default: 2592000,
     })
-    @IsOptional()
-    @IsNumber()
-    @Min(60)
     refreshTokenExpiresInSeconds?: number;
 }
 
@@ -122,7 +135,7 @@ export class ChainedAsTokenConfig {
  * OID4VP verifier flow and only returns the OAuth authorization code after
  * a successful presentation callback.
  */
-export class ChainedAsVpConfig {
+export class ChainedAsVpConfig extends createZodDto(ChainedAsVpConfigSchema) {
     /**
      * Whether the VP-backed AS is enabled.
      */
@@ -130,7 +143,6 @@ export class ChainedAsVpConfig {
         description: "Enable VP-backed chained AS mode",
         default: false,
     })
-    @IsBoolean()
     enabled!: boolean;
 
     /**
@@ -140,7 +152,6 @@ export class ChainedAsVpConfig {
         description: "Presentation configuration ID used for OID4VP",
         example: "pid-no-hook",
     })
-    @IsString()
     presentationConfigId!: string;
 }
 
@@ -166,7 +177,7 @@ export class ChainedAsVpConfig {
  * 7. EUDIPLO issues its own access token with `issuer_state`, DPoP binding, etc.
  * 8. Wallet uses EUDIPLO-issued token for credential requests
  */
-export class ChainedAsConfig {
+export class ChainedAsConfig extends createZodDto(ChainedAsConfigSchema) {
     /**
      * Whether chained AS mode is enabled.
      * When enabled, EUDIPLO acts as the AS and delegates to upstream for authentication.
@@ -175,7 +186,6 @@ export class ChainedAsConfig {
         description: "Enable chained AS mode",
         default: false,
     })
-    @IsBoolean()
     enabled!: boolean;
 
     /**
@@ -186,9 +196,6 @@ export class ChainedAsConfig {
         description: "Upstream OIDC provider configuration",
         type: () => UpstreamOidcConfig,
     })
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => UpstreamOidcConfig)
     upstream?: UpstreamOidcConfig;
 
     /**
@@ -198,9 +205,6 @@ export class ChainedAsConfig {
         description: "VP-backed chained AS configuration",
         type: () => ChainedAsVpConfig,
     })
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => ChainedAsVpConfig)
     vp?: ChainedAsVpConfig;
 
     /**
@@ -210,9 +214,6 @@ export class ChainedAsConfig {
         description: "Token configuration",
         type: () => ChainedAsTokenConfig,
     })
-    @IsOptional()
-    @ValidateNested()
-    @Type(() => ChainedAsTokenConfig)
     token?: ChainedAsTokenConfig;
 
     /**
@@ -224,7 +225,5 @@ export class ChainedAsConfig {
         description: "Require DPoP binding for tokens",
         default: true,
     })
-    @IsOptional()
-    @IsBoolean()
     requireDPoP?: boolean;
 }
