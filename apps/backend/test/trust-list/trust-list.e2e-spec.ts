@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { rmSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { INestApplication, ValidationPipe } from "@nestjs/common";
+import { INestApplication } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
 import { decodeJwt, decodeProtectedHeader, importX509, jwtVerify } from "jose";
@@ -11,6 +11,7 @@ import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { AppModule } from "../../src/app.module";
 import { KeyChainImportDto } from "../../src/crypto/key/dto/key-chain-import.dto";
 import { TrustListCreateDto } from "../../src/issuer/trust-list/dto/trust-list-create.dto";
+import { createAppValidationPipe } from "../../src/shared/common/zod/zod-schema.util";
 import { getToken, readConfig } from "../utils";
 
 interface TestContext {
@@ -31,12 +32,7 @@ describe("Trust List e2e Tests", () => {
         }).compile();
 
         const app = moduleFixture.createNestApplication();
-        app.useGlobalPipes(
-            new ValidationPipe({
-                whitelist: true,
-                transform: true,
-            }),
-        );
+        app.useGlobalPipes(createAppValidationPipe());
 
         const configService = app.get(ConfigService);
         const configFolder = resolve(__dirname + "/../fixtures");
@@ -46,6 +42,7 @@ describe("Trust List e2e Tests", () => {
         const clientSecret =
             configService.getOrThrow<string>("AUTH_CLIENT_SECRET");
 
+        console.log("client:", clientId, clientSecret);
         await app.init();
         await app.listen(3000);
 
@@ -196,7 +193,7 @@ describe("Trust List e2e Tests", () => {
             await request(ctx.app.getHttpServer())
                 .delete(`/trust-list/${testTrustListId}`)
                 .set("Authorization", `Bearer ${ctx.authToken}`)
-                .expect(200);
+                .expect(204);
 
             // Verify it's deleted
             await request(ctx.app.getHttpServer())
