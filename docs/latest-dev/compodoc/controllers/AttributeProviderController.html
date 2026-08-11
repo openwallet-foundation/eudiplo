@@ -204,6 +204,7 @@
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#delete" >delete</a>
                             </li>
                             <li>
@@ -273,14 +274,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post()<br />@ApiOperation({summary: &#x27;Create a new attribute provider&#x27;})<br />@ApiResponse({status: 201, description: &#x27;Attribute provider created&#x27;})<br />@ApiBody({type: CreateAttributeProviderDto})<br /></code>
+                    <code>@Post()<br />@ApiOperation({summary: &#x27;Create a new attribute provider&#x27;})<br />@ApiResponse({status: 201, description: &#x27;Attribute provider created&#x27;, type: AttributeProviderEntity})<br />@ApiBody({type: CreateAttributeProviderDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="45"
-                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.controller.ts:45</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="59"
+                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.controller.ts:59</a></div>
                         </td>
                     </tr>
 
@@ -360,6 +361,7 @@
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>delete</b></span>
                         <a href="#delete"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -376,14 +378,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Delete(&#x27;:id&#x27;)<br />@ApiOperation({summary: &#x27;Delete an attribute provider&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Attribute provider deleted&#x27;})<br />@ApiResponse({status: 404, description: &#x27;Attribute provider not found&#x27;})<br /></code>
+                    <code>@Delete(&#x27;:id&#x27;)<br />@ApiOperation({summary: &#x27;Delete an attribute provider&#x27;})<br />@ApiResponse({status: 204, description: &#x27;Attribute provider deleted&#x27;})<br />@ApiResponse({status: 404, description: &#x27;Attribute provider not found&#x27;})<br />@HttpCode(204)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="71"
-                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.controller.ts:71</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="90"
+                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.controller.ts:90</a></div>
                         </td>
                     </tr>
 
@@ -478,14 +480,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get()<br />@ApiOperation({summary: &#x27;List all attribute providers&#x27;})<br />@ApiResponse({status: 200, description: &#x27;List of attribute providers&#x27;})<br /></code>
+                    <code>@Get()<br />@ApiOperation({summary: &#x27;List all attribute providers&#x27;})<br />@ApiResponse({status: 200, description: &#x27;List of attribute providers&#x27;, type: undefined})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="29"
-                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.controller.ts:29</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="35"
+                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.controller.ts:35</a></div>
                         </td>
                     </tr>
 
@@ -557,14 +559,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get(&#x27;:id&#x27;)<br />@ApiOperation({summary: &#x27;Get an attribute provider by ID&#x27;})<br />@ApiResponse({status: 200, description: &#x27;The attribute provider&#x27;})<br />@ApiResponse({status: 404, description: &#x27;Attribute provider not found&#x27;})<br /></code>
+                    <code>@Get(&#x27;:id&#x27;)<br />@ApiOperation({summary: &#x27;Get an attribute provider by ID&#x27;})<br />@ApiResponse({status: 200, description: &#x27;The attribute provider&#x27;, type: AttributeProviderEntity})<br />@ApiResponse({status: 404, description: &#x27;Attribute provider not found&#x27;})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="37"
-                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.controller.ts:37</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="47"
+                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.controller.ts:47</a></div>
                         </td>
                     </tr>
 
@@ -649,14 +651,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Patch(&#x27;:id&#x27;)<br />@ApiOperation({summary: &#x27;Update an attribute provider&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Attribute provider updated&#x27;})<br />@ApiResponse({status: 404, description: &#x27;Attribute provider not found&#x27;})<br />@ApiBody({type: UpdateAttributeProviderDto})<br /></code>
+                    <code>@Patch(&#x27;:id&#x27;)<br />@ApiOperation({summary: &#x27;Update an attribute provider&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Attribute provider updated&#x27;, type: AttributeProviderEntity})<br />@ApiResponse({status: 404, description: &#x27;Attribute provider not found&#x27;})<br />@ApiBody({type: UpdateAttributeProviderDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="58"
-                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.controller.ts:58</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">src/issuer/configuration/attribute-provider/attribute-provider.controller.ts:76</a></div>
                         </td>
                     </tr>
 
@@ -752,6 +754,7 @@
     Patch,
     Post,
     Req,
+    HttpCode,
 } from &quot;@nestjs/common&quot;;
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from &quot;@nestjs/swagger&quot;;
 import { Request } from &quot;express&quot;;
@@ -761,6 +764,7 @@ import { Token, TokenPayload } from &quot;../../../auth/token.decorator&quot;;
 import { AttributeProviderService } from &quot;./attribute-provider.service&quot;;
 import { CreateAttributeProviderDto } from &quot;./dto/create-attribute-provider.dto&quot;;
 import { UpdateAttributeProviderDto } from &quot;./dto/update-attribute-provider.dto&quot;;
+import { AttributeProviderEntity } from &quot;./entities/attribute-provider.entity&quot;;
 
 @ApiTags(&quot;Issuer&quot;)
 @Secured([Role.Issuances])
@@ -770,14 +774,22 @@ export class AttributeProviderController {
 
     @Get()
     @ApiOperation({ summary: &quot;List all attribute providers&quot; })
-    @ApiResponse({ status: 200, description: &quot;List of attribute providers&quot; })
+    @ApiResponse({
+        status: 200,
+        description: &quot;List of attribute providers&quot;,
+        type: [AttributeProviderEntity],
+    })
     getAll(@Token() user: TokenPayload) {
         return this.service.getAll(user.entity!.id);
     }
 
     @Get(&quot;:id&quot;)
     @ApiOperation({ summary: &quot;Get an attribute provider by ID&quot; })
-    @ApiResponse({ status: 200, description: &quot;The attribute provider&quot; })
+    @ApiResponse({
+        status: 200,
+        description: &quot;The attribute provider&quot;,
+        type: AttributeProviderEntity,
+    })
     @ApiResponse({ status: 404, description: &quot;Attribute provider not found&quot; })
     getById(@Param(&quot;id&quot;) id: string, @Token() user: TokenPayload) {
         return this.service.getById(user.entity!.id, id);
@@ -785,7 +797,11 @@ export class AttributeProviderController {
 
     @Post()
     @ApiOperation({ summary: &quot;Create a new attribute provider&quot; })
-    @ApiResponse({ status: 201, description: &quot;Attribute provider created&quot; })
+    @ApiResponse({
+        status: 201,
+        description: &quot;Attribute provider created&quot;,
+        type: AttributeProviderEntity,
+    })
     @ApiBody({ type: CreateAttributeProviderDto })
     create(
         @Body() dto: CreateAttributeProviderDto,
@@ -797,7 +813,11 @@ export class AttributeProviderController {
 
     @Patch(&quot;:id&quot;)
     @ApiOperation({ summary: &quot;Update an attribute provider&quot; })
-    @ApiResponse({ status: 200, description: &quot;Attribute provider updated&quot; })
+    @ApiResponse({
+        status: 200,
+        description: &quot;Attribute provider updated&quot;,
+        type: AttributeProviderEntity,
+    })
     @ApiResponse({ status: 404, description: &quot;Attribute provider not found&quot; })
     @ApiBody({ type: UpdateAttributeProviderDto })
     update(
@@ -811,8 +831,9 @@ export class AttributeProviderController {
 
     @Delete(&quot;:id&quot;)
     @ApiOperation({ summary: &quot;Delete an attribute provider&quot; })
-    @ApiResponse({ status: 200, description: &quot;Attribute provider deleted&quot; })
+    @ApiResponse({ status: 204, description: &quot;Attribute provider deleted&quot; })
     @ApiResponse({ status: 404, description: &quot;Attribute provider not found&quot; })
+    @HttpCode(204)
     delete(
         @Param(&quot;id&quot;) id: string,
         @Token() user: TokenPayload,

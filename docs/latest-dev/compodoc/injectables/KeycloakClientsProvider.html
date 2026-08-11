@@ -1438,7 +1438,7 @@ Returns the new plain secret for one-time display.</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:51</a></code>
+                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:50</a></code>
 </div>
                         </td>
                     </tr>
@@ -1581,7 +1581,6 @@ import {
 } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
-import { plainToClass } from &quot;class-transformer&quot;;
 import { decodeJwt } from &quot;jose&quot;;
 import { Repository } from &quot;typeorm&quot;;
 import { ConfigImportService } from &quot;../../../shared/utils/config-import/config-import.service&quot;;
@@ -1591,6 +1590,7 @@ import { ClientsProvider } from &quot;../client.provider&quot;;
 import { CreateClientDto } from &quot;../dto/create-client.dto&quot;;
 import { UpdateClientDto } from &quot;../dto/update-client.dto&quot;;
 import { ClientEntity } from &quot;../entities/client.entity&quot;;
+import { CreateClientSchema } from &quot;../schemas/client.schema&quot;;
 
 @Injectable()
 export class KeycloakClientsProvider
@@ -1677,11 +1677,11 @@ export class KeycloakClientsProvider
             {
                 subfolder: &quot;clients&quot;,
                 fileExtension: &quot;.json&quot;,
-                validationClass: ClientEntity,
+                validationSchema: CreateClientSchema,
                 resourceType: &quot;client config&quot;,
                 loadData: (filePath) &#x3D;&gt; {
                     const payload &#x3D; JSON.parse(readFileSync(filePath, &quot;utf8&quot;));
-                    return plainToClass(ClientEntity, payload);
+                    return payload as ClientEntity;
                 },
                 checkExists: async (currentTenantId, data) &#x3D;&gt; {
                     return this.getClientById((data as any).clientId)

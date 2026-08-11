@@ -172,11 +172,11 @@
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#clients" >clients</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
@@ -198,22 +198,17 @@
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#sessionConfig" >sessionConfig</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#status" >status</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
@@ -244,6 +239,7 @@
                     <a name="clients"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>clients</b></span>
                         <a href="#clients"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -260,13 +256,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @OneToMany(undefined, client &#x3D;&gt; client.tenant)<br />
+                            @ApiPropertyOptional({description: &#x27;Clients associated with the tenant&#x27;, type: undefined})<br />@OneToMany(undefined, client &#x3D;&gt; client.tenant)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:81</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:77</a></div>
                         </td>
                     </tr>
 
@@ -287,7 +283,6 @@
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>description</b></span>
                         <a href="#description"><span class="icon ion-ios-link"></span></a>
@@ -305,13 +300,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @IsString()<br />@IsOptional()<br />@Column({nullable: true})<br />
+                            @ApiPropertyOptional({description: &#x27;Tenant description&#x27;})<br />@Column({nullable: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:36</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:33</a></div>
                         </td>
                     </tr>
 
@@ -348,13 +343,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @IsString()<br />@PrimaryColumn()<br />
+                            @ApiProperty({description: &#x27;Unique tenant identifier&#x27;})<br />@PrimaryColumn()<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:21</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:19</a></div>
                         </td>
                     </tr>
 
@@ -391,13 +386,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @IsString()<br />@Column({default: &#x27;EUDIPLO&#x27;})<br />
+                            @ApiProperty({description: &#x27;Tenant display name&#x27;})<br />@Column({default: &#x27;EUDIPLO&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:28</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:26</a></div>
                         </td>
                     </tr>
 
@@ -418,9 +413,6 @@
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>sessionConfig</b></span>
                         <a href="#sessionConfig"><span class="icon ion-ios-link"></span></a>
@@ -438,13 +430,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Session storage configuration for this tenant. Controls TTL and cleanup behavior.&#x27;, type: () &#x3D;&gt; SessionStorageConfig})<br />@IsOptional()<br />@ValidateNested()<br />@Type(undefined)<br />@Column(&#x27;json&#x27;, {nullable: true})<br />
+                            @ApiPropertyOptional({description: &#x27;Session storage configuration for this tenant. Controls TTL and cleanup behavior.&#x27;, type: () &#x3D;&gt; SessionStorageConfig})<br />@Column(&#x27;json&#x27;, {nullable: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:57</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:52</a></div>
                         </td>
                     </tr>
 
@@ -465,6 +457,7 @@ Controls how long sessions are kept and how they are cleaned up.</p>
                     <a name="status"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>status</b></span>
                         <a href="#status"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -481,13 +474,13 @@ Controls how long sessions are kept and how they are cleaned up.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @Column(&#x27;varchar&#x27;, {nullable: true})<br />
+                            @ApiProperty({description: &#x27;Tenant status&#x27;, example: &#x27;active&#x27;})<br />@Column(&#x27;varchar&#x27;, {nullable: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:42</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -508,9 +501,6 @@ Controls how long sessions are kept and how they are cleaned up.</p>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>statusListConfig</b></span>
                         <a href="#statusListConfig"><span class="icon ion-ios-link"></span></a>
@@ -528,13 +518,13 @@ Controls how long sessions are kept and how they are cleaned up.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Status list configuration for this tenant. Only affects newly created status lists.&#x27;, type: () &#x3D;&gt; StatusListConfig})<br />@IsOptional()<br />@ValidateNested()<br />@Type(undefined)<br />@Column(&#x27;json&#x27;, {nullable: true})<br />
+                            @ApiPropertyOptional({description: &#x27;Status list configuration for this tenant. Only affects newly created status lists.&#x27;, type: () &#x3D;&gt; StatusListConfig})<br />@Column(&#x27;json&#x27;, {nullable: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:72</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:64</a></div>
                         </td>
                     </tr>
 
@@ -553,9 +543,7 @@ Controls the size and bits per status entry for newly created status lists.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
-import { IsOptional, IsString, ValidateNested } from &quot;class-validator&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
 import { Column, Entity, OneToMany, PrimaryColumn } from &quot;typeorm&quot;;
 import { ClientEntity } from &quot;../../client/entities/client.entity&quot;;
 import { SessionStorageConfig } from &quot;./session-storage-config&quot;;
@@ -571,28 +559,28 @@ export class TenantEntity {
     /**
      * The unique identifier for the tenant.
      */
-    @IsString()
+    @ApiProperty({ description: &quot;Unique tenant identifier&quot; })
     @PrimaryColumn()
     id!: string;
 
     /**
      * The name of the tenant.
      */
-    @IsString()
+    @ApiProperty({ description: &quot;Tenant display name&quot; })
     @Column({ default: &quot;EUDIPLO&quot; })
     name!: string;
 
     /**
      * The description of the tenant.
      */
-    @IsString()
-    @IsOptional()
+    @ApiPropertyOptional({ description: &quot;Tenant description&quot; })
     @Column({ nullable: true })
     description?: string;
 
     /**
      * The current status of the tenant.
      */
+    @ApiProperty({ description: &quot;Tenant status&quot;, example: &quot;active&quot; })
     @Column(&quot;varchar&quot;, { nullable: true })
     status!: TenantStatus;
 
@@ -605,9 +593,6 @@ export class TenantEntity {
             &quot;Session storage configuration for this tenant. Controls TTL and cleanup behavior.&quot;,
         type: () &#x3D;&gt; SessionStorageConfig,
     })
-    @IsOptional()
-    @ValidateNested()
-    @Type(() &#x3D;&gt; SessionStorageConfig)
     @Column(&quot;json&quot;, { nullable: true })
     sessionConfig?: SessionStorageConfig | null;
 
@@ -620,15 +605,16 @@ export class TenantEntity {
             &quot;Status list configuration for this tenant. Only affects newly created status lists.&quot;,
         type: () &#x3D;&gt; StatusListConfig,
     })
-    @IsOptional()
-    @ValidateNested()
-    @Type(() &#x3D;&gt; StatusListConfig)
     @Column(&quot;json&quot;, { nullable: true })
     statusListConfig?: StatusListConfig | null;
 
     /**
      * The clients associated with the tenant.
      */
+    @ApiPropertyOptional({
+        description: &quot;Clients associated with the tenant&quot;,
+        type: [ClientEntity],
+    })
     @OneToMany(
         () &#x3D;&gt; ClientEntity,
         (client) &#x3D;&gt; client.tenant,

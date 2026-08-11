@@ -205,6 +205,8 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#deleteTrustList" >deleteTrustList</a>
                             </li>
                             <li>
@@ -283,8 +285,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="33"
-                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:33</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="34"
+                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -351,6 +353,8 @@
                     <a name="deleteTrustList"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>deleteTrustList</b></span>
                         <a href="#deleteTrustList"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -367,14 +371,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Delete(&#x27;:id&#x27;)<br /></code>
+                    <code>@Delete(&#x27;:id&#x27;)<br />@ApiResponse({status: 204, description: &#x27;Trust list deleted&#x27;})<br />@HttpCode(204)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="148"
-                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:148</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="151"
+                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:151</a></div>
                         </td>
                     </tr>
 
@@ -463,8 +467,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="74"
-                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:74</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="75"
+                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:75</a></div>
                         </td>
                     </tr>
 
@@ -553,8 +557,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="50"
-                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:50</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="51"
+                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -631,8 +635,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="61"
-                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:61</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="62"
+                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:62</a></div>
                         </td>
                     </tr>
 
@@ -721,8 +725,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="108"
-                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:108</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="109"
+                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:109</a></div>
                         </td>
                     </tr>
 
@@ -823,8 +827,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="89"
-                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:89</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="90"
+                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:90</a></div>
                         </td>
                     </tr>
 
@@ -913,8 +917,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="129"
-                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:129</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="130"
+                                    class="link-to-prism">src/issuer/trust-list/trustlist.controller.ts:130</a></div>
                         </td>
                     </tr>
 
@@ -998,11 +1002,12 @@ Creates a new version for audit and regenerates the JWT</p>
     Controller,
     Delete,
     Get,
+    HttpCode,
     Param,
     Post,
     Put,
 } from &quot;@nestjs/common&quot;;
-import { ApiTags } from &quot;@nestjs/swagger&quot;;
+import { ApiResponse, ApiTags } from &quot;@nestjs/swagger&quot;;
 import { Role } from &quot;../../auth/roles/role.enum&quot;;
 import { Secured } from &quot;../../auth/secure.decorator&quot;;
 import { Token, TokenPayload } from &quot;../../auth/token.decorator&quot;;
@@ -1139,6 +1144,8 @@ export class TrustListController {
      * @returns
      */
     @Delete(&quot;:id&quot;)
+    @ApiResponse({ status: 204, description: &quot;Trust list deleted&quot; })
+    @HttpCode(204)
     deleteTrustList(@Param(&quot;id&quot;) id: string, @Token() token: TokenPayload) {
         return this.trustListService.remove(token.entity!.id, id);
     }

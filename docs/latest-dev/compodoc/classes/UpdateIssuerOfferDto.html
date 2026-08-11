@@ -154,6 +154,12 @@
     <div class="tab-pane fade active in" id="info">
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../miscellaneous/variables.html#UpdateIssuerOfferSchema" target="_self" >createZodDto(UpdateIssuerOfferSchema)</a></code>
+            </p>
 
             <p class="comment">
                 <h3>Implements</h3>
@@ -175,6 +181,9 @@
                 <div class="col-sm-6">
                     <h4>Depends on</h4>
                         <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../miscellaneous/variables.html#UpdateIssuerOfferSchema" target="_self" >createZodDto(UpdateIssuerOfferSchema)</a></code>
+                                </li>
                                 <li>
                                             <code><a href="../classes/UpdateIssuerOfferDto.html" target="_self" >GeneratedUpdateIssuerOfferDto</a></code>
                                 </li>
@@ -198,15 +207,11 @@
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#credentialOfferUrl" >credentialOfferUrl</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#description" >description</a>
@@ -237,8 +242,6 @@
                     <a name="credentialOfferUrl"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>credentialOfferUrl</b></span>
                         <a href="#credentialOfferUrl"><span class="icon ion-ios-link"></span></a>
@@ -256,13 +259,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;URL where the user can receive a credential offer from this issuer.&#x27;})<br />@IsOptional()<br />@IsString()<br />
+                            @ApiPropertyOptional({description: &#x27;URL where the user can receive a credential offer from this issuer.&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:73</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:92</a></div>
                         </td>
                     </tr>
 
@@ -275,8 +278,6 @@
                 <td class="col-md-4">
                     <a name="description"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>description</b></span>
@@ -295,13 +296,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Human-readable description to help users choose the right issuer.&#x27;})<br />@IsOptional()<br />@IsString()<br />
+                            @ApiPropertyOptional({description: &#x27;Human-readable description to help users choose the right issuer.&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:81</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="98" class="link-to-prism">src/registrar/schema-metadata/dto/schema-metadata.dto.ts:98</a></div>
                         </td>
                     </tr>
 
@@ -321,14 +322,8 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
-import {
-    IsArray,
-    IsEnum,
-    IsOptional,
-    IsString,
-    ValidateNested,
-} from &quot;class-validator&quot;;
+import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 import type {
     AccessCertificate,
     MetadataSchema,
@@ -381,25 +376,48 @@ export type SchemaMetadataTag &#x3D; (typeof TAG_VALUES)[number];
 const VOCABULARY_STATUS_VALUES &#x3D; [&quot;active&quot;, &quot;deprecated&quot;] as const;
 export type VocabularyStatus &#x3D; (typeof VOCABULARY_STATUS_VALUES)[number];
 
+const UpdateIssuerOfferSchema &#x3D; z
+    .object({
+        credentialOfferUrl: z.string().optional(),
+        description: z.string().optional(),
+    })
+    .strict();
+
+const UpdateSchemaMetadataSchema &#x3D; z
+    .object({
+        category: z.enum(CATEGORY_VALUES).optional(),
+        tags: z.array(z.enum(TAG_VALUES)).optional(),
+        displayName: z.string().optional(),
+        issuerOffers: z.array(UpdateIssuerOfferSchema).optional(),
+    })
+    .strict();
+
+const DeprecateSchemaMetadataSchema &#x3D; z
+    .object({
+        deprecated: z.boolean(),
+        message: z.string().optional(),
+        supersededByVersion: z.string().optional(),
+    })
+    .strict();
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Request bodies
 // ─────────────────────────────────────────────────────────────────────────────
 
-export class UpdateIssuerOfferDto implements GeneratedUpdateIssuerOfferDto {
+export class UpdateIssuerOfferDto
+    extends createZodDto(UpdateIssuerOfferSchema)
+    implements GeneratedUpdateIssuerOfferDto
+{
     @ApiPropertyOptional({
         description:
             &quot;URL where the user can receive a credential offer from this issuer.&quot;,
     })
-    @IsOptional()
-    @IsString()
     credentialOfferUrl?: string;
 
     @ApiPropertyOptional({
         description:
             &quot;Human-readable description to help users choose the right issuer.&quot;,
     })
-    @IsOptional()
-    @IsString()
     description?: string;
 }
 
@@ -407,14 +425,13 @@ export class UpdateIssuerOfferDto implements GeneratedUpdateIssuerOfferDto {
  * Request body for &#x60;PATCH /registrar/schema-metadata/:id&#x60;.
  */
 export class UpdateSchemaMetadataDto
+    extends createZodDto(UpdateSchemaMetadataSchema)
     implements GeneratedUpdateSchemaMetadataDto
 {
     @ApiPropertyOptional({
         description: &quot;Domain category for filtering&quot;,
         enum: CATEGORY_VALUES,
     })
-    @IsOptional()
-    @IsEnum(CATEGORY_VALUES)
     category?: SchemaMetadataCategory;
 
     @ApiPropertyOptional({
@@ -422,17 +439,12 @@ export class UpdateSchemaMetadataDto
         type: [String],
         enum: TAG_VALUES,
     })
-    @IsOptional()
-    @IsArray()
-    @IsEnum(TAG_VALUES, { each: true })
     tags?: SchemaMetadataTag[];
 
     @ApiPropertyOptional({
         description:
             &quot;Optional human-readable schema name for UI display and search&quot;,
     })
-    @IsOptional()
-    @IsString()
     displayName?: string;
 
     @ApiPropertyOptional({
@@ -440,10 +452,6 @@ export class UpdateSchemaMetadataDto
             &quot;Issuer offer entries shown to users, each with credential-offer URL and description&quot;,
         type: [UpdateIssuerOfferDto],
     })
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; UpdateIssuerOfferDto)
     issuerOffers?: UpdateIssuerOfferDto[];
 }
 
@@ -482,8 +490,6 @@ export class SchemaMetadataVocabulariesDto {
             &quot;Allowed category values that can be used when updating schema metadata category.&quot;,
         type: [VocabularyEntryDto],
     })
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; VocabularyEntryDto)
     categories!: VocabularyEntryDto[];
 
     @ApiProperty({
@@ -491,8 +497,6 @@ export class SchemaMetadataVocabulariesDto {
             &quot;Allowed tag values that can be used when updating schema metadata tags.&quot;,
         type: [VocabularyEntryDto],
     })
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; VocabularyEntryDto)
     tags!: VocabularyEntryDto[];
 }
 
@@ -651,8 +655,6 @@ export class SchemaMetadataResponseDto implements SchemaMetadataResponseBase {
         description: &quot;Format-specific schema URIs for this schema metadata&quot;,
         type: [MetadataSchemaDto],
     })
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; MetadataSchemaDto)
     schemaURIs!: MetadataSchemaDto[];
 
     @ApiProperty({
@@ -660,8 +662,6 @@ export class SchemaMetadataResponseDto implements SchemaMetadataResponseBase {
             &quot;Trust frameworks / trust anchors applicable to this schema metadata&quot;,
         type: [TrustAuthorityDto],
     })
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; TrustAuthorityDto)
     trustedAuthorities!: TrustAuthorityDto[];
 
     @ApiPropertyOptional({
@@ -687,8 +687,6 @@ export class SchemaMetadataResponseDto implements SchemaMetadataResponseBase {
             &quot;Issuer offer entries for this schema metadata. Each entry provides a credential offer URL and user-facing description.&quot;,
         type: [IssuerOfferEntryDto],
     })
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; IssuerOfferEntryDto)
     issuerOffers!: IssuerOfferEntryDto[];
 
     @ApiProperty({ description: &quot;The original signed JWT&quot; })
@@ -701,8 +699,6 @@ export class SchemaMetadataResponseDto implements SchemaMetadataResponseBase {
         description: &quot;The access certificate used to sign this schema metadata&quot;,
         type: AccessCertificateRefDto,
     })
-    @ValidateNested()
-    @Type(() &#x3D;&gt; AccessCertificateRefDto)
     signerCertificate?: AccessCertificateRefDto;
 
     @ApiProperty({
@@ -738,22 +734,20 @@ export class SchemaMetadataResponseDto implements SchemaMetadataResponseBase {
 /**
  * Request body for &#x60;PATCH /registrar/schema-metadata/:id/versions/:version/deprecation&#x60;.
  */
-export class DeprecateSchemaMetadataDto {
+export class DeprecateSchemaMetadataDto extends createZodDto(
+    DeprecateSchemaMetadataSchema,
+) {
     @ApiProperty({ description: &quot;Whether to mark this version as deprecated&quot; })
     deprecated!: boolean;
 
     @ApiPropertyOptional({
         description: &quot;Deprecation message shown to consumers&quot;,
     })
-    @IsOptional()
-    @IsString()
     message?: string;
 
     @ApiPropertyOptional({
         description: &quot;The version that supersedes this one&quot;,
     })
-    @IsOptional()
-    @IsString()
     supersededByVersion?: string;
 }
 </code></pre>

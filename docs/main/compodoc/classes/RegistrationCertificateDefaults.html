@@ -181,15 +181,11 @@ These values are merged into presentation-specific registration certificate bodi
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#privacy_policy" >privacy_policy</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#support_uri" >support_uri</a>
@@ -220,8 +216,6 @@ These values are merged into presentation-specific registration certificate bodi
                     <a name="privacy_policy"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>privacy_policy</b></span>
                         <a href="#privacy_policy"><span class="icon ion-ios-link"></span></a>
@@ -239,13 +233,13 @@ These values are merged into presentation-specific registration certificate bodi
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Default privacy policy URL for registration certificate creation.&#x27;, example: &#x27;https://verifier.example/privacy&#x27;})<br />@IsOptional()<br />@IsString()<br />
+                            @ApiPropertyOptional({description: &#x27;Default privacy policy URL for registration certificate creation.&#x27;, example: &#x27;https://verifier.example/privacy&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:18</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:15</a></div>
                         </td>
                     </tr>
 
@@ -258,8 +252,6 @@ These values are merged into presentation-specific registration certificate bodi
                 <td class="col-md-4">
                     <a name="support_uri"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>support_uri</b></span>
@@ -278,13 +270,13 @@ These values are merged into presentation-specific registration certificate bodi
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Default support contact URI for registration certificate creation.&#x27;, example: &#x27;mailto:support@verifier.example&#x27;})<br />@IsOptional()<br />@IsString()<br />
+                            @ApiPropertyOptional({description: &#x27;Default support contact URI for registration certificate creation.&#x27;, example: &#x27;mailto:support@verifier.example&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:27</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:22</a></div>
                         </td>
                     </tr>
 
@@ -304,7 +296,6 @@ These values are merged into presentation-specific registration certificate bodi
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { IsObject, IsOptional, IsString } from &quot;class-validator&quot;;
 import { Column, Entity, ManyToOne, PrimaryColumn } from &quot;typeorm&quot;;
 import { TenantEntity } from &quot;../../auth/tenant/entitites/tenant.entity&quot;;
 
@@ -318,8 +309,6 @@ export class RegistrationCertificateDefaults {
             &quot;Default privacy policy URL for registration certificate creation.&quot;,
         example: &quot;https://verifier.example/privacy&quot;,
     })
-    @IsOptional()
-    @IsString()
     privacy_policy?: string;
 
     @ApiPropertyOptional({
@@ -327,8 +316,6 @@ export class RegistrationCertificateDefaults {
             &quot;Default support contact URI for registration certificate creation.&quot;,
         example: &quot;mailto:support@verifier.example&quot;,
     })
-    @IsOptional()
-    @IsString()
     support_uri?: string;
 }
 
@@ -362,7 +349,6 @@ export class RegistrarConfigEntity {
         description: &quot;The base URL of the registrar API&quot;,
         example: &quot;https://sandbox.eudi-wallet.org/api&quot;,
     })
-    @IsString()
     @Column(&quot;varchar&quot;)
     registrarUrl!: string;
 
@@ -376,7 +362,6 @@ export class RegistrarConfigEntity {
             &quot;The OIDC issuer URL for authentication (e.g., Keycloak realm URL)&quot;,
         example: &quot;https://auth.example.com/realms/my-realm&quot;,
     })
-    @IsString()
     @Column(&quot;varchar&quot;)
     oidcUrl!: string;
 
@@ -388,7 +373,6 @@ export class RegistrarConfigEntity {
         description: &quot;The OIDC client ID for the registrar&quot;,
         example: &quot;registrar-client&quot;,
     })
-    @IsString()
     @Column(&quot;varchar&quot;)
     clientId!: string;
 
@@ -399,8 +383,6 @@ export class RegistrarConfigEntity {
         description:
             &quot;The OIDC client secret (optional, for confidential clients)&quot;,
     })
-    @IsOptional()
-    @IsString()
     @Column(&quot;varchar&quot;, { nullable: true })
     clientSecret?: string;
 
@@ -411,7 +393,6 @@ export class RegistrarConfigEntity {
         description: &quot;The username for OIDC login&quot;,
         example: &quot;admin@example.com&quot;,
     })
-    @IsString()
     @Column(&quot;varchar&quot;)
     username!: string;
 
@@ -422,7 +403,6 @@ export class RegistrarConfigEntity {
     @ApiProperty({
         description: &quot;The password for OIDC login (stored in plaintext)&quot;,
     })
-    @IsString()
     @Column(&quot;varchar&quot;)
     password!: string;
 
@@ -436,8 +416,6 @@ export class RegistrarConfigEntity {
         type: () &#x3D;&gt; RegistrationCertificateDefaults,
         additionalProperties: true,
     })
-    @IsOptional()
-    @IsObject()
     @Column(&quot;json&quot;, { nullable: true })
     registrationCertificateDefaults?: RegistrationCertificateDefaults | null;
 }

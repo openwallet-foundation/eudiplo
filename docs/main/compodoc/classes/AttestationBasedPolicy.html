@@ -158,7 +158,9 @@
                 <h3>Extends</h3>
             </p>
             <p class="comment">
-                            <code><a href="../classes/EmbeddedDisclosurePolicy.html" target="_self" >EmbeddedDisclosurePolicy</a></code>
+                            <code><a href="../classes/AttestationBasedPolicy.html" target="_self" >createZodDto(
+    AttestationBasedPolicySchema,
+)</a></code>
             </p>
 
 
@@ -176,7 +178,9 @@
                     <h4>Depends on</h4>
                         <ul class="list-unstyled relationships-list">
                                 <li>
-                                            <code><a href="../classes/EmbeddedDisclosurePolicy.html" target="_self" >EmbeddedDisclosurePolicy</a></code>
+                                            <code><a href="../classes/AttestationBasedPolicy.html" target="_self" >createZodDto(
+    AttestationBasedPolicySchema,
+)</a></code>
                                 </li>
                         </ul>
                 </div>
@@ -198,16 +202,10 @@
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#policy" >policy</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#values" >values</a>
                             </li>
                         </ul>
@@ -236,8 +234,6 @@
                     <a name="policy"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>policy</b></span>
                         <a href="#policy"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -249,25 +245,9 @@
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />@IsIn([&#x27;attestationBased&#x27;])<br />
-                        </code>
-                    </td>
-                </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <div class="io-line">Inherited from         <code><a href="../classes/EmbeddedDisclosurePolicy.html" target="_self" >EmbeddedDisclosurePolicy</a></code>
-</div>
-                            </td>
-                        </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/EmbeddedDisclosurePolicy.html#source" target="_self" >EmbeddedDisclosurePolicy:86</a></code>
-</div>
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/issuer/configuration/credentials/entities/policies.dto.ts:67</a></div>
                         </td>
                     </tr>
 
@@ -280,10 +260,6 @@
                 <td class="col-md-4">
                     <a name="values"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>values</b></span>
                         <a href="#values"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -295,18 +271,9 @@
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsDefined()<br />@IsArray()<br />@ValidateNested({each: true})<br />@Type(undefined)<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">src/issuer/configuration/credentials/entities/policies.dto.ts:92</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="69" class="link-to-prism">src/issuer/configuration/credentials/entities/policies.dto.ts:69</a></div>
                         </td>
                     </tr>
 
@@ -325,97 +292,74 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Type } from &quot;class-transformer&quot;;
-import {
-    IsArray,
-    IsDefined,
-    IsIn,
-    IsOptional,
-    IsString,
-    ValidateNested,
-} from &quot;class-validator&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 import {
     ClaimsQuery,
-    CredentialQuery,
-    CredentialQueryDcSdJwt,
-    CredentialQueryMsoMdoc,
     CredentialQueryValue,
     CredentialSetQuery,
 } from &quot;../../../../verifier/presentations/entities/presentation-config.entity&quot;;
 
-export class EmbeddedDisclosurePolicy {
-    @IsString()
+const EmbeddedDisclosurePolicySchema &#x3D; z
+    .object({
+        policy: z.string(),
+    })
+    .strict();
+
+const PolicyCredentialSchema &#x3D; z
+    .object({
+        claims: z.array(z.any()).optional(),
+        credentials: z.array(z.any()),
+        credential_sets: z.array(z.any()).optional(),
+    })
+    .strict();
+
+const AttestationBasedPolicySchema &#x3D; z
+    .object({
+        policy: z.literal(&quot;attestationBased&quot;),
+        values: z.array(PolicyCredentialSchema),
+    })
+    .strict();
+
+export class EmbeddedDisclosurePolicy extends createZodDto(
+    EmbeddedDisclosurePolicySchema,
+) {
     policy!: string;
 }
 
 /** allowList */
 export class AllowListPolicy extends EmbeddedDisclosurePolicy {
-    @IsString()
-    @IsIn([&quot;allowList&quot;])
     declare policy: &quot;allowList&quot;;
 
-    @IsDefined()
-    @IsString({ each: true })
     values!: string[];
 }
 
 /** rootOfTrust */
 export class RootOfTrustPolicy extends EmbeddedDisclosurePolicy {
-    @IsString()
-    @IsIn([&quot;rootOfTrust&quot;])
     declare policy: &quot;rootOfTrust&quot;;
 
     // adapt as needed if you want an array instead
-    @IsDefined()
-    @IsString()
     values!: string;
 }
 
 /** none */
 export class NoneTrustPolicy extends EmbeddedDisclosurePolicy {
-    @IsString()
-    @IsIn([&quot;none&quot;])
     declare policy: &quot;none&quot;;
 }
 /** attestationBased */
-export class PolicyCredential {
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; ClaimsQuery)
+export class PolicyCredential extends createZodDto(PolicyCredentialSchema) {
     claims?: ClaimsQuery[];
 
-    @IsDefined()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; CredentialQuery, {
-        discriminator: {
-            property: &quot;format&quot;,
-            subTypes: [
-                { value: CredentialQueryDcSdJwt, name: &quot;dc+sd-jwt&quot; },
-                { value: CredentialQueryMsoMdoc, name: &quot;mso_mdoc&quot; },
-            ],
-        },
-        keepDiscriminatorProperty: true,
-    })
     credentials!: CredentialQueryValue[];
 
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; CredentialSetQuery)
     credential_sets?: CredentialSetQuery[];
 }
 
-export class AttestationBasedPolicy extends EmbeddedDisclosurePolicy {
-    @IsString()
-    @IsIn([&quot;attestationBased&quot;])
+export class AttestationBasedPolicy extends createZodDto(
+    AttestationBasedPolicySchema,
+) {
     declare policy: &quot;attestationBased&quot;;
 
-    @IsDefined()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; PolicyCredential)
     values!: PolicyCredential[];
 }
 </code></pre>

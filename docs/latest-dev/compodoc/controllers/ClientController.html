@@ -201,10 +201,16 @@
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#createClient" >createClient</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#deleteClient" >deleteClient</a>
@@ -213,10 +219,15 @@
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#getClient" >getClient</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#getClients" >getClients</a>
@@ -236,6 +247,10 @@
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#updateClient" >updateClient</a>
@@ -265,6 +280,9 @@
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>createClient</b></span>
                         <a href="#createClient"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -281,14 +299,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Secured([&#x27;undefined&#x27;])<br />@Post()<br /></code>
+                    <code>@Secured([&#x27;undefined&#x27;])<br />@ApiOperation({summary: &#x27;Create a new client&#x27;})<br />@ApiBody({type: CreateClientDto})<br />@ApiResponse({status: 201, type: ClientEntity})<br />@Post()<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="139"
-                                    class="link-to-prism">src/auth/client/client.controller.ts:139</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="153"
+                                    class="link-to-prism">src/auth/client/client.controller.ts:153</a></div>
                         </td>
                     </tr>
 
@@ -356,6 +374,9 @@
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>deleteClient</b></span>
                         <a href="#deleteClient"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -372,14 +393,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Secured([&#x27;undefined&#x27;])<br />@Delete(&#x27;:id&#x27;)<br /></code>
+                    <code>@Secured([&#x27;undefined&#x27;])<br />@ApiOperation({summary: &#x27;Delete a client&#x27;})<br />@ApiResponse({status: 204, description: &#x27;Client deleted&#x27;})<br />@Delete(&#x27;:id&#x27;)<br />@HttpCode(204)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="164"
-                                    class="link-to-prism">src/auth/client/client.controller.ts:164</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="181"
+                                    class="link-to-prism">src/auth/client/client.controller.ts:181</a></div>
                         </td>
                     </tr>
 
@@ -447,6 +468,9 @@
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>getClient</b></span>
                         <a href="#getClient"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -463,14 +487,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Secured([&#x27;undefined&#x27;])<br />@Get(&#x27;:id&#x27;)<br /></code>
+                    <code>@Secured([&#x27;undefined&#x27;])<br />@ApiOperation({summary: &#x27;Get a client by its id&#x27;})<br />@ApiResponse({status: 200, type: ClientEntity})<br />@ApiResponse({status: 404, description: &#x27;Client not found&#x27;})<br />@Get(&#x27;:id&#x27;)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="54"
-                                    class="link-to-prism">src/auth/client/client.controller.ts:54</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">src/auth/client/client.controller.ts:61</a></div>
                         </td>
                     </tr>
 
@@ -538,6 +562,8 @@
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>getClients</b></span>
                         <a href="#getClients"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -554,14 +580,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Secured([&#x27;undefined&#x27;])<br />@Get()<br /></code>
+                    <code>@Secured([&#x27;undefined&#x27;])<br />@ApiOperation({summary: &#x27;Get all clients for the current tenant&#x27;})<br />@ApiResponse({status: 200, type: undefined})<br />@Get()<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="41"
-                                    class="link-to-prism">src/auth/client/client.controller.ts:41</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="45"
+                                    class="link-to-prism">src/auth/client/client.controller.ts:45</a></div>
                         </td>
                     </tr>
 
@@ -646,8 +672,8 @@ Use POST /client/:id/rotate-secret to generate a new secret.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="68"
-                                    class="link-to-prism">src/auth/client/client.controller.ts:68</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="75"
+                                    class="link-to-prism">src/auth/client/client.controller.ts:75</a></div>
                         </td>
                     </tr>
 
@@ -738,8 +764,8 @@ Use POST /client/:id/rotate-secret to generate a new secret.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="91"
-                                    class="link-to-prism">src/auth/client/client.controller.ts:91</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="98"
+                                    class="link-to-prism">src/auth/client/client.controller.ts:98</a></div>
                         </td>
                     </tr>
 
@@ -811,6 +837,10 @@ Users with <code>clients:manage</code> role can only rotate secrets for clients 
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>updateClient</b></span>
                         <a href="#updateClient"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -827,14 +857,14 @@ Users with <code>clients:manage</code> role can only rotate secrets for clients 
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Secured([&#x27;undefined&#x27;])<br />@Patch(&#x27;:id&#x27;)<br /></code>
+                    <code>@Secured([&#x27;undefined&#x27;])<br />@ApiOperation({summary: &#x27;Update a client by its id&#x27;})<br />@ApiBody({type: UpdateClientDto})<br />@ApiResponse({status: 200, type: ClientEntity})<br />@ApiResponse({status: 404, description: &#x27;Client not found&#x27;})<br />@Patch(&#x27;:id&#x27;)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="113"
-                                    class="link-to-prism">src/auth/client/client.controller.ts:113</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="124"
+                                    class="link-to-prism">src/auth/client/client.controller.ts:124</a></div>
                         </td>
                     </tr>
 
@@ -919,20 +949,22 @@ Users with <code>clients:manage</code> role can only rotate secrets for clients 
     Get,
     HttpException,
     HttpStatus,
+    HttpCode,
     Inject,
     Param,
     Patch,
     Post,
 } from &quot;@nestjs/common&quot;;
-import { ApiTags } from &quot;@nestjs/swagger&quot;;
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from &quot;@nestjs/swagger&quot;;
 import { Role } from &quot;../roles/role.enum&quot;;
 import { Secured } from &quot;../secure.decorator&quot;;
 import { Token, TokenPayload } from &quot;../token.decorator&quot;;
 import { requireTenantContext } from &quot;../tenant-context.util&quot;;
 import { CLIENTS_PROVIDER, ClientsProvider } from &quot;./client.provider&quot;;
-import { ClientSecretResponseDto } from &quot;./dto/client-secret-response.dto&quot;;
 import { CreateClientDto } from &quot;./dto/create-client.dto&quot;;
+import { ClientSecretResponseDto } from &quot;./dto/client-secret-response.dto&quot;;
 import { UpdateClientDto } from &quot;./dto/update-client.dto&quot;;
+import { ClientEntity } from &quot;./entities/client.entity&quot;;
 
 /**
  * Controller to manage clients.
@@ -950,6 +982,8 @@ export class ClientController {
      * @returns
      */
     @Secured([Role.Clients])
+    @ApiOperation({ summary: &quot;Get all clients for the current tenant&quot; })
+    @ApiResponse({ status: 200, type: [ClientEntity] })
     @Get()
     getClients(@Token() user: TokenPayload) {
         const tenantId &#x3D; requireTenantContext(user);
@@ -963,6 +997,9 @@ export class ClientController {
      * @returns
      */
     @Secured([Role.Clients])
+    @ApiOperation({ summary: &quot;Get a client by its id&quot; })
+    @ApiResponse({ status: 200, type: ClientEntity })
+    @ApiResponse({ status: 404, description: &quot;Client not found&quot; })
     @Get(&quot;:id&quot;)
     getClient(@Param(&quot;id&quot;) id: string, @Token() user: TokenPayload) {
         const tenantId &#x3D; requireTenantContext(user);
@@ -1022,6 +1059,10 @@ export class ClientController {
      * @returns
      */
     @Secured([Role.Clients])
+    @ApiOperation({ summary: &quot;Update a client by its id&quot; })
+    @ApiBody({ type: UpdateClientDto })
+    @ApiResponse({ status: 200, type: ClientEntity })
+    @ApiResponse({ status: 404, description: &quot;Client not found&quot; })
     @Patch(&quot;:id&quot;)
     updateClient(
         @Param(&quot;id&quot;) id: string,
@@ -1048,6 +1089,9 @@ export class ClientController {
      * @returns
      */
     @Secured([Role.Clients])
+    @ApiOperation({ summary: &quot;Create a new client&quot; })
+    @ApiBody({ type: CreateClientDto })
+    @ApiResponse({ status: 201, type: ClientEntity })
     @Post()
     createClient(
         @Body() createClientDto: CreateClientDto,
@@ -1073,7 +1117,10 @@ export class ClientController {
      * @returns
      */
     @Secured([Role.Clients])
+    @ApiOperation({ summary: &quot;Delete a client&quot; })
+    @ApiResponse({ status: 204, description: &quot;Client deleted&quot; })
     @Delete(&quot;:id&quot;)
+    @HttpCode(204)
     deleteClient(@Param(&quot;id&quot;) id: string, @Token() user: TokenPayload) {
         const tenantId &#x3D; requireTenantContext(user);
         return this.clients.removeClient(tenantId, id);

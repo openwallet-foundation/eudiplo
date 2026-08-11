@@ -161,10 +161,39 @@
 
             </p>
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../entitys/Session.html" target="_self" >createZodDto(
+    UpdateSessionConfigSchema,
+)</a></code>
+            </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../entitys/Session.html" target="_self" >createZodDto(
+    UpdateSessionConfigSchema,
+)</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -180,16 +209,11 @@
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#cleanupMode" >cleanupMode</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#ttlSeconds" >ttlSeconds</a>
@@ -220,8 +244,6 @@
                     <a name="cleanupMode"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>cleanupMode</b></span>
                         <a href="#cleanupMode"><span class="icon ion-ios-link"></span></a>
@@ -239,13 +261,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Cleanup mode: &#x27;full&#x27; deletes everything, &#x27;anonymize&#x27; keeps metadata but removes PII.&#x27;, enum: SessionCleanupMode, default: undefined})<br />@IsOptional()<br />@IsEnum(SessionCleanupMode)<br />
+                            @ApiPropertyOptional({description: &#x27;Cleanup mode: &#x27;full&#x27; deletes everything, &#x27;anonymize&#x27; keeps metadata but removes PII.&#x27;, enum: SessionCleanupMode, default: undefined})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/session/dto/update-session-config.dto.ts:38</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/session/dto/update-session-config.dto.ts:43</a></div>
                         </td>
                     </tr>
 
@@ -269,9 +291,6 @@
                     <a name="ttlSeconds"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>ttlSeconds</b></span>
                         <a href="#ttlSeconds"><span class="icon ion-ios-link"></span></a>
@@ -289,13 +308,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Time-to-live for sessions in seconds. Set to null to use global default.&#x27;, example: 86400, minimum: 60})<br />@IsOptional()<br />@IsInt()<br />@Min(60)<br />
+                            @ApiPropertyOptional({description: &#x27;Time-to-live for sessions in seconds. Set to null to use global default.&#x27;, example: 86400, minimum: 60})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/session/dto/update-session-config.dto.ts:23</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/session/dto/update-session-config.dto.ts:30</a></div>
                         </td>
                     </tr>
 
@@ -323,13 +342,23 @@ If not set or null, uses the global SESSION_TTL environment variable.</p>
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { IsEnum, IsInt, IsOptional, Min } from &quot;class-validator&quot;;
+import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 import { SessionCleanupMode } from &quot;../../auth/tenant/entitites/session-storage-config&quot;;
+
+const UpdateSessionConfigSchema &#x3D; z
+    .object({
+        ttlSeconds: z.coerce.number().int().min(60).nullable().optional(),
+        cleanupMode: z.enum(SessionCleanupMode).optional(),
+    })
+    .strict();
 
 /**
  * DTO for updating session storage configuration.
  */
-export class UpdateSessionConfigDto {
+export class UpdateSessionConfigDto extends createZodDto(
+    UpdateSessionConfigSchema,
+) {
     /**
      * Time-to-live for sessions in seconds.
      * After this period, sessions are eligible for cleanup.
@@ -341,9 +370,6 @@ export class UpdateSessionConfigDto {
         example: 86400,
         minimum: 60,
     })
-    @IsOptional()
-    @IsInt()
-    @Min(60)
     ttlSeconds?: number | null;
 
     /**
@@ -357,8 +383,6 @@ export class UpdateSessionConfigDto {
         enum: SessionCleanupMode,
         default: SessionCleanupMode.Full,
     })
-    @IsOptional()
-    @IsEnum(SessionCleanupMode)
     cleanupMode?: SessionCleanupMode;
 }
 </code></pre>

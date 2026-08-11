@@ -154,10 +154,39 @@
     <div class="tab-pane fade active in" id="info">
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../classes/RegistrationCertificatePurpose.html" target="_self" >createZodDto(
+    RegistrationCertificatePurposeSchema,
+)</a></code>
+            </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../classes/RegistrationCertificatePurpose.html" target="_self" >createZodDto(
+    RegistrationCertificatePurposeSchema,
+)</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -172,12 +201,10 @@
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                 <a href="#content" >content</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                 <a href="#lang" >lang</a>
                             </li>
                         </ul>
@@ -205,7 +232,6 @@
                 <td class="col-md-4">
                     <a name="content"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                         <span ><b>content</b></span>
                         <a href="#content"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -217,18 +243,9 @@
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/verifier/presentations/dto/vp-request.dto.ts:16</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/verifier/presentations/dto/vp-request.dto.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -241,7 +258,6 @@
                 <td class="col-md-4">
                     <a name="lang"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                         <span ><b>lang</b></span>
                         <a href="#lang"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -253,18 +269,9 @@
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/verifier/presentations/dto/vp-request.dto.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/verifier/presentations/dto/vp-request.dto.ts:35</a></div>
                         </td>
                     </tr>
 
@@ -283,83 +290,83 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Type } from &quot;class-transformer&quot;;
-import {
-    IsArray,
-    IsObject,
-    IsOptional,
-    IsString,
-    ValidateIf,
-    ValidateNested,
-} from &quot;class-validator&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 
-export class RegistrationCertificatePurpose {
-    @IsString()
+const RegistrationCertificatePurposeSchema &#x3D; z
+    .object({
+        lang: z.string(),
+        content: z.string(),
+    })
+    .strict();
+
+const RegistrationCertificateBodySchema &#x3D; z
+    .object({
+        privacy_policy: z.string().optional(),
+        support_uri: z.string().optional(),
+        intermediary: z.string().optional(),
+        purpose: z.array(RegistrationCertificatePurposeSchema).optional(),
+        credentials: z.array(z.record(z.string(), z.unknown())).optional(),
+        provided_attestations: z
+            .array(z.record(z.string(), z.unknown()))
+            .optional(),
+    })
+    .strict();
+
+export const RegistrationCertificateRequestSchema &#x3D; z
+    .object({
+        id: z.string().optional(),
+        body: RegistrationCertificateBodySchema.optional(),
+        jwt: z.string().optional(),
+    })
+    .strict();
+
+export class RegistrationCertificatePurpose extends createZodDto(
+    RegistrationCertificatePurposeSchema,
+) {
     lang!: string;
 
-    @IsString()
     content!: string;
 }
 
-export class RegistrationCertificateBody {
-    @IsOptional()
-    @IsString()
+export class RegistrationCertificateBody extends createZodDto(
+    RegistrationCertificateBodySchema,
+) {
     privacy_policy?: string;
 
-    @IsOptional()
-    @IsString()
     support_uri?: string;
 
-    @IsOptional()
-    @IsString()
     intermediary?: string;
 
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; RegistrationCertificatePurpose)
     purpose?: RegistrationCertificatePurpose[];
 
-    @IsOptional()
-    @IsArray()
-    @IsObject({ each: true })
     credentials?: Record&lt;string, unknown&gt;[];
 
-    @IsOptional()
-    @IsArray()
-    @IsObject({ each: true })
     provided_attestations?: Record&lt;string, unknown&gt;[];
 }
 
 /**
  * RegistrationCertificateRequest DTO
  */
-export class RegistrationCertificateRequest {
+export class RegistrationCertificateRequest extends createZodDto(
+    RegistrationCertificateRequestSchema,
+) {
     /**
      * Optional registrar-side certificate identifier.
      * If provided and still valid, EUDIPLO reuses it instead of creating a new certificate.
      */
-    @IsOptional()
-    @IsString()
     id?: string;
 
     /**
      * Registration certificate creation payload.
      * This is merged with tenant-level registrar defaults when a certificate is created.
      */
-    @ValidateIf((o) &#x3D;&gt; !o.jwt)
-    @IsObject()
-    @ValidateNested()
-    @Type(() &#x3D;&gt; RegistrationCertificateBody)
     body?: RegistrationCertificateBody;
 
     /**
      * Optional pre-existing registration certificate JWT.
      * If provided, EUDIPLO forwards it as-is and does not create a new one.
      */
-    @ValidateIf((o) &#x3D;&gt; !o.body)
-    @IsOptional()
-    @IsString()
     jwt?: string;
 }
 </code></pre>

@@ -181,10 +181,12 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#download" >download</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
@@ -216,6 +218,7 @@
                     <a name="download"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>download</b></span>
                         <a href="#download"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -232,14 +235,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get(&#x27;:key&#x27;)<br /></code>
+                    <code>@Get(&#x27;:key&#x27;)<br />@ApiResponse({status: 200, description: &#x27;Binary file stream&#x27;, content: undefined})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="55"
-                                    class="link-to-prism">src/storage/storage.controller.ts:55</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="66"
+                                    class="link-to-prism">src/storage/storage.controller.ts:66</a></div>
                         </td>
                     </tr>
 
@@ -298,6 +301,7 @@
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>upload</b></span>
                         <a href="#upload"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -314,14 +318,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@UseInterceptors(undefined)<br />@Secured([&#x27;undefined&#x27;])<br />@ApiConsumes(&#x27;multipart/form-data&#x27;)<br />@ApiBody({type: FileUploadDto})<br />@Post()<br /></code>
+                    <code>@UseInterceptors(undefined)<br />@Secured([&#x27;undefined&#x27;])<br />@ApiConsumes(&#x27;multipart/form-data&#x27;)<br />@ApiBody({type: FileUploadDto})<br />@ApiResponse({status: 200, type: StoredObjectResponseDto})<br />@Post()<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="44"
-                                    class="link-to-prism">src/storage/storage.controller.ts:44</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="46"
+                                    class="link-to-prism">src/storage/storage.controller.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -397,11 +401,12 @@
     UseInterceptors,
 } from &quot;@nestjs/common&quot;;
 import { FileInterceptor } from &quot;@nestjs/platform-express&quot;;
-import { ApiBody, ApiConsumes, ApiTags } from &quot;@nestjs/swagger&quot;;
+import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from &quot;@nestjs/swagger&quot;;
 import { Role } from &quot;../auth/roles/role.enum&quot;;
 import { Secured } from &quot;../auth/secure.decorator&quot;;
 import { Token, TokenPayload } from &quot;../auth/token.decorator&quot;;
 import { FileUploadDto } from &quot;./dto/file-upload.dto&quot;;
+import { StoredObjectResponseDto } from &quot;./dto/stored-object-response.dto&quot;;
 import { FilesService } from &quot;./files.service&quot;;
 
 /**
@@ -428,6 +433,7 @@ export class StorageController {
     @ApiBody({
         type: FileUploadDto,
     })
+    @ApiResponse({ status: 200, type: StoredObjectResponseDto })
     @Post()
     upload(
         @Token() user: TokenPayload,
@@ -440,6 +446,15 @@ export class StorageController {
      * Get a file and stream it
      */
     @Get(&quot;:key&quot;)
+    @ApiResponse({
+        status: 200,
+        description: &quot;Binary file stream&quot;,
+        content: {
+            &quot;application/octet-stream&quot;: {
+                schema: { type: &quot;string&quot;, format: &quot;binary&quot; },
+            },
+        },
+    })
     download(@Param(&quot;key&quot;) key: string) {
         return this.filesService
             .getStream(key)

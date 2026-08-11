@@ -166,10 +166,35 @@
 
             </p>
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../miscellaneous/variables.html#KeyChainCreateSchema" target="_self" >createZodDto(KeyChainCreateSchema)</a></code>
+            </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../miscellaneous/variables.html#KeyChainCreateSchema" target="_self" >createZodDto(KeyChainCreateSchema)</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -185,15 +210,11 @@
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#description" >description</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#kmsProvider" >kmsProvider</a>
@@ -201,21 +222,16 @@
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#rotationPolicy" >rotationPolicy</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#type" >type</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#usageType" >usageType</a>
                             </li>
@@ -245,8 +261,6 @@
                     <a name="description"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>description</b></span>
                         <a href="#description"><span class="icon ion-ios-link"></span></a>
@@ -264,13 +278,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Human-readable description for the key chain.&#x27;, example: &#x27;Production credential signing key&#x27;})<br />@IsString()<br />@IsOptional()<br />
+                            @ApiPropertyOptional({description: &#x27;Human-readable description for the key chain.&#x27;, example: &#x27;Production credential signing key&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="94" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:94</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:77</a></div>
                         </td>
                     </tr>
 
@@ -283,8 +297,6 @@
                 <td class="col-md-4">
                     <a name="kmsProvider"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>kmsProvider</b></span>
@@ -303,13 +315,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;KMS provider to use (defaults to the configured default provider).&#x27;, example: &#x27;vault&#x27;})<br />@IsString()<br />@IsOptional()<br />
+                            @ApiPropertyOptional({description: &#x27;KMS provider to use (defaults to the configured default provider).&#x27;, example: &#x27;vault&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="103" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:103</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="84" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:84</a></div>
                         </td>
                     </tr>
 
@@ -322,9 +334,6 @@
                 <td class="col-md-4">
                     <a name="rotationPolicy"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>rotationPolicy</b></span>
@@ -343,13 +352,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Rotation policy configuration. Only applicable for the signing key (root CA never rotates).&#x27;, type: RotationPolicyCreateDto})<br />@ValidateNested()<br />@Type(undefined)<br />@IsOptional()<br />
+                            @ApiPropertyOptional({description: &#x27;Rotation policy configuration. Only applicable for the signing key (root CA never rotates).&#x27;, type: RotationPolicyCreateDto})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="113" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:113</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="91" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:91</a></div>
                         </td>
                     </tr>
 
@@ -362,7 +371,6 @@
                 <td class="col-md-4">
                     <a name="type"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                         <span ><b>type</b></span>
                         <a href="#type"><span class="icon ion-ios-link"></span></a>
@@ -380,13 +388,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Type of key chain to create.&#x27;, enum: KeyChainType, example: &#x27;internalChain&#x27;})<br />@IsEnum(KeyChainType)<br />
+                            @ApiProperty({description: &#x27;Type of key chain to create.&#x27;, enum: KeyChainType, example: &#x27;internalChain&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="86" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:86</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="71" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:71</a></div>
                         </td>
                     </tr>
 
@@ -399,7 +407,6 @@
                 <td class="col-md-4">
                     <a name="usageType"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                         <span ><b>usageType</b></span>
                         <a href="#usageType"><span class="icon ion-ios-link"></span></a>
@@ -417,13 +424,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Usage type determines the purpose of this key chain (access, attestation, etc.).&#x27;, enum: KeyUsageType, example: &#x27;attestation&#x27;})<br />@IsEnum(KeyUsageType)<br />
+                            @ApiProperty({description: &#x27;Usage type determines the purpose of this key chain (access, attestation, etc.).&#x27;, enum: KeyUsageType, example: &#x27;attestation&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:78</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:64</a></div>
                         </td>
                     </tr>
 
@@ -443,28 +450,23 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
+import { createZodDto } from &quot;nestjs-zod&quot;;
+import { KeyUsageType } from &quot;../types/key-usage-type&quot;;
 import {
-    IsBoolean,
-    IsEnum,
-    IsNumber,
-    IsOptional,
-    IsString,
-    Max,
-    Min,
-    ValidateNested,
-} from &quot;class-validator&quot;;
-import { KeyUsageType } from &quot;../entities/key-chain.entity&quot;;
+    KeyChainCreateSchema,
+    RotationPolicyCreateSchema,
+} from &quot;../schemas/key-chain.schema&quot;;
 
 /**
  * DTO for rotation policy configuration.
  */
-export class RotationPolicyCreateDto {
+export class RotationPolicyCreateDto extends createZodDto(
+    RotationPolicyCreateSchema,
+) {
     @ApiProperty({
         description: &quot;Whether automatic key rotation is enabled.&quot;,
         default: false,
     })
-    @IsBoolean()
     enabled!: boolean;
 
     @ApiPropertyOptional({
@@ -474,10 +476,6 @@ export class RotationPolicyCreateDto {
         minimum: 1,
         maximum: 3650,
     })
-    @IsNumber()
-    @Min(1)
-    @Max(3650)
-    @IsOptional()
     intervalDays?: number;
 
     @ApiPropertyOptional({
@@ -487,10 +485,6 @@ export class RotationPolicyCreateDto {
         minimum: 1,
         maximum: 3650,
     })
-    @IsNumber()
-    @Min(1)
-    @Max(3650)
-    @IsOptional()
     certValidityDays?: number;
 }
 
@@ -511,14 +505,13 @@ export enum KeyChainType {
  * - For standalone type: A single key with a self-signed certificate
  * - For internalChain type: An internal root CA + signing key with CA-signed certificate
  */
-export class KeyChainCreateDto {
+export class KeyChainCreateDto extends createZodDto(KeyChainCreateSchema) {
     @ApiProperty({
         description:
             &quot;Usage type determines the purpose of this key chain (access, attestation, etc.).&quot;,
         enum: KeyUsageType,
         example: &quot;attestation&quot;,
     })
-    @IsEnum(KeyUsageType)
     usageType!: KeyUsageType;
 
     @ApiProperty({
@@ -526,15 +519,12 @@ export class KeyChainCreateDto {
         enum: KeyChainType,
         example: &quot;internalChain&quot;,
     })
-    @IsEnum(KeyChainType)
     type!: KeyChainType;
 
     @ApiPropertyOptional({
         description: &quot;Human-readable description for the key chain.&quot;,
         example: &quot;Production credential signing key&quot;,
     })
-    @IsString()
-    @IsOptional()
     description?: string;
 
     @ApiPropertyOptional({
@@ -542,8 +532,6 @@ export class KeyChainCreateDto {
             &quot;KMS provider to use (defaults to the configured default provider).&quot;,
         example: &quot;vault&quot;,
     })
-    @IsString()
-    @IsOptional()
     kmsProvider?: string;
 
     @ApiPropertyOptional({
@@ -551,9 +539,6 @@ export class KeyChainCreateDto {
             &quot;Rotation policy configuration. Only applicable for the signing key (root CA never rotates).&quot;,
         type: RotationPolicyCreateDto,
     })
-    @ValidateNested()
-    @Type(() &#x3D;&gt; RotationPolicyCreateDto)
-    @IsOptional()
     rotationPolicy?: RotationPolicyCreateDto;
 }
 </code></pre>

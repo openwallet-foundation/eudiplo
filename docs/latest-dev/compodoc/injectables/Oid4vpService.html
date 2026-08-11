@@ -268,7 +268,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:36</a></div>
                             </td>
                         </tr>
 
@@ -485,8 +485,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="158"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:158</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="159"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:159</a></div>
                         </td>
                     </tr>
 
@@ -590,8 +590,8 @@ It initializes the session logging context and logs the start of the flow.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="391"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:391</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="392"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:392</a></div>
                         </td>
                     </tr>
 
@@ -717,8 +717,8 @@ It initializes the session logging context and logs the start of the flow.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="107"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:107</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="108"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:108</a></div>
                         </td>
                     </tr>
 
@@ -832,8 +832,8 @@ session creation, which is essential for transaction_data hash validation.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="521"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:521</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="522"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:522</a></div>
                         </td>
                     </tr>
 
@@ -926,8 +926,8 @@ from the URL path (not the session ID).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="367"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:367</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="368"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:368</a></div>
                         </td>
                     </tr>
 
@@ -996,8 +996,8 @@ from the URL path (not the session ID).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="90"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:90</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="91"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:91</a></div>
                         </td>
                     </tr>
 
@@ -1071,8 +1071,8 @@ compatibility with sessions created before the walletNonce migration.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="54"
-                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:54</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:55</a></div>
                         </td>
                     </tr>
 
@@ -1158,7 +1158,7 @@ compatibility with sessions created before the walletNonce migration.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/verifier/oid4vp/oid4vp.service.ts:41</a></div>
                         </td>
                     </tr>
 
@@ -1175,8 +1175,6 @@ compatibility with sessions created before the walletNonce migration.</p>
 import { BadRequestException, Injectable } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
-import { plainToInstance } from &quot;class-transformer&quot;;
-import { validateOrReject } from &quot;class-validator&quot;;
 import { base64url } from &quot;jose&quot;;
 import { Span, TraceService } from &quot;nestjs-otel&quot;;
 import { InjectPinoLogger, PinoLogger } from &quot;nestjs-pino&quot;;
@@ -1185,7 +1183,7 @@ import { v4 } from &quot;uuid&quot;;
 import { EncryptionService } from &quot;../../crypto/encryption/encryption.service&quot;;
 import { CertService } from &quot;../../crypto/key/cert/cert.service&quot;;
 import { CryptoImplementationService } from &quot;../../crypto/key/crypto-implementation/crypto-implementation.service&quot;;
-import { KeyUsageType } from &quot;../../crypto/key/entities/key-chain.entity&quot;;
+import { KeyUsageType } from &quot;../../crypto/key/types/key-usage-type&quot;;
 import { KeyChainService } from &quot;../../crypto/key/key-chain.service&quot;;
 import { CredentialFormat } from &quot;../../issuer/configuration/credentials/entities/credential.entity&quot;;
 import { WebhookEndpointEntity } from &quot;../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity&quot;;
@@ -1197,7 +1195,10 @@ import { DEFAULT_VERIFIER_SKEW_SECONDS } from &quot;../../shared/trust/types&quo
 import { AuditLogContext } from &quot;../../shared/utils/logger/audit-log.service&quot;;
 import { SessionLoggerService } from &quot;../../shared/utils/logger/session-logger.service&quot;;
 import { WebhookService } from &quot;../../shared/utils/webhook/webhook.service&quot;;
-import { AuthResponse } from &quot;../presentations/dto/auth-response.dto&quot;;
+import {
+    AuthResponse,
+    AuthResponseSchema,
+} from &quot;../presentations/dto/auth-response.dto&quot;;
 import { IncompletePresentationException } from &quot;../presentations/exceptions/incomplete-presentation.exception&quot;;
 import { PresentationsService } from &quot;../presentations/presentations.service&quot;;
 import { applyTrustedAuthoritiesPolicy } from &quot;./dcql-trusted-authorities.util&quot;;
@@ -1780,19 +1781,20 @@ export class Oid4vpService {
                     | undefined,
             );
 
-        // Validate decrypted response against AuthResponse class
-        const res &#x3D; plainToInstance(AuthResponse, decrypted);
+        // Validate decrypted response against the Zod schema
+
+        const parsed &#x3D; AuthResponseSchema.safeParse(decrypted);
+        if (!parsed.success) {
+            throw new BadRequestException(
+                &#x60;Invalid authorization response: ${JSON.stringify(parsed.error.issues)}&#x60;,
+            );
+        }
+
+        const res: AuthResponse &#x3D; parsed.data;
         this.logger.trace(
             { decryptedResponse: decrypted },
             &quot;[TRACE] Decrypted OID4VP authorization response&quot;,
         );
-        try {
-            await validateOrReject(res);
-        } catch (errors) {
-            throw new BadRequestException(
-                &#x60;Invalid authorization response: ${JSON.stringify(errors)}&#x60;,
-            );
-        }
 
         //for dc api the state is no longer included in the res, see: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-request
 

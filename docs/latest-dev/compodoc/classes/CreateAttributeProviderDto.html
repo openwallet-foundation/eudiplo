@@ -152,9 +152,8 @@
                 <h3>Extends</h3>
             </p>
             <p class="comment">
-                            <code><a href="../entitys/AttributeProviderEntity.html" target="_self" >OmitType(
-    AttributeProviderEntity,
-    TENANT_RELATION_FIELDS,
+                            <code><a href="../miscellaneous/variables.html#CreateAttributeProviderSchema" target="_self" >createZodDto(
+    CreateAttributeProviderSchema,
 )</a></code>
             </p>
 
@@ -173,9 +172,8 @@
                     <h4>Depends on</h4>
                         <ul class="list-unstyled relationships-list">
                                 <li>
-                                            <code><a href="../entitys/AttributeProviderEntity.html" target="_self" >OmitType(
-    AttributeProviderEntity,
-    TENANT_RELATION_FIELDS,
+                                            <code><a href="../miscellaneous/variables.html#CreateAttributeProviderSchema" target="_self" >createZodDto(
+    CreateAttributeProviderSchema,
 )</a></code>
                                 </li>
                         </ul>
@@ -187,13 +185,11 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { OmitType } from &quot;@nestjs/swagger&quot;;
-import { TENANT_RELATION_FIELDS } from &quot;../../../../shared/utils/dto-omit-fields&quot;;
-import { AttributeProviderEntity } from &quot;../entities/attribute-provider.entity&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createZodDto } from &quot;nestjs-zod&quot;;
+import { CreateAttributeProviderSchema } from &quot;../schemas/attribute-provider.schema&quot;;
 
-export class CreateAttributeProviderDto extends OmitType(
-    AttributeProviderEntity,
-    TENANT_RELATION_FIELDS,
+export class CreateAttributeProviderDto extends createZodDto(
+    CreateAttributeProviderSchema,
 ) {}
 </code></pre>
     </div>

@@ -193,6 +193,8 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#getIssuanceConfigurations" >getIssuanceConfigurations</a>
                             </li>
                             <li>
@@ -205,6 +207,9 @@
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#storeIssuanceConfiguration" >storeIssuanceConfiguration</a>
                             </li>
@@ -232,6 +237,8 @@
                     <a name="getIssuanceConfigurations"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>getIssuanceConfigurations</b></span>
                         <a href="#getIssuanceConfigurations"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -248,14 +255,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get()<br /></code>
+                    <code>@Get()<br />@ApiOperation({summary: &#x27;Get issuance configuration&#x27;})<br />@ApiResponse({status: 200, type: IssuanceConfig})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="23"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance-config.controller.ts:23</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="25"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance-config.controller.ts:25</a></div>
                         </td>
                     </tr>
 
@@ -335,8 +342,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="74"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance-config.controller.ts:74</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="79"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance-config.controller.ts:79</a></div>
                         </td>
                     </tr>
 
@@ -391,6 +398,9 @@
                     <a name="storeIssuanceConfiguration"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>storeIssuanceConfiguration</b></span>
                         <a href="#storeIssuanceConfiguration"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -407,14 +417,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post()<br /></code>
+                    <code>@Post()<br />@ApiOperation({summary: &#x27;Create or replace issuance configuration&#x27;})<br />@ApiBody({type: UpdateIssuanceDto})<br />@ApiResponse({status: 200, type: IssuanceConfig})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="42"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance-config.controller.ts:42</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="47"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance-config.controller.ts:47</a></div>
                         </td>
                     </tr>
 
@@ -492,7 +502,7 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Body, Controller, Get, Post, Req } from &quot;@nestjs/common&quot;;
-import { ApiOperation, ApiResponse, ApiTags } from &quot;@nestjs/swagger&quot;;
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from &quot;@nestjs/swagger&quot;;
 import { Request } from &quot;express&quot;;
 import { Role } from &quot;../../../auth/roles/role.enum&quot;;
 import { Secured } from &quot;../../../auth/secure.decorator&quot;;
@@ -513,6 +523,8 @@ export class IssuanceConfigController {
      * @returns
      */
     @Get()
+    @ApiOperation({ summary: &quot;Get issuance configuration&quot; })
+    @ApiResponse({ status: 200, type: IssuanceConfig })
     getIssuanceConfigurations(
         @Token() user: TokenPayload,
     ): Promise&lt;IssuanceConfig&gt; {
@@ -532,6 +544,9 @@ export class IssuanceConfigController {
      * @returns
      */
     @Post()
+    @ApiOperation({ summary: &quot;Create or replace issuance configuration&quot; })
+    @ApiBody({ type: UpdateIssuanceDto })
+    @ApiResponse({ status: 200, type: IssuanceConfig })
     storeIssuanceConfiguration(
         @Body() config: UpdateIssuanceDto,
         @Token() user: TokenPayload,

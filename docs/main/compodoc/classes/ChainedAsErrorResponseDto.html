@@ -236,7 +236,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="223" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:223</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="247" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:247</a></div>
                         </td>
                     </tr>
 
@@ -273,7 +273,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="228" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:228</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="252" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:252</a></div>
                         </td>
                     </tr>
 
@@ -293,75 +293,11 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { Transform } from &quot;class-transformer&quot;;
-import { IsArray, IsOptional, IsString } from &quot;class-validator&quot;;
+import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 
-/**
- * Pushed Authorization Request (PAR) body for Chained AS.
- */
-export class ChainedAsParRequestDto {
-    @ApiProperty({
-        description: &quot;OAuth response type (must be &#x27;code&#x27;)&quot;,
-        example: &quot;code&quot;,
-    })
-    @IsString()
-    response_type!: string;
-
-    @ApiProperty({
-        description: &quot;Client identifier (wallet identifier)&quot;,
-        example: &quot;https://wallet.example.com&quot;,
-    })
-    @IsString()
-    client_id!: string;
-
-    @ApiProperty({
-        description: &quot;URI to redirect the wallet after authorization&quot;,
-        example: &quot;https://wallet.example.com/callback&quot;,
-    })
-    @IsString()
-    redirect_uri!: string;
-
-    @ApiPropertyOptional({
-        description: &quot;PKCE code challenge&quot;,
-    })
-    @IsString()
-    @IsOptional()
-    code_challenge?: string;
-
-    @ApiPropertyOptional({
-        description: &quot;PKCE code challenge method (e.g., S256)&quot;,
-        example: &quot;S256&quot;,
-    })
-    @IsString()
-    @IsOptional()
-    code_challenge_method?: string;
-
-    @ApiPropertyOptional({
-        description: &quot;State parameter (returned in redirect)&quot;,
-    })
-    @IsString()
-    @IsOptional()
-    state?: string;
-
-    @ApiPropertyOptional({
-        description: &quot;Scope requested&quot;,
-        example: &quot;openid credential&quot;,
-    })
-    @IsString()
-    @IsOptional()
-    scope?: string;
-
-    @ApiPropertyOptional({
-        description: &quot;Issuer state from credential offer&quot;,
-    })
-    @IsString()
-    @IsOptional()
-    issuer_state?: string;
-
-    @ApiPropertyOptional({
-        description: &quot;Authorization details (JSON array)&quot;,
-    })
-    @Transform(({ value }) &#x3D;&gt; {
+const authorizationDetailsSchema &#x3D; z.preprocess(
+    (value) &#x3D;&gt; {
         if (typeof value &#x3D;&#x3D;&#x3D; &quot;string&quot;) {
             try {
                 return JSON.parse(value);
@@ -370,9 +306,106 @@ export class ChainedAsParRequestDto {
             }
         }
         return value;
+    },
+    z.array(z.record(z.string(), z.unknown())),
+);
+
+const ChainedAsParRequestSchema &#x3D; z
+    .object({
+        response_type: z.string(),
+        client_id: z.string(),
+        redirect_uri: z.string(),
+        code_challenge: z.string().optional(),
+        code_challenge_method: z.string().optional(),
+        state: z.string().optional(),
+        scope: z.string().optional(),
+        issuer_state: z.string().optional(),
+        authorization_details: authorizationDetailsSchema.optional(),
     })
-    @IsArray()
-    @IsOptional()
+    .strict();
+
+const ChainedAsAuthorizeQuerySchema &#x3D; z
+    .object({
+        client_id: z.string(),
+        request_uri: z.string(),
+    })
+    .strict();
+
+const ChainedAsTokenRequestSchema &#x3D; z
+    .object({
+        grant_type: z.string(),
+        code: z.string().optional(),
+        refresh_token: z.string().optional(),
+        client_id: z.string().optional(),
+        redirect_uri: z.string().optional(),
+        code_verifier: z.string().optional(),
+    })
+    .strict();
+
+/**
+ * Pushed Authorization Request (PAR) body for Chained AS.
+ */
+export class ChainedAsParRequestDto extends createZodDto(
+    ChainedAsParRequestSchema,
+) {
+    @ApiProperty({
+        description: &quot;OAuth response type (must be &#x27;code&#x27;)&quot;,
+        example: &quot;code&quot;,
+    })
+    response_type!: string;
+
+    @ApiProperty({
+        description: &quot;Client identifier (wallet identifier)&quot;,
+        example: &quot;https://wallet.example.com&quot;,
+    })
+    client_id!: string;
+
+    @ApiProperty({
+        description: &quot;URI to redirect the wallet after authorization&quot;,
+        example: &quot;https://wallet.example.com/callback&quot;,
+    })
+    redirect_uri!: string;
+
+    @ApiPropertyOptional({
+        description: &quot;PKCE code challenge&quot;,
+    })
+    code_challenge?: string;
+
+    @ApiPropertyOptional({
+        description: &quot;PKCE code challenge method (e.g., S256)&quot;,
+        example: &quot;S256&quot;,
+    })
+    code_challenge_method?: string;
+
+    @ApiPropertyOptional({
+        description: &quot;State parameter (returned in redirect)&quot;,
+    })
+    state?: string;
+
+    @ApiPropertyOptional({
+        description: &quot;Scope requested&quot;,
+        example: &quot;openid credential&quot;,
+    })
+    scope?: string;
+
+    @ApiPropertyOptional({
+        description: &quot;Issuer state from credential offer&quot;,
+    })
+    issuer_state?: string;
+
+    @ApiPropertyOptional({
+        oneOf: [
+            {
+                type: &quot;string&quot;,
+                description: &quot;JSON-encoded authorization details array&quot;,
+            },
+            {
+                type: &quot;array&quot;,
+                items: { type: &quot;object&quot;, additionalProperties: true },
+            },
+        ],
+        description: &quot;Authorization details&quot;,
+    })
     authorization_details?: Record&lt;string, unknown&gt;[];
 }
 
@@ -396,66 +429,57 @@ export class ChainedAsParResponseDto {
 /**
  * Query parameters for the authorize endpoint.
  */
-export class ChainedAsAuthorizeQueryDto {
+export class ChainedAsAuthorizeQueryDto extends createZodDto(
+    ChainedAsAuthorizeQuerySchema,
+) {
     @ApiProperty({
         description: &quot;Client identifier&quot;,
     })
-    @IsString()
     client_id!: string;
 
     @ApiProperty({
         description: &quot;Request URI from PAR response&quot;,
         example: &quot;urn:ietf:params:oauth:request_uri:abc123&quot;,
     })
-    @IsString()
     request_uri!: string;
 }
 
 /**
  * Token request body for Chained AS.
  */
-export class ChainedAsTokenRequestDto {
+export class ChainedAsTokenRequestDto extends createZodDto(
+    ChainedAsTokenRequestSchema,
+) {
     @ApiProperty({
         description: &quot;Grant type (&#x27;authorization_code&#x27; or &#x27;refresh_token&#x27;)&quot;,
         example: &quot;authorization_code&quot;,
     })
-    @IsString()
     grant_type!: string;
 
     @ApiPropertyOptional({
         description:
             &quot;Authorization code received in the callback (authorization_code grant)&quot;,
     })
-    @IsString()
-    @IsOptional()
     code?: string;
 
     @ApiPropertyOptional({
         description: &quot;Refresh token (refresh_token grant)&quot;,
     })
-    @IsString()
-    @IsOptional()
     refresh_token?: string;
 
     @ApiPropertyOptional({
         description: &quot;Client identifier&quot;,
     })
-    @IsString()
-    @IsOptional()
     client_id?: string;
 
     @ApiPropertyOptional({
         description: &quot;Redirect URI (must match the one used in PAR)&quot;,
     })
-    @IsString()
-    @IsOptional()
     redirect_uri?: string;
 
     @ApiPropertyOptional({
         description: &quot;PKCE code verifier&quot;,
     })
-    @IsString()
-    @IsOptional()
     code_verifier?: string;
 }
 

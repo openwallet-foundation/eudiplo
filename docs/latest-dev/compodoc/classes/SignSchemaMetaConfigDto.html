@@ -163,10 +163,39 @@ EUDIPLO no longer performs local SchemaMetadata JWT signing for this flow.</p>
 
             </p>
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../classes/SchemaMetaConfig.html" target="_self" >createZodDto(
+    SignSchemaMetaConfigSchema,
+)</a></code>
+            </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../classes/SchemaMetaConfig.html" target="_self" >createZodDto(
+    SignSchemaMetaConfigSchema,
+)</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -182,22 +211,16 @@ EUDIPLO no longer performs local SchemaMetadata JWT signing for this flow.</p>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#config" >config</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#credentialConfigId" >credentialConfigId</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#pinMode" >pinMode</a>
@@ -228,8 +251,6 @@ EUDIPLO no longer performs local SchemaMetadata JWT signing for this flow.</p>
                     <a name="config"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>config</b></span>
                         <a href="#config"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -246,13 +267,13 @@ EUDIPLO no longer performs local SchemaMetadata JWT signing for this flow.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({type: () &#x3D;&gt; SchemaMetaConfig, description: &#x27;The schema metadata configuration to submit. Registrar builds and signs the final schema metadata.&#x27;})<br />@ValidateNested()<br />@Type(undefined)<br />
+                            @ApiProperty({type: () &#x3D;&gt; SchemaMetaConfig, description: &#x27;The schema metadata configuration to submit. Registrar builds and signs the final schema metadata.&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="235" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:235</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="247" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:247</a></div>
                         </td>
                     </tr>
 
@@ -265,8 +286,6 @@ EUDIPLO no longer performs local SchemaMetadata JWT signing for this flow.</p>
                 <td class="col-md-4">
                     <a name="credentialConfigId"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>credentialConfigId</b></span>
@@ -285,13 +304,13 @@ EUDIPLO no longer performs local SchemaMetadata JWT signing for this flow.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: undefined})<br />@IsOptional()<br />@IsString()<br />
+                            @ApiPropertyOptional({description: undefined})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="244" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:244</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="254" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:254</a></div>
                         </td>
                     </tr>
 
@@ -304,8 +323,6 @@ EUDIPLO no longer performs local SchemaMetadata JWT signing for this flow.</p>
                 <td class="col-md-4">
                     <a name="pinMode"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>pinMode</b></span>
@@ -324,13 +341,13 @@ EUDIPLO no longer performs local SchemaMetadata JWT signing for this flow.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({enum: SchemaMetadataPinMode, description: &#x27;How to update credential config pinning after publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to a different schema id.&#x27;, default: undefined})<br />@IsOptional()<br />@IsEnum(SchemaMetadataPinMode)<br />
+                            @ApiPropertyOptional({enum: SchemaMetadataPinMode, description: &#x27;How to update credential config pinning after publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to a different schema id.&#x27;, default: undefined})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="254" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:254</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="262" class="link-to-prism">src/issuer/configuration/credentials/dto/schema-meta-config.dto.ts:262</a></div>
                         </td>
                     </tr>
 
@@ -351,20 +368,13 @@ EUDIPLO no longer performs local SchemaMetadata JWT signing for this flow.</p>
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
 import { SchemaURIMeta } from &quot;@owf/eudi-attestation-schema&quot;;
-import { Type } from &quot;class-transformer&quot;;
-import {
-    IsArray,
-    IsEnum,
-    IsObject,
-    IsOptional,
-    IsString,
-    ValidateNested,
-} from &quot;class-validator&quot;;
+import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 
 /**
  * Attestation Level of Security (LoS) as defined in TS11.
  */
-enum AttestationLoS {
+export enum AttestationLoS {
     HIGH &#x3D; &quot;iso_18045_high&quot;,
     MODERATE &#x3D; &quot;iso_18045_moderate&quot;,
     ENHANCED_BASIC &#x3D; &quot;iso_18045_enhanced-basic&quot;,
@@ -374,7 +384,7 @@ enum AttestationLoS {
 /**
  * Cryptographic binding type as defined in TS11.
  */
-enum SchemaMetaBindingType {
+export enum SchemaMetaBindingType {
     CLAIM &#x3D; &quot;claim&quot;,
     KEY &#x3D; &quot;key&quot;,
     BIOMETRIC &#x3D; &quot;biometric&quot;,
@@ -396,18 +406,65 @@ export enum SchemaMetadataPinMode {
     REPLACE_ID &#x3D; &quot;replace_id&quot;,
 }
 
+const SchemaUriEntrySchema &#x3D; z
+    .object({
+        credentialConfigId: z.string().optional(),
+        format: z.string().optional(),
+        uri: z.string().optional(),
+        meta: z.record(z.string(), z.unknown()).optional(),
+    })
+    .strict();
+
+const TrustAuthorityEntrySchema &#x3D; z
+    .object({
+        trustListId: z.string().optional(),
+        frameworkType: z.enum(SchemaMetaFrameworkType).optional(),
+        value: z.string().optional(),
+        verificationMethod: z
+            .union([z.record(z.string(), z.unknown()), z.string()])
+            .optional(),
+    })
+    .strict();
+
+const SchemaMetaConfigSchema &#x3D; z
+    .object({
+        id: z.string().optional(),
+        name: z.string().optional(),
+        version: z.string(),
+        rulebookURI: z.string().optional(),
+        attestationLoS: z.enum(AttestationLoS),
+        bindingType: z.enum(SchemaMetaBindingType),
+        schemaURIs: z.array(SchemaUriEntrySchema).optional(),
+        trustedAuthorities: z.array(TrustAuthorityEntrySchema).optional(),
+    })
+    .strict();
+
+const SignSchemaMetaConfigSchema &#x3D; z
+    .object({
+        config: SchemaMetaConfigSchema,
+        credentialConfigId: z.string().optional(),
+        pinMode: z.enum(SchemaMetadataPinMode).optional(),
+    })
+    .strict();
+
+const SignVersionSchemaMetaConfigSchema &#x3D; z
+    .object({
+        config: SchemaMetaConfigSchema,
+        credentialConfigId: z.string().optional(),
+        pinMode: z.enum(SchemaMetadataPinMode).optional(),
+    })
+    .strict();
+
 /**
  * Schema URI entry per attestation format.
  */
-export class SchemaUriEntry {
+export class SchemaUriEntry extends createZodDto(SchemaUriEntrySchema) {
     @ApiPropertyOptional({
         description:
             &quot;Credential config ID to resolve and upload its schema content. &quot; +
             &quot;When set, uri can be omitted and is resolved server-side.&quot;,
         example: &quot;pid_de_credential_config&quot;,
     })
-    @IsOptional()
-    @IsString()
     credentialConfigId?: string;
 
     @ApiPropertyOptional({
@@ -415,15 +472,11 @@ export class SchemaUriEntry {
             &quot;Attestation format this schema URI applies to (e.g. dc+sd-jwt, mso_mdoc)&quot;,
         example: &quot;dc+sd-jwt&quot;,
     })
-    @IsOptional()
-    @IsString()
     format?: string;
 
     @ApiPropertyOptional({
         description: &quot;URI pointing to the schema document for this format&quot;,
     })
-    @IsOptional()
-    @IsString()
     uri?: string;
 
     @ApiProperty({
@@ -432,38 +485,32 @@ export class SchemaUriEntry {
         type: &quot;object&quot;,
         additionalProperties: true,
     })
-    @IsOptional()
-    @IsObject()
     meta?: SchemaURIMeta;
 }
 
 /**
  * Trust authority entry for TS11 SchemaMeta.
  */
-export class TrustAuthorityEntry {
+export class TrustAuthorityEntry extends createZodDto(
+    TrustAuthorityEntrySchema,
+) {
     @ApiPropertyOptional({
         description:
             &quot;Trust list ID to resolve from the database. &quot; +
             &quot;When set, frameworkType, value, and verificationMethod are derived automatically.&quot;,
     })
-    @IsOptional()
-    @IsString()
     trustListId?: string;
 
     @ApiPropertyOptional({
         enum: SchemaMetaFrameworkType,
         description: &quot;Trust framework type (ignored when trustListId is set)&quot;,
     })
-    @IsOptional()
-    @IsEnum(SchemaMetaFrameworkType)
     frameworkType?: SchemaMetaFrameworkType;
 
     @ApiPropertyOptional({
         description:
             &quot;URI of the trust list or trust anchor (ignored when trustListId is set)&quot;,
     })
-    @IsOptional()
-    @IsString()
     value?: string;
 
     @ApiPropertyOptional({
@@ -482,7 +529,6 @@ export class TrustAuthorityEntry {
             },
         ],
     })
-    @IsOptional()
     verificationMethod?: Record&lt;string, unknown&gt; | string;
 }
 
@@ -496,15 +542,13 @@ export class TrustAuthorityEntry {
  *
  * @experimental The underlying TS11 specification is not yet finalized.
  */
-export class SchemaMetaConfig {
+export class SchemaMetaConfig extends createZodDto(SchemaMetaConfigSchema) {
     @ApiPropertyOptional({
         description:
             &quot;Optional override for the schema ID (attestation identifier URI). &quot; +
             &quot;When not set, derived from vct (dc+sd-jwt) or docType (mso_mdoc).&quot;,
         example: &quot;https://example.com/attestations/my-credential&quot;,
     })
-    @IsOptional()
-    @IsString()
     id?: string;
 
     @ApiPropertyOptional({
@@ -512,15 +556,12 @@ export class SchemaMetaConfig {
             &quot;Human-readable name of the schema metadata entry. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.&quot;,
         example: &quot;German PID&quot;,
     })
-    @IsOptional()
-    @IsString()
     name?: string;
 
     @ApiPropertyOptional({
         description: &quot;Schema version in SemVer format&quot;,
         example: &quot;1.0.0&quot;,
     })
-    @IsString()
     version!: string;
 
     @ApiPropertyOptional({
@@ -528,22 +569,18 @@ export class SchemaMetaConfig {
             &quot;URI of the Attestation Rulebook. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.&quot;,
         example: &quot;https://example.com/rulebooks/my-credential/1.0.0.md&quot;,
     })
-    @IsOptional()
-    @IsString()
     rulebookURI?: string;
 
     @ApiPropertyOptional({
         enum: AttestationLoS,
         description: &quot;Attestation Level of Security&quot;,
     })
-    @IsEnum(AttestationLoS)
     attestationLoS!: AttestationLoS;
 
     @ApiPropertyOptional({
         enum: SchemaMetaBindingType,
         description: &quot;Cryptographic binding type&quot;,
     })
-    @IsEnum(SchemaMetaBindingType)
     bindingType!: SchemaMetaBindingType;
 
     @ApiPropertyOptional({
@@ -552,20 +589,12 @@ export class SchemaMetaConfig {
             &quot;Schema URIs per attestation format. &quot; +
             &quot;When omitted, the format is derived from the credential config format field.&quot;,
     })
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; SchemaUriEntry)
     schemaURIs?: SchemaUriEntry[];
 
     @ApiPropertyOptional({
         type: () &#x3D;&gt; [TrustAuthorityEntry],
         description: &quot;Trust authorities for this attestation schema&quot;,
     })
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; TrustAuthorityEntry)
     trustedAuthorities?: TrustAuthorityEntry[];
 }
 
@@ -575,14 +604,14 @@ export class SchemaMetaConfig {
  * The registrar builds and signs schema metadata from the submitted values.
  * EUDIPLO no longer performs local SchemaMetadata JWT signing for this flow.
  */
-export class SignSchemaMetaConfigDto {
+export class SignSchemaMetaConfigDto extends createZodDto(
+    SignSchemaMetaConfigSchema,
+) {
     @ApiProperty({
         type: () &#x3D;&gt; SchemaMetaConfig,
         description:
             &quot;The schema metadata configuration to submit. Registrar builds and signs the final schema metadata.&quot;,
     })
-    @ValidateNested()
-    @Type(() &#x3D;&gt; SchemaMetaConfig)
     config!: SchemaMetaConfig;
 
     @ApiPropertyOptional({
@@ -590,8 +619,6 @@ export class SignSchemaMetaConfigDto {
             &quot;ID of the credential config to link back after submission. &quot; +
             &quot;When provided, schemaMeta.id on the credential config is updated with the reserved attestation ID.&quot;,
     })
-    @IsOptional()
-    @IsString()
     credentialConfigId?: string;
 
     @ApiPropertyOptional({
@@ -600,8 +627,6 @@ export class SignSchemaMetaConfigDto {
             &quot;How to update credential config pinning after publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to a different schema id.&quot;,
         default: SchemaMetadataPinMode.KEEP_CURRENT,
     })
-    @IsOptional()
-    @IsEnum(SchemaMetadataPinMode)
     pinMode?: SchemaMetadataPinMode;
 }
 
@@ -610,22 +635,20 @@ export class SignSchemaMetaConfigDto {
  *
  * The registrar builds and signs the new version.
  */
-export class SignVersionSchemaMetaConfigDto {
+export class SignVersionSchemaMetaConfigDto extends createZodDto(
+    SignVersionSchemaMetaConfigSchema,
+) {
     @ApiProperty({
         type: () &#x3D;&gt; SchemaMetaConfig,
         description:
             &quot;The schema metadata configuration to submit as a new version. Must include the existing id.&quot;,
     })
-    @ValidateNested()
-    @Type(() &#x3D;&gt; SchemaMetaConfig)
     config!: SchemaMetaConfig;
 
     @ApiPropertyOptional({
         description:
             &quot;Optional credential config to update pinning for after successful version publish.&quot;,
     })
-    @IsOptional()
-    @IsString()
     credentialConfigId?: string;
 
     @ApiPropertyOptional({
@@ -634,8 +657,6 @@ export class SignVersionSchemaMetaConfigDto {
             &quot;How to update credential config pinning after version publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to config.id.&quot;,
         default: SchemaMetadataPinMode.KEEP_CURRENT,
     })
-    @IsOptional()
-    @IsEnum(SchemaMetadataPinMode)
     pinMode?: SchemaMetadataPinMode;
 }
 </code></pre>

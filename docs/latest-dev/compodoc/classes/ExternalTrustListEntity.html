@@ -179,23 +179,18 @@
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#info" >info</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                 <a href="#issuerCertPem" >issuerCertPem</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                 <a href="#revocationCertPem" >revocationCertPem</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#type" >type</a>
                             </li>
@@ -224,8 +219,6 @@
                 <td class="col-md-4">
                     <a name="info"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>info</b></span>
                         <a href="#info"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -237,18 +230,9 @@
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @ValidateNested()<br />@Type(undefined)<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">src/issuer/trust-list/dto/trust-list-create.dto.ts:82</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/issuer/trust-list/dto/trust-list-create.dto.ts:55</a></div>
                         </td>
                     </tr>
 
@@ -261,7 +245,6 @@
                 <td class="col-md-4">
                     <a name="issuerCertPem"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                         <span ><b>issuerCertPem</b></span>
                         <a href="#issuerCertPem"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -273,18 +256,9 @@
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/issuer/trust-list/dto/trust-list-create.dto.ts:75</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/issuer/trust-list/dto/trust-list-create.dto.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -297,7 +271,6 @@
                 <td class="col-md-4">
                     <a name="revocationCertPem"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                         <span ><b>revocationCertPem</b></span>
                         <a href="#revocationCertPem"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -309,18 +282,9 @@
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="78" class="link-to-prism">src/issuer/trust-list/dto/trust-list-create.dto.ts:78</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/issuer/trust-list/dto/trust-list-create.dto.ts:53</a></div>
                         </td>
                     </tr>
 
@@ -333,7 +297,6 @@
                 <td class="col-md-4">
                     <a name="type"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                         <span ><b>type</b></span>
                         <a href="#type"><span class="icon ion-ios-link"></span></a>
@@ -351,13 +314,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({enum: undefined})<br />@IsString()<br />
+                            @ApiProperty({enum: undefined})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/issuer/trust-list/dto/trust-list-create.dto.ts:72</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/issuer/trust-list/dto/trust-list-create.dto.ts:49</a></div>
                         </td>
                     </tr>
 
@@ -382,43 +345,26 @@
     getSchemaPath,
     OmitType,
 } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
-import { IsOptional, IsString, ValidateNested } from &quot;class-validator&quot;;
 import { TrustList } from &quot;../entities/trust-list.entity&quot;;
 
 /**
  * Entity information for certificates (metadata for TEInformation)
  */
 export class TrustListEntityInfo {
-    @IsString()
     name!: string;
 
-    @IsString()
-    @IsOptional()
     lang?: string;
 
-    @IsString()
-    @IsOptional()
     uri?: string;
 
-    @IsString()
-    @IsOptional()
     country?: string;
 
-    @IsString()
-    @IsOptional()
     locality?: string;
 
-    @IsString()
-    @IsOptional()
     postalCode?: string;
 
-    @IsString()
-    @IsOptional()
     streetAddress?: string;
 
-    @IsString()
-    @IsOptional()
     contactUri?: string;
 }
 
@@ -427,17 +373,12 @@ export class TrustListEntityInfo {
  */
 class InternalTrustListEntity {
     @ApiProperty({ enum: [&quot;internal&quot;] })
-    @IsString()
     type!: &quot;internal&quot;;
 
-    @IsString()
     issuerKeyChainId!: string;
 
-    @IsString()
     revocationKeyChainId!: string;
 
-    @ValidateNested()
-    @Type(() &#x3D;&gt; TrustListEntityInfo)
     info!: TrustListEntityInfo;
 }
 
@@ -446,17 +387,12 @@ class InternalTrustListEntity {
  */
 class ExternalTrustListEntity {
     @ApiProperty({ enum: [&quot;external&quot;] })
-    @IsString()
     type!: &quot;external&quot;;
 
-    @IsString()
     issuerCertPem!: string;
 
-    @IsString()
     revocationCertPem!: string;
 
-    @ValidateNested()
-    @Type(() &#x3D;&gt; TrustListEntityInfo)
     info!: TrustListEntityInfo;
 }
 
@@ -478,20 +414,12 @@ export class TrustListCreateDto extends OmitType(TrustList, [
     &quot;entityConfig&quot;,
     &quot;id&quot;,
 ] as const) {
-    @IsString()
-    @IsOptional()
     id?: string;
 
-    @IsString()
-    @IsOptional()
     description?: string;
 
-    @IsString()
-    @IsOptional()
     keyChainId?: string;
 
-    @IsOptional()
-    @ValidateNested({ each: true })
     @ApiProperty({
         type: &quot;array&quot;,
         items: {
@@ -507,16 +435,6 @@ export class TrustListCreateDto extends OmitType(TrustList, [
                 },
             },
         },
-    })
-    @Type(() &#x3D;&gt; Object, {
-        discriminator: {
-            property: &quot;type&quot;,
-            subTypes: [
-                { value: InternalTrustListEntity, name: &quot;internal&quot; },
-                { value: ExternalTrustListEntity, name: &quot;external&quot; },
-            ],
-        },
-        keepDiscriminatorProperty: true,
     })
     entities!: TrustListEntity[];
 }

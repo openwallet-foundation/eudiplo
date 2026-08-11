@@ -381,14 +381,14 @@ This will generate the credential and mark it as ready for retrieval.</p>
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@ApiOperation({summary: &#x27;Fail a deferred credential transaction&#x27;, description: undefined})<br />@ApiBody({type: FailDeferredDto, required: false, examples: undefined})<br />@ApiResponse({status: 200, description: &#x27;Transaction marked as failed&#x27;, type: DeferredOperationResponse})<br />@ApiResponse({status: 404, description: &#x27;Transaction not found&#x27;})<br />@HttpCode(HttpStatus.OK)<br />@Post(&#x27;:transactionId/fail&#x27;)<br /></code>
+                    <code>@ApiOperation({summary: &#x27;Fail a deferred credential transaction&#x27;, description: undefined})<br />@ApiBody({type: FailDeferredDto, examples: undefined})<br />@ApiResponse({status: 200, description: &#x27;Transaction marked as failed&#x27;, type: DeferredOperationResponse})<br />@ApiResponse({status: 404, description: &#x27;Transaction not found&#x27;})<br />@HttpCode(HttpStatus.OK)<br />@Post(&#x27;:transactionId/fail&#x27;)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="131"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/deferred.controller.ts:131</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="130"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/deferred.controller.ts:130</a></div>
                         </td>
                     </tr>
 
@@ -589,7 +589,6 @@ export class DeferredController {
     })
     @ApiBody({
         type: FailDeferredDto,
-        required: false,
         examples: {
             example: {
                 summary: &quot;Fail with error message&quot;,

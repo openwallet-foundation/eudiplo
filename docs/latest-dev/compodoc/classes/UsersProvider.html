@@ -252,15 +252,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>addUser(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, dto: <a href="../classes/CreateUserDto.html" target="_self">CreateUserDto</a>)</code>
+                    <code>addUser(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, dto: <a href="../miscellaneous/typealiases.html#CreateUser" target="_self">CreateUser</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="12"
-                                    class="link-to-prism">src/auth/user/user.provider.ts:12</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="11"
+                                    class="link-to-prism">src/auth/user/user.provider.ts:11</a></div>
                         </td>
                     </tr>
 
@@ -295,7 +295,7 @@
                                         <tr>
                                                 <td>dto</td>
                                             <td>
-                                                            <code><a href="../classes/CreateUserDto.html" target="_self" >CreateUserDto</a></code>
+                                                            <code><a href="../miscellaneous/typealiases.html#CreateUser" target="_self" >CreateUser</a></code>
                                             </td>
 
                                             <td>
@@ -340,8 +340,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="10"
-                                    class="link-to-prism">src/auth/user/user.provider.ts:10</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="9"
+                                    class="link-to-prism">src/auth/user/user.provider.ts:9</a></div>
                         </td>
                     </tr>
 
@@ -421,8 +421,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="8"
-                                    class="link-to-prism">src/auth/user/user.provider.ts:8</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="7"
+                                    class="link-to-prism">src/auth/user/user.provider.ts:7</a></div>
                         </td>
                     </tr>
 
@@ -490,8 +490,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="23"
-                                    class="link-to-prism">src/auth/user/user.provider.ts:23</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="22"
+                                    class="link-to-prism">src/auth/user/user.provider.ts:22</a></div>
                         </td>
                     </tr>
 
@@ -564,15 +564,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>updateUser(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, dto: <a href="../classes/UpdateUserDto.html" target="_self">UpdateUserDto</a>)</code>
+                    <code>updateUser(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, dto: <a href="../miscellaneous/typealiases.html#UpdateUser" target="_self">UpdateUser</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="17"
-                                    class="link-to-prism">src/auth/user/user.provider.ts:17</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="16"
+                                    class="link-to-prism">src/auth/user/user.provider.ts:16</a></div>
                         </td>
                     </tr>
 
@@ -619,7 +619,7 @@
                                         <tr>
                                                 <td>dto</td>
                                             <td>
-                                                            <code><a href="../classes/UpdateUserDto.html" target="_self" >UpdateUserDto</a></code>
+                                                            <code><a href="../miscellaneous/typealiases.html#UpdateUser" target="_self" >UpdateUser</a></code>
                                             </td>
 
                                             <td>
@@ -653,9 +653,8 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CreateUserDto } from &quot;./dto/create-user.dto&quot;;
-import { ManagedUserDto } from &quot;./dto/managed-user.dto&quot;;
-import { UpdateUserDto } from &quot;./dto/update-user.dto&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ManagedUserDto } from &quot;./dto/managed-user.dto&quot;;
+import type { CreateUser, UpdateUser } from &quot;./schemas/create-user.schema&quot;;
 
 export const USERS_PROVIDER &#x3D; &quot;USERS_PROVIDER&quot;;
 
@@ -666,13 +665,13 @@ export abstract class UsersProvider {
 
     abstract addUser(
         tenantId: string,
-        dto: CreateUserDto,
+        dto: CreateUser,
     ): Promise&lt;ManagedUserDto&gt;;
 
     abstract updateUser(
         tenantId: string,
         userId: string,
-        dto: UpdateUserDto,
+        dto: UpdateUser,
     ): Promise&lt;ManagedUserDto&gt;;
 
     abstract removeUser(tenantId: string, userId: string): Promise&lt;void&gt;;

@@ -154,10 +154,39 @@
     <div class="tab-pane fade active in" id="info">
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../miscellaneous/variables.html#ResolveIssuerMetadataSchema" target="_self" >createZodDto(
+    ResolveIssuerMetadataSchema,
+)</a></code>
+            </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../miscellaneous/variables.html#ResolveIssuerMetadataSchema" target="_self" >createZodDto(
+    ResolveIssuerMetadataSchema,
+)</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -172,8 +201,6 @@
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#issuerUrl" >issuerUrl</a>
                             </li>
@@ -203,8 +230,6 @@
                     <a name="issuerUrl"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>issuerUrl</b></span>
                         <a href="#issuerUrl"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -221,13 +246,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Issuer URL or full OpenID4VCI metadata URL to resolve server-side.&#x27;, example: &#x27;https://issuer.example.com/issuers/tenant-a&#x27;})<br />@IsString()<br />@IsUrl({require_tld: false})<br />
+                            @ApiProperty({description: &#x27;Issuer URL or full OpenID4VCI metadata URL to resolve server-side.&#x27;, example: &#x27;https://issuer.example.com/issuers/tenant-a&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/verifier/presentations/dto/resolve-issuer-metadata.dto.ts:12</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/verifier/presentations/dto/resolve-issuer-metadata.dto.ts:19</a></div>
                         </td>
                     </tr>
 
@@ -247,16 +272,23 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty } from &quot;@nestjs/swagger&quot;;
-import { IsString, IsUrl } from &quot;class-validator&quot;;
+import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 
-export class ResolveIssuerMetadataDto {
+const ResolveIssuerMetadataSchema &#x3D; z
+    .object({
+        issuerUrl: z.url(),
+    })
+    .strict();
+
+export class ResolveIssuerMetadataDto extends createZodDto(
+    ResolveIssuerMetadataSchema,
+) {
     @ApiProperty({
         description:
             &quot;Issuer URL or full OpenID4VCI metadata URL to resolve server-side.&quot;,
         example: &quot;https://issuer.example.com/issuers/tenant-a&quot;,
     })
-    @IsString()
-    @IsUrl({ require_tld: false })
     issuerUrl!: string;
 }
 </code></pre>

@@ -161,10 +161,39 @@
 
             </p>
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../miscellaneous/variables.html#RotationPolicyCreateSchema" target="_self" >createZodDto(
+    RotationPolicyCreateSchema,
+)</a></code>
+            </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../miscellaneous/variables.html#RotationPolicyCreateSchema" target="_self" >createZodDto(
+    RotationPolicyCreateSchema,
+)</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -180,25 +209,16 @@
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#certValidityDays" >certValidityDays</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#enabled" >enabled</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#intervalDays" >intervalDays</a>
@@ -229,10 +249,6 @@
                     <a name="certValidityDays"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>certValidityDays</b></span>
                         <a href="#certValidityDays"><span class="icon ion-ios-link"></span></a>
@@ -250,13 +266,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Certificate validity in days. Defaults to rotation interval + 30 days grace period.&#x27;, example: 365, minimum: 1, maximum: 3650})<br />@IsNumber()<br />@Min(1)<br />@Max(3650)<br />@IsOptional()<br />
+                            @ApiPropertyOptional({description: &#x27;Certificate validity in days. Defaults to rotation interval + 30 days grace period.&#x27;, example: 365, minimum: 1, maximum: 3650})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:50</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -269,7 +285,6 @@
                 <td class="col-md-4">
                     <a name="enabled"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                         <span ><b>enabled</b></span>
                         <a href="#enabled"><span class="icon ion-ios-link"></span></a>
@@ -287,13 +302,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Whether automatic key rotation is enabled.&#x27;, default: false})<br />@IsBoolean()<br />
+                            @ApiProperty({description: &#x27;Whether automatic key rotation is enabled.&#x27;, default: false})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:24</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:19</a></div>
                         </td>
                     </tr>
 
@@ -306,10 +321,6 @@
                 <td class="col-md-4">
                     <a name="intervalDays"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>intervalDays</b></span>
@@ -328,13 +339,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Rotation interval in days. Required when enabled is true.&#x27;, example: 90, minimum: 1, maximum: 3650})<br />@IsNumber()<br />@Min(1)<br />@Max(3650)<br />@IsOptional()<br />
+                            @ApiPropertyOptional({description: &#x27;Rotation interval in days. Required when enabled is true.&#x27;, example: 90, minimum: 1, maximum: 3650})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/crypto/key/dto/key-chain-create.dto.ts:28</a></div>
                         </td>
                     </tr>
 
@@ -354,28 +365,23 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
+import { createZodDto } from &quot;nestjs-zod&quot;;
+import { KeyUsageType } from &quot;../types/key-usage-type&quot;;
 import {
-    IsBoolean,
-    IsEnum,
-    IsNumber,
-    IsOptional,
-    IsString,
-    Max,
-    Min,
-    ValidateNested,
-} from &quot;class-validator&quot;;
-import { KeyUsageType } from &quot;../entities/key-chain.entity&quot;;
+    KeyChainCreateSchema,
+    RotationPolicyCreateSchema,
+} from &quot;../schemas/key-chain.schema&quot;;
 
 /**
  * DTO for rotation policy configuration.
  */
-export class RotationPolicyCreateDto {
+export class RotationPolicyCreateDto extends createZodDto(
+    RotationPolicyCreateSchema,
+) {
     @ApiProperty({
         description: &quot;Whether automatic key rotation is enabled.&quot;,
         default: false,
     })
-    @IsBoolean()
     enabled!: boolean;
 
     @ApiPropertyOptional({
@@ -385,10 +391,6 @@ export class RotationPolicyCreateDto {
         minimum: 1,
         maximum: 3650,
     })
-    @IsNumber()
-    @Min(1)
-    @Max(3650)
-    @IsOptional()
     intervalDays?: number;
 
     @ApiPropertyOptional({
@@ -398,10 +400,6 @@ export class RotationPolicyCreateDto {
         minimum: 1,
         maximum: 3650,
     })
-    @IsNumber()
-    @Min(1)
-    @Max(3650)
-    @IsOptional()
     certValidityDays?: number;
 }
 
@@ -422,14 +420,13 @@ export enum KeyChainType {
  * - For standalone type: A single key with a self-signed certificate
  * - For internalChain type: An internal root CA + signing key with CA-signed certificate
  */
-export class KeyChainCreateDto {
+export class KeyChainCreateDto extends createZodDto(KeyChainCreateSchema) {
     @ApiProperty({
         description:
             &quot;Usage type determines the purpose of this key chain (access, attestation, etc.).&quot;,
         enum: KeyUsageType,
         example: &quot;attestation&quot;,
     })
-    @IsEnum(KeyUsageType)
     usageType!: KeyUsageType;
 
     @ApiProperty({
@@ -437,15 +434,12 @@ export class KeyChainCreateDto {
         enum: KeyChainType,
         example: &quot;internalChain&quot;,
     })
-    @IsEnum(KeyChainType)
     type!: KeyChainType;
 
     @ApiPropertyOptional({
         description: &quot;Human-readable description for the key chain.&quot;,
         example: &quot;Production credential signing key&quot;,
     })
-    @IsString()
-    @IsOptional()
     description?: string;
 
     @ApiPropertyOptional({
@@ -453,8 +447,6 @@ export class KeyChainCreateDto {
             &quot;KMS provider to use (defaults to the configured default provider).&quot;,
         example: &quot;vault&quot;,
     })
-    @IsString()
-    @IsOptional()
     kmsProvider?: string;
 
     @ApiPropertyOptional({
@@ -462,9 +454,6 @@ export class KeyChainCreateDto {
             &quot;Rotation policy configuration. Only applicable for the signing key (root CA never rotates).&quot;,
         type: RotationPolicyCreateDto,
     })
-    @ValidateNested()
-    @Type(() &#x3D;&gt; RotationPolicyCreateDto)
-    @IsOptional()
     rotationPolicy?: RotationPolicyCreateDto;
 }
 </code></pre>

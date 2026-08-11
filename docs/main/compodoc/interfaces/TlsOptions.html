@@ -382,7 +382,6 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { existsSync, readFileSync, writeFileSync } from &quot;node:fs&quot;;
-import { ValidationPipe } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
 import { NestFactory } from &quot;@nestjs/core&quot;;
 import { NestExpressApplication } from &quot;@nestjs/platform-express&quot;;
@@ -393,6 +392,7 @@ import { AllExceptionsFilter } from &quot;./all-exceptions.filter&quot;;
 import { AppModule } from &quot;./app.module&quot;;
 import { filterOpenApiPaths, GLOBAL_PREFIX_EXCLUSIONS } from &quot;./main.helpers&quot;;
 import { ValidationErrorFilter } from &quot;./shared/common/filters/validation-error.filter&quot;;
+import { createAppValidationPipe } from &quot;./shared/common/zod/zod-schema.util&quot;;
 import { registerTolerantX509Extensions } from &quot;./shared/utils/x509-tolerant-extensions&quot;;
 import { NextFunction, Request, Response } from &quot;express&quot;;
 
@@ -511,16 +511,7 @@ async function bootstrap() {
     // This ensures LOG_LEVEL env var is respected across all services
     app.useLogger(app.get(Logger));
 
-    app.useGlobalPipes(
-        new ValidationPipe({
-            transform: true, // required for discriminator instantiation
-            whitelist: true,
-            forbidUnknownValues: false, // avoid false positives on plain objects
-            forbidNonWhitelisted: false,
-            stopAtFirstError: false,
-            validateCustomDecorators: true,
-        }),
-    );
+    app.useGlobalPipes(createAppValidationPipe());
 
     const configService &#x3D; app.get(ConfigService);
     const publicUrl &#x3D; configService.getOrThrow&lt;string&gt;(&quot;PUBLIC_URL&quot;);

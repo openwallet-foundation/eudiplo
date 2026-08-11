@@ -214,6 +214,7 @@
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                     <span class="modifier">Async</span>
                                 <a href="#par" >par</a>
                             </li>
@@ -287,14 +288,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Public()<br />@Get(&#x27;authorize&#x27;)<br />@ApiOperation({summary: &#x27;Authorization endpoint&#x27;, description: &#x27;Validates the request_uri and redirects the browser into an OID4VP wallet request.&#x27;})<br />@ApiParam({name: &#x27;tenantId&#x27;, description: &#x27;Tenant identifier&#x27;})<br />@ApiResponse({status: 302, description: &#x27;Redirect to OID4VP wallet invocation&#x27;})<br />@ApiResponse({status: 400, type: ChainedAsErrorResponseDto})<br /></code>
+                    <code>@Public()<br />@Get(&#x27;authorize&#x27;)<br />@ApiOperation({summary: &#x27;Authorization endpoint&#x27;, description: &#x27;Validates the request_uri and redirects the browser into an OID4VP wallet request.&#x27;})<br />@ApiParam({name: &#x27;tenantId&#x27;, description: &#x27;Tenant identifier&#x27;})<br />@ApiResponse({status: 302, description: &#x27;Redirect to OID4VP wallet invocation&#x27;, headers: undefined})<br />@ApiResponse({status: 400, type: ChainedAsErrorResponseDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="96"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.controller.ts:96</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="105"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.controller.ts:105</a></div>
                         </td>
                     </tr>
 
@@ -393,6 +394,7 @@
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                             <span class="modifier">Async</span>
                         <span ><b>par</b></span>
                         <a href="#par"><span class="icon ion-ios-link"></span></a>
@@ -402,7 +404,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>par(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, dpopJwt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, clientAttestationJwt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, clientAttestationPopJwt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>par(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, body: <a href="../classes/ChainedAsParRequestDto.html" target="_self">ChainedAsParRequestDto</a>, dpopJwt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, clientAttestationJwt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, clientAttestationPopJwt?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -410,14 +412,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Public()<br />@Post(&#x27;par&#x27;)<br />@HttpCode(HttpStatus.CREATED)<br />@ApiConsumes(&#x27;application/x-www-form-urlencoded&#x27;)<br />@ApiOperation({summary: &#x27;Pushed Authorization Request&#x27;, description: &#x27;Submit wallet authorization request parameters for the VP-backed AS.&#x27;})<br />@ApiParam({name: &#x27;tenantId&#x27;, description: &#x27;Tenant identifier&#x27;})<br />@ApiHeader({name: &#x27;DPoP&#x27;, required: false, description: &#x27;DPoP proof JWT&#x27;})<br />@ApiHeader({name: &#x27;OAuth-Client-Attestation&#x27;, required: false, description: &#x27;Wallet attestation JWT&#x27;})<br />@ApiHeader({name: &#x27;OAuth-Client-Attestation-PoP&#x27;, required: false, description: &#x27;Wallet attestation proof-of-possession JWT&#x27;})<br />@ApiResponse({status: 201, type: ChainedAsParResponseDto})<br />@ApiResponse({status: 400, type: ChainedAsErrorResponseDto})<br /></code>
+                    <code>@Public()<br />@Post(&#x27;par&#x27;)<br />@HttpCode(HttpStatus.CREATED)<br />@ApiConsumes(&#x27;application/x-www-form-urlencoded&#x27;)<br />@ApiOperation({summary: &#x27;Pushed Authorization Request&#x27;, description: &#x27;Submit wallet authorization request parameters for the VP-backed AS.&#x27;})<br />@ApiParam({name: &#x27;tenantId&#x27;, description: &#x27;Tenant identifier&#x27;})<br />@ApiHeader({name: &#x27;DPoP&#x27;, required: false, description: &#x27;DPoP proof JWT&#x27;})<br />@ApiHeader({name: &#x27;OAuth-Client-Attestation&#x27;, required: false, description: &#x27;Wallet attestation JWT&#x27;})<br />@ApiHeader({name: &#x27;OAuth-Client-Attestation-PoP&#x27;, required: false, description: &#x27;Wallet attestation proof-of-possession JWT&#x27;})<br />@ApiBody({type: ChainedAsParRequestDto})<br />@ApiResponse({status: 201, type: ChainedAsParResponseDto})<br />@ApiResponse({status: 400, type: ChainedAsErrorResponseDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="61"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.controller.ts:61</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="64"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.controller.ts:64</a></div>
                         </td>
                     </tr>
 
@@ -452,7 +454,7 @@
                                         <tr>
                                                 <td>body</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../classes/ChainedAsParRequestDto.html" target="_self" >ChainedAsParRequestDto</a></code>
                                             </td>
 
                                             <td>
@@ -548,8 +550,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="155"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.controller.ts:155</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="170"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.controller.ts:170</a></div>
                         </td>
                     </tr>
 
@@ -648,14 +650,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Public()<br />@Get(&#x27;vp-callback&#x27;)<br />@ApiOperation({summary: &#x27;Verifier callback&#x27;, description: &#x27;Receives the OID4VP verifier redirect and finishes the OAuth authorization flow.&#x27;})<br />@ApiParam({name: &#x27;tenantId&#x27;, description: &#x27;Tenant identifier&#x27;})<br />@ApiResponse({status: 302, description: &#x27;Redirect to wallet with authorization code&#x27;})<br />@ApiResponse({status: 400, type: ChainedAsErrorResponseDto})<br /></code>
+                    <code>@Public()<br />@Get(&#x27;vp-callback&#x27;)<br />@ApiOperation({summary: &#x27;Verifier callback&#x27;, description: &#x27;Receives the OID4VP verifier redirect and finishes the OAuth authorization flow.&#x27;})<br />@ApiParam({name: &#x27;tenantId&#x27;, description: &#x27;Tenant identifier&#x27;})<br />@ApiResponse({status: 302, description: &#x27;Redirect to wallet with authorization code&#x27;, headers: undefined})<br />@ApiResponse({status: 400, type: ChainedAsErrorResponseDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="124"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.controller.ts:124</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="139"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as-vp/chained-as-vp.controller.ts:139</a></div>
                         </td>
                     </tr>
 
@@ -779,6 +781,7 @@
     Res,
 } from &quot;@nestjs/common&quot;;
 import {
+    ApiBody,
     ApiConsumes,
     ApiHeader,
     ApiOperation,
@@ -791,6 +794,7 @@ import { Public } from &quot;../../../../../auth/public.decorator&quot;;
 import {
     ChainedAsAuthorizeQueryDto,
     ChainedAsErrorResponseDto,
+    ChainedAsParRequestDto,
     ChainedAsParResponseDto,
     ChainedAsTokenRequestDto,
     ChainedAsTokenResponseDto,
@@ -824,11 +828,12 @@ export class ChainedAsVpController {
         required: false,
         description: &quot;Wallet attestation proof-of-possession JWT&quot;,
     })
+    @ApiBody({ type: ChainedAsParRequestDto })
     @ApiResponse({ status: 201, type: ChainedAsParResponseDto })
     @ApiResponse({ status: 400, type: ChainedAsErrorResponseDto })
     async par(
         @Param(&quot;tenantId&quot;) tenantId: string,
-        @Body() body: any,
+        @Body() body: ChainedAsParRequestDto,
         @Headers(&quot;dpop&quot;) dpopJwt?: string,
         @Headers(&quot;oauth-client-attestation&quot;) clientAttestationJwt?: string,
         @Headers(&quot;oauth-client-attestation-pop&quot;)
@@ -859,6 +864,12 @@ export class ChainedAsVpController {
     @ApiResponse({
         status: 302,
         description: &quot;Redirect to OID4VP wallet invocation&quot;,
+        headers: {
+            Location: {
+                description: &quot;Redirect target&quot;,
+                schema: { type: &quot;string&quot; },
+            },
+        },
     })
     @ApiResponse({ status: 400, type: ChainedAsErrorResponseDto })
     async authorize(
@@ -887,6 +898,12 @@ export class ChainedAsVpController {
     @ApiResponse({
         status: 302,
         description: &quot;Redirect to wallet with authorization code&quot;,
+        headers: {
+            Location: {
+                description: &quot;Redirect target&quot;,
+                schema: { type: &quot;string&quot; },
+            },
+        },
     })
     @ApiResponse({ status: 400, type: ChainedAsErrorResponseDto })
     async vpCallback(

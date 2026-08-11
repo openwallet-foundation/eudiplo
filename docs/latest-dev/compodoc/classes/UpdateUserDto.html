@@ -137,12 +137,6 @@
                 role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
         </li>
         <li class="nav-item">
-            <a href="#api" 
-                class="nav-link"
-                
-                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
-        </li>
-        <li class="nav-item">
             <a href="#source" 
                 class="nav-link"
                 
@@ -158,7 +152,7 @@
                 <h3>Extends</h3>
             </p>
             <p class="comment">
-                            <code><a href="../classes/CreateUserDto.html" target="_self" >PartialType(CreateUserDto)</a></code>
+                            <code><a href="../miscellaneous/variables.html#UpdateUserSchema" target="_self" >createZodDto(UpdateUserSchema)</a></code>
             </p>
 
 
@@ -176,7 +170,7 @@
                     <h4>Depends on</h4>
                         <ul class="list-unstyled relationships-list">
                                 <li>
-                                            <code><a href="../classes/CreateUserDto.html" target="_self" >PartialType(CreateUserDto)</a></code>
+                                            <code><a href="../miscellaneous/variables.html#UpdateUserSchema" target="_self" >createZodDto(UpdateUserSchema)</a></code>
                                 </li>
                         </ul>
                 </div>
@@ -184,108 +178,13 @@
         </section>
     </div>
 
-    <div class="tab-pane fade " id="api">
-            <section data-compodoc="block-index">
-    <h3 id="index">Index</h3>
-        <table class="table table-sm table-bordered index-table">
-            <tbody>
-                <tr>
-                    <td class="col-md-3">
-                        <h6><b>Properties</b></h6>
-                    </td>
-                    <td class="col-md-9">
-                        <ul class="index-list">
-                            <li>
-                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier">Optional</span>
-                                <a href="#password" >password</a>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-
-
-
-
-
-</section>
-
-
-            <section data-compodoc="block-properties">
-    
-    <h3 id="inputs">
-        Properties
-    </h3>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="password"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier">Optional</span>
-                        <span ><b>password</b></span>
-                        <a href="#password"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @ApiPropertyOptional({example: &#x27;S3cur3P@ssword&#x27;})<br />@IsOptional()<br />@IsString()<br />@MinLength(8)<br />
-                        </code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/auth/user/dto/update-user.dto.ts:10</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-</section>
-
-
-
-
-
-
-
-    </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiPropertyOptional, PartialType } from &quot;@nestjs/swagger&quot;;
-import { IsOptional, IsString, MinLength } from &quot;class-validator&quot;;
-import { CreateUserDto } from &quot;./create-user.dto&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createZodDto } from &quot;nestjs-zod&quot;;
+import { UpdateUserSchema } from &quot;../schemas/create-user.schema&quot;;
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
-    @ApiPropertyOptional({ example: &quot;S3cur3P@ssword&quot; })
-    @IsOptional()
-    @IsString()
-    @MinLength(8)
-    password?: string;
-}
+export class UpdateUserDto extends createZodDto(UpdateUserSchema) {}
 </code></pre>
     </div>
 </div>

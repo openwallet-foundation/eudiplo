@@ -616,7 +616,7 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>instantiate(provider: <a href="../miscellaneous/typealiases.html#KmsProviderConfigDto" target="_self">KmsProviderConfigDto</a>)</code>
+                    <code>instantiate(provider: <a href="../miscellaneous/typealiases.html#KmsProviderConfig" target="_self">KmsProviderConfig</a>)</code>
                 </td>
             </tr>
 
@@ -647,7 +647,7 @@ the id <code>&quot;db&quot;</code> so existing deployments keep working.</p>
                                         <tr>
                                                 <td>provider</td>
                                             <td>
-                                                            <code><a href="../miscellaneous/typealiases.html#KmsProviderConfigDto" target="_self" >KmsProviderConfigDto</a></code>
+                                                            <code><a href="../miscellaneous/typealiases.html#KmsProviderConfig" target="_self" >KmsProviderConfig</a></code>
                                             </td>
 
                                             <td>
@@ -1053,9 +1053,9 @@ import {
 } from &quot;@nestjs/common&quot;;
 import * as x509 from &quot;@peculiar/x509&quot;;
 import type {
-    KmsProviderConfigDto,
+    KmsProviderConfig,
     KmsProviderType,
-} from &quot;../dto/kms-config.dto&quot;;
+} from &quot;../schemas/kms-config.schema&quot;;
 import { KmsConfigService } from &quot;./kms-config.service&quot;;
 import { KmsCryptoProvider } from &quot;./kms-crypto-provider&quot;;
 import type { KmsProviderInfoDto } from &quot;../dto/kms-provider-capabilities.dto&quot;;
@@ -1218,14 +1218,14 @@ export class KmsProviderRegistry implements OnModuleInit {
         this.tenantBundles.delete(tenantId);
     }
 
-    private instantiate(provider: KmsProviderConfigDto): KmsAdapter {
+    private instantiate(provider: KmsProviderConfig): KmsAdapter {
         const type: KmsProviderType &#x3D; provider.type;
         switch (type) {
             case &quot;db&quot;:
                 return new DbKmsAdapter(provider.id);
             case &quot;vault&quot;: {
                 const p &#x3D; provider as Extract&lt;
-                    KmsProviderConfigDto,
+                    KmsProviderConfig,
                     { type: &quot;vault&quot; }
                 &gt;;
                 return new VaultKmsAdapter(
@@ -1239,7 +1239,7 @@ export class KmsProviderRegistry implements OnModuleInit {
             }
             case &quot;aws-kms&quot;: {
                 const p &#x3D; provider as Extract&lt;
-                    KmsProviderConfigDto,
+                    KmsProviderConfig,
                     { type: &quot;aws-kms&quot; }
                 &gt;;
                 return new AwsKmsAdapter({
@@ -1251,7 +1251,7 @@ export class KmsProviderRegistry implements OnModuleInit {
             }
             case &quot;pkcs11&quot;: {
                 const p &#x3D; provider as Extract&lt;
-                    KmsProviderConfigDto,
+                    KmsProviderConfig,
                     { type: &quot;pkcs11&quot; }
                 &gt;;
                 const slot &#x3D;
@@ -1268,7 +1268,7 @@ export class KmsProviderRegistry implements OnModuleInit {
             }
             case &quot;http&quot;: {
                 const p &#x3D; provider as Extract&lt;
-                    KmsProviderConfigDto,
+                    KmsProviderConfig,
                     { type: &quot;http&quot; }
                 &gt;;
                 return new HttpKmsAdapter(
@@ -1285,7 +1285,7 @@ export class KmsProviderRegistry implements OnModuleInit {
             }
             case &quot;csc&quot;: {
                 const p &#x3D; provider as Extract&lt;
-                    KmsProviderConfigDto,
+                    KmsProviderConfig,
                     { type: &quot;csc&quot; }
                 &gt;;
                 return new CscKmsAdapter(

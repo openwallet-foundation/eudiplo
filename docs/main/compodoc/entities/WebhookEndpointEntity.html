@@ -177,13 +177,10 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#auth" >auth</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
@@ -191,7 +188,6 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#id" >id</a>
@@ -209,6 +205,7 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#tenantId" >tenantId</a>
                             </li>
@@ -244,8 +241,6 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>auth</b></span>
                         <a href="#auth"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -262,13 +257,13 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ValidateNested()<br />@ApiProperty({oneOf: undefined})<br />@Type(undefined, {discriminator: undefined, keepDiscriminatorProperty: true})<br />@Column(&#x27;json&#x27;)<br />
+                            @ApiProperty({oneOf: undefined})<br />@Column(&#x27;json&#x27;)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.ts:67</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.ts:55</a></div>
                         </td>
                     </tr>
 
@@ -281,7 +276,6 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
                 <td class="col-md-4">
                     <a name="description"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
@@ -301,13 +295,13 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @IsOptional()<br />@IsString()<br />@Column(&#x27;varchar&#x27;, {nullable: true})<br />
+                            @ApiPropertyOptional({description: &#x27;Webhook endpoint description&#x27;})<br />@Column(&#x27;varchar&#x27;, {nullable: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.ts:43</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.ts:42</a></div>
                         </td>
                     </tr>
 
@@ -320,7 +314,6 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
                 <td class="col-md-4">
                     <a name="id"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                         <span ><b>id</b></span>
@@ -339,13 +332,13 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Unique identifier for the webhook endpoint&#x27;})<br />@IsString()<br />@PrimaryColumn(&#x27;varchar&#x27;)<br />
+                            @ApiProperty({description: &#x27;Unique identifier for the webhook endpoint&#x27;})<br />@PrimaryColumn(&#x27;varchar&#x27;)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.ts:28</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.ts:27</a></div>
                         </td>
                     </tr>
 
@@ -376,7 +369,7 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @IsString()<br />@Column(&#x27;varchar&#x27;)<br />
+                            @ApiProperty({description: &#x27;Webhook endpoint name&#x27;})<br />@Column(&#x27;varchar&#x27;)<br />
                         </code>
                     </td>
                 </tr>
@@ -432,6 +425,7 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
                     <a name="tenantId"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>tenantId</b></span>
                         <a href="#tenantId"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -448,7 +442,7 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @Column(&#x27;varchar&#x27;, {primary: true})<br />
+                            @ApiProperty({description: &#x27;Tenant identifier&#x27;})<br />@Column(&#x27;varchar&#x27;, {primary: true})<br />
                         </code>
                     </td>
                 </tr>
@@ -485,13 +479,13 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @IsString()<br />@Column(&#x27;varchar&#x27;)<br />
+                            @ApiProperty({description: &#x27;Webhook endpoint URL&#x27;})<br />@Column(&#x27;varchar&#x27;)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.ts:47</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -503,14 +497,14 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, getSchemaPath } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
-import { IsOptional, IsString, ValidateNested } from &quot;class-validator&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+    ApiProperty,
+    ApiPropertyOptional,
+    getSchemaPath,
+} from &quot;@nestjs/swagger&quot;;
 import { Column, Entity, ManyToOne, PrimaryColumn } from &quot;typeorm&quot;;
 import { TenantEntity } from &quot;../../../../auth/tenant/entitites/tenant.entity&quot;;
 import {
-    AuthConfig,
-    WebHookAuthConfig,
     WebHookAuthConfigHeader,
     WebHookAuthConfigNone,
 } from &quot;../../../../shared/utils/webhook/webhook.dto&quot;;
@@ -528,45 +522,33 @@ export class WebhookEndpointEntity {
     @ApiProperty({
         description: &quot;Unique identifier for the webhook endpoint&quot;,
     })
-    @IsString()
     @PrimaryColumn(&quot;varchar&quot;)
     id!: string;
 
+    @ApiProperty({ description: &quot;Tenant identifier&quot; })
     @Column(&quot;varchar&quot;, { primary: true })
     tenantId!: string;
 
     @ManyToOne(() &#x3D;&gt; TenantEntity, { cascade: true, onDelete: &quot;CASCADE&quot; })
     tenant!: TenantEntity;
 
-    @IsString()
+    @ApiProperty({ description: &quot;Webhook endpoint name&quot; })
     @Column(&quot;varchar&quot;)
     name!: string;
 
-    @IsOptional()
-    @IsString()
+    @ApiPropertyOptional({ description: &quot;Webhook endpoint description&quot; })
     @Column(&quot;varchar&quot;, { nullable: true })
     description?: string | null;
 
-    @IsString()
+    @ApiProperty({ description: &quot;Webhook endpoint URL&quot; })
     @Column(&quot;varchar&quot;)
     url!: string;
 
-    @ValidateNested()
     @ApiProperty({
         oneOf: [
             { $ref: getSchemaPath(WebHookAuthConfigNone) },
             { $ref: getSchemaPath(WebHookAuthConfigHeader) },
         ],
-    })
-    @Type(() &#x3D;&gt; WebHookAuthConfig, {
-        discriminator: {
-            property: &quot;type&quot;,
-            subTypes: [
-                { name: AuthConfig.NONE, value: WebHookAuthConfigNone },
-                { name: AuthConfig.API_KEY, value: WebHookAuthConfigHeader },
-            ],
-        },
-        keepDiscriminatorProperty: true,
     })
     @Column(&quot;json&quot;)
     auth!: WebHookAuthConfigNone | WebHookAuthConfigHeader;

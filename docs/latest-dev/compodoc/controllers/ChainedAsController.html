@@ -306,14 +306,14 @@ issuing its own tokens containing issuer_state for session correlation.</p>
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Public()<br />@Get(&#x27;authorize&#x27;)<br />@ApiOperation({summary: &#x27;Authorization endpoint&#x27;, description: &#x27;Validates the request_uri from PAR and redirects to the upstream OIDC provider for authentication.&#x27;})<br />@ApiParam({name: &#x27;tenantId&#x27;, description: &#x27;Tenant identifier&#x27;})<br />@ApiResponse({status: 302, description: &#x27;Redirect to upstream OIDC provider&#x27;})<br />@ApiResponse({status: 400, description: &#x27;Invalid request&#x27;, type: ChainedAsErrorResponseDto})<br /></code>
+                    <code>@Public()<br />@Get(&#x27;authorize&#x27;)<br />@ApiOperation({summary: &#x27;Authorization endpoint&#x27;, description: &#x27;Validates the request_uri from PAR and redirects to the upstream OIDC provider for authentication.&#x27;})<br />@ApiParam({name: &#x27;tenantId&#x27;, description: &#x27;Tenant identifier&#x27;})<br />@ApiResponse({status: 302, description: &#x27;Redirect to upstream OIDC provider&#x27;, headers: undefined})<br />@ApiResponse({status: 400, description: &#x27;Invalid request&#x27;, type: ChainedAsErrorResponseDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="137"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:137</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="143"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:143</a></div>
                         </td>
                     </tr>
 
@@ -415,14 +415,14 @@ Validates the request_uri and redirects to the upstream OIDC provider.</p>
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Public()<br />@Get(&#x27;callback&#x27;)<br />@ApiOperation({summary: &#x27;Upstream OIDC callback&#x27;, description: &#x27;Receives the authorization response from the upstream OIDC provider, exchanges the code, and redirects back to the wallet.&#x27;})<br />@ApiParam({name: &#x27;tenantId&#x27;, description: &#x27;Tenant identifier&#x27;})<br />@ApiResponse({status: 302, description: &#x27;Redirect to wallet with authorization code&#x27;})<br />@ApiResponse({status: 400, description: &#x27;Invalid callback&#x27;, type: ChainedAsErrorResponseDto})<br /></code>
+                    <code>@Public()<br />@Get(&#x27;callback&#x27;)<br />@ApiOperation({summary: &#x27;Upstream OIDC callback&#x27;, description: &#x27;Receives the authorization response from the upstream OIDC provider, exchanges the code, and redirects back to the wallet.&#x27;})<br />@ApiParam({name: &#x27;tenantId&#x27;, description: &#x27;Tenant identifier&#x27;})<br />@ApiResponse({status: 302, description: &#x27;Redirect to wallet with authorization code&#x27;, headers: undefined})<br />@ApiResponse({status: 400, description: &#x27;Invalid callback&#x27;, type: ChainedAsErrorResponseDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="171"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:171</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="183"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:183</a></div>
                         </td>
                     </tr>
 
@@ -707,8 +707,8 @@ Wallets submit authorization parameters here before redirecting to authorize.</p
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="222"
-                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:222</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="234"
+                                    class="link-to-prism">src/issuer/issuance/oid4vci/authorization/chained-as/chained-as.controller.ts:234</a></div>
                         </td>
                     </tr>
 
@@ -916,6 +916,12 @@ export class ChainedAsController {
     @ApiResponse({
         status: 302,
         description: &quot;Redirect to upstream OIDC provider&quot;,
+        headers: {
+            Location: {
+                description: &quot;Redirect target&quot;,
+                schema: { type: &quot;string&quot; },
+            },
+        },
     })
     @ApiResponse({
         status: 400,
@@ -950,6 +956,12 @@ export class ChainedAsController {
     @ApiResponse({
         status: 302,
         description: &quot;Redirect to wallet with authorization code&quot;,
+        headers: {
+            Location: {
+                description: &quot;Redirect target&quot;,
+                schema: { type: &quot;string&quot; },
+            },
+        },
     })
     @ApiResponse({
         status: 400,

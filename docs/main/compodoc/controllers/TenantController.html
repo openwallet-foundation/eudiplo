@@ -200,25 +200,38 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#deleteTenant" >deleteTenant</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#getTenant" >getTenant</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#getTenants" >getTenants</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#initTenant" >initTenant</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#updateTenant" >updateTenant</a>
                             </li>
@@ -246,6 +259,9 @@
                     <a name="deleteTenant"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>deleteTenant</b></span>
                         <a href="#deleteTenant"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -262,14 +278,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Delete(&#x27;:id&#x27;)<br /></code>
+                    <code>@ApiOperation({summary: &#x27;Delete a tenant by ID&#x27;})<br />@ApiResponse({status: 204, description: &#x27;Tenant deleted&#x27;})<br />@Delete(&#x27;:id&#x27;)<br />@HttpCode(204)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="85"
-                                    class="link-to-prism">src/auth/tenant/tenant.controller.ts:85</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="109"
+                                    class="link-to-prism">src/auth/tenant/tenant.controller.ts:109</a></div>
                         </td>
                     </tr>
 
@@ -357,6 +373,8 @@
                     <a name="getTenant"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>getTenant</b></span>
                         <a href="#getTenant"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -373,14 +391,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get(&#x27;:id&#x27;)<br /></code>
+                    <code>@ApiOperation({summary: &#x27;Get a tenant by ID&#x27;})<br />@ApiResponse({status: 200, type: TenantResponseDto})<br />@Get(&#x27;:id&#x27;)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="60"
-                                    class="link-to-prism">src/auth/tenant/tenant.controller.ts:60</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="78"
+                                    class="link-to-prism">src/auth/tenant/tenant.controller.ts:78</a></div>
                         </td>
                     </tr>
 
@@ -423,7 +441,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/TenantResponseDto.html" target="_self" >Promise&lt;TenantResponseDto&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -441,6 +459,8 @@
                     <a name="getTenants"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>getTenants</b></span>
                         <a href="#getTenants"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -457,14 +477,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get()<br /></code>
+                    <code>@ApiOperation({summary: &#x27;Get all tenants&#x27;})<br />@ApiResponse({status: 200, type: undefined})<br />@Get()<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="36"
-                                    class="link-to-prism">src/auth/tenant/tenant.controller.ts:36</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="49"
+                                    class="link-to-prism">src/auth/tenant/tenant.controller.ts:49</a></div>
                         </td>
                     </tr>
 
@@ -475,7 +495,7 @@
 </div>
 
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                            <b>Returns : </b>        <code><a href="../classes/TenantResponseDto.html" target="_self" >Promise&lt;TenantResponseDto[]&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -491,6 +511,9 @@
                 <td class="col-md-4">
                     <a name="initTenant"></a>
                     <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                             <span class="modifier"></span>
                         <span ><b>initTenant</b></span>
                         <a href="#initTenant"><span class="icon ion-ios-link"></span></a>
@@ -508,14 +531,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post()<br /></code>
+                    <code>@ApiOperation({summary: &#x27;Initialize a tenant&#x27;})<br />@ApiBody({type: CreateTenantDto})<br />@ApiResponse({status: 201, type: TenantCreateResponseDto})<br />@Post()<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="46"
-                                    class="link-to-prism">src/auth/tenant/tenant.controller.ts:46</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="62"
+                                    class="link-to-prism">src/auth/tenant/tenant.controller.ts:62</a></div>
                         </td>
                     </tr>
 
@@ -594,6 +617,9 @@
                     <a name="updateTenant"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>updateTenant</b></span>
                         <a href="#updateTenant"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -610,14 +636,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Patch(&#x27;:id&#x27;)<br /></code>
+                    <code>@ApiOperation({summary: &#x27;Update a tenant by ID&#x27;})<br />@ApiBody({type: UpdateTenantDto})<br />@ApiResponse({status: 200, type: TenantResponseDto})<br />@Patch(&#x27;:id&#x27;)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="71"
-                                    class="link-to-prism">src/auth/tenant/tenant.controller.ts:71</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="92"
+                                    class="link-to-prism">src/auth/tenant/tenant.controller.ts:92</a></div>
                         </td>
                     </tr>
 
@@ -729,16 +755,27 @@
     Patch,
     Post,
     Req,
+    HttpCode,
 } from &quot;@nestjs/common&quot;;
-import { ApiExtraModels, ApiTags } from &quot;@nestjs/swagger&quot;;
+import {
+    ApiBody,
+    ApiExtraModels,
+    ApiOperation,
+    ApiResponse,
+    ApiTags,
+} from &quot;@nestjs/swagger&quot;;
 import { Request } from &quot;express&quot;;
 import { Role } from &quot;../roles/role.enum&quot;;
 import { Secured } from &quot;../secure.decorator&quot;;
 import { Token, TokenPayload } from &quot;../token.decorator&quot;;
-import { CreateTenantDto } from &quot;./dto/create-tenant.dto&quot;;
 import { ImportTenantDto } from &quot;./dto/import-tenant.dto&quot;;
-import { UpdateTenantDto } from &quot;./dto/update-tenant.dto&quot;;
 import { TenantService } from &quot;./tenant.service&quot;;
+import { CreateTenantDto } from &quot;./dto/create-tenant.dto&quot;;
+import { UpdateTenantDto } from &quot;./dto/update-tenant.dto&quot;;
+import {
+    TenantCreateResponseDto,
+    TenantResponseDto,
+} from &quot;./dto/tenant-response.dto&quot;;
 
 /**
  * Tenant management controller
@@ -754,8 +791,10 @@ export class TenantController {
      * Get all tenants
      * @returns
      */
+    @ApiOperation({ summary: &quot;Get all tenants&quot; })
+    @ApiResponse({ status: 200, type: [TenantResponseDto] })
     @Get()
-    getTenants() {
+    getTenants(): Promise&lt;TenantResponseDto[]&gt; {
         return this.tenantService.getAll();
     }
 
@@ -764,6 +803,9 @@ export class TenantController {
      * @param data
      * @returns
      */
+    @ApiOperation({ summary: &quot;Initialize a tenant&quot; })
+    @ApiBody({ type: CreateTenantDto })
+    @ApiResponse({ status: 201, type: TenantCreateResponseDto })
     @Post()
     initTenant(
         @Body() data: CreateTenantDto,
@@ -778,8 +820,10 @@ export class TenantController {
      * @param id The ID of the tenant
      * @returns The tenant
      */
+    @ApiOperation({ summary: &quot;Get a tenant by ID&quot; })
+    @ApiResponse({ status: 200, type: TenantResponseDto })
     @Get(&quot;:id&quot;)
-    getTenant(@Param(&quot;id&quot;) id: string) {
+    getTenant(@Param(&quot;id&quot;) id: string): Promise&lt;TenantResponseDto&gt; {
         return this.tenantService.getTenant(id);
     }
 
@@ -789,6 +833,9 @@ export class TenantController {
      * @param data The updated tenant data
      * @returns The updated tenant
      */
+    @ApiOperation({ summary: &quot;Update a tenant by ID&quot; })
+    @ApiBody({ type: UpdateTenantDto })
+    @ApiResponse({ status: 200, type: TenantResponseDto })
     @Patch(&quot;:id&quot;)
     updateTenant(
         @Param(&quot;id&quot;) id: string,
@@ -803,7 +850,10 @@ export class TenantController {
      * Deletes a tenant by ID
      * @param id The ID of the tenant to delete
      */
+    @ApiOperation({ summary: &quot;Delete a tenant by ID&quot; })
+    @ApiResponse({ status: 204, description: &quot;Tenant deleted&quot; })
     @Delete(&quot;:id&quot;)
+    @HttpCode(204)
     deleteTenant(
         @Param(&quot;id&quot;) id: string,
         @Token() token: TokenPayload,

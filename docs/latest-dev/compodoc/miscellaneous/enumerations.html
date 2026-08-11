@@ -162,9 +162,6 @@
                             <a href="#FederationTrustMode" title="src/issuer/configuration/issuance/dto/federation-config.dto.ts" class="reference-link "><span class="reference-badge reference-badge--enum" aria-hidden="true">E</span><span class="reference-link-label"><b>FederationTrustMode</b>&nbsp;&nbsp;&nbsp;(src/.../federation-config.dto.ts)</span></a>
                         </li>
                         <li>
-                            <a href="#FlowType" title="src/issuer/issuance/oid4vci/dto/offer-request.dto.ts" class="reference-link "><span class="reference-badge reference-badge--enum" aria-hidden="true">E</span><span class="reference-link-label"><b>FlowType</b>&nbsp;&nbsp;&nbsp;(src/.../offer-request.dto.ts)</span></a>
-                        </li>
-                        <li>
                             <a href="#IaeActionType" title="src/issuer/configuration/credentials/entities/iae-action.dto.ts" class="reference-link "><span class="reference-badge reference-badge--enum" aria-hidden="true">E</span><span class="reference-link-label"><b>IaeActionType</b>&nbsp;&nbsp;&nbsp;(src/.../iae-action.dto.ts)</span></a>
                         </li>
                         <li>
@@ -189,13 +186,10 @@
                             <a href="#KeyUsage" title="src/crypto/key/entities/key-chain.entity.ts" class="reference-link "><span class="reference-badge reference-badge--enum" aria-hidden="true">E</span><span class="reference-link-label"><b>KeyUsage</b>&nbsp;&nbsp;&nbsp;(src/.../key-chain.entity.ts)</span></a>
                         </li>
                         <li>
-                            <a href="#KeyUsageType" title="src/crypto/key/entities/key-chain.entity.ts" class="reference-link "><span class="reference-badge reference-badge--enum" aria-hidden="true">E</span><span class="reference-link-label"><b>KeyUsageType</b>&nbsp;&nbsp;&nbsp;(src/.../key-chain.entity.ts)</span></a>
+                            <a href="#KeyUsageType" title="src/crypto/key/types/key-usage-type.ts" class="reference-link "><span class="reference-badge reference-badge--enum" aria-hidden="true">E</span><span class="reference-link-label"><b>KeyUsageType</b>&nbsp;&nbsp;&nbsp;(src/.../key-usage-type.ts)</span></a>
                         </li>
                         <li>
                             <a href="#MediaType" title="src/shared/utils/mediaType/media-type.enum.ts" class="reference-link "><span class="reference-badge reference-badge--enum" aria-hidden="true">E</span><span class="reference-link-label"><b>MediaType</b>&nbsp;&nbsp;&nbsp;(src/.../media-type.enum.ts)</span></a>
-                        </li>
-                        <li>
-                            <a href="#ResponseType" title="src/verifier/oid4vp/dto/presentation-request.dto.ts" class="reference-link "><span class="reference-badge reference-badge--enum" aria-hidden="true">E</span><span class="reference-link-label"><b>ResponseType</b>&nbsp;&nbsp;&nbsp;(src/.../presentation-request.dto.ts)</span></a>
                         </li>
                         <li>
                             <a href="#RevocationCheckMode" title="src/shared/trust/types.ts" class="reference-link "><span class="reference-badge reference-badge--enum" aria-hidden="true">E</span><span class="reference-link-label"><b>RevocationCheckMode</b>&nbsp;&nbsp;&nbsp;(src/.../types.ts)</span></a>
@@ -799,39 +793,6 @@
             </tbody>
         </table>
 </section>
-    <h3>src/issuer/issuance/oid4vci/dto/offer-request.dto.ts</h3>
-    <section data-compodoc="block-enums">
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="FlowType"></a>
-                        <span class="name "><b>FlowType</b><a href="#FlowType"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;AUTH_CODE
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>authorization_code</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;PRE_AUTH_CODE
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>pre_authorized_code</code>
-                            </td>
-                        </tr>
-            </tbody>
-        </table>
-</section>
     <h3>src/issuer/configuration/credentials/entities/iae-action.dto.ts</h3>
     <section data-compodoc="block-enums">
         <table class="table table-sm table-bordered">
@@ -1155,6 +1116,9 @@ Lower numbers run first.</p>
                         </tr>
             </tbody>
         </table>
+</section>
+    <h3>src/crypto/key/types/key-usage-type.ts</h3>
+    <section data-compodoc="block-enums">
         <table class="table table-sm table-bordered">
             <tbody>
                 <tr>
@@ -1256,55 +1220,6 @@ Lower numbers run first.</p>
                         <tr>
                             <td class="col-md-4">
                                 <i>Value : </i><code>application/jwt</code>
-                            </td>
-                        </tr>
-            </tbody>
-        </table>
-</section>
-    <h3>src/verifier/oid4vp/dto/presentation-request.dto.ts</h3>
-    <section data-compodoc="block-enums">
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="ResponseType"></a>
-                        <span class="name "><b>ResponseType</b><a href="#ResponseType"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-description"><p>Enum for the type of response expected from the presentation request.</p>
-</div>
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;URI
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>uri</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;DC_API
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>dc-api</code>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                &nbsp;ISO_18013_7
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <i>Value : </i><code>iso-18013-7</code>
                             </td>
                         </tr>
             </tbody>

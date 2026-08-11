@@ -161,10 +161,35 @@
 
             </p>
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../miscellaneous/variables.html#CompleteDeferredSchema" target="_self" >createZodDto(CompleteDeferredSchema)</a></code>
+            </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../miscellaneous/variables.html#CompleteDeferredSchema" target="_self" >createZodDto(CompleteDeferredSchema)</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -179,7 +204,6 @@
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#claims" >claims</a>
                             </li>
@@ -209,7 +233,6 @@
                     <a name="claims"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>claims</b></span>
                         <a href="#claims"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -226,13 +249,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Claims to include in the credential. The structure should match the credential configuration&#x27;s expected claims.&#x27;, example: undefined})<br />@IsObject()<br />
+                            @ApiProperty({description: &#x27;Claims to include in the credential. The structure should match the credential configuration&#x27;s expected claims.&#x27;, example: undefined})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/issuer/issuance/oid4vci/dto/complete-deferred.dto.ts:23</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/issuer/issuance/oid4vci/dto/complete-deferred.dto.ts:35</a></div>
                         </td>
                     </tr>
 
@@ -259,13 +282,26 @@ The structure should match the credential configuration&#39;s expected claims.</
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty } from &quot;@nestjs/swagger&quot;;
-import { IsObject, IsOptional, IsString } from &quot;class-validator&quot;;
+import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 import { DeferredTransactionStatus } from &quot;../entities/deferred-transaction.entity&quot;;
+
+const CompleteDeferredSchema &#x3D; z
+    .object({
+        claims: z.record(z.string(), z.unknown()),
+    })
+    .strict();
+
+const FailDeferredSchema &#x3D; z
+    .object({
+        error: z.string().optional(),
+    })
+    .strict();
 
 /**
  * DTO for completing a deferred transaction
  */
-export class CompleteDeferredDto {
+export class CompleteDeferredDto extends createZodDto(CompleteDeferredSchema) {
     /**
      * Claims to include in the credential.
      * The structure should match the credential configuration&#x27;s expected claims.
@@ -279,14 +315,13 @@ export class CompleteDeferredDto {
             birthdate: &quot;1990-01-15&quot;,
         },
     })
-    @IsObject()
     claims!: Record&lt;string, unknown&gt;;
 }
 
 /**
  * DTO for failing a deferred transaction
  */
-export class FailDeferredDto {
+export class FailDeferredDto extends createZodDto(FailDeferredSchema) {
     /**
      * Optional error message explaining why the issuance failed
      */
@@ -296,8 +331,6 @@ export class FailDeferredDto {
         required: false,
         example: &quot;Identity verification failed&quot;,
     })
-    @IsOptional()
-    @IsString()
     error?: string;
 }
 

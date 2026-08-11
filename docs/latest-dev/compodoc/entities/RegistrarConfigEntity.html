@@ -177,13 +177,10 @@ using a secrets manager like HashiCorp Vault.</p>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#clientId" >clientId</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
@@ -193,12 +190,10 @@ using a secrets manager like HashiCorp Vault.</p>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#oidcUrl" >oidcUrl</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#password" >password</a>
@@ -207,13 +202,10 @@ using a secrets manager like HashiCorp Vault.</p>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#registrarUrl" >registrarUrl</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
@@ -231,7 +223,6 @@ using a secrets manager like HashiCorp Vault.</p>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#username" >username</a>
@@ -262,7 +253,6 @@ using a secrets manager like HashiCorp Vault.</p>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>clientId</b></span>
                         <a href="#clientId"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -279,13 +269,13 @@ using a secrets manager like HashiCorp Vault.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;The OIDC client ID for the registrar&#x27;, example: &#x27;registrar-client&#x27;})<br />@IsString()<br />@Column(&#x27;varchar&#x27;)<br />
+                            @ApiProperty({description: &#x27;The OIDC client ID for the registrar&#x27;, example: &#x27;registrar-client&#x27;})<br />@Column(&#x27;varchar&#x27;)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:88</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:80</a></div>
                         </td>
                     </tr>
 
@@ -307,8 +297,6 @@ This is typically provided by the registrar service.</p>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>clientSecret</b></span>
                         <a href="#clientSecret"><span class="icon ion-ios-link"></span></a>
@@ -326,13 +314,13 @@ This is typically provided by the registrar service.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;The OIDC client secret (optional, for confidential clients)&#x27;})<br />@IsOptional()<br />@IsString()<br />@Column(&#x27;varchar&#x27;, {nullable: true})<br />
+                            @ApiPropertyOptional({description: &#x27;The OIDC client secret (optional, for confidential clients)&#x27;})<br />@Column(&#x27;varchar&#x27;, {nullable: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="100" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:100</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:90</a></div>
                         </td>
                     </tr>
 
@@ -353,7 +341,6 @@ This is typically provided by the registrar service.</p>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>oidcUrl</b></span>
                         <a href="#oidcUrl"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -370,13 +357,13 @@ This is typically provided by the registrar service.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;The OIDC issuer URL for authentication (e.g., Keycloak realm URL)&#x27;, example: &#x27;https://auth.example.com/realms/my-realm&#x27;})<br />@IsString()<br />@Column(&#x27;varchar&#x27;)<br />
+                            @ApiProperty({description: &#x27;The OIDC issuer URL for authentication (e.g., Keycloak realm URL)&#x27;, example: &#x27;https://auth.example.com/realms/my-realm&#x27;})<br />@Column(&#x27;varchar&#x27;)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:76</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="69" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:69</a></div>
                         </td>
                     </tr>
 
@@ -399,7 +386,6 @@ Example: <a href="https://auth.example.com/realms/my-realm">https://auth.example
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>password</b></span>
                         <a href="#password"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -416,13 +402,13 @@ Example: <a href="https://auth.example.com/realms/my-realm">https://auth.example
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;The password for OIDC login (stored in plaintext)&#x27;})<br />@IsString()<br />@Column(&#x27;varchar&#x27;)<br />
+                            @ApiProperty({description: &#x27;The password for OIDC login (stored in plaintext)&#x27;})<br />@Column(&#x27;varchar&#x27;)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="122" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:122</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="110" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:110</a></div>
                         </td>
                     </tr>
 
@@ -444,7 +430,6 @@ Note: Stored in plaintext for ease of use. Use a secrets manager for production.
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>registrarUrl</b></span>
                         <a href="#registrarUrl"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -461,13 +446,13 @@ Note: Stored in plaintext for ease of use. Use a secrets manager for production.
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;The base URL of the registrar API&#x27;, example: &#x27;https://sandbox.eudi-wallet.org/api&#x27;})<br />@IsString()<br />@Column(&#x27;varchar&#x27;)<br />
+                            @ApiProperty({description: &#x27;The base URL of the registrar API&#x27;, example: &#x27;https://sandbox.eudi-wallet.org/api&#x27;})<br />@Column(&#x27;varchar&#x27;)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:62</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:56</a></div>
                         </td>
                     </tr>
 
@@ -489,8 +474,6 @@ Example: <a href="https://sandbox.eudi-wallet.org/api">https://sandbox.eudi-wall
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>registrationCertificateDefaults</b></span>
                         <a href="#registrationCertificateDefaults"><span class="icon ion-ios-link"></span></a>
@@ -508,13 +491,13 @@ Example: <a href="https://sandbox.eudi-wallet.org/api">https://sandbox.eudi-wall
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Optional default values merged into registration certificate creation requests (for example privacy_policy, support_uri)&#x27;, type: () &#x3D;&gt; RegistrationCertificateDefaults, additionalProperties: true})<br />@IsOptional()<br />@IsObject()<br />@Column(&#x27;json&#x27;, {nullable: true})<br />
+                            @ApiPropertyOptional({description: &#x27;Optional default values merged into registration certificate creation requests (for example privacy_policy, support_uri)&#x27;, type: () &#x3D;&gt; RegistrationCertificateDefaults, additionalProperties: true})<br />@Column(&#x27;json&#x27;, {nullable: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="137" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:137</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="123" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:123</a></div>
                         </td>
                     </tr>
 
@@ -557,7 +540,7 @@ Presentation config values take precedence over these defaults.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:50</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:45</a></div>
                         </td>
                     </tr>
 
@@ -599,7 +582,7 @@ Presentation config values take precedence over these defaults.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:44</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:39</a></div>
                         </td>
                     </tr>
 
@@ -620,7 +603,6 @@ Presentation config values take precedence over these defaults.</p>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>username</b></span>
                         <a href="#username"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -637,13 +619,13 @@ Presentation config values take precedence over these defaults.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;The username for OIDC login&#x27;, example: &#x27;admin@example.com&#x27;})<br />@IsString()<br />@Column(&#x27;varchar&#x27;)<br />
+                            @ApiProperty({description: &#x27;The username for OIDC login&#x27;, example: &#x27;admin@example.com&#x27;})<br />@Column(&#x27;varchar&#x27;)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="111" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:111</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="100" class="link-to-prism">src/registrar/entities/registrar-config.entity.ts:100</a></div>
                         </td>
                     </tr>
 
@@ -662,7 +644,6 @@ Presentation config values take precedence over these defaults.</p>
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { IsObject, IsOptional, IsString } from &quot;class-validator&quot;;
 import { Column, Entity, ManyToOne, PrimaryColumn } from &quot;typeorm&quot;;
 import { TenantEntity } from &quot;../../auth/tenant/entitites/tenant.entity&quot;;
 
@@ -676,8 +657,6 @@ export class RegistrationCertificateDefaults {
             &quot;Default privacy policy URL for registration certificate creation.&quot;,
         example: &quot;https://verifier.example/privacy&quot;,
     })
-    @IsOptional()
-    @IsString()
     privacy_policy?: string;
 
     @ApiPropertyOptional({
@@ -685,8 +664,6 @@ export class RegistrationCertificateDefaults {
             &quot;Default support contact URI for registration certificate creation.&quot;,
         example: &quot;mailto:support@verifier.example&quot;,
     })
-    @IsOptional()
-    @IsString()
     support_uri?: string;
 }
 
@@ -720,7 +697,6 @@ export class RegistrarConfigEntity {
         description: &quot;The base URL of the registrar API&quot;,
         example: &quot;https://sandbox.eudi-wallet.org/api&quot;,
     })
-    @IsString()
     @Column(&quot;varchar&quot;)
     registrarUrl!: string;
 
@@ -734,7 +710,6 @@ export class RegistrarConfigEntity {
             &quot;The OIDC issuer URL for authentication (e.g., Keycloak realm URL)&quot;,
         example: &quot;https://auth.example.com/realms/my-realm&quot;,
     })
-    @IsString()
     @Column(&quot;varchar&quot;)
     oidcUrl!: string;
 
@@ -746,7 +721,6 @@ export class RegistrarConfigEntity {
         description: &quot;The OIDC client ID for the registrar&quot;,
         example: &quot;registrar-client&quot;,
     })
-    @IsString()
     @Column(&quot;varchar&quot;)
     clientId!: string;
 
@@ -757,8 +731,6 @@ export class RegistrarConfigEntity {
         description:
             &quot;The OIDC client secret (optional, for confidential clients)&quot;,
     })
-    @IsOptional()
-    @IsString()
     @Column(&quot;varchar&quot;, { nullable: true })
     clientSecret?: string;
 
@@ -769,7 +741,6 @@ export class RegistrarConfigEntity {
         description: &quot;The username for OIDC login&quot;,
         example: &quot;admin@example.com&quot;,
     })
-    @IsString()
     @Column(&quot;varchar&quot;)
     username!: string;
 
@@ -780,7 +751,6 @@ export class RegistrarConfigEntity {
     @ApiProperty({
         description: &quot;The password for OIDC login (stored in plaintext)&quot;,
     })
-    @IsString()
     @Column(&quot;varchar&quot;)
     password!: string;
 
@@ -794,8 +764,6 @@ export class RegistrarConfigEntity {
         type: () &#x3D;&gt; RegistrationCertificateDefaults,
         additionalProperties: true,
     })
-    @IsOptional()
-    @IsObject()
     @Column(&quot;json&quot;, { nullable: true })
     registrationCertificateDefaults?: RegistrationCertificateDefaults | null;
 }

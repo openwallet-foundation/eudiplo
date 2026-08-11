@@ -264,8 +264,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="58"
-                                    class="link-to-prism">src/core/app/app.controller.ts:58</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="63"
+                                    class="link-to-prism">src/core/app/app.controller.ts:63</a></div>
                         </td>
                     </tr>
 
@@ -310,14 +310,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get(&#x27;version&#x27;)<br />@UseGuards(JwtAuthGuard)<br />@ApiSecurity(&#x27;oauth2&#x27;)<br />@ApiOperation({summary: &#x27;Get service version&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Service version info&#x27;})<br /></code>
+                    <code>@Get(&#x27;version&#x27;)<br />@UseGuards(JwtAuthGuard)<br />@ApiSecurity(&#x27;oauth2&#x27;)<br />@ApiOperation({summary: &#x27;Get service version&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Service version info&#x27;, type: VersionResponseDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="40"
-                                    class="link-to-prism">src/core/app/app.controller.ts:40</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="45"
+                                    class="link-to-prism">src/core/app/app.controller.ts:45</a></div>
                         </td>
                     </tr>
 
@@ -328,7 +328,7 @@
 </div>
 
                         <div class="io-description">
-                            <b>Returns : </b>    <code>{ version: any; }</code>
+                            <b>Returns : </b>        <code><a href="../classes/VersionResponseDto.html" target="_self" >VersionResponseDto</a></code>
 
                         </div>
                 </td>
@@ -364,8 +364,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="24"
-                                    class="link-to-prism">src/core/app/app.controller.ts:24</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="25"
+                                    class="link-to-prism">src/core/app/app.controller.ts:25</a></div>
                         </td>
                     </tr>
 
@@ -398,6 +398,7 @@ import {
 } from &quot;@nestjs/swagger&quot;;
 import { JwtAuthGuard } from &quot;../../auth/auth.guard&quot;;
 import { FrontendConfigResponseDto } from &quot;./dto/frontend-config-response.dto&quot;;
+import { VersionResponseDto } from &quot;./dto/version-response.dto&quot;;
 
 /**
  * Main application controller
@@ -426,8 +427,12 @@ export class AppController {
     @UseGuards(JwtAuthGuard)
     @ApiSecurity(&quot;oauth2&quot;)
     @ApiOperation({ summary: &quot;Get service version&quot; })
-    @ApiResponse({ status: 200, description: &quot;Service version info&quot; })
-    getVersion() {
+    @ApiResponse({
+        status: 200,
+        description: &quot;Service version info&quot;,
+        type: VersionResponseDto,
+    })
+    getVersion(): VersionResponseDto {
         return {
             version: process.env.VERSION ?? &quot;main&quot;,
         };

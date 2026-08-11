@@ -160,8 +160,8 @@ All fields are optional.</p>
                 <h3>Extends</h3>
             </p>
             <p class="comment">
-                            <code><a href="../classes/CreateRegistrarConfigDto.html" target="_self" >PartialType(
-    CreateRegistrarConfigDto,
+                            <code><a href="../miscellaneous/variables.html#UpdateRegistrarConfigSchema" target="_self" >createZodDto(
+    UpdateRegistrarConfigSchema,
 )</a></code>
             </p>
 
@@ -180,8 +180,8 @@ All fields are optional.</p>
                     <h4>Depends on</h4>
                         <ul class="list-unstyled relationships-list">
                                 <li>
-                                            <code><a href="../classes/CreateRegistrarConfigDto.html" target="_self" >PartialType(
-    CreateRegistrarConfigDto,
+                                            <code><a href="../miscellaneous/variables.html#UpdateRegistrarConfigSchema" target="_self" >createZodDto(
+    UpdateRegistrarConfigSchema,
 )</a></code>
                                 </li>
                         </ul>
@@ -193,15 +193,15 @@ All fields are optional.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PartialType } from &quot;@nestjs/swagger&quot;;
-import { CreateRegistrarConfigDto } from &quot;./create-registrar-config.dto&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createZodDto } from &quot;nestjs-zod&quot;;
+import { UpdateRegistrarConfigSchema } from &quot;../schemas/registrar.schema&quot;;
 
 /**
  * DTO for updating a registrar configuration.
  * All fields are optional.
  */
-export class UpdateRegistrarConfigDto extends PartialType(
-    CreateRegistrarConfigDto,
+export class UpdateRegistrarConfigDto extends createZodDto(
+    UpdateRegistrarConfigSchema,
 ) {}
 </code></pre>
     </div>

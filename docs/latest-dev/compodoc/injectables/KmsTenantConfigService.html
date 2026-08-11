@@ -221,7 +221,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:22</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:19</a></div>
                             </td>
                         </tr>
 
@@ -412,7 +412,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/KmsConfigDto.html" target="_self" >KmsConfigDto</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#KmsConfig" target="_self" >KmsConfig</a></code>
 
                         </div>
                             <div class="io-description">
@@ -442,8 +442,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="29"
-                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:29</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="26"
+                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:26</a></div>
                         </td>
                     </tr>
 
@@ -479,7 +479,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/KmsConfigDto.html" target="_self" >KmsConfigDto | null</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#KmsConfig" target="_self" >KmsConfig | null</a></code>
 
                         </div>
                             <div class="io-description">
@@ -640,7 +640,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>saveTenantConfig(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, config: <a href="../classes/KmsConfigDto.html" target="_self">KmsConfigDto</a>)</code>
+<code>saveTenantConfig(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, config: <a href="../miscellaneous/typealiases.html#KmsConfig" target="_self">KmsConfig</a>)</code>
                 </td>
             </tr>
 
@@ -683,7 +683,7 @@
                                         <tr>
                                                 <td>config</td>
                                             <td>
-                                                            <code><a href="../classes/KmsConfigDto.html" target="_self" >KmsConfigDto</a></code>
+                                                            <code><a href="../miscellaneous/typealiases.html#KmsConfig" target="_self" >KmsConfig</a></code>
                                             </td>
 
                                             <td>
@@ -696,7 +696,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/KmsConfigDto.html" target="_self" >KmsConfigDto</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#KmsConfig" target="_self" >KmsConfig</a></code>
 
                         </div>
                             <div class="io-description">
@@ -721,7 +721,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>validateConfig(config: <a href="../classes/KmsConfigDto.html" target="_self">KmsConfigDto</a>)</code>
+                    <code>validateConfig(config: <a href="../miscellaneous/typealiases.html#KmsConfig" target="_self">KmsConfig</a>)</code>
                 </td>
             </tr>
 
@@ -752,7 +752,7 @@
                                         <tr>
                                                 <td>config</td>
                                             <td>
-                                                            <code><a href="../classes/KmsConfigDto.html" target="_self" >KmsConfigDto</a></code>
+                                                            <code><a href="../miscellaneous/typealiases.html#KmsConfig" target="_self" >KmsConfig</a></code>
                                             </td>
 
                                             <td>
@@ -765,7 +765,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/KmsConfigDto.html" target="_self" >KmsConfigDto</a></code>
+                            <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#KmsConfig" target="_self" >KmsConfig</a></code>
 
                         </div>
                             <div class="io-description">
@@ -790,15 +790,12 @@
     writeFileSync,
 } from &quot;node:fs&quot;;
 import { dirname, join } from &quot;node:path&quot;;
-import {
-    BadRequestException,
-    Injectable,
-    NotFoundException,
-} from &quot;@nestjs/common&quot;;
+import { Injectable, NotFoundException } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
-import { plainToInstance } from &quot;class-transformer&quot;;
-import { validateSync } from &quot;class-validator&quot;;
-import { KmsConfigDto } from &quot;../dto/kms-config.dto&quot;;
+import {
+    parseRawKmsConfig,
+    type KmsConfig,
+} from &quot;../schemas/kms-config.schema&quot;;
 import { KmsProviderRegistry } from &quot;./kms-provider.registry&quot;;
 import { KmsConfigService } from &quot;./kms-config.service&quot;;
 
@@ -810,19 +807,22 @@ export class KmsTenantConfigService {
         private readonly kmsProviderRegistry: KmsProviderRegistry,
     ) {}
 
-    getTenantConfig(tenantId: string): KmsConfigDto | null {
+    getTenantConfig(tenantId: string): KmsConfig | null {
         const path &#x3D; this.getTenantConfigPath(tenantId);
         if (!path || !existsSync(path)) {
             return null;
         }
-        return JSON.parse(readFileSync(path, &quot;utf8&quot;)) as KmsConfigDto;
+        return parseRawKmsConfig(
+            JSON.parse(readFileSync(path, &quot;utf8&quot;)),
+            &#x60;tenant &#x27;${tenantId}&#x27; kms.json&#x60;,
+        );
     }
 
-    getEffectiveConfig(tenantId: string): KmsConfigDto {
+    getEffectiveConfig(tenantId: string): KmsConfig {
         return this.kmsConfigService.getConfig(tenantId);
     }
 
-    saveTenantConfig(tenantId: string, config: KmsConfigDto): KmsConfigDto {
+    saveTenantConfig(tenantId: string, config: KmsConfig): KmsConfig {
         const path &#x3D; this.getTenantConfigPath(tenantId);
         if (!path) {
             throw new NotFoundException(&quot;CONFIG_FOLDER is not configured&quot;);
@@ -863,22 +863,8 @@ export class KmsTenantConfigService {
         return join(configFolder, tenantId, &quot;kms.json&quot;);
     }
 
-    private validateConfig(config: KmsConfigDto): KmsConfigDto {
-        const dto &#x3D; plainToInstance(KmsConfigDto, config);
-        const errors &#x3D; validateSync(dto, {
-            whitelist: true,
-            forbidNonWhitelisted: true,
-            stopAtFirstError: false,
-        });
-
-        if (errors.length &gt; 0) {
-            throw new BadRequestException({
-                message: &quot;Invalid KMS configuration&quot;,
-                errors,
-            });
-        }
-
-        return dto;
+    private validateConfig(config: KmsConfig): KmsConfig {
+        return parseRawKmsConfig(config, &quot;tenant KMS configuration&quot;);
     }
 }
 </code></pre>

@@ -153,18 +153,36 @@
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
 
+
             <p class="comment">
-                <h3>Description</h3>
+                <h3>Extends</h3>
             </p>
             <p class="comment">
-                <p>Configuration for API key authentication in webhooks.</p>
-
+                            <code><a href="../classes/ApiKeyConfig.html" target="_self" >createZodDto(ApiKeyConfigSchema)</a></code>
             </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
 
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../classes/ApiKeyConfig.html" target="_self" >createZodDto(ApiKeyConfigSchema)</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -179,12 +197,10 @@
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                 <a href="#headerName" >headerName</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                 <a href="#value" >value</a>
                             </li>
                         </ul>
@@ -212,7 +228,6 @@
                 <td class="col-md-4">
                     <a name="headerName"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                         <span ><b>headerName</b></span>
                         <a href="#headerName"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -224,18 +239,9 @@
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/shared/utils/webhook/webhook.dto.ts:21</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/shared/utils/webhook/webhook.dto.ts:19</a></div>
                         </td>
                     </tr>
 
@@ -254,7 +260,6 @@
                 <td class="col-md-4">
                     <a name="value"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                         <span ><b>value</b></span>
                         <a href="#value"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -266,18 +271,9 @@
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/shared/utils/webhook/webhook.dto.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/shared/utils/webhook/webhook.dto.ts:23</a></div>
                         </td>
                     </tr>
 
@@ -303,30 +299,27 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiExtraModels, ApiProperty, getSchemaPath } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
-import {
-    IsArray,
-    IsEnum,
-    IsIn,
-    IsObject,
-    IsOptional,
-    IsString,
-    ValidateNested,
-} from &quot;class-validator&quot;;
+import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 
 /**
  * Configuration for API key authentication in webhooks.
  */
-export class ApiKeyConfig {
+const ApiKeyConfigSchema &#x3D; z
+    .object({
+        headerName: z.string(),
+        value: z.string(),
+    })
+    .strict();
+
+export class ApiKeyConfig extends createZodDto(ApiKeyConfigSchema) {
     /**
      * The name of the header where the API key will be sent.
      */
-    @IsString()
     headerName!: string;
     /**
      * The value of the API key to be sent in the header.
      */
-    @IsString()
     value!: string;
 }
 
@@ -341,84 +334,81 @@ export enum AuthConfig {
 /**
  * Configuration for webhook authentication.
  */
-export class WebHookAuthConfigHeader implements WebHookAuthConfig {
+const WebHookAuthConfigHeaderSchema &#x3D; z
+    .object({
+        type: z.literal(AuthConfig.API_KEY),
+        config: ApiKeyConfigSchema,
+    })
+    .strict();
+
+export class WebHookAuthConfigHeader extends createZodDto(
+    WebHookAuthConfigHeaderSchema,
+) {
     /**
      * The type of authentication used for the webhook.
      */
-    @IsIn([AuthConfig.API_KEY])
-    @IsString()
     type!: AuthConfig.API_KEY;
     /**
      * Configuration for API key authentication.
      * This is required if the type is &#x27;apiKey&#x27;.
      */
-    @Type(() &#x3D;&gt; ApiKeyConfig)
-    @IsObject()
     config!: ApiKeyConfig;
 }
 
-export class WebHookAuthConfigNone implements WebHookAuthConfig {
+const WebHookAuthConfigNoneSchema &#x3D; z
+    .object({
+        type: z.literal(AuthConfig.NONE),
+    })
+    .strict();
+
+export class WebHookAuthConfigNone extends createZodDto(
+    WebHookAuthConfigNoneSchema,
+) {
     /**
      * The type of authentication used for the webhook.
      */
-    @IsIn([AuthConfig.NONE])
-    @IsString()
     type!: AuthConfig.NONE;
 }
 
-export class WebHookAuthConfig {
-    @IsEnum(AuthConfig)
-    type!: AuthConfig;
-}
+export const WebHookAuthConfigSchema &#x3D; z.discriminatedUnion(&quot;type&quot;, [
+    WebHookAuthConfigNoneSchema,
+    WebHookAuthConfigHeaderSchema,
+]);
+
+export const WebhookConfigSchema &#x3D; z
+    .object({
+        url: z.string(),
+        auth: WebHookAuthConfigSchema,
+        includeRawTokensFor: z.array(z.string()).optional(),
+    })
+    .strict();
 
 /**
  * Configuration for webhooks used in various services.
  */
 @ApiExtraModels(WebHookAuthConfigNone, WebHookAuthConfigHeader)
-export class WebhookConfig {
+export class WebhookConfig extends createZodDto(WebhookConfigSchema) {
     /**
      * The URL to which the webhook will send notifications.
      */
-    @IsString()
     url!: string;
     /**
      * Optional authentication configuration for the webhook.
      * If not provided, no authentication will be used.
      */
-    @ValidateNested()
     @ApiProperty({
         oneOf: [
             { $ref: getSchemaPath(WebHookAuthConfigNone) },
             { $ref: getSchemaPath(WebHookAuthConfigHeader) },
         ],
     })
-    @Type(() &#x3D;&gt; WebHookAuthConfig, {
-        discriminator: {
-            property: &quot;type&quot;,
-            subTypes: [
-                {
-                    name: AuthConfig.NONE,
-                    value: WebHookAuthConfigNone,
-                },
-                {
-                    name: AuthConfig.API_KEY,
-                    value: WebHookAuthConfigHeader,
-                },
-            ],
-        },
-        keepDiscriminatorProperty: true,
-    })
-    @IsObject()
-    auth!: WebHookAuthConfigNone | WebHookAuthConfigHeader;
+    auth!: z.infer&lt;typeof WebHookAuthConfigSchema&gt;;
 
     /**
      * Optional array of credential configuration IDs.
      * If provided, the webhook payload will include the raw cryptographic
      * presentation (e.g., vp_token) for these specific credentials.
      */
-    @IsOptional()
-    @IsArray()
-    @IsString({ each: true })
     @ApiProperty({
         required: false,
         type: [String],

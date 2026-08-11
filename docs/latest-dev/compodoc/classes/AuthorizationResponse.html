@@ -153,27 +153,40 @@
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
 
+
             <p class="comment">
-                <h3>Description</h3>
+                <h3>Extends</h3>
             </p>
             <p class="comment">
-                <p>DTO for the authorization response containing either a VP token (success) or
-an OAuth 2.0 error response (when wallet cannot fulfill the request).</p>
-<p>Per OID4VP spec section 6.2, wallets can return error responses with:</p>
-<ul>
-<li>error (required)</li>
-<li>error_description (optional)</li>
-<li>error_uri (optional)</li>
-<li>state (required if present in the request)</li>
-</ul>
-<p>See <a href="https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-error-response">https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-error-response</a></p>
-
+                            <code><a href="../classes/AuthorizationResponse.html" target="_self" >createZodDto(
+    AuthorizationResponseSchema,
+)</a></code>
             </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
 
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../classes/AuthorizationResponse.html" target="_self" >createZodDto(
+    AuthorizationResponseSchema,
+)</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -188,43 +201,31 @@ an OAuth 2.0 error response (when wallet cannot fulfill the request).</p>
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#error" >error</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#error_description" >error_description</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#error_uri" >error_uri</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#response" >response</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#sendResponse" >sendResponse</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#state" >state</a>
                             </li>
@@ -253,8 +254,6 @@ an OAuth 2.0 error response (when wallet cannot fulfill the request).</p>
                 <td class="col-md-4">
                     <a name="error"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>error</b></span>
                         <a href="#error"><span class="icon ion-ios-link"></span></a>
@@ -267,18 +266,9 @@ an OAuth 2.0 error response (when wallet cannot fulfill the request).</p>
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />@ValidateIf(o &#x3D;&gt; )<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/verifier/oid4vp/dto/authorization-response.dto.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/verifier/oid4vp/dto/authorization-response.dto.ts:48</a></div>
                         </td>
                     </tr>
 
@@ -299,8 +289,6 @@ unsupported_response_type, invalid_scope, server_error, temporarily_unavailable.
                 <td class="col-md-4">
                     <a name="error_description"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>error_description</b></span>
                         <a href="#error_description"><span class="icon ion-ios-link"></span></a>
@@ -313,18 +301,9 @@ unsupported_response_type, invalid_scope, server_error, temporarily_unavailable.
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />@IsOptional()<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/verifier/oid4vp/dto/authorization-response.dto.ts:47</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/verifier/oid4vp/dto/authorization-response.dto.ts:53</a></div>
                         </td>
                     </tr>
 
@@ -343,8 +322,6 @@ unsupported_response_type, invalid_scope, server_error, temporarily_unavailable.
                 <td class="col-md-4">
                     <a name="error_uri"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>error_uri</b></span>
                         <a href="#error_uri"><span class="icon ion-ios-link"></span></a>
@@ -357,18 +334,9 @@ unsupported_response_type, invalid_scope, server_error, temporarily_unavailable.
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />@IsOptional()<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/verifier/oid4vp/dto/authorization-response.dto.ts:54</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/verifier/oid4vp/dto/authorization-response.dto.ts:58</a></div>
                         </td>
                     </tr>
 
@@ -387,8 +355,6 @@ unsupported_response_type, invalid_scope, server_error, temporarily_unavailable.
                 <td class="col-md-4">
                     <a name="response"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>response</b></span>
                         <a href="#response"><span class="icon ion-ios-link"></span></a>
@@ -401,18 +367,9 @@ unsupported_response_type, invalid_scope, server_error, temporarily_unavailable.
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />@ValidateIf(o &#x3D;&gt; )<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/verifier/oid4vp/dto/authorization-response.dto.ts:22</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/verifier/oid4vp/dto/authorization-response.dto.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -432,8 +389,6 @@ Required for success responses, absent for error responses.</p>
                 <td class="col-md-4">
                     <a name="sendResponse"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>sendResponse</b></span>
                         <a href="#sendResponse"><span class="icon ion-ios-link"></span></a>
@@ -446,18 +401,9 @@ Required for success responses, absent for error responses.</p>
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsBoolean()<br />@IsOptional()<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/verifier/oid4vp/dto/authorization-response.dto.ts:29</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/verifier/oid4vp/dto/authorization-response.dto.ts:39</a></div>
                         </td>
                     </tr>
 
@@ -476,8 +422,6 @@ Required for success responses, absent for error responses.</p>
                 <td class="col-md-4">
                     <a name="state"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>state</b></span>
                         <a href="#state"><span class="icon ion-ios-link"></span></a>
@@ -490,18 +434,9 @@ Required for success responses, absent for error responses.</p>
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />@IsOptional()<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/verifier/oid4vp/dto/authorization-response.dto.ts:61</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/verifier/oid4vp/dto/authorization-response.dto.ts:63</a></div>
                         </td>
                     </tr>
 
@@ -526,7 +461,8 @@ Required for success responses, absent for error responses.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { IsBoolean, IsOptional, IsString, ValidateIf } from &quot;class-validator&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 
 /**
  * DTO for the authorization response containing either a VP token (success) or
@@ -540,20 +476,29 @@ Required for success responses, absent for error responses.</p>
  *
  * @see https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-error-response
  */
-export class AuthorizationResponse {
+const AuthorizationResponseSchema &#x3D; z
+    .object({
+        response: z.string().optional(),
+        sendResponse: z.boolean().optional(),
+        error: z.string().optional(),
+        error_description: z.string().optional(),
+        error_uri: z.string().optional(),
+        state: z.string().optional(),
+    })
+    .strict();
+
+export class AuthorizationResponse extends createZodDto(
+    AuthorizationResponseSchema,
+) {
     /**
      * The response string containing the authorization details (JWE-encrypted VP token).
      * Required for success responses, absent for error responses.
      */
-    @IsString()
-    @ValidateIf((o) &#x3D;&gt; !o.error)
     response?: string;
 
     /**
      * When set to true, the authorization response will be sent to the client.
      */
-    @IsBoolean()
-    @IsOptional()
     sendResponse?: boolean;
 
     // OAuth 2.0 Authorization Error Response fields (per RFC 6749 section 4.1.2.1)
@@ -563,29 +508,21 @@ export class AuthorizationResponse {
      * Common values: invalid_request, unauthorized_client, access_denied,
      * unsupported_response_type, invalid_scope, server_error, temporarily_unavailable.
      */
-    @IsString()
-    @ValidateIf((o) &#x3D;&gt; !o.response)
     error?: string;
 
     /**
      * Human-readable description of the error.
      */
-    @IsString()
-    @IsOptional()
     error_description?: string;
 
     /**
      * URI with additional information about the error.
      */
-    @IsString()
-    @IsOptional()
     error_uri?: string;
 
     /**
      * State value from the authorization request (for correlation).
      */
-    @IsString()
-    @IsOptional()
     state?: string;
 }
 </code></pre>

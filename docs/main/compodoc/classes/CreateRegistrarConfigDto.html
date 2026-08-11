@@ -160,10 +160,9 @@ Excludes the tenant field as it will be set from the request context.</p>
                 <h3>Extends</h3>
             </p>
             <p class="comment">
-                            <code><a href="../entitys/RegistrarConfigEntity.html" target="_self" >OmitType(RegistrarConfigEntity, [
-    &quot;tenant&quot;,
-    &quot;tenantId&quot;,
-] as const)</a></code>
+                            <code><a href="../miscellaneous/variables.html#CreateRegistrarConfigSchema" target="_self" >createZodDto(
+    CreateRegistrarConfigSchema,
+)</a></code>
             </p>
 
 
@@ -181,10 +180,9 @@ Excludes the tenant field as it will be set from the request context.</p>
                     <h4>Depends on</h4>
                         <ul class="list-unstyled relationships-list">
                                 <li>
-                                            <code><a href="../entitys/RegistrarConfigEntity.html" target="_self" >OmitType(RegistrarConfigEntity, [
-    &quot;tenant&quot;,
-    &quot;tenantId&quot;,
-] as const)</a></code>
+                                            <code><a href="../miscellaneous/variables.html#CreateRegistrarConfigSchema" target="_self" >createZodDto(
+    CreateRegistrarConfigSchema,
+)</a></code>
                                 </li>
                         </ul>
                 </div>
@@ -195,17 +193,16 @@ Excludes the tenant field as it will be set from the request context.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { OmitType } from &quot;@nestjs/swagger&quot;;
-import { RegistrarConfigEntity } from &quot;../entities/registrar-config.entity&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createZodDto } from &quot;nestjs-zod&quot;;
+import { CreateRegistrarConfigSchema } from &quot;../schemas/registrar.schema&quot;;
 
 /**
  * DTO for creating or importing a registrar configuration.
  * Excludes the tenant field as it will be set from the request context.
  */
-export class CreateRegistrarConfigDto extends OmitType(RegistrarConfigEntity, [
-    &quot;tenant&quot;,
-    &quot;tenantId&quot;,
-] as const) {}
+export class CreateRegistrarConfigDto extends createZodDto(
+    CreateRegistrarConfigSchema,
+) {}
 </code></pre>
     </div>
 </div>

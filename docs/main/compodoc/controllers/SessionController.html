@@ -193,6 +193,8 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#deleteSession" >deleteSession</a>
                             </li>
                             <li>
@@ -220,6 +222,8 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#revokeAll" >revokeAll</a>
                             </li>
                         </ul>
@@ -246,6 +250,8 @@
                     <a name="deleteSession"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>deleteSession</b></span>
                         <a href="#deleteSession"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -262,14 +268,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Delete(&#x27;:id&#x27;)<br /></code>
+                    <code>@Delete(&#x27;:id&#x27;)<br />@ApiResponse({status: 204, description: &#x27;Session deleted&#x27;})<br />@HttpCode(204)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="66"
-                                    class="link-to-prism">src/session/session.controller.ts:66</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="69"
+                                    class="link-to-prism">src/session/session.controller.ts:69</a></div>
                         </td>
                     </tr>
 
@@ -360,8 +366,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="39"
-                                    class="link-to-prism">src/session/session.controller.ts:39</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">src/session/session.controller.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -451,8 +457,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="52"
-                                    class="link-to-prism">src/session/session.controller.ts:52</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="53"
+                                    class="link-to-prism">src/session/session.controller.ts:53</a></div>
                         </td>
                     </tr>
 
@@ -554,8 +560,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="81"
-                                    class="link-to-prism">src/session/session.controller.ts:81</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="84"
+                                    class="link-to-prism">src/session/session.controller.ts:84</a></div>
                         </td>
                     </tr>
 
@@ -631,6 +637,8 @@
                     <a name="revokeAll"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>revokeAll</b></span>
                         <a href="#revokeAll"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -647,14 +655,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post(&#x27;revoke&#x27;)<br /></code>
+                    <code>@Post(&#x27;revoke&#x27;)<br />@ApiResponse({status: 204, description: &#x27;All sessions revoked&#x27;})<br />@HttpCode(204)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="95"
-                                    class="link-to-prism">src/session/session.controller.ts:95</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="100"
+                                    class="link-to-prism">src/session/session.controller.ts:100</a></div>
                         </td>
                     </tr>
 
@@ -724,6 +732,7 @@
     Controller,
     Delete,
     Get,
+    HttpCode,
     Param,
     Post,
     Query,
@@ -784,6 +793,8 @@ export class SessionController {
      * @returns
      */
     @Delete(&quot;:id&quot;)
+    @ApiResponse({ status: 204, description: &quot;Session deleted&quot; })
+    @HttpCode(204)
     deleteSession(
         @Param(&quot;id&quot;) id: string,
         @Token() user: TokenPayload,
@@ -813,6 +824,8 @@ export class SessionController {
      * @returns
      */
     @Post(&quot;revoke&quot;)
+    @ApiResponse({ status: 204, description: &quot;All sessions revoked&quot; })
+    @HttpCode(204)
     revokeAll(@Body() value: StatusUpdateDto, @Token() user: TokenPayload) {
         return this.statusListService.updateStatus(value, user.entity!.id);
     }

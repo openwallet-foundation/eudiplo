@@ -200,10 +200,13 @@
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#deleteConfiguration" >deleteConfiguration</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#getConfiguration" >getConfiguration</a>
@@ -262,10 +265,12 @@
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#storePresentationConfig" >storePresentationConfig</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#updateConfiguration" >updateConfiguration</a>
@@ -317,8 +322,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="34"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:34</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="39"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:39</a></div>
                         </td>
                     </tr>
 
@@ -374,6 +379,8 @@
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>deleteConfiguration</b></span>
                         <a href="#deleteConfiguration"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -390,14 +397,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Secured([&#x27;undefined&#x27;])<br />@Delete(&#x27;:id&#x27;)<br /></code>
+                    <code>@Secured([&#x27;undefined&#x27;])<br />@Delete(&#x27;:id&#x27;)<br />@ApiResponse({status: 204, description: &#x27;Presentation configuration deleted&#x27;})<br />@HttpCode(204)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="208"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:208</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="225"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:225</a></div>
                         </td>
                     </tr>
 
@@ -477,6 +484,7 @@
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>getConfiguration</b></span>
                         <a href="#getConfiguration"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -493,14 +501,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Secured([&#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Get(&#x27;:id&#x27;)<br /></code>
+                    <code>@Secured([&#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Get(&#x27;:id&#x27;)<br />@ApiResponse({status: 200, type: PresentationConfig})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="170"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:170</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="181"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:181</a></div>
                         </td>
                     </tr>
 
@@ -586,14 +594,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Secured([&#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Get(&#x27;schema-metadata/catalog&#x27;)<br />@ApiOperation({summary: &#x27;List schema metadata from the registrar catalog&#x27;, description: &#x27;Returns all schema metadata entries from the configured registrar. Returns an empty array when no registrar is configured.&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Catalog entries from the registrar&#x27;})<br /></code>
+                    <code>@Secured([&#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Get(&#x27;schema-metadata/catalog&#x27;)<br />@ApiOperation({summary: &#x27;List schema metadata from the registrar catalog&#x27;, description: &#x27;Returns all schema metadata entries from the configured registrar. Returns an empty array when no registrar is configured.&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Catalog entries from the registrar&#x27;, type: undefined})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="136"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:136</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="145"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:145</a></div>
                         </td>
                     </tr>
 
@@ -669,14 +677,14 @@ Returns an empty array when the registrar is not enabled for this tenant.</p>
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Secured([&#x27;undefined&#x27;])<br />@Post(&#x27;:id/registration-cert/reissue&#x27;)<br />@ApiOperation({summary: &#x27;Reissue the registration certificate cache&#x27;, description: &#x27;Bypasses the embedded registration-certificate cache and re-resolves it from the configured registrar.&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Updated presentation configuration&#x27;})<br />@ApiResponse({status: 400, description: &#x27;Config has no registrationCert spec or registrar is not enabled&#x27;})<br /></code>
+                    <code>@Secured([&#x27;undefined&#x27;])<br />@Post(&#x27;:id/registration-cert/reissue&#x27;)<br />@ApiOperation({summary: &#x27;Reissue the registration certificate cache&#x27;, description: &#x27;Bypasses the embedded registration-certificate cache and re-resolves it from the configured registrar.&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Updated presentation configuration&#x27;, type: PresentationConfig})<br />@ApiResponse({status: 400, description: &#x27;Config has no registrationCert spec or registrar is not enabled&#x27;})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="241"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:241</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="259"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:259</a></div>
                         </td>
                     </tr>
 
@@ -766,14 +774,14 @@ configuration. Bypasses and refreshes the embedded cache.</p>
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Secured([&#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Post(&#x27;issuer-metadata/resolve&#x27;)<br />@ApiOperation({summary: &#x27;Resolve external issuer metadata&#x27;, description: &#x27;Fetches OpenID4VCI credential issuer metadata from an external issuer URL on the server side.&#x27;})<br />@ApiBody({type: ResolveIssuerMetadataDto})<br />@ApiResponse({status: 200, description: &#x27;Resolved credential issuer metadata&#x27;})<br />@ApiResponse({status: 400, description: &#x27;Invalid issuer URL or metadata could not be resolved&#x27;})<br /></code>
+                    <code>@Secured([&#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Post(&#x27;issuer-metadata/resolve&#x27;)<br />@ApiOperation({summary: &#x27;Resolve external issuer metadata&#x27;, description: &#x27;Fetches OpenID4VCI credential issuer metadata from an external issuer URL on the server side.&#x27;})<br />@ApiBody({type: ResolveIssuerMetadataDto})<br />@ApiResponse({status: 200, description: &#x27;Resolved credential issuer metadata&#x27;, type: CredentialIssuerMetadataDto})<br />@ApiResponse({status: 400, description: &#x27;Invalid issuer URL or metadata could not be resolved&#x27;})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="60"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:60</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="66"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:66</a></div>
                         </td>
                     </tr>
 
@@ -851,14 +859,14 @@ This avoids browser CORS limitations when browsing issuer metadata.</p>
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Secured([&#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Post(&#x27;schema-metadata/resolve&#x27;)<br />@ApiOperation({summary: &#x27;Resolve external schema metadata&#x27;, description: &#x27;Fetches schema metadata from an external URL, extracts signedJwt, validates the JWT payload shape and returns normalized fields for presentation config import.&#x27;})<br />@ApiBody({type: ResolveSchemaMetadataDto})<br />@ApiResponse({status: 200, description: &#x27;Resolved schema metadata import payload&#x27;})<br />@ApiResponse({status: 400, description: &#x27;Invalid URL, invalid response, or invalid schema metadata JWT&#x27;})<br /></code>
+                    <code>@Secured([&#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Post(&#x27;schema-metadata/resolve&#x27;)<br />@ApiOperation({summary: &#x27;Resolve external schema metadata&#x27;, description: &#x27;Fetches schema metadata from an external URL, extracts signedJwt, validates the JWT payload shape and returns normalized fields for presentation config import.&#x27;})<br />@ApiBody({type: ResolveSchemaMetadataDto})<br />@ApiResponse({status: 200, description: &#x27;Resolved schema metadata import payload&#x27;, type: ResolvedSchemaMetadataResponseDto})<br />@ApiResponse({status: 400, description: &#x27;Invalid URL, invalid response, or invalid schema metadata JWT&#x27;})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="88"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:88</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="95"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:95</a></div>
                         </td>
                     </tr>
 
@@ -937,14 +945,14 @@ directly from registrar URLs.</p>
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Secured([&#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Post(&#x27;schema-metadata/resolve-jwt&#x27;)<br />@ApiOperation({summary: &#x27;Resolve schema metadata JWT&#x27;, description: &#x27;Validates and resolves a signed schema metadata JWT directly, building DCQL and resolving schema references. Useful for resolving catalog entries without requiring external URL accessibility.&#x27;})<br />@ApiBody({type: ResolveSchemaMetadataJwtDto})<br />@ApiResponse({status: 200, description: &#x27;Resolved schema metadata import payload&#x27;})<br />@ApiResponse({status: 400, description: &#x27;Invalid JWT or invalid schema metadata&#x27;})<br /></code>
+                    <code>@Secured([&#x27;undefined&#x27;, &#x27;undefined&#x27;])<br />@Post(&#x27;schema-metadata/resolve-jwt&#x27;)<br />@ApiOperation({summary: &#x27;Resolve schema metadata JWT&#x27;, description: &#x27;Validates and resolves a signed schema metadata JWT directly, building DCQL and resolving schema references. Useful for resolving catalog entries without requiring external URL accessibility.&#x27;})<br />@ApiBody({type: ResolveSchemaMetadataJwtDto})<br />@ApiResponse({status: 200, description: &#x27;Resolved schema metadata import payload&#x27;, type: ResolvedSchemaMetadataResponseDto})<br />@ApiResponse({status: 400, description: &#x27;Invalid JWT or invalid schema metadata&#x27;})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="115"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:115</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="123"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:123</a></div>
                         </td>
                     </tr>
 
@@ -1002,6 +1010,7 @@ without requiring a URL fetch. Useful for resolving catalog entries.</p>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>storePresentationConfig</b></span>
                         <a href="#storePresentationConfig"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -1018,14 +1027,14 @@ without requiring a URL fetch. Useful for resolving catalog entries.</p>
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Secured([&#x27;undefined&#x27;])<br />@Post()<br /></code>
+                    <code>@Secured([&#x27;undefined&#x27;])<br />@Post()<br />@ApiResponse({status: 201, type: PresentationConfig})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="149"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:149</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="159"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:159</a></div>
                         </td>
                     </tr>
 
@@ -1105,6 +1114,7 @@ without requiring a URL fetch. Useful for resolving catalog entries.</p>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>updateConfiguration</b></span>
                         <a href="#updateConfiguration"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -1121,14 +1131,14 @@ without requiring a URL fetch. Useful for resolving catalog entries.</p>
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Secured([&#x27;undefined&#x27;])<br />@Patch(&#x27;:id&#x27;)<br /></code>
+                    <code>@Secured([&#x27;undefined&#x27;])<br />@Patch(&#x27;:id&#x27;)<br />@ApiResponse({status: 200, type: PresentationConfig})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="186"
-                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:186</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="198"
+                                    class="link-to-prism">src/verifier/presentations/presentations.controller.ts:198</a></div>
                         </td>
                     </tr>
 
@@ -1222,6 +1232,7 @@ without requiring a URL fetch. Useful for resolving catalog entries.</p>
     Controller,
     Delete,
     Get,
+    HttpCode,
     Param,
     Patch,
     Post,
@@ -1232,11 +1243,15 @@ import { Request } from &quot;express&quot;;
 import { Role } from &quot;../../auth/roles/role.enum&quot;;
 import { Secured } from &quot;../../auth/secure.decorator&quot;;
 import { Token, TokenPayload } from &quot;../../auth/token.decorator&quot;;
+import { CredentialIssuerMetadataDto } from &quot;../../issuer/issuance/oid4vci/well-known/dto/credential-issuer-metadata.dto&quot;;
+import { SchemaMetadataResponseDto } from &quot;../../registrar/schema-metadata/dto/schema-metadata.dto&quot;;
 import { PresentationConfigCreateDto } from &quot;./dto/presentation-config-create.dto&quot;;
+import { ResolvedSchemaMetadataResponseDto } from &quot;./dto/resolved-schema-metadata-response.dto&quot;;
 import { PresentationConfigUpdateDto } from &quot;./dto/presentation-config-update.dto&quot;;
 import { ResolveIssuerMetadataDto } from &quot;./dto/resolve-issuer-metadata.dto&quot;;
 import { ResolveSchemaMetadataDto } from &quot;./dto/resolve-schema-metadata.dto&quot;;
 import { ResolveSchemaMetadataJwtDto } from &quot;./dto/resolve-schema-metadata-jwt.dto&quot;;
+import { PresentationConfig } from &quot;./entities/presentation-config.entity&quot;;
 import { PresentationsService } from &quot;./presentations.service&quot;;
 
 @ApiTags(&quot;Verifier&quot;)
@@ -1271,6 +1286,7 @@ export class PresentationManagementController {
     @ApiResponse({
         status: 200,
         description: &quot;Resolved credential issuer metadata&quot;,
+        type: CredentialIssuerMetadataDto,
     })
     @ApiResponse({
         status: 400,
@@ -1298,6 +1314,7 @@ export class PresentationManagementController {
     @ApiResponse({
         status: 200,
         description: &quot;Resolved schema metadata import payload&quot;,
+        type: ResolvedSchemaMetadataResponseDto,
     })
     @ApiResponse({
         status: 400,
@@ -1326,6 +1343,7 @@ export class PresentationManagementController {
     @ApiResponse({
         status: 200,
         description: &quot;Resolved schema metadata import payload&quot;,
+        type: ResolvedSchemaMetadataResponseDto,
     })
     @ApiResponse({
         status: 400,
@@ -1351,6 +1369,7 @@ export class PresentationManagementController {
     @ApiResponse({
         status: 200,
         description: &quot;Catalog entries from the registrar&quot;,
+        type: [SchemaMetadataResponseDto],
     })
     listSchemaMetadataCatalog(@Token() user: TokenPayload) {
         return this.presentationsService.listSchemaMetadataCatalog(
@@ -1365,6 +1384,7 @@ export class PresentationManagementController {
      */
     @Secured([Role.Presentations])
     @Post()
+    @ApiResponse({ status: 201, type: PresentationConfig })
     storePresentationConfig(
         @Body() config: PresentationConfigCreateDto,
         @Token() user: TokenPayload,
@@ -1386,6 +1406,7 @@ export class PresentationManagementController {
      */
     @Secured([Role.Presentations, Role.PresentationRequest])
     @Get(&quot;:id&quot;)
+    @ApiResponse({ status: 200, type: PresentationConfig })
     getConfiguration(@Param(&quot;id&quot;) id: string, @Token() user: TokenPayload) {
         return this.presentationsService.getPresentationConfig(
             id,
@@ -1402,6 +1423,7 @@ export class PresentationManagementController {
      */
     @Secured([Role.Presentations])
     @Patch(&quot;:id&quot;)
+    @ApiResponse({ status: 200, type: PresentationConfig })
     updateConfiguration(
         @Param(&quot;id&quot;) id: string,
         @Body() config: PresentationConfigUpdateDto,
@@ -1424,6 +1446,11 @@ export class PresentationManagementController {
      */
     @Secured([Role.Presentations])
     @Delete(&quot;:id&quot;)
+    @ApiResponse({
+        status: 204,
+        description: &quot;Presentation configuration deleted&quot;,
+    })
+    @HttpCode(204)
     deleteConfiguration(
         @Param(&quot;id&quot;) id: string,
         @Token() user: TokenPayload,
@@ -1451,6 +1478,7 @@ export class PresentationManagementController {
     @ApiResponse({
         status: 200,
         description: &quot;Updated presentation configuration&quot;,
+        type: PresentationConfig,
     })
     @ApiResponse({
         status: 400,

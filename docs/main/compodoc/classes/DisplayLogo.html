@@ -154,10 +154,35 @@
     <div class="tab-pane fade active in" id="info">
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                        <code>createZodDto(DisplayLogoSchema)</code>
+            </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                        <code>createZodDto(DisplayLogoSchema)</code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -172,14 +197,11 @@
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#alt_text" >alt_text</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                 <a href="#uri" >uri</a>
                             </li>
                         </ul>
@@ -207,8 +229,6 @@
                 <td class="col-md-4">
                     <a name="alt_text"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>alt_text</b></span>
                         <a href="#alt_text"><span class="icon ion-ios-link"></span></a>
@@ -221,18 +241,9 @@
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />@IsOptional()<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/issuer/configuration/issuance/dto/display.dto.ts:10</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/issuer/configuration/issuance/dto/display.dto.ts:14</a></div>
                         </td>
                     </tr>
 
@@ -245,7 +256,6 @@
                 <td class="col-md-4">
                     <a name="uri"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                         <span ><b>uri</b></span>
                         <a href="#uri"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -257,18 +267,9 @@
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">src/issuer/configuration/issuance/dto/display.dto.ts:6</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/issuer/configuration/issuance/dto/display.dto.ts:12</a></div>
                         </td>
                     </tr>
 
@@ -278,24 +279,6 @@
 </section>
 
 
-            <section data-compodoc="block-indexables">
-    <h3 id="inputs">Indexable</h3>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <code>[key: string]:    <code>unknown</code>
-</code>
-                    </td>
-                </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/issuer/configuration/issuance/dto/display.dto.ts:10</a></div>
-                            </td>
-                        </tr>
-            </tbody>
-        </table>
-</section>
 
 
 
@@ -305,34 +288,36 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Type } from &quot;class-transformer&quot;;
-import { IsOptional, IsString, ValidateNested } from &quot;class-validator&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 
-class DisplayLogo {
-    @IsString()
+const DisplayLogoSchema &#x3D; z
+    .object({
+        uri: z.string(),
+        alt_text: z.string().optional(),
+    })
+    .catchall(z.unknown());
+
+class DisplayLogo extends createZodDto(DisplayLogoSchema) {
     uri!: string;
 
-    @IsString()
-    @IsOptional()
     alt_text?: string;
-
-    [key: string]: unknown;
 }
-export class DisplayInfo {
-    @IsString()
-    @IsOptional()
+
+const DisplayInfoSchema &#x3D; z
+    .object({
+        name: z.string().optional(),
+        locale: z.string().optional(),
+        logo: DisplayLogoSchema.optional(),
+    })
+    .catchall(z.unknown());
+
+export class DisplayInfo extends createZodDto(DisplayInfoSchema) {
     name?: string;
 
-    @IsString()
-    @IsOptional()
     locale?: string;
 
-    @ValidateNested()
-    @IsOptional()
-    @Type(() &#x3D;&gt; DisplayLogo)
     logo?: DisplayLogo;
-
-    [key: string]: unknown;
 }
 </code></pre>
     </div>

@@ -173,17 +173,11 @@
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#allowedIssuanceConfigs" >allowedIssuanceConfigs</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
@@ -199,7 +193,6 @@
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#description" >description</a>
                             </li>
@@ -213,18 +206,19 @@
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#secret" >secret</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#tenant" >tenant</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#tenantId" >tenantId</a>
@@ -255,9 +249,6 @@
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>allowedIssuanceConfigs</b></span>
                         <a href="#allowedIssuanceConfigs"><span class="icon ion-ios-link"></span></a>
@@ -275,13 +266,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({type: undefined, description: &#x27;List of issuance config IDs this client can use. If empty/null, all configs are allowed.&#x27;, example: undefined})<br />@IsOptional()<br />@IsArray()<br />@IsString({each: true})<br />@Column({type: &#x27;json&#x27;, nullable: true})<br />
+                            @ApiPropertyOptional({type: undefined, description: &#x27;List of issuance config IDs this client can use. If empty/null, all configs are allowed.&#x27;, example: undefined})<br />@Column({type: &#x27;json&#x27;, nullable: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">src/auth/client/entities/client.entity.ts:80</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/auth/client/entities/client.entity.ts:81</a></div>
                         </td>
                     </tr>
 
@@ -304,9 +295,6 @@ Only relevant if the client has the &#39;issuance:offer&#39; role.</p>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>allowedPresentationConfigs</b></span>
                         <a href="#allowedPresentationConfigs"><span class="icon ion-ios-link"></span></a>
@@ -324,13 +312,13 @@ Only relevant if the client has the &#39;issuance:offer&#39; role.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({type: undefined, description: &#x27;List of presentation config IDs this client can use. If empty/null, all configs are allowed.&#x27;, example: undefined})<br />@IsOptional()<br />@IsArray()<br />@IsString({each: true})<br />@Column({type: &#x27;json&#x27;, nullable: true})<br />
+                            @ApiPropertyOptional({type: undefined, description: &#x27;List of presentation config IDs this client can use. If empty/null, all configs are allowed.&#x27;, example: undefined})<br />@Column({type: &#x27;json&#x27;, nullable: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/auth/client/entities/client.entity.ts:63</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/auth/client/entities/client.entity.ts:67</a></div>
                         </td>
                     </tr>
 
@@ -369,13 +357,13 @@ Only relevant if the client has the &#39;presentation:request&#39; role.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @IsString()<br />@PrimaryColumn(&#x27;varchar&#x27;)<br />
+                            @ApiProperty({description: &#x27;Unique client identifier&#x27;})<br />@PrimaryColumn(&#x27;varchar&#x27;)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/auth/client/entities/client.entity.ts:17</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/auth/client/entities/client.entity.ts:20</a></div>
                         </td>
                     </tr>
 
@@ -396,7 +384,6 @@ Only relevant if the client has the &#39;presentation:request&#39; role.</p>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>description</b></span>
                         <a href="#description"><span class="icon ion-ios-link"></span></a>
@@ -414,13 +401,13 @@ Only relevant if the client has the &#39;presentation:request&#39; role.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @IsString()<br />@IsOptional()<br />@Column(&#x27;varchar&#x27;, {nullable: true})<br />
+                            @ApiPropertyOptional({description: &#x27;Client description&#x27;})<br />@Column(&#x27;varchar&#x27;, {nullable: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/auth/client/entities/client.entity.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/auth/client/entities/client.entity.ts:43</a></div>
                         </td>
                     </tr>
 
@@ -457,13 +444,13 @@ Only relevant if the client has the &#39;presentation:request&#39; role.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @IsEnum(Role, {each: true})<br />@Column({type: &#x27;json&#x27;})<br />
+                            @ApiProperty({description: &#x27;Roles assigned to the client&#x27;, type: undefined})<br />@Column({type: &#x27;json&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/auth/client/entities/client.entity.ts:46</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/auth/client/entities/client.entity.ts:53</a></div>
                         </td>
                     </tr>
 
@@ -484,7 +471,6 @@ Only relevant if the client has the &#39;presentation:request&#39; role.</p>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>secret</b></span>
                         <a href="#secret"><span class="icon ion-ios-link"></span></a>
@@ -502,13 +488,13 @@ Only relevant if the client has the &#39;presentation:request&#39; role.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @IsString()<br />@IsOptional()<br />@Column(&#x27;varchar&#x27;, {nullable: true})<br />
+                            @ApiHideProperty()<br />@Column(&#x27;varchar&#x27;, {nullable: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/auth/client/entities/client.entity.ts:25</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/auth/client/entities/client.entity.ts:27</a></div>
                         </td>
                     </tr>
 
@@ -528,6 +514,7 @@ Only relevant if the client has the &#39;presentation:request&#39; role.</p>
                     <a name="tenant"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>tenant</b></span>
                         <a href="#tenant"><span class="icon ion-ios-link"></span></a>
@@ -545,13 +532,13 @@ Only relevant if the client has the &#39;presentation:request&#39; role.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ManyToOne(undefined, tenant &#x3D;&gt; tenant.clients, {onDelete: &#x27;CASCADE&#x27;})<br />
+                            @ApiHideProperty()<br />@ManyToOne(undefined, tenant &#x3D;&gt; tenant.clients, {onDelete: &#x27;CASCADE&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/auth/client/entities/client.entity.ts:90</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">src/auth/client/entities/client.entity.ts:92</a></div>
                         </td>
                     </tr>
 
@@ -571,6 +558,7 @@ Only relevant if the client has the &#39;presentation:request&#39; role.</p>
                     <a name="tenantId"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>tenantId</b></span>
                         <a href="#tenantId"><span class="icon ion-ios-link"></span></a>
@@ -588,13 +576,13 @@ Only relevant if the client has the &#39;presentation:request&#39; role.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @Column(&#x27;varchar&#x27;, {nullable: true})<br />
+                            @ApiPropertyOptional({description: &#x27;Tenant identifier the client belongs to&#x27;})<br />@Column(&#x27;varchar&#x27;, {nullable: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/auth/client/entities/client.entity.ts:31</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/auth/client/entities/client.entity.ts:36</a></div>
                         </td>
                     </tr>
 
@@ -612,8 +600,11 @@ Only relevant if the client has the &#39;presentation:request&#39; role.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { IsArray, IsEnum, IsOptional, IsString } from &quot;class-validator&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+    ApiHideProperty,
+    ApiProperty,
+    ApiPropertyOptional,
+} from &quot;@nestjs/swagger&quot;;
 import { Column, Entity, ManyToOne, PrimaryColumn } from &quot;typeorm&quot;;
 import { Role } from &quot;../../roles/role.enum&quot;;
 import { TenantEntity } from &quot;../../tenant/entitites/tenant.entity&quot;;
@@ -626,36 +617,40 @@ export class ClientEntity {
     /**
      * The unique identifier for the client.
      */
-    @IsString()
+    @ApiProperty({ description: &quot;Unique client identifier&quot; })
     @PrimaryColumn(&quot;varchar&quot;)
     clientId!: string;
 
     /**
      * The secret key for the client.
      */
-    @IsString()
-    @IsOptional()
+    @ApiHideProperty()
     @Column(&quot;varchar&quot;, { nullable: true })
     secret?: string;
 
     /**
      * The unique identifier for the tenant that the client belongs to. Only null for accounts that manage tenants, that do not belong to a client
      */
+    @ApiPropertyOptional({
+        description: &quot;Tenant identifier the client belongs to&quot;,
+    })
     @Column(&quot;varchar&quot;, { nullable: true })
     tenantId?: string;
 
     /**
      * The description of the client.
      */
-    @IsString()
-    @IsOptional()
+    @ApiPropertyOptional({ description: &quot;Client description&quot; })
     @Column(&quot;varchar&quot;, { nullable: true })
     description?: string;
 
     /**
      * The roles assigned to the client.
      */
-    @IsEnum(Role, { each: true })
+    @ApiProperty({
+        description: &quot;Roles assigned to the client&quot;,
+        type: [String],
+    })
     @Column({ type: &quot;json&quot; })
     roles!: Role[];
 
@@ -670,9 +665,6 @@ export class ClientEntity {
             &quot;List of presentation config IDs this client can use. If empty/null, all configs are allowed.&quot;,
         example: [&quot;age-verification&quot;, &quot;kyc-basic&quot;],
     })
-    @IsOptional()
-    @IsArray()
-    @IsString({ each: true })
     @Column({ type: &quot;json&quot;, nullable: true })
     allowedPresentationConfigs?: string[] | null;
 
@@ -687,15 +679,13 @@ export class ClientEntity {
             &quot;List of issuance config IDs this client can use. If empty/null, all configs are allowed.&quot;,
         example: [&quot;pid&quot;, &quot;mdl&quot;],
     })
-    @IsOptional()
-    @IsArray()
-    @IsString({ each: true })
     @Column({ type: &quot;json&quot;, nullable: true })
     allowedIssuanceConfigs?: string[] | null;
 
     /**
      * The tenant that the client belongs to.
      */
+    @ApiHideProperty()
     @ManyToOne(
         () &#x3D;&gt; TenantEntity,
         (tenant) &#x3D;&gt; tenant.clients,

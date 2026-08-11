@@ -204,6 +204,7 @@
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#delete" >delete</a>
                             </li>
                             <li>
@@ -272,14 +273,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post()<br />@ApiOperation({summary: &#x27;Create a new webhook endpoint&#x27;})<br />@ApiResponse({status: 201, description: &#x27;Webhook endpoint created&#x27;})<br />@ApiBody({type: CreateWebhookEndpointDto})<br /></code>
+                    <code>@Post()<br />@ApiOperation({summary: &#x27;Create a new webhook endpoint&#x27;})<br />@ApiResponse({status: 201, description: &#x27;Webhook endpoint created&#x27;, type: WebhookEndpointEntity})<br />@ApiBody({type: CreateWebhookEndpointDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="54"
-                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:54</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="63"
+                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:63</a></div>
                         </td>
                     </tr>
 
@@ -359,6 +360,7 @@
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>delete</b></span>
                         <a href="#delete"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -375,14 +377,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Delete(&#x27;:id&#x27;)<br />@ApiOperation({summary: &#x27;Delete a webhook endpoint&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Webhook endpoint deleted&#x27;})<br />@ApiResponse({status: 404, description: &#x27;Webhook endpoint not found&#x27;})<br /></code>
+                    <code>@Delete(&#x27;:id&#x27;)<br />@ApiOperation({summary: &#x27;Delete a webhook endpoint&#x27;})<br />@ApiResponse({status: 204, description: &#x27;Webhook endpoint deleted&#x27;})<br />@ApiResponse({status: 404, description: &#x27;Webhook endpoint not found&#x27;})<br />@HttpCode(204)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="80"
-                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:80</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="94"
+                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:94</a></div>
                         </td>
                     </tr>
 
@@ -482,8 +484,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="38"
-                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:38</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="39"
+                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:39</a></div>
                         </td>
                     </tr>
 
@@ -557,14 +559,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get(&#x27;:id&#x27;)<br />@ApiOperation({summary: &#x27;Get a webhook endpoint by ID&#x27;})<br />@ApiResponse({status: 200, description: &#x27;The webhook endpoint&#x27;})<br />@ApiResponse({status: 404, description: &#x27;Webhook endpoint not found&#x27;})<br /></code>
+                    <code>@Get(&#x27;:id&#x27;)<br />@ApiOperation({summary: &#x27;Get a webhook endpoint by ID&#x27;})<br />@ApiResponse({status: 200, description: &#x27;The webhook endpoint&#x27;, type: WebhookEndpointEntity})<br />@ApiResponse({status: 404, description: &#x27;Webhook endpoint not found&#x27;})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="46"
-                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:46</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="51"
+                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -649,14 +651,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Patch(&#x27;:id&#x27;)<br />@ApiOperation({summary: &#x27;Update a webhook endpoint&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Webhook endpoint updated&#x27;})<br />@ApiResponse({status: 404, description: &#x27;Webhook endpoint not found&#x27;})<br />@ApiBody({type: UpdateWebhookEndpointDto})<br /></code>
+                    <code>@Patch(&#x27;:id&#x27;)<br />@ApiOperation({summary: &#x27;Update a webhook endpoint&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Webhook endpoint updated&#x27;, type: WebhookEndpointEntity})<br />@ApiResponse({status: 404, description: &#x27;Webhook endpoint not found&#x27;})<br />@ApiBody({type: UpdateWebhookEndpointDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="67"
-                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:67</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="80"
+                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:80</a></div>
                         </td>
                     </tr>
 
@@ -752,6 +754,7 @@
     Patch,
     Post,
     Req,
+    HttpCode,
 } from &quot;@nestjs/common&quot;;
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from &quot;@nestjs/swagger&quot;;
 import { Request } from &quot;express&quot;;
@@ -786,7 +789,11 @@ export class WebhookEndpointController {
 
     @Get(&quot;:id&quot;)
     @ApiOperation({ summary: &quot;Get a webhook endpoint by ID&quot; })
-    @ApiResponse({ status: 200, description: &quot;The webhook endpoint&quot; })
+    @ApiResponse({
+        status: 200,
+        description: &quot;The webhook endpoint&quot;,
+        type: WebhookEndpointEntity,
+    })
     @ApiResponse({ status: 404, description: &quot;Webhook endpoint not found&quot; })
     getById(@Param(&quot;id&quot;) id: string, @Token() user: TokenPayload) {
         return this.service.getById(user.entity!.id, id);
@@ -794,7 +801,11 @@ export class WebhookEndpointController {
 
     @Post()
     @ApiOperation({ summary: &quot;Create a new webhook endpoint&quot; })
-    @ApiResponse({ status: 201, description: &quot;Webhook endpoint created&quot; })
+    @ApiResponse({
+        status: 201,
+        description: &quot;Webhook endpoint created&quot;,
+        type: WebhookEndpointEntity,
+    })
     @ApiBody({ type: CreateWebhookEndpointDto })
     create(
         @Body() dto: CreateWebhookEndpointDto,
@@ -806,7 +817,11 @@ export class WebhookEndpointController {
 
     @Patch(&quot;:id&quot;)
     @ApiOperation({ summary: &quot;Update a webhook endpoint&quot; })
-    @ApiResponse({ status: 200, description: &quot;Webhook endpoint updated&quot; })
+    @ApiResponse({
+        status: 200,
+        description: &quot;Webhook endpoint updated&quot;,
+        type: WebhookEndpointEntity,
+    })
     @ApiResponse({ status: 404, description: &quot;Webhook endpoint not found&quot; })
     @ApiBody({ type: UpdateWebhookEndpointDto })
     update(
@@ -820,8 +835,9 @@ export class WebhookEndpointController {
 
     @Delete(&quot;:id&quot;)
     @ApiOperation({ summary: &quot;Delete a webhook endpoint&quot; })
-    @ApiResponse({ status: 200, description: &quot;Webhook endpoint deleted&quot; })
+    @ApiResponse({ status: 204, description: &quot;Webhook endpoint deleted&quot; })
     @ApiResponse({ status: 404, description: &quot;Webhook endpoint not found&quot; })
+    @HttpCode(204)
     delete(
         @Param(&quot;id&quot;) id: string,
         @Token() user: TokenPayload,

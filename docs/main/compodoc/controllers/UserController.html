@@ -205,6 +205,7 @@
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#deleteUser" >deleteUser</a>
                             </li>
                             <li>
@@ -282,8 +283,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="52"
-                                    class="link-to-prism">src/auth/user/user.controller.ts:52</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="53"
+                                    class="link-to-prism">src/auth/user/user.controller.ts:53</a></div>
                         </td>
                     </tr>
 
@@ -351,6 +352,7 @@
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>deleteUser</b></span>
                         <a href="#deleteUser"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -367,14 +369,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@ApiOperation({summary: &#x27;Delete a managed user&#x27;})<br />@ApiResponse({status: 200})<br />@Secured([&#x27;undefined&#x27;])<br />@Delete(&#x27;:id&#x27;)<br /></code>
+                    <code>@ApiOperation({summary: &#x27;Delete a managed user&#x27;})<br />@ApiResponse({status: 204, description: &#x27;User deleted&#x27;})<br />@Secured([&#x27;undefined&#x27;])<br />@Delete(&#x27;:id&#x27;)<br />@HttpCode(204)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="96"
-                                    class="link-to-prism">src/auth/user/user.controller.ts:96</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="98"
+                                    class="link-to-prism">src/auth/user/user.controller.ts:98</a></div>
                         </td>
                     </tr>
 
@@ -464,8 +466,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="42"
-                                    class="link-to-prism">src/auth/user/user.controller.ts:42</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="43"
+                                    class="link-to-prism">src/auth/user/user.controller.ts:43</a></div>
                         </td>
                     </tr>
 
@@ -555,8 +557,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="33"
-                                    class="link-to-prism">src/auth/user/user.controller.ts:33</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="34"
+                                    class="link-to-prism">src/auth/user/user.controller.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -635,8 +637,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="74"
-                                    class="link-to-prism">src/auth/user/user.controller.ts:74</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="75"
+                                    class="link-to-prism">src/auth/user/user.controller.ts:75</a></div>
                         </td>
                     </tr>
 
@@ -717,6 +719,7 @@
     Delete,
     ForbiddenException,
     Get,
+    HttpCode,
     Inject,
     Param,
     Patch,
@@ -803,9 +806,10 @@ export class UserController {
     }
 
     @ApiOperation({ summary: &quot;Delete a managed user&quot; })
-    @ApiResponse({ status: 200 })
+    @ApiResponse({ status: 204, description: &quot;User deleted&quot; })
     @Secured([Role.Users])
     @Delete(&quot;:id&quot;)
+    @HttpCode(204)
     deleteUser(@Param(&quot;id&quot;) id: string, @Token() user: TokenPayload) {
         const tenantId &#x3D; requireTenantContext(user);
         return this.users.removeUser(tenantId, id);

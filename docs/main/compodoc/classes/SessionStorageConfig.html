@@ -180,16 +180,11 @@
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#cleanupMode" >cleanupMode</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#ttlSeconds" >ttlSeconds</a>
@@ -220,8 +215,6 @@
                     <a name="cleanupMode"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>cleanupMode</b></span>
                         <a href="#cleanupMode"><span class="icon ion-ios-link"></span></a>
@@ -239,13 +232,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Cleanup mode: &#x27;full&#x27; deletes everything, &#x27;anonymize&#x27; keeps metadata but removes PII.&#x27;, enum: SessionCleanupMode, default: undefined})<br />@IsOptional()<br />@IsEnum(SessionCleanupMode)<br />
+                            @ApiPropertyOptional({description: &#x27;Cleanup mode: &#x27;full&#x27; deletes everything, &#x27;anonymize&#x27; keeps metadata but removes PII.&#x27;, enum: SessionCleanupMode, default: undefined})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/auth/tenant/entitites/session-storage-config.ts:52</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/auth/tenant/entitites/session-storage-config.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -269,9 +262,6 @@
                     <a name="ttlSeconds"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>ttlSeconds</b></span>
                         <a href="#ttlSeconds"><span class="icon ion-ios-link"></span></a>
@@ -289,13 +279,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Time-to-live for sessions in seconds. If not set, uses global SESSION_TTL.&#x27;, example: 86400, minimum: 60})<br />@IsOptional()<br />@IsInt()<br />@Min(60)<br />
+                            @ApiPropertyOptional({description: &#x27;Time-to-live for sessions in seconds. If not set, uses global SESSION_TTL.&#x27;, example: 86400, minimum: 60})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/auth/tenant/entitites/session-storage-config.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/auth/tenant/entitites/session-storage-config.ts:33</a></div>
                         </td>
                     </tr>
 
@@ -323,7 +313,6 @@ If not set, uses the global SESSION_TTL environment variable (default: 86400 = 2
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { IsEnum, IsInt, IsOptional, Min } from &quot;class-validator&quot;;
 
 /**
  * Cleanup mode when sessions expire.
@@ -355,9 +344,6 @@ export class SessionStorageConfig {
         example: 86400,
         minimum: 60,
     })
-    @IsOptional()
-    @IsInt()
-    @Min(60)
     ttlSeconds?: number;
 
     /**
@@ -371,8 +357,6 @@ export class SessionStorageConfig {
         enum: SessionCleanupMode,
         default: SessionCleanupMode.Full,
     })
-    @IsOptional()
-    @IsEnum(SessionCleanupMode)
     cleanupMode?: SessionCleanupMode;
 }
 </code></pre>

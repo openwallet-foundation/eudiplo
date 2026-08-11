@@ -163,10 +163,35 @@ Key material and certificates are managed internally.</p>
 
             </p>
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../miscellaneous/variables.html#KeyChainUpdateSchema" target="_self" >createZodDto(KeyChainUpdateSchema)</a></code>
+            </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../miscellaneous/variables.html#KeyChainUpdateSchema" target="_self" >createZodDto(KeyChainUpdateSchema)</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -182,24 +207,17 @@ Key material and certificates are managed internally.</p>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#activeCertificate" >activeCertificate</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#description" >description</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#rotationPolicy" >rotationPolicy</a>
@@ -230,8 +248,6 @@ Key material and certificates are managed internally.</p>
                     <a name="activeCertificate"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>activeCertificate</b></span>
                         <a href="#activeCertificate"><span class="icon ion-ios-link"></span></a>
@@ -249,13 +265,13 @@ Key material and certificates are managed internally.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Active certificate chain in PEM format. Used for external certificate updates.&#x27;})<br />@IsString()<br />@IsOptional()<br />
+                            @ApiPropertyOptional({description: &#x27;Active certificate chain in PEM format. Used for external certificate updates.&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">src/crypto/key/dto/key-chain-update.dto.ts:76</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/crypto/key/dto/key-chain-update.dto.ts:56</a></div>
                         </td>
                     </tr>
 
@@ -268,8 +284,6 @@ Key material and certificates are managed internally.</p>
                 <td class="col-md-4">
                     <a name="description"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>description</b></span>
@@ -288,13 +302,13 @@ Key material and certificates are managed internally.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Human-readable description for the key chain.&#x27;})<br />@IsString()<br />@IsOptional()<br />
+                            @ApiPropertyOptional({description: &#x27;Human-readable description for the key chain.&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/crypto/key/dto/key-chain-update.dto.ts:59</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/crypto/key/dto/key-chain-update.dto.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -307,9 +321,6 @@ Key material and certificates are managed internally.</p>
                 <td class="col-md-4">
                     <a name="rotationPolicy"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>rotationPolicy</b></span>
@@ -328,13 +339,13 @@ Key material and certificates are managed internally.</p>
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Rotation policy configuration.&#x27;, type: RotationPolicyUpdateDto})<br />@ValidateNested()<br />@Type(undefined)<br />@IsOptional()<br />
+                            @ApiPropertyOptional({description: &#x27;Rotation policy configuration.&#x27;, type: RotationPolicyUpdateDto})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/crypto/key/dto/key-chain-update.dto.ts:68</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/crypto/key/dto/key-chain-update.dto.ts:50</a></div>
                         </td>
                     </tr>
 
@@ -354,26 +365,21 @@ Key material and certificates are managed internally.</p>
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
+import { createZodDto } from &quot;nestjs-zod&quot;;
 import {
-    IsBoolean,
-    IsNumber,
-    IsOptional,
-    IsString,
-    Max,
-    Min,
-    ValidateNested,
-} from &quot;class-validator&quot;;
+    KeyChainUpdateSchema,
+    RotationPolicyUpdateSchema,
+} from &quot;../schemas/key-chain.schema&quot;;
 
 /**
  * DTO for updating rotation policy.
  */
-export class RotationPolicyUpdateDto {
+export class RotationPolicyUpdateDto extends createZodDto(
+    RotationPolicyUpdateSchema,
+) {
     @ApiPropertyOptional({
         description: &quot;Whether automatic key rotation is enabled.&quot;,
     })
-    @IsBoolean()
-    @IsOptional()
     enabled?: boolean;
 
     @ApiPropertyOptional({
@@ -381,10 +387,6 @@ export class RotationPolicyUpdateDto {
         minimum: 1,
         maximum: 3650,
     })
-    @IsNumber()
-    @Min(1)
-    @Max(3650)
-    @IsOptional()
     intervalDays?: number;
 
     @ApiPropertyOptional({
@@ -392,10 +394,6 @@ export class RotationPolicyUpdateDto {
         minimum: 1,
         maximum: 3650,
     })
-    @IsNumber()
-    @Min(1)
-    @Max(3650)
-    @IsOptional()
     certValidityDays?: number;
 }
 
@@ -405,29 +403,22 @@ export class RotationPolicyUpdateDto {
  * Only metadata and rotation policy can be updated.
  * Key material and certificates are managed internally.
  */
-export class KeyChainUpdateDto {
+export class KeyChainUpdateDto extends createZodDto(KeyChainUpdateSchema) {
     @ApiPropertyOptional({
         description: &quot;Human-readable description for the key chain.&quot;,
     })
-    @IsString()
-    @IsOptional()
     description?: string;
 
     @ApiPropertyOptional({
         description: &quot;Rotation policy configuration.&quot;,
         type: RotationPolicyUpdateDto,
     })
-    @ValidateNested()
-    @Type(() &#x3D;&gt; RotationPolicyUpdateDto)
-    @IsOptional()
     rotationPolicy?: RotationPolicyUpdateDto;
 
     @ApiPropertyOptional({
         description:
             &quot;Active certificate chain in PEM format. Used for external certificate updates.&quot;,
     })
-    @IsString()
-    @IsOptional()
     activeCertificate?: string;
 }
 </code></pre>

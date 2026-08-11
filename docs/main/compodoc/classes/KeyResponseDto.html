@@ -172,6 +172,7 @@
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier"></span>
                                 <a href="#keys" >keys</a>
                             </li>
                         </ul>
@@ -199,6 +200,7 @@
                 <td class="col-md-4">
                     <a name="keys"></a>
                     <span class="name">
+                            <span class="modifier"></span>
                         <span ><b>keys</b></span>
                         <a href="#keys"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -210,9 +212,18 @@
 
                     </td>
                 </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ApiProperty({description: &#x27;JSON Web Keys&#x27;, type: undefined})<br />
+                        </code>
+                    </td>
+                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="4" class="link-to-prism">src/crypto/key/dto/key-response.dto.ts:4</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">src/crypto/key/dto/key-response.dto.ts:6</a></div>
                         </td>
                     </tr>
 
@@ -232,8 +243,10 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { EC_Public } from &quot;../../../issuer/issuance/oid4vci/well-known/dto/jwks-response.dto&quot;;
+import { ApiProperty } from &quot;@nestjs/swagger&quot;;
 
 export class KeyResponseDto {
+    @ApiProperty({ description: &quot;JSON Web Keys&quot;, type: [Object] })
     keys!: EC_Public[];
 }
 </code></pre>

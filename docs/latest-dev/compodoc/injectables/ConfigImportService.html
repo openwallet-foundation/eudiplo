@@ -256,7 +256,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:11</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:26</a></div>
                             </td>
                         </tr>
 
@@ -312,15 +312,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>extractErrorMessages(error: <a href="https://angular.dev/api/forms/signals/ValidationError" target="_blank">ValidationError</a>)</code>
+<code>extractErrorMessages(error: unknown)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="347"
-                                    class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:347</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="379"
+                                    class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:379</a></div>
                         </td>
                     </tr>
 
@@ -345,7 +345,7 @@
                                         <tr>
                                                 <td>error</td>
                                             <td>
-                                                            <code><a href="https://angular.dev/api/forms/signals/ValidationError" target="_blank" >ValidationError</a></code>
+                                                        <code>unknown</code>
                                             </td>
 
                                             <td>
@@ -381,23 +381,21 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>formatNestedValidationError(error: <a href="https://angular.dev/api/forms/signals/ValidationError" target="_blank">ValidationError</a>)</code>
+<code>formatNestedValidationError(error: unknown)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="368"
-                                    class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:368</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="392"
+                                    class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:392</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Format validation errors with nested messages</p>
-</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -414,7 +412,7 @@
                                         <tr>
                                                 <td>error</td>
                                             <td>
-                                                            <code><a href="https://angular.dev/api/forms/signals/ValidationError" target="_blank" >ValidationError</a></code>
+                                                        <code>unknown</code>
                                             </td>
 
                                             <td>
@@ -464,8 +462,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="122"
-                                    class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:122</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="141"
+                                    class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:141</a></div>
                         </td>
                     </tr>
 
@@ -543,8 +541,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="19"
-                                    class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:19</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="34"
+                                    class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -635,8 +633,8 @@ This is the preferred method when using the orchestrator&#39;s tenant-by-tenant 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="240"
-                                    class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:240</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="263"
+                                    class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:263</a></div>
                         </td>
                     </tr>
 
@@ -709,15 +707,15 @@ ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;de
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>validateConfig&lt;T&gt;(file: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, payload: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, cls: ClassConstructor<T>, tenant: { name: string }, resourceType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, formatError?: (error?: <a href="https://angular.dev/api/forms/signals/ValidationError" target="_blank">ValidationError</a>) => void)</code>
+                    <code>validateConfig&lt;T&gt;(filePath: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, file: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, payload: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, schemaOrDto: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, tenant: { name: string }, resourceType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, formatError?: (error?: unknown) => void)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="307"
-                                    class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:307</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="330"
+                                    class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:330</a></div>
                         </td>
                     </tr>
 
@@ -732,7 +730,7 @@ ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;de
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Validate configuration against a class</p>
+                        <div class="io-description"><p>Validate configuration against a Zod schema or parse-capable DTO.</p>
 </div>
 
                             <div class="io-description">
@@ -747,6 +745,18 @@ ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;de
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr>
+                                                <td>filePath</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
                                         <tr>
                                                 <td>file</td>
                                             <td>
@@ -772,9 +782,9 @@ ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;de
 
                                         </tr>
                                         <tr>
-                                                <td>cls</td>
+                                                <td>schemaOrDto</td>
                                             <td>
-                                                        <code>ClassConstructor&lt;T&gt;</code>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                             </td>
 
                                             <td>
@@ -866,7 +876,7 @@ ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;de
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:11</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/shared/utils/config-import/config-import.service.ts:26</a></div>
                         </td>
                     </tr>
 
@@ -883,9 +893,24 @@ ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;de
 import { join } from &quot;node:path&quot;;
 import { Injectable, Logger } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
-import { ClassConstructor, plainToClass } from &quot;class-transformer&quot;;
-import { ValidationError, validate } from &quot;class-validator&quot;;
 import { ImportOptions, TenantImportOptions } from &quot;./import-options&quot;;
+
+function resolveValidationSchema(schemaOrDto: unknown): any | undefined {
+    if (!schemaOrDto) {
+        return undefined;
+    }
+
+    const candidate &#x3D; schemaOrDto as any;
+    if (typeof candidate.safeParse &#x3D;&#x3D;&#x3D; &quot;function&quot;) {
+        return candidate;
+    }
+
+    if (typeof candidate.schema?.safeParse &#x3D;&#x3D;&#x3D; &quot;function&quot;) {
+        return candidate.schema;
+    }
+
+    return undefined;
+}
 
 @Injectable()
 export class ConfigImportService {
@@ -917,6 +942,8 @@ export class ConfigImportService {
         const files &#x3D; readdirSync(path);
 
         for (const file of files) {
+            const filePath &#x3D; join(path, file);
+
             // Filter by extension if provided
             if (
                 options.fileExtension &amp;&amp;
@@ -926,8 +953,6 @@ export class ConfigImportService {
             }
 
             try {
-                const filePath &#x3D; join(path, file);
-
                 // Load data using custom loader or default JSON loader
                 let data: T;
                 if (options.loadData) {
@@ -940,12 +965,15 @@ export class ConfigImportService {
                 // Replace placeholders like ${ENV_VAR} or ${ENV_VAR:default}
                 data &#x3D; this.replacePlaceholders(data);
 
-                // Validate if validation class is provided
-                if (options.validationClass) {
+                // Validate if validation schema is provided
+                const schemaOrDto &#x3D;
+                    options.validationSchema ?? options.validationClass;
+                if (schemaOrDto) {
                     const validationResult &#x3D; await this.validateConfig(
+                        filePath,
                         file,
                         data,
-                        options.validationClass,
+                        schemaOrDto,
                         { name: tenantId },
                         options.resourceType,
                         options.formatValidationError,
@@ -955,7 +983,7 @@ export class ConfigImportService {
                         continue; // Skip invalid config
                     }
 
-                    data &#x3D; validationResult.data;
+                    data &#x3D; validationResult.data as T;
                 }
 
                 // Check if exists
@@ -979,8 +1007,9 @@ export class ConfigImportService {
                 await options.processItem(tenantId, data, file);
                 counter++;
             } catch (error: any) {
+                const reason &#x3D; error?.message || &quot;Unknown error&quot;;
                 this.logger.error(
-                    &#x60;[${tenantId}] Failed to import ${options.resourceType} ${file}: ${error.message}&#x60;,
+                    &#x60;[${tenantId}] Failed to import ${options.resourceType} ${file} (${filePath}): ${reason}&#x60;,
                 );
                 if (strictConfig &#x3D;&#x3D;&#x3D; &quot;abort&quot;) {
                     // Abort the entire import process in strict abort mode
@@ -1029,6 +1058,8 @@ export class ConfigImportService {
             const files &#x3D; readdirSync(path);
 
             for (const file of files) {
+                const filePath &#x3D; join(path, file);
+
                 // Filter by extension if provided
                 if (
                     options.fileExtension &amp;&amp;
@@ -1038,8 +1069,6 @@ export class ConfigImportService {
                 }
 
                 try {
-                    const filePath &#x3D; join(path, file);
-
                     // Load data using custom loader or default JSON loader
                     let data: T;
                     if (options.loadData) {
@@ -1057,11 +1086,14 @@ export class ConfigImportService {
                     data &#x3D; this.replacePlaceholders(data);
 
                     // Validate if validation class is provided
-                    if (options.validationClass) {
+                    const schemaOrDto &#x3D;
+                        options.validationSchema ?? options.validationClass;
+                    if (schemaOrDto) {
                         const validationResult &#x3D; await this.validateConfig(
+                            filePath,
                             file,
                             data,
-                            options.validationClass,
+                            schemaOrDto,
                             tenant,
                             options.resourceType,
                             options.formatValidationError,
@@ -1071,7 +1103,7 @@ export class ConfigImportService {
                             continue; // Skip invalid config
                         }
 
-                        data &#x3D; validationResult.data;
+                        data &#x3D; validationResult.data as T;
                     }
 
                     // Check if exists
@@ -1095,8 +1127,9 @@ export class ConfigImportService {
                     await options.processItem(tenant.name, data, file);
                     counter++;
                 } catch (error: any) {
+                    const reason &#x3D; error?.message || &quot;Unknown error&quot;;
                     this.logger.error(
-                        &#x60;[${tenant.name}] Failed to import ${options.resourceType} ${file}: ${error.message}&#x60;,
+                        &#x60;[${tenant.name}] Failed to import ${options.resourceType} ${file} (${filePath}): ${reason}&#x60;,
                     );
                     if (strictConfig &#x3D;&#x3D;&#x3D; &quot;abort&quot;) {
                         // Abort the entire import process in strict abort mode
@@ -1183,74 +1216,72 @@ export class ConfigImportService {
     }
 
     /**
-     * Validate configuration against a class
+     * Validate configuration against a Zod schema or parse-capable DTO.
      */
     async validateConfig&lt;T extends object&gt;(
+        filePath: string,
         file: string,
         payload: any,
-        cls: ClassConstructor&lt;T&gt;,
+        schemaOrDto: any,
         tenant: { name: string },
         resourceType: string,
-        formatError?: (error: ValidationError) &#x3D;&gt; any,
+        formatError?: (error: unknown) &#x3D;&gt; any,
     ): Promise&lt;{ isValid: boolean; data: T }&gt; {
-        const config &#x3D; plainToClass(cls, payload);
-
-        const validationErrors &#x3D; await validate(config as object, {
-            whitelist: true,
-            forbidUnknownValues: false,
-            forbidNonWhitelisted: false,
-            stopAtFirstError: false,
-        });
-
-        if (validationErrors.length &gt; 0) {
-            const formatter &#x3D;
-                formatError ||
-                ((error: ValidationError) &#x3D;&gt; ({
-                    property: error.property,
-                    constraints: error.constraints,
-                    value: error.value,
-                }));
-
-            this.logger.error(
-                { errors: validationErrors.map(formatter) },
-                &#x60;[${tenant.name}] Validation failed for ${resourceType} ${file}&#x60;,
+        const schema &#x3D; resolveValidationSchema(schemaOrDto);
+        if (!schema) {
+            throw new Error(
+                &#x60;Validation requested for ${resourceType} ${file} (${filePath}) but no Zod schema was provided&#x60;,
             );
-
-            return { isValid: false, data: config };
         }
 
-        return { isValid: true, data: config };
+        const parsed &#x3D; schema.safeParse(payload) as
+            | { success: true; data: T }
+            | { success: false; error: any };
+
+        if (!parsed.success) {
+            const formatter &#x3D;
+                formatError ||
+                ((error: unknown) &#x3D;&gt; {
+                    if (
+                        error &amp;&amp;
+                        typeof error &#x3D;&#x3D;&#x3D; &quot;object&quot; &amp;&amp;
+                        &quot;path&quot; in error &amp;&amp;
+                        &quot;message&quot; in error
+                    ) {
+                        return error;
+                    }
+                    return { message: &quot;Invalid config&quot; };
+                });
+
+            this.logger.error(
+                { errors: parsed.error.issues.map(formatter) },
+                &#x60;[${tenant.name}] Validation failed for ${resourceType} ${file} (${filePath})&#x60;,
+            );
+
+            return { isValid: false, data: payload };
+        }
+
+        return { isValid: true, data: parsed.data as T };
     }
 
     /**
      * Extract nested error messages from validation errors
      */
-    extractErrorMessages(error: ValidationError): string[] {
-        const messages: string[] &#x3D; [];
-
-        if (error.constraints) {
-            messages.push(
-                ...Object.values(error.constraints as Record&lt;string, string&gt;),
-            );
+    extractErrorMessages(error: unknown): string[] {
+        if (
+            error &amp;&amp;
+            typeof error &#x3D;&#x3D;&#x3D; &quot;object&quot; &amp;&amp;
+            &quot;message&quot; in error &amp;&amp;
+            typeof (error as { message?: unknown }).message &#x3D;&#x3D;&#x3D; &quot;string&quot;
+        ) {
+            return [(error as { message: string }).message];
         }
 
-        if (error.children &amp;&amp; error.children.length &gt; 0) {
-            for (const child of error.children) {
-                messages.push(...this.extractErrorMessages(child));
-            }
-        }
-
-        return messages;
+        return [&quot;Invalid config&quot;];
     }
 
-    /**
-     * Format validation errors with nested messages
-     */
-    formatNestedValidationError(error: ValidationError): string {
-        const messages &#x3D; this.extractErrorMessages(error);
-        return messages.length &gt; 0
-            ? &#x60;${error.property}: ${messages.join(&quot;, &quot;)}&#x60;
-            : error.property;
+    formatNestedValidationError(error: unknown): string {
+        return this.extractErrorMessages(error).join(&quot;, &quot;);
     }
 }
 </code></pre>

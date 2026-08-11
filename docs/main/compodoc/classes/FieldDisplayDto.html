@@ -154,10 +154,35 @@
     <div class="tab-pane fade active in" id="info">
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../interfaces/FieldDisplay.html" target="_self" >createZodDto(FieldDisplaySchema)</a></code>
+            </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../interfaces/FieldDisplay.html" target="_self" >createZodDto(FieldDisplaySchema)</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -173,20 +198,15 @@
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#description" >description</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#locale" >locale</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#name" >name</a>
                             </li>
@@ -216,8 +236,6 @@
                     <a name="description"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>description</b></span>
                         <a href="#description"><span class="icon ion-ios-link"></span></a>
@@ -235,13 +253,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Optional display description&#x27;, example: &#x27;Primary first name&#x27;})<br />@IsOptional()<br />@IsString()<br />
+                            @ApiPropertyOptional({description: &#x27;Optional display description&#x27;, example: &#x27;Primary first name&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:31</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -254,8 +272,6 @@
                 <td class="col-md-4">
                     <a name="locale"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>locale</b></span>
                         <a href="#locale"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -267,18 +283,9 @@
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @ApiProperty({description: &#x27;Locale code based on BCP47 (RFC 5646)&#x27;, example: &#x27;en-US&#x27;})<br />@IsString()<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:19</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -291,7 +298,6 @@
                 <td class="col-md-4">
                     <a name="name"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                         <span ><b>name</b></span>
                         <a href="#name"><span class="icon ion-ios-link"></span></a>
@@ -309,13 +315,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Display name&#x27;, example: &#x27;Given Name&#x27;})<br />@IsString()<br />
+                            @ApiProperty({description: &#x27;Display name&#x27;, example: &#x27;Given Name&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:23</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/issuer/configuration/credentials/dto/claim-field-definition.dto.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -335,39 +341,56 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
-import {
-    IsArray,
-    IsBoolean,
-    IsIn,
-    IsObject,
-    IsOptional,
-    IsString,
-    ValidateNested,
-} from &quot;class-validator&quot;;
+import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 
-export class FieldDisplayDto {
-    @ApiProperty({
-        description: &quot;Locale code based on BCP47 (RFC 5646)&quot;,
-        example: &quot;en-US&quot;,
+const FieldDisplaySchema &#x3D; z
+    .object({
+        locale: z.string(),
+        name: z.string(),
+        description: z.string().optional(),
     })
-    @IsString()
+    .strict();
+
+const ClaimFieldDefinitionSchema: z.ZodType&lt;any&gt; &#x3D; z.lazy(() &#x3D;&gt;
+    z
+        .object({
+            path: z.array(z.union([z.string(), z.number(), z.null()])),
+            type: z.enum([
+                &quot;string&quot;,
+                &quot;number&quot;,
+                &quot;integer&quot;,
+                &quot;boolean&quot;,
+                &quot;object&quot;,
+                &quot;array&quot;,
+            ]),
+            defaultValue: z.unknown().optional(),
+            mandatory: z.boolean().optional(),
+            disclosable: z.boolean().optional(),
+            namespace: z.string().optional(),
+            display: z.array(FieldDisplaySchema).optional(),
+            constraints: z.record(z.string(), z.unknown()).optional(),
+            children: z.array(ClaimFieldDefinitionSchema).optional(),
+        })
+        .strict(),
+);
+
+export class FieldDisplayDto extends createZodDto(FieldDisplaySchema) {
     locale!: string;
 
     @ApiProperty({ description: &quot;Display name&quot;, example: &quot;Given Name&quot; })
-    @IsString()
     name!: string;
 
     @ApiPropertyOptional({
         description: &quot;Optional display description&quot;,
         example: &quot;Primary first name&quot;,
     })
-    @IsOptional()
-    @IsString()
     description?: string;
 }
 
-export class ClaimFieldDefinitionDto {
+export class ClaimFieldDefinitionDto extends createZodDto(
+    ClaimFieldDefinitionSchema,
+) {
     @ApiProperty({
         description:
             &quot;Path to claim value. For nested child fields this can be relative to the parent path.&quot;,
@@ -377,15 +400,12 @@ export class ClaimFieldDefinitionDto {
             oneOf: [{ type: &quot;string&quot; }, { type: &quot;number&quot; }, { type: &quot;null&quot; }],
         },
     })
-    @IsArray()
     path!: Array&lt;string | number | null&gt;;
 
     @ApiProperty({
         description: &quot;Claim value type&quot;,
         enum: [&quot;string&quot;, &quot;number&quot;, &quot;integer&quot;, &quot;boolean&quot;, &quot;object&quot;, &quot;array&quot;],
     })
-    @IsString()
-    @IsIn([&quot;string&quot;, &quot;number&quot;, &quot;integer&quot;, &quot;boolean&quot;, &quot;object&quot;, &quot;array&quot;])
     type!: &quot;string&quot; | &quot;number&quot; | &quot;integer&quot; | &quot;boolean&quot; | &quot;object&quot; | &quot;array&quot;;
 
     @ApiPropertyOptional({
@@ -399,19 +419,14 @@ export class ClaimFieldDefinitionDto {
             { type: &quot;null&quot; },
         ],
     })
-    @IsOptional()
     defaultValue?: unknown;
 
     @ApiPropertyOptional({ description: &quot;Whether claim is mandatory&quot; })
-    @IsOptional()
-    @IsBoolean()
     mandatory?: boolean;
 
     @ApiPropertyOptional({
         description: &quot;Whether claim is disclosable in SD-JWT&quot;,
     })
-    @IsOptional()
-    @IsBoolean()
     disclosable?: boolean;
 
     @ApiPropertyOptional({
@@ -419,23 +434,15 @@ export class ClaimFieldDefinitionDto {
             &quot;Namespace for mDOC field. Optional when the namespace is already present as the first path segment.&quot;,
         example: &quot;eu.europa.ec.eudi.pid.1&quot;,
     })
-    @IsOptional()
-    @IsString()
     namespace?: string;
 
     @ApiPropertyOptional({ type: () &#x3D;&gt; [FieldDisplayDto] })
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; FieldDisplayDto)
     display?: FieldDisplayDto[];
 
     @ApiPropertyOptional({
         description: &quot;Additional JSON schema constraints for this field&quot;,
         type: Object,
     })
-    @IsOptional()
-    @IsObject()
     constraints?: Record&lt;string, unknown&gt;;
 
     @ApiPropertyOptional({
@@ -443,10 +450,6 @@ export class ClaimFieldDefinitionDto {
             &quot;Optional nested child fields. Child paths may be specified relative to the parent field path.&quot;,
         type: () &#x3D;&gt; [ClaimFieldDefinitionDto],
     })
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; ClaimFieldDefinitionDto)
     children?: ClaimFieldDefinitionDto[];
 }
 </code></pre>

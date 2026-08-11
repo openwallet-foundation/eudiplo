@@ -243,14 +243,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@ApiResponse({description: &#x27;JSON response&#x27;, status: 201, type: OfferResponse, content: undefined})<br />@ApiProduces(&#x27;application/json&#x27;, &#x27;image/png&#x27;)<br />@ApiBody({type: PresentationRequest, examples: undefined})<br />@Post()<br /></code>
+                    <code>@ApiResponse({description: &#x27;JSON response&#x27;, status: 201, content: undefined})<br />@ApiProduces(&#x27;application/json&#x27;, &#x27;image/png&#x27;)<br />@ApiBody({type: PresentationRequest, examples: undefined})<br />@Post()<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="68"
-                                    class="link-to-prism">src/verifier/verifier-offer/verifier-offer.controller.ts:68</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="67"
+                                    class="link-to-prism">src/verifier/verifier-offer/verifier-offer.controller.ts:67</a></div>
                         </td>
                     </tr>
 
@@ -352,7 +352,6 @@ import { Request, Response } from &quot;express&quot;;
 import { Role } from &quot;../../auth/roles/role.enum&quot;;
 import { Secured } from &quot;../../auth/secure.decorator&quot;;
 import { Token, TokenPayload } from &quot;../../auth/token.decorator&quot;;
-import { OfferResponse } from &quot;../../issuer/issuance/oid4vci/dto/offer-request.dto&quot;;
 import { Iso18013Service } from &quot;../iso18013/iso18013.service&quot;;
 import {
     PresentationRequest,
@@ -377,10 +376,10 @@ export class VerifierOfferController {
     @ApiResponse({
         description: &quot;JSON response&quot;,
         status: 201,
-        //TODO: do not use type, otherwise the response can not deal with both JSON and PNG.
-        type: OfferResponse,
         content: {
-            &quot;application/json&quot;: { schema: { type: &quot;object&quot; } },
+            &quot;application/json&quot;: {
+                schema: { $ref: &quot;#/components/schemas/OfferResponse&quot; },
+            },
             &quot;image/png&quot;: { schema: { type: &quot;string&quot;, format: &quot;binary&quot; } },
         },
     })

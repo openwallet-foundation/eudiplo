@@ -154,10 +154,39 @@
     <div class="tab-pane fade active in" id="info">
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../miscellaneous/variables.html#ResolveSchemaMetadataSchema" target="_self" >createZodDto(
+    ResolveSchemaMetadataSchema,
+)</a></code>
+            </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../miscellaneous/variables.html#ResolveSchemaMetadataSchema" target="_self" >createZodDto(
+    ResolveSchemaMetadataSchema,
+)</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -172,8 +201,6 @@
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#schemaMetadataUrl" >schemaMetadataUrl</a>
                             </li>
@@ -203,8 +230,6 @@
                     <a name="schemaMetadataUrl"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>schemaMetadataUrl</b></span>
                         <a href="#schemaMetadataUrl"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -221,13 +246,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Schema metadata URL to resolve server-side. The response must contain a signedJwt field.&#x27;, example: &#x27;https://registrar.example.com/schema-metadata/5c0d7dbb-ef2e-448b-b84f-b8103575947b&#x27;})<br />@IsString()<br />@IsUrl({require_tld: false})<br />
+                            @ApiProperty({description: &#x27;Schema metadata URL to resolve server-side. The response must contain a signedJwt field.&#x27;, example: &#x27;https://registrar.example.com/schema-metadata/5c0d7dbb-ef2e-448b-b84f-b8103575947b&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/verifier/presentations/dto/resolve-schema-metadata.dto.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/verifier/presentations/dto/resolve-schema-metadata.dto.ts:20</a></div>
                         </td>
                     </tr>
 
@@ -247,17 +272,24 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty } from &quot;@nestjs/swagger&quot;;
-import { IsString, IsUrl } from &quot;class-validator&quot;;
+import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 
-export class ResolveSchemaMetadataDto {
+const ResolveSchemaMetadataSchema &#x3D; z
+    .object({
+        schemaMetadataUrl: z.url(),
+    })
+    .strict();
+
+export class ResolveSchemaMetadataDto extends createZodDto(
+    ResolveSchemaMetadataSchema,
+) {
     @ApiProperty({
         description:
             &quot;Schema metadata URL to resolve server-side. The response must contain a signedJwt field.&quot;,
         example:
             &quot;https://registrar.example.com/schema-metadata/5c0d7dbb-ef2e-448b-b84f-b8103575947b&quot;,
     })
-    @IsString()
-    @IsUrl({ require_tld: false })
     schemaMetadataUrl!: string;
 }
 </code></pre>

@@ -162,10 +162,39 @@ Used for OID4VP flow where a credential presentation request is sent</p>
 
             </p>
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../entitys/IssuanceConfig.html" target="_self" >createZodDto(
+    PresentationDuringIssuanceConfigSchema,
+)</a></code>
+            </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../entitys/IssuanceConfig.html" target="_self" >createZodDto(
+    PresentationDuringIssuanceConfigSchema,
+)</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -180,7 +209,6 @@ Used for OID4VP flow where a credential presentation request is sent</p>
                         <ul class="index-list">
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                 <a href="#type" >type</a>
                             </li>
                         </ul>
@@ -208,7 +236,6 @@ Used for OID4VP flow where a credential presentation request is sent</p>
                 <td class="col-md-4">
                     <a name="type"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                         <span ><b>type</b></span>
                         <a href="#type"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -220,18 +247,9 @@ Used for OID4VP flow where a credential presentation request is sent</p>
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @IsString()<br />
-                        </code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/issuer/configuration/issuance/dto/authentication-config.dto.ts:41</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="70" class="link-to-prism">src/issuer/configuration/issuance/dto/authentication-config.dto.ts:70</a></div>
                         </td>
                     </tr>
 
@@ -256,34 +274,62 @@ Used for OID4VP flow where a credential presentation request is sent</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Type } from &quot;class-transformer&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 import {
-    IsIn,
-    IsObject,
-    IsOptional,
-    IsString,
-    ValidateNested,
-} from &quot;class-validator&quot;;
-import { WebhookConfig } from &quot;../../../../shared/utils/webhook/webhook.dto&quot;;
+    WebhookConfig,
+    WebhookConfigSchema,
+} from &quot;../../../../shared/utils/webhook/webhook.dto&quot;;
+
+const AuthenticationUrlConfigSchema &#x3D; z
+    .object({
+        url: z.string(),
+        webhook: WebhookConfigSchema.optional(),
+    })
+    .strict();
+
+const PresentationDuringIssuanceConfigSchema &#x3D; z
+    .object({
+        type: z.string(),
+    })
+    .strict();
+
+const AuthenticationMethodPresentationSchema &#x3D; z
+    .object({
+        method: z.literal(&quot;presentationDuringIssuance&quot;),
+        config: PresentationDuringIssuanceConfigSchema,
+    })
+    .strict();
+
+const AuthenticationMethodAuthSchema &#x3D; z
+    .object({
+        method: z.literal(&quot;auth&quot;),
+        config: AuthenticationUrlConfigSchema,
+    })
+    .strict();
+
+const AuthenticationMethodNoneSchema &#x3D; z
+    .object({
+        method: z.literal(&quot;none&quot;),
+    })
+    .strict();
 
 /**
  * Configuration for authentication method &#x27;auth&#x27;
  * Used for OID4VCI authorized code flow where the user will be redirected for authentication
  */
-export class AuthenticationUrlConfig {
+export class AuthenticationUrlConfig extends createZodDto(
+    AuthenticationUrlConfigSchema,
+) {
     /**
      * The URL used in the OID4VCI authorized code flow.
      * This URL is where users will be redirected for authentication.
      */
-    @IsString()
     url!: string;
 
     /**
      * Optional webhook configuration for authentication callbacks
      */
-    @IsOptional()
-    @ValidateNested()
-    @Type(() &#x3D;&gt; WebhookConfig)
     webhook?: WebhookConfig;
 }
 
@@ -291,39 +337,35 @@ export class AuthenticationUrlConfig {
  * Configuration for authentication method &#x27;presentationDuringIssuance&#x27;
  * Used for OID4VP flow where a credential presentation request is sent
  */
-export class PresentationDuringIssuanceConfig {
+export class PresentationDuringIssuanceConfig extends createZodDto(
+    PresentationDuringIssuanceConfigSchema,
+) {
     /**
      * Link to the presentation configuration that is relevant for the issuance process
      */
-    @IsString()
     type!: string;
 }
 
 export class AuthenticationMethodPresentation
+    extends createZodDto(AuthenticationMethodPresentationSchema)
     implements AuthenticationMethodInterface
 {
-    @IsString()
-    @IsIn([&quot;presentationDuringIssuance&quot;])
     method!: &quot;presentationDuringIssuance&quot;;
-    @IsObject()
-    @ValidateNested()
-    @Type(() &#x3D;&gt; PresentationDuringIssuanceConfig)
     config!: PresentationDuringIssuanceConfig;
 }
 
-export class AuthenticationMethodAuth implements AuthenticationMethodInterface {
-    @IsString()
-    @IsIn([&quot;auth&quot;])
+export class AuthenticationMethodAuth
+    extends createZodDto(AuthenticationMethodAuthSchema)
+    implements AuthenticationMethodInterface
+{
     method!: &quot;auth&quot;;
-    @IsObject()
-    @ValidateNested()
-    @Type(() &#x3D;&gt; AuthenticationUrlConfig)
     config!: AuthenticationUrlConfig;
 }
 
-export class AuthenticationMethodNone implements AuthenticationMethodInterface {
-    @IsString()
-    @IsIn([&quot;none&quot;])
+export class AuthenticationMethodNone
+    extends createZodDto(AuthenticationMethodNoneSchema)
+    implements AuthenticationMethodInterface
+{
     method!: &quot;none&quot;;
 }
 

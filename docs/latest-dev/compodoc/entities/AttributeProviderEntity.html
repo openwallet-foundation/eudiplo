@@ -176,13 +176,10 @@ referenced by multiple credential configurations via <code>attributeProviderId</
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#auth" >auth</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
@@ -190,7 +187,6 @@ referenced by multiple credential configurations via <code>attributeProviderId</
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#id" >id</a>
                             </li>
@@ -207,6 +203,7 @@ referenced by multiple credential configurations via <code>attributeProviderId</
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#tenantId" >tenantId</a>
                             </li>
@@ -242,8 +239,6 @@ referenced by multiple credential configurations via <code>attributeProviderId</
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>auth</b></span>
                         <a href="#auth"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -260,13 +255,13 @@ referenced by multiple credential configurations via <code>attributeProviderId</
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ValidateNested()<br />@ApiProperty({oneOf: undefined})<br />@Type(undefined, {discriminator: undefined, keepDiscriminatorProperty: true})<br />@Column(&#x27;json&#x27;)<br />
+                            @ApiProperty({oneOf: undefined})<br />@Column(&#x27;json&#x27;)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/issuer/configuration/attribute-provider/entities/attribute-provider.entity.ts:63</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/issuer/configuration/attribute-provider/entities/attribute-provider.entity.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -279,7 +274,6 @@ referenced by multiple credential configurations via <code>attributeProviderId</
                 <td class="col-md-4">
                     <a name="description"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
@@ -299,13 +293,13 @@ referenced by multiple credential configurations via <code>attributeProviderId</
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @IsOptional()<br />@IsString()<br />@Column(&#x27;varchar&#x27;, {nullable: true})<br />
+                            @ApiPropertyOptional({description: &#x27;Attribute provider description&#x27;})<br />@Column(&#x27;varchar&#x27;, {nullable: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/issuer/configuration/attribute-provider/entities/attribute-provider.entity.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/issuer/configuration/attribute-provider/entities/attribute-provider.entity.ts:38</a></div>
                         </td>
                     </tr>
 
@@ -318,7 +312,6 @@ referenced by multiple credential configurations via <code>attributeProviderId</
                 <td class="col-md-4">
                     <a name="id"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                         <span ><b>id</b></span>
                         <a href="#id"><span class="icon ion-ios-link"></span></a>
@@ -336,13 +329,13 @@ referenced by multiple credential configurations via <code>attributeProviderId</
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @IsString()<br />@PrimaryColumn(&#x27;varchar&#x27;)<br />
+                            @PrimaryColumn(&#x27;varchar&#x27;)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/issuer/configuration/attribute-provider/entities/attribute-provider.entity.ts:24</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/issuer/configuration/attribute-provider/entities/attribute-provider.entity.ts:23</a></div>
                         </td>
                     </tr>
 
@@ -373,7 +366,7 @@ referenced by multiple credential configurations via <code>attributeProviderId</
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @IsString()<br />@Column(&#x27;varchar&#x27;)<br />
+                            @ApiProperty({description: &#x27;Attribute provider name&#x27;})<br />@Column(&#x27;varchar&#x27;)<br />
                         </code>
                     </td>
                 </tr>
@@ -429,6 +422,7 @@ referenced by multiple credential configurations via <code>attributeProviderId</
                     <a name="tenantId"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>tenantId</b></span>
                         <a href="#tenantId"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -445,7 +439,7 @@ referenced by multiple credential configurations via <code>attributeProviderId</
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @Column(&#x27;varchar&#x27;, {primary: true})<br />
+                            @ApiProperty({description: &#x27;Tenant identifier&#x27;})<br />@Column(&#x27;varchar&#x27;, {primary: true})<br />
                         </code>
                     </td>
                 </tr>
@@ -482,13 +476,13 @@ referenced by multiple credential configurations via <code>attributeProviderId</
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @IsString()<br />@Column(&#x27;varchar&#x27;)<br />
+                            @ApiProperty({description: &#x27;Attribute provider URL&#x27;})<br />@Column(&#x27;varchar&#x27;)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/issuer/configuration/attribute-provider/entities/attribute-provider.entity.ts:43</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/issuer/configuration/attribute-provider/entities/attribute-provider.entity.ts:42</a></div>
                         </td>
                     </tr>
 
@@ -500,14 +494,14 @@ referenced by multiple credential configurations via <code>attributeProviderId</
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, getSchemaPath } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
-import { IsOptional, IsString, ValidateNested } from &quot;class-validator&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+    ApiProperty,
+    ApiPropertyOptional,
+    getSchemaPath,
+} from &quot;@nestjs/swagger&quot;;
 import { Column, Entity, ManyToOne, PrimaryColumn } from &quot;typeorm&quot;;
 import { TenantEntity } from &quot;../../../../auth/tenant/entitites/tenant.entity&quot;;
 import {
-    AuthConfig,
-    WebHookAuthConfig,
     WebHookAuthConfigHeader,
     WebHookAuthConfigNone,
 } from &quot;../../../../shared/utils/webhook/webhook.dto&quot;;
@@ -521,45 +515,33 @@ import {
  */
 @Entity()
 export class AttributeProviderEntity {
-    @IsString()
     @PrimaryColumn(&quot;varchar&quot;)
     id!: string;
 
+    @ApiProperty({ description: &quot;Tenant identifier&quot; })
     @Column(&quot;varchar&quot;, { primary: true })
     tenantId!: string;
 
     @ManyToOne(() &#x3D;&gt; TenantEntity, { cascade: true, onDelete: &quot;CASCADE&quot; })
     tenant!: TenantEntity;
 
-    @IsString()
+    @ApiProperty({ description: &quot;Attribute provider name&quot; })
     @Column(&quot;varchar&quot;)
     name!: string;
 
-    @IsOptional()
-    @IsString()
+    @ApiPropertyOptional({ description: &quot;Attribute provider description&quot; })
     @Column(&quot;varchar&quot;, { nullable: true })
     description?: string | null;
 
-    @IsString()
+    @ApiProperty({ description: &quot;Attribute provider URL&quot; })
     @Column(&quot;varchar&quot;)
     url!: string;
 
-    @ValidateNested()
     @ApiProperty({
         oneOf: [
             { $ref: getSchemaPath(WebHookAuthConfigNone) },
             { $ref: getSchemaPath(WebHookAuthConfigHeader) },
         ],
-    })
-    @Type(() &#x3D;&gt; WebHookAuthConfig, {
-        discriminator: {
-            property: &quot;type&quot;,
-            subTypes: [
-                { name: AuthConfig.NONE, value: WebHookAuthConfigNone },
-                { name: AuthConfig.API_KEY, value: WebHookAuthConfigHeader },
-            ],
-        },
-        keepDiscriminatorProperty: true,
     })
     @Column(&quot;json&quot;)
     auth!: WebHookAuthConfigNone | WebHookAuthConfigHeader;

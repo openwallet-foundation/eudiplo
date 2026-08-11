@@ -173,23 +173,16 @@
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#url" >url</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#verifierKey" >verifierKey</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#verifierX509Der" >verifierX509Der</a>
@@ -220,7 +213,6 @@
                     <a name="url"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>url</b></span>
                         <a href="#url"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -237,13 +229,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({format: &#x27;uri&#x27;})<br />@IsString()<br />
+                            @ApiProperty({format: &#x27;uri&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:52</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:38</a></div>
                         </td>
                     </tr>
 
@@ -256,9 +248,6 @@
                 <td class="col-md-4">
                     <a name="verifierKey"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>verifierKey</b></span>
@@ -277,13 +266,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({type: &#x27;object&#x27;, additionalProperties: true, description: &#x27;JWK used to verify the trust-list JWT signature.&#x27;})<br />@ValidateIf(o &#x3D;&gt; )<br />@IsDefined()<br />@IsObject()<br />
+                            @ApiPropertyOptional({type: &#x27;object&#x27;, additionalProperties: true, description: &#x27;JWK used to verify the trust-list JWT signature.&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:62</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:45</a></div>
                         </td>
                     </tr>
 
@@ -296,9 +285,6 @@
                 <td class="col-md-4">
                     <a name="verifierX509Der"></a>
                     <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>verifierX509Der</b></span>
@@ -317,13 +303,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({type: &#x27;string&#x27;, description: &#x27;Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature.&#x27;})<br />@ValidateIf(o &#x3D;&gt; )<br />@IsDefined()<br />@IsString()<br />
+                            @ApiPropertyOptional({type: &#x27;string&#x27;, description: &#x27;Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature.&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:72</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/issuer/configuration/issuance/entities/issuance-config.entity.ts:52</a></div>
                         </td>
                     </tr>
 
@@ -349,19 +335,6 @@
     ApiPropertyOptional,
     getSchemaPath,
 } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
-import {
-    IsDefined,
-    IsArray,
-    IsBoolean,
-    ArrayMinSize,
-    IsNumber,
-    IsObject,
-    IsOptional,
-    IsString,
-    ValidateIf,
-    ValidateNested,
-} from &quot;class-validator&quot;;
 import {
     Column,
     CreateDateColumn,
@@ -392,7 +365,6 @@ import {
 
 class WalletProviderTrustListRefDto {
     @ApiProperty({ format: &quot;uri&quot; })
-    @IsString()
     url!: string;
 
     @ApiPropertyOptional({
@@ -400,9 +372,6 @@ class WalletProviderTrustListRefDto {
         additionalProperties: true,
         description: &quot;JWK used to verify the trust-list JWT signature.&quot;,
     })
-    @ValidateIf((o: WalletProviderTrustListRefDto) &#x3D;&gt; !o.verifierX509Der)
-    @IsDefined()
-    @IsObject()
     verifierKey?: Record&lt;string, unknown&gt;;
 
     @ApiPropertyOptional({
@@ -410,9 +379,6 @@ class WalletProviderTrustListRefDto {
         description:
             &quot;Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature.&quot;,
     })
-    @ValidateIf((o: WalletProviderTrustListRefDto) &#x3D;&gt; !o.verifierKey)
-    @IsDefined()
-    @IsString()
     verifierX509Der?: string;
 }
 
@@ -448,16 +414,12 @@ export class IssuanceConfig {
      * Value to determine the amount of credentials that are issued in a batch.
      * Default is 1.
      */
-    @IsNumber()
-    @IsOptional()
     @Column(&quot;int&quot;, { default: 1 })
     batchSize?: number;
 
     /**
      * Indicates whether DPoP is required for the issuance process. Default value is true.
      */
-    @IsBoolean()
-    @IsOptional()
     @Column(&quot;boolean&quot;, { default: true })
     dPopRequired?: boolean;
 
@@ -466,8 +428,6 @@ export class IssuanceConfig {
      * When enabled, wallets must provide OAuth-Client-Attestation headers.
      * Default value is false.
      */
-    @IsBoolean()
-    @IsOptional()
     @Column(&quot;boolean&quot;, { default: false })
     walletAttestationRequired?: boolean;
 
@@ -478,10 +438,6 @@ export class IssuanceConfig {
     @ApiPropertyOptional({
         type: [WalletProviderTrustListRefDto],
     })
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; WalletProviderTrustListRefDto)
-    @IsOptional()
     @Column({ type: &quot;json&quot;, nullable: true })
     walletProviderTrustLists?: WalletProviderTrustListRefDto[];
 
@@ -494,8 +450,6 @@ export class IssuanceConfig {
         description:
             &quot;Key ID for signing access tokens. If unset, the default signing key is used.&quot;,
     })
-    @IsOptional()
-    @IsString()
     @Column({ type: &quot;varchar&quot;, nullable: true })
     signingKeyId?: string;
 
@@ -526,20 +480,6 @@ export class IssuanceConfig {
             },
         },
     })
-    @ArrayMinSize(1)
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; ManagedAuthorizationServerConfig, {
-        keepDiscriminatorProperty: true,
-        discriminator: {
-            property: &quot;type&quot;,
-            subTypes: [
-                { name: &quot;external&quot;, value: ExternalAuthorizationServerConfig },
-                { name: &quot;oid4vp&quot;, value: Oid4VpAuthorizationServerConfig },
-                { name: &quot;chained&quot;, value: ChainedAuthorizationServerConfig },
-                { name: &quot;built-in&quot;, value: BuiltInAuthorizationServerConfig },
-            ],
-        },
-    })
     @Column({ type: &quot;json&quot;, nullable: true })
     authorizationServers!: ManagedAuthorizationServerConfig[];
 
@@ -548,9 +488,6 @@ export class IssuanceConfig {
      * When omitted, trust checks rely on existing LoTE trust-list behavior.
      */
     @ApiPropertyOptional({ type: () &#x3D;&gt; FederationConfig })
-    @ValidateNested()
-    @Type(() &#x3D;&gt; FederationConfig)
-    @IsOptional()
     @Column({ type: &quot;json&quot;, nullable: true })
     federation?: FederationConfig | null;
 
@@ -559,9 +496,6 @@ export class IssuanceConfig {
      * Supports importing an existing JWT or generating one via registrar.
      */
     @ApiPropertyOptional({ type: () &#x3D;&gt; IssuerRegistrationCertificateConfig })
-    @ValidateNested()
-    @Type(() &#x3D;&gt; IssuerRegistrationCertificateConfig)
-    @IsOptional()
     @Column({ type: &quot;json&quot;, nullable: true })
     registrationCertificate?: IssuerRegistrationCertificateConfig | null;
 
@@ -572,14 +506,9 @@ export class IssuanceConfig {
         type: () &#x3D;&gt; IssuerRegistrationCertificateCache,
         readOnly: true,
     })
-    @ValidateNested()
-    @Type(() &#x3D;&gt; IssuerRegistrationCertificateCache)
-    @IsOptional()
     @Column({ type: &quot;json&quot;, nullable: true })
     registrationCertificateCache?: IssuerRegistrationCertificateCache | null;
 
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; DisplayInfo)
     @Column(&quot;json&quot;, { nullable: true })
     display!: DisplayInfo[];
 
@@ -596,8 +525,6 @@ export class IssuanceConfig {
             &quot;Whether &#x60;credential_response_encryption&#x60; should be advertised in the credential issuer metadata.&quot;,
         default: false,
     })
-    @IsBoolean()
-    @IsOptional()
     @Column(&quot;boolean&quot;, { default: false })
     credentialResponseEncryption?: boolean;
 
@@ -612,8 +539,6 @@ export class IssuanceConfig {
             &quot;Whether &#x60;credential_request_encryption&#x60; should be advertised in the credential issuer metadata.&quot;,
         default: false,
     })
-    @IsBoolean()
-    @IsOptional()
     @Column(&quot;boolean&quot;, { default: false })
     credentialRequestEncryption?: boolean;
 
@@ -629,8 +554,6 @@ export class IssuanceConfig {
         default: 5,
         nullable: true,
     })
-    @IsNumber()
-    @IsOptional()
     @Column(&quot;int&quot;, { nullable: true })
     txCodeMaxAttempts?: number;
 

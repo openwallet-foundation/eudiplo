@@ -335,7 +335,7 @@ subsequent storage in the local certificate store.</p>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>createAccessCertificate(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, dto: <a href="../classes/CreateAccessCertificateDto.html" target="_self">CreateAccessCertificateDto</a>)</code>
+                    <code>createAccessCertificate(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, dto: <a href="../miscellaneous/typealiases.html#CreateAccessCertificate" target="_self">CreateAccessCertificate</a>)</code>
                 </td>
             </tr>
 
@@ -389,7 +389,7 @@ and stores it in EUDIPLO&#39;s local certificate store.</p>
                                         <tr>
                                                 <td>dto</td>
                                             <td>
-                                                            <code><a href="../classes/CreateAccessCertificateDto.html" target="_self" >CreateAccessCertificateDto</a></code>
+                                                            <code><a href="../miscellaneous/typealiases.html#CreateAccessCertificate" target="_self" >CreateAccessCertificate</a></code>
                                             </td>
 
                                             <td>
@@ -469,9 +469,9 @@ and stores it in EUDIPLO&#39;s local certificate store.</p>
 import { ConfigService } from &quot;@nestjs/config&quot;;
 import { CertService } from &quot;../crypto/key/cert/cert.service&quot;;
 import { KeyChainService } from &quot;../crypto/key/key-chain.service&quot;;
-import { CreateAccessCertificateDto } from &quot;./dto/create-access-certificate.dto&quot;;
 import { accessCertificateControllerRegister } from &quot;./generated&quot;;
 import { RegistrarAuthService } from &quot;./registrar-auth.service&quot;;
+import type { CreateAccessCertificate } from &quot;./schemas/registrar.schema&quot;;
 
 /**
  * Handles creation of access certificates via the registrar API and their
@@ -499,7 +499,7 @@ export class AccessCertificateService {
      */
     async createAccessCertificate(
         tenantId: string,
-        dto: CreateAccessCertificateDto,
+        dto: CreateAccessCertificate,
     ): Promise&lt;{ id: string; certId: string; crt: string }&gt; {
         const client &#x3D; await this.authService.getClient(tenantId);
         const relyingPartyId &#x3D;

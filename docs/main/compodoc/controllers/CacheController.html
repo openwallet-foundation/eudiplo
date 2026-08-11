@@ -279,8 +279,8 @@ Useful for forcing a refresh when trust lists or status lists are known to have 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="65"
-                                    class="link-to-prism">src/shared/trust/cache.controller.ts:65</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="67"
+                                    class="link-to-prism">src/shared/trust/cache.controller.ts:67</a></div>
                         </td>
                     </tr>
 
@@ -330,8 +330,8 @@ Useful for forcing a refresh when trust lists or status lists are known to have 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="102"
-                                    class="link-to-prism">src/shared/trust/cache.controller.ts:102</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="104"
+                                    class="link-to-prism">src/shared/trust/cache.controller.ts:104</a></div>
                         </td>
                     </tr>
 
@@ -381,8 +381,8 @@ Useful for forcing a refresh when trust lists or status lists are known to have 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="84"
-                                    class="link-to-prism">src/shared/trust/cache.controller.ts:84</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="86"
+                                    class="link-to-prism">src/shared/trust/cache.controller.ts:86</a></div>
                         </td>
                     </tr>
 
@@ -425,14 +425,14 @@ Useful for forcing a refresh when trust lists or status lists are known to have 
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get(&#x27;stats&#x27;)<br />@ApiOperation({summary: &#x27;Get cache statistics&#x27;, description: &#x27;Returns statistics about the trust list and status list caches.&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Cache statistics&#x27;})<br /></code>
+                    <code>@Get(&#x27;stats&#x27;)<br />@ApiOperation({summary: &#x27;Get cache statistics&#x27;, description: &#x27;Returns statistics about the trust list and status list caches.&#x27;})<br />@ApiResponse({status: 200, description: &#x27;Cache statistics&#x27;, type: CacheStatsResponseDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="36"
-                                    class="link-to-prism">src/shared/trust/cache.controller.ts:36</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="38"
+                                    class="link-to-prism">src/shared/trust/cache.controller.ts:38</a></div>
                         </td>
                     </tr>
 
@@ -443,7 +443,7 @@ Useful for forcing a refresh when trust lists or status lists are known to have 
 </div>
 
                         <div class="io-description">
-                            <b>Returns : </b>    <code>{ trustListCache: { hasCache: boolean; }; statusListCache: { size: any; jwtCacheSize: any; uris: any; }; }</code>
+                            <b>Returns : </b>        <code><a href="../classes/CacheStatsResponseDto.html" target="_self" >CacheStatsResponseDto</a></code>
 
                         </div>
                 </td>
@@ -459,6 +459,7 @@ Useful for forcing a refresh when trust lists or status lists are known to have 
 import { ApiOperation, ApiResponse, ApiTags } from &quot;@nestjs/swagger&quot;;
 import { Role } from &quot;../../auth/roles/role.enum&quot;;
 import { Secured } from &quot;../../auth/secure.decorator&quot;;
+import { CacheStatsResponseDto } from &quot;./dto/cache-stats-response.dto&quot;;
 import { StatusListVerifierService } from &quot;./status-list-verifier.service&quot;;
 import { TrustStoreService } from &quot;./trust-store.service&quot;;
 
@@ -489,8 +490,9 @@ export class CacheController {
     @ApiResponse({
         status: 200,
         description: &quot;Cache statistics&quot;,
+        type: CacheStatsResponseDto,
     })
-    getStats() {
+    getStats(): CacheStatsResponseDto {
         const statusListStats &#x3D; this.statusListVerifierService.getCacheStats();
         return {
             trustListCache: {

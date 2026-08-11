@@ -224,6 +224,7 @@ eventSource.onerror = (error) =&gt; {
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                     <span class="modifier">Async</span>
                                 <a href="#subscribeToSessionEvents" >subscribeToSessionEvents</a>
                             </li>
@@ -255,6 +256,7 @@ eventSource.onerror = (error) =&gt; {
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                             <span class="modifier">Async</span>
                         <span ><b>subscribeToSessionEvents</b></span>
                         <a href="#subscribeToSessionEvents"><span class="icon ion-ios-link"></span></a>
@@ -272,14 +274,14 @@ eventSource.onerror = (error) =&gt; {
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get(&#x27;:id/events&#x27;)<br />@Sse()<br />@ApiOperation({summary: &#x27;Subscribe to session status updates&#x27;, description: undefined})<br />@ApiParam({name: &#x27;id&#x27;, description: &#x27;Session ID to subscribe to&#x27;, type: String})<br />@ApiQuery({name: &#x27;token&#x27;, description: &#x27;JWT access token for authentication&#x27;, required: true, type: String})<br /></code>
+                    <code>@Get(&#x27;:id/events&#x27;)<br />@Sse()<br />@ApiOperation({summary: &#x27;Subscribe to session status updates&#x27;, description: undefined})<br />@ApiParam({name: &#x27;id&#x27;, description: &#x27;Session ID to subscribe to&#x27;, type: String})<br />@ApiQuery({name: &#x27;token&#x27;, description: &#x27;JWT access token for authentication&#x27;, required: true, type: String})<br />@ApiResponse({status: 200, description: &#x27;Server-Sent Events stream of session updates&#x27;, content: undefined})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="92"
-                                    class="link-to-prism">src/session/session-events.controller.ts:92</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="111"
+                                    class="link-to-prism">src/session/session-events.controller.ts:111</a></div>
                         </td>
                     </tr>
 
@@ -379,7 +381,13 @@ token must be passed as a query parameter.</p>
     Sse,
     UnauthorizedException,
 } from &quot;@nestjs/common&quot;;
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from &quot;@nestjs/swagger&quot;;
+import {
+    ApiOperation,
+    ApiParam,
+    ApiQuery,
+    ApiResponse,
+    ApiTags,
+} from &quot;@nestjs/swagger&quot;;
 import { Observable, startWith } from &quot;rxjs&quot;;
 import { JwtService } from &quot;../auth/jwt.service&quot;;
 import { SessionService } from &quot;./session.service&quot;;
@@ -459,6 +467,19 @@ export class SessionEventsController {
         description: &quot;JWT access token for authentication&quot;,
         required: true,
         type: String,
+    })
+    @ApiResponse({
+        status: 200,
+        description: &quot;Server-Sent Events stream of session updates&quot;,
+        content: {
+            &quot;text/event-stream&quot;: {
+                schema: {
+                    type: &quot;string&quot;,
+                    example:
+                        &#x27;event: message\ndata: {&quot;id&quot;:&quot;session-1&quot;,&quot;status&quot;:&quot;active&quot;,&quot;updatedAt&quot;:&quot;2026-01-01T00:00:00.000Z&quot;}\n\n&#x27;,
+                },
+            },
+        },
     })
     async subscribeToSessionEvents(
         @Param(&quot;id&quot;) id: string,

@@ -204,6 +204,7 @@
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#getOAuth2Token" >getOAuth2Token</a>
                             </li>
                             <li>
@@ -255,14 +256,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get(&#x27;.well-known/jwks.json&#x27;)<br />@ApiOperation({summary: &#x27;JSON Web Key Set&#x27;, description: &#x27;Returns the JSON Web Key Set for token verification.&#x27;})<br />@ApiResponse({status: 200, description: &#x27;JSON Web Key Set&#x27;})<br /></code>
+                    <code>@Get(&#x27;.well-known/jwks.json&#x27;)<br />@ApiOperation({summary: &#x27;JSON Web Key Set&#x27;, description: &#x27;Returns the JSON Web Key Set for token verification.&#x27;})<br />@ApiResponse({status: 200, description: &#x27;JSON Web Key Set&#x27;, type: KeyResponseDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="105"
-                                    class="link-to-prism">src/auth/auth.controller.ts:105</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="111"
+                                    class="link-to-prism">src/auth/auth.controller.ts:111</a></div>
                         </td>
                     </tr>
 
@@ -291,6 +292,7 @@ This provides the JSON Web Key Set for verifying tokens issued by this server.</
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>getOAuth2Token</b></span>
                         <a href="#getOAuth2Token"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -299,7 +301,7 @@ This provides the JSON Web Key Set for verifying tokens issued by this server.</
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getOAuth2Token(body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, headers: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                    <code>getOAuth2Token(body: <a href="../classes/ClientCredentialsDto.html" target="_self">ClientCredentialsDto</a>, headers: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
                 </td>
             </tr>
 
@@ -307,14 +309,14 @@ This provides the JSON Web Key Set for verifying tokens issued by this server.</
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post(&#x27;api/oauth2/token&#x27;)<br />@ApiBody({type: ClientCredentialsDto, examples: undefined})<br />@ApiResponse({status: 200, description: &#x27;OAuth2 token response&#x27;, type: TokenResponse, examples: undefined})<br />@ApiResponse({status: 401, description: &#x27;Invalid client credentials&#x27;})<br /></code>
+                    <code>@Post(&#x27;api/oauth2/token&#x27;)<br />@ApiConsumes(&#x27;application/x-www-form-urlencoded&#x27;)<br />@ApiBody({type: ClientCredentialsDto, examples: undefined})<br />@ApiResponse({status: 200, description: &#x27;OAuth2 token response&#x27;, type: TokenResponse, examples: undefined})<br />@ApiResponse({status: 401, description: &#x27;Invalid client credentials&#x27;, type: OAuthTokenErrorResponseDto})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="66"
-                                    class="link-to-prism">src/auth/auth.controller.ts:66</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="70"
+                                    class="link-to-prism">src/auth/auth.controller.ts:70</a></div>
                         </td>
                     </tr>
 
@@ -340,7 +342,7 @@ Accepts client credentials either in Authorization header (Basic auth) or reques
                                         <tr>
                                                 <td>body</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                            <code><a href="../classes/ClientCredentialsDto.html" target="_self" >ClientCredentialsDto</a></code>
                                             </td>
 
                                             <td>
@@ -400,14 +402,14 @@ Accepts client credentials either in Authorization header (Basic auth) or reques
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get(&#x27;.well-known/oauth-authorization-server&#x27;)<br />@ApiOperation({summary: &#x27;OIDC Discovery Configuration&#x27;, description: &#x27;Returns the OpenID Connect discovery configuration for client credentials authentication.&#x27;})<br />@ApiResponse({status: 200, description: &#x27;OIDC Discovery Configuration&#x27;})<br /></code>
+                    <code>@Get(&#x27;.well-known/oauth-authorization-server&#x27;)<br />@ApiOperation({summary: &#x27;OIDC Discovery Configuration&#x27;, description: &#x27;Returns the OpenID Connect discovery configuration for client credentials authentication.&#x27;})<br />@ApiResponse({status: 200, description: &#x27;OIDC Discovery Configuration&#x27;, schema: undefined})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="88"
-                                    class="link-to-prism">src/auth/auth.controller.ts:88</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="93"
+                                    class="link-to-prism">src/auth/auth.controller.ts:93</a></div>
                         </td>
                     </tr>
 
@@ -436,6 +438,7 @@ that need to authenticate using client_id and client_secret.</p>
 import {
     ApiBody,
     ApiExtraModels,
+    ApiConsumes,
     ApiOperation,
     ApiResponse,
     ApiTags,
@@ -444,6 +447,7 @@ import { KeyResponseDto } from &quot;../crypto/key/dto/key-response.dto&quot;;
 import { AuthService } from &quot;./auth.service&quot;;
 import { ClientCredentialsDto } from &quot;./dto/client-credentials.dto&quot;;
 import { OidcDiscoveryDto } from &quot;./dto/oidc-discovery.dto&quot;;
+import { OAuthTokenErrorResponseDto } from &quot;./dto/oauth-token-error-response.dto&quot;;
 import { RoleDto } from &quot;./dto/role.dto&quot;;
 import { TokenResponse } from &quot;./dto/token-response.dto&quot;;
 
@@ -464,6 +468,7 @@ export class AuthController {
      * @returns
      */
     @Post(&quot;api/oauth2/token&quot;)
+    @ApiConsumes(&quot;application/x-www-form-urlencoded&quot;)
     @ApiBody({
         type: ClientCredentialsDto,
         examples: {
@@ -496,9 +501,10 @@ export class AuthController {
     @ApiResponse({
         status: 401,
         description: &quot;Invalid client credentials&quot;,
+        type: OAuthTokenErrorResponseDto,
     })
     getOAuth2Token(
-        @Body() body: any,
+        @Body() body: ClientCredentialsDto,
         @Headers() headers: any,
     ): Promise&lt;TokenResponse&gt; {
         return this.authService.getOAuth2Token(body, headers);
@@ -518,6 +524,7 @@ export class AuthController {
     @ApiResponse({
         status: 200,
         description: &quot;OIDC Discovery Configuration&quot;,
+        schema: { type: &quot;object&quot;, additionalProperties: true },
     })
     getOidcDiscovery(): OidcDiscoveryDto {
         return this.authService.getOidcDiscovery();
@@ -535,6 +542,7 @@ export class AuthController {
     @ApiResponse({
         status: 200,
         description: &quot;JSON Web Key Set&quot;,
+        type: KeyResponseDto,
     })
     getGlobalJwks(): KeyResponseDto {
         // For now, return an empty key set since the actual keys are tenant-specific

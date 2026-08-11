@@ -154,10 +154,39 @@
     <div class="tab-pane fade active in" id="info">
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../classes/FederationTrustAnchorConfig.html" target="_self" >createZodDto(
+    FederationTrustAnchorConfigSchema,
+)</a></code>
+            </p>
 
 
 
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../classes/FederationTrustAnchorConfig.html" target="_self" >createZodDto(
+    FederationTrustAnchorConfigSchema,
+)</a></code>
+                                </li>
+                        </ul>
+                </div>
             </div>
+        </section>
+    </div>
 
     <div class="tab-pane fade " id="api">
             <section data-compodoc="block-index">
@@ -173,12 +202,10 @@
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
                                     <span class="modifier"></span>
-                                    <span class="modifier"></span>
                                 <a href="#entityConfigurationUri" >entityConfigurationUri</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
-                                    <span class="modifier"></span>
                                     <span class="modifier"></span>
                                 <a href="#entityId" >entityId</a>
                             </li>
@@ -208,7 +235,6 @@
                     <a name="entityConfigurationUri"></a>
                     <span class="name">
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
                         <span ><b>entityConfigurationUri</b></span>
                         <a href="#entityConfigurationUri"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -225,13 +251,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Federation endpoint URL for the trust anchor entity configuration.&#x27;, example: &#x27;https://ta.example.org/.well-known/openid-federation&#x27;})<br />@IsString()<br />
+                            @ApiProperty({description: &#x27;Federation endpoint URL for the trust anchor entity configuration.&#x27;, example: &#x27;https://ta.example.org/.well-known/openid-federation&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/issuer/configuration/issuance/dto/federation-config.dto.ts:38</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/issuer/configuration/issuance/dto/federation-config.dto.ts:48</a></div>
                         </td>
                     </tr>
 
@@ -244,7 +270,6 @@
                 <td class="col-md-4">
                     <a name="entityId"></a>
                     <span class="name">
-                            <span class="modifier"></span>
                             <span class="modifier"></span>
                         <span ><b>entityId</b></span>
                         <a href="#entityId"><span class="icon ion-ios-link"></span></a>
@@ -262,13 +287,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiProperty({description: &#x27;Entity identifier (sub) of the federation trust anchor.&#x27;, example: &#x27;https://ta.example.org&#x27;})<br />@IsString()<br />
+                            @ApiProperty({description: &#x27;Entity identifier (sub) of the federation trust anchor.&#x27;, example: &#x27;https://ta.example.org&#x27;})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/issuer/configuration/issuance/dto/federation-config.dto.ts:30</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/issuer/configuration/issuance/dto/federation-config.dto.ts:41</a></div>
                         </td>
                     </tr>
 
@@ -288,16 +313,8 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApiProperty, ApiPropertyOptional } from &quot;@nestjs/swagger&quot;;
-import { Type } from &quot;class-transformer&quot;;
-import {
-    IsArray,
-    IsBoolean,
-    IsEnum,
-    IsNumber,
-    IsOptional,
-    IsString,
-    ValidateNested,
-} from &quot;class-validator&quot;;
+import { createZodDto } from &quot;nestjs-zod&quot;;
+import { z } from &quot;zod&quot;;
 
 export enum FederationTrustMode {
     FEDERATION_ONLY &#x3D; &quot;federation-only&quot;,
@@ -310,12 +327,31 @@ export enum FederationEntityRole {
     LEAF &#x3D; &quot;leaf&quot;,
 }
 
-export class FederationTrustAnchorConfig {
+const FederationTrustAnchorConfigSchema &#x3D; z
+    .object({
+        entityId: z.string(),
+        entityConfigurationUri: z.string(),
+    })
+    .strict();
+
+const FederationConfigSchema &#x3D; z
+    .object({
+        role: z.enum(FederationEntityRole).optional(),
+        mode: z.enum(FederationTrustMode).optional(),
+        entityId: z.string().optional(),
+        enforceSigningPolicy: z.boolean().optional(),
+        cacheTtlSeconds: z.number().optional(),
+        trustAnchors: z.array(FederationTrustAnchorConfigSchema),
+    })
+    .strict();
+
+export class FederationTrustAnchorConfig extends createZodDto(
+    FederationTrustAnchorConfigSchema,
+) {
     @ApiProperty({
         description: &quot;Entity identifier (sub) of the federation trust anchor.&quot;,
         example: &quot;https://ta.example.org&quot;,
     })
-    @IsString()
     entityId!: string;
 
     @ApiProperty({
@@ -323,19 +359,16 @@ export class FederationTrustAnchorConfig {
             &quot;Federation endpoint URL for the trust anchor entity configuration.&quot;,
         example: &quot;https://ta.example.org/.well-known/openid-federation&quot;,
     })
-    @IsString()
     entityConfigurationUri!: string;
 }
 
-export class FederationConfig {
+export class FederationConfig extends createZodDto(FederationConfigSchema) {
     @ApiPropertyOptional({
         enum: FederationEntityRole,
         description:
             &quot;Role this tenant plays in the OpenID Federation topology.&quot;,
         default: FederationEntityRole.LEAF,
     })
-    @IsOptional()
-    @IsEnum(FederationEntityRole)
     role?: FederationEntityRole;
 
     @ApiPropertyOptional({
@@ -344,8 +377,6 @@ export class FederationConfig {
             &quot;Trust decision strategy when both LoTE trust lists and OpenID Federation are configured.&quot;,
         default: FederationTrustMode.HYBRID,
     })
-    @IsOptional()
-    @IsEnum(FederationTrustMode)
     mode?: FederationTrustMode;
 
     @ApiPropertyOptional({
@@ -353,8 +384,6 @@ export class FederationConfig {
             &quot;Entity identifier of this issuer/verifier in the federation.&quot;,
         example: &quot;https://issuer.example.org&quot;,
     })
-    @IsOptional()
-    @IsString()
     entityId?: string;
 
     @ApiPropertyOptional({
@@ -362,8 +391,6 @@ export class FederationConfig {
             &quot;Whether federation checks are enforced for upstream metadata and signer trust decisions.&quot;,
         default: true,
     })
-    @IsOptional()
-    @IsBoolean()
     enforceSigningPolicy?: boolean;
 
     @ApiPropertyOptional({
@@ -371,17 +398,12 @@ export class FederationConfig {
             &quot;Cache TTL in seconds for federation entity statements and trust chain results.&quot;,
         default: 300,
     })
-    @IsOptional()
-    @IsNumber()
     cacheTtlSeconds?: number;
 
     @ApiProperty({
         type: () &#x3D;&gt; [FederationTrustAnchorConfig],
         description: &quot;Configured federation trust anchors.&quot;,
     })
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() &#x3D;&gt; FederationTrustAnchorConfig)
     trustAnchors!: FederationTrustAnchorConfig[];
 }
 </code></pre>
