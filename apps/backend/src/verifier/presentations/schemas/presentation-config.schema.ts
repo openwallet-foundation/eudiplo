@@ -109,6 +109,58 @@ const CredentialQueryBaseSchema = z
     .describe("Base credential query structure.")
     .strict();
 
+function validateClaimSets(
+    credential: z.infer<typeof CredentialQueryBaseSchema> & {
+        claims?: Array<{ id?: string }>;
+    },
+    ctx: z.RefinementCtx,
+) {
+    if (!credential.claim_sets || credential.claim_sets.length === 0) {
+        return;
+    }
+
+    const claimsById = new Map<string, number>();
+    for (const [index, claim] of (credential.claims ?? []).entries()) {
+        if (typeof claim.id !== "string" || claim.id.trim() === "") {
+            continue;
+        }
+
+        const previousIndex = claimsById.get(claim.id);
+        if (previousIndex !== undefined) {
+            ctx.addIssue({
+                code: "custom",
+                path: ["claims", index, "id"],
+                message: `Duplicate claim id '${claim.id}' already used at claims[${previousIndex}]`,
+            });
+            continue;
+        }
+
+        claimsById.set(claim.id, index);
+    }
+
+    if (claimsById.size === 0) {
+        ctx.addIssue({
+            code: "custom",
+            path: ["claim_sets"],
+            message:
+                "claim_sets requires at least one claim with an id in claims",
+        });
+        return;
+    }
+
+    credential.claim_sets.forEach((claimSet, setIndex) => {
+        claimSet.forEach((claimId, claimIndex) => {
+            if (!claimsById.has(claimId)) {
+                ctx.addIssue({
+                    code: "custom",
+                    path: ["claim_sets", setIndex, claimIndex],
+                    message: `claim_sets references unknown claim id '${claimId}' for credential '${credential.id}'`,
+                });
+            }
+        });
+    });
+}
+
 const CredentialQueryDcSdJwtSchema = CredentialQueryBaseSchema.extend({
     format: z.literal("dc+sd-jwt").describe("Credential format discriminator."),
     meta: z
@@ -124,7 +176,9 @@ const CredentialQueryDcSdJwtSchema = CredentialQueryBaseSchema.extend({
         .array(ClaimsQuerySchema)
         .optional()
         .describe("Optional claim-level constraints."),
-}).strict();
+})
+    .strict()
+    .superRefine((credential, ctx) => validateClaimSets(credential, ctx));
 
 const CredentialQueryMsoMdocSchema = CredentialQueryBaseSchema.extend({
     format: z.literal("mso_mdoc").describe("Credential format discriminator."),
@@ -141,7 +195,9 @@ const CredentialQueryMsoMdocSchema = CredentialQueryBaseSchema.extend({
         .array(MsoMdocClaimsQuerySchema)
         .optional()
         .describe("Optional mDoc claim-level constraints."),
-}).strict();
+})
+    .strict()
+    .superRefine((credential, ctx) => validateClaimSets(credential, ctx));
 
 const CredentialSetQuerySchema = z
     .object({
