@@ -5,10 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="EUDIPLO — the diplomatic layer for EUDI Wallet integration."
+      content="EUDIPLO is open-source, self-hosted middleware for integrating EUDI Wallet issuance and verification with OID4VCI, OID4VP, SD-JWT VC and mdoc."
     />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="OpenWallet Foundation" />
+    <meta name="theme-color" content="#111827" />
+    <link rel="canonical" href="https://eudiplo.dev/" />
     <link rel="icon" type="image/svg+xml" href="logo.svg" />
-    <title>EUDIPLO — EUDI protocols. One integration.</title>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="EUDIPLO" />
+    <meta property="og:locale" content="en_US" />
+    <meta
+      property="og:title"
+      content="EUDIPLO — Open Source EUDI Wallet Issuer &amp; Verifier Middleware"
+    />
+    <meta
+      property="og:description"
+      content="Connect existing backends to EUDI Wallets with self-hosted middleware for credential issuance, verification and wallet protocols."
+    />
+    <meta property="og:url" content="https://eudiplo.dev/" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="EUDIPLO — Open Source EUDI Wallet Issuer &amp; Verifier Middleware"
+    />
+    <meta
+      name="twitter:description"
+      content="Self-hosted middleware for EUDI Wallet issuance and verification with OID4VCI, OID4VP, SD-JWT VC and mdoc."
+    />
+
+    <title>
+      EUDIPLO — Open Source EUDI Wallet Issuer &amp; Verifier Middleware
+    </title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "EUDIPLO",
+        "description": "Open-source, self-hosted middleware for integrating backend applications with EUDI Wallet issuance and verification protocols.",
+        "url": "https://eudiplo.dev/",
+        "codeRepository": "https://github.com/openwallet-foundation/eudiplo",
+        "license": "https://github.com/openwallet-foundation/eudiplo/blob/main/LICENSE",
+        "programmingLanguage": "TypeScript",
+        "runtimePlatform": "Docker",
+        "publisher": {
+          "@type": "Organization",
+          "name": "OpenWallet Foundation",
+          "url": "https://openwallet.foundation/"
+        }
+      }
+    </script>
     <style>
       :root {
         color-scheme: light dark;
@@ -768,37 +816,172 @@
           font-size: 14px;
           line-height: 1.6;
         }
+        #eudiplo-homepage-concept .install-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-top: 18px;
+        }
+        #eudiplo-homepage-concept .download-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 40px;
+          padding: 0 16px;
+          border-radius: 10px;
+          border: 1px solid var(--border);
+          background: var(--card);
+          color: var(--card-foreground);
+          font-size: 13px;
+          font-weight: 650;
+          text-decoration: none;
+        }
+        #eudiplo-homepage-concept .download-btn.primary {
+          border-color: transparent;
+          background: var(--foreground);
+          color: var(--background);
+        }
+        #eudiplo-homepage-concept .requirement-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 24px;
+        }
+
+        #eudiplo-homepage-concept .requirement-chip {
+          display: inline-flex;
+          align-items: center;
+          min-height: 30px;
+          padding: 0 11px;
+          border: 1px solid var(--border);
+          border-radius: 999px;
+          background: var(--card);
+          color: var(--muted-foreground);
+          font-size: 11px;
+          font-weight: 600;
+        }
+
+        #eudiplo-homepage-concept pre.quickstart-command {
+          margin: 0;
+          min-height: 0;
+          padding: 18px;
+          overflow-x: auto;
+          border: 1px solid var(--border);
+          border-radius: 14px;
+          background: var(--foreground);
+          color: var(--background);
+          font:
+            13px/1.75 ui-monospace,
+            SFMono-Regular,
+            Menlo,
+            monospace;
+          white-space: pre;
+        }
+
+        #eudiplo-homepage-concept .secondary-install {
+          margin-top: 18px;
+          padding-top: 18px;
+          border-top: 1px solid var(--border);
+        }
+
+        #eudiplo-homepage-concept .secondary-install summary {
+          cursor: pointer;
+          color: var(--foreground);
+          font-size: 13px;
+          font-weight: 650;
+        }
+
+        #eudiplo-homepage-concept .secondary-install p {
+          margin: 10px 0 12px;
+          color: var(--muted-foreground);
+          font-size: 12px;
+          line-height: 1.55;
+        }
+
+        #eudiplo-homepage-concept .secondary-command {
+          display: block;
+          padding: 12px 14px;
+          overflow-x: auto;
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          background: var(--card);
+          color: var(--card-foreground);
+          font:
+            12px/1.5 ui-monospace,
+            SFMono-Regular,
+            Menlo,
+            monospace;
+          white-space: nowrap;
+        }
+
         #eudiplo-homepage-concept .final {
           position: relative;
-          padding: 104px 0;
+          padding: 112px 0;
           overflow: hidden;
-          text-align: center;
+          border-top: 1px solid var(--border);
+          background: color-mix(
+            in srgb,
+            var(--eudi-blue) 4%,
+            var(--background)
+          );
         }
+
         #eudiplo-homepage-concept .final::before {
           content: '';
           position: absolute;
-          width: 520px;
-          height: 520px;
+          width: 620px;
+          height: 620px;
           border-radius: 50%;
           left: 50%;
-          top: 50%;
+          top: 44%;
           transform: translate(-50%, -50%);
           background: radial-gradient(
             circle,
-            color-mix(in srgb, var(--eudi-blue) 18%, transparent),
+            color-mix(in srgb, var(--eudi-blue) 15%, transparent),
             transparent 68%
           );
+          pointer-events: none;
         }
-        #eudiplo-homepage-concept .final .shell {
+
+        #eudiplo-homepage-concept .final-grid {
           position: relative;
-          display: flex;
-          flex-direction: column;
+          display: grid;
+          grid-template-columns: minmax(0, 900px);
+          justify-content: center;
+          gap: 38px;
           align-items: center;
         }
-        #eudiplo-homepage-concept .final p {
-          max-width: 590px;
-          color: var(--muted-foreground);
-          line-height: 1.65;
+
+        #eudiplo-homepage-concept .final-copy {
+          text-align: center;
+        }
+
+        #eudiplo-homepage-concept .final-copy h2 {
+          margin-inline: auto;
+        }
+
+        #eudiplo-homepage-concept .final-copy .section-intro {
+          max-width: 650px;
+          margin-inline: auto;
+        }
+
+        #eudiplo-homepage-concept .final .requirement-row,
+        #eudiplo-homepage-concept .final-actions {
+          justify-content: center;
+        }
+
+        #eudiplo-homepage-concept .final-actions {
+          margin-top: 28px;
+        }
+
+        #eudiplo-homepage-concept .final .quickstart-card {
+          width: 100%;
+          margin-top: 0;
+          text-align: left;
+        }
+
+        #eudiplo-homepage-concept .final .terminal-caption {
+          max-width: none;
         }
         #eudiplo-homepage-concept .footer {
           padding: 30px 0;
@@ -846,7 +1029,8 @@
             padding: 72px 0 62px;
           }
           #eudiplo-homepage-concept .hero-grid,
-          #eudiplo-homepage-concept .split {
+          #eudiplo-homepage-concept .split,
+          #eudiplo-homepage-concept .final-grid {
             grid-template-columns: 1fr;
           }
           #eudiplo-homepage-concept .hero-visual {
@@ -895,6 +1079,12 @@
           #eudiplo-homepage-concept .terminal {
             align-items: flex-start;
             flex-direction: column;
+          }
+          #eudiplo-homepage-concept .final {
+            padding: 76px 0;
+          }
+          #eudiplo-homepage-concept .final-grid {
+            gap: 40px;
           }
         }
       </style>
@@ -962,7 +1152,7 @@
                   href="docs/main/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  >Start building <span aria-hidden="true">→</span></a
+                  >Read the documentation <span aria-hidden="true">→</span></a
                 >
                 <a
                   class="cta"
@@ -1248,53 +1438,66 @@
                 </p>
               </article>
             </div>
-            <div class="terminal-card">
-              <div class="terminal-card-head">
-                <span class="terminal-badge">Quick start</span>
-                <span class="terminal-note"
-                  >one command to a local issuer/verifier demo</span
-                >
-              </div>
-              <div class="terminal-shell">
-                <span>npx @eudiplo/cli demo</span>
-                <a
-                  href="docs/main/getting-started/cli/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Learn the CLI</a
-                >
-              </div>
-              <p class="terminal-caption">
-                Prefer a standalone CLI? The release workflow publishes a Node
-                SEA binary for <code>eudiplo</code>.
-              </p>
-            </div>
           </div>
         </section>
 
-        <section class="final">
-          <div class="shell">
-            <p class="section-kicker">Open source. Ready to integrate.</p>
-            <h2>Let your product focus on<br />what makes it different.</h2>
-            <p>
-              EUDIPLO takes care of the wallet protocol layer—so your team can
-              build the service users actually came for.
-            </p>
-            <div class="cta-row">
-              <a
-                class="cta main"
-                href="docs/main/"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Read the documentation →</a
-              >
-              <a
-                class="cta"
-                href="https://github.com/openwallet-foundation/eudiplo"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Star on GitHub ↗</a
-              >
+        <section
+          class="final"
+          id="quickstart"
+          aria-labelledby="quickstart-title"
+        >
+          <div class="shell final-grid">
+            <div class="final-copy">
+              <p class="section-kicker">Open source. Ready to try.</p>
+              <h2 id="quickstart-title">Run EUDIPLO locally in seconds.</h2>
+              <p class="section-intro">
+                Install the EUDIPLO CLI and start a local Docker Compose demo.
+              </p>
+              <div
+                class="requirement-row"
+                aria-label="Quick start requirements"
+              ></div>
+              <div class="cta-row final-actions">
+                <a
+                  class="cta main"
+                  href="docs/main/getting-started/cli/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >CLI documentation →</a
+                >
+                <a
+                  class="cta"
+                  href="https://github.com/openwallet-foundation/eudiplo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Star on GitHub ↗</a
+                >
+              </div>
+            </div>
+
+            <div class="terminal-card quickstart-card">
+              <div class="terminal-card-head">
+                <span class="terminal-badge">Quick start</span>
+                <span class="terminal-note">Standalone CLI</span>
+              </div>
+              <pre
+                class="quickstart-command"
+              ><code>$ curl -fsSL https://raw.githubusercontent.com/openwallet-foundation/eudiplo/main/scripts/install-cli.sh | bash
+$ eudiplo demo</code></pre>
+              <p class="terminal-caption">
+                The installer downloads the EUDIPLO CLI. Then
+                <code>eudiplo demo</code> prepares and starts the local demo
+                using Docker Compose.
+              </p>
+
+              <details class="secondary-install">
+                <summary>Already using Node.js?</summary>
+                <p>
+                  Run the CLI directly from npm instead of installing the
+                  standalone binary.
+                </p>
+                <code class="secondary-command">npx @eudiplo/cli demo</code>
+              </details>
             </div>
           </div>
         </section>
