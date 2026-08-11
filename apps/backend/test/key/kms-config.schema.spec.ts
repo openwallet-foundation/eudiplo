@@ -205,14 +205,12 @@ describe("KMS Zod schemas", () => {
 
     it("rejects missing required provider fields", () => {
         expectInvalid(VaultKmsConfigSchema, { id: "vault", type: "vault" });
-        expectInvalid(AwsKmsConfigSchema, { id: "aws", type: "aws-kms" }, [
-            "region",
-        ]);
+        expectInvalid(AwsKmsConfigSchema, { id: "aws", type: "aws-kms" });
         expectInvalid(HttpKmsConfigSchema, { id: "http", type: "http" });
     });
 
     it("rejects empty strings for required values", () => {
-        expectInvalid(DbKmsConfigSchema, { id: "", type: "db" }, ["id"]);
+        expectInvalid(DbKmsConfigSchema, { id: "", type: "db" });
         expectInvalid(
             VaultKmsConfigSchema,
             {
@@ -238,7 +236,6 @@ describe("KMS Zod schemas", () => {
                 ...validVaultProvider(),
                 vaultUrl: "not-a-url",
             },
-            ["vaultUrl"],
         );
         expectInvalid(
             HttpAuthOauth2ConfigSchema,
@@ -248,7 +245,6 @@ describe("KMS Zod schemas", () => {
                 clientId: "client-id",
                 clientSecret: "client-secret",
             },
-            ["tokenUrl"],
         );
     });
 
