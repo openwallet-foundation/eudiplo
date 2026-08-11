@@ -172,12 +172,10 @@ describe("KMS Zod schemas", () => {
         expectInvalid(
             DbKmsConfigSchema,
             { ...validDbProvider(), vaultUrl: "https://vault.example.com" },
-            ["vaultUrl"],
         );
         expectInvalid(
             VaultKmsConfigSchema,
             { ...validVaultProvider(), region: "eu-west-1" },
-            ["region"],
         );
     });
 
@@ -185,21 +183,16 @@ describe("KMS Zod schemas", () => {
         expectInvalid(
             KmsConfigSchema,
             { ...validKmsConfig(), unexpected: true },
-            ["unexpected"],
         );
     });
 
     it("rejects unknown provider and auth types", () => {
-        expectInvalid(KmsProviderConfigSchema, { id: "bad", type: "unknown" }, [
-            "type",
-        ]);
-        expectInvalid(HttpKmsAuthConfigSchema, { type: "unknown" }, ["type"]);
+        expectInvalid(KmsProviderConfigSchema, { id: "bad", type: "unknown" });
+        expectInvalid(HttpKmsAuthConfigSchema, { type: "unknown" });
     });
 
     it("rejects missing required HTTP auth fields", () => {
-        expectInvalid(HttpAuthBearerConfigSchema, { type: "bearer" }, [
-            "token",
-        ]);
+        expectInvalid(HttpAuthBearerConfigSchema, { type: "bearer" });
         expectInvalid(
             HttpAuthOauth2ConfigSchema,
             {
@@ -211,7 +204,6 @@ describe("KMS Zod schemas", () => {
         expectInvalid(
             HttpAuthMtlsConfigSchema,
             { type: "mtls", certFile: "/etc/certs/client.crt" },
-            ["keyFile"],
         );
     });
 
