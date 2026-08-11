@@ -217,6 +217,12 @@ see [Status Management](./status-management.md).
 
 Define client-specific configurations, including client IDs, secrets, and permissions.
 
+!!! note "Client ID format"
+
+    Client IDs in imported configuration files must be non-empty and may only contain
+    letters, numbers, and the characters `.`, `_`, `:`, and `-`. Whitespace and
+    other special characters are rejected.
+
 **Schema Reference**:
 [Client Config API](../api/openapi.md)
 

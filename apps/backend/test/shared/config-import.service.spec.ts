@@ -86,6 +86,22 @@ describe("ConfigImportService", () => {
         expect(result.isValid).toBe(false);
     });
 
+    it("rejects client IDs containing whitespace or unsupported characters", async () => {
+        const result = await service.validateConfig(
+            "/tmp/tenant-a/clients/client.json",
+            "client.json",
+            {
+                clientId: "car entry",
+                roles: ["clients:manage"],
+            },
+            CreateClientSchema,
+            { name: "tenant-a" },
+            "client config",
+        );
+
+        expect(result.isValid).toBe(false);
+    });
+
     it("includes the file path in validation error logs", async () => {
         const errorSpy = vi
             .spyOn(Logger.prototype, "error")

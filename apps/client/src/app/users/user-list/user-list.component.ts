@@ -32,6 +32,8 @@ import {
 export class UserListComponent implements OnInit {
   users: ManagedUserDto[] = [];
   loading = false;
+  isUnavailable = false;
+  unavailableMessage = '';
   displayedColumns: (keyof ManagedUserDto | 'actions')[] = [
     'username',
     'roles',
@@ -47,14 +49,85 @@ export class UserListComponent implements OnInit {
 
   async loadUsers(): Promise<void> {
     this.loading = true;
+    this.isUnavailable = false;
+    this.unavailableMessage = '';
+
     try {
       this.users = await userControllerGetUsers<true>().then((res) => res.data);
     } catch (error) {
-      console.error('Error loading users:', error);
-      this.snackBar.open('Failed to load users', 'Close', { duration: 3000 });
+      const message = this.getErrorMessage(error);
+
+      if (this.isUnavailableError(message, error)) {
+        this.isUnavailable = true;
+        this.unavailableMessage = message;
+        this.users = [];
+      } else {
+        console.error('Error loading users:', error);
+        this.snackBar.open('Failed to load users', 'Close', { duration: 3000 });
+      }
     } finally {
       this.loading = false;
     }
+  }
+
+  private getErrorMessage(error: unknown): string {
+    if (error instanceof Error && error.message) {
+      return error.message;
+    }
+
+    if (typeof error === 'string') {
+      return error;
+    }
+
+    if (typeof error === 'object' && error !== null) {
+      const maybeMessage = (error as { message?: unknown }).message;
+      if (typeof maybeMessage === 'string') {
+        return maybeMessage;
+      }
+
+      const maybeBody = (error as { body?: unknown }).body;
+      if (typeof maybeBody === 'string') {
+        return maybeBody;
+      }
+
+      if (typeof maybeBody === 'object' && maybeBody !== null) {
+        const bodyMessage = (maybeBody as { message?: unknown }).message;
+        if (typeof bodyMessage === 'string') {
+          return bodyMessage;
+        }
+      }
+    }
+
+    return 'Failed to load users';
+  }
+
+  private isUnavailableError(message: string, error: unknown): boolean {
+    const errorText = `${message} ${this.getErrorDetails(error)}`.toLowerCase();
+
+    return (
+      errorText.includes('human user management') ||
+      errorText.includes('external oidc provider') ||
+      errorText.includes('not implemented') ||
+      (typeof error === 'object' && error !== null && 'status' in error && (error as { status?: number }).status === 501)
+    );
+  }
+
+  private getErrorDetails(error: unknown): string {
+    if (typeof error !== 'object' || error === null) {
+      return '';
+    }
+
+    const maybeBody = (error as { body?: unknown }).body;
+    if (typeof maybeBody === 'string') {
+      return maybeBody;
+    }
+
+    if (typeof maybeBody === 'object' && maybeBody !== null) {
+      const bodyText = JSON.stringify(maybeBody);
+      return bodyText;
+    }
+
+    return '';
   }
 
   async deleteUser(user: ManagedUserDto): Promise<void> {

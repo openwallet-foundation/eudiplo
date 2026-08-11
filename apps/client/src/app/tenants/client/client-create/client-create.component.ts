@@ -13,6 +13,8 @@ import {
   clientControllerGetClient,
   clientControllerUpdateClient,
   credentialConfigControllerGetConfigs,
+  type CreateClientDto,
+  type UpdateClientDto,
 } from '@eudiplo/sdk-core';
 import { ApiService } from '../../../core';
 import { JwtService, roles } from '../../../services/jwt.service';
@@ -66,7 +68,7 @@ export class ClientCreateComponent implements OnInit {
     private readonly jwtService: JwtService
   ) {
     this.clientForm = this.fb.group({
-      clientId: ['', [Validators.required, Validators.minLength(1)]],
+      clientId: ['', [Validators.required, Validators.minLength(1), this.clientIdValidator]],
       description: [''],
       roles: [[], [Validators.required]],
       allowedPresentationConfigs: [[]],
@@ -119,14 +121,77 @@ export class ClientCreateComponent implements OnInit {
     }
   }
 
+  private buildCreateClientPayload(): CreateClientDto {
+    const rawValue = this.clientForm.getRawValue() as Partial<CreateClientDto> & {
+      clientId?: unknown;
+      description?: unknown;
+      allowedPresentationConfigs?: unknown;
+      allowedIssuanceConfigs?: unknown;
+      roles?: string[];
+    };
+    const clientId = typeof rawValue.clientId === 'string' ? rawValue.clientId.trim() : '';
+    const description =
+      typeof rawValue.description === 'string' ? rawValue.description.trim() : rawValue.description;
+
+    return {
+      clientId,
+      description: description || undefined,
+      roles: rawValue.roles ?? [],
+      allowedPresentationConfigs: this.normalizeStringList(rawValue.allowedPresentationConfigs),
+      allowedIssuanceConfigs: this.normalizeStringList(rawValue.allowedIssuanceConfigs),
+    };
+  }
+
+  private buildUpdateClientPayload(): UpdateClientDto {
+    const rawValue = this.clientForm.getRawValue() as Partial<UpdateClientDto> & {
+      description?: unknown;
+      allowedPresentationConfigs?: unknown;
+      allowedIssuanceConfigs?: unknown;
+      roles?: string[];
+    };
+    const description =
+      typeof rawValue.description === 'string' ? rawValue.description.trim() : rawValue.description;
+
+    return {
+      description: description || undefined,
+      roles: rawValue.roles ?? [],
+      allowedPresentationConfigs: this.normalizeStringList(rawValue.allowedPresentationConfigs),
+      allowedIssuanceConfigs: this.normalizeStringList(rawValue.allowedIssuanceConfigs),
+    };
+  }
+
+  private clientIdValidator(control: { value: string | null | undefined }): Record<string, boolean> | null {
+    const value = control.value?.trim();
+    if (!value) {
+      return null;
+    }
+
+    const validPattern = /^[A-Za-z0-9._:-]+$/;
+    return validPattern.test(value) ? null : { invalidClientId: true };
+  }
+
+  private normalizeStringList(value: unknown): string[] | undefined {
+    if (Array.isArray(value)) {
+      return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0);
+    }
+
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return [value.trim()];
+    }
+
+    return [];
+  }
+
   async onSubmit(): Promise<void> {
     this.isSubmitting = true;
 
     try {
       if (this.loaded) {
+        const payload = this.buildUpdateClientPayload();
+
         await clientControllerUpdateClient({
           path: { id: this.id! },
-          body: this.clientForm.value,
+          body: payload,
         });
         this.snackBar.open('Client updated successfully', 'Close', {
           duration: 3000,
@@ -138,8 +203,10 @@ export class ClientCreateComponent implements OnInit {
           this.apiService.refreshAccessToken();
         }
       } else {
+        const payload = this.buildCreateClientPayload();
+
         const result = await clientControllerCreateClient({
-          body: this.clientForm.value,
+          body: payload,
         });
 
         // Cast to expected type since SDK returns generic response

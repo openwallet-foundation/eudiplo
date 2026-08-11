@@ -45,6 +45,12 @@ When a protected endpoint is called, EUDIPLO enforces tenant isolation and role-
 - Clients can be either managed by EUDIPLO by storing the client secrets (securely hashed with bcrypt) in the database or by using an external OIDC provider like Keycloak.
 - The web client authenticates against the OIDC provider and interacts with EUDIPLO using the provided access token.
 
+!!! note "Client ID format"
+
+    Client IDs must be non-empty and may only contain letters, numbers, and the
+    characters `.`, `_`, `:`, and `-`. Whitespace and other special characters are
+    rejected.
+
 From the UI you can:
 
 - Create and delete tenants

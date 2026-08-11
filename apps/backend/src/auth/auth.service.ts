@@ -78,6 +78,8 @@ export class AuthService {
             );
         }
 
+        console.log(clientId);
+
         const client = await this.clients.validateClientCredentials(
             clientId,
             clientSecret,

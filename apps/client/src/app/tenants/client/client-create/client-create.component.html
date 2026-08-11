@@ -23,6 +23,11 @@
           @if (clientForm.get('clientId')?.hasError('minlength')) {
             <mat-error> Client ID must be at least 1 character long </mat-error>
           }
+          @if (clientForm.get('clientId')?.hasError('invalidClientId')) {
+            <mat-error>
+              Client ID may only contain letters, numbers, and the characters . _ : -
+            </mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">

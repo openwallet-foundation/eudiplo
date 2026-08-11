@@ -6,9 +6,16 @@ const rolesSchema = z
     .min(1)
     .describe("Roles assigned to the client. At least one role is required.");
 
+const clientIdSchema = z
+    .string()
+    .trim()
+    .min(1)
+    .regex(/^[A-Za-z0-9._:-]+$/, "Client ID must contain only letters, numbers, and . _ : -")
+    .describe("Unique client identifier.");
+
 export const CreateClientSchema = z
     .object({
-        clientId: z.string().min(1).describe("Unique client identifier."),
+        clientId: clientIdSchema,
         secret: z
             .string()
             .min(1)
