@@ -79,7 +79,8 @@ export class IssuanceService {
                     this.issuanceConfigRepo
                         .delete({ tenantId: tid })
                         .then(() => undefined),
-                loadData: (filePath) => loadConfigDto(filePath, IssuanceConfigSchema),
+                loadData: (filePath) =>
+                    loadConfigDto(filePath, IssuanceConfigSchema),
                 processItem: async (tid, issuanceDto) => {
                     // Replace relative URIs with public URLs
                     issuanceDto.display = await this.replaceUrl(
