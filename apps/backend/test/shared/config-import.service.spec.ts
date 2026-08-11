@@ -8,6 +8,7 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { ConfigService } from "@nestjs/config";
+import { Logger } from "@nestjs/common";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CreateClientDto } from "../../src/auth/client/dto/create-client.dto";
 import { CreateClientSchema } from "../../src/auth/client/schemas/client.schema";
@@ -49,6 +50,7 @@ describe("ConfigImportService", () => {
 
     it("validates a raw Zod schema", async () => {
         const result = await service.validateConfig(
+            "/tmp/tenant-a/clients/client.json",
             "client.json",
             {
                 clientId: "alpha",
@@ -70,6 +72,7 @@ describe("ConfigImportService", () => {
 
     it("rejects invalid payloads with a raw Zod schema", async () => {
         const result = await service.validateConfig(
+            "/tmp/tenant-a/clients/client.json",
             "client.json",
             {
                 clientId: "",
@@ -83,8 +86,32 @@ describe("ConfigImportService", () => {
         expect(result.isValid).toBe(false);
     });
 
+    it("includes the file path in validation error logs", async () => {
+        const errorSpy = vi
+            .spyOn(Logger.prototype, "error")
+            .mockImplementation(() => undefined as any);
+
+        await service.validateConfig(
+            "/tmp/tenant-a/clients/client.json",
+            "client.json",
+            {
+                clientId: "",
+                roles: [],
+            },
+            CreateClientSchema,
+            { name: "tenant-a" },
+            "client config",
+        );
+
+        expect(errorSpy).toHaveBeenCalledWith(
+            expect.any(Object),
+            expect.stringContaining("/tmp/tenant-a/clients/client.json"),
+        );
+    });
+
     it("supports createZodDto classes", async () => {
         const result = await service.validateConfig(
+            "/tmp/tenant-a/clients/client.json",
             "client.json",
             {
                 clientId: "alpha",
@@ -103,6 +130,7 @@ describe("ConfigImportService", () => {
     it("fails closed when validation schema is unsupported", async () => {
         await expect(
             service.validateConfig(
+                "/tmp/tenant-a/clients/client.json",
                 "client.json",
                 { clientId: "alpha" },
                 {} as any,

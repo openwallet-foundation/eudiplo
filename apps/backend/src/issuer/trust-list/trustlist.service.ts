@@ -30,6 +30,7 @@ import {
 } from "./dto/trust-list-create.dto";
 import { TrustList } from "./entities/trust-list.entity";
 import { TrustListVersion } from "./entities/trust-list-version.entity";
+import { TrustListCreateSchema } from "./schemas/trust-list.schema";
 
 export enum ServiceTypeIdentifier {
     PIDIssuance = "http://uri.etsi.org/19602/SvcType/PID/Issuance",
@@ -185,10 +186,10 @@ export class TrustListService {
             {
                 subfolder: "trust-lists",
                 fileExtension: ".json",
-                validationClass: TrustListCreateDto,
+                validationSchema: TrustListCreateSchema,
                 resourceType: "trustlist",
                 loadData: (filePath) =>
-                    loadConfigDto(filePath, TrustListCreateDto),
+                    loadConfigDto(filePath, TrustListCreateSchema),
                 checkExists: (tenantId, data) => {
                     return this.findOne(tenantId, data.id!)
                         .then(() => true)

@@ -35,6 +35,7 @@ import {
     ImportPhase,
 } from "../../../shared/utils/config-import/config-import-orchestrator.service";
 import { StatusListImportDto } from "./dto/status-list-import.dto";
+import { StatusListImportSchema } from "./dto/status-list.schema";
 import { StatusUpdateDto } from "./dto/status-update.dto";
 import { StatusListEntity } from "./entities/status-list.entity";
 import { StatusMapping } from "./entities/status-mapping.entity";
@@ -717,7 +718,7 @@ export class StatusListService {
             {
                 subfolder: "issuance/status-lists",
                 fileExtension: ".json",
-                validationClass: StatusListImportDto,
+                validationSchema: StatusListImportSchema,
                 resourceType: "status list",
                 checkExists: async (tid, data) => {
                     // Check if a list with this ID already exists

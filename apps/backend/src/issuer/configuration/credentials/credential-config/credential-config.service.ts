@@ -23,6 +23,7 @@ import { CredentialConfigCreate } from "../dto/credential-config-create.dto";
 import { CredentialConfigUpdate } from "../dto/credential-config-update.dto";
 import { CredentialConfig } from "../entities/credential.entity";
 import { IaeActionType } from "../entities/iae-action.dto";
+import { CredentialConfigCreateSchema } from "../schemas/credential-config.schema";
 
 /**
  * Service for managing credential configurations.
@@ -61,7 +62,7 @@ export class CredentialConfigService {
             {
                 subfolder: "issuance/credentials",
                 fileExtension: ".json",
-                validationClass: CredentialConfigCreate,
+                validationSchema: CredentialConfigCreateSchema,
                 resourceType: "credential config",
                 checkExists: (tid, data) =>
                     this.getById(tid, data.id)
@@ -75,7 +76,7 @@ export class CredentialConfigService {
                         })
                         .then(() => undefined),
                 loadData: (filePath) =>
-                    loadConfigDto(filePath, CredentialConfigCreate),
+                    loadConfigDto(filePath, CredentialConfigCreateSchema),
                 processItem: async (tid, config) => {
                     await this.processCredentialConfig(tid, config);
                 },

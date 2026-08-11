@@ -26,6 +26,7 @@ import { IssuerProvidedAttestation } from "./dto/issuer-registration-certificate
 import { DisplayInfo } from "./dto/display.dto";
 import { IssuanceDto } from "./dto/issuance.dto";
 import { IssuanceConfig } from "./entities/issuance-config.entity";
+import { IssuanceConfigSchema } from "./schemas/issuance.schema";
 /**
  * Service for managing issuance configurations.
  * It provides methods to get, store, and delete issuance configurations.
@@ -65,7 +66,7 @@ export class IssuanceService {
             {
                 subfolder: "issuance",
                 fileExtension: ".json",
-                validationClass: IssuanceDto,
+                validationSchema: IssuanceConfigSchema,
                 resourceType: "issuance config",
                 formatValidationError: (error) =>
                     this.configImportService.formatNestedValidationError(error),
@@ -78,7 +79,7 @@ export class IssuanceService {
                     this.issuanceConfigRepo
                         .delete({ tenantId: tid })
                         .then(() => undefined),
-                loadData: (filePath) => loadConfigDto(filePath, IssuanceDto),
+                loadData: (filePath) => loadConfigDto(filePath, IssuanceConfigSchema),
                 processItem: async (tid, issuanceDto) => {
                     // Replace relative URIs with public URLs
                     issuanceDto.display = await this.replaceUrl(

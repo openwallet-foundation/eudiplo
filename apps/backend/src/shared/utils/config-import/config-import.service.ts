@@ -51,6 +51,8 @@ export class ConfigImportService {
         const files = readdirSync(path);
 
         for (const file of files) {
+            const filePath = join(path, file);
+
             // Filter by extension if provided
             if (
                 options.fileExtension &&
@@ -60,8 +62,6 @@ export class ConfigImportService {
             }
 
             try {
-                const filePath = join(path, file);
-
                 // Load data using custom loader or default JSON loader
                 let data: T;
                 if (options.loadData) {
@@ -79,6 +79,7 @@ export class ConfigImportService {
                     options.validationSchema ?? options.validationClass;
                 if (schemaOrDto) {
                     const validationResult = await this.validateConfig(
+                        filePath,
                         file,
                         data,
                         schemaOrDto,
@@ -115,8 +116,9 @@ export class ConfigImportService {
                 await options.processItem(tenantId, data, file);
                 counter++;
             } catch (error: any) {
+                const reason = error?.message || "Unknown error";
                 this.logger.error(
-                    `[${tenantId}] Failed to import ${options.resourceType} ${file}: ${error.message}`,
+                    `[${tenantId}] Failed to import ${options.resourceType} ${file} (${filePath}): ${reason}`,
                 );
                 if (strictConfig === "abort") {
                     // Abort the entire import process in strict abort mode
@@ -165,6 +167,8 @@ export class ConfigImportService {
             const files = readdirSync(path);
 
             for (const file of files) {
+                const filePath = join(path, file);
+
                 // Filter by extension if provided
                 if (
                     options.fileExtension &&
@@ -174,8 +178,6 @@ export class ConfigImportService {
                 }
 
                 try {
-                    const filePath = join(path, file);
-
                     // Load data using custom loader or default JSON loader
                     let data: T;
                     if (options.loadData) {
@@ -197,6 +199,7 @@ export class ConfigImportService {
                         options.validationSchema ?? options.validationClass;
                     if (schemaOrDto) {
                         const validationResult = await this.validateConfig(
+                            filePath,
                             file,
                             data,
                             schemaOrDto,
@@ -233,8 +236,9 @@ export class ConfigImportService {
                     await options.processItem(tenant.name, data, file);
                     counter++;
                 } catch (error: any) {
+                    const reason = error?.message || "Unknown error";
                     this.logger.error(
-                        `[${tenant.name}] Failed to import ${options.resourceType} ${file}: ${error.message}`,
+                        `[${tenant.name}] Failed to import ${options.resourceType} ${file} (${filePath}): ${reason}`,
                     );
                     if (strictConfig === "abort") {
                         // Abort the entire import process in strict abort mode
@@ -324,6 +328,7 @@ export class ConfigImportService {
      * Validate configuration against a Zod schema or parse-capable DTO.
      */
     async validateConfig<T extends object>(
+        filePath: string,
         file: string,
         payload: any,
         schemaOrDto: any,
@@ -334,7 +339,7 @@ export class ConfigImportService {
         const schema = resolveValidationSchema(schemaOrDto);
         if (!schema) {
             throw new Error(
-                `Validation requested for ${resourceType} ${file} but no Zod schema was provided`,
+                `Validation requested for ${resourceType} ${file} (${filePath}) but no Zod schema was provided`,
             );
         }
 
@@ -359,7 +364,7 @@ export class ConfigImportService {
 
             this.logger.error(
                 { errors: parsed.error.issues.map(formatter) },
-                `[${tenant.name}] Validation failed for ${resourceType} ${file}`,
+                `[${tenant.name}] Validation failed for ${resourceType} ${file} (${filePath})`,
             );
 
             return { isValid: false, data: payload };
