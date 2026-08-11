@@ -169,21 +169,21 @@ describe("KMS Zod schemas", () => {
     });
 
     it("rejects provider-specific fields on the wrong provider type", () => {
-        expectInvalid(
-            DbKmsConfigSchema,
-            { ...validDbProvider(), vaultUrl: "https://vault.example.com" },
-        );
-        expectInvalid(
-            VaultKmsConfigSchema,
-            { ...validVaultProvider(), region: "eu-west-1" },
-        );
+        expectInvalid(DbKmsConfigSchema, {
+            ...validDbProvider(),
+            vaultUrl: "https://vault.example.com",
+        });
+        expectInvalid(VaultKmsConfigSchema, {
+            ...validVaultProvider(),
+            region: "eu-west-1",
+        });
     });
 
     it("rejects unknown properties", () => {
-        expectInvalid(
-            KmsConfigSchema,
-            { ...validKmsConfig(), unexpected: true },
-        );
+        expectInvalid(KmsConfigSchema, {
+            ...validKmsConfig(),
+            unexpected: true,
+        });
     });
 
     it("rejects unknown provider and auth types", () => {
@@ -197,10 +197,10 @@ describe("KMS Zod schemas", () => {
             type: "oauth2-client-credentials",
             tokenUrl: "https://iam.example.com/token",
         });
-        expectInvalid(
-            HttpAuthMtlsConfigSchema,
-            { type: "mtls", certFile: "/etc/certs/client.crt" },
-        );
+        expectInvalid(HttpAuthMtlsConfigSchema, {
+            type: "mtls",
+            certFile: "/etc/certs/client.crt",
+        });
     });
 
     it("rejects missing required provider fields", () => {
@@ -211,41 +211,29 @@ describe("KMS Zod schemas", () => {
 
     it("rejects empty strings for required values", () => {
         expectInvalid(DbKmsConfigSchema, { id: "", type: "db" });
-        expectInvalid(
-            VaultKmsConfigSchema,
-            {
-                id: "vault",
-                type: "vault",
-                vaultUrl: "",
-                vaultToken: "token",
-            },
-        );
-        expectInvalid(
-            HttpAuthBearerConfigSchema,
-            {
-                type: "bearer",
-                token: "",
-            },
-        );
+        expectInvalid(VaultKmsConfigSchema, {
+            id: "vault",
+            type: "vault",
+            vaultUrl: "",
+            vaultToken: "token",
+        });
+        expectInvalid(HttpAuthBearerConfigSchema, {
+            type: "bearer",
+            token: "",
+        });
     });
 
     it("rejects malformed URLs", () => {
-        expectInvalid(
-            VaultKmsConfigSchema,
-            {
-                ...validVaultProvider(),
-                vaultUrl: "not-a-url",
-            },
-        );
-        expectInvalid(
-            HttpAuthOauth2ConfigSchema,
-            {
-                type: "oauth2-client-credentials",
-                tokenUrl: "not-a-url",
-                clientId: "client-id",
-                clientSecret: "client-secret",
-            },
-        );
+        expectInvalid(VaultKmsConfigSchema, {
+            ...validVaultProvider(),
+            vaultUrl: "not-a-url",
+        });
+        expectInvalid(HttpAuthOauth2ConfigSchema, {
+            type: "oauth2-client-credentials",
+            tokenUrl: "not-a-url",
+            clientId: "client-id",
+            clientSecret: "client-secret",
+        });
     });
 
     it("rejects duplicate provider ids", () => {
