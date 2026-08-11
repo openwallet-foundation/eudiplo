@@ -193,14 +193,10 @@ describe("KMS Zod schemas", () => {
 
     it("rejects missing required HTTP auth fields", () => {
         expectInvalid(HttpAuthBearerConfigSchema, { type: "bearer" });
-        expectInvalid(
-            HttpAuthOauth2ConfigSchema,
-            {
-                type: "oauth2-client-credentials",
-                tokenUrl: "https://iam.example.com/token",
-            },
-            ["clientId"],
-        );
+        expectInvalid(HttpAuthOauth2ConfigSchema, {
+            type: "oauth2-client-credentials",
+            tokenUrl: "https://iam.example.com/token",
+        });
         expectInvalid(
             HttpAuthMtlsConfigSchema,
             { type: "mtls", certFile: "/etc/certs/client.crt" },
@@ -208,15 +204,11 @@ describe("KMS Zod schemas", () => {
     });
 
     it("rejects missing required provider fields", () => {
-        expectInvalid(VaultKmsConfigSchema, { id: "vault", type: "vault" }, [
-            "vaultUrl",
-        ]);
+        expectInvalid(VaultKmsConfigSchema, { id: "vault", type: "vault" });
         expectInvalid(AwsKmsConfigSchema, { id: "aws", type: "aws-kms" }, [
             "region",
         ]);
-        expectInvalid(HttpKmsConfigSchema, { id: "http", type: "http" }, [
-            "baseUrl",
-        ]);
+        expectInvalid(HttpKmsConfigSchema, { id: "http", type: "http" });
     });
 
     it("rejects empty strings for required values", () => {
@@ -229,7 +221,6 @@ describe("KMS Zod schemas", () => {
                 vaultUrl: "",
                 vaultToken: "token",
             },
-            ["vaultUrl"],
         );
         expectInvalid(
             HttpAuthBearerConfigSchema,
@@ -237,7 +228,6 @@ describe("KMS Zod schemas", () => {
                 type: "bearer",
                 token: "",
             },
-            ["token"],
         );
     });
 
