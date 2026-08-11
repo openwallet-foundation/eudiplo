@@ -269,6 +269,16 @@ export class IssuanceService {
             existingConfig = await this.getIssuanceConfiguration(tenantId);
         } catch {
             // No existing config, will create new
+            existingConfig = { 
+                tenantId, 
+                authorizationServers: [
+                    {
+                        type: "built-in",
+                        id: "issuer-built-in",
+                        enabled: true,
+                    }
+                ] 
+            };
         }
 
         // Filter out undefined values from the incoming config.
