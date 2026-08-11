@@ -62,7 +62,7 @@ describe("Issuance - Configuration", () => {
         expect(res.body.authorizationServers).toBeDefined();
         expect(res.body.authorizationServers).toHaveLength(1);
         expect(res.body.authorizationServers[0]).toMatchObject({
-            type: "built-in",            
+            type: "built-in",
         });
     });
 
