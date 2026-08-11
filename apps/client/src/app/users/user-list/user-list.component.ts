@@ -108,7 +108,10 @@ export class UserListComponent implements OnInit {
       errorText.includes('human user management') ||
       errorText.includes('external oidc provider') ||
       errorText.includes('not implemented') ||
-      (typeof error === 'object' && error !== null && 'status' in error && (error as { status?: number }).status === 501)
+      (typeof error === 'object' &&
+        error !== null &&
+        'status' in error &&
+        (error as { status?: number }).status === 501)
     );
   }
 

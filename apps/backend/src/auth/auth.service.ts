@@ -76,9 +76,7 @@ export class AuthService {
             throw new UnauthorizedException(
                 "Client credentials must be provided either in Authorization header (Basic auth) or request body",
             );
-        }
-
-        console.log(clientId);
+        }    
 
         const client = await this.clients.validateClientCredentials(
             clientId,

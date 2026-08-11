@@ -160,7 +160,9 @@ export class ClientCreateComponent implements OnInit {
     };
   }
 
-  private clientIdValidator(control: { value: string | null | undefined }): Record<string, boolean> | null {
+  private clientIdValidator(control: {
+    value: string | null | undefined;
+  }): Record<string, boolean> | null {
     const value = control.value?.trim();
     if (!value) {
       return null;
@@ -172,7 +174,9 @@ export class ClientCreateComponent implements OnInit {
 
   private normalizeStringList(value: unknown): string[] | undefined {
     if (Array.isArray(value)) {
-      return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0);
+      return value.filter(
+        (item): item is string => typeof item === 'string' && item.trim().length > 0
+      );
     }
 
     if (typeof value === 'string' && value.trim().length > 0) {

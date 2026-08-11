@@ -10,7 +10,10 @@ const clientIdSchema = z
     .string()
     .trim()
     .min(1)
-    .regex(/^[A-Za-z0-9._:-]+$/, "Client ID must contain only letters, numbers, and . _ : -")
+    .regex(
+        /^[A-Za-z0-9._:-]+$/,
+        "Client ID must contain only letters, numbers, and . _ : -",
+    )
     .describe("Unique client identifier.");
 
 export const CreateClientSchema = z
