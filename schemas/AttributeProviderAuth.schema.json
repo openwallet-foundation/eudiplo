@@ -55,23 +55,6 @@
     }
   ],
   "description": "Authentication method used to call the attribute provider.",
-  "type": "object",
-  "properties": {
-    "type": {
-      "type": "string",
-      "enum": [
-        "none",
-        "apiKey"
-      ]
-    }
-  },
-  "discriminator": {
-    "propertyName": "type",
-    "mapping": {
-      "none": "#/oneOf/0",
-      "apiKey": "#/oneOf/1"
-    }
-  },
   "$id": "./AttributeProviderAuth.schema.json",
   "title": "AttributeProviderAuth"
 }

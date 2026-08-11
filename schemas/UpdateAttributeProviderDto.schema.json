@@ -84,24 +84,7 @@
           "description": "API key authentication variant."
         }
       ],
-      "description": "Authentication configuration for outbound provider requests.",
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "none",
-            "apiKey"
-          ]
-        }
-      },
-      "discriminator": {
-        "propertyName": "type",
-        "mapping": {
-          "none": "#/oneOf/0",
-          "apiKey": "#/oneOf/1"
-        }
-      }
+      "description": "Authentication configuration for outbound provider requests."
     }
   },
   "additionalProperties": false,

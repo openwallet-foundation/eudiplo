@@ -10,7 +10,13 @@ export interface ImportOptions<T extends object> {
     fileExtension?: string;
 
     /**
-     * Class constructor for validation (if applicable)
+     * Zod schema or Zod DTO class used to validate imported payloads.
+     */
+    validationSchema?: unknown;
+
+    /**
+     * Backward-compatible alias for validationSchema.
+     * @deprecated Use validationSchema.
      */
     validationClass?: unknown;
 

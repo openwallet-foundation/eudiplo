@@ -13,96 +13,6 @@ type SchemaEntry = {
     schema: Record<string, unknown>;
 };
 
-function addDiscriminatorHints(node: unknown): unknown {
-    if (Array.isArray(node)) {
-        return node.map((item) => addDiscriminatorHints(item));
-    }
-
-    if (!node || typeof node !== "object") {
-        return node;
-    }
-
-    const out = Object.fromEntries(
-        Object.entries(node as Record<string, unknown>).map(([key, value]) => [
-            key,
-            addDiscriminatorHints(value),
-        ]),
-    ) as Record<string, unknown>;
-
-    const variants = Array.isArray(out.oneOf)
-        ? (out.oneOf as Array<Record<string, unknown>>)
-        : undefined;
-
-    if (!variants || variants.length < 2) {
-        return out;
-    }
-
-    const candidateTags = ["type", "format", "method", "policy"];
-
-    const findTagValues = (tag: string) => {
-        const values: string[] = [];
-
-        for (const variant of variants) {
-            if (!variant || typeof variant !== "object") {
-                return undefined;
-            }
-
-            const properties = variant.properties as Record<string, unknown> | undefined;
-            const property = properties?.[tag] as Record<string, unknown> | undefined;
-            const value = property?.const;
-
-            if (typeof value !== "string") {
-                return undefined;
-            }
-
-            values.push(value);
-        }
-
-        return values;
-    };
-
-    let chosenTag: string | undefined;
-    let chosenValues: string[] | undefined;
-
-    for (const tag of candidateTags) {
-        const values = findTagValues(tag);
-        if (values) {
-            chosenTag = tag;
-            chosenValues = values;
-            break;
-        }
-    }
-
-    if (!chosenTag || !chosenValues) {
-        return out;
-    }
-
-    const existingProperties =
-        (out.properties as Record<string, unknown> | undefined) ?? {};
-    const existingTagProperty =
-        (existingProperties[chosenTag] as Record<string, unknown> | undefined) ??
-        {};
-
-    out.type ??= "object";
-    out.properties = {
-        ...existingProperties,
-        [chosenTag]: {
-            ...existingTagProperty,
-            type: "string",
-            enum: [...new Set(chosenValues)],
-        },
-    };
-
-    out.discriminator = {
-        propertyName: chosenTag,
-        mapping: Object.fromEntries(
-            chosenValues.map((value, index) => [value, `#/oneOf/${index}`]),
-        ),
-    };
-
-    return out;
-}
-
 const ROOT = resolve(process.cwd());
 const SCHEMAS_DIR = join(ROOT, "schemas");
 const CLIENT_SCHEMAS_FILE = join(ROOT, "apps/client/src/app/utils/schemas.json");
@@ -118,16 +28,15 @@ function getIdBase(): string {
 
 const ID_BASE = getIdBase();
 
-function emitSchema(bundle: EditorSchemaBundle, name: string, schema: z.ZodTypeAny): SchemaEntry {
+function emitSchema(name: string, schema: z.ZodTypeAny): SchemaEntry {
     const generated = z.toJSONSchema(schema, {
         target: "draft-2020-12",
     }) as Record<string, unknown>;
-    const enhanced = addDiscriminatorHints(generated) as Record<string, unknown>;
 
     const normalizedIdBase = ID_BASE.endsWith("/") ? ID_BASE : `${ID_BASE}/`;
 
     const finalSchema = {
-        ...enhanced,
+        ...generated,
         $schema: "https://json-schema.org/draft/2020-12/schema",
         $id: `${normalizedIdBase}${name}.schema.json`,
         title: name,
@@ -203,7 +112,7 @@ async function mergeRegistry(schemaEntries: SchemaEntry[]): Promise<SchemaEntry[
 
 async function main() {
     const schemaEntries = editorSchemaBundles.flatMap((bundle) =>
-        bundle.schemas.map((definition) => emitSchema(bundle, definition.name, definition.schema)),
+        bundle.schemas.map((definition) => emitSchema(definition.name, definition.schema)),
     );
 
     assertNoDuplicateSchemaNamesAndIds(schemaEntries);

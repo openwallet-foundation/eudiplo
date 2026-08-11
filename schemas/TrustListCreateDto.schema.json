@@ -169,24 +169,7 @@
             ],
             "additionalProperties": false
           }
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "internal",
-              "external"
-            ]
-          }
-        },
-        "discriminator": {
-          "propertyName": "type",
-          "mapping": {
-            "internal": "#/oneOf/0",
-            "external": "#/oneOf/1"
-          }
-        }
+        ]
       },
       "description": "One or more entities included in this trust list."
     },

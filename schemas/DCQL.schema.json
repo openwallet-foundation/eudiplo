@@ -12,6 +12,8 @@
             "properties": {
               "id": {
                 "type": "string",
+                "minLength": 1,
+                "pattern": "^[A-Za-z0-9_-]+$",
                 "description": "Credential query identifier."
               },
               "multiple": {
@@ -52,8 +54,16 @@
                               },
                               "url": {
                                 "description": "Optional trust list URL reference.",
-                                "type": "string",
-                                "format": "uri"
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "format": "uri"
+                                  },
+                                  {
+                                    "type": "string",
+                                    "pattern": "^<TENANT_URL>(?:\\/.*)?$"
+                                  }
+                                ]
                               },
                               "verifierKey": {
                                 "description": "Optional verifier key material.",
@@ -101,24 +111,7 @@
                       ],
                       "additionalProperties": false
                     }
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "etsi_tl",
-                        "openid_federation"
-                      ]
-                    }
-                  },
-                  "discriminator": {
-                    "propertyName": "type",
-                    "mapping": {
-                      "etsi_tl": "#/oneOf/0",
-                      "openid_federation": "#/oneOf/1"
-                    }
-                  }
+                  ]
                 }
               },
               "format": {
@@ -194,6 +187,8 @@
             "properties": {
               "id": {
                 "type": "string",
+                "minLength": 1,
+                "pattern": "^[A-Za-z0-9_-]+$",
                 "description": "Credential query identifier."
               },
               "multiple": {
@@ -234,8 +229,16 @@
                               },
                               "url": {
                                 "description": "Optional trust list URL reference.",
-                                "type": "string",
-                                "format": "uri"
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "format": "uri"
+                                  },
+                                  {
+                                    "type": "string",
+                                    "pattern": "^<TENANT_URL>(?:\\/.*)?$"
+                                  }
+                                ]
                               },
                               "verifierKey": {
                                 "description": "Optional verifier key material.",
@@ -283,24 +286,7 @@
                       ],
                       "additionalProperties": false
                     }
-                  ],
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "etsi_tl",
-                        "openid_federation"
-                      ]
-                    }
-                  },
-                  "discriminator": {
-                    "propertyName": "type",
-                    "mapping": {
-                      "etsi_tl": "#/oneOf/0",
-                      "openid_federation": "#/oneOf/1"
-                    }
-                  }
+                  ]
                 }
               },
               "format": {
@@ -372,24 +358,7 @@
             ],
             "additionalProperties": false
           }
-        ],
-        "type": "object",
-        "properties": {
-          "format": {
-            "type": "string",
-            "enum": [
-              "dc+sd-jwt",
-              "mso_mdoc"
-            ]
-          }
-        },
-        "discriminator": {
-          "propertyName": "format",
-          "mapping": {
-            "dc+sd-jwt": "#/oneOf/0",
-            "mso_mdoc": "#/oneOf/1"
-          }
-        }
+        ]
       },
       "description": "Credential queries requested by the verifier."
     },

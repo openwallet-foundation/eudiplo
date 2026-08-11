@@ -22,12 +22,14 @@ export const CreateClientSchema = z
         roles: rolesSchema,
         allowedPresentationConfigs: z
             .array(z.string().min(1))
+            .nullable()
             .optional()
             .describe(
                 "Optional allow-list of presentation config ids this client can use.",
             ),
         allowedIssuanceConfigs: z
             .array(z.string().min(1))
+            .nullable()
             .optional()
             .describe(
                 "Optional allow-list of issuance config ids this client can use.",
@@ -48,12 +50,14 @@ export const UpdateClientSchema = z
             .describe("Optional replacement roles for the client."),
         allowedPresentationConfigs: z
             .array(z.string().min(1))
+            .nullable()
             .optional()
             .describe(
                 "Optional replacement allow-list of presentation config ids.",
             ),
         allowedIssuanceConfigs: z
             .array(z.string().min(1))
+            .nullable()
             .optional()
             .describe(
                 "Optional replacement allow-list of issuance config ids.",

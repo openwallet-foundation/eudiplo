@@ -4,6 +4,23 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { ImportOptions, TenantImportOptions } from "./import-options";
 
+function resolveValidationSchema(schemaOrDto: unknown): any | undefined {
+    if (!schemaOrDto) {
+        return undefined;
+    }
+
+    const candidate = schemaOrDto as any;
+    if (typeof candidate.safeParse === "function") {
+        return candidate;
+    }
+
+    if (typeof candidate.schema?.safeParse === "function") {
+        return candidate.schema;
+    }
+
+    return undefined;
+}
+
 @Injectable()
 export class ConfigImportService {
     private readonly logger = new Logger(ConfigImportService.name);
@@ -58,11 +75,12 @@ export class ConfigImportService {
                 data = this.replacePlaceholders(data);
 
                 // Validate if validation schema is provided
-                if (options.validationClass) {
+                const schemaOrDto = options.validationSchema ?? options.validationClass;
+                if (schemaOrDto) {
                     const validationResult = await this.validateConfig(
                         file,
                         data,
-                        options.validationClass,
+                        schemaOrDto,
                         { name: tenantId },
                         options.resourceType,
                         options.formatValidationError,
@@ -174,11 +192,13 @@ export class ConfigImportService {
                     data = this.replacePlaceholders(data);
 
                     // Validate if validation class is provided
-                    if (options.validationClass) {
+                    const schemaOrDto =
+                        options.validationSchema ?? options.validationClass;
+                    if (schemaOrDto) {
                         const validationResult = await this.validateConfig(
                             file,
                             data,
-                            options.validationClass,
+                            schemaOrDto,
                             tenant,
                             options.resourceType,
                             options.formatValidationError,
@@ -310,15 +330,16 @@ export class ConfigImportService {
         resourceType: string,
         formatError?: (error: unknown) => any,
     ): Promise<{ isValid: boolean; data: T }> {
-        const schema =
-            schemaOrDto &&
-            typeof schemaOrDto === "object" &&
-            "schema" in schemaOrDto
-                ? schemaOrDto.schema
-                : null;
-        const parsed = schema
-            ? schema.safeParse(payload)
-            : { success: true as const, data: payload as T };
+        const schema = resolveValidationSchema(schemaOrDto);
+        if (!schema) {
+            throw new Error(
+                `Validation requested for ${resourceType} ${file} but no Zod schema was provided`,
+            );
+        }
+
+        const parsed = schema.safeParse(payload) as
+            | { success: true; data: T }
+            | { success: false; error: any };
 
         if (!parsed.success) {
             const formatter =

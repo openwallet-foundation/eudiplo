@@ -60,24 +60,7 @@
           "additionalProperties": false
         }
       ],
-      "description": "Webhook authentication strategy.",
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "none",
-            "apiKey"
-          ]
-        }
-      },
-      "discriminator": {
-        "propertyName": "type",
-        "mapping": {
-          "none": "#/oneOf/0",
-          "apiKey": "#/oneOf/1"
-        }
-      }
+      "description": "Webhook authentication strategy."
     },
     "includeRawTokensFor": {
       "description": "List of credential IDs to include raw tokens for (for example ['sca_credential']).",

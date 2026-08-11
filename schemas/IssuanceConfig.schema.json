@@ -310,28 +310,7 @@
             "additionalProperties": false
           }
         ],
-        "description": "Supported authorization server configurations.",
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "external",
-              "oid4vp",
-              "chained",
-              "built-in"
-            ]
-          }
-        },
-        "discriminator": {
-          "propertyName": "type",
-          "mapping": {
-            "external": "#/oneOf/0",
-            "oid4vp": "#/oneOf/1",
-            "chained": "#/oneOf/2",
-            "built-in": "#/oneOf/3"
-          }
-        }
+        "description": "Supported authorization server configurations."
       },
       "description": "Configured authorization server entries."
     },

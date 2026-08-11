@@ -10,6 +10,7 @@ import { ConfigImportOrchestratorService } from "../../../shared/utils/config-im
 import { Role } from "../../roles/role.enum";
 import { ClientsProvider } from "../client.provider";
 import { ClientEntity } from "../entities/client.entity";
+import { CreateClientSchema } from "../schemas/client.schema";
 import type { CreateClient, UpdateClient } from "../schemas/client.schema";
 
 const BCRYPT_ROUNDS = 10;
@@ -59,7 +60,7 @@ export class InternalClientsProvider
             {
                 subfolder: "clients",
                 fileExtension: ".json",
-                validationClass: ClientEntity,
+                validationSchema: CreateClientSchema,
                 resourceType: "client config",
                 loadData: (filePath) => {
                     const payload = JSON.parse(readFileSync(filePath, "utf8"));

@@ -37,19 +37,33 @@
     },
     "allowedPresentationConfigs": {
       "description": "Optional allow-list of presentation config ids this client can use.",
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      }
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "allowedIssuanceConfigs": {
       "description": "Optional allow-list of issuance config ids this client can use.",
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      }
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
     }
   },
   "required": [

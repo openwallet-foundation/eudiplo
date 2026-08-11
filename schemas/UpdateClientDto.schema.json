@@ -27,19 +27,33 @@
     },
     "allowedPresentationConfigs": {
       "description": "Optional replacement allow-list of presentation config ids.",
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      }
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "allowedIssuanceConfigs": {
       "description": "Optional replacement allow-list of issuance config ids.",
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      }
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
     }
   },
   "additionalProperties": false,

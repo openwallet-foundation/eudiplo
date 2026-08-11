@@ -18,6 +18,7 @@ import { ClientsProvider } from "../client.provider";
 import { CreateClientDto } from "../dto/create-client.dto";
 import { UpdateClientDto } from "../dto/update-client.dto";
 import { ClientEntity } from "../entities/client.entity";
+import { CreateClientSchema } from "../schemas/client.schema";
 
 @Injectable()
 export class KeycloakClientsProvider
@@ -104,7 +105,7 @@ export class KeycloakClientsProvider
             {
                 subfolder: "clients",
                 fileExtension: ".json",
-                validationClass: ClientEntity,
+                validationSchema: CreateClientSchema,
                 resourceType: "client config",
                 loadData: (filePath) => {
                     const payload = JSON.parse(readFileSync(filePath, "utf8"));
