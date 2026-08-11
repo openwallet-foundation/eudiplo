@@ -432,8 +432,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="513"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:513</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="523"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:523</a></div>
                         </td>
                     </tr>
 
@@ -526,8 +526,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="442"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:442</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="452"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:452</a></div>
                         </td>
                     </tr>
 
@@ -738,8 +738,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="533"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:533</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="543"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:543</a></div>
                         </td>
                     </tr>
 
@@ -807,8 +807,8 @@ It provides methods to get, store, and delete issuance configurations.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="427"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:427</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="437"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:437</a></div>
                         </td>
                     </tr>
 
@@ -1029,8 +1029,8 @@ Replaces cache and revokes the previously active cached certificate.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="373"
-                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:373</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="383"
+                                    class="link-to-prism">src/issuer/configuration/issuance/issuance.service.ts:383</a></div>
                         </td>
                     </tr>
 
@@ -1587,6 +1587,16 @@ export class IssuanceService {
             existingConfig &#x3D; await this.getIssuanceConfiguration(tenantId);
         } catch {
             // No existing config, will create new
+            existingConfig &#x3D; {
+                tenantId,
+                authorizationServers: [
+                    {
+                        type: &quot;built-in&quot;,
+                        id: &quot;issuer-built-in&quot;,
+                        enabled: true,
+                    },
+                ],
+            };
         }
 
         // Filter out undefined values from the incoming config.
