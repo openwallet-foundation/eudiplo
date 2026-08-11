@@ -3012,6 +3012,12 @@ Future improvements may include <strong>per-tenant databases</strong> or <strong
 <li>Clients can be either managed by EUDIPLO by storing the client secrets (securely hashed with bcrypt) in the database or by using an external OIDC provider like Keycloak.</li>
 <li>The web client authenticates against the OIDC provider and interacts with EUDIPLO using the provided access token.</li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Client ID format</p>
+<p>Client IDs must be non-empty and may only contain letters, numbers, and the
+characters <code>.</code>, <code>_</code>, <code>:</code>, and <code>-</code>. Whitespace and other special characters are
+rejected.</p>
+</div>
 <p>From the UI you can:</p>
 <ul>
 <li>Create and delete tenants</li>

@@ -3822,6 +3822,12 @@ see <a href="../status-management/">Status Management</a>.</p>
 <h3 id="client-configurations">Client Configurations<a class="headerlink" href="#client-configurations" title="Permanent link">¶</a></h3>
 <p><strong>Location</strong>: <code>config/{tenant}/clients/*.json</code></p>
 <p>Define client-specific configurations, including client IDs, secrets, and permissions.</p>
+<div class="admonition note">
+<p class="admonition-title">Client ID format</p>
+<p>Client IDs in imported configuration files must be non-empty and may only contain
+letters, numbers, and the characters <code>.</code>, <code>_</code>, <code>:</code>, and <code>-</code>. Whitespace and
+other special characters are rejected.</p>
+</div>
 <p><strong>Schema Reference</strong>:
 <a href="../../api/openapi/">Client Config API</a></p>
 <h3 id="image-configuration">Image Configuration<a class="headerlink" href="#image-configuration" title="Permanent link">¶</a></h3>
