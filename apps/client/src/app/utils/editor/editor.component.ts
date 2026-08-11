@@ -169,7 +169,8 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
         }
       } catch (error) {
         this.validateFn = undefined;
-        this.schemaValidationError = error instanceof Error ? error.message : 'Schema validation setup failed';
+        this.schemaValidationError =
+          error instanceof Error ? error.message : 'Schema validation setup failed';
       }
       this._validatorChange?.();
     }

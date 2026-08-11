@@ -75,7 +75,8 @@ export class ConfigImportService {
                 data = this.replacePlaceholders(data);
 
                 // Validate if validation schema is provided
-                const schemaOrDto = options.validationSchema ?? options.validationClass;
+                const schemaOrDto =
+                    options.validationSchema ?? options.validationClass;
                 if (schemaOrDto) {
                     const validationResult = await this.validateConfig(
                         file,

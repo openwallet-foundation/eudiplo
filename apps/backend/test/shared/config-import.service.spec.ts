@@ -1,4 +1,10 @@
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+    mkdirSync,
+    mkdtempSync,
+    readFileSync,
+    rmSync,
+    writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { ConfigService } from "@nestjs/config";
@@ -110,10 +116,14 @@ describe("ConfigImportService", () => {
         const tenantFolder = join(tmpRoot, "tenant-a", "clients");
         rmSync(tenantFolder, { recursive: true, force: true });
         mkdirSync(tenantFolder, { recursive: true });
-        writeFileSync(join(tenantFolder, "bad.json"), JSON.stringify({
-            clientId: "",
-            roles: [],
-        }), "utf8");
+        writeFileSync(
+            join(tenantFolder, "bad.json"),
+            JSON.stringify({
+                clientId: "",
+                roles: [],
+            }),
+            "utf8",
+        );
 
         const processItem = vi.fn();
         const deleteExisting = vi.fn();
