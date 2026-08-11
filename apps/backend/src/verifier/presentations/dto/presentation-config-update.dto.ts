@@ -1,6 +1,6 @@
-import { PartialType } from "@nestjs/swagger";
-import { PresentationConfigCreateDto } from "./presentation-config-create.dto";
+import { createZodDto } from "nestjs-zod";
+import { PresentationConfigUpdateSchema } from "../schemas/presentation-config.schema";
 
-export class PresentationConfigUpdateDto extends PartialType(
-    PresentationConfigCreateDto,
+export class PresentationConfigUpdateDto extends createZodDto(
+    PresentationConfigUpdateSchema,
 ) {}

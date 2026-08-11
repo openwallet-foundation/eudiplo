@@ -1,12 +1,6 @@
-import { OmitType } from "@nestjs/swagger";
-import { TENANT_RELATION_FIELDS } from "../../../shared/utils/dto-omit-fields";
-import { PresentationConfig } from "../entities/presentation-config.entity";
+import { createZodDto } from "nestjs-zod";
+import { PresentationConfigCreateSchema } from "../schemas/presentation-config.schema";
 
-export class PresentationConfigCreateDto extends OmitType(PresentationConfig, [
-    ...TENANT_RELATION_FIELDS,
-    "createdAt",
-    "updatedAt",
-    "registrationCertCache",
-] as const) {
-    // Define the properties for the presentation config create DTO
-}
+export class PresentationConfigCreateDto extends createZodDto(
+    PresentationConfigCreateSchema,
+) {}

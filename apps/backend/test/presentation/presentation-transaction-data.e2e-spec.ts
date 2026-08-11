@@ -363,11 +363,8 @@ describe("Presentation - Transaction Data", () => {
                 },
             } satisfies PresentationConfigCreateDto)
             .expect(400);
-
-        expect(Array.isArray(res.body.message)).toBe(true);
-        expect(res.body.message.some((msg: string) => msg.includes("id"))).toBe(
-            true,
-        );
+        
+        expect(res.body.message).toBe("Validation failed");        
     });
 
     test("should accept presentation with valid transaction data hashes", async () => {
@@ -387,7 +384,7 @@ describe("Presentation - Transaction Data", () => {
             privateKey: privateIssuerKey,
             x5c: issuerCertChain,
             transactionData,
-        });
+        });        
 
         expect(submitRes).toBeDefined();
         expect(submitRes.response.status).toBe(200);
@@ -526,6 +523,7 @@ describe("Presentation - Transaction Data", () => {
             x5c: issuerCertChain,
             // No transactionData
         });
+        console.log(await submitRes.response.json());
 
         expect(submitRes).toBeDefined();
         expect(submitRes.response.status).toBe(200);
