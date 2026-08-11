@@ -608,7 +608,7 @@ export class Oid4vpService {
                     | undefined,
             );
 
-        // Validate decrypted response against the Zod schema        
+        // Validate decrypted response against the Zod schema
 
         const parsed = AuthResponseSchema.safeParse(decrypted);
         if (!parsed.success) {
