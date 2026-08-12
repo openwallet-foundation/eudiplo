@@ -17,6 +17,9 @@ jobs:
   prepare-release:
     name: Prepare versioned release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     outputs:
       has_release: ${{ steps.version_check.outputs.has_release }}
       is_major: ${{ steps.version_check.outputs.is_major }}
@@ -79,8 +82,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Running semantic-release dry-run to detect version bump..."
-          DRY_OUTPUT="$(npx semantic-release --dry-run 2>&1)"
-          DRY_EXIT=$?
+          DRY_EXIT=0
+          DRY_OUTPUT="$(npx semantic-release --dry-run 2>&1)" || DRY_EXIT=$?
           echo "$DRY_OUTPUT"
           if [ "$DRY_EXIT" -ne 0 ]; then
             echo "semantic-release dry-run failed (see output above)" >&2
