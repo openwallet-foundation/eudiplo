@@ -1,13 +1,18 @@
-import { access, unlink, writeFile } from "node:fs/promises";
+import { access, rm, unlink, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import {
+    copyBundledDemoConfig,
     createComposeFile,
     createComposeEnv,
     createNoClientComposeOverride,
+    demoComposeFileName,
+    demoConfigDirectory,
+    demoEnvFileName,
     defaultComposeFileName,
     defaultComposeOverrideFileName,
     defaultEnvFileName,
+    hasFiles,
 } from "./compose-template.js";
 import type {
     DeploymentDriver,
@@ -53,20 +58,51 @@ export const drivers: Record<DeploymentTarget, DeploymentDriver> = {
 
 export async function ensureComposeProject(
     cwd: string,
-    options: { useDemoImage?: boolean; noClient?: boolean } = {},
+    options: {
+        mode?: "standard" | "demo";
+        noClient?: boolean;
+        force?: boolean;
+        reset?: boolean;
+        cliVersion: string;
+        imageTagOverride?: string;
+    },
 ): Promise<InstanceConfig> {
-    const composePath = join(cwd, defaultComposeFileName);
-    const overridePath = join(cwd, defaultComposeOverrideFileName);
-    const envPath = join(cwd, defaultEnvFileName);
+    const mode = options.mode ?? "standard";
+    const composeFileName = mode === "demo" ? demoComposeFileName : defaultComposeFileName;
+    const envFileName = mode === "demo" ? demoEnvFileName : defaultEnvFileName;
 
-    if (!(await exists(composePath))) {
+    const composePath = join(cwd, composeFileName);
+    const overridePath = join(cwd, defaultComposeOverrideFileName);
+    const envPath = join(cwd, envFileName);
+
+    if (mode === "demo" && options.reset === true) {
+        await removeDemoProjectAssets(cwd);
+    }
+
+    if (!(await exists(composePath)) || options.force === true) {
         await writeFile(composePath, await createComposeFile(), "utf8");
     }
-    if (!(await exists(envPath))) {
-        await writeFile(envPath, createComposeEnv(options.useDemoImage === true), {
+    if (!(await exists(envPath)) || options.force === true) {
+        await writeFile(
+            envPath,
+            createComposeEnv({
+                mode,
+                cliVersion: options.cliVersion,
+                imageTagOverride: options.imageTagOverride,
+            }),
+            {
             encoding: "utf8",
             mode: 0o600,
-        });
+            },
+        );
+    }
+
+    if (mode === "demo") {
+        const demoConfigPath = join(cwd, demoConfigDirectory);
+        const hasExistingConfig = await hasFiles(demoConfigPath);
+        if (!hasExistingConfig || options.force === true || options.reset === true) {
+            await copyBundledDemoConfig(demoConfigPath, true);
+        }
     }
 
     if (options.noClient === true) {
@@ -75,7 +111,7 @@ export async function ensureComposeProject(
         await removeIfExists(overridePath);
     }
 
-    const composeFiles = [defaultComposeFileName];
+    const composeFiles = [composeFileName];
     if (options.noClient === true) {
         composeFiles.push(defaultComposeOverrideFileName);
     }
@@ -86,9 +122,24 @@ export async function ensureComposeProject(
         clientUrl: options.noClient === true ? undefined : "http://localhost:4200",
         composeFile: defaultComposeFileName,
         composeFiles,
-        envFile: defaultEnvFileName,
+        envFile: envFileName,
         projectName: "eudiplo-demo",
     };
+}
+
+export async function demoProjectExists(cwd: string): Promise<boolean> {
+    return (
+        (await exists(join(cwd, demoComposeFileName))) ||
+        (await exists(join(cwd, demoEnvFileName))) ||
+        (await exists(join(cwd, demoConfigDirectory)))
+    );
+}
+
+export async function removeDemoProjectAssets(cwd: string): Promise<void> {
+    await rm(join(cwd, demoComposeFileName), { force: true });
+    await rm(join(cwd, demoEnvFileName), { force: true });
+    await rm(join(cwd, defaultComposeOverrideFileName), { force: true });
+    await rm(join(cwd, demoConfigDirectory), { recursive: true, force: true });
 }
 
 export function unsupportedCommand(command: string, target: DeploymentTarget): string {

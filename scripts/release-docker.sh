@@ -47,6 +47,7 @@ main() {
   login
   promote_image "eudiplo"
   promote_image "eudiplo-client"
+  promote_image "eudiplo-demo"
   log "Done."
 }
 

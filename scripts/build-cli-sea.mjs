@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { arch, platform } from "node:process";
 import { fileURLToPath } from "node:url";
@@ -54,17 +54,39 @@ function detectBuildTarget() {
 function createEffectiveSeaConfig() {
     const baseConfig = JSON.parse(readFileSync(baseSeaConfigPath, "utf-8"));
     const outputFilename = platform === "win32" ? "eudiplo.exe" : "eudiplo";
+    const templatesPath = join(packagePath, "templates");
+    const templateAssetMap = collectAssetMap(templatesPath);
     const generatedConfig = {
         ...baseConfig,
         main: "dist-sea/index.js",
         output: `dist-sea/${outputFilename}`,
-        assets: {
-            "templates/docker-compose.yml": "templates/docker-compose.yml",
-        },
+        assets: templateAssetMap,
     };
 
     writeFileSync(generatedSeaConfigPath, `${JSON.stringify(generatedConfig, null, 4)}\n`);
     return outputFilename;
+}
+
+function collectAssetMap(rootDirectory) {
+    const assets = {};
+
+    function walk(relativeDirectory = "") {
+        const absoluteDirectory = join(rootDirectory, relativeDirectory);
+        const entries = readdirSync(absoluteDirectory, { withFileTypes: true });
+        for (const entry of entries) {
+            const relativePath = relativeDirectory
+                ? `${relativeDirectory}/${entry.name}`
+                : entry.name;
+            if (entry.isDirectory()) {
+                walk(relativePath);
+                continue;
+            }
+            assets[`templates/${relativePath}`] = `templates/${relativePath}`;
+        }
+    }
+
+    walk();
+    return assets;
 }
 
 function cleanup() {

@@ -13,56 +13,45 @@ your first credential.
 
 ## What You'll Need
 
+- Option A (recommended): [Node.js](https://nodejs.org/) for `npx`
+- Option B: standalone `eudiplo` binary from GitHub Releases
 - [Docker](https://www.docker.com/get-started) installed
 - 2 minutes of your time ⏱️
 
 ---
 
-## Step 1: Choose Your Setup
+## Step 1: Start the Demo (Recommended)
 
-Choose how you want to run EUDIPLO:
+The recommended onboarding path is a single CLI command:
 
-=== "🖥️ Full Setup (Web Client + API)"
+```bash
+npx @eudiplo/cli demo
+```
 
-    **For users who want the web interface:**
+If you prefer not to install Node.js locally, use the standalone CLI binary from
+GitHub Releases and run the same command:
 
-    ```bash
-    # Start the backend (set required credentials)
-    docker run -d \
-      --name eudiplo \
-      -p 3000:3000 \
-      -e MASTER_SECRET=$(openssl rand -base64 32) \
-      -e AUTH_CLIENT_ID=demo \
-      -e AUTH_CLIENT_SECRET=demo-secret \
-      ghcr.io/openwallet-foundation/eudiplo:latest
+```bash
+eudiplo demo
+```
 
-    # Start the web client
-    docker run -d \
-      --name eudiplo-client \
-      -p 4200:8080 \
-      ghcr.io/openwallet-foundation/eudiplo-client:latest
-    ```
+This generates editable demo files in your current directory:
 
-=== "⚡ API-Only Setup"
+- `.eudiplo.demo.env`
+- `.eudiplo/demo-config`
 
-    **For users who only need the API:**
+It then starts backend and client containers using compatible image tags.
 
-    ```bash
-    # Run EUDIPLO backend only (set required credentials)
-    docker run -d \
-      --name eudiplo \
-      -p 3000:3000 \
-      -e MASTER_SECRET=$(openssl rand -base64 32) \
-      -e AUTH_CLIENT_ID=demo \
-      -e AUTH_CLIENT_SECRET=demo-secret \
-      ghcr.io/openwallet-foundation/eudiplo:latest
-    ```
+!!! warning "Demo mode only"
+
+        Demo mode uses predictable onboarding credentials and loopback-bound ports.
+        It is not suitable for production.
 
 ---
 
 ## Step 2: Verify It's Working
 
-After starting the container, check that EUDIPLO is healthy by querying its health endpoint:
+After starting the demo, check that EUDIPLO is healthy by querying its health endpoint:
 
 ```bash
 curl http://localhost:3000/health
@@ -90,8 +79,7 @@ EUDIPLO provides two ways to interact with the system:
 
     **Open the Web Interface**:
 
-    - If you used **Full Setup**: http://localhost:4200
-    - If you used **API-Only Setup**: Not available (web client not started)
+    - URL: http://localhost:4200
 
     The web client provides a user-friendly interface for:
 
@@ -102,9 +90,6 @@ EUDIPLO provides two ways to interact with the system:
 
     !!! tip "Perfect for first-time users"
         The web client is the easiest way to understand EUDIPLO's capabilities without needing API knowledge.
-
-    !!! warning "Web Client Requires Full Setup"
-        To use the web client, make sure you chose the "Full Setup" option in Step 1.
 
 === "🔧 Swagger API (For developers)"
 
@@ -199,15 +184,14 @@ EUDIPLO is now running and ready for credential issuance and verification.
 
 When you're done experimenting:
 
-**For Full Setup users:**
+**CLI demo users:**
 
 ```bash
-docker stop eudiplo eudiplo-client
-docker rm eudiplo eudiplo-client
+eudiplo down
 ```
 
-**For API-Only Setup users:**
+To reset managed demo data and regenerate demo config:
 
 ```bash
-docker stop eudiplo && docker rm eudiplo
+eudiplo demo --reset --force
 ```

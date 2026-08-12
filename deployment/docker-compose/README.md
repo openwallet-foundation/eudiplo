@@ -4,13 +4,17 @@ This directory contains Docker Compose configurations for EUDIPLO with profile-b
 
 ## Demo Image (Embedded Config)
 
-For the easiest demo setup, use the demo backend image. It contains embedded demo config and bootstraps it automatically when `/app/config` is empty.
+This is the Docker-only path. The recommended onboarding path is
+`npx @eudiplo/cli demo`.
+
+The demo backend image contains embedded demo config and bootstraps it
+automatically when `/app/config` is empty.
 
 Pull from GHCR (recommended):
 
 ```bash
 cp .env.minimal.example .env
-echo 'EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo-demo:main' >> .env
+echo 'EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo-demo:latest' >> .env
 docker compose up -d
 ```
 
@@ -59,7 +63,7 @@ By default, EUDIPLO mounts `/app/config` from a named Docker volume.
 - Use repository config files (useful for load tests and config import):
   - Set `EUDIPLO_CONFIG_MOUNT=../../assets:/app/config`
 
-When using the demo image (`EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo-demo:main` or `EUDIPLO_IMAGE=eudiplo-demo:local`), you typically do not need a bind mount for config import.
+When using the demo image (`EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo-demo:latest` or `EUDIPLO_IMAGE=eudiplo-demo:local`), you typically do not need a bind mount for config import.
 
 Example:
 

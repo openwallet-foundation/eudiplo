@@ -71,15 +71,17 @@ docker compose down
 
     This deployment uses default in-memory storage. **All data is lost when containers stop.** Use Minimal or Full deployment for persistent storage.
 
-## Demo Backend Image (Embedded Config)
+## Docker-only Demo Backend Image (Advanced)
 
-If you want a very simple demo experience without downloading config folders, use the demo backend image.
+If you specifically want a Docker-only demo flow without the CLI, use the demo
+backend image. For most users, `npx @eudiplo/cli demo` is the recommended
+onboarding path.
 
 From `deployment/docker-compose` (pull from GHCR):
 
 ```bash
 cp .env.minimal.example .env
-echo "EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo-demo:main" >> .env
+echo "EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo-demo:latest" >> .env
 docker compose up -d
 ```
 

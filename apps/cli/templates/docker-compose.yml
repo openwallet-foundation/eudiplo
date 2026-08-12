@@ -19,7 +19,7 @@ services:
     env_file:
       - ${EUDIPLO_ENV_FILE:-.env}
     ports:
-      - '3000:3000'
+      - '${EUDIPLO_BIND_ADDRESS:-0.0.0.0}:3000:3000'
     volumes:
       - ${EUDIPLO_CONFIG_MOUNT:-eudiplo-config:/app/config}
       - eudiplo-uploads:/app/uploads
@@ -40,10 +40,10 @@ services:
       - eudiplo-network
 
   eudiplo-client:
-    image: ghcr.io/openwallet-foundation/eudiplo-client:latest
+    image: ${EUDIPLO_CLIENT_IMAGE:-ghcr.io/openwallet-foundation/eudiplo-client:latest}
     restart: always
     ports:
-      - '4200:8080'
+      - '${EUDIPLO_BIND_ADDRESS:-0.0.0.0}:4200:8080'
     depends_on:
       eudiplo:
         condition: service_healthy

@@ -26,13 +26,16 @@ eudiplo doctor
 ```
 
 The demo command copies EUDIPLO's bundled Docker Compose deployment template,
-creates a local `.eudiplo.env` file, and starts the `compose` driver. This keeps
-the quick-start path usable without cloning the repository while still using the
-same Compose file maintained under `deployment/docker-compose`.
+creates local demo assets, and starts the `compose` driver:
 
-If you prefer a standalone binary, the release workflow also publishes the SEA
-build as a GitHub release asset. For local builds, run `pnpm --filter
-@eudiplo/cli build:sea`.
+- `.eudiplo.demo.env`
+- `.eudiplo/demo-config` (editable generated demo configuration)
+
+This keeps the quick-start path usable without cloning the repository while
+still using canonical assets maintained in this repository.
+
+If you prefer a standalone binary (no local Node.js required), download the
+SEA artifact from GitHub Releases and run `eudiplo demo` directly.
 
 ## Register an Existing Deployment
 
@@ -82,16 +85,23 @@ These commands are available only for `compose` instances:
 ```bash
 npx @eudiplo/cli init --target compose
 npx @eudiplo/cli init --target compose --demo
+npx @eudiplo/cli init --target compose --demo --image-tag main
 npx @eudiplo/cli init --target compose --no-client
 npx @eudiplo/cli up
 npx @eudiplo/cli down
 npx @eudiplo/cli logs
+npx @eudiplo/cli demo --reset --force
 ```
 
-`init --target compose` creates the local `.eudiplo.env` using the standard
-image from the bundled Compose file. Add `--demo` if you want the CLI to write
-the demo image override into `.eudiplo.env` instead. Add `--no-client` if you
-want the CLI to generate a Compose override that leaves out the web client.
+`init --target compose` creates local Compose assets without starting them.
+`init --target compose --demo` generates the same editable demo deployment as
+`demo`, but does not start containers.
+
+`demo --reset --force` recreates only CLI-managed demo assets and managed demo
+volumes.
+
+Demo mode warning: generated demo credentials are for local onboarding only and
+must not be used in production.
 
 If a compose-only command is used against an external instance, the CLI returns a
 clear error such as `logs is not available for externally managed deployments`.

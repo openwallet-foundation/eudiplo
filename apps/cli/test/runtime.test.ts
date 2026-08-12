@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { drivers } from "../src/drivers.js";
 import { runCli } from "../src/runtime.js";
 import type { CommandContext } from "../src/types.js";
+import packageJson from "../package.json" with { type: "json" };
 
 describe("EUDIPLO CLI", () => {
     it("prints command descriptions in help", async () => {
@@ -42,6 +43,7 @@ describe("EUDIPLO CLI", () => {
         expect(output.stdout).toContain("--target <compose|external>");
         expect(output.stdout).toContain("--instance <name>");
         expect(output.stdout).toContain("--demo");
+        expect(output.stdout).toContain("--image-tag <tag>");
         expect(output.stdout).toContain("--no-client");
         expect(output.stdout).not.toContain("Commands:\n    eudiplo demo");
     });
@@ -150,15 +152,41 @@ describe("EUDIPLO CLI", () => {
         );
     });
 
-    it("initializes compose instances with the demo image when requested", async () => {
+    it("initializes compose demo instances with editable demo config when requested", async () => {
         const { context, output, cwd } = await createContext();
 
         const code = await runCli(["init", "--target", "compose", "--demo"], context);
 
         expect(code).toBe(0);
         expect(output.stdout).toContain("Initialized compose instance local.");
-        await expect(readFile(join(cwd, ".eudiplo.env"), "utf8")).resolves.toContain(
-            "ghcr.io/openwallet-foundation/eudiplo-demo:main",
+        await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
+            `EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo:${packageJson.version}`,
+        );
+        await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
+            `EUDIPLO_CLIENT_IMAGE=ghcr.io/openwallet-foundation/eudiplo-client:${packageJson.version}`,
+        );
+        await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
+            "EUDIPLO_BIND_ADDRESS=127.0.0.1",
+        );
+        await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
+            "EUDIPLO_CONFIG_MOUNT=./.eudiplo/demo-config:/app/config",
+        );
+    });
+
+    it("accepts demo image tag overrides", async () => {
+        const { context, cwd } = await createContext();
+
+        const code = await runCli(
+            ["init", "--target", "compose", "--demo", "--image-tag", "main"],
+            context,
+        );
+
+        expect(code).toBe(0);
+        await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
+            "EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo:main",
+        );
+        await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
+            "EUDIPLO_CLIENT_IMAGE=ghcr.io/openwallet-foundation/eudiplo-client:main",
         );
     });
 
@@ -224,7 +252,7 @@ describe("EUDIPLO CLI", () => {
         }
     });
 
-    it("keeps the demo command pinned to the demo image", async () => {
+    it("demo generates local assets and starts compose", async () => {
         const { context, output, cwd } = await createContext();
         const originalUp = drivers.compose.up;
         drivers.compose.up = async () => 0;
@@ -234,10 +262,54 @@ describe("EUDIPLO CLI", () => {
 
             expect(code).toBe(0);
             expect(output.stdout).toContain("Starting EUDIPLO demo with Docker Compose...");
-            await expect(readFile(join(cwd, ".eudiplo.env"), "utf8")).resolves.toContain(
-                "ghcr.io/openwallet-foundation/eudiplo-demo:main",
+            expect(output.stdout).toContain("Demo mode - not for production.");
+            await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
+                `EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo:${packageJson.version}`,
             );
         } finally {
+            drivers.compose.up = originalUp;
+        }
+    });
+
+    it("init --demo does not overwrite existing demo config without --force", async () => {
+        const { context, cwd } = await createContext();
+        const customFile = join(cwd, ".eudiplo", "demo-config", "info.json");
+
+        expect(await runCli(["init", "--target", "compose", "--demo"], context)).toBe(0);
+        await writeFile(customFile, "custom-demo-config", "utf8");
+
+        expect(await runCli(["init", "--target", "compose", "--demo"], context)).toBe(0);
+        await expect(readFile(customFile, "utf8")).resolves.toBe("custom-demo-config");
+    });
+
+    it("demo --reset requires --force", async () => {
+        const { context, output } = await createContext();
+
+        const code = await runCli(["demo", "--reset"], context);
+
+        expect(code).toBe(1);
+        expect(output.stderr).toContain("demo --reset requires --force");
+    });
+
+    it("demo --reset --force removes only managed demo deployment data", async () => {
+        const { context, cwd } = await createContext();
+        const originalDown = drivers.compose.down;
+        const originalUp = drivers.compose.up;
+        const calls = [] as string[];
+        drivers.compose.down = async (options) => {
+            calls.push(options.args.join(" "));
+            return 0;
+        };
+        drivers.compose.up = async () => 0;
+
+        try {
+            await writeFile(join(cwd, ".eudiplo.env"), "manual-env", "utf8");
+            expect(await runCli(["demo"], context)).toBe(0);
+            expect(await runCli(["demo", "--reset", "--force"], context)).toBe(0);
+            await expect(readFile(join(cwd, ".eudiplo.env"), "utf8")).resolves.toBe("manual-env");
+            expect(calls).toContain("--volumes --remove-orphans");
+        } finally {
+            drivers.compose.down = originalDown;
             drivers.compose.up = originalUp;
         }
     });

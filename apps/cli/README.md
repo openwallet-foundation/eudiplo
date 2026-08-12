@@ -15,10 +15,19 @@ npx @eudiplo/cli instance add production --url https://eudiplo.example.com
 npx @eudiplo/cli doctor --instance production
 ```
 
-`demo` creates a local `.eudiplo.env`, copies the bundled EUDIPLO Docker Compose
-template, and starts the `compose` driver. The Compose template is bundled with
-the npm package and checked during build against the canonical file in
-`deployment/docker-compose/docker-compose.yml`.
+`demo` creates a local editable demo deployment, writes `.eudiplo.demo.env`,
+copies canonical demo configuration into `.eudiplo/demo-config`, and starts the
+`compose` driver.
+
+- Backend image: `ghcr.io/openwallet-foundation/eudiplo:<tag>`
+- Client image: `ghcr.io/openwallet-foundation/eudiplo-client:<tag>`
+
+Tag selection defaults to the CLI version. For prerelease versions containing
+`-main.`, the CLI uses the `main` tag for both images. Use `--image-tag` (or
+`EUDIPLO_IMAGE_TAG`) to override.
+
+The generated demo config remains editable after creation. Existing files are
+preserved unless you pass `--force`.
 
 ## Package and Binary Names
 
@@ -57,16 +66,21 @@ Compose driver commands require a `compose` instance:
 ```bash
 eudiplo init --target compose
 eudiplo init --target compose --demo
+eudiplo init --target compose --demo --image-tag main
 eudiplo init --target compose --no-client
 eudiplo up
 eudiplo down
 eudiplo logs
+eudiplo demo --reset --force
 ```
 
-`init --target compose` writes a local `.eudiplo.env` that uses the standard
-`ghcr.io/openwallet-foundation/eudiplo:latest` image via the Compose default.
-Add `--demo` to write the demo image override instead. Add `--no-client` to
-generate a small Compose override that skips the web client container.
+`init --target compose` writes a local `.eudiplo.env` using Compose defaults.
+`init --target compose --demo` writes demo-specific assets (`.eudiplo.demo.env`
+and `.eudiplo/demo-config`) without starting Docker Compose. Add `--no-client`
+to generate a small Compose override that skips the web client container.
+
+`demo --reset --force` stops the managed demo stack, removes managed demo
+volumes, and recreates only CLI-managed demo assets.
 
 If a driver-specific command is used with an unsupported target, the CLI exits
 with a clear error, for example:
@@ -99,8 +113,10 @@ pnpm --filter @eudiplo/cli build
 pnpm --filter @eudiplo/cli lint
 ```
 
-The build runs `assets:check`, which fails if the bundled Compose template has
-drifted from the canonical deployment Compose file.
+The build synchronizes and validates bundled CLI assets from canonical sources:
+
+- `deployment/docker-compose/docker-compose.yml`
+- `assets/config/demo/**`
 
 ## Single Executable Application
 

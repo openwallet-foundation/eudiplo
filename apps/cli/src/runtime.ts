@@ -1,6 +1,11 @@
 import { parseArgs, readStringFlag } from "./args.js";
 import { loadConfig, resolveConfigPath, saveConfig, upsertInstance } from "./config.js";
-import { drivers, ensureComposeProject, unsupportedCommand } from "./drivers.js";
+import {
+    demoProjectExists,
+    drivers,
+    ensureComposeProject,
+    unsupportedCommand,
+} from "./drivers.js";
 import { formatChecks, hasFailedChecks, runDoctor } from "./doctor.js";
 import packageJson from "../package.json" with { type: "json" };
 import type { CliConfig, CommandContext, DeploymentTarget, ParsedArgs } from "./types.js";
@@ -53,7 +58,7 @@ async function dispatch(parsed: ParsedArgs, context: CommandContext): Promise<nu
         case "init":
             return init(configPath, config, parsed, context);
         case "demo":
-            return demo(configPath, config, context);
+            return demo(configPath, config, parsed, context);
         case "instance":
             return instance(configPath, config, parsed, context);
         case "config":
@@ -80,11 +85,20 @@ async function init(
     const target = parseTarget(readStringFlag(parsed.flags, "target") ?? "compose");
     const name = readStringFlag(parsed.flags, "instance") ?? "local";
     const url = readStringFlag(parsed.flags, "url");
-    const useDemoImage = parsed.flags.demo === true;
+    const useDemoMode = parsed.flags.demo === true;
     const noClient = parsed.flags["no-client"] === true;
+    const force = parsed.flags.force === true;
+    const imageTagOverride =
+        readStringFlag(parsed.flags, "image-tag") ?? context.env.EUDIPLO_IMAGE_TAG;
 
     if (target === "compose") {
-        const instance = await ensureComposeProject(context.cwd, { useDemoImage, noClient });
+        const instance = await ensureComposeProject(context.cwd, {
+            mode: useDemoMode ? "demo" : "standard",
+            noClient,
+            force,
+            cliVersion: packageJson.version,
+            imageTagOverride,
+        });
         const nextConfig = upsertInstance(config, name, {
             ...instance,
             url: url ?? instance.url,
@@ -109,18 +123,66 @@ async function init(
 async function demo(
     configPath: string,
     config: CliConfig,
+    parsed: ParsedArgs,
     context: CommandContext,
 ): Promise<number> {
-    const instance = await ensureComposeProject(context.cwd, { useDemoImage: true });
+    const force = parsed.flags.force === true;
+    const reset = parsed.flags.reset === true;
+    const imageTagOverride =
+        readStringFlag(parsed.flags, "image-tag") ?? context.env.EUDIPLO_IMAGE_TAG;
+
+    if (reset && !force) {
+        throw new Error("demo --reset requires --force to remove managed demo data.");
+    }
+
+    if (reset && (await demoProjectExists(context.cwd))) {
+        context.stdout.write("Resetting demo deployment and removing managed demo volumes...\n");
+        await drivers.compose.down?.({
+            instanceName: "local",
+            instance: {
+                target: "compose",
+                url: "http://localhost:3000",
+                clientUrl: "http://localhost:4200",
+                composeFiles: ["eudiplo.demo.compose.yaml"],
+                envFile: ".eudiplo.demo.env",
+                projectName: "eudiplo-demo",
+            },
+            args: ["--volumes", "--remove-orphans"],
+            context,
+        });
+    }
+
+    const instance = await ensureComposeProject(context.cwd, {
+        mode: "demo",
+        force,
+        reset,
+        cliVersion: packageJson.version,
+        imageTagOverride,
+    });
     const nextConfig = upsertInstance(config, "local", instance);
     await saveConfig(configPath, nextConfig);
     context.stdout.write("Starting EUDIPLO demo with Docker Compose...\n");
-    return drivers.compose.up?.({
+    const exitCode =
+        (await drivers.compose.up?.({
         instanceName: "local",
         instance,
         args: [],
         context,
-    }) ?? 1;
+    })) ?? 1;
+
+    if (exitCode === 0) {
+        context.stdout.write("\nDemo mode - not for production.\n");
+        context.stdout.write("API URL: http://localhost:3000\n");
+        context.stdout.write("Client URL: http://localhost:4200\n");
+        context.stdout.write("Demo credentials:\n");
+        context.stdout.write("  Client ID: root\n");
+        context.stdout.write("  Client Secret: root\n");
+        context.stdout.write(
+            `Editable demo config: ${context.cwd}/.eudiplo/demo-config\n`,
+        );
+    }
+
+    return exitCode;
 }
 
 async function instance(
@@ -275,7 +337,9 @@ Options:
     --target <compose|external>          Selects the deployment target for init/add.
     --url <url>                          Sets the EUDIPLO API URL for an instance.
     --client-url <url>                   Sets the optional web client URL for an instance.
+    --image-tag <tag>                    Overrides the backend/client Docker tag for demo mode.
     --no-client                          Skips the web client for compose init.
+    --force                              Allows replacing managed demo files when used with --demo/--reset.
     --help                               Shows this help message.
     --version, -v                        Prints the installed CLI version without network access.
 
@@ -291,11 +355,14 @@ function commandHelpText(command: string): string {
             return `EUDIPLO CLI
 
 Usage:
-    eudiplo demo
+    eudiplo demo [--reset --force] [--image-tag <tag>]
 
 Creates local demo assets and starts EUDIPLO with Docker Compose.
 
 Options:
+    --reset                              Stops and recreates managed demo data and config.
+    --force                              Required with --reset; allows replacing managed demo files.
+    --image-tag <tag>                    Overrides backend/client Docker tag (or use EUDIPLO_IMAGE_TAG).
     --help                               Shows this help message.`;
         case "init":
             return `EUDIPLO CLI
@@ -308,8 +375,10 @@ Creates local deployment assets without starting them.
 Options:
     --target <compose|external>          Selects the deployment target. Defaults to compose.
     --instance <name>                    Names the instance in CLI config. Defaults to local.
-    --demo                               Uses the demo image instead of the standard image.
+    --demo                               Generates editable demo config and uses regular backend/client images.
     --no-client                          Omits the web client from the local Compose setup.
+    --image-tag <tag>                    Overrides backend/client Docker tag for demo mode.
+    --force                              Replaces managed demo files when used with --demo.
     --url <url>                          Overrides the instance API URL.
     --help                               Shows this help message.`;
         case "up":
