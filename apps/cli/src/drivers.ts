@@ -135,7 +135,7 @@ export async function demoProjectExists(cwd: string): Promise<boolean> {
     );
 }
 
-export async function removeDemoProjectAssets(cwd: string): Promise<void> {
+async function removeDemoProjectAssets(cwd: string): Promise<void> {
     await rm(join(cwd, demoComposeFileName), { force: true });
     await rm(join(cwd, demoEnvFileName), { force: true });
     await rm(join(cwd, defaultComposeOverrideFileName), { force: true });
