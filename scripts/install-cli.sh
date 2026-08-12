@@ -19,31 +19,18 @@ detect_asset() {
     Linux)
       case "$arch" in
         x86_64|amd64)
-          echo "eudiplo-seal-linux-x64"
-          ;;
-        arm64|aarch64)
-          echo "eudiplo-seal-linux-arm64"
+          echo "eudiplo-sea-linux-x64"
           ;;
         *)
-          fail "Unsupported Linux architecture: $arch"
+          fail "Standalone CLI builds are currently published only for Linux x64. Install the npm package instead: npm install -g @eudiplo/cli"
           ;;
       esac
       ;;
     Darwin)
-      case "$arch" in
-        x86_64|amd64)
-          echo "eudiplo-seal-macos-x64"
-          ;;
-        arm64|aarch64)
-          echo "eudiplo-seal-macos-arm64"
-          ;;
-        *)
-          fail "Unsupported macOS architecture: $arch"
-          ;;
-      esac
+      fail "Standalone CLI builds are currently published only for Linux x64. Install the npm package instead: npm install -g @eudiplo/cli"
       ;;
     *)
-      fail "Unsupported operating system: $os"
+      fail "Unsupported operating system: $os. Standalone CLI builds are currently published only for Linux x64. Install the npm package instead: npm install -g @eudiplo/cli"
       ;;
   esac
 }
@@ -52,10 +39,26 @@ ensure_tool() {
   command -v curl >/dev/null 2>&1 || fail "curl is required but not installed"
 }
 
+ensure_npm_fallback() {
+  command -v npm >/dev/null 2>&1 || fail "npm is required for the fallback install on this platform"
+}
+
+fallback_to_npm_install() {
+  echo "Standalone CLI binary is currently published only for Linux x64. Falling back to the npm package install for this machine."
+  ensure_npm_fallback
+  npm install -g @eudiplo/cli
+  echo "Installed @eudiplo/cli via npm"
+  exit 0
+}
+
 main() {
   ensure_tool
 
   local asset install_path download_url tmp_file
+  if [[ "$(uname -s)" != "Linux" || "$(uname -m)" != "x86_64" && "$(uname -m)" != "amd64" ]]; then
+    fallback_to_npm_install
+  fi
+
   asset="$(detect_asset)"
   download_url="${RELEASE_BASE}/${asset}"
   install_path="${INSTALL_DIR}/eudiplo"

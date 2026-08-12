@@ -110,8 +110,44 @@ To produce a standalone CLI binary with Node.js SEA support, run:
 pnpm --filter @eudiplo/cli build:sea
 ```
 
-This writes the executable to `apps/cli/dist-sea/eudiplo` and bundles the
-Compose template as a SEA asset.
+This writes the executable to `apps/cli/dist-sea/eudiplo` on Linux/macOS and
+`apps/cli/dist-sea/eudiplo.exe` on Windows, while bundling the Compose template
+as a SEA asset.
 
-The GitHub release workflow also publishes that SEA binary as a release asset,
-so consumers can download the standalone executable without cloning the repo.
+### Supported standalone platforms
+
+The versioned release publishes archive files for the currently supported native
+platforms:
+
+- Linux x64: `eudiplo-vVERSION-linux-x64.tar.gz`
+- Linux arm64: `eudiplo-vVERSION-linux-arm64.tar.gz`
+- macOS arm64: `eudiplo-vVERSION-macos-arm64.tar.gz`
+- Windows x64: `eudiplo-vVERSION-windows-x64.zip`
+
+### Install and verify a release archive
+
+Extract the archive for the matching platform and run the executable directly:
+
+```bash
+# Linux / macOS
+curl -LO https://github.com/openwallet-foundation/eudiplo/releases/download/vVERSION/eudiplo-vVERSION-linux-x64.tar.gz
+mkdir -p ~/.local/bin
+ tar -xzf eudiplo-vVERSION-linux-x64.tar.gz -C ~/.local/bin
+ ~/.local/bin/eudiplo --help
+
+# Windows PowerShell
+Invoke-WebRequest -Uri "https://github.com/openwallet-foundation/eudiplo/releases/download/vVERSION/eudiplo-vVERSION-windows-x64.zip" -OutFile "eudiplo-vVERSION-windows-x64.zip"
+Expand-Archive -Path .\eudiplo-vVERSION-windows-x64.zip -DestinationPath .
+.\eudiplo.exe --help
+```
+
+The release also attaches `SHA256SUMS.txt`. Verify the downloaded archive before
+running it:
+
+```bash
+sha256sum -c SHA256SUMS.txt
+```
+
+The standalone binary does not replace Docker or Docker Compose. You still need
+Docker to run the local deployment stack, but you do not need a local Node.js
+installation just to use the CLI itself.

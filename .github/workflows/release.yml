@@ -14,21 +14,18 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  release:
-    name: Create Versioned Release
+  prepare-release:
+    name: Prepare versioned release
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
-      pull-requests: write
-      actions: read
-      pages: write
-      id-token: write
+    outputs:
+      has_release: ${{ steps.version_check.outputs.has_release }}
+      is_major: ${{ steps.version_check.outputs.is_major }}
+      next_version: ${{ steps.version_check.outputs.next_version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
-          fetch-depth: 0 # Fetch full history for mike versioning
+          fetch-depth: 0
 
       - name: Require the main branch
         if: github.ref != 'refs/heads/main'
@@ -55,9 +52,7 @@ jobs:
             );
 
             if (!successfulRun) {
-              core.setFailed(
-                `No successful CI / Docker push run exists for ${context.sha}.`,
-              );
+              core.setFailed(`No successful CI / Docker push run exists for ${context.sha}.`);
               return;
             }
 
@@ -78,27 +73,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build SDK
-        run: pnpm --filter @eudiplo/sdk-core build
-
-      - name: Build CLI
-        run: pnpm --filter @eudiplo/cli build
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Verify immutable Docker source images
-        run: |
-          docker buildx imagetools inspect "ghcr.io/openwallet-foundation/eudiplo:sha-${GITHUB_SHA}"
-          docker buildx imagetools inspect "ghcr.io/openwallet-foundation/eudiplo-client:sha-${GITHUB_SHA}"
-
       - name: Check for major version bump
         id: version_check
         env:
@@ -112,7 +86,7 @@ jobs:
             echo "semantic-release dry-run failed (see output above)" >&2
             exit "$DRY_EXIT"
           fi
-          # Extract the next version from dry-run output
+
           NEXT_VERSION=$(echo "$DRY_OUTPUT" | grep -oP "The next release version is \K[0-9]+\.[0-9]+\.[0-9]+" || echo "")
           CURRENT_VERSION=$(git describe --tags --abbrev=0 2>/dev/null | sed 's/^v//' || echo "0.0.0")
 
@@ -129,7 +103,6 @@ jobs:
           echo "has_release=true" >> "$GITHUB_OUTPUT"
           echo "next_version=$NEXT_VERSION" >> "$GITHUB_OUTPUT"
 
-          # Extract major versions
           CURRENT_MAJOR=$(echo "$CURRENT_VERSION" | cut -d. -f1)
           NEXT_MAJOR=$(echo "$NEXT_VERSION" | cut -d. -f1)
 
@@ -155,38 +128,179 @@ jobs:
           echo "A major version bump was detected but not confirmed."
           echo "To release a major version, trigger this workflow manually with:"
           echo "  confirm_major: CONFIRM"
-          echo ""
-          echo "This safeguard prevents accidental breaking changes from being released."
           exit 1
+
+  build-cli-release:
+    name: Build CLI (${{ matrix.target }})
+    needs: prepare-release
+    if: needs.prepare-release.outputs.has_release == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            target: linux-x64
+          - runner: ubuntu-24.04-arm
+            target: linux-arm64
+          - runner: macos-15
+            target: macos-arm64
+          - runner: windows-2025
+            target: windows-x64
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v5
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Sync CLI version
+        shell: bash
+        run: node scripts/sync-cli-version.js "${{ needs.prepare-release.outputs.next_version }}"
+
+      - name: Build CLI
+        shell: bash
+        run: pnpm --filter @eudiplo/cli build
+
+      - name: Build standalone CLI SEA
+        shell: bash
+        run: pnpm --filter @eudiplo/cli build:sea
+
+      - name: Smoke test executable
+        shell: bash
+        run: |
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            ./apps/cli/dist-sea/eudiplo.exe --help
+          else
+            ./apps/cli/dist-sea/eudiplo --help
+          fi
+
+      - name: Package binary
+        shell: bash
+        run: |
+          set -e
+          mkdir -p release
+          ARCHIVE_NAME="eudiplo-v${{ needs.prepare-release.outputs.next_version }}-${{ matrix.target }}"
+          if [[ "${{ matrix.target }}" == "windows-x64" ]]; then
+            powershell -NoProfile -ExecutionPolicy Bypass -Command "Compress-Archive -Path 'apps/cli/dist-sea/eudiplo.exe' -DestinationPath 'release/${ARCHIVE_NAME}.zip' -Force"
+          else
+            chmod +x apps/cli/dist-sea/eudiplo
+            tar -C apps/cli/dist-sea -czf "release/${ARCHIVE_NAME}.tar.gz" eudiplo
+          fi
+
+      - name: Upload packaged CLI artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: cli-${{ matrix.target }}
+          path: release/*
+          if-no-files-found: error
+          retention-days: 1
+
+  publish-release:
+    name: Publish GitHub Release
+    needs: [prepare-release, build-cli-release]
+    if: needs.prepare-release.outputs.has_release == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+      actions: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Download packaged CLI artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: cli-*
+          path: release
+          merge-multiple: true
+
+      - name: Generate checksums
+        shell: bash
+        run: |
+          set -e
+          mkdir -p release
+          find release -maxdepth 1 -type f \( -name '*.tar.gz' -o -name '*.zip' \) -print0 | sort -z | xargs -0 sha256sum > release/SHA256SUMS.txt
+          echo "Generated checksums:"
+          cat release/SHA256SUMS.txt
+
+      - uses: pnpm/action-setup@v5
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Set release version
+        id: release_version
+        run: |
+          echo "version=${{ needs.prepare-release.outputs.next_version }}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify immutable Docker source images
+        run: |
+          docker buildx imagetools inspect "ghcr.io/openwallet-foundation/eudiplo:sha-${GITHUB_SHA}"
+          docker buildx imagetools inspect "ghcr.io/openwallet-foundation/eudiplo-client:sha-${GITHUB_SHA}"
 
       - name: Run semantic-release
         id: semantic_release
         env:
+          EUDIPLO_RELEASE_VERSION: ${{ needs.prepare-release.outputs.next_version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
           DOCKER_REGISTRY_USER: ${{ github.actor }}
           DOCKER_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
           DOCKER_SOURCE_SHA: ${{ github.sha }}
         run: |
-          echo "Running semantic-release..."
+          echo "Running semantic-release with release assets ready..."
           npx semantic-release
 
-          NEXT_VERSION="${{ steps.version_check.outputs.next_version }}"
+          NEXT_VERSION="${{ needs.prepare-release.outputs.next_version }}"
           EXPECTED_TAG="v${NEXT_VERSION}"
-
           if ! git ls-remote --exit-code --tags origin "refs/tags/${EXPECTED_TAG}" >/dev/null; then
             echo "semantic-release did not publish the expected tag ${EXPECTED_TAG}"
             exit 1
           fi
 
-          echo "New release detected: ${EXPECTED_TAG}"
           echo "new_release=true" >> "$GITHUB_OUTPUT"
           echo "version=${EXPECTED_TAG}" >> "$GITHUB_OUTPUT"
-
-      - name: Debug release detection
-        run: |
-          echo "New release: ${{ steps.semantic_release.outputs.new_release }}"
-          echo "Version: ${{ steps.semantic_release.outputs.version }}"
 
       - name: Set up Python for docs
         if: steps.semantic_release.outputs.new_release == 'true'

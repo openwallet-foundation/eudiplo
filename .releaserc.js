@@ -32,7 +32,7 @@ module.exports = {
         [
             '@semantic-release/exec',
             {
-                prepareCmd: 'node scripts/sync-sdk-version.js ${nextRelease.version} && node scripts/sync-cli-version.js ${nextRelease.version} && node scripts/build-cli-sea.mjs',
+                prepareCmd: 'node scripts/sync-sdk-version.js ${nextRelease.version} && node scripts/sync-cli-version.js ${nextRelease.version}',
                 publishCmd: 'chmod +x scripts/release-docker.sh && DOCKER_RELEASE_VERSION=${nextRelease.version} ./scripts/release-docker.sh',
             },
         ],
@@ -48,8 +48,24 @@ module.exports = {
         ['@semantic-release/github', {
             assets: [
                 {
-                    path: 'apps/cli/dist-sea/eudiplo',
-                    label: 'eudiplo-sea-linux-x64',
+                    path: 'release/eudiplo-v${nextRelease.version}-linux-x64.tar.gz',
+                    label: 'eudiplo-v${nextRelease.version}-linux-x64.tar.gz',
+                },
+                {
+                    path: 'release/eudiplo-v${nextRelease.version}-linux-arm64.tar.gz',
+                    label: 'eudiplo-v${nextRelease.version}-linux-arm64.tar.gz',
+                },
+                {
+                    path: 'release/eudiplo-v${nextRelease.version}-macos-arm64.tar.gz',
+                    label: 'eudiplo-v${nextRelease.version}-macos-arm64.tar.gz',
+                },
+                {
+                    path: 'release/eudiplo-v${nextRelease.version}-windows-x64.zip',
+                    label: 'eudiplo-v${nextRelease.version}-windows-x64.zip',
+                },
+                {
+                    path: 'release/SHA256SUMS.txt',
+                    label: 'SHA256SUMS.txt',
                 },
             ],
             addReleases: 'bottom',
