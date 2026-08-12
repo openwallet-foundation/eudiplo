@@ -361,6 +361,18 @@ jobs:
           docker buildx imagetools inspect "ghcr.io/openwallet-foundation/eudiplo-client:sha-${GITHUB_SHA}"
           docker buildx imagetools inspect "ghcr.io/openwallet-foundation/eudiplo-demo:sha-${GITHUB_SHA}"
 
+      - name: Verify release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="${{ needs.prepare-release.outputs.next_version }}"
+
+          test -s "release/eudiplo-v${VERSION}-linux-x64.tar.gz"
+          test -s "release/eudiplo-v${VERSION}-linux-arm64.tar.gz"
+          test -s "release/eudiplo-v${VERSION}-macos-arm64.tar.gz"
+          test -s "release/eudiplo-v${VERSION}-windows-x64.zip"
+          test -s "release/SHA256SUMS.txt"
+
       - name: Run semantic-release
         id: semantic_release
         env:

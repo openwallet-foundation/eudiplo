@@ -48,24 +48,24 @@ module.exports = {
         ['@semantic-release/github', {
             assets: [
                 {
-                    path: 'release/eudiplo-v${nextRelease.version}-linux-x64.tar.gz',
-                    label: 'eudiplo-v${nextRelease.version}-linux-x64.tar.gz',
+                    path: 'release/*-linux-x64.tar.gz',
+                    label: 'EUDIPLO CLI — Linux x64',
                 },
                 {
-                    path: 'release/eudiplo-v${nextRelease.version}-linux-arm64.tar.gz',
-                    label: 'eudiplo-v${nextRelease.version}-linux-arm64.tar.gz',
+                    path: 'release/*-linux-arm64.tar.gz',
+                    label: 'EUDIPLO CLI — Linux ARM64',
                 },
                 {
-                    path: 'release/eudiplo-v${nextRelease.version}-macos-arm64.tar.gz',
-                    label: 'eudiplo-v${nextRelease.version}-macos-arm64.tar.gz',
+                    path: 'release/*-macos-arm64.tar.gz',
+                    label: 'EUDIPLO CLI — macOS ARM64',
                 },
                 {
-                    path: 'release/eudiplo-v${nextRelease.version}-windows-x64.zip',
-                    label: 'eudiplo-v${nextRelease.version}-windows-x64.zip',
+                    path: 'release/*-windows-x64.zip',
+                    label: 'EUDIPLO CLI — Windows x64',
                 },
                 {
                     path: 'release/SHA256SUMS.txt',
-                    label: 'SHA256SUMS.txt',
+                    label: 'SHA256 checksums',
                 },
             ],
             addReleases: 'bottom',
