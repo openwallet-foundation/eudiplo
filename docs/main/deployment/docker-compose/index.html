@@ -1513,10 +1513,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#demo-backend-image-embedded-config" class="md-nav__link">
+  <a href="#docker-only-demo-backend-image-advanced" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Demo Backend Image (Embedded Config)
+        Docker-only Demo Backend Image (Advanced)
       
     </span>
   </a>
@@ -3677,10 +3677,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#demo-backend-image-embedded-config" class="md-nav__link">
+  <a href="#docker-only-demo-backend-image-advanced" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Demo Backend Image (Embedded Config)
+        Docker-only Demo Backend Image (Advanced)
       
     </span>
   </a>
@@ -4539,11 +4539,13 @@
 <p class="admonition-title">Ephemeral Storage</p>
 <p>This deployment uses default in-memory storage. <strong>All data is lost when containers stop.</strong> Use Minimal or Full deployment for persistent storage.</p>
 </div>
-<h2 id="demo-backend-image-embedded-config">Demo Backend Image (Embedded Config)<a class="headerlink" href="#demo-backend-image-embedded-config" title="Permanent link">¶</a></h2>
-<p>If you want a very simple demo experience without downloading config folders, use the demo backend image.</p>
+<h2 id="docker-only-demo-backend-image-advanced">Docker-only Demo Backend Image (Advanced)<a class="headerlink" href="#docker-only-demo-backend-image-advanced" title="Permanent link">¶</a></h2>
+<p>If you specifically want a Docker-only demo flow without the CLI, use the demo
+backend image. For most users, <code>npx @eudiplo/cli demo</code> is the recommended
+onboarding path.</p>
 <p>From <code>deployment/docker-compose</code> (pull from GHCR):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cp<span class="w"> </span>.env.minimal.example<span class="w"> </span>.env
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo-demo:main"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.env
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo-demo:latest"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.env
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
 <p>Or build locally:</p>

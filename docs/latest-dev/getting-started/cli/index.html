@@ -2941,12 +2941,15 @@ any directory:</p>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>eudiplo<span class="w"> </span>doctor
 </code></pre></div>
 <p>The demo command copies EUDIPLO's bundled Docker Compose deployment template,
-creates a local <code>.eudiplo.env</code> file, and starts the <code>compose</code> driver. This keeps
-the quick-start path usable without cloning the repository while still using the
-same Compose file maintained under <code>deployment/docker-compose</code>.</p>
-<p>If you prefer a standalone binary, the release workflow also publishes the SEA
-build as a GitHub release asset. For local builds, run <code>pnpm --filter
-@eudiplo/cli build:sea</code>.</p>
+creates local demo assets, and starts the <code>compose</code> driver:</p>
+<ul>
+<li><code>.eudiplo.demo.env</code></li>
+<li><code>.eudiplo/demo-config</code> (editable generated demo configuration)</li>
+</ul>
+<p>This keeps the quick-start path usable without cloning the repository while
+still using canonical assets maintained in this repository.</p>
+<p>If you prefer a standalone binary (no local Node.js required), download the
+SEA artifact from GitHub Releases and run <code>eudiplo demo</code> directly.</p>
 <h2 id="register-an-existing-deployment">Register an Existing Deployment<a class="headerlink" href="#register-an-existing-deployment" title="Permanent link">¶</a></h2>
 <p>For Kubernetes, Helm, standalone containers, or any externally managed instance,
 register the public API URL:</p>
@@ -2980,15 +2983,20 @@ deployment.</p>
 <p>These commands are available only for <code>compose</code> instances:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose<span class="w"> </span>--demo
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose<span class="w"> </span>--no-client
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>up
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>down
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>logs
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose<span class="w"> </span>--demo<span class="w"> </span>--image-tag<span class="w"> </span>main
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose<span class="w"> </span>--no-client
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>up
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>down
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>logs
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>demo<span class="w"> </span>--reset<span class="w"> </span>--force
 </code></pre></div>
-<p><code>init --target compose</code> creates the local <code>.eudiplo.env</code> using the standard
-image from the bundled Compose file. Add <code>--demo</code> if you want the CLI to write
-the demo image override into <code>.eudiplo.env</code> instead. Add <code>--no-client</code> if you
-want the CLI to generate a Compose override that leaves out the web client.</p>
+<p><code>init --target compose</code> creates local Compose assets without starting them.
+<code>init --target compose --demo</code> generates the same editable demo deployment as
+<code>demo</code>, but does not start containers.</p>
+<p><code>demo --reset --force</code> recreates only CLI-managed demo assets and managed demo
+volumes.</p>
+<p>Demo mode warning: generated demo credentials are for local onboarding only and
+must not be used in production.</p>
 <p>If a compose-only command is used against an external instance, the CLI returns a
 clear error such as <code>logs is not available for externally managed deployments</code>.</p>
 <h2 id="command-name-usability">Command Name Usability<a class="headerlink" href="#command-name-usability" title="Permanent link">¶</a></h2>

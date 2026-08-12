@@ -575,10 +575,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-1-choose-your-setup" class="md-nav__link">
+  <a href="#step-1-start-the-demo-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Choose Your Setup
+        Step 1: Start the Demo (Recommended)
       
     </span>
   </a>
@@ -2918,10 +2918,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-1-choose-your-setup" class="md-nav__link">
+  <a href="#step-1-start-the-demo-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Choose Your Setup
+        Step 1: Start the Demo (Recommended)
       
     </span>
   </a>
@@ -3090,49 +3090,35 @@ production setup and advanced configuration, see the
 <hr>
 <h2 id="what-youll-need">What You'll Need<a class="headerlink" href="#what-youll-need" title="Permanent link">¶</a></h2>
 <ul>
+<li>Option A (recommended): <a href="https://nodejs.org/">Node.js</a> for <code>npx</code></li>
+<li>Option B: standalone <code>eudiplo</code> binary from GitHub Releases</li>
 <li><a href="https://www.docker.com/get-started">Docker</a> installed</li>
 <li>2 minutes of your time ⏱️</li>
 </ul>
 <hr>
-<h2 id="step-1-choose-your-setup">Step 1: Choose Your Setup<a class="headerlink" href="#step-1-choose-your-setup" title="Permanent link">¶</a></h2>
-<p>Choose how you want to run EUDIPLO:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">🖥️ Full Setup (Web Client + API)</label><label for="__tabbed_1_2">⚡ API-Only Setup</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<p><strong>For users who want the web interface:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Start the backend (set required credentials)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--name<span class="w"> </span>eudiplo<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">3000</span>:3000<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">MASTER_SECRET</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">AUTH_CLIENT_ID</span><span class="o">=</span>demo<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">AUTH_CLIENT_SECRET</span><span class="o">=</span>demo-secret<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>ghcr.io/openwallet-foundation/eudiplo:latest
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Start the web client</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--name<span class="w"> </span>eudiplo-client<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">4200</span>:8080<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>ghcr.io/openwallet-foundation/eudiplo-client:latest
+<h2 id="step-1-start-the-demo-recommended">Step 1: Start the Demo (Recommended)<a class="headerlink" href="#step-1-start-the-demo-recommended" title="Permanent link">¶</a></h2>
+<p>The recommended onboarding path is a single CLI command:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>demo
 </code></pre></div>
-</div>
-<div class="tabbed-block">
-<p><strong>For users who only need the API:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Run EUDIPLO backend only (set required credentials)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--name<span class="w"> </span>eudiplo<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">3000</span>:3000<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">MASTER_SECRET</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">AUTH_CLIENT_ID</span><span class="o">=</span>demo<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">AUTH_CLIENT_SECRET</span><span class="o">=</span>demo-secret<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>ghcr.io/openwallet-foundation/eudiplo:latest
+<p>If you prefer not to install Node.js locally, use the standalone CLI binary from
+GitHub Releases and run the same command:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>eudiplo<span class="w"> </span>demo
 </code></pre></div>
-</div>
-</div>
+<p>This generates editable demo files in your current directory:</p>
+<ul>
+<li><code>.eudiplo.demo.env</code></li>
+<li><code>.eudiplo/demo-config</code></li>
+</ul>
+<p>It then starts backend and client containers using compatible image tags.</p>
+<div class="admonition warning">
+<p class="admonition-title">Demo mode only</p>
+<div class="highlight"><pre><span></span><code>Demo mode uses predictable onboarding credentials and loopback-bound ports.
+It is not suitable for production.
+</code></pre></div>
 </div>
 <hr>
 <h2 id="step-2-verify-its-working">Step 2: Verify It's Working<a class="headerlink" href="#step-2-verify-its-working" title="Permanent link">¶</a></h2>
-<p>After starting the container, check that EUDIPLO is healthy by querying its health endpoint:</p>
+<p>After starting the demo, check that EUDIPLO is healthy by querying its health endpoint:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>http://localhost:3000/health
 </code></pre></div>
 <p><strong>Expected response from EUDIPLO:</strong></p>
@@ -3147,13 +3133,12 @@ production setup and advanced configuration, see the
 <hr>
 <h2 id="step-3-choose-your-interface">Step 3: Choose Your Interface<a class="headerlink" href="#step-3-choose-your-interface" title="Permanent link">¶</a></h2>
 <p>EUDIPLO provides two ways to interact with the system:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio"><input id="__tabbed_2_2" name="__tabbed_2" type="radio"><div class="tabbed-labels"><label for="__tabbed_2_1">🖥️ Web Client (Recommended for beginners)</label><label for="__tabbed_2_2">🔧 Swagger API (For developers)</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">🖥️ Web Client (Recommended for beginners)</label><label for="__tabbed_1_2">🔧 Swagger API (For developers)</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><strong>Open the Web Interface</strong>:</p>
 <ul>
-<li>If you used <strong>Full Setup</strong>: <a href="http://localhost:4200">http://localhost:4200</a></li>
-<li>If you used <strong>API-Only Setup</strong>: Not available (web client not started)</li>
+<li>URL: <a href="http://localhost:4200">http://localhost:4200</a></li>
 </ul>
 <p>The web client provides a user-friendly interface for:</p>
 <ul>
@@ -3165,10 +3150,6 @@ production setup and advanced configuration, see the
 <div class="admonition tip">
 <p class="admonition-title">Perfect for first-time users</p>
 <p>The web client is the easiest way to understand EUDIPLO's capabilities without needing API knowledge.</p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Web Client Requires Full Setup</p>
-<p>To use the web client, make sure you chose the "Full Setup" option in Step 1.</p>
 </div>
 </div>
 <div class="tabbed-block">
@@ -3186,7 +3167,7 @@ production setup and advanced configuration, see the
 <hr>
 <h2 id="step-4-get-started">Step 4: Get Started<a class="headerlink" href="#step-4-get-started" title="Permanent link">¶</a></h2>
 <p>Choose your preferred approach:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio"><input id="__tabbed_3_2" name="__tabbed_3" type="radio"><div class="tabbed-labels"><label for="__tabbed_3_1">🖥️ Using the Web Client</label><label for="__tabbed_3_2">🔧 Using the Swagger API</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio"><input id="__tabbed_2_2" name="__tabbed_2" type="radio"><div class="tabbed-labels"><label for="__tabbed_2_1">🖥️ Using the Web Client</label><label for="__tabbed_2_2">🔧 Using the Swagger API</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <ol>
@@ -3245,7 +3226,7 @@ production setup and advanced configuration, see the
 <li>Troubleshoot common issues</li>
 </ol>
 </div>
-<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio"><div class="tabbed-labels"><label for="__tabbed_4_1">🖥️ Web Client Users</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio"><div class="tabbed-labels"><label for="__tabbed_3_1">🖥️ Web Client Users</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -3256,7 +3237,7 @@ production setup and advanced configuration, see the
 <li>🔍 <strong>Verify Credentials</strong> - Set up verification flows through the web UI</li>
 <li>📋 <strong>Manage Templates</strong> - Create custom credential templates for your use case</li>
 </ul>
-<div class="tabbed-set tabbed-alternate" data-tabs="5:1"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio"><div class="tabbed-labels"><label for="__tabbed_5_1">🔧 API Users</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:1"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio"><div class="tabbed-labels"><label for="__tabbed_4_1">🔧 API Users</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block"></div>
 </div>
@@ -3275,12 +3256,11 @@ production setup and advanced configuration, see the
 </ul>
 <h3 id="clean-up">Clean Up<a class="headerlink" href="#clean-up" title="Permanent link">¶</a></h3>
 <p>When you're done experimenting:</p>
-<p><strong>For Full Setup users:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>docker<span class="w"> </span>stop<span class="w"> </span>eudiplo<span class="w"> </span>eudiplo-client
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>docker<span class="w"> </span>rm<span class="w"> </span>eudiplo<span class="w"> </span>eudiplo-client
+<p><strong>CLI demo users:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>eudiplo<span class="w"> </span>down
 </code></pre></div>
-<p><strong>For API-Only Setup users:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>docker<span class="w"> </span>stop<span class="w"> </span>eudiplo<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>rm<span class="w"> </span>eudiplo
+<p>To reset managed demo data and regenerate demo config:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>eudiplo<span class="w"> </span>demo<span class="w"> </span>--reset<span class="w"> </span>--force
 </code></pre></div>
 
 
