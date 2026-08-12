@@ -246,12 +246,12 @@ jobs:
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install dependencies
-        run: pnpm --filter @eudiplo/cli... install --frozen-lockfile
-
       - name: Sync CLI version
         shell: bash
         run: node scripts/sync-cli-version.js "${{ needs.prepare-release.outputs.next_version }}"
+
+      - name: Install dependencies
+        run: pnpm --filter @eudiplo/cli... install --frozen-lockfile
 
       - name: Build CLI
         shell: bash
