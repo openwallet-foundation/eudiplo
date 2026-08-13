@@ -88,7 +88,7 @@ main() {
 
   tmp_file="$(mktemp "${TMPDIR:-/tmp}/eudiplo-install.XXXXXX")"
   archive_dir="$(mktemp -d "${TMPDIR:-/tmp}/eudiplo-archive.XXXXXX")"
-  trap 'rm -f "$tmp_file"; rm -rf "$archive_dir"' EXIT
+  trap 'rm -f "${tmp_file:-}"; rm -rf "${archive_dir:-}"' EXIT
 
   echo "Downloading ${asset} from ${download_url}"
   curl -fsSL "$download_url" -o "$tmp_file"
