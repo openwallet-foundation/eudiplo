@@ -55,6 +55,26 @@ describe("OutboundUrlPolicyService", () => {
         ).resolves.toBeUndefined();
     });
 
+    it("uses ConfigService fallback values for policy flags", () => {
+        process.env.NODE_ENV = "production";
+        const configService = {
+            get: vi.fn((key: string, defaultValue?: boolean | string) => defaultValue),
+        };
+        const service = new OutboundUrlPolicyService(configService as any);
+
+        expect(service["allowHttp"]()).toBe(false);
+        expect(configService.get).toHaveBeenCalledWith(
+            "OUTBOUND_URL_ALLOW_HTTP",
+            false,
+        );
+
+        expect(service["allowPrivateNetwork"]()).toBe(false);
+        expect(configService.get).toHaveBeenCalledWith(
+            "OUTBOUND_URL_ALLOW_PRIVATE_NETWORK",
+            false,
+        );
+    });
+
     it("rejects localhost targets", async () => {
         process.env.NODE_ENV = "production";
         const { service } = createService();

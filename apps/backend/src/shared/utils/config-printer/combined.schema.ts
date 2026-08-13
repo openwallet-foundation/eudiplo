@@ -9,6 +9,7 @@ import { STORAGE_VALIDATION_SCHEMA } from "../../../storage/storage-validation.s
 import { VERIFIER_VALIDATION_SCHEMA } from "../../../verifier/verifier-validation.schema";
 import { ENCRYPTION_VALIDATION_SCHEMA } from "../encryption/encryption-validation.schema";
 import { LOG_VALIDATION_SCHEMA } from "../logger/log-validation.schema";
+import { WEBHOOK_VALIDATION_SCHEMA } from "../webhook/webhook-validation.schema";
 import { CONFIG_VALIDATION_SCHEMA } from "./config-validation.schema";
 import { BASE_VALIDATION_SCHEMA } from "./validation.schema";
 
@@ -28,4 +29,5 @@ export const VALIDATION_SCHEMA = BASE_VALIDATION_SCHEMA.concat(
     .concat(STATUS_LIST_VALIDATION_SCHEMA)
     .concat(AUDIT_LOG_VALIDATION_SCHEMA)
     .concat(ENCRYPTION_VALIDATION_SCHEMA)
-    .concat(VERIFIER_VALIDATION_SCHEMA);
+    .concat(VERIFIER_VALIDATION_SCHEMA)
+    .concat(WEBHOOK_VALIDATION_SCHEMA);

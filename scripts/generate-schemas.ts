@@ -5,7 +5,6 @@ import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { z } from "zod";
 import { editorSchemaBundles } from "../apps/backend/src/shared/common/zod/editor-schema.registry";
-import type { EditorSchemaBundle } from "../apps/backend/src/shared/common/zod/editor-schema";
 
 type SchemaEntry = {
     uri: string;

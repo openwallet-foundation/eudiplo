@@ -95,8 +95,8 @@ export class OutboundUrlPolicyService {
     }
 
     private readBoolean(key: string, fallback: boolean): boolean {
-        const configured = this.configService.get<string | boolean>(key);
-        if (configured === undefined) {
+        const configured = this.configService.get<string | boolean>(key, fallback);
+        if (configured === undefined || configured === null) {
             return fallback;
         }
         if (typeof configured === "boolean") {
@@ -108,6 +108,7 @@ export class OutboundUrlPolicyService {
     private allowedHosts(): string[] {
         const raw = this.configService.get<string>(
             "OUTBOUND_URL_ALLOWED_HOSTS",
+            "",
         );
         if (!raw) return [];
         return raw

@@ -62,6 +62,12 @@ It must include:
 }
 ```
 
+### Outbound URL Policy
+
+EUDIPLO validates outbound webhook targets before sending requests. This protects against SSRF and prevents access to localhost, private IP ranges, or other restricted destinations unless explicitly allowed.
+
+--8<-- "docs/generated/config-webhook.md"
+
 ---
 
 ## Fetching Claims (Attribute Providers)
