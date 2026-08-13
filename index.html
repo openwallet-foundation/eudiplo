@@ -2,1579 +2,1451 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta
       name="description"
-      content="EUDIPLO is open-source, self-hosted middleware for integrating EUDI Wallet issuance and verification with OID4VCI, OID4VP, SD-JWT VC and mdoc."
+      content="Configure EUDI Wallet issuance and verification. EUDIPLO handles the protocols."
     />
-    <meta name="robots" content="index, follow" />
-    <meta name="author" content="OpenWallet Foundation" />
-    <meta name="theme-color" content="#111827" />
-    <link rel="canonical" href="https://eudiplo.dev/" />
-    <link rel="icon" type="image/svg+xml" href="logo.svg" />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="EUDIPLO" />
-    <meta property="og:locale" content="en_US" />
-    <meta
-      property="og:title"
-      content="EUDIPLO — Open Source EUDI Wallet Issuer &amp; Verifier Middleware"
-    />
-    <meta
-      property="og:description"
-      content="Connect existing backends to EUDI Wallets with self-hosted middleware for credential issuance, verification and wallet protocols."
-    />
-    <meta property="og:url" content="https://eudiplo.dev/" />
-
-    <meta name="twitter:card" content="summary" />
-    <meta
-      name="twitter:title"
-      content="EUDIPLO — Open Source EUDI Wallet Issuer &amp; Verifier Middleware"
-    />
-    <meta
-      name="twitter:description"
-      content="Self-hosted middleware for EUDI Wallet issuance and verification with OID4VCI, OID4VP, SD-JWT VC and mdoc."
-    />
-
-    <title>
-      EUDIPLO — Open Source EUDI Wallet Issuer &amp; Verifier Middleware
-    </title>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "SoftwareSourceCode",
-        "name": "EUDIPLO",
-        "description": "Open-source, self-hosted middleware for integrating backend applications with EUDI Wallet issuance and verification protocols.",
-        "url": "https://eudiplo.dev/",
-        "codeRepository": "https://github.com/openwallet-foundation/eudiplo",
-        "license": "https://github.com/openwallet-foundation/eudiplo/blob/main/LICENSE",
-        "programmingLanguage": "TypeScript",
-        "runtimePlatform": "Docker",
-        "publisher": {
-          "@type": "Organization",
-          "name": "OpenWallet Foundation",
-          "url": "https://openwallet.foundation/"
-        }
-      }
-    </script>
+    <title>EUDIPLO — Configuration-driven EUDI Wallet middleware</title>
     <style>
       :root {
-        color-scheme: light dark;
-        --background: #f7f9fc;
-        --foreground: #111827;
-        --card: #ffffff;
-        --card-foreground: #111827;
-        --muted: #e9eef5;
-        --muted-foreground: #607087;
-        --border: #dbe3ee;
-        --viz-series-1: #2563eb;
-        --viz-series-2: #06b6d4;
-        --viz-series-3: #7c3aed;
+        --ink: #111827;
+        --muted: #657084;
+        --line: #dfe5ee;
+        --blue: #146ce0;
+        --cyan: #09b8d7;
+        --navy: #0f1729;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
       }
       body {
         margin: 0;
-        padding: 24px;
-        background: var(--background);
+        background: #f8faff;
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
       }
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --background: #090d16;
-          --foreground: #f7f9fc;
-          --card: #111827;
-          --card-foreground: #f7f9fc;
-          --muted: #1b2637;
-          --muted-foreground: #9caec4;
-          --border: #263449;
-          --viz-series-1: #60a5fa;
-          --viz-series-2: #22d3ee;
-          --viz-series-3: #a78bfa;
+      button,
+      select {
+        font: inherit;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        height: 78px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1280px;
+        margin: 18px auto 0;
+        padding: 0 30px;
+        border: 1px solid rgba(213, 221, 233, 0.9);
+        border-radius: 20px 20px 0 0;
+        background: rgba(250, 252, 255, 0.9);
+        backdrop-filter: blur(18px);
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 11px;
+        font-size: 19px;
+        font-weight: 750;
+        letter-spacing: -0.03em;
+      }
+      .mark {
+        width: 30px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        border-radius: 9px;
+        color: #fff;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--blue), var(--cyan));
+        transform: rotate(-4deg);
+      }
+      nav {
+        display: flex;
+        gap: 34px;
+        color: #657084;
+        font-size: 14px;
+      }
+      nav a:hover,
+      footer a:hover {
+        color: var(--blue);
+      }
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .github {
+        font-size: 14px;
+        font-weight: 650;
+        padding: 10px 14px;
+      }
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 22px;
+        min-height: 50px;
+        padding: 0 23px;
+        border-radius: 11px;
+        border: 1px solid var(--navy);
+        background: var(--navy);
+        color: #fff;
+        font-weight: 650;
+        font-size: 14px;
+        box-shadow: 0 8px 20px rgba(15, 23, 41, 0.12);
+        transition:
+          transform 0.18s,
+          box-shadow 0.18s;
+      }
+      .button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(15, 23, 41, 0.18);
+      }
+      .button.small {
+        min-height: 42px;
+        padding: 0 18px;
+      }
+      .button.ghost {
+        background: #fff;
+        color: var(--ink);
+        border-color: var(--line);
+        box-shadow: none;
+      }
+      .hero {
+        position: relative;
+        overflow: hidden;
+        max-width: 1280px;
+        min-height: 640px;
+        margin: 0 auto;
+        padding: 108px 68px 50px;
+        border: 1px solid var(--line);
+        border-top: 0;
+        text-align: center;
+        background: #f9fbff;
+      }
+      .hero:before {
+        content: '';
+        position: absolute;
+        width: 760px;
+        height: 520px;
+        left: 50%;
+        top: 35%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(43, 112, 235, 0.16) 0,
+          rgba(76, 171, 235, 0.08) 38%,
+          transparent 68%
+        );
+        filter: blur(18px);
+      }
+      .hero > * {
+        position: relative;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 12px;
+        border: 1px solid #cbd7e8;
+        border-radius: 999px;
+        color: #5b687b;
+        background: rgba(255, 255, 255, 0.72);
+        font-size: 12px;
+      }
+      .eyebrow i {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--cyan);
+        box-shadow: 0 0 0 5px rgba(9, 184, 215, 0.12);
+      }
+      h1 {
+        max-width: 990px;
+        margin: 30px auto 23px;
+        font-size: clamp(52px, 6vw, 82px);
+        line-height: 0.99;
+        font-weight: 780;
+      }
+      h1 em {
+        font-style: normal;
+        background: linear-gradient(90deg, #236de2 12%, #00b9d4 88%);
+        color: transparent;
+        background-clip: text;
+        -webkit-background-clip: text;
+      }
+      .hero-copy {
+        max-width: 720px;
+        margin: 0 auto;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.65;
+      }
+      .hero-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 32px;
+      }
+      .protocols {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 58px;
+        color: #516077;
+        font:
+          650 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.08em;
+      }
+      .protocols span {
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid #e1e7ef;
+      }
+      .protocols i {
+        color: #a7b0bf;
+        font-style: normal;
+      }
+      .section {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 110px 50px 120px;
+        border-inline: 1px solid var(--line);
+        background: #fff;
+      }
+      .heading {
+        max-width: 780px;
+        margin: 0 auto 48px;
+        text-align: center;
+      }
+      .kicker {
+        margin: 0 0 17px;
+        color: var(--blue);
+        font:
+          700 11px ui-monospace,
+          monospace;
+        letter-spacing: 0.16em;
+      }
+      .heading h2,
+      .translation h2,
+      .capabilities h2,
+      .quickstart h2 {
+        margin: 0;
+        font-size: clamp(38px, 4vw, 57px);
+        line-height: 1.04;
+        letter-spacing: -0.022em;
+      }
+      .heading > p:last-child {
+        color: var(--muted);
+        font-size: 17px;
+      }
+      .playground {
+        border: 1px solid #cfd8e6;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 30px 80px rgba(34, 59, 91, 0.13);
+        overflow: hidden;
+      }
+      .topbar {
+        min-height: 78px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--line);
+        background: #f8fafd;
+      }
+      .tabs {
+        display: flex;
+        gap: 5px;
+        padding: 5px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+      }
+      .tabs button {
+        border: 0;
+        border-radius: 8px;
+        padding: 11px 16px;
+        background: transparent;
+        color: #657084;
+        cursor: pointer;
+        font-weight: 650;
+      }
+      .tabs button.active {
+        background: var(--navy);
+        color: #fff;
+        box-shadow: 0 5px 12px rgba(15, 23, 41, 0.16);
+      }
+      .preset {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #758196;
+        font-size: 12px;
+        font-weight: 650;
+      }
+      .preset select,
+      .format select {
+        border: 1px solid #d7dfeb;
+        border-radius: 9px;
+        background: #fff;
+        color: var(--ink);
+        padding: 10px 32px 10px 12px;
+        outline: none;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 0.88fr 1.22fr 0.9fr;
+        min-height: 590px;
+      }
+      .grid > div {
+        min-width: 0;
+        padding: 24px;
+      }
+      .controls,
+      .code-panel {
+        border-right: 1px solid var(--line);
+      }
+      .code-panel {
+        background: #0d1628;
+        color: #dbe7fb;
+        padding: 0 !important;
+      }
+      .panel-label {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 22px;
+        color: #7c8799;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font:
+          700 10px ui-monospace,
+          monospace;
+      }
+      .panel-label > span {
+        color: var(--blue);
+      }
+      .code-label {
+        height: 64px;
+        padding: 0 22px;
+        margin: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+        color: #8191ac;
+      }
+      .code-label button {
+        margin-left: auto;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 7px;
+        padding: 6px 10px;
+        color: #bcd0ed;
+        background: rgba(255, 255, 255, 0.04);
+        cursor: pointer;
+        text-transform: none;
+        letter-spacing: 0;
+      }
+      .format {
+        margin-bottom: 18px;
+      }
+      .format label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 12px;
+        color: #687589;
+        font-weight: 650;
+      }
+      .format select {
+        width: 100%;
+      }
+      .switch-row {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 17px 0;
+        border-bottom: 1px solid #edf0f5;
+        cursor: pointer;
+      }
+      .switch-row > span:first-child {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .switch-row strong {
+        font-size: 13px;
+      }
+      .switch-row small {
+        color: #8a94a5;
+        font-size: 10px;
+        line-height: 1.35;
+      }
+      .switch-row input {
+        position: absolute;
+        opacity: 0;
+      }
+      .switch {
+        flex: 0 0 auto;
+        position: relative;
+        width: 38px;
+        height: 22px;
+        border-radius: 999px;
+        background: #cdd5e2;
+        transition: 0.2s;
+      }
+      .switch:after {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        top: 3px;
+        left: 3px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        transition: 0.2s;
+      }
+      .switch-row input:checked + .switch {
+        background: var(--blue);
+      }
+      .switch-row input:checked + .switch:after {
+        transform: translateX(16px);
+      }
+      .switch-row.disabled {
+        cursor: not-allowed;
+        opacity: 0.55;
+      }
+      .claims {
+        margin-top: 22px;
+      }
+      .claims > span {
+        display: block;
+        margin-bottom: 9px;
+        color: #7c8799;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 700;
+      }
+      .claim {
+        display: grid;
+        grid-template-columns: 18px 1fr;
+        gap: 1px 5px;
+        padding: 8px 0;
+        font-size: 12px;
+      }
+      .claim i {
+        grid-row: span 2;
+        display: grid;
+        place-items: center;
+        align-self: center;
+        width: 17px;
+        height: 17px;
+        border-radius: 5px;
+        background: #e8f8f2;
+        color: #0b9a6c;
+        font-style: normal;
+        font-size: 10px;
+      }
+      .claim code {
+        grid-column: 2;
+        color: #94a0b1;
+        font-size: 9px;
+      }
+      .code-panel pre {
+        margin: 0;
+        height: 525px;
+        overflow: auto;
+        padding: 21px 22px 30px;
+        scrollbar-width: thin;
+        scrollbar-color: #33415b transparent;
+      }
+      .code-panel code {
+        color: #cbd8ec;
+        font:
+          11px/1.65 ui-monospace,
+          monospace;
+        white-space: pre;
+      }
+      .result {
+        background: #fbfcfe;
+      }
+      .credential {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 194px;
+        padding: 20px;
+        border-radius: 17px;
+        overflow: hidden;
+        color: #fff;
+        background:
+          radial-gradient(
+            circle at 90% 0,
+            rgba(51, 221, 238, 0.42),
+            transparent 40%
+          ),
+          linear-gradient(145deg, #1167db, #16347a);
+        box-shadow: 0 20px 35px rgba(23, 67, 147, 0.25);
+      }
+      .credential:after {
+        content: '';
+        position: absolute;
+        width: 170px;
+        height: 170px;
+        right: -60px;
+        bottom: -105px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 50%;
+      }
+      .credential-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .credential-head small {
+        font:
+          600 8px ui-monospace,
+          monospace;
+        letter-spacing: 0.12em;
+        opacity: 0.75;
+      }
+      .credential-icon {
+        display: grid;
+        place-items: center;
+        width: 35px;
+        height: 35px;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.13);
+        font-weight: 750;
+      }
+      .credential p {
+        margin: 0 0 5px;
+        font-weight: 700;
+      }
+      .credential div > small {
+        opacity: 0.7;
+        font-size: 9px;
+      }
+      .behaviors {
+        list-style: none;
+        margin: 25px 0 0;
+        padding: 0;
+      }
+      .behaviors li {
+        display: flex;
+        gap: 11px;
+        padding: 13px 0;
+        border-bottom: 1px solid #e9edf3;
+      }
+      .behaviors i {
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        width: 21px;
+        height: 21px;
+        border-radius: 50%;
+        background: #e7f8f1;
+        color: #079366;
+        font-size: 10px;
+        font-style: normal;
+      }
+      .behaviors span {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .behaviors strong {
+        font-size: 12px;
+      }
+      .behaviors small {
+        color: #8791a1;
+        font-size: 10px;
+      }
+      .verified {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        min-height: 142px;
+        padding: 22px;
+        border-radius: 16px;
+        border: 1px solid #cfe7dd;
+        background: linear-gradient(145deg, #f5fffb, #eaf9f3);
+      }
+      .verified-icon {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        color: #fff;
+        background: #0ba777;
+        box-shadow: 0 8px 18px rgba(11, 167, 119, 0.25);
+        font-weight: 800;
+      }
+      .verified div {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .verified small {
+        color: #0b9069;
+        font:
+          700 8px ui-monospace,
+          monospace;
+        letter-spacing: 0.12em;
+      }
+      .verified strong {
+        font-size: 15px;
+      }
+      .verified p {
+        margin: 0;
+        color: #6f827b;
+        font-size: 10px;
+      }
+      .playground-footer {
+        min-height: 58px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 22px;
+        border-top: 1px solid var(--line);
+        color: #7c8799;
+        font-size: 11px;
+      }
+      .playground-footer i {
+        color: #0ab17b;
+        font-style: normal;
+        margin-right: 6px;
+      }
+      .playground-footer a {
+        color: var(--blue);
+        font-weight: 650;
+      }
+      .translation {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 105px 60px;
+        border: 1px solid var(--line);
+        background: #f5f8fd;
+      }
+      .translation > p:last-of-type {
+        max-width: 700px;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.65;
+      }
+      .flow {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr auto 1fr;
+        align-items: stretch;
+        gap: 18px;
+        margin-top: 52px;
+      }
+      .flow article {
+        position: relative;
+        min-height: 230px;
+        padding: 25px;
+        border: 1px solid #dbe2ed;
+        border-radius: 16px;
+        background: #fff;
+      }
+      .flow article > span {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        color: #a1adbd;
+        font:
+          650 10px ui-monospace,
+          monospace;
+      }
+      .flow h3 {
+        margin: 26px 0 8px;
+        font-size: 18px;
+      }
+      .flow p {
+        margin: 0;
+        color: #7b8798;
+        font-size: 12px;
+      }
+      .flow .middle {
+        color: #fff;
+        border-color: var(--navy);
+        background: var(--navy);
+        box-shadow: 0 20px 35px rgba(15, 23, 41, 0.17);
+      }
+      .flow .middle p {
+        color: #aebbd0;
+      }
+      .symbol {
+        display: grid;
+        place-items: center;
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        color: var(--blue);
+        background: #edf4ff;
+        font:
+          750 16px ui-monospace,
+          monospace;
+      }
+      .middle .symbol {
+        color: #fff;
+      }
+      .arrow {
+        align-self: center;
+        color: #9cabbf;
+        font-size: 25px;
+      }
+      .capabilities {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 105px 60px 115px;
+        border-inline: 1px solid var(--line);
+        background: #fff;
+      }
+      .capabilities h2 {
+        margin-bottom: 50px;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      .cards article {
+        min-height: 220px;
+        padding: 28px;
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        background: #fff;
+        transition: 0.18s;
+      }
+      .cards article:hover {
+        transform: translateY(-3px);
+        border-color: #bfcde0;
+        box-shadow: 0 16px 30px rgba(30, 58, 92, 0.08);
+      }
+      .cards span {
+        color: var(--blue);
+        font:
+          700 11px ui-monospace,
+          monospace;
+      }
+      .cards h3 {
+        margin: 42px 0 10px;
+        font-size: 17px;
+      }
+      .cards p {
+        margin: 0;
+        color: #748094;
+        font-size: 12px;
+        line-height: 1.65;
+      }
+      .quickstart {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 100px 50px;
+        border: 1px solid var(--line);
+        text-align: center;
+        background: linear-gradient(145deg, #eef4ff, #f8fbff);
+      }
+      .quickstart > .kicker {
+        margin-bottom: 10px;
+      }
+      .command {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 30px 0 26px;
+      }
+      .command code {
+        padding: 13px 16px;
+        border-radius: 9px;
+        color: #d5e3fa;
+        background: var(--navy);
+        font:
+          11px ui-monospace,
+          monospace;
+      }
+      .command span {
+        color: #94a0b1;
+        font-size: 11px;
+      }
+      footer {
+        max-width: 1280px;
+        min-height: 110px;
+        margin: 0 auto 30px;
+        padding: 0 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 25px;
+        border: 1px solid var(--line);
+        border-top: 0;
+        color: #7b8798;
+        background: #fff;
+        font-size: 12px;
+      }
+      footer > div {
+        display: flex;
+        gap: 24px;
+      }
+      @media (max-width: 980px) {
+        .header {
+          margin-top: 0;
+          border-radius: 0;
+        }
+        .header nav {
+          display: none;
+        }
+        .hero {
+          padding-inline: 30px;
+        }
+        .section {
+          padding-inline: 24px;
+        }
+        .grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .result {
+          grid-column: 1/-1;
+          border-top: 1px solid var(--line);
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 26px;
+        }
+        .result .panel-label {
+          grid-column: 1/-1;
+          margin-bottom: -10px;
+        }
+        .result .behaviors {
+          margin-top: 0;
+        }
+        .flow {
+          grid-template-columns: 1fr;
+        }
+        .arrow {
+          transform: rotate(90deg);
+          justify-self: center;
+        }
+        .cards {
+          grid-template-columns: repeat(2, 1fr);
         }
       }
-      @media (max-width: 560px) {
-        body {
-          padding: 0;
+      @media (max-width: 680px) {
+        .header {
+          height: 68px;
+          padding: 0 17px;
+        }
+        .github {
+          display: none;
+        }
+        .brand {
+          font-size: 17px;
+        }
+        .mark {
+          width: 27px;
+          height: 27px;
+        }
+        .button.small {
+          min-height: 38px;
+        }
+        .hero {
+          min-height: 610px;
+          padding: 78px 20px 35px;
+        }
+        h1 {
+          font-size: 46px;
+        }
+        .hero-copy {
+          font-size: 16px;
+        }
+        .hero-actions {
+          flex-direction: column;
+          align-items: stretch;
+          max-width: 330px;
+          margin-inline: auto;
+        }
+        .protocols {
+          margin-top: 42px;
+          gap: 8px;
+        }
+        .protocols i {
+          display: none;
+        }
+        .section {
+          padding: 78px 12px;
+        }
+        .heading {
+          padding-inline: 12px;
+        }
+        .topbar {
+          align-items: stretch;
+          flex-direction: column;
+        }
+        .tabs {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+        }
+        .tabs button {
+          padding-inline: 8px;
+          font-size: 12px;
+        }
+        .preset {
+          justify-content: space-between;
+        }
+        .preset select {
+          flex: 1;
+        }
+        .grid {
+          display: block;
+        }
+        .controls,
+        .code-panel {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+        .code-panel pre {
+          height: 420px;
+        }
+        .result {
+          display: block;
+        }
+        .result .panel-label {
+          margin-bottom: 22px;
+        }
+        .result .behaviors {
+          margin-top: 24px;
+        }
+        .playground-footer {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 10px;
+          padding-block: 15px;
+        }
+        .translation,
+        .capabilities {
+          padding: 74px 20px;
+        }
+        .cards {
+          grid-template-columns: 1fr;
+        }
+        .quickstart {
+          padding: 70px 20px;
+        }
+        .command {
+          align-items: stretch;
+          flex-direction: column;
+        }
+        .command code {
+          overflow-x: auto;
+        }
+        footer {
+          flex-direction: column;
+          justify-content: center;
+          padding: 32px 20px;
+          text-align: center;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        * {
+          transition: none !important;
         }
       }
     </style>
   </head>
   <body>
-    <div id="eudiplo-homepage-concept" class="eudi-site">
-      <style>
-        #eudiplo-homepage-concept {
-          --eudi-blue: var(--viz-series-1);
-          --eudi-cyan: var(--viz-series-2);
-          --eudi-violet: var(--viz-series-3);
-          color: var(--foreground);
-          background: var(--background);
-          border: 1px solid var(--border);
-          border-radius: 22px;
-          overflow: hidden;
-          font-family:
-            Inter,
-            ui-sans-serif,
-            system-ui,
-            -apple-system,
-            BlinkMacSystemFont,
-            'Segoe UI',
-            sans-serif;
-        }
-        #eudiplo-homepage-concept * {
-          box-sizing: border-box;
-        }
-        #eudiplo-homepage-concept a {
-          color: inherit;
-          text-decoration: none;
-        }
-        #eudiplo-homepage-concept .shell {
-          width: min(1160px, calc(100% - 40px));
-          margin: 0 auto;
-        }
-        #eudiplo-homepage-concept .nav {
-          min-height: 72px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 24px;
-        }
-        #eudiplo-homepage-concept .brand {
-          display: flex;
-          align-items: center;
-          gap: 11px;
-          font-weight: 700;
-          letter-spacing: -0.02em;
-        }
-        #eudiplo-homepage-concept .brand-mark {
-          width: 34px;
-          height: 34px;
-          display: grid;
-          place-items: center;
-          border-radius: 11px;
-          overflow: hidden;
-        }
-        #eudiplo-homepage-concept .brand-mark img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        #eudiplo-homepage-concept .nav-links {
-          display: flex;
-          align-items: center;
-          gap: 28px;
-          color: var(--muted-foreground);
-          font-size: 13px;
-        }
-        #eudiplo-homepage-concept .nav-links a:hover {
-          color: var(--foreground);
-        }
-        #eudiplo-homepage-concept .nav-actions {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        #eudiplo-homepage-concept .mini-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 7px;
-          min-height: 38px;
-          padding: 0 14px;
-          border-radius: 10px;
-          border: 1px solid var(--border);
-          background: var(--card);
-          color: var(--card-foreground);
-          font-size: 13px;
-          font-weight: 600;
-        }
-        #eudiplo-homepage-concept .mini-btn.primary {
-          border-color: transparent;
-          background: var(--foreground);
-          color: var(--background);
-        }
-        #eudiplo-homepage-concept .hero {
-          position: relative;
-          padding: 98px 0 94px;
-        }
-        #eudiplo-homepage-concept .hero::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          pointer-events: none;
-          background:
-            radial-gradient(
-              circle at 76% 42%,
-              color-mix(in srgb, var(--eudi-blue) 20%, transparent) 0,
-              transparent 32%
-            ),
-            radial-gradient(
-              circle at 85% 26%,
-              color-mix(in srgb, var(--eudi-violet) 12%, transparent) 0,
-              transparent 22%
-            );
-        }
-        #eudiplo-homepage-concept .hero-grid {
-          position: relative;
-          display: grid;
-          grid-template-columns: 1.08fr 0.92fr;
-          align-items: center;
-          gap: 58px;
-        }
-        #eudiplo-homepage-concept .eyebrow {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 7px 11px;
-          border: 1px solid
-            color-mix(in srgb, var(--eudi-blue) 35%, var(--border));
-          border-radius: 999px;
-          background: color-mix(
-            in srgb,
-            var(--eudi-blue) 8%,
-            var(--background)
-          );
-          color: var(--muted-foreground);
-          font-size: 12px;
-        }
-        #eudiplo-homepage-concept .eyebrow-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 99px;
-          background: var(--eudi-cyan);
-          box-shadow: 0 0 0 4px
-            color-mix(in srgb, var(--eudi-cyan) 14%, transparent);
-        }
-        #eudiplo-homepage-concept h1 {
-          margin: 26px 0 22px;
-          max-width: 720px;
-          font-size: clamp(38px, 5.9vw, 72px);
-          line-height: 1.02;
-          letter-spacing: -0.065em;
-          font-weight: 600;
-        }
-        #eudiplo-homepage-concept .gradient-word {
-          background: linear-gradient(
-            90deg,
-            var(--eudi-blue),
-            var(--eudi-cyan)
-          );
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-        }
-        #eudiplo-homepage-concept .hero-copy {
-          max-width: 610px;
-          margin: 0 0 30px;
-          color: var(--muted-foreground);
-          font-size: 18px;
-          line-height: 1.65;
-        }
-        #eudiplo-homepage-concept .hero-note {
-          margin-top: 18px;
-          max-width: 560px;
-          font-size: 15px;
-          line-height: 1.55;
-        }
-        #eudiplo-homepage-concept .cta-row {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 12px;
-        }
-        #eudiplo-homepage-concept .cta {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          min-height: 48px;
-          padding: 0 19px;
-          border-radius: 12px;
-          border: 1px solid var(--border);
-          background: var(--card);
-          color: var(--card-foreground);
-          font-size: 14px;
-          font-weight: 650;
-        }
-        #eudiplo-homepage-concept .cta.main {
-          border-color: transparent;
-          background: var(--foreground);
-          color: var(--background);
-        }
-        #eudiplo-homepage-concept .proof-row {
-          margin-top: 18px;
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-        }
-        #eudiplo-homepage-concept .proof-chip {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          min-height: 30px;
-          padding: 0 11px;
-          border-radius: 999px;
-          border: 1px solid var(--border);
-          background: var(--card);
-          color: var(--muted-foreground);
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.01em;
-        }
-        #eudiplo-homepage-concept .proof-chip b {
-          color: var(--foreground);
-          font-weight: 650;
-        }
-        #eudiplo-homepage-concept .hero-visual {
-          position: relative;
-          min-height: 440px;
-          display: grid;
-          place-items: center;
-        }
-        #eudiplo-homepage-concept .orbit {
-          position: relative;
-          width: min(400px, 100%);
-          aspect-ratio: 1;
-          border-radius: 50%;
-          border: 1px solid
-            color-mix(in srgb, var(--eudi-blue) 27%, var(--border));
-          background:
-            radial-gradient(
-              circle,
-              color-mix(in srgb, var(--eudi-blue) 9%, var(--card)) 0 23%,
-              transparent 24%
-            ),
-            repeating-radial-gradient(
-              circle,
-              transparent 0 18%,
-              color-mix(in srgb, var(--border) 75%, transparent) 18.2% 18.5%,
-              transparent 18.7% 31%
-            );
-        }
-        #eudiplo-homepage-concept .core {
-          position: absolute;
-          inset: 50% auto auto 50%;
-          transform: translate(-50%, -50%);
-          width: 96px;
-          height: 96px;
-          border-radius: 0;
-          background: transparent;
-          color: var(--foreground);
-          display: grid;
-          place-items: center;
-          overflow: hidden;
-          box-shadow: none;
-        }
-        #eudiplo-homepage-concept .core img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-          display: block;
-          transform: scale(1.18);
-          transform-origin: center;
-        }
-        #eudiplo-homepage-concept .protocol {
-          position: absolute;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 9px 12px;
-          border: 1px solid var(--border);
-          border-radius: 11px;
-          background: color-mix(in srgb, var(--card) 92%, transparent);
-          color: var(--card-foreground);
-          font:
-            600 11px/1 ui-monospace,
-            SFMono-Regular,
-            Menlo,
-            monospace;
-          box-shadow: 0 16px 38px
-            color-mix(in srgb, var(--foreground) 8%, transparent);
-          backdrop-filter: blur(12px);
-        }
-        #eudiplo-homepage-concept .protocol i {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background: var(--eudi-blue);
-        }
-        #eudiplo-homepage-concept .p1 {
-          top: 8%;
-          left: 43%;
-        }
-        #eudiplo-homepage-concept .p2 {
-          top: 31%;
-          right: -3%;
-        }
-        #eudiplo-homepage-concept .p3 {
-          bottom: 19%;
-          right: 1%;
-        }
-        #eudiplo-homepage-concept .p4 {
-          bottom: 7%;
-          left: 25%;
-        }
-        #eudiplo-homepage-concept .p5 {
-          top: 38%;
-          left: -4%;
-        }
-        #eudiplo-homepage-concept .trustline {
-          padding: 22px 0;
-          border-top: 1px solid var(--border);
-          border-bottom: 1px solid var(--border);
-          color: var(--muted-foreground);
-        }
-        #eudiplo-homepage-concept .trustline .shell {
-          display: flex;
-          justify-content: center;
-          flex-wrap: wrap;
-          gap: 16px 36px;
-          font-size: 12px;
-        }
-        #eudiplo-homepage-concept .trustline span {
-          display: inline-flex;
-          align-items: center;
-          gap: 7px;
-        }
-        #eudiplo-homepage-concept .trustline b {
-          color: var(--foreground);
-          font-weight: 600;
-        }
-        #eudiplo-homepage-concept .quick-links {
-          padding: 48px 0;
-        }
-        #eudiplo-homepage-concept .quick-links-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 12px;
-        }
-        #eudiplo-homepage-concept .quick-link {
-          display: block;
-          min-height: 130px;
-          padding: 18px;
-          border: 1px solid var(--border);
-          border-radius: 14px;
-          background: var(--card);
-        }
-        #eudiplo-homepage-concept .quick-link:hover {
-          border-color: color-mix(in srgb, var(--eudi-blue) 50%, var(--border));
-        }
-        #eudiplo-homepage-concept .quick-link-kicker {
-          margin: 0;
-          color: var(--eudi-blue);
-          font:
-            600 11px/1 ui-monospace,
-            SFMono-Regular,
-            Menlo,
-            monospace;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-        }
-        #eudiplo-homepage-concept .quick-link-title {
-          margin: 14px 0 8px;
-          color: var(--foreground);
-          font-size: 16px;
-          font-weight: 650;
-        }
-        #eudiplo-homepage-concept .quick-link-copy {
-          margin: 0;
-          color: var(--muted-foreground);
-          font-size: 13px;
-          line-height: 1.5;
-        }
-        #eudiplo-homepage-concept .section {
-          padding: 104px 0;
-        }
-        #eudiplo-homepage-concept .section.soft {
-          background: color-mix(in srgb, var(--muted) 36%, var(--background));
-        }
-        #eudiplo-homepage-concept .section-kicker {
-          margin: 0 0 14px;
-          color: var(--eudi-blue);
-          font:
-            600 12px/1 ui-monospace,
-            SFMono-Regular,
-            Menlo,
-            monospace;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-        }
-        #eudiplo-homepage-concept h2 {
-          margin: 0;
-          max-width: 760px;
-          font-size: clamp(32px, 4.7vw, 54px);
-          line-height: 1.04;
-          letter-spacing: -0.045em;
-          font-weight: 600;
-        }
-        #eudiplo-homepage-concept .section-intro {
-          max-width: 650px;
-          margin: 20px 0 0;
-          color: var(--muted-foreground);
-          line-height: 1.65;
-        }
-        #eudiplo-homepage-concept .flow-tabs {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          margin: 38px 0 22px;
-          padding: 0;
-          border: 0;
-          min-width: 0;
-        }
-        #eudiplo-homepage-concept .flow-tab {
-          appearance: none;
-          border: 1px solid var(--border);
-          background: var(--card);
-          color: var(--muted-foreground);
-          border-radius: 999px;
-          padding: 10px 15px;
-          font: inherit;
-          font-size: 13px;
-          cursor: pointer;
-        }
-        #eudiplo-homepage-concept .flow-tab[aria-pressed='true'] {
-          background: var(--foreground);
-          color: var(--background);
-          border-color: transparent;
-        }
-        #eudiplo-homepage-concept .flow-stage {
-          display: grid;
-          grid-template-columns: 1fr auto 1.15fr auto 1fr;
-          align-items: stretch;
-          gap: 14px;
-        }
-        #eudiplo-homepage-concept .flow-card {
-          min-height: 190px;
-          padding: 24px;
-          border: 1px solid var(--border);
-          border-radius: 18px;
-          background: var(--card);
-          color: var(--card-foreground);
-        }
-        #eudiplo-homepage-concept .flow-card.middle {
-          background: linear-gradient(
-            145deg,
-            color-mix(in srgb, var(--eudi-blue) 13%, var(--card)),
-            color-mix(in srgb, var(--eudi-violet) 8%, var(--card))
-          );
-          border-color: color-mix(in srgb, var(--eudi-blue) 32%, var(--border));
-        }
-        #eudiplo-homepage-concept .flow-icon {
-          width: 38px;
-          height: 38px;
-          display: grid;
-          place-items: center;
-          border-radius: 11px;
-          background: var(--muted);
-          color: var(--muted-foreground);
-        }
-        #eudiplo-homepage-concept .flow-card.middle .flow-icon {
-          background: var(--foreground);
-          color: var(--background);
-        }
-        #eudiplo-homepage-concept .flow-card h3 {
-          margin: 29px 0 8px;
-          font-size: 17px;
-          font-weight: 650;
-        }
-        #eudiplo-homepage-concept .flow-card p {
-          margin: 0;
-          color: var(--muted-foreground);
-          font-size: 13px;
-          line-height: 1.55;
-        }
-        #eudiplo-homepage-concept .arrow {
-          align-self: center;
-          color: var(--muted-foreground);
-          font-size: 22px;
-        }
-        #eudiplo-homepage-concept .split {
-          display: grid;
-          grid-template-columns: 0.84fr 1.16fr;
-          gap: 68px;
-          align-items: start;
-        }
-        #eudiplo-homepage-concept .feature-list {
-          margin-top: 36px;
-          display: grid;
-          gap: 0;
-        }
-        #eudiplo-homepage-concept .feature {
-          display: grid;
-          grid-template-columns: 34px 1fr;
-          gap: 14px;
-          padding: 21px 0;
-          border-bottom: 1px solid var(--border);
-        }
-        #eudiplo-homepage-concept .feature-num {
-          color: var(--eudi-blue);
-          font:
-            600 12px/1.5 ui-monospace,
-            SFMono-Regular,
-            Menlo,
-            monospace;
-        }
-        #eudiplo-homepage-concept .feature h3 {
-          margin: 0 0 6px;
-          font-size: 16px;
-          font-weight: 650;
-        }
-        #eudiplo-homepage-concept .feature p {
-          margin: 0;
-          color: var(--muted-foreground);
-          font-size: 13px;
-          line-height: 1.55;
-        }
-        #eudiplo-homepage-concept .code-window {
-          overflow: hidden;
-          border: 1px solid var(--border);
-          border-radius: 18px;
-          background: color-mix(in srgb, var(--card) 93%, var(--foreground));
-          color: var(--card-foreground);
-          box-shadow: 0 26px 80px
-            color-mix(in srgb, var(--foreground) 10%, transparent);
-        }
-        #eudiplo-homepage-concept .code-top {
-          min-height: 50px;
-          padding: 0 16px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          border-bottom: 1px solid var(--border);
-        }
-        #eudiplo-homepage-concept .dots {
-          display: flex;
-          gap: 6px;
-        }
-        #eudiplo-homepage-concept .dots i {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: var(--muted-foreground);
-          opacity: 0.45;
-        }
-        #eudiplo-homepage-concept .code-label {
-          color: var(--muted-foreground);
-          font:
-            500 11px/1 ui-monospace,
-            SFMono-Regular,
-            Menlo,
-            monospace;
-        }
-        #eudiplo-homepage-concept pre {
-          margin: 0;
-          min-height: 430px;
-          padding: 25px;
-          overflow: hidden;
-          color: var(--card-foreground);
-          font:
-            12px/1.75 ui-monospace,
-            SFMono-Regular,
-            Menlo,
-            monospace;
-          white-space: pre-wrap;
-        }
-        #eudiplo-homepage-concept .token-key {
-          color: var(--eudi-blue);
-        }
-        #eudiplo-homepage-concept .token-string {
-          color: var(--eudi-cyan);
-        }
-        #eudiplo-homepage-concept .token-comment {
-          color: var(--muted-foreground);
-        }
-        #eudiplo-homepage-concept .grid3 {
-          margin-top: 42px;
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 16px;
-        }
-        #eudiplo-homepage-concept .capability {
-          min-height: 205px;
-          padding: 25px;
-          border: 1px solid var(--border);
-          border-radius: 18px;
-          background: var(--card);
-          color: var(--card-foreground);
-        }
-        #eudiplo-homepage-concept .capability .cap-icon {
-          color: var(--eudi-blue);
-          font:
-            600 13px/1 ui-monospace,
-            SFMono-Regular,
-            Menlo,
-            monospace;
-        }
-        #eudiplo-homepage-concept .capability h3 {
-          margin: 46px 0 9px;
-          font-size: 17px;
-          font-weight: 650;
-        }
-        #eudiplo-homepage-concept .capability p {
-          margin: 0;
-          color: var(--muted-foreground);
-          font-size: 13px;
-          line-height: 1.6;
-        }
-        #eudiplo-homepage-concept .terminal {
-          margin-top: 38px;
-          padding: 16px 20px;
-          border: 1px solid var(--border);
-          border-radius: 14px;
-          background: var(--foreground);
-          color: var(--background);
-          font:
-            13px/1.5 ui-monospace,
-            SFMono-Regular,
-            Menlo,
-            monospace;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 18px;
-        }
-        #eudiplo-homepage-concept .terminal span:first-child::before {
-          content: '$ ';
-          opacity: 0.55;
-        }
-        #eudiplo-homepage-concept .terminal-note {
-          opacity: 0.65;
-          font-size: 11px;
-        }
-        #eudiplo-homepage-concept .terminal-card {
-          margin-top: 36px;
-          padding: 22px;
-          border: 1px solid
-            color-mix(in srgb, var(--eudi-blue) 20%, var(--border));
-          border-radius: 18px;
-          background: linear-gradient(
-            145deg,
-            color-mix(in srgb, var(--eudi-blue) 10%, var(--card)),
-            color-mix(in srgb, var(--eudi-violet) 8%, var(--card))
-          );
-          box-shadow: 0 18px 48px
-            color-mix(in srgb, var(--foreground) 10%, transparent);
-        }
-        #eudiplo-homepage-concept .terminal-card-head {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 12px;
-          margin-bottom: 14px;
-        }
-        #eudiplo-homepage-concept .terminal-badge {
-          display: inline-flex;
-          align-items: center;
-          min-height: 26px;
-          padding: 0 10px;
-          border-radius: 999px;
-          background: color-mix(in srgb, var(--eudi-blue) 12%, var(--card));
-          color: var(--foreground);
-          font-size: 11px;
-          font-weight: 650;
-          letter-spacing: 0.02em;
-          text-transform: uppercase;
-        }
-        #eudiplo-homepage-concept .terminal-card-head .terminal-note {
-          font-size: 12px;
-          text-align: right;
-        }
-        #eudiplo-homepage-concept .terminal-shell {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 18px;
-          padding: 16px 18px;
-          border: 1px solid var(--border);
-          border-radius: 14px;
-          background: var(--foreground);
-          color: var(--background);
-          font:
-            13px/1.5 ui-monospace,
-            SFMono-Regular,
-            Menlo,
-            monospace;
-        }
-        #eudiplo-homepage-concept .terminal-shell span:first-child::before {
-          content: '$ ';
-          opacity: 0.55;
-        }
-        #eudiplo-homepage-concept .terminal-shell a {
-          flex: 0 0 auto;
-          display: inline-flex;
-          align-items: center;
-          min-height: 34px;
-          padding: 0 12px;
-          border-radius: 999px;
-          border: 1px solid
-            color-mix(in srgb, var(--background) 16%, transparent);
-          background: color-mix(in srgb, var(--background) 8%, transparent);
-          color: var(--background);
-          font-size: 12px;
-          font-weight: 600;
-          text-decoration: none;
-        }
-        #eudiplo-homepage-concept .terminal-caption {
-          margin: 14px 0 0;
-          max-width: 560px;
-          color: var(--muted-foreground);
-          font-size: 14px;
-          line-height: 1.6;
-        }
-        #eudiplo-homepage-concept .install-row {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 12px;
-          margin-top: 18px;
-        }
-        #eudiplo-homepage-concept .download-btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          min-height: 40px;
-          padding: 0 16px;
-          border-radius: 10px;
-          border: 1px solid var(--border);
-          background: var(--card);
-          color: var(--card-foreground);
-          font-size: 13px;
-          font-weight: 650;
-          text-decoration: none;
-        }
-        #eudiplo-homepage-concept .download-btn.primary {
-          border-color: transparent;
-          background: var(--foreground);
-          color: var(--background);
-        }
-        #eudiplo-homepage-concept .requirement-row {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          margin-top: 24px;
-        }
+    <header class="header">
+      <a class="brand" href="#top" aria-label="EUDIPLO home"
+        ><img src="./logo.svg" alt="EUDIPLO logo" width="100"
+      /></a>
+      <nav aria-label="Main navigation">
+        <a href="#playground">How it works</a
+        ><a href="#capabilities">Capabilities</a
+        ><a href="https://eudiplo.dev/docs/main/">Docs</a>
+      </nav>
+      <div class="header-actions">
+        <a
+          class="github"
+          href="https://github.com/openwallet-foundation/eudiplo"
+          >GitHub ↗</a
+        ><a class="button small" href="#quickstart">Get started</a>
+      </div>
+    </header>
 
-        #eudiplo-homepage-concept .requirement-chip {
-          display: inline-flex;
-          align-items: center;
-          min-height: 30px;
-          padding: 0 11px;
-          border: 1px solid var(--border);
-          border-radius: 999px;
-          background: var(--card);
-          color: var(--muted-foreground);
-          font-size: 11px;
-          font-weight: 600;
-        }
-
-        #eudiplo-homepage-concept pre.quickstart-command {
-          margin: 0;
-          min-height: 0;
-          padding: 18px;
-          overflow-x: auto;
-          border: 1px solid var(--border);
-          border-radius: 14px;
-          background: var(--foreground);
-          color: var(--background);
-          font:
-            13px/1.75 ui-monospace,
-            SFMono-Regular,
-            Menlo,
-            monospace;
-          white-space: pre;
-        }
-
-        #eudiplo-homepage-concept .secondary-install {
-          margin-top: 18px;
-          padding-top: 18px;
-          border-top: 1px solid var(--border);
-        }
-
-        #eudiplo-homepage-concept .secondary-install summary {
-          cursor: pointer;
-          color: var(--foreground);
-          font-size: 13px;
-          font-weight: 650;
-        }
-
-        #eudiplo-homepage-concept .secondary-install p {
-          margin: 10px 0 12px;
-          color: var(--muted-foreground);
-          font-size: 12px;
-          line-height: 1.55;
-        }
-
-        #eudiplo-homepage-concept .secondary-command {
-          display: block;
-          padding: 12px 14px;
-          overflow-x: auto;
-          border: 1px solid var(--border);
-          border-radius: 10px;
-          background: var(--card);
-          color: var(--card-foreground);
-          font:
-            12px/1.5 ui-monospace,
-            SFMono-Regular,
-            Menlo,
-            monospace;
-          white-space: nowrap;
-        }
-
-        #eudiplo-homepage-concept .final {
-          position: relative;
-          padding: 112px 0;
-          overflow: hidden;
-          border-top: 1px solid var(--border);
-          background: color-mix(
-            in srgb,
-            var(--eudi-blue) 4%,
-            var(--background)
-          );
-        }
-
-        #eudiplo-homepage-concept .final::before {
-          content: '';
-          position: absolute;
-          width: 620px;
-          height: 620px;
-          border-radius: 50%;
-          left: 50%;
-          top: 44%;
-          transform: translate(-50%, -50%);
-          background: radial-gradient(
-            circle,
-            color-mix(in srgb, var(--eudi-blue) 15%, transparent),
-            transparent 68%
-          );
-          pointer-events: none;
-        }
-
-        #eudiplo-homepage-concept .final-grid {
-          position: relative;
-          display: grid;
-          grid-template-columns: minmax(0, 900px);
-          justify-content: center;
-          gap: 38px;
-          align-items: center;
-        }
-
-        #eudiplo-homepage-concept .final-copy {
-          text-align: center;
-        }
-
-        #eudiplo-homepage-concept .final-copy h2 {
-          margin-inline: auto;
-        }
-
-        #eudiplo-homepage-concept .final-copy .section-intro {
-          max-width: 650px;
-          margin-inline: auto;
-        }
-
-        #eudiplo-homepage-concept .final .requirement-row,
-        #eudiplo-homepage-concept .final-actions {
-          justify-content: center;
-        }
-
-        #eudiplo-homepage-concept .final-actions {
-          margin-top: 28px;
-        }
-
-        #eudiplo-homepage-concept .final .quickstart-card {
-          width: 100%;
-          margin-top: 0;
-          text-align: left;
-        }
-
-        #eudiplo-homepage-concept .final .terminal-caption {
-          max-width: none;
-        }
-        #eudiplo-homepage-concept .footer {
-          padding: 30px 0;
-          border-top: 1px solid var(--border);
-          color: var(--muted-foreground);
-          font-size: 12px;
-        }
-        #eudiplo-homepage-concept .footer .shell {
-          display: flex;
-          justify-content: space-between;
-          gap: 24px;
-          flex-wrap: wrap;
-        }
-        #eudiplo-homepage-concept .footer-links {
-          display: flex;
-          gap: 20px;
-        }
-        #eudiplo-homepage-concept .footer-brand {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-        }
-        #eudiplo-homepage-concept .footer-brand img {
-          width: 22px;
-          height: 22px;
-          border-radius: 6px;
-          border: 1px solid var(--border);
-        }
-        #eudiplo-homepage-concept .sr-only {
-          position: absolute;
-          width: 1px;
-          height: 1px;
-          padding: 0;
-          margin: -1px;
-          overflow: hidden;
-          clip: rect(0, 0, 0, 0);
-          white-space: nowrap;
-          border: 0;
-        }
-        @media (max-width: 900px) {
-          #eudiplo-homepage-concept .nav-links {
-            display: none;
-          }
-          #eudiplo-homepage-concept .hero {
-            padding: 72px 0 62px;
-          }
-          #eudiplo-homepage-concept .hero-grid,
-          #eudiplo-homepage-concept .split,
-          #eudiplo-homepage-concept .final-grid {
-            grid-template-columns: 1fr;
-          }
-          #eudiplo-homepage-concept .hero-visual {
-            min-height: 390px;
-          }
-          #eudiplo-homepage-concept .flow-stage {
-            grid-template-columns: 1fr;
-          }
-          #eudiplo-homepage-concept .arrow {
-            transform: rotate(90deg);
-            justify-self: center;
-          }
-          #eudiplo-homepage-concept .grid3 {
-            grid-template-columns: 1fr 1fr;
-          }
-          #eudiplo-homepage-concept .quick-links-grid {
-            grid-template-columns: 1fr 1fr;
-          }
-        }
-        @media (max-width: 560px) {
-          #eudiplo-homepage-concept .shell {
-            width: min(100% - 26px, 1160px);
-          }
-          #eudiplo-homepage-concept .nav-actions .mini-btn:first-child {
-            display: none;
-          }
-          #eudiplo-homepage-concept .hero {
-            padding-top: 55px;
-          }
-          #eudiplo-homepage-concept .hero-visual {
-            min-height: 320px;
-          }
-          #eudiplo-homepage-concept .protocol {
-            padding: 7px 9px;
-            font-size: 9px;
-          }
-          #eudiplo-homepage-concept .grid3 {
-            grid-template-columns: 1fr;
-          }
-          #eudiplo-homepage-concept .quick-links-grid {
-            grid-template-columns: 1fr;
-          }
-          #eudiplo-homepage-concept .section {
-            padding: 76px 0;
-          }
-          #eudiplo-homepage-concept .terminal {
-            align-items: flex-start;
-            flex-direction: column;
-          }
-          #eudiplo-homepage-concept .final {
-            padding: 76px 0;
-          }
-          #eudiplo-homepage-concept .final-grid {
-            gap: 40px;
-          }
-        }
-      </style>
-
-      <header class="shell nav">
-        <a class="brand" href="#" aria-label="EUDIPLO home">
-          <span class="brand-mark" aria-hidden="true">
-            <img src="logo.svg" alt="" />
-          </span>
-          <span>eudiplo</span>
-        </a>
-        <nav class="nav-links" aria-label="Main navigation">
-          <a href="#why">Why EUDIPLO</a>
-          <a href="#capabilities">Capabilities</a>
-          <a href="#docs-jump">Developer docs</a>
-          <a href="docs/main/" target="_blank" rel="noopener noreferrer"
-            >Docs</a
-          >
-          <a
-            href="https://github.com/openwallet-foundation/eudiplo"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Community</a
-          >
-        </nav>
-        <div class="nav-actions">
-          <a
-            class="mini-btn"
-            href="https://github.com/openwallet-foundation/eudiplo"
-            target="_blank"
-            rel="noopener noreferrer"
-            >GitHub ↗</a
-          >
-          <a
-            class="mini-btn primary"
-            href="docs/main/"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Get started</a
+    <main>
+      <section class="hero" id="top">
+        <div class="eyebrow">
+          <i></i> Open source · Open standards · Your infrastructure
+        </div>
+        <h1>
+          Configure wallet flows.<br /><em>EUDIPLO handles the protocols.</em>
+        </h1>
+        <p class="hero-copy">
+          Define credentials and presentation requests in JSON. EUDIPLO turns
+          configuration into standards-compliant issuance and
+          verification—without moving your business logic.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="#playground"
+            >Try a configuration <span>↓</span></a
+          ><a class="button ghost" href="#quickstart"
+            >Run locally <span>→</span></a
           >
         </div>
-      </header>
-
-      <main>
-        <section class="hero">
-          <div class="shell hero-grid">
-            <div>
-              <div class="eyebrow">
-                <span class="eyebrow-dot"></span> Open source · Open standards ·
-                On your infrastructure
-              </div>
-              <h1>
-                Your Diplomatic Layer
-                <span class="gradient-word">for EUDI Wallet Integration.</span>
-              </h1>
-              <p class="hero-copy">
-                EUDIPLO bridges your backend and EUDI Wallets through a unified
-                API and open standards. Issue and verify credentials with
-                production-ready protocol handling, while your team keeps focus
-                on business logic.
-              </p>
-              <div class="cta-row">
-                <a
-                  class="cta main"
-                  href="docs/main/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Read the documentation <span aria-hidden="true">→</span></a
-                >
-                <a
-                  class="cta"
-                  href="https://github.com/openwallet-foundation/eudiplo"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >View on GitHub <span aria-hidden="true">↗</span></a
-                >
-              </div>
-            </div>
-            <div
-              class="hero-visual"
-              aria-label="EUDIPLO connecting applications with EUDI Wallet protocols"
-            >
-              <div class="orbit">
-                <div class="core" aria-label="EUDIPLO">
-                  <img src="logo.svg" alt="" />
-                </div>
-                <span class="protocol p1"><i></i> OID4VCI</span>
-                <span class="protocol p2"><i></i> SD-JWT VC</span>
-                <span class="protocol p3"><i></i> mdoc</span>
-                <span class="protocol p4"><i></i> OpenID Federation</span>
-                <span class="protocol p5"><i></i> OID4VP</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <div class="trustline">
-          <div class="shell">
-            <span><b>OpenWallet Foundation</b> project</span>
-            <span>✓ OIDF conformance tested</span>
-            <span>✓ Self-hosted by design</span>
-            <span>✓ Built for issuer &amp; verifier use cases</span>
-          </div>
+        <div class="protocols" aria-label="Supported protocols and formats">
+          <span>OID4VCI</span><i>·</i><span>OID4VP</span><i>·</i
+          ><span>SD-JWT VC</span><i>·</i><span>mdoc</span><i>·</i
+          ><span>DCQL</span>
         </div>
+      </section>
 
-        <section class="quick-links" id="docs-jump">
-          <div class="shell quick-links-grid">
-            <a
-              class="quick-link"
-              href="docs/main/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <p class="quick-link-kicker">01 / Docs</p>
-              <h3 class="quick-link-title">Getting Started</h3>
-              <p class="quick-link-copy">
-                Run locally, configure credentials, and issue your first
-                wallet-compatible credential.
-              </p>
-            </a>
-            <a
-              class="quick-link"
-              href="docs/main/architecture/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <p class="quick-link-kicker">02 / Docs</p>
-              <h3 class="quick-link-title">Architecture</h3>
-              <p class="quick-link-copy">
-                Understand issuer, verifier, key management, trust model, and
-                protocol abstraction boundaries.
-              </p>
-            </a>
-            <a
-              class="quick-link"
-              href="docs/main/api/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <p class="quick-link-kicker">03 / Docs</p>
-              <h3 class="quick-link-title">API Reference</h3>
-              <p class="quick-link-copy">
-                Explore endpoints, authentication, DTOs, and generated API
-                documentation.
-              </p>
-            </a>
-            <a
-              class="quick-link"
-              href="docs/main/deployment/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <p class="quick-link-kicker">04 / Docs</p>
-              <h3 class="quick-link-title">Deployment</h3>
-              <p class="quick-link-copy">
-                Deploy with Docker Compose or Kubernetes and run with
-                observability and key controls.
-              </p>
-            </a>
-          </div>
-        </section>
-
-        <section class="section soft" id="why">
-          <div class="shell">
-            <p class="section-kicker">The diplomatic layer</p>
-            <h2>Your business logic speaks API.<br />EUDIPLO speaks wallet.</h2>
-            <p class="section-intro">
-              Keep attributes and decisions in your own systems. EUDIPLO
-              translates a clean integration into the protocol flows, metadata,
-              security mechanisms and wallet interoperability the ecosystem
-              expects.
-            </p>
-            <fieldset class="flow-tabs">
-              <legend class="sr-only">Choose a flow</legend>
-              <button
-                class="flow-tab"
-                type="button"
-                data-flow="issue"
-                aria-pressed="true"
-              >
-                Issue a credential
+      <section class="section" id="playground">
+        <div class="heading">
+          <p class="kicker">THE CONFIGURATION-DRIVEN LAYER</p>
+          <h2>Change the outcome.<br />Watch the protocol behavior follow.</h2>
+          <p>
+            Explore a real EUDIPLO configuration. No backend or wallet required.
+          </p>
+        </div>
+        <div class="playground">
+          <div class="topbar">
+            <div class="tabs" role="group" aria-label="Choose wallet flow">
+              <button id="issue-tab" class="active" type="button">
+                ＋ Issue credential</button
+              ><button id="verify-tab" type="button">
+                ✓ Verify presentation
               </button>
-              <button
-                class="flow-tab"
-                type="button"
-                data-flow="verify"
-                aria-pressed="false"
-              >
-                Verify a presentation
-              </button>
-            </fieldset>
-            <div class="flow-stage" aria-live="polite">
-              <div class="flow-card">
-                <div class="flow-icon" aria-hidden="true">01</div>
-                <h3 id="flow-left-title">Your application</h3>
-                <p id="flow-left-copy">
-                  Provides credential data through a webhook or API.
-                </p>
-              </div>
-              <div class="arrow" aria-hidden="true">→</div>
-              <div class="flow-card middle">
-                <div class="flow-icon" aria-hidden="true">02</div>
-                <h3>EUDIPLO</h3>
-                <p id="flow-middle-copy">
-                  Orchestrates authorization, proof validation, credential
-                  formats, signing and status.
-                </p>
-              </div>
-              <div class="arrow" aria-hidden="true">→</div>
-              <div class="flow-card">
-                <div class="flow-icon" aria-hidden="true">03</div>
-                <h3 id="flow-right-title">EUDI Wallet</h3>
-                <p id="flow-right-copy">
-                  Receives a standards-compliant credential.
-                </p>
-              </div>
             </div>
-          </div>
-        </section>
-
-        <section class="section">
-          <div class="shell split">
-            <div>
-              <p class="section-kicker">Simple on the outside</p>
-              <h2>Configure the outcome. Not the protocol.</h2>
-              <p class="section-intro">
-                Define what you want to issue or request. EUDIPLO turns
-                configuration into complete issuer and verifier behavior.
-              </p>
-              <div class="feature-list">
-                <div class="feature">
-                  <span class="feature-num">01</span>
-                  <div>
-                    <h3>Bring your existing backend</h3>
-                    <p>
-                      Connect through webhooks and APIs without moving your
-                      business data into another cloud.
-                    </p>
-                  </div>
-                </div>
-                <div class="feature">
-                  <span class="feature-num">02</span>
-                  <div>
-                    <h3>Stay adaptable</h3>
-                    <p>
-                      Support SD-JWT VC and mdoc while keeping protocol changes
-                      out of your application.
-                    </p>
-                  </div>
-                </div>
-                <div class="feature">
-                  <span class="feature-num">03</span>
-                  <div>
-                    <h3>Operate with confidence</h3>
-                    <p>
-                      Use tenant isolation, auditable sessions, OpenTelemetry
-                      and production-grade key management.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="code-window"
-              aria-label="Example EUDIPLO credential configuration"
+            <label class="preset"
+              >Example
+              <select id="preset">
+                <option value="event">Event pass</option>
+                <option value="employee">Employee ID</option>
+                <option value="age">Age check</option>
+              </select></label
             >
-              <div class="code-top">
-                <span class="dots"><i></i><i></i><i></i></span
-                ><span class="code-label">event-access-attestation.json</span>
+          </div>
+          <div class="grid">
+            <div class="controls">
+              <div class="panel-label"><span>01</span> Define the outcome</div>
+              <div class="format">
+                <label for="format">Credential format</label
+                ><select id="format">
+                  <option value="dc+sd-jwt">SD-JWT VC</option>
+                  <option value="mso_mdoc">ISO mdoc</option>
+                </select>
               </div>
-              <pre><code><span class="token-comment">// Shortened real-world shape used by EUDIPLO configs</span>
-{
-  <span class="token-key">"id"</span>: <span class="token-string">"event-access-attestation"</span>,
-  <span class="token-key">"description"</span>: <span class="token-string">"Event Access Attestation"</span>,
-  <span class="token-key">"lifeTime"</span>: <span class="token-string">7776000</span>,
-  <span class="token-key">"keyBinding"</span>: <span class="token-string">true</span>,
-  <span class="token-key">"statusManagement"</span>: <span class="token-string">false</span>,
-  <span class="token-key">"vct"</span>: <span class="token-string">"urn:eudi:eaa:event-access-attestation:1"</span>,
-  <span class="token-key">"config"</span>: {
-    <span class="token-key">"format"</span>: <span class="token-string">"dc+sd-jwt"</span>,
-    <span class="token-key">"display"</span>: [{ <span class="token-key">"name"</span>: <span class="token-string">"Event Access Pass"</span>, <span class="token-key">"locale"</span>: <span class="token-string">"en-US"</span> }]
-  },
-  <span class="token-key">"fields"</span>: [
-    {
-      <span class="token-key">"path"</span>: [<span class="token-string">"event_name"</span>],
-      <span class="token-key">"type"</span>: <span class="token-string">"string"</span>,
-      <span class="token-key">"mandatory"</span>: <span class="token-string">true</span>,
-      <span class="token-key">"disclosable"</span>: <span class="token-string">true</span>
-    },
-    {
-      <span class="token-key">"path"</span>: [<span class="token-string">"access_type"</span>],
-      <span class="token-key">"constraints"</span>: { <span class="token-key">"enum"</span>: [<span class="token-string">"full_access"</span>, <span class="token-string">"vip_access"</span>] }
-    }
-  ]
-}</code></pre>
-            </div>
-          </div>
-        </section>
-
-        <section class="section soft" id="capabilities">
-          <div class="shell">
-            <p class="section-kicker">Built for real deployments</p>
-            <h2>The infrastructure behind a trustworthy wallet service.</h2>
-            <div class="grid3">
-              <article class="capability">
-                <span class="cap-icon">{ issuer }</span>
-                <h3>Credential issuance</h3>
-                <p>
-                  Authorization Code and Pre-Authorized Code flows, SD-JWT VC
-                  and mdoc, batch issuance, status and notifications.
-                </p>
-              </article>
-              <article class="capability">
-                <span class="cap-icon">{ verifier }</span>
-                <h3>Presentations</h3>
-                <p>
-                  OID4VP, DC API and DCQL with same-device and cross-device
-                  flows, secure responses and webhooks.
-                </p>
-              </article>
-              <article class="capability">
-                <span class="cap-icon">{ trust }</span>
-                <h3>Trust &amp; registration</h3>
-                <p>
-                  Trusted lists, Access and Registration Certificates, OpenID
-                  Federation and registrar integration.
-                </p>
-              </article>
-              <article class="capability">
-                <span class="cap-icon">{ keys }</span>
-                <h3>Key management</h3>
-                <p>
-                  Local keys, Vault, AWS KMS, remote KMS and PKCS#11/HSM
-                  adapters through a unified model.
-                </p>
-              </article>
-              <article class="capability">
-                <span class="cap-icon">{ teams }</span>
-                <h3>Multi-tenant operations</h3>
-                <p>
-                  Separate tenants, role-based access, PostgreSQL support and an
-                  administration interface for teams.
-                </p>
-              </article>
-              <article class="capability">
-                <span class="cap-icon">{ observe }</span>
-                <h3>Observable by default</h3>
-                <p>
-                  Persistent session logs and OpenTelemetry integration for the
-                  visibility production environments need.
-                </p>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <section
-          class="final"
-          id="quickstart"
-          aria-labelledby="quickstart-title"
-        >
-          <div class="shell final-grid">
-            <div class="final-copy">
-              <p class="section-kicker">Open source. Ready to try.</p>
-              <h2 id="quickstart-title">Run EUDIPLO locally in seconds.</h2>
-              <p class="section-intro">
-                Install the EUDIPLO CLI and start a local Docker Compose demo.
-              </p>
-              <div
-                class="requirement-row"
-                aria-label="Quick start requirements"
-              ></div>
-              <div class="cta-row final-actions">
-                <a
-                  class="cta main"
-                  href="docs/main/getting-started/cli/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >CLI documentation →</a
-                >
-                <a
-                  class="cta"
-                  href="https://github.com/openwallet-foundation/eudiplo"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Star on GitHub ↗</a
-                >
+              <div id="switches"></div>
+              <div class="claims">
+                <span id="claim-title">Credential fields</span>
+                <div id="claims"></div>
               </div>
             </div>
-
-            <div class="terminal-card quickstart-card">
-              <div class="terminal-card-head">
-                <span class="terminal-badge">Quick start</span>
-                <span class="terminal-note">Standalone CLI</span>
+            <div class="code-panel">
+              <div class="panel-label code-label">
+                <span>02</span> Generated configuration
+                <button id="copy" type="button">Copy</button>
               </div>
               <pre
-                class="quickstart-command"
-              ><code>$ curl -fsSL https://raw.githubusercontent.com/openwallet-foundation/eudiplo/main/scripts/install-cli.sh | bash
-$ eudiplo demo</code></pre>
-              <p class="terminal-caption">
-                The installer downloads the EUDIPLO CLI. Then
-                <code>eudiplo demo</code> prepares and starts the local demo
-                using Docker Compose.
-              </p>
-
-              <details class="secondary-install">
-                <summary>Already using Node.js?</summary>
-                <p>
-                  Run the CLI directly from npm instead of installing the
-                  standalone binary.
-                </p>
-                <code class="secondary-command">npx @eudiplo/cli demo</code>
-              </details>
+                aria-label="Generated EUDIPLO JSON configuration"
+              ><code id="config"></code></pre>
+            </div>
+            <div class="result">
+              <div class="panel-label"><span>03</span> EUDIPLO provides</div>
+              <div id="preview"></div>
+              <ul class="behaviors" id="behaviors"></ul>
             </div>
           </div>
-        </section>
-      </main>
-
-      <footer class="footer">
-        <div class="shell">
-          <span class="footer-brand"
-            ><img src="logo.svg" alt="" />eudiplo · An OpenWallet Foundation
-            project</span
-          ><span class="footer-links"
-            ><a href="docs/main/" target="_blank" rel="noopener noreferrer"
-              >Docs</a
+          <div class="playground-footer">
+            <span><i>●</i> Updates instantly in your browser</span
             ><a
-              href="https://github.com/openwallet-foundation/eudiplo"
-              target="_blank"
-              rel="noopener noreferrer"
-              >GitHub</a
-            ><a
-              href="https://github.com/openwallet-foundation/eudiplo/blob/main/LICENSE"
-              target="_blank"
-              rel="noopener noreferrer"
-              >License</a
-            ></span
-          >
+              id="reference"
+              href="https://eudiplo.dev/docs/main/getting-started/issuance/credential-configuration/"
+              >Explore the full configuration reference →</a
+            >
+          </div>
         </div>
-      </footer>
+      </section>
 
-      <script>
-        (function () {
-          const root = document.getElementById('eudiplo-homepage-concept');
-          if (!root) return;
-          const content = {
-            issue: {
-              leftTitle: 'Your application',
-              leftCopy: 'Provides credential data through a webhook or API.',
-              middleCopy:
-                'Orchestrates authorization, proof validation, credential formats, signing and status.',
-              rightTitle: 'EUDI Wallet',
-              rightCopy: 'Receives a standards-compliant credential.',
+      <section class="translation" id="capabilities">
+        <p class="kicker">THE DIPLOMATIC LAYER</p>
+        <h2>Your application speaks JSON.<br />EUDIPLO speaks wallet.</h2>
+        <p>
+          Keep attributes, policies, and decisions in your own systems. EUDIPLO
+          translates the desired outcome into metadata, proofs, trust checks,
+          signing, status, and callbacks.
+        </p>
+        <div class="flow" aria-label="EUDIPLO integration flow">
+          <article>
+            <span>01</span>
+            <div class="symbol">{ }</div>
+            <h3>Your application</h3>
+            <p>Simple JSON, APIs, and webhooks.</p>
+          </article>
+          <div class="arrow">→</div>
+          <article class="middle">
+            <span>02</span>
+            <img
+              class="symbol"
+              src="./logo.svg"
+              alt="EUDIPLO logo"
+              width="100"
+            />
+            <h3>EUDIPLO</h3>
+            <p>Configuration becomes protocol behavior.</p>
+          </article>
+          <div class="arrow">→</div>
+          <article>
+            <span>03</span>
+            <div class="symbol">▣</div>
+            <h3>EUDI Wallets</h3>
+            <p>Interoperable issuance and presentation.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="capabilities">
+        <p class="kicker">BUILT FOR REAL DEPLOYMENTS</p>
+        <h2>Simple on the outside.<br />Production-ready underneath.</h2>
+        <div class="cards">
+          <article>
+            <span>{ issuer }</span>
+            <h3>Credential issuance</h3>
+            <p>
+              Authorization Code and Pre-Authorized Code flows, SD-JWT VC, mdoc,
+              batch issuance, status, and notifications.
+            </p>
+          </article>
+          <article>
+            <span>{ verifier }</span>
+            <h3>Presentations</h3>
+            <p>
+              OID4VP, Digital Credentials API, and DCQL with same-device and
+              cross-device flows plus secure webhooks.
+            </p>
+          </article>
+          <article>
+            <span>{ trust }</span>
+            <h3>Trust & registration</h3>
+            <p>
+              Trusted lists, Access and Registration Certificates, OpenID
+              Federation, and registrar integration.
+            </p>
+          </article>
+          <article>
+            <span>{ keys }</span>
+            <h3>Key management</h3>
+            <p>
+              Local keys, Vault, AWS KMS, remote KMS, and PKCS#11/HSM adapters
+              through one model.
+            </p>
+          </article>
+          <article>
+            <span>{ teams }</span>
+            <h3>Multi-tenant operations</h3>
+            <p>
+              Tenant isolation, role-based access, PostgreSQL support, and an
+              administration interface for teams.
+            </p>
+          </article>
+          <article>
+            <span>{ observe }</span>
+            <h3>Observable by default</h3>
+            <p>
+              Persistent session logs and OpenTelemetry integration for
+              production visibility and troubleshooting.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="quickstart" id="quickstart">
+        <p class="kicker">READY TO TRY IT?</p>
+        <h2>One command to a working wallet flow.</h2>
+        <div class="command">
+          <code>curl -fsSL https://eudiplo.dev/install.sh | bash</code
+          ><span>then</span><code>eudiplo demo</code>
+        </div>
+        <a
+          class="button"
+          href="https://eudiplo.dev/docs/main/getting-started/cli/"
+          >Open the CLI guide →</a
+        >
+      </section>
+    </main>
+    <footer>
+      <a class="brand" href="#top"
+        ><img src="./eudiplo.png" alt="EUDIPLO logo" width="200"
+      /></a>
+      <span>An OpenWallet Foundation project</span>
+      <div>
+        <a href="https://eudiplo.dev/docs/main/">Docs</a
+        ><a href="https://github.com/openwallet-foundation/eudiplo">GitHub</a
+        ><a
+          href="https://github.com/openwallet-foundation/eudiplo/blob/main/LICENSE"
+          >License</a
+        >
+      </div>
+    </footer>
+
+    <script>
+      const data = {
+        event: {
+          title: 'OpenWallet Summit Pass',
+          id: 'event-access-pass',
+          icon: '◎',
+          fields: [
+            ['event_name', 'Event name'],
+            ['holder_name', 'Holder name'],
+            ['access_type', 'Access type'],
+          ],
+        },
+        employee: {
+          title: 'Digital Employee ID',
+          id: 'employee-id',
+          icon: '◇',
+          fields: [
+            ['given_name', 'Given name'],
+            ['family_name', 'Family name'],
+            ['department', 'Department'],
+          ],
+        },
+        age: {
+          title: 'Age verification',
+          id: 'age-check',
+          icon: '18+',
+          fields: [
+            ['age_over_18', 'Age over 18'],
+            ['issuing_country', 'Issuing country'],
+          ],
+        },
+      };
+      const state = {
+        flow: 'issue',
+        preset: 'event',
+        format: 'dc+sd-jwt',
+        keyBinding: true,
+        statusManagement: false,
+        selectiveDisclosure: true,
+        trustValidation: true,
+        strictStatus: true,
+      };
+      const $ = (id) => document.getElementById(id);
+      const switchRow = (key, label, hint, disabled = false) =>
+        `<label class="switch-row${disabled ? ' disabled' : ''}"><span><strong>${label}</strong><small>${hint}</small></span><input type="checkbox" data-key="${key}" ${state[key] ? 'checked' : ''} ${disabled ? 'disabled' : ''}><span class="switch" aria-hidden="true"></span></label>`;
+      const item = (title, description) =>
+        `<li><i>✓</i><span><strong>${title}</strong><small>${description}</small></span></li>`;
+      function configuration() {
+        const itemData = data[state.preset],
+          mdoc = state.format === 'mso_mdoc',
+          ns = `org.openwallet.${itemData.id}.1`,
+          vct = `urn:eudi:eaa:${itemData.id}:1`;
+        if (state.flow === 'issue')
+          return {
+            id: itemData.id,
+            description: itemData.title,
+            lifeTime: 7776000,
+            keyBinding: state.keyBinding,
+            statusManagement: state.statusManagement,
+            ...(!mdoc ? { vct } : {}),
+            config: {
+              format: state.format,
+              ...(mdoc ? { docType: ns, namespace: ns } : {}),
+              display: [{ name: itemData.title, locale: 'en-US' }],
             },
-            verify: {
-              leftTitle: 'EUDI Wallet',
-              leftCopy:
-                'Presents only the attributes requested by your service.',
-              middleCopy:
-                'Builds DCQL requests, validates responses, trust and credential status.',
-              rightTitle: 'Your application',
-              rightCopy:
-                'Receives a clean, verified result through your webhook.',
-            },
+            fields: itemData.fields.map(([name]) => ({
+              path: [name],
+              type: name === 'age_over_18' ? 'boolean' : 'string',
+              mandatory: true,
+              ...(!mdoc ? { disclosable: state.selectiveDisclosure } : {}),
+            })),
           };
-          const tabs = root.querySelectorAll('.flow-tab');
-          tabs.forEach(function (tab) {
-            tab.addEventListener('click', function () {
-              const selected = tab.getAttribute('data-flow');
-              const item = content[selected];
-              if (!item) return;
-              tabs.forEach(function (peer) {
-                peer.setAttribute(
-                  'aria-pressed',
-                  peer === tab ? 'true' : 'false',
-                );
-              });
-              root.querySelector('#flow-left-title').textContent =
-                item.leftTitle;
-              root.querySelector('#flow-left-copy').textContent = item.leftCopy;
-              root.querySelector('#flow-middle-copy').textContent =
-                item.middleCopy;
-              root.querySelector('#flow-right-title').textContent =
-                item.rightTitle;
-              root.querySelector('#flow-right-copy').textContent =
-                item.rightCopy;
-            });
-          });
-        })();
-      </script>
-    </div>
+        return {
+          id: `${itemData.id}-presentation`,
+          description: `Request ${itemData.title}`,
+          statusCheckMode: state.strictStatus ? 'strict' : 'best_effort',
+          dcql_query: {
+            credentials: [
+              {
+                id: itemData.id,
+                format: state.format,
+                meta: mdoc ? { doctype_value: ns } : { vct_values: [vct] },
+                claims: itemData.fields.map(([name]) => ({
+                  path: mdoc ? [ns, name] : [name],
+                })),
+                ...(state.trustValidation
+                  ? {
+                      trusted_authorities: [
+                        {
+                          type: 'etsi_tl',
+                          values: [{ trustListId: 'eaa-trust-list' }],
+                        },
+                      ],
+                    }
+                  : {}),
+              },
+            ],
+          },
+          webhook: { url: 'https://your-app.example/wallet/result' },
+        };
+      }
+      function render() {
+        const itemData = data[state.preset],
+          mdoc = state.format === 'mso_mdoc';
+        $('issue-tab').classList.toggle('active', state.flow === 'issue');
+        $('verify-tab').classList.toggle('active', state.flow === 'verify');
+        $('claim-title').textContent =
+          state.flow === 'issue' ? 'Credential fields' : 'Requested claims';
+        $('claims').innerHTML = itemData.fields
+          .map(
+            ([name, label]) =>
+              `<div class="claim"><i>✓</i><span>${label}</span><code>${name}</code></div>`,
+          )
+          .join('');
+        $('switches').innerHTML =
+          state.flow === 'issue'
+            ? switchRow(
+                'keyBinding',
+                'Key binding',
+                'Bind the credential to a wallet key',
+              ) +
+              switchRow(
+                'statusManagement',
+                'Status management',
+                'Enable revocation through Token Status Lists',
+              ) +
+              switchRow(
+                'selectiveDisclosure',
+                'Selective disclosure',
+                mdoc
+                  ? 'Controlled by mdoc namespaces'
+                  : 'Let the holder reveal individual claims',
+                mdoc,
+              )
+            : switchRow(
+                'trustValidation',
+                'Validate issuer trust',
+                'Require an issuer from your trusted list',
+              ) +
+              switchRow(
+                'strictStatus',
+                'Strict status check',
+                state.strictStatus
+                  ? 'Fail closed if credential status is unavailable'
+                  : 'Continue if status data is temporarily unavailable',
+              );
+        $('switches')
+          .querySelectorAll('input')
+          .forEach((input) =>
+            input.addEventListener('change', (e) => {
+              state[e.target.dataset.key] = e.target.checked;
+              render();
+            }),
+          );
+        $('config').textContent = JSON.stringify(configuration(), null, 2);
+        if (state.flow === 'issue') {
+          $('preview').innerHTML =
+            `<div class="credential"><div class="credential-head"><span class="credential-icon">${itemData.icon}</span><small>EUDI WALLET</small></div><div><p>${itemData.title}</p><small>OpenWallet Foundation</small></div></div>`;
+          $('behaviors').innerHTML =
+            item('OID4VCI metadata', 'Published automatically') +
+            item(
+              state.keyBinding ? 'Wallet proof required' : 'Bearer credential',
+              state.keyBinding
+                ? 'Key binding enforced'
+                : 'No proof of possession',
+            ) +
+            item(
+              state.statusManagement
+                ? 'Revocable credential'
+                : 'No status entry',
+              state.statusManagement
+                ? 'Token Status List managed'
+                : 'Status management disabled',
+            );
+          $('reference').href =
+            'https://eudiplo.dev/docs/main/getting-started/issuance/credential-configuration/';
+        } else {
+          $('preview').innerHTML =
+            `<div class="verified"><span class="verified-icon">✓</span><div><small>VERIFIED RESULT</small><strong>${itemData.title}</strong><p>${itemData.fields.length} claims returned to your webhook</p></div></div>`;
+          $('behaviors').innerHTML =
+            item('DCQL request', 'Built from your selected claims') +
+            item(
+              state.trustValidation
+                ? 'Issuer trust enforced'
+                : 'Cryptographic validation only',
+              state.trustValidation
+                ? 'Matched against configured trust list'
+                : 'No trust framework configured',
+            ) +
+            item(
+              state.strictStatus
+                ? 'Strict status validation'
+                : 'Best-effort status validation',
+              state.strictStatus
+                ? 'Unavailable status fails closed'
+                : 'Temporary failures do not block the flow',
+            ) +
+            item('Clean JSON result', 'Delivered through webhook or API');
+          $('reference').href =
+            'https://eudiplo.dev/docs/main/getting-started/presentation/presentation-configuration/';
+        }
+      }
+      $('issue-tab').addEventListener('click', () => {
+        state.flow = 'issue';
+        render();
+      });
+      $('verify-tab').addEventListener('click', () => {
+        state.flow = 'verify';
+        render();
+      });
+      $('preset').addEventListener('change', (e) => {
+        state.preset = e.target.value;
+        render();
+      });
+      $('format').addEventListener('change', (e) => {
+        state.format = e.target.value;
+        render();
+      });
+      $('copy').addEventListener('click', async () => {
+        await navigator.clipboard.writeText($('config').textContent);
+        $('copy').textContent = 'Copied!';
+        setTimeout(() => ($('copy').textContent = 'Copy'), 1600);
+      });
+      render();
+    </script>
   </body>
 </html>
