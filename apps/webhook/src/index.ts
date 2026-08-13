@@ -44,7 +44,9 @@ function handleNotification(data: NotificationWebhookRequest): Response {
         `  Credential Config: ${data.notification.credentialConfigurationId}`,
     );
 
-    return Response.json(createNotificationSuccess(), { status: 200 });
+    const response = createNotificationSuccess();
+    console.log("Outgoing notification response:", JSON.stringify(response, null, 2));
+    return Response.json(response, { status: 200 });
 }
 
 /**
@@ -88,6 +90,7 @@ function handleClaimsWithPresentation(data: ClaimsWebhookRequest): Response {
         },
     );
 
+    console.log("Outgoing claims response:", JSON.stringify(response, null, 2));
     return Response.json(response, { status: 200 });
 }
 
@@ -126,6 +129,7 @@ function handleUnifiedClaims(data: ClaimsWebhookRequest): Response {
             data.credential_configuration_id,
             claims,
         );
+        console.log("Outgoing unified claims response:", JSON.stringify(response, null, 2));
         return Response.json(response, { status: 200 });
     }
 
@@ -152,6 +156,7 @@ function handleDeferredClaims(): Response {
     );
 
     const response = createDeferredResponse(10); // Poll every 10 seconds
+    console.log("Outgoing deferred response:", JSON.stringify(response, null, 2));
     return Response.json(response, { status: 200 });
 }
 

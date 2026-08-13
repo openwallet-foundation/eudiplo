@@ -451,6 +451,9 @@ jobs:
             --exclude .git \
             website/. gh-pages-out/
 
+          test -s gh-pages-out/install.sh
+          bash -n gh-pages-out/install.sh
+
           touch gh-pages-out/.nojekyll
 
           if [ -n "$(git -C gh-pages-out status --porcelain)" ]; then

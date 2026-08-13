@@ -13,27 +13,47 @@ your first credential.
 
 ## What You'll Need
 
-- Option A (recommended): [Node.js](https://nodejs.org/) for `npx`
-- Option B: standalone `eudiplo` binary from GitHub Releases
+- CLI access via one of these options:
+    - Option A (recommended on Linux/macOS): standalone CLI via installer
+    - Option B: npm package `@eudiplo/cli` with [Node.js 22+](https://nodejs.org/)
+    - Windows: `npx @eudiplo/cli demo` (Node.js 22+) or Windows x64 release archive
 - [Docker](https://www.docker.com/get-started) installed
 - 2 minutes of your time ⏱️
 
 ---
 
-## Step 1: Start the Demo (Recommended)
+## Step 1: Start the Demo with the CLI (Recommended)
 
-The recommended onboarding path is a single CLI command:
+### Linux and macOS: Standalone CLI (recommended)
+
+```bash
+curl -fsSL https://eudiplo.dev/install.sh | bash
+eudiplo demo
+```
+
+### Already using Node.js 22+?
 
 ```bash
 npx @eudiplo/cli demo
 ```
 
-If you prefer not to install Node.js locally, use the standalone CLI binary from
-GitHub Releases and run the same command:
+### Windows
 
-```bash
+Use Node.js 22+:
+
+```powershell
+npx @eudiplo/cli demo
+```
+
+or download the Windows x64 standalone release archive and run:
+
+```powershell
 eudiplo demo
 ```
+
+Both options run the same **EUDIPLO CLI**. The standalone CLI removes the
+Node.js requirement, but Docker and Docker Compose are still required for
+`eudiplo demo`.
 
 This generates editable demo files in your current directory:
 
@@ -71,9 +91,26 @@ curl http://localhost:3000/health
 
 ---
 
-## Step 3: Choose Your Interface
+## Step 3: Continue with the CLI (Recommended)
 
-EUDIPLO provides two ways to interact with the system:
+The CLI is the primary workflow for local onboarding and lifecycle commands.
+Use the same mode you chose in Step 1:
+
+```bash
+# Stop demo stack
+eudiplo down
+
+# npm alternative
+npx @eudiplo/cli down
+
+# Reset demo data and regenerate demo config
+eudiplo demo --reset --force
+
+# npm alternative
+npx @eudiplo/cli demo --reset --force
+```
+
+You can still use the Web Client or Swagger API at any time:
 
 === "🖥️ Web Client (Recommended for beginners)"
 
@@ -104,13 +141,13 @@ EUDIPLO provides two ways to interact with the system:
 
 ---
 
-## Step 4: Get Started
+## Step 4: Optional UI and API Exploration
 
-Choose your preferred approach:
+After starting with the CLI, choose an interface for interactive exploration:
 
 === "🖥️ Using the Web Client"
 
-    1. **Open**: http://localhost:4200 (if you used Full Setup)
+    1. **Open**: http://localhost:4200
     2. **Log in** with the default credentials:
         - **EUDIPLO Instance**: `http://localhost:3000`
         - **Client ID**: `root`
@@ -184,14 +221,19 @@ EUDIPLO is now running and ready for credential issuance and verification.
 
 When you're done experimenting:
 
-**CLI demo users:**
+Use the same CLI mode from Step 1:
 
 ```bash
 eudiplo down
+
+# npm alternative
+npx @eudiplo/cli down
 ```
 
 To reset managed demo data and regenerate demo config:
 
 ```bash
+npx @eudiplo/cli demo --reset --force
+# or
 eudiplo demo --reset --force
 ```

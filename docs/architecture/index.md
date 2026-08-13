@@ -28,7 +28,7 @@ Understanding EUDIPLO's role helps you integrate it correctly:
 
 ### Typical Integration Pattern
 
-For a visual overview, see the [system diagram](../index.md#how-do-i-use-it) on the home page.
+For a visual overview, see the [system diagram](../index.md#where-does-it-fit) on the home page.
 
 ```mermaid
 flowchart LR

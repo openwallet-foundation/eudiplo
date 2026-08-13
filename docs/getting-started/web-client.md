@@ -8,7 +8,7 @@ There is no need to use the client to interact with EUDIPLO, but it offers a mor
 
 ### Accessing the Web Client
 
-After completing the [Full Setup](./quick-start.md#step-1-choose-your-setup):
+After completing the [Quick Start setup](./quick-start.md#step-1-start-the-demo-with-the-cli-recommended):
 
 1. **Open your browser** and go to: [http://localhost:4200](http://localhost:4200)
 2. **Login** using the default credentials:

@@ -52,6 +52,37 @@ can run yourself, integrate over HTTP, and configure via JSON.
 
 ---
 
+## Try EUDIPLO
+
+=== "Standalone CLI"
+
+    ```bash
+    curl -fsSL https://eudiplo.dev/install.sh | bash
+    eudiplo demo
+    ```
+
+=== "Node.js / npm"
+
+    ```bash
+    npx @eudiplo/cli demo
+    ```
+
+Both options run the same **EUDIPLO CLI**.
+
+- **Standalone CLI**: native executable, no Node.js required.
+- **npm package**: `@eudiplo/cli`, requires Node.js 22+.
+- The demo requires Docker and Docker Compose.
+- `eudiplo demo` creates a local demo deployment for evaluation, not production.
+
+Continue with:
+
+- [Quick Start](./getting-started/quick-start.md)
+- [CLI documentation](./getting-started/cli.md)
+- [Production deployment](./deployment/index.md)
+- [GitHub Releases](https://github.com/openwallet-foundation/eudiplo/releases)
+
+---
+
 ## Where Does It Fit?
 
 Here’s how EUDIPLO fits into your infrastructure:
@@ -75,24 +106,6 @@ Learn more about EUDIPLO in our recorded webinar (September 17, 2025), featuring
 Join our bi-weekly community call every Thursday:
 
 [Participate via Zoom](https://zoom-lfx.platform.linuxfoundation.org/meeting/94494306854?password=0d272140-5b2b-4bd4-a8fe-0b70efe1aa86)
-
----
-
-## How Do I Use It?
-
-EUDIPLO is distributed as a Docker container and can be configured in minutes.
-
-```shell
-docker run -p 3000:3000 \
-  -e PUBLIC_URL=https://example.com \
-  ghcr.io/openwallet-foundation/eudiplo:latest
-```
-
-- `-p 3000:3000` exposes EUDIPLO locally on port 3000.
-- `PUBLIC_URL` should be the public-facing URL where your instance is reachable (used for callbacks and wallet redirects).
-
-➡️ For step-by-step instructions, see the [Quickstart Guide](./getting-started/quick-start.md).  
-⚙️ For production deployment and advanced configuration, see [Production Setup](./architecture/index.md).
 
 ---
 

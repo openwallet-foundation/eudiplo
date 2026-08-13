@@ -2,8 +2,8 @@
 
 [![Build Status](https://github.com/openwallet-foundation/eudiplo/actions/workflows/ci-and-release.yml/badge.svg)](https://github.com/openwallet-foundation/eudiplo/actions)
 ![License](https://img.shields.io/github/license/openwallet-foundation/eudiplo)
-[![Website](https://img.shields.io/badge/website-eudiplo-blue)](https://openwallet-foundation.github.io/eudiplo/docs/latest/)
-[![Documentation Coverage](https://openwallet-foundation.github.io/eudiplo/docs/main/compodoc/images/coverage-badge-documentation.svg)](https://openwallet-foundation.github.io/eudiplo/main/compodoc/coverage.html)
+[![Website](https://img.shields.io/badge/website-eudiplo-blue)](https://eudiplo.dev/docs/latest/)
+[![Documentation Coverage](https://eudiplo.dev/docs/latest/compodoc/images/coverage-badge-documentation.svg)](https://eudiplo.dev/docs/latest/compodoc/coverage.html)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=openwallet-foundation_eudiplo&metric=security_rating)](https://sonarcloud.io/project/overview?id=openwallet-foundation_eudiplo)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=openwallet-foundation_eudiplo&metric=alert_status)](https://sonarcloud.io/project/overview?id=openwallet-foundation_eudiplo)
 [![Join our Discord](https://img.shields.io/discord/1022962884864643214?label=Join%20our%20Discord&logo=discord&color=7289DA&labelColor=2C2F33)](https://discord.gg/58ys8XfXDu)
@@ -66,101 +66,55 @@ Join our bi-weekly community call every Thursday:
 
 ## 🚀 Quick Start
 
-### Simplest Setup: Use the CLI
+Requirements:
 
-The easiest way to create and start a local EUDIPLO setup is with the CLI:
+- Docker with Docker Compose
+- Linux, macOS, or Windows
+
+### Linux and macOS: standalone CLI
+
+```bash
+curl -fsSL https://eudiplo.dev/install.sh | bash
+eudiplo demo
+```
+
+No local Node.js installation is required.
+
+### Already using Node.js 22+?
 
 ```bash
 npx @eudiplo/cli demo
 ```
 
-This command creates the local setup files and starts EUDIPLO with Docker Compose.
-For repeated use, install it once and run `eudiplo` directly:
+### Windows
 
-```bash
-npm install -g @eudiplo/cli
-eudiplo demo
-```
+Use `npx @eudiplo/cli demo` with Node.js 22+, or download the Windows x64
+standalone executable from GitHub Releases.
 
-See the full CLI guide:
-[https://openwallet-foundation.github.io/eudiplo/docs/latest/getting-started/cli/](https://openwallet-foundation.github.io/eudiplo/docs/latest/getting-started/cli/)
+Both commands run the same **EUDIPLO CLI**:
 
-### Demo Setup (Easiest)
+1. **Standalone CLI**: native executable, no Node.js required.
+2. **npm package**: `@eudiplo/cli`, requires Node.js 22+.
 
-For quick testing and demos:
+`eudiplo demo` creates a **demo deployment** for local evaluation:
 
-```bash
-# Clone the repository
-git clone https://github.com/openwallet-foundation/eudiplo.git
-cd eudiplo
+- Creates editable demo configuration (`.eudiplo.demo.env` and `.eudiplo/demo-config`).
+- Starts the backend and web client using Docker Compose.
+- Exposes the API at `http://localhost:3000`.
+- Exposes the web client at `http://localhost:4200`.
+- Uses demo credentials that must not be used in production.
 
-# Create .env with demo credentials
-cp .env.example .env
-echo "MASTER_SECRET=$(openssl rand -base64 32)" >> .env
-echo "AUTH_CLIENT_ID=demo" >> .env
-echo "AUTH_CLIENT_SECRET=demo-secret" >> .env
+See the detailed guides:
 
-# Start services
-docker compose up -d
+- [Quick Start](https://eudiplo.dev/docs/latest/getting-started/quick-start/)
+- [EUDIPLO CLI](https://eudiplo.dev/docs/latest/getting-started/cli/)
+- [API Reference](https://eudiplo.dev/docs/latest/api/)
 
-# Access the services
-# Backend API: http://localhost:3000
-# Client UI: http://localhost:4200
-```
+### Other deployment options
 
-⚠️ **Remember to change credentials for production!**
-
-### Option 1: Using Docker Compose (Recommended for Production)
-
-```bash
-# Clone and configure
-git clone https://github.com/openwallet-foundation/eudiplo.git
-cd eudiplo
-cp .env.example .env
-
-# Configure secure authentication (all three are REQUIRED)
-echo "MASTER_SECRET=$(openssl rand -base64 32)" >> .env
-echo "AUTH_CLIENT_ID=my-client" >> .env
-echo "AUTH_CLIENT_SECRET=$(openssl rand -base64 24)" >> .env
-
-# Start both backend and client with Docker Compose
-docker compose up -d
-
-# Access the services
-# Backend API: http://localhost:3000
-# Client UI: http://localhost:4200
-```
-
-### Option 2: Using Individual Docker Images
-
-```bash
-# Run just the backend
-docker run -p 3000:3000 \
-  -e PUBLIC_URL=https://example.com \
-  -e MASTER_SECRET=your-32-character-secret \
-  -e AUTH_CLIENT_ID=your-client-id \
-  -e AUTH_CLIENT_SECRET=your-client-secret \
-  -v $(pwd)/assets:/app/config \
-  ghcr.io/openwallet-foundation/eudiplo:latest
-
-# Run the client (optional - web interface)
-docker run -p 4200:80 \
-  -e API_BASE_URL=http://localhost:3000 \
-  ghcr.io/openwallet-foundation/eudiplo-client:latest
-```
-
-### Option 3: Local Development
-
-```bash
-# Install dependencies
-pnpm install
-
-# Start backend
-pnpm --filter @eudiplo/backend run start:dev
-
-# Start client (in another terminal)
-pnpm --filter @eudiplo/client run dev
-```
+- Docker Compose deployment: [Deployment Guide](https://eudiplo.dev/docs/latest/deployment/docker-compose/)
+- Individual container images: [Deployment Options](https://eudiplo.dev/docs/latest/deployment/)
+- Local development workflow: [Development Guide](https://eudiplo.dev/docs/latest/development/)
 
 ### Get Started with the API
 
@@ -175,34 +129,24 @@ curl -X POST http://localhost:3000/api/oauth2/token \
   }'
 ```
 
-📚 API:
-[https://openwallet-foundation.github.io/eudiplo/docs/latest/api/](https://openwallet-foundation.github.io/eudiplo/docs/latest/api/)  
-📦
-Full setup:
-[Quickstart Guide](https://openwallet-foundation.github.io/eudiplo/docs/latest/getting-started/quick-start/)
+For production authentication setup, see [Authentication](https://eudiplo.dev/docs/latest/api/authentication/).
 
 ---
 
 ## 📚 Documentation
 
-**Choose your documentation version:**
+Use the stable docs entry point:
 
-- 🚀 **Latest Stable** (recommended):
-  [https://openwallet-foundation.github.io/eudiplo/docs/latest/](https://openwallet-foundation.github.io/eudiplo/docs/latest/) -
-  Documentation for the most recent major release
-- 🔬 **Development**:
-  [https://openwallet-foundation.github.io/eudiplo/main/](https://openwallet-foundation.github.io/eudiplo/main/) -
-  Latest features from the main branch
-- 📚 **Specific Major Versions**:
-  [v1](https://openwallet-foundation.github.io/eudiplo/1/),
-  [v2](https://openwallet-foundation.github.io/eudiplo/2/), etc.
+- 🚀 **Latest Stable**: [https://eudiplo.dev/docs/latest/](https://eudiplo.dev/docs/latest/)
+
+Use the version selector in the docs UI to switch between available releases.
 
 **Key sections:**
 
-- [Architecture](https://openwallet-foundation.github.io/eudiplo/docs/latest/architecture/)
-- [Supported Protocols](https://openwallet-foundation.github.io/eudiplo/docs/latest/architecture/supported-protocols/)
-- [API Reference](https://openwallet-foundation.github.io/eudiplo/docs/latest/api/)
-- [Code Documentation](https://openwallet-foundation.github.io/eudiplo/docs/latest/compodoc/)
+- [Architecture](https://eudiplo.dev/docs/latest/architecture/)
+- [Supported Protocols](https://eudiplo.dev/docs/latest/architecture/supported-protocols/)
+- [API Reference](https://eudiplo.dev/docs/latest/api/)
+- [Code Documentation](https://eudiplo.dev/docs/latest/compodoc/)
 
 ---
 

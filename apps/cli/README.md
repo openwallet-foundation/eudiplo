@@ -5,9 +5,11 @@ instance and deployment-driver commands for local Docker Compose demos.
 
 ## Quick Start
 
-`npx` is provided by npm, which is installed with Node.js. It is not bundled with
-operating systems by default, so install a current Node.js distribution first if
-`npx` is missing.
+This package is the npm distribution of the **EUDIPLO CLI** and requires
+Node.js 22+.
+
+For users who do not want a local Node.js dependency, use the standalone CLI
+installer instead: `curl -fsSL https://eudiplo.dev/install.sh | bash`
 
 ```bash
 npx @eudiplo/cli demo
@@ -28,6 +30,10 @@ Tag selection defaults to the CLI version. For prerelease versions containing
 
 The generated demo config remains editable after creation. Existing files are
 preserved unless you pass `--force`.
+
+The standalone CLI and this npm package are two distributions of the same
+`eudiplo` command. The standalone CLI removes the Node.js requirement, but
+Docker and Docker Compose are still required for the demo deployment.
 
 ## Package and Binary Names
 
