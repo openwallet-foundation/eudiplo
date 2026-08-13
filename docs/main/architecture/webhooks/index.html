@@ -2059,6 +2059,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#outbound-url-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outbound URL Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2915,6 +2926,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#outbound-url-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outbound URL Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3121,6 +3143,34 @@ directory. It can be run locally or deployed to a Cloudflare Worker, and is a go
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="p">}</span>
 </code></pre></div>
+<h3 id="outbound-url-policy">Outbound URL Policy<a class="headerlink" href="#outbound-url-policy" title="Permanent link">¶</a></h3>
+<p>EUDIPLO validates outbound webhook targets before sending requests. This protects against SSRF and prevents access to localhost, private IP ranges, or other restricted destinations unless explicitly allowed.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OUTBOUND_URL_ALLOW_HTTP</code></td>
+<td><code>boolean</code></td>
+<td>Allow HTTP (non-TLS) for outbound webhook calls  [optional]</td>
+</tr>
+<tr>
+<td><code>OUTBOUND_URL_ALLOW_PRIVATE_NETWORK</code></td>
+<td><code>boolean</code></td>
+<td>Allow outbound webhook calls to private, loopback, or link-local IP ranges  [optional]</td>
+</tr>
+<tr>
+<td><code>OUTBOUND_URL_ALLOWED_HOSTS</code></td>
+<td><code>string</code></td>
+<td>Comma-separated hostname allowlist for outbound webhook calls (supports exact host and subdomains)  [optional]</td>
+</tr>
+</tbody>
+</table>
 <hr>
 <h2 id="fetching-claims-attribute-providers">Fetching Claims (Attribute Providers)<a class="headerlink" href="#fetching-claims-attribute-providers" title="Permanent link">¶</a></h2>
 <p>To fetch claims dynamically during credential issuance, use <strong>Attribute Providers</strong>. Attribute Providers are tenant-level resources that define how EUDIPLO retrieves claims from your backend.</p>

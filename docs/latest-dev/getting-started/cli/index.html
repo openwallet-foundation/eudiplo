@@ -704,10 +704,60 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
-  <a href="#run-a-local-demo" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Run a Local Demo
+        Installation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standalone-cli-linuxmacos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone CLI (Linux/macOS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npm-package-eudiplocli-nodejs-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        npm package (@eudiplo/cli, Node.js 22+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eudiplocli-npx-and-eudiplo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @eudiplo/cli, npx, and eudiplo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-a-local-demo-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a Local Demo Deployment
       
     </span>
   </a>
@@ -741,17 +791,6 @@
     <span class="md-ellipsis">
       
         Compose Driver Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#command-name-usability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Command Name Usability
       
     </span>
   </a>
@@ -2829,10 +2868,60 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
       
         <li class="md-nav__item">
-  <a href="#run-a-local-demo" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Run a Local Demo
+        Installation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standalone-cli-linuxmacos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone CLI (Linux/macOS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npm-package-eudiplocli-nodejs-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        npm package (@eudiplo/cli, Node.js 22+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eudiplocli-npx-and-eudiplo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @eudiplo/cli, npx, and eudiplo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-a-local-demo-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a Local Demo Deployment
       
     </span>
   </a>
@@ -2866,17 +2955,6 @@
     <span class="md-ellipsis">
       
         Compose Driver Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#command-name-usability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Command Name Usability
       
     </span>
   </a>
@@ -2923,22 +3001,52 @@
 
 
 <h1 id="eudiplo-cli">EUDIPLO CLI<a class="headerlink" href="#eudiplo-cli" title="Permanent link">¶</a></h1>
-<p>The EUDIPLO CLI is designed around deployment targets. Generic commands inspect
-an EUDIPLO API over HTTP, while lifecycle commands are provided by a deployment
-driver.</p>
-<h2 id="run-a-local-demo">Run a Local Demo<a class="headerlink" href="#run-a-local-demo" title="Permanent link">¶</a></h2>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p><code>npx</code> is provided by npm, which is installed with <a href="https://nodejs.org/en/download/current">Node.js</a>. It is not an operating
-system tool, so install a current Node.js distribution first if <code>npx</code> is missing.</p>
-</div>
-<p>Use the scoped package name for one-off npm execution:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>demo
+<p>The <strong>EUDIPLO CLI</strong> has two distributions of the same command-line tool:</p>
+<ol>
+<li><strong>Standalone CLI</strong>: native executable, no Node.js required.</li>
+<li><strong>npm package</strong>: <code>@eudiplo/cli</code>, requires Node.js 22+.</li>
+</ol>
+<p>The command name is <code>eudiplo</code> in both cases.</p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">¶</a></h2>
+<h3 id="standalone-cli-linuxmacos">Standalone CLI (Linux/macOS)<a class="headerlink" href="#standalone-cli-linuxmacos" title="Permanent link">¶</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://eudiplo.dev/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>eudiplo<span class="w"> </span>--version
 </code></pre></div>
-<p>For repeated use, install the CLI globally and run the <code>eudiplo</code> command from
-any directory:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>@eudiplo/cli
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>eudiplo<span class="w"> </span>doctor
+<p>The installer downloads a release archive and verifies it against
+<code>SHA256SUMS.txt</code> from the same GitHub release before extracting.</p>
+<p>Supported standalone release artifacts:</p>
+<ul>
+<li>Linux x64: <code>eudiplo-vVERSION-linux-x64.tar.gz</code></li>
+<li>Linux arm64: <code>eudiplo-vVERSION-linux-arm64.tar.gz</code></li>
+<li>macOS arm64: <code>eudiplo-vVERSION-macos-arm64.tar.gz</code></li>
+<li>Windows x64: <code>eudiplo-vVERSION-windows-x64.zip</code></li>
+</ul>
+<p><code>install.sh</code> is for Linux/macOS shells only. On Windows, use Node.js/npm or the
+Windows x64 release archive.</p>
+<p>Release assets and checksums:</p>
+<ul>
+<li><a href="https://github.com/openwallet-foundation/eudiplo/releases">GitHub Releases</a></li>
+<li><a href="https://github.com/openwallet-foundation/eudiplo/releases/latest">SHA256SUMS.txt (latest release)</a></li>
+</ul>
+<h3 id="npm-package-eudiplocli-nodejs-22">npm package (<code>@eudiplo/cli</code>, Node.js 22+)<a class="headerlink" href="#npm-package-eudiplocli-nodejs-22" title="Permanent link">¶</a></h3>
+<p>One-off execution:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>--version
+</code></pre></div>
+<p>Global install:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>@eudiplo/cli
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>eudiplo<span class="w"> </span>--version
+</code></pre></div>
+<h3 id="eudiplocli-npx-and-eudiplo"><code>@eudiplo/cli</code>, <code>npx</code>, and <code>eudiplo</code><a class="headerlink" href="#eudiplocli-npx-and-eudiplo" title="Permanent link">¶</a></h3>
+<ul>
+<li><code>@eudiplo/cli</code> is the npm package name.</li>
+<li><code>npx @eudiplo/cli ...</code> runs the package without a global install.</li>
+<li><code>eudiplo ...</code> runs the installed command (standalone or npm-installed).</li>
+</ul>
+<h2 id="run-a-local-demo-deployment">Run a Local Demo Deployment<a class="headerlink" href="#run-a-local-demo-deployment" title="Permanent link">¶</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>eudiplo<span class="w"> </span>demo
+</code></pre></div>
+<p>or, with npm one-off execution:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>demo
 </code></pre></div>
 <p>The demo command copies EUDIPLO's bundled Docker Compose deployment template,
 creates local demo assets, and starts the <code>compose</code> driver:</p>
@@ -2946,15 +3054,14 @@ creates local demo assets, and starts the <code>compose</code> driver:</p>
 <li><code>.eudiplo.demo.env</code></li>
 <li><code>.eudiplo/demo-config</code> (editable generated demo configuration)</li>
 </ul>
-<p>This keeps the quick-start path usable without cloning the repository while
-still using canonical assets maintained in this repository.</p>
-<p>If you prefer a standalone binary (no local Node.js required), download the
-SEA artifact from GitHub Releases and run <code>eudiplo demo</code> directly.</p>
+<p>The standalone CLI removes the Node.js requirement only. Docker and Docker
+Compose are still required for <code>demo</code>.</p>
+<p>Demo mode warning: generated demo credentials are for local onboarding only and
+must not be used in production.</p>
 <h2 id="register-an-existing-deployment">Register an Existing Deployment<a class="headerlink" href="#register-an-existing-deployment" title="Permanent link">¶</a></h2>
 <p>For Kubernetes, Helm, standalone containers, or any externally managed instance,
 register the public API URL:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>instance<span class="w"> </span>add<span class="w"> </span>production<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--url<span class="w"> </span>https://eudiplo.example.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>eudiplo<span class="w"> </span>instance<span class="w"> </span>add<span class="w"> </span>production<span class="w"> </span>--url<span class="w"> </span>https://eudiplo.example.com
 </code></pre></div>
 <p>Instance metadata is stored in the user's EUDIPLO CLI config directory, not in
 the source tree. Do not put secrets in this config; commands that need client
@@ -2963,11 +3070,11 @@ environment.</p>
 <h2 id="deployment-neutral-commands">Deployment-Neutral Commands<a class="headerlink" href="#deployment-neutral-commands" title="Permanent link">¶</a></h2>
 <p>These commands work with both <code>compose</code> and <code>external</code> instances and do not
 require Docker:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>doctor<span class="w"> </span>--instance<span class="w"> </span>production
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>status<span class="w"> </span>--instance<span class="w"> </span>production
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>config<span class="w"> </span>validate
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>--version
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>eudiplo<span class="w"> </span>doctor<span class="w"> </span>--instance<span class="w"> </span>production
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>eudiplo<span class="w"> </span>status<span class="w"> </span>--instance<span class="w"> </span>production
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>validate
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>eudiplo<span class="w"> </span>--version
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>eudiplo<span class="w"> </span>version
 </code></pre></div>
 <p><code>--version</code> and <code>-v</code> print the installed CLI version without network access.
 <code>version</code> also checks the npm registry and reports whether an update is
@@ -2981,30 +3088,22 @@ prints the configured instances. It does not require Docker or contact the
 deployment.</p>
 <h2 id="compose-driver-commands">Compose Driver Commands<a class="headerlink" href="#compose-driver-commands" title="Permanent link">¶</a></h2>
 <p>These commands are available only for <code>compose</code> instances:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose<span class="w"> </span>--demo
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose<span class="w"> </span>--demo<span class="w"> </span>--image-tag<span class="w"> </span>main
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose<span class="w"> </span>--no-client
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>up
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>down
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>logs
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>demo<span class="w"> </span>--reset<span class="w"> </span>--force
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose<span class="w"> </span>--demo
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose<span class="w"> </span>--demo<span class="w"> </span>--image-tag<span class="w"> </span>main
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose<span class="w"> </span>--no-client
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>eudiplo<span class="w"> </span>up
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>eudiplo<span class="w"> </span>down
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>eudiplo<span class="w"> </span>logs
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>eudiplo<span class="w"> </span>demo<span class="w"> </span>--reset<span class="w"> </span>--force
 </code></pre></div>
 <p><code>init --target compose</code> creates local Compose assets without starting them.
 <code>init --target compose --demo</code> generates the same editable demo deployment as
 <code>demo</code>, but does not start containers.</p>
 <p><code>demo --reset --force</code> recreates only CLI-managed demo assets and managed demo
 volumes.</p>
-<p>Demo mode warning: generated demo credentials are for local onboarding only and
-must not be used in production.</p>
 <p>If a compose-only command is used against an external instance, the CLI returns a
 clear error such as <code>logs is not available for externally managed deployments</code>.</p>
-<h2 id="command-name-usability">Command Name Usability<a class="headerlink" href="#command-name-usability" title="Permanent link">¶</a></h2>
-<p>The best publishable npm shape is <code>@eudiplo/cli</code> with a <code>eudiplo</code> binary. That
-means <code>npx @eudiplo/cli</code> is the reliable one-off command, while <code>eudiplo</code> is what
-users type after installation. A shorter <code>npx eudiplo</code> command would require a
-separate unscoped npm package named <code>eudiplo</code> that depends on or aliases the
-scoped CLI package.</p>
 
 
 

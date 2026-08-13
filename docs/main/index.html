@@ -2747,6 +2747,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#try-eudiplo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try EUDIPLO
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#where-does-it-fit" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2773,17 +2784,6 @@
     <span class="md-ellipsis">
       
         🤝 Community Call
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-do-i-use-it" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How Do I Use It?
       
     </span>
   </a>
@@ -2921,6 +2921,35 @@ can run yourself, integrate over HTTP, and configure via JSON.</p>
 </tbody>
 </table>
 <hr>
+<h2 id="try-eudiplo">Try EUDIPLO<a class="headerlink" href="#try-eudiplo" title="Permanent link">¶</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">Standalone CLI</label><label for="__tabbed_1_2">Node.js / npm</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://eudiplo.dev/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>eudiplo<span class="w"> </span>demo
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>demo
+</code></pre></div>
+</div>
+</div>
+</div>
+<p>Both options run the same <strong>EUDIPLO CLI</strong>.</p>
+<ul>
+<li><strong>Standalone CLI</strong>: native executable, no Node.js required.</li>
+<li><strong>npm package</strong>: <code>@eudiplo/cli</code>, requires Node.js 22+.</li>
+<li>The demo requires Docker and Docker Compose.</li>
+<li><code>eudiplo demo</code> creates a local demo deployment for evaluation, not production.</li>
+</ul>
+<p>Continue with:</p>
+<ul>
+<li><a href="getting-started/quick-start/">Quick Start</a></li>
+<li><a href="getting-started/cli/">CLI documentation</a></li>
+<li><a href="deployment/">Production deployment</a></li>
+<li><a href="https://github.com/openwallet-foundation/eudiplo/releases">GitHub Releases</a></li>
+</ul>
+<hr>
 <h2 id="where-does-it-fit">Where Does It Fit?<a class="headerlink" href="#where-does-it-fit" title="Permanent link">¶</a></h2>
 <p>Here’s how EUDIPLO fits into your infrastructure:</p>
 <p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="EUDIPLO Overview" src="overview.excalidraw.svg"></a></p>
@@ -2933,19 +2962,6 @@ can run yourself, integrate over HTTP, and configure via JSON.</p>
 <h2 id="community-call">🤝 Community Call<a class="headerlink" href="#community-call" title="Permanent link">¶</a></h2>
 <p>Join our bi-weekly community call every Thursday:</p>
 <p><a href="https://zoom-lfx.platform.linuxfoundation.org/meeting/94494306854?password=0d272140-5b2b-4bd4-a8fe-0b70efe1aa86">Participate via Zoom</a></p>
-<hr>
-<h2 id="how-do-i-use-it">How Do I Use It?<a class="headerlink" href="#how-do-i-use-it" title="Permanent link">¶</a></h2>
-<p>EUDIPLO is distributed as a Docker container and can be configured in minutes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">3000</span>:3000<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">PUBLIC_URL</span><span class="o">=</span>https://example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>ghcr.io/openwallet-foundation/eudiplo:latest
-</code></pre></div>
-<ul>
-<li><code>-p 3000:3000</code> exposes EUDIPLO locally on port 3000.</li>
-<li><code>PUBLIC_URL</code> should be the public-facing URL where your instance is reachable (used for callbacks and wallet redirects).</li>
-</ul>
-<p>➡️ For step-by-step instructions, see the <a href="getting-started/quick-start/">Quickstart Guide</a>.<br>
-⚙️ For production deployment and advanced configuration, see <a href="architecture/">Production Setup</a>.</p>
 <hr>
 <p>For more details on credential issuance and verification, check out:<br>
 📘 <a href="getting-started/issuance/">Configure credentials</a><br>

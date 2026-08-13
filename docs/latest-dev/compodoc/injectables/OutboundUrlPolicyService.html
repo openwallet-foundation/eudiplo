@@ -318,8 +318,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="108"
-                                    class="link-to-prism">src/shared/utils/webhook/outbound-url-policy.service.ts:108</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="111"
+                                    class="link-to-prism">src/shared/utils/webhook/outbound-url-policy.service.ts:111</a></div>
                         </td>
                     </tr>
 
@@ -504,8 +504,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="123"
-                                    class="link-to-prism">src/shared/utils/webhook/outbound-url-policy.service.ts:123</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="127"
+                                    class="link-to-prism">src/shared/utils/webhook/outbound-url-policy.service.ts:127</a></div>
                         </td>
                     </tr>
 
@@ -573,8 +573,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="119"
-                                    class="link-to-prism">src/shared/utils/webhook/outbound-url-policy.service.ts:119</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="123"
+                                    class="link-to-prism">src/shared/utils/webhook/outbound-url-policy.service.ts:123</a></div>
                         </td>
                     </tr>
 
@@ -805,8 +805,11 @@ export class OutboundUrlPolicyService {
     }
 
     private readBoolean(key: string, fallback: boolean): boolean {
-        const configured &#x3D; this.configService.get&lt;string | boolean&gt;(key);
-        if (configured &#x3D;&#x3D;&#x3D; undefined) {
+        const configured &#x3D; this.configService.get&lt;string | boolean&gt;(
+            key,
+            fallback,
+        );
+        if (configured &#x3D;&#x3D;&#x3D; undefined || configured &#x3D;&#x3D;&#x3D; null) {
             return fallback;
         }
         if (typeof configured &#x3D;&#x3D;&#x3D; &quot;boolean&quot;) {
@@ -818,6 +821,7 @@ export class OutboundUrlPolicyService {
     private allowedHosts(): string[] {
         const raw &#x3D; this.configService.get&lt;string&gt;(
             &quot;OUTBOUND_URL_ALLOWED_HOSTS&quot;,
+            &quot;&quot;,
         );
         if (!raw) return [];
         return raw
