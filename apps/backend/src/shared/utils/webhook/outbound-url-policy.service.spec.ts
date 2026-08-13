@@ -58,7 +58,9 @@ describe("OutboundUrlPolicyService", () => {
     it("uses ConfigService fallback values for policy flags", () => {
         process.env.NODE_ENV = "production";
         const configService = {
-            get: vi.fn((key: string, defaultValue?: boolean | string) => defaultValue),
+            get: vi.fn(
+                (key: string, defaultValue?: boolean | string) => defaultValue,
+            ),
         };
         const service = new OutboundUrlPolicyService(configService as any);
 

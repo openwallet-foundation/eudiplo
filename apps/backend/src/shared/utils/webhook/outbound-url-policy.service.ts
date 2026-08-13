@@ -95,7 +95,10 @@ export class OutboundUrlPolicyService {
     }
 
     private readBoolean(key: string, fallback: boolean): boolean {
-        const configured = this.configService.get<string | boolean>(key, fallback);
+        const configured = this.configService.get<string | boolean>(
+            key,
+            fallback,
+        );
         if (configured === undefined || configured === null) {
             return fallback;
         }
