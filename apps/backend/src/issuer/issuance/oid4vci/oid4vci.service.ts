@@ -1928,18 +1928,13 @@ export class Oid4vciService {
         const issuer = this.getIssuer(tenantId);
         const resourceServer = this.getResourceServer(tenantId);
         const issuerMetadata = await this.issuerMetadata(tenantId, issuer);
-        const issuanceConfig =
-            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        
         const headers = getHeadersFromRequest(req);
 
-        const allowedAuthenticationSchemes: SupportedAuthenticationScheme[] = [
-            SupportedAuthenticationScheme.DPoP,
-        ];
-        if (!issuanceConfig.dPopRequired) {
-            allowedAuthenticationSchemes.push(
-                SupportedAuthenticationScheme.Bearer,
-            );
-        }
+        // dpop is not required since this is only for credential endpoint
+        const allowedAuthenticationSchemes: SupportedAuthenticationScheme[] = [            
+            SupportedAuthenticationScheme.Bearer,
+        ];        
 
         const { tokenPayload } = await resourceServer.verifyResourceRequest({
             authorizationServers: issuerMetadata.authorizationServers,
