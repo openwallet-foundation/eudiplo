@@ -1928,13 +1928,13 @@ export class Oid4vciService {
         const issuer = this.getIssuer(tenantId);
         const resourceServer = this.getResourceServer(tenantId);
         const issuerMetadata = await this.issuerMetadata(tenantId, issuer);
-        
+
         const headers = getHeadersFromRequest(req);
 
         // dpop is not required since this is only for credential endpoint
-        const allowedAuthenticationSchemes: SupportedAuthenticationScheme[] = [            
+        const allowedAuthenticationSchemes: SupportedAuthenticationScheme[] = [
             SupportedAuthenticationScheme.Bearer,
-        ];        
+        ];
 
         const { tokenPayload } = await resourceServer.verifyResourceRequest({
             authorizationServers: issuerMetadata.authorizationServers,
