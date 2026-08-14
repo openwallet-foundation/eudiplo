@@ -56,10 +56,15 @@ export class SessionController {
         @Token() token: TokenPayload,
         @Query() query: SessionQueryDto,
     ): Promise<PaginatedSessionResponseDto> {
-        const result = await this.sessionService.getAll(token.entity!.id, query);
+        const result = await this.sessionService.getAll(
+            token.entity!.id,
+            query,
+        );
         return {
             ...result,
-            items: result.items.map((item) => this.sanitizeSessionResponse(item)),
+            items: result.items.map((item) =>
+                this.sanitizeSessionResponse(item),
+            ),
         };
     }
 
@@ -118,7 +123,9 @@ export class SessionController {
             }
 
             if (consumeResult === "consumed") {
-                throw new UnauthorizedException("response_code already consumed");
+                throw new UnauthorizedException(
+                    "response_code already consumed",
+                );
             }
         }
 

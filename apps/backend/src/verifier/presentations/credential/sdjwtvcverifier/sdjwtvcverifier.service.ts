@@ -140,7 +140,7 @@ export class SdjwtvcverifierService {
      *
      * @param result The verification result containing the KB-JWT payload
      * @param transactionData The base64url-encoded transaction data strings from the request
-    * @throws PresentationVerificationException if validation fails
+     * @throws PresentationVerificationException if validation fails
      */
     private validateTransactionDataHashes(
         result: VerificationResult,

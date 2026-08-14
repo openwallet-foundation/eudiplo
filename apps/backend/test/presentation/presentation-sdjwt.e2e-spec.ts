@@ -458,9 +458,8 @@ describe("Presentation - SD-JWT Credential", () => {
             .expect(200);
 
         expect(resultRes.body.status).toBe("failed");
-        expect([
-            "issuer_not_trusted",
-            "verification_failed",
-        ]).toContain(resultRes.body.failure.code);
+        expect(["issuer_not_trusted", "verification_failed"]).toContain(
+            resultRes.body.failure.code,
+        );
     });
 });

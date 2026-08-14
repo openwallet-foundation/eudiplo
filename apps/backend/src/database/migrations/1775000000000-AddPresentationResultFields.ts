@@ -12,7 +12,9 @@ export class AddPresentationResultFields1775000000000
         }
 
         const ensureColumn = async (column: TableColumn) => {
-            const exists = table.columns.some((col) => col.name === column.name);
+            const exists = table.columns.some(
+                (col) => col.name === column.name,
+            );
             if (!exists) {
                 await queryRunner.addColumn("session", column);
             }

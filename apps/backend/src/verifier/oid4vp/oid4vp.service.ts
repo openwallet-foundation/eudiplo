@@ -86,9 +86,9 @@ export class Oid4vpService {
         };
     }
 
-    private normalizeWalletProtocolError(protocolError?: string):
-        | string
-        | undefined {
+    private normalizeWalletProtocolError(
+        protocolError?: string,
+    ): string | undefined {
         if (!protocolError) {
             return undefined;
         }
@@ -684,19 +684,16 @@ export class Oid4vpService {
             ? new Date(session.expiresAt as unknown as string)
             : undefined;
 
-        if (
-            sessionExpiresAt &&
-            !Number.isNaN(sessionExpiresAt.getTime())
-        ) {
+        if (sessionExpiresAt && !Number.isNaN(sessionExpiresAt.getTime())) {
             const expirationCutoff = new Date(sessionExpiresAt);
             expirationCutoff.setHours(23, 59, 59, 999);
 
             if (expirationCutoff.getTime() < Date.now()) {
-            return this.finalizeFailedSession(
-                session.id,
-                PresentationFailureCode.SessionExpired,
-                "Presentation session expired",
-            );
+                return this.finalizeFailedSession(
+                    session.id,
+                    PresentationFailureCode.SessionExpired,
+                    "Presentation session expired",
+                );
             }
         }
 

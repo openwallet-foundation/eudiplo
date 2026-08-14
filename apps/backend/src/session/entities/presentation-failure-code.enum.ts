@@ -5,8 +5,7 @@ export enum PresentationFailureCode {
     CredentialNotYetValid = "credential_not_yet_valid",
     IssuerNotTrusted = "issuer_not_trusted",
     HolderBindingFailed = "holder_binding_failed",
-    PresentationRequirementsNotSatisfied =
-        "presentation_requirements_not_satisfied",
+    PresentationRequirementsNotSatisfied = "presentation_requirements_not_satisfied",
     ResponseInvalid = "response_invalid",
     SessionExpired = "session_expired",
     ReplayDetected = "replay_detected",
