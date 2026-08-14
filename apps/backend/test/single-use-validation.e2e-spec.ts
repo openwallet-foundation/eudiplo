@@ -249,7 +249,8 @@ describe("Single-Use Validation (Issue #503) - OID4VP", () => {
             .post(new URL(responseUri).pathname)
             .trustLocalhost()
             .send(authorizationResponse.authorizationResponsePayload)
-            .expect(400);
+            // The OID4VP spec requires that the response is always 200, even in case of failure. The actual failure is indicated in the session result.
+            .expect(200);
 
         expect(secondSubmit.body.message).toContain(
             "presentation offer has already been used",

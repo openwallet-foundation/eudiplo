@@ -137,6 +137,26 @@ the final status and structured failure code from the result endpoint.
 See [OID4VP Failure Codes](../../architecture/sessions.md#oid4vp-failure-codes)
 for the stable RP-facing failure-code list.
 
+### Why HTTP 200 instead of 400?
+
+The wallet callback response is treated as a protocol transport acknowledgment,
+not as the verifier's business-result channel.
+
+- OID4VP flows do not define a verifier-specific HTTP 4xx error body contract
+  that wallets must parse for failed presentation verification outcomes.
+- Returning custom `400` JSON would be implementation-specific and therefore
+  not reliably interoperable across wallets.
+- In practice, many wallets only need to know whether the callback endpoint was
+  reached and do not consume custom verifier error payloads.
+- The same principle applies to Digital Credentials API flows (`dc-api` and
+  `iso-18013-7`): the wallet/browser path does not receive verifier-side
+  structured result details for business outcome handling or wallet-side
+  logging.
+
+For this reason, EUDIPLO keeps the wallet-facing callback on HTTP `200` and
+exposes machine-readable verification outcomes to the RP via
+`GET /api/session/{sessionId}/result`.
+
 ---
 
 ## Related Docs

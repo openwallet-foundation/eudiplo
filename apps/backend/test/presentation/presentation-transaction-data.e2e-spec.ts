@@ -463,8 +463,8 @@ describe("Presentation - Transaction Data", () => {
             overrideTransactionDataHashes: ["INVALID_HASH_THAT_WONT_MATCH"],
         });
 
-        // Per OID4VP spec, the verifier MUST return 400
-        expect(submitRes.response.status).toBe(400);
+        // Accept 200 because the OID4VP spec requires that the response is always 200, even in case of failure. The actual failure is indicated in the session result.
+        expect(submitRes.response.status).toBe(200);
 
         // Verify the session is marked as failed with error reason
         const sessionRes = await request(app.getHttpServer())
@@ -500,8 +500,8 @@ describe("Presentation - Transaction Data", () => {
             overrideTransactionDataHashes: [], // Empty hashes when data was expected
         });
 
-        // Per OID4VP spec, the verifier MUST return 400
-        expect(submitRes.response.status).toBe(400);
+        // Accept 200 because the OID4VP spec requires that the response is always 200, even in case of failure. The actual failure is indicated in the session result.
+        expect(submitRes.response.status).toBe(200);
 
         // Verify the session is marked as failed with error reason
         const sessionRes = await request(app.getHttpServer())
