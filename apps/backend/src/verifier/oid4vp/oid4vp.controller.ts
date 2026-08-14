@@ -93,6 +93,8 @@ export class Oid4vpController {
      */
     @Post()
     @HttpCode(HttpStatus.OK)
+    @Header("Content-Type", "application/json")
+    @Header("Cache-Control", "no-store")
     getResponse(
         @Body() body: AuthorizationResponse,
         @Param("sessionId") sessionId: string,

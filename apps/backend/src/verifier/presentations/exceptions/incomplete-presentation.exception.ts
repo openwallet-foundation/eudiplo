@@ -1,10 +1,11 @@
-import { BadRequestException } from "@nestjs/common";
+import { PresentationFailureCode } from "../../../session/entities/presentation-failure-code.enum";
+import { PresentationVerificationException } from "./presentation-verification.exception";
 
 /**
  * Exception thrown when a presentation response does not satisfy the DCQL query requirements.
  * This includes missing credentials, missing claims, or unsatisfied credential sets.
  */
-export class IncompletePresentationException extends BadRequestException {
+export class IncompletePresentationException extends PresentationVerificationException {
     constructor(
         message: string,
         public readonly details?: {
@@ -13,10 +14,9 @@ export class IncompletePresentationException extends BadRequestException {
             unsatisfiedCredentialSets?: number[];
         },
     ) {
-        super({
+        super(
+            PresentationFailureCode.PresentationRequirementsNotSatisfied,
             message,
-            error: "Incomplete Presentation",
-            details,
-        });
+        );
     }
 }

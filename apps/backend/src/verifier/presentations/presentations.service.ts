@@ -24,6 +24,7 @@ import {
 } from "../../issuer/trust-list/trustlist.service";
 import { RegistrarService } from "../../registrar/registrar.service";
 import { Session } from "../../session/entities/session.entity";
+import { PresentationFailureCode } from "../../session/entities/presentation-failure-code.enum";
 import { revocationModeToPolicy } from "../../shared/trust/revocation-policy.util";
 import {
     DEFAULT_VERIFIER_SKEW_SECONDS,
@@ -60,6 +61,7 @@ import {
     TrustListRef,
 } from "./entities/presentation-config.entity";
 import { IncompletePresentationException } from "./exceptions/incomplete-presentation.exception";
+import { PresentationVerificationException } from "./exceptions/presentation-verification.exception";
 
 type CredentialType = "dc+sd-jwt" | "mso_mdoc";
 
@@ -2325,7 +2327,18 @@ export class PresentationsService {
             "mDOC verification failed",
         );
 
-        throw new BadRequestException(
+        const codeByType: Record<string, PresentationFailureCode> = {
+            signature_invalid: PresentationFailureCode.VerificationFailed,
+            no_trust_chain_to_root: PresentationFailureCode.IssuerNotTrusted,
+            trust_chain_not_trusted: PresentationFailureCode.IssuerNotTrusted,
+            x5c_missing: PresentationFailureCode.ResponseInvalid,
+            verification_error: PresentationFailureCode.VerificationFailed,
+        };
+
+        throw new PresentationVerificationException(
+            result.failureType
+                ? codeByType[result.failureType]
+                : PresentationFailureCode.VerificationFailed,
             `mDOC verification failed for credential "${attId}": ${reason}`,
         );
     }

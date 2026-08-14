@@ -20,7 +20,7 @@ to request (DCQL, webhook defaults, registration certificate), see
 
 | Field              | Required | Description                                                           |
 | ------------------ | -------- | --------------------------------------------------------------------- |
-| `response_type`    | Yes      | Response mode. Supported values: `uri`, `dc-api`, `iso-18013-7`.       |
+| `response_type`    | Yes      | Response mode. Supported values: `uri`, `dc-api`, `iso-18013-7`.      |
 | `requestId`        | Yes      | ID of the presentation configuration to use.                          |
 | `webhook`          | No       | Inline webhook override for this request.                             |
 | `redirectUri`      | No       | Redirect target after completion. Supports `{sessionId}` placeholder. |
@@ -125,11 +125,17 @@ in the other flows.
 
 ## Session and Result Retrieval
 
-If no webhook is configured, retrieve the result via the `/session` endpoint
-using the returned session identifier.
+If no webhook is configured, retrieve the verifier-facing result via:
 
-For same-device redirect flows, use the `response_code` from the redirect URL to
-look up the completed session.
+- `GET /api/session/{sessionId}/result` for cross-device polling (no redirect)
+- `GET /api/session/{sessionId}/result?response_code=...` for same-device redirect flows
+
+The wallet-facing OID4VP response endpoint always returns HTTP `200` with either
+`{}` (no redirect) or `{ "redirect_uri": "...response_code=..." }`.
+Verification failures are not encoded in the wallet redirect URL; the RP reads
+the final status and structured failure code from the result endpoint.
+See [OID4VP Failure Codes](../../architecture/sessions.md#oid4vp-failure-codes)
+for the stable RP-facing failure-code list.
 
 ---
 

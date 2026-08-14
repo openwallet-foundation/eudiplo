@@ -22,4 +22,10 @@ export const SESSION_VALIDATION_SCHEMA = Joi.object({
             "Default cleanup mode when sessions expire. 'full' deletes the entire session, 'anonymize' keeps metadata but removes personal data. Can be overridden per tenant.",
         )
         .meta({ group: "session", order: 30 }),
+    SESSION_RESULT_CODE_TTL: Joi.number()
+        .default(300)
+        .description(
+            "Time to live in seconds for RP-facing OID4VP response_code values.",
+        )
+        .meta({ group: "session", order: 40 }),
 });

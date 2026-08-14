@@ -1,4 +1,5 @@
 import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
+import { createHash, randomBytes } from "node:crypto";
 import { ConfigService } from "@nestjs/config";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { SchedulerRegistry } from "@nestjs/schedule";
@@ -162,6 +163,68 @@ export class SessionService implements OnApplicationBootstrap {
      */
     add(issuer_state: string, values: QueryDeepPartialEntity<Session>) {
         return this.sessionRepository.update({ id: issuer_state }, values);
+    }
+
+    private hashResponseCode(responseCode: string): string {
+        return createHash("sha256").update(responseCode, "utf8").digest("hex");
+    }
+
+    async issueResponseCode(sessionId: string): Promise<string> {
+        const responseCode = randomBytes(32).toString("base64url");
+        const responseCodeHash = this.hashResponseCode(responseCode);
+        const ttlSeconds =
+            this.configService.get<number>("SESSION_RESULT_CODE_TTL") ?? 300;
+        const responseCodeExpiresAt = new Date(Date.now() + ttlSeconds * 1000);
+
+        await this.add(sessionId, {
+            responseCode,
+            responseCodeHash,
+            responseCodeExpiresAt,
+            responseCodeConsumedAt: null as any,
+        });
+
+        return responseCode;
+    }
+
+    async consumeResponseCode(
+        sessionId: string,
+        responseCode: string,
+    ): Promise<"valid" | "missing" | "invalid" | "expired" | "consumed"> {
+        const session = await this.get(sessionId);
+
+        if (!session.responseCodeHash) {
+            return "missing";
+        }
+
+        const providedHash = this.hashResponseCode(responseCode);
+        if (providedHash !== session.responseCodeHash) {
+            return "invalid";
+        }
+
+        if (session.responseCodeConsumedAt) {
+            return "consumed";
+        }
+
+        if (
+            !session.responseCodeExpiresAt ||
+            session.responseCodeExpiresAt.getTime() < Date.now()
+        ) {
+            return "expired";
+        }
+
+        const result = await this.sessionRepository.update(
+            {
+                id: sessionId,
+                responseCodeHash: providedHash,
+                responseCodeConsumedAt: IsNull(),
+            },
+            {
+                responseCodeConsumedAt: new Date(),
+                responseCode: null as any,
+            },
+        );
+
+        return (result.affected ?? 0) > 0 ? "valid" : "consumed";
     }
 
     /**

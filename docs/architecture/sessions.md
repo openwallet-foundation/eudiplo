@@ -22,14 +22,44 @@ For OID4VP presentation sessions, EUDIPLO stores additional fields that
 implement the security model defined in
 [OID4VP §13.3](https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#section-13.3):
 
-| Field          | Type             | Description                                                                                                                                                                           |
-| -------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `walletNonce`  | `string \| null` | Wallet-facing identifier used as `state` in the authorization request. Separates the wallet's view of the session from the internal `session.id`, preventing cross-reference attacks. |
-| `responseCode` | `string \| null` | One-time code generated when the wallet submits its response. Appended to the `redirect_uri` for same-device flows to prevent session fixation on redirect.                           |
+| Field                              | Type               | Description                                                                                                                                                                           |
+| ---------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `walletNonce`                      | `string \| null`   | Wallet-facing identifier used as `state` in the authorization request. Separates the wallet's view of the session from the internal `session.id`, preventing cross-reference attacks. |
+| `responseCode`                     | `string \| null`   | One-time code generated when the wallet submits its response. Appended to the `redirect_uri` for same-device flows to prevent session fixation on redirect.                           |
+| `responseCodeHash`                 | `string \| null`   | SHA-256 hash used to validate RP result retrieval without persisting only plaintext response-code material.                                                                           |
+| `responseCodeExpiresAt`            | `datetime \| null` | Expiration timestamp for the one-time response code.                                                                                                                                  |
+| `responseCodeConsumedAt`           | `datetime \| null` | Set after a successful `/session/{id}/result?response_code=...` lookup to enforce single-use retrieval.                                                                               |
+| `presentationFailureCode`          | `string \| null`   | Stable machine-readable failure code returned to RPs via `/session/{id}/result`.                                                                                                      |
+| `presentationFailureProtocolError` | `string \| null`   | Optional allow-listed wallet protocol error (for example `access_denied`) for `wallet_error` outcomes.                                                                                |
 
-These fields are populated automatically when a presentation request is created
-and are **not exposed** through the session management API. They exist solely for
-the OID4VP protocol flow.
+These fields are populated automatically during OID4VP processing and are **not
+exposed** through the ordinary session management API (`/api/session/{id}`). They
+exist solely for wallet/RP protocol flow handling.
+
+## OID4VP Failure Codes
+
+When an OID4VP presentation fails, the RP-facing result endpoint returns a
+stable machine-readable failure code. These codes are intentionally separate
+from wallet protocol errors so the verifier can distinguish transport-level
+wallet responses from presentation-level outcomes.
+
+| Code                                      | Meaning                                                               |
+| ----------------------------------------- | --------------------------------------------------------------------- |
+| `wallet_error`                            | The wallet returned an OID4VP protocol error such as `access_denied`. |
+| `credential_status_invalid`               | A credential status check failed.                                     |
+| `credential_expired`                      | A credential is expired.                                              |
+| `credential_not_yet_valid`                | A credential is not yet valid.                                        |
+| `issuer_not_trusted`                      | The issuer chain could not be trusted.                                |
+| `holder_binding_failed`                   | Holder binding verification failed.                                   |
+| `presentation_requirements_not_satisfied` | The presentation did not satisfy the configured requirements.         |
+| `response_invalid`                        | The wallet response could not be parsed or validated.                 |
+| `session_expired`                         | The presentation session expired before completion.                   |
+| `replay_detected`                         | The response was already consumed or replayed.                        |
+| `verification_failed`                     | Generic verification failure when no more specific code applies.      |
+| `internal_error`                          | An unexpected internal error occurred.                                |
+
+For `wallet_error`, the RP-facing result may also include an allow-listed
+`protocolError` value such as `access_denied` or `temporarily_unavailable`.
 
 For details on how these fields are used in practice, see
 [Credential Presentation — Direct Post Security Model](../getting-started/presentation/index.md#direct-post-security-model-oid4vp-133).
@@ -54,7 +84,8 @@ All credential offers (OID4VCI) and presentation requests (OID4VP) are **enforce
 **For OID4VP (Credential Presentation):**
 
 - When a wallet submits a presentation response, the session is marked as consumed
-- Any subsequent presentation attempts with the same request are rejected with a `400 Bad Request` error
+- Any subsequent presentation attempts with the same request are treated as replay attempts
+- The wallet-facing response URI still returns HTTP `200` for protocol-level interoperability
 
 ### Audit Trail
 

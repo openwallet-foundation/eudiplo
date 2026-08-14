@@ -324,7 +324,7 @@ describe("Presentation - SD-JWT Credential", () => {
                 error_description: "User cancelled the presentation request",
                 state: sessionId,
             })
-            .expect(400); // OID4VP spec requires 400 response
+            .expect(200);
 
         // Verify response is empty (no redirect_uri configured)
         expect(errorResponse.body).toEqual({});
@@ -342,6 +342,16 @@ describe("Presentation - SD-JWT Credential", () => {
         expect(sessionRes.body.errorReason).toContain(
             "User cancelled the presentation request",
         );
+
+        const resultRes = await request(app.getHttpServer())
+            .get(`/session/${sessionId}/result`)
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .expect(200);
+
+        expect(resultRes.body.status).toBe("failed");
+        expect(resultRes.body.failure.code).toBe("wallet_error");
+        expect(resultRes.body.failure.protocolError).toBe("access_denied");
     });
 
     test("should reject credential signed by untrusted issuer (not in trust list)", async () => {
@@ -423,8 +433,8 @@ describe("Presentation - SD-JWT Credential", () => {
                 resolved.authorizationRequestPayload as Openid4vpAuthorizationRequest,
         });
 
-        // The submission should succeed (200 per OID4VP spec) but session should fail
-        expect(submitRes.response.status).toBe(400);
+        // The submission must succeed at the transport level, while the session fails.
+        expect(submitRes.response.status).toBe(200);
 
         // Verify the session is marked as failed with trust-related error
         const sessionRes = await request(app.getHttpServer())
@@ -440,5 +450,17 @@ describe("Presentation - SD-JWT Credential", () => {
         expect(sessionRes.body.errorReason).toMatch(
             /trust|chain|no_trusted_entity_match|Invalid.*Signature/i,
         );
+
+        const resultRes = await request(app.getHttpServer())
+            .get(`/session/${sessionId}/result`)
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .expect(200);
+
+        expect(resultRes.body.status).toBe("failed");
+        expect([
+            "issuer_not_trusted",
+            "verification_failed",
+        ]).toContain(resultRes.body.failure.code);
     });
 });

@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { base64url } from "jose";
@@ -16,6 +16,10 @@ import { CredentialFormat } from "../../issuer/configuration/credentials/entitie
 import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { OfferResponse } from "../../issuer/issuance/oid4vci/dto/offer-request.dto";
 import { RegistrarService } from "../../registrar/registrar.service";
+import {
+    PresentationFailureCode,
+    WALLET_PROTOCOL_ERROR_ALLOWLIST,
+} from "../../session/entities/presentation-failure-code.enum";
 import { SessionStatus } from "../../session/entities/session.entity";
 import { SessionService } from "../../session/session.service";
 import { DEFAULT_VERIFIER_SKEW_SECONDS } from "../../shared/trust/types";
@@ -26,7 +30,7 @@ import {
     AuthResponse,
     AuthResponseSchema,
 } from "../presentations/dto/auth-response.dto";
-import { IncompletePresentationException } from "../presentations/exceptions/incomplete-presentation.exception";
+import { PresentationVerificationException } from "../presentations/exceptions/presentation-verification.exception";
 import { PresentationsService } from "../presentations/presentations.service";
 import { applyTrustedAuthoritiesPolicy } from "./dcql-trusted-authorities.util";
 import { AuthorizationResponse } from "./dto/authorization-response.dto";
@@ -79,6 +83,111 @@ export class Oid4vpService {
         return {
             url: endpoint.url,
             auth: endpoint.auth,
+        };
+    }
+
+    private normalizeWalletProtocolError(protocolError?: string):
+        | string
+        | undefined {
+        if (!protocolError) {
+            return undefined;
+        }
+
+        return WALLET_PROTOCOL_ERROR_ALLOWLIST.has(protocolError)
+            ? protocolError
+            : undefined;
+    }
+
+    private buildRedirectUriWithResponseCode(
+        redirectUri: string,
+        sessionId: string,
+        responseCode: string,
+    ): string {
+        const resolvedRedirectUri = decodeURIComponent(redirectUri).replaceAll(
+            "{sessionId}",
+            sessionId,
+        );
+
+        try {
+            const url = new URL(resolvedRedirectUri);
+            url.searchParams.set("response_code", responseCode);
+            return url.toString();
+        } catch {
+            const separator = resolvedRedirectUri.includes("?") ? "&" : "?";
+            return `${resolvedRedirectUri}${separator}response_code=${encodeURIComponent(responseCode)}`;
+        }
+    }
+
+    private mapFailureCode(error: unknown): PresentationFailureCode {
+        if (error instanceof PresentationVerificationException) {
+            return error.failureCode;
+        }
+
+        return PresentationFailureCode.VerificationFailed;
+    }
+
+    private async finalizeFailedSession(
+        sessionId: string,
+        failureCode: PresentationFailureCode,
+        errorReason: string,
+        protocolError?: string,
+    ): Promise<{ redirect_uri?: string }> {
+        const session = await this.sessionService.get(sessionId);
+        const responseCode = session.redirectUri
+            ? await this.sessionService.issueResponseCode(session.id)
+            : undefined;
+
+        await this.sessionService.add(session.id, {
+            status: SessionStatus.Failed,
+            errorReason,
+            presentationFailureCode: failureCode,
+            presentationFailureProtocolError: protocolError ?? (null as any),
+            consumed: true,
+            consumedAt: session.consumedAt ?? new Date(),
+        });
+
+        if (!session.redirectUri || !responseCode) {
+            return {};
+        }
+
+        return {
+            redirect_uri: this.buildRedirectUriWithResponseCode(
+                session.redirectUri,
+                session.id,
+                responseCode,
+            ),
+        };
+    }
+
+    private async finalizeSuccessfulSession(
+        sessionId: string,
+        credentials: unknown[],
+    ): Promise<{ redirect_uri?: string }> {
+        const session = await this.sessionService.get(sessionId);
+        const responseCode = session.redirectUri
+            ? await this.sessionService.issueResponseCode(session.id)
+            : undefined;
+
+        await this.sessionService.add(session.id, {
+            credentials: credentials as any,
+            status: SessionStatus.Completed,
+            consumed: true,
+            consumedAt: session.consumedAt ?? new Date(),
+            errorReason: null as any,
+            presentationFailureCode: null as any,
+            presentationFailureProtocolError: null as any,
+        });
+
+        if (!session.redirectUri || !responseCode) {
+            return {};
+        }
+
+        return {
+            redirect_uri: this.buildRedirectUriWithResponseCode(
+                session.redirectUri,
+                session.id,
+                responseCode,
+            ),
         };
     }
 
@@ -520,14 +629,12 @@ export class Oid4vpService {
      */
     @Span("oid4vp.getResponse")
     async getResponse(body: AuthorizationResponse, nonce: string) {
-        const session = await this.resolveSessionByNonce(nonce);
+        let session;
 
-        // Enforce single-use validation: prevent replay attacks
-        // Check if this presentation request has already been consumed
-        if (session.consumed) {
-            throw new BadRequestException(
-                "The presentation offer has already been used",
-            );
+        try {
+            session = await this.resolveSessionByNonce(nonce);
+        } catch {
+            return {};
         }
 
         // Add session context to span for trace correlation
@@ -541,20 +648,64 @@ export class Oid4vpService {
         // The expected state value is the walletNonce (or session.id for legacy sessions)
         const expectedState = session.walletNonce ?? session.id;
 
-        // Handle wallet error responses per OID4VP spec section 6.2
-        // When wallet cannot fulfill the request, it sends an OAuth 2.0 error response
+        // Create audit logging context
+        const logContext: AuditLogContext = {
+            sessionId: session.id,
+            tenantId: session.tenantId,
+            flowType: "OID4VP",
+            stage: "response_processing",
+        };
+
+        if (session.consumed) {
+            this.auditLogger.logFlowError(
+                logContext,
+                new Error("Replay detected for consumed presentation session"),
+                {
+                    action: "replay_detected",
+                },
+            );
+
+            // Keep existing terminal states untouched to avoid rewriting completed outcomes.
+            if (
+                session.status === SessionStatus.Completed ||
+                session.status === SessionStatus.Failed
+            ) {
+                return {};
+            }
+
+            return this.finalizeFailedSession(
+                session.id,
+                PresentationFailureCode.ReplayDetected,
+                "Replay detected for consumed presentation session",
+            );
+        }
+
+        const sessionExpiresAt = session.expiresAt
+            ? new Date(session.expiresAt as unknown as string)
+            : undefined;
+
+        if (
+            sessionExpiresAt &&
+            !Number.isNaN(sessionExpiresAt.getTime())
+        ) {
+            const expirationCutoff = new Date(sessionExpiresAt);
+            expirationCutoff.setHours(23, 59, 59, 999);
+
+            if (expirationCutoff.getTime() < Date.now()) {
+            return this.finalizeFailedSession(
+                session.id,
+                PresentationFailureCode.SessionExpired,
+                "Presentation session expired",
+            );
+            }
+        }
+
+        // Handle wallet error responses per OID4VP spec section 6.2.
         if (body.error) {
             const errorMessage = body.error_description
                 ? `${body.error}: ${body.error_description}`
                 : body.error;
-
-            // Create audit logging context for error response
-            const logContext: AuditLogContext = {
-                sessionId: session.id,
-                tenantId: session.tenantId,
-                flowType: "OID4VP",
-                stage: "response_processing",
-            };
+            const protocolError = this.normalizeWalletProtocolError(body.error);
 
             this.auditLogger.logFlowError(
                 logContext,
@@ -566,93 +717,72 @@ export class Oid4vpService {
                 },
             );
 
-            // Update session with failed status
-            await this.sessionService.add(session.id, {
-                status: SessionStatus.Failed,
-                errorReason: `Wallet error: ${errorMessage}`,
-            });
-
-            // Return redirect_uri with error if configured
-            // and propagate HTTP 400 while preserving response body shape.
-            if (session.redirectUri) {
-                const processedRedirectUri = decodeURIComponent(
-                    session.redirectUri,
-                ).replaceAll("{sessionId}", session.id);
-
-                const separator = processedRedirectUri.includes("?")
-                    ? "&"
-                    : "?";
-                throw new BadRequestException({
-                    redirect_uri: `${processedRedirectUri}${separator}error=${encodeURIComponent(body.error)}${body.error_description ? `&error_description=${encodeURIComponent(body.error_description)}` : ""}`,
-                });
-            }
-
-            // Return empty response body (session status indicates failure)
-            // and propagate HTTP 400.
-            throw new BadRequestException({});
+            return this.finalizeFailedSession(
+                session.id,
+                PresentationFailureCode.WalletError,
+                `Wallet error: ${errorMessage}`,
+                protocolError,
+            );
         }
 
-        // Ensure response field is present for success path
         if (!body.response) {
-            throw new BadRequestException(
+            return this.finalizeFailedSession(
+                session.id,
+                PresentationFailureCode.ResponseInvalid,
                 "Missing response field in authorization response",
             );
         }
 
-        const decrypted =
-            await this.encryptionService.decryptJweWithPrivateJwk<AuthResponse>(
-                body.response,
-                session.tenantId,
-                session.responseEncryptionPrivateJwk as
-                    | Record<string, unknown>
-                    | undefined,
-            );
-
-        // Validate decrypted response against the Zod schema
-
-        const parsed = AuthResponseSchema.safeParse(decrypted);
-        if (!parsed.success) {
-            throw new BadRequestException(
-                `Invalid authorization response: ${JSON.stringify(parsed.error.issues)}`,
-            );
-        }
-
-        const res: AuthResponse = parsed.data;
-        this.logger.trace(
-            { decryptedResponse: decrypted },
-            "[TRACE] Decrypted OID4VP authorization response",
-        );
-
-        //for dc api the state is no longer included in the res, see: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-request
-
-        // Create audit logging context
-        const logContext: AuditLogContext = {
-            sessionId: session.id,
-            tenantId: session.tenantId,
-            flowType: "OID4VP",
-            stage: "response_processing",
-        };
-
-        const presentationConfig =
-            await this.presentationsService.getPresentationConfig(
-                session.requestId!,
-                session.tenantId,
-            );
-        const webhook =
-            session.parsedWebhook ??
-            (await this.resolveWebhookFromEndpoint(
-                session.webhookEndpointId ??
-                    presentationConfig.webhookEndpointId,
-                session.tenantId,
-            ));
-
-        this.auditLogger.logFlowStart(logContext, {
-            action: "process_presentation_response",
-            hasWebhook: !!webhook,
-        });
-
         try {
-            //TODO: load required fields from the config
+            const decrypted =
+                await this.encryptionService.decryptJweWithPrivateJwk<AuthResponse>(
+                    body.response,
+                    session.tenantId,
+                    session.responseEncryptionPrivateJwk as
+                        | Record<string, unknown>
+                        | undefined,
+                );
+
+            const parsed = AuthResponseSchema.safeParse(decrypted);
+            if (!parsed.success) {
+                return this.finalizeFailedSession(
+                    session.id,
+                    PresentationFailureCode.ResponseInvalid,
+                    "Invalid authorization response",
+                );
+            }
+
+            const res: AuthResponse = parsed.data;
+            this.logger.trace(
+                { decryptedResponse: decrypted },
+                "[TRACE] Decrypted OID4VP authorization response",
+            );
+
+            const presentationConfig =
+                await this.presentationsService.getPresentationConfig(
+                    session.requestId!,
+                    session.tenantId,
+                );
+            const webhook =
+                session.parsedWebhook ??
+                (await this.resolveWebhookFromEndpoint(
+                    session.webhookEndpointId ??
+                        presentationConfig.webhookEndpointId,
+                    session.tenantId,
+                ));
+
+            this.auditLogger.logFlowStart(logContext, {
+                action: "process_presentation_response",
+                hasWebhook: !!webhook,
+            });
+
+            if (res.state && res.state !== expectedState) {
+                throw new PresentationVerificationException(
+                    PresentationFailureCode.HolderBindingFailed,
+                    "State mismatch: response state does not match expected value",
+                );
+            }
+
             const credentials = await this.presentationsService.parseResponse(
                 res,
                 presentationConfig,
@@ -668,28 +798,6 @@ export class Oid4vpService {
                 },
             );
 
-            // Validate state matches the expected walletNonce / session ID
-            // For DC API, state is not included in the response (per OID4VP spec).
-            if (res.state && res.state !== expectedState) {
-                throw new BadRequestException(
-                    "State mismatch: response state does not match expected value",
-                );
-            }
-
-            // Per OID4VP spec Section 13.3: generate a response_code after successful
-            // VP Token processing. This is included in redirect_uri so only the
-            // legitimate frontend (which receives the redirect) can confirm completion.
-            const responseCode = randomUUID();
-
-            await this.sessionService.add(session.id, {
-                //TODO: not clear why it has to be any
-                credentials: credentials as any,
-                status: SessionStatus.Completed,
-                responseCode,
-                consumed: true,
-                consumedAt: new Date(),
-            });
-            // if there a a webhook passed in the session, use it
             if (webhook) {
                 const response = await this.webhookService
                     .sendWebhook({
@@ -697,13 +805,6 @@ export class Oid4vpService {
                         session,
                         credentials,
                         expectResponse: false,
-                        // ==========================================================
-                        // Direct Pass-through of the raw presentation payload.
-                        // We intentionally do not persist this in the database (Session entity)
-                        // to adhere to privacy-by-design principles (data minimization).
-                        // Since webhooks currently do not support retries, keeping
-                        // the raw PII/tokens only in memory for this call is sufficient.
-                        // ==========================================================
                         rawPresentationPayload: decrypted,
                     })
                     .catch((error) => {
@@ -715,9 +816,11 @@ export class Oid4vpService {
                             },
                         );
                     });
-                //override it when a redirect URI is returned by the webhook
+
                 if (response?.redirectUri) {
-                    session.redirectUri = response.redirectUri;
+                    await this.sessionService.add(session.id, {
+                        redirectUri: response.redirectUri,
+                    });
                 }
             }
 
@@ -726,66 +829,23 @@ export class Oid4vpService {
                 webhookSent: !!webhook,
             });
 
-            //check if a redirect URI is defined and return it to the caller. If so, sendResponse is ignored
-            if (session.redirectUri) {
-                //TODO: not clear with the brackets are encoded
-                // Replace {sessionId} placeholder with actual session ID
-                const processedRedirectUri = decodeURIComponent(
-                    session.redirectUri,
-                ).replaceAll("{sessionId}", session.id);
-                // Per OID4VP spec Section 13.3: include response_code in redirect_uri
-                // so the frontend can use it to confirm the session completed legitimately.
-                const separator = processedRedirectUri.includes("?")
-                    ? "&"
-                    : "?";
-                return {
-                    redirect_uri: `${processedRedirectUri}${separator}response_code=${responseCode}`,
-                };
-            }
-
-            if (body.sendResponse) {
-                return credentials;
-            }
-
-            return {};
-        } catch (error: any) {
+            return this.finalizeSuccessfulSession(session.id, credentials);
+        } catch (error) {
             this.auditLogger.logFlowError(logContext, error as Error, {
                 action: "process_presentation_response",
             });
 
-            // Per OID4VP spec, the verifier MUST always return HTTP 200.
-            // Validation failures are documented in the session and communicated
-            // via redirect_uri (if configured) or session status.
+            const failureCode = this.mapFailureCode(error);
             const errorMessage =
-                error instanceof IncompletePresentationException
+                error instanceof Error
                     ? error.message
-                    : `Presentation validation failed: ${error.message}`;
+                    : "Presentation validation failed";
 
-            // Update session with failed status and error reason
-            await this.sessionService.add(session.id, {
-                status: SessionStatus.Failed,
-                errorReason: errorMessage,
-            });
-
-            // If redirect_uri is configured, return it with error parameter,
-            // while propagating HTTP 400.
-            if (session.redirectUri) {
-                const processedRedirectUri = decodeURIComponent(
-                    session.redirectUri,
-                ).replaceAll("{sessionId}", session.id);
-
-                // Append error query parameter to redirect URI
-                const separator = processedRedirectUri.includes("?")
-                    ? "&"
-                    : "?";
-                throw new BadRequestException({
-                    redirect_uri: `${processedRedirectUri}${separator}error=invalid_request&error_description=${encodeURIComponent(errorMessage)}`,
-                });
-            }
-
-            // Return empty response body (session status indicates failure)
-            // and propagate HTTP 400.
-            throw new BadRequestException({});
+            return this.finalizeFailedSession(
+                session.id,
+                failureCode,
+                errorMessage,
+            );
         }
     }
 }

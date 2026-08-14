@@ -263,6 +263,12 @@ describe("Presentation - Direct Post Security (Section 13.3)", () => {
         });
 
         expect(submitRes.response.status).toBe(200);
+        expect(submitRes.response.headers["cache-control"]).toContain(
+            "no-store",
+        );
+        expect(submitRes.response.headers["content-type"]).toContain(
+            "application/json",
+        );
 
         const body = await submitRes.response.json();
 
@@ -335,8 +341,8 @@ describe("Presentation - Direct Post Security (Section 13.3)", () => {
             .expect(200);
 
         expect(sessionRes.body.status).toBe("completed");
-        expect(sessionRes.body.responseCode).toBeDefined();
-        expect(sessionRes.body.responseCode.length).toBeGreaterThan(0);
+        expect(sessionRes.body.responseCode).toBeUndefined();
+        expect(sessionRes.body.responseCodeHash).toBeUndefined();
     });
 
     test("response_code is unique per presentation", async () => {
@@ -407,7 +413,7 @@ describe("Presentation - Direct Post Security (Section 13.3)", () => {
 
     // ─── Wallet error flow preserves security model ────────────────────
 
-    test("wallet error with redirectUri does not include response_code", async () => {
+    test("wallet error with redirectUri returns opaque response_code only", async () => {
         const redirectUri = "https://example.com/callback?session={sessionId}";
 
         const res = await createPresentationRequest(app, authToken, {
@@ -431,13 +437,115 @@ describe("Presentation - Direct Post Security (Section 13.3)", () => {
                 error_description: "User declined",
                 state: walletNonce,
             })
-            .expect(400);
+            .expect(200);
 
-        // Error redirect should NOT include a response_code
+        // Redirect must include only an opaque response_code (no error details)
         expect(errorRes.body.redirect_uri).toBeDefined();
         const redirectUrl = new URL(errorRes.body.redirect_uri);
-        expect(redirectUrl.searchParams.has("response_code")).toBe(false);
-        expect(redirectUrl.searchParams.get("error")).toBe("access_denied");
+        expect(redirectUrl.searchParams.has("response_code")).toBe(true);
+        expect(redirectUrl.searchParams.has("error")).toBe(false);
+        expect(redirectUrl.searchParams.has("error_description")).toBe(false);
+
+        const responseCode = redirectUrl.searchParams.get("response_code");
+        expect(responseCode).toBeTruthy();
+
+        const resultRes = await request(app.getHttpServer())
+            .get(`/session/${res.body.session}/result`)
+            .query({ response_code: responseCode })
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .expect(200);
+
+        expect(resultRes.body.status).toBe("failed");
+        expect(resultRes.body.failure.code).toBe("wallet_error");
+        expect(resultRes.body.failure.protocolError).toBe("access_denied");
+    });
+
+    test("result endpoint enforces response_code binding and single-use", async () => {
+        const redirectUri = "https://example.com/callback";
+
+        const res = await createPresentationRequest(app, authToken, {
+            response_type: ResponseType.URI,
+            requestId: "pid-no-hook",
+            redirectUri,
+        });
+
+        const sessionId: string = res.body.session;
+
+        const authRequest = client.parseOpenid4vpAuthorizationRequest({
+            authorizationRequest: res.body.uri,
+        });
+
+        const resolved = await client.resolveOpenId4vpAuthorizationRequest({
+            authorizationRequestPayload: authRequest.params,
+            responseMode: { type: "direct_post" },
+        });
+
+        const vp_token = await preparePresentation(
+            {
+                iat: Math.floor(Date.now() / 1000),
+                aud: resolved.authorizationRequestPayload.client_id as string,
+                nonce: resolved.authorizationRequestPayload.nonce,
+            },
+            privateIssuerKey,
+            issuerCertChain,
+            statusListService,
+            credentialConfigId,
+        );
+
+        const jwt = await encryptVpToken(vp_token, "pid", resolved);
+
+        const authorizationResponse =
+            await client.createOpenid4vpAuthorizationResponse({
+                authorizationRequestPayload: authRequest.params,
+                authorizationResponsePayload: {
+                    response: jwt,
+                },
+                ...callbacks,
+            });
+
+        const submitRes = await client.submitOpenid4vpAuthorizationResponse({
+            authorizationResponsePayload:
+                authorizationResponse.authorizationResponsePayload,
+            authorizationRequestPayload:
+                resolved.authorizationRequestPayload as Openid4vpAuthorizationRequest,
+        });
+
+        expect(submitRes.response.status).toBe(200);
+        const walletBody = await submitRes.response.json();
+        const responseCode = new URL(walletBody.redirect_uri).searchParams.get(
+            "response_code",
+        )!;
+
+        await request(app.getHttpServer())
+            .get(`/session/${sessionId}/result`)
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .expect(400);
+
+        await request(app.getHttpServer())
+            .get(`/session/${sessionId}/result`)
+            .query({ response_code: "invalid" })
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .expect(401);
+
+        await request(app.getHttpServer())
+            .get(`/session/${sessionId}/result`)
+            .query({ response_code: responseCode })
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .expect(200)
+            .expect((resultRes) => {
+                expect(resultRes.body.status).toBe("completed");
+            });
+
+        await request(app.getHttpServer())
+            .get(`/session/${sessionId}/result`)
+            .query({ response_code: responseCode })
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .expect(401);
     });
 
     // ─── walletNonce changes on session re-use ─────────────────────────

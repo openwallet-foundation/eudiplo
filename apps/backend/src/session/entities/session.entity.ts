@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
     CredentialOfferObject,
     NotificationEvent,
@@ -19,6 +19,7 @@ import { EncryptedJsonTransformer } from "../../shared/utils/encryption";
 import { WebhookConfig } from "../../shared/utils/webhook/webhook.dto";
 import { TransactionData } from "../../verifier/presentations/entities/presentation-config.entity";
 import { JWK } from "jose";
+import { PresentationFailureCode } from "./presentation-failure-code.enum";
 
 export enum SessionStatus {
     Active = "active",
@@ -243,6 +244,26 @@ export class Session {
     responseCode?: string;
 
     /**
+     * SHA-256 hash of the response code used by the RP result endpoint.
+     * Stores verifier binding material without exposing the raw code at rest.
+     */
+    @Column("varchar", { nullable: true })
+    responseCodeHash?: string;
+
+    /**
+     * Expiration timestamp for the response code.
+     */
+    @Column({ nullable: true })
+    responseCodeExpiresAt?: Date;
+
+    /**
+     * Timestamp of successful response-code consumption.
+     * Enforces single-use result retrieval.
+     */
+    @Column({ nullable: true })
+    responseCodeConsumedAt?: Date;
+
+    /**
      * Response URI used in the OID4VP authorization request.
      */
     @Column("varchar", { nullable: true })
@@ -295,6 +316,20 @@ export class Session {
      */
     @Column("text", { nullable: true })
     errorReason?: string;
+
+    /**
+     * Stable machine-readable failure code for RP result retrieval.
+     */
+    @ApiPropertyOptional({ enum: PresentationFailureCode })
+    @Column("varchar", { nullable: true })
+    presentationFailureCode?: PresentationFailureCode;
+
+    /**
+     * Optional allow-listed OAuth/OID4VP protocol error reported by wallet.
+     */
+    @ApiPropertyOptional()
+    @Column("varchar", { nullable: true })
+    presentationFailureProtocolError?: string;
 
     /**
      * Number of failed tx_code (transaction code) validation attempts.

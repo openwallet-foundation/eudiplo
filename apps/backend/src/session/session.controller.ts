@@ -1,12 +1,15 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     Delete,
+    GoneException,
     Get,
     HttpCode,
     Param,
     Post,
     Query,
+    UnauthorizedException,
 } from "@nestjs/common";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Role } from "../auth/roles/role.enum";
@@ -18,6 +21,8 @@ import { SessionLogStoreService } from "../shared/utils/logger/session-log-store
 import { PaginatedSessionResponseDto } from "./dto/paginated-session-response.dto";
 import { SessionLogEntryResponseDto } from "./dto/session-log-entry-response.dto";
 import { SessionQueryDto } from "./dto/session-query.dto";
+import { SessionResultQueryDto } from "./dto/session-result-query.dto";
+import { SessionResultResponseDto } from "./dto/session-result-response.dto";
 import { Session } from "./entities/session.entity";
 import { SessionService } from "./session.service";
 
@@ -31,17 +36,31 @@ export class SessionController {
         private readonly logStoreService: SessionLogStoreService,
     ) {}
 
+    private sanitizeSessionResponse(session: Session): Session {
+        return {
+            ...session,
+            responseCode: undefined,
+            responseCodeHash: undefined,
+            responseCodeExpiresAt: undefined,
+            responseCodeConsumedAt: undefined,
+        };
+    }
+
     /**
      * Retrieves a paginated list of sessions with optional filters.
      */
     @ApiOperation({ summary: "Get sessions (paginated)" })
     @ApiResponse({ status: 200, type: PaginatedSessionResponseDto })
     @Get()
-    getAllSessions(
+    async getAllSessions(
         @Token() token: TokenPayload,
         @Query() query: SessionQueryDto,
     ): Promise<PaginatedSessionResponseDto> {
-        return this.sessionService.getAll(token.entity!.id, query);
+        const result = await this.sessionService.getAll(token.entity!.id, query);
+        return {
+            ...result,
+            items: result.items.map((item) => this.sanitizeSessionResponse(item)),
+        };
     }
 
     /**
@@ -50,11 +69,83 @@ export class SessionController {
      */
     @ApiParam({ name: "id", description: "The session ID", type: String })
     @Get(":id")
-    getSession(
+    async getSession(
         @Param("id") id: string,
         @Token() token: TokenPayload,
     ): Promise<Session> {
-        return this.sessionService.getBy({ id, tenantId: token.entity!.id });
+        const session = await this.sessionService.getBy({
+            id,
+            tenantId: token.entity!.id,
+        });
+        return this.sanitizeSessionResponse(session);
+    }
+
+    @ApiParam({ name: "id", description: "The session ID", type: String })
+    @ApiOperation({
+        summary:
+            "Get RP-facing presentation result (same-device with response_code or cross-device polling)",
+    })
+    @ApiResponse({ status: 200, type: SessionResultResponseDto })
+    @Get(":id/result")
+    async getSessionResult(
+        @Param("id") id: string,
+        @Query() query: SessionResultQueryDto,
+        @Token() token: TokenPayload,
+    ): Promise<SessionResultResponseDto> {
+        const session = await this.sessionService.getBy({
+            id,
+            tenantId: token.entity!.id,
+        });
+
+        if (session.redirectUri) {
+            if (!query.response_code) {
+                throw new BadRequestException(
+                    "response_code is required for redirected presentation results",
+                );
+            }
+
+            const consumeResult = await this.sessionService.consumeResponseCode(
+                id,
+                query.response_code,
+            );
+
+            if (consumeResult === "missing" || consumeResult === "invalid") {
+                throw new UnauthorizedException("Invalid response_code");
+            }
+
+            if (consumeResult === "expired") {
+                throw new GoneException("response_code expired");
+            }
+
+            if (consumeResult === "consumed") {
+                throw new UnauthorizedException("response_code already consumed");
+            }
+        }
+
+        if (session.status === "completed") {
+            return {
+                status: session.status,
+                credentials: session.credentials ?? [],
+            };
+        }
+
+        if (session.status === "failed") {
+            return {
+                status: session.status,
+                failure: session.presentationFailureCode
+                    ? {
+                          code: session.presentationFailureCode,
+                          protocolError:
+                              session.presentationFailureProtocolError ??
+                              undefined,
+                      }
+                    : undefined,
+            };
+        }
+
+        return {
+            status: session.status,
+        };
     }
 
     /**

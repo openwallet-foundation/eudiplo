@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { digest } from "@owf/crypto";
 import { SDJwtVcInstance, VerificationResult } from "@sd-jwt/sd-jwt-vc";
 import { base64url, JWK } from "jose";
@@ -8,8 +8,10 @@ import { PinoLogger } from "nestjs-pino";
 import { CryptoImplementationService } from "../../../../crypto/key/crypto-implementation/crypto-implementation.service";
 import { VerifierOptions } from "../../../../shared/trust/types";
 import { MatchedTrustedEntity } from "../../../../shared/trust/x509-validation.service";
+import { PresentationFailureCode } from "../../../../session/entities/presentation-failure-code.enum";
 import { ResolverService } from "../../../resolver/resolver.service";
 import { CredentialChainValidationService } from "../credential-chain-validation.service";
+import { PresentationVerificationException } from "../../exceptions/presentation-verification.exception";
 import {
     isStatusListUnavailableError,
     resolveRevocationPolicy,
@@ -138,7 +140,7 @@ export class SdjwtvcverifierService {
      *
      * @param result The verification result containing the KB-JWT payload
      * @param transactionData The base64url-encoded transaction data strings from the request
-     * @throws BadRequestException if validation fails
+    * @throws PresentationVerificationException if validation fails
      */
     private validateTransactionDataHashes(
         result: VerificationResult,
@@ -152,7 +154,8 @@ export class SdjwtvcverifierService {
             | undefined;
 
         if (!kbPayload) {
-            throw new BadRequestException(
+            throw new PresentationVerificationException(
+                PresentationFailureCode.ResponseInvalid,
                 "Transaction data was provided but KB-JWT is missing",
             );
         }
@@ -160,13 +163,15 @@ export class SdjwtvcverifierService {
         const receivedHashes = kbPayload.transaction_data_hashes;
 
         if (!receivedHashes || !Array.isArray(receivedHashes)) {
-            throw new BadRequestException(
+            throw new PresentationVerificationException(
+                PresentationFailureCode.ResponseInvalid,
                 "Transaction data was provided but KB-JWT does not contain transaction_data_hashes",
             );
         }
 
         if (receivedHashes.length !== transactionData.length) {
-            throw new BadRequestException(
+            throw new PresentationVerificationException(
+                PresentationFailureCode.ResponseInvalid,
                 `Transaction data hash count mismatch: expected ${transactionData.length}, received ${receivedHashes.length}`,
             );
         }
@@ -183,7 +188,8 @@ export class SdjwtvcverifierService {
 
         const nodeAlgo = algoMap[hashAlg];
         if (!nodeAlgo) {
-            throw new BadRequestException(
+            throw new PresentationVerificationException(
+                PresentationFailureCode.ResponseInvalid,
                 `Unsupported transaction_data_hashes_alg: ${hashAlg}`,
             );
         }
@@ -199,7 +205,8 @@ export class SdjwtvcverifierService {
                 this.logger.debug(
                     `Transaction data hash mismatch at index ${i}: expected ${expectedHash}, received ${receivedHashes[i]}`,
                 );
-                throw new BadRequestException(
+                throw new PresentationVerificationException(
+                    PresentationFailureCode.ResponseInvalid,
                     `Transaction data hash mismatch at index ${i}`,
                 );
             }
@@ -365,7 +372,10 @@ export class SdjwtvcverifierService {
             typeof kbPayload.iat !== "number" ||
             !Number.isFinite(kbPayload.iat)
         ) {
-            throw new BadRequestException("Invalid key binding JWT iat");
+            throw new PresentationVerificationException(
+                PresentationFailureCode.HolderBindingFailed,
+                "Invalid key binding JWT iat",
+            );
         }
 
         const nowInSeconds = Math.floor(Date.now() / 1000);
@@ -378,7 +388,10 @@ export class SdjwtvcverifierService {
                 },
                 "KB-JWT iat is in the future",
             );
-            throw new BadRequestException("Invalid key binding JWT iat");
+            throw new PresentationVerificationException(
+                PresentationFailureCode.HolderBindingFailed,
+                "Invalid key binding JWT iat",
+            );
         }
 
         if (nowInSeconds - kbPayload.iat > MAX_PAST_IAT_AGE_SECONDS) {
@@ -390,7 +403,10 @@ export class SdjwtvcverifierService {
                 },
                 "KB-JWT iat is too old",
             );
-            throw new BadRequestException("Invalid key binding JWT iat");
+            throw new PresentationVerificationException(
+                PresentationFailureCode.HolderBindingFailed,
+                "Invalid key binding JWT iat",
+            );
         }
 
         if (expectedAudience) {
@@ -402,7 +418,8 @@ export class SdjwtvcverifierService {
                     },
                     "KB-JWT audience mismatch",
                 );
-                throw new BadRequestException(
+                throw new PresentationVerificationException(
+                    PresentationFailureCode.HolderBindingFailed,
                     "Invalid key binding JWT audience",
                 );
             }
