@@ -180,6 +180,9 @@ function mergeLeafSchema(existing: JsonSchema, next: JsonSchema): JsonSchema {
     if (existing.properties && Object.keys(existing.properties).length > 0) {
         merged.properties = existing.properties;
     }
+    if (Object.prototype.hasOwnProperty.call(existing, "additionalProperties")) {
+        merged.additionalProperties = existing.additionalProperties;
+    }
     if (Array.isArray(existing.required) && existing.required.length > 0) {
         merged.required = existing.required;
     }
@@ -233,6 +236,7 @@ function ensureSchemaNode(
                 cursor.items = {
                     type: "object",
                     properties: {},
+                    additionalProperties: false,
                 };
             }
 
@@ -247,6 +251,7 @@ function ensureSchemaNode(
             cursor.properties[key] = {
                 type: "object",
                 properties: {},
+                additionalProperties: false,
             };
         }
 
@@ -412,6 +417,7 @@ export function buildJsonSchema(fields: ClaimFieldDefinition[]): JsonSchema {
         $schema: JSON_SCHEMA_DRAFT_2020_12,
         type: "object",
         properties: {},
+        additionalProperties: false,
     };
 
     for (const field of flattenFields(fields)) {

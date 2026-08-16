@@ -794,7 +794,16 @@ describe("Issuance - Pre-authorized Code Flow", () => {
             .expect(201);
 
         await expect(getClaims(offerResponse)).rejects.toMatchObject({
-            error: "credential_request_denied",
+            response: {
+                credentialErrorResponseResult: {
+                    data: {
+                        error: "credential_request_denied",
+                        error_description: expect.stringMatching(
+                            /additional properties|Claims do not conform to the schema/i,
+                        ),
+                    },
+                },
+            },
         });
         expect(nock.isDone()).toBe(true);
     });

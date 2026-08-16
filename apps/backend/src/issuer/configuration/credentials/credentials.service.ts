@@ -371,8 +371,7 @@ export class CredentialsService {
         const ajv = new Ajv({
             allErrors: true,
             strict: true,
-            removeAdditional: "all", // strip properties not defined in the schema
-            useDefaults: true, // optionally apply default values from schema
+            useDefaults: true,
         });
         //fetch the credential configuration
         return this.credentialConfigRepo
