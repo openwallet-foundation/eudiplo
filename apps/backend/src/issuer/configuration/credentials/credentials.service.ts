@@ -10,6 +10,7 @@ import { Session } from "../../../session/entities/session.entity";
 import { FederationTrustService } from "../../../shared/trust/federation-trust.service";
 import { WebhookConfig } from "../../../shared/utils/webhook/webhook.dto";
 import { WebhookService } from "../../../shared/utils/webhook/webhook.service";
+import { CredentialRequestException } from "../../issuance/oid4vci/exceptions";
 import { VCT } from "../../issuance/oid4vci/metadata/dto/vct.dto";
 import { AttributeProviderEntity } from "../attribute-provider/entities/attribute-provider.entity";
 import { IssuanceService } from "../issuance/issuance.service";
@@ -487,7 +488,8 @@ export class CredentialsService {
         // No webhook configured
         if (!webhook) {
             if (options?.requireWebhook) {
-                throw new ConflictException(
+                throw new CredentialRequestException(
+                    "credential_request_denied",
                     `Authorization code flow requires an attribute provider to be configured on credential '${credentialConfigurationId}' ` +
                         `or provided at offer time.`,
                 );
@@ -512,10 +514,34 @@ export class CredentialsService {
             };
         }
 
+        const claims = response[credentialConfigurationId];
+        if (!claims || typeof claims !== "object" || Array.isArray(claims)) {
+            throw new CredentialRequestException(
+                "credential_request_denied",
+                `Claims webhook for credential '${credentialConfigurationId}' returned an invalid payload`,
+            );
+        }
+
+        try {
+            await this.validateClaimsForCredential(
+                credentialConfigurationId,
+                claims as Record<string, unknown>,
+                session.tenantId,
+            );
+        } catch (error) {
+            if (error instanceof ConflictException) {
+                throw new CredentialRequestException(
+                    "credential_request_denied",
+                    `${error.message} Returned payload: ${JSON.stringify(claims)}`,
+                );
+            }
+            throw error;
+        }
+
         // Return claims for immediate issuance
         return {
             deferred: false,
-            claims: response[credentialConfigurationId] as Record<string, any>,
+            claims: claims as Record<string, any>,
         };
     }
 

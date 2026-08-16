@@ -230,15 +230,6 @@ export class WebhookService {
                 values.webhook.auth.config.value;
         }
 
-        this.logger.debug(
-            {
-                webhookUrl: values.webhook.url,
-                sessionId: values.session,
-                credentialConfigurationId: values.credentialConfigurationId,
-            },
-            "Sending claims webhook",
-        );
-
         const payload: Record<string, unknown> = {
             session: values.session,
             credential_configuration_id: values.credentialConfigurationId,
@@ -252,15 +243,42 @@ export class WebhookService {
             payload.credentials = values.credentials;
         }
 
+        this.logger.debug(
+            {
+                webhookUrl: values.webhook.url,
+                sessionId: values.session,
+                credentialConfigurationId: values.credentialConfigurationId,
+                payload,
+            },
+            "Sending claims webhook request",
+        );
+
         return firstValueFrom(
             this.httpService.post(values.webhook.url, payload, { headers }),
         ).then(
             (webhookResponse) => {
+                this.logger.debug(
+                    {
+                        webhookUrl: values.webhook.url,
+                        sessionId: values.session,
+                        credentialConfigurationId:
+                            values.credentialConfigurationId,
+                        response: webhookResponse.data,
+                    },
+                    "Received claims webhook response",
+                );
                 return webhookResponse.data;
             },
             (err) => {
                 this.logger.error(
-                    { webhookUrl: values.webhook.url, error: err.message },
+                    {
+                        webhookUrl: values.webhook.url,
+                        sessionId: values.session,
+                        credentialConfigurationId:
+                            values.credentialConfigurationId,
+                        error: err.message,
+                        payload,
+                    },
                     "Error sending claims webhook",
                 );
                 throw new Error(

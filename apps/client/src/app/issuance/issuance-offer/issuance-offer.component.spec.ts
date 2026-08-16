@@ -141,4 +141,18 @@ describe('IssuanceOfferComponent', () => {
 
     expect(defaultServer).toBe('ext-auth');
   });
+
+  it('excludes built-in authorization server from auth-code external flow options', () => {
+    component.issuanceConfig = {
+      authorizationServers: [
+        { type: 'external', id: 'ext-auth', issuer: 'https://auth.example.com', enabled: true },
+        { type: 'built-in', id: 'issuer-built-in', enabled: true, label: 'Issuer Local AS' },
+      ],
+    } as any;
+    component.flowStepForm.patchValue({ flow: 'authorization_code_external' });
+
+    expect(component.authCodeAuthorizationServerOptions).toEqual([
+      { value: 'ext-auth', label: 'ext-auth' },
+    ]);
+  });
 });

@@ -761,6 +761,44 @@ describe("Issuance - Pre-authorized Code Flow", () => {
         expect(nock.isDone()).toBe(true);
     });
 
+    test("pre auth flow rejects undeclared fields returned by a claims webhook", async () => {
+        const town = "Köln";
+
+        nock("http://localhost:8787")
+            .post("/request", () => true)
+            .reply(200, {
+                citizen: {
+                    town,
+                    unexpected: "should be rejected",
+                },
+            });
+
+        const offerResponse = await request(app.getHttpServer())
+            .post("/issuer/offer")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                flow: "pre_authorized_code",
+                response_type: "uri",
+                credentialConfigurationIds: ["citizen"],
+                credentialClaims: {
+                    citizen: {
+                        type: "webhook",
+                        webhook: {
+                            url: "http://localhost:8787/request",
+                            auth: { type: "none" },
+                        },
+                    },
+                },
+            })
+            .expect(201);
+
+        await expect(getClaims(offerResponse)).rejects.toMatchObject({
+            error: "credential_request_denied",
+        });
+        expect(nock.isDone()).toBe(true);
+    });
+
     test("pre auth flow with passed claims", async () => {
         const town = "Hamburg";
 

@@ -432,6 +432,7 @@ export class IssuanceOfferComponent implements OnInit {
 
     return servers
       .filter((server) => server?.enabled !== false)
+      .filter((server) => !(this.isAuthCodeExternalFlow && server?.type === 'built-in'))
       .map((server) => {
         if (server?.type === 'external' && typeof server?.issuer === 'string') {
           return {
@@ -488,8 +489,16 @@ export class IssuanceOfferComponent implements OnInit {
    */
   private getDefaultAuthServerForFlow(flow: string): string {
     let options: { value: string; label: string }[] = [];
-    if (flow === 'authorization_code_external' || flow === 'pre_authorized_code') {
+    if (flow === 'authorization_code_external') {
       options = this.authCodeAuthorizationServerOptions;
+    }
+
+    if (flow === 'pre_authorized_code') {
+      options = this.preAuthAuthorizationServerOptions;
+    }
+
+    if (flow === 'authorization_code_iae') {
+      return '';
     }
 
     if (options.length === 0) {

@@ -50,6 +50,66 @@ describe("Issuance - Authorization Code Flow", () => {
         await app.close();
     });
 
+    test("authorized code flow ignores built-in authorization server when another server is configured", async () => {
+        await request(app.getHttpServer())
+            .post("/issuer/config")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                authorizationServers: [
+                    { id: "issuer-built-in", type: "built-in" },
+                    {
+                        id: "issuer-external",
+                        type: "external",
+                        issuer: "https://auth.example.com",
+                    },
+                ],
+            })
+            .expect(201);
+
+        const offerResponse = await request(app.getHttpServer())
+            .post("/issuer/offer")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                response_type: "uri",
+                credentialConfigurationIds: ["pid-no-key"],
+                flow: "authorization_code",
+            })
+            .expect(201);
+
+        const client = new Openid4vciClient({
+            callbacks: {
+                ...callbacks,
+                clientAuthentication: clientAuthenticationAnonymous(),
+            },
+        });
+        const credentialOffer = await client.resolveCredentialOffer(
+            offerResponse.body.uri,
+        );
+
+        expect(credentialOffer.grants?.authorization_code).toMatchObject({
+            authorization_server: "https://auth.example.com",
+        });
+    });
+
+    test("authorized code flow rejects built-in authorization server override", async () => {
+        await request(app.getHttpServer())
+            .post("/issuer/offer")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                response_type: "uri",
+                credentialConfigurationIds: ["pid-no-key"],
+                flow: "authorization_code",
+                authorization_server: "issuer-built-in",
+            })
+            .expect(400)
+            .expect(({ body }) => {
+                expect(body.message).toContain("authorization server");
+            });
+    });
+
     test("authorized code flow", async () => {
         const offerResponse = await request(app.getHttpServer())
             .post("/issuer/offer")

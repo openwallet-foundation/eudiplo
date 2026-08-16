@@ -51,9 +51,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
             message = "Internal Server Error";
         }
 
-        // Log the error with stack trace if available using NestJS Logger
+        const validationDetails =
+            responseBody && typeof responseBody.errors !== "undefined"
+                ? JSON.stringify(responseBody.errors, null, 2)
+                : undefined;
+
+        // Log the error with stack trace and validation details if available.
         this.logger.error(
-            `[${request.method}] ${requestPath} ${status} - ${JSON.stringify(message)}`,
+            `[${request.method}] ${requestPath} ${status} - ${JSON.stringify(message)}${
+                validationDetails ? ` | Details: ${validationDetails}` : ""
+            }`,
             exception instanceof Error ? exception.stack : undefined,
         );
 

@@ -115,7 +115,9 @@ function handleUnifiedClaims(data: ClaimsWebhookRequest): Response {
             JSON.stringify(data.identity.token_claims, null, 2),
         );
 
-        // Map external AS claims to credential claims
+        // Example: build a realistic diploma payload for university-diploma credentials.
+        // Keep the field names aligned with the credential schema you configured for this
+        // credential configuration; only return the claims that the schema allows.
         const claims: Record<string, unknown> = {};
 
         if (data.identity.token_claims.given_name) {
@@ -123,6 +125,21 @@ function handleUnifiedClaims(data: ClaimsWebhookRequest): Response {
         }
         if (data.identity.token_claims.family_name) {
             claims.family_name = data.identity.token_claims.family_name;
+        }
+
+        if (data.credential_configuration_id === "university-diploma") {
+            claims.degree_name = "Computer Science";
+            claims.degree_type = "Master of Science";
+            claims.family_name =
+                (data.identity.token_claims.family_name as string) ??
+                "MUSTERMANN";
+            claims.given_name =
+                (data.identity.token_claims.given_name as string) ?? "ERIKA";
+            claims.graduation_date = "2025-07-15";
+            claims.honors = "magna cum laude";
+            claims.issuing_authority = "European Technical University";
+            claims.issuing_country = "DE";
+            claims.student_id = data.identity.sub;
         }
 
         const response: ClaimsWebhookResponse = createClaimsResponse(

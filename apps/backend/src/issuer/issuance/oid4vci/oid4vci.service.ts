@@ -173,7 +173,10 @@ export class Oid4vciService {
      * Get the authorization server URL for credential offers.
      * Uses the first enabled authorization server in configured order.
      */
-    private async getAuthorizationServer(tenantId: string): Promise<string> {
+    private async getAuthorizationServer(
+        tenantId: string,
+        flow?: "authorization_code" | "pre_authorized_code",
+    ): Promise<string> {
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
         const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
@@ -184,6 +187,13 @@ export class Oid4vciService {
             const chainedServer = server as Partial<ChainedServerConfig>;
 
             if (server.enabled === false) {
+                continue;
+            }
+
+            if (
+                flow === "authorization_code" &&
+                server.type === "built-in"
+            ) {
                 continue;
             }
 
@@ -222,13 +232,14 @@ export class Oid4vciService {
         }
 
         throw new BadRequestException(
-            "No enabled authorization server configured",
+            `No enabled authorization server configured for ${flow ?? "this"} flow`,
         );
     }
 
     private async resolveAuthorizationServerSelection(
         tenantId: string,
         selectedAuthorizationServer?: string,
+        flow?: "authorization_code" | "pre_authorized_code",
     ): Promise<string | undefined> {
         if (!selectedAuthorizationServer) {
             return undefined;
@@ -249,6 +260,12 @@ export class Oid4vciService {
                 server.id !== selectedAuthorizationServer
             ) {
                 continue;
+            }
+
+            if (flow === "authorization_code" && server.type === "built-in") {
+                throw new BadRequestException(
+                    "The built-in authorization server cannot be used in the authorization code flow; it only supports pre-authorized code flow.",
+                );
             }
 
             if (
@@ -933,10 +950,14 @@ export class Oid4vciService {
                 await this.resolveAuthorizationServerSelection(
                     tenantId,
                     body.authorization_server,
+                    "pre_authorized_code",
                 );
             const authServer =
                 selectedAuthorizationServer ??
-                (await this.getAuthorizationServer(tenantId));
+                (await this.getAuthorizationServer(
+                    tenantId,
+                    "pre_authorized_code",
+                ));
 
             grants = {
                 [preAuthorizedCodeGrantIdentifier]: {
@@ -959,10 +980,14 @@ export class Oid4vciService {
                 await this.resolveAuthorizationServerSelection(
                     tenantId,
                     body.authorization_server,
+                    "authorization_code",
                 );
             const authServer =
                 selectedAuthorizationServer ??
-                (await this.getAuthorizationServer(tenantId));
+                (await this.getAuthorizationServer(
+                    tenantId,
+                    "authorization_code",
+                ));
             grants = {
                 [authorizationCodeGrantIdentifier]: {
                     issuer_state,
@@ -1547,6 +1572,31 @@ export class Oid4vciService {
         ) {
             throw new CredentialRequestException(
                 "unknown_credential_configuration",
+                error.message,
+            );
+        }
+
+        if (error instanceof CredentialRequestException) {
+            const response = error.getResponse();
+            if (
+                typeof response === "object" &&
+                response !== null &&
+                "error" in response &&
+                (response as { error?: string }).error ===
+                    "credential_request_denied"
+            ) {
+                throw error;
+            }
+        }
+
+        if (
+            error instanceof Error &&
+            (error.message?.toLowerCase().includes("claims do not conform") ||
+                error.message?.toLowerCase().includes("returned an invalid payload") ||
+                error.message?.toLowerCase().includes("returned payload"))
+        ) {
+            throw new CredentialRequestException(
+                "credential_request_denied",
                 error.message,
             );
         }
