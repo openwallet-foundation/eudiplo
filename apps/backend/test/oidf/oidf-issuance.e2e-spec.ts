@@ -201,7 +201,7 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
                 {
                     response_type: ResponseType.URI,
                     credentialConfigurationIds: [credentialConfigurationId],
-                    flow: FlowType.AUTH_CODE,
+                    flow: FlowType.PRE_AUTH_CODE,
                 },
                 {
                     headers: {
