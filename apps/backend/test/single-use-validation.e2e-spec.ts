@@ -126,9 +126,10 @@ describe("Single-Use Validation (Issue #503) - OID4VCI", () => {
             .send({
                 response_type: "uri",
                 credentialConfigurationIds: ["pid-no-key"],
-                flow: "authorization_code",
+                flow: "pre_authorized_code",
             })
-            .expect(201);
+            .expect(201);        
+        
 
         const offerUri = new URL(offerRes.body.uri);
         const credentialOfferUri = offerUri.searchParams.get(
