@@ -190,10 +190,7 @@ export class Oid4vciService {
                 continue;
             }
 
-            if (
-                flow === "authorization_code" &&
-                server.type === "built-in"
-            ) {
+            if (flow === "authorization_code" && server.type === "built-in") {
                 continue;
             }
 
@@ -1592,7 +1589,9 @@ export class Oid4vciService {
         if (
             error instanceof Error &&
             (error.message?.toLowerCase().includes("claims do not conform") ||
-                error.message?.toLowerCase().includes("returned an invalid payload") ||
+                error.message
+                    ?.toLowerCase()
+                    .includes("returned an invalid payload") ||
                 error.message?.toLowerCase().includes("returned payload"))
         ) {
             throw new CredentialRequestException(
