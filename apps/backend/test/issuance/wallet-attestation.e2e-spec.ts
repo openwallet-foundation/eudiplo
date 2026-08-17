@@ -482,10 +482,12 @@ describe("Issuance - Wallet Attestation", () => {
                 clientAuthentication: clientAuthenticationAnonymous(),
                 signJwt: getSignJwtCallback([holderPrivateKeyJwk as Jwk]),
             },
-        }).resolveCredentialOffer(offerResponse.body.uri).catch((err) => {
-            console.error("Error resolving credential offer:", err);
-            throw err;
-        });
+        })
+            .resolveCredentialOffer(offerResponse.body.uri)
+            .catch((err) => {
+                console.error("Error resolving credential offer:", err);
+                throw err;
+            });
 
         const issuerMetadata = await new Openid4vciClient({
             callbacks: {

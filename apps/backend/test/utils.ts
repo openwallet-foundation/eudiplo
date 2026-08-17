@@ -558,8 +558,8 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
                     issuer: fakeAuthServer,
                     sessionBinding: {
                         method: "access_token_claim",
-                        claim: "issuer_state"
-                    }
+                        claim: "issuer_state",
+                    },
                 },
             ],
             dPopRequired: false,
