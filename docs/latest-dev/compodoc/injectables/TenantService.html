@@ -1287,13 +1287,13 @@ import {
     extractRequestMeta,
     getChangedFieldsForKeys,
     resolveAuditActor,
-} from &quot;../../shared/utils/audit-log-context.util&quot;;
-import { ConfigImportOrchestratorService } from &quot;../../shared/utils/config-import/config-import-orchestrator.service&quot;;
+} from &quot;../../audit-log/audit-log-context.util&quot;;
+import { ConfigImportOrchestratorService } from &quot;../../platform/config-import/config-import-orchestrator.service&quot;;
 import { FilesService } from &quot;../../storage/files.service&quot;;
 import { CLIENTS_PROVIDER, ClientsProvider } from &quot;../client/client.provider&quot;;
 import { Role } from &quot;../roles/role.enum&quot;;
 import { TokenPayload } from &quot;../token.decorator&quot;;
-import { TenantEntity } from &quot;./entitites/tenant.entity&quot;;
+import { TenantEntity } from &quot;./entities/tenant.entity&quot;;
 import { ImportTenantSchema } from &quot;./schemas/create-tenant.schema&quot;;
 import type {
     CreateTenant,

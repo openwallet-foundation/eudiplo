@@ -1,0 +1,497 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content module">
+                   <div class="content-data">
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">Modules</li>
+    <li class="breadcrumb-item" >SessionLoggingModule</li>
+</ol>
+
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/session/logging/session-logging.module.ts</code>
+</div>
+
+<div class="text-center module-graph-container">
+    <div id="module-graph-svg">
+        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.47.0 (20210316.0004)
+ -->
+<!-- Title: dependencies Pages: 1 -->
+<svg width="680pt" height="284pt"
+ viewBox="0.00 0.00 680.00 284.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 280)">
+<title>dependencies</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-280 676,-280 676,4 -4,4"/>
+<text text-anchor="start" x="315.01" y="-42.4" font-family="Times-12" font-weight="bold" font-size="14.00">Legend</text>
+<polygon fill="#ffffb3" stroke="transparent" points="102,-10 102,-30 122,-30 122,-10 102,-10"/>
+<text text-anchor="start" x="125.63" y="-15.4" font-family="Times-12" font-size="14.00"> &#160;Declarations</text>
+<polygon fill="#8dd3c7" stroke="transparent" points="215,-10 215,-30 235,-30 235,-10 215,-10"/>
+<text text-anchor="start" x="238.73" y="-15.4" font-family="Times-12" font-size="14.00"> &#160;Module</text>
+<polygon fill="#80b1d3" stroke="transparent" points="301,-10 301,-30 321,-30 321,-10 301,-10"/>
+<text text-anchor="start" x="324.78" y="-15.4" font-family="Times-12" font-size="14.00"> &#160;Bootstrap</text>
+<polygon fill="#fdb462" stroke="transparent" points="398,-10 398,-30 418,-30 418,-10 398,-10"/>
+<text text-anchor="start" x="421.67" y="-15.4" font-family="Times-12" font-size="14.00"> &#160;Providers</text>
+<polygon fill="#fb8072" stroke="transparent" points="494,-10 494,-30 514,-30 514,-10 494,-10"/>
+<text text-anchor="start" x="517.73" y="-15.4" font-family="Times-12" font-size="14.00"> &#160;Exports</text>
+<g id="clust1" class="cluster">
+<title>cluster_SessionLoggingModule</title>
+<polygon fill="none" stroke="black" stroke-dasharray="1,5" points="8,-70 8,-268 664,-268 664,-70 8,-70"/>
+</g>
+<g id="clust6" class="cluster">
+<title>cluster_SessionLoggingModule_providers</title>
+<polygon fill="none" stroke="black" points="16,-78 16,-130 656,-130 656,-78 16,-78"/>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_SessionLoggingModule_exports</title>
+<polygon fill="none" stroke="black" points="93,-208 93,-260 582,-260 582,-208 93,-208"/>
+</g>
+<!-- SessionAuditService  -->
+<g id="node1" class="node"><a xlink:href="../injectables/SessionAuditService.html" href="../injectables/SessionAuditService.html" target="_top">
+<title>SessionAuditService </title>
+<polygon fill="#fb8072" stroke="black" points="574.14,-252 437.86,-252 437.86,-216 574.14,-216 574.14,-252"/>
+<text text-anchor="middle" x="506" y="-229.8" font-family="Times,serif" font-size="14.00">SessionAuditService </text>
+</a></g>
+<!-- SessionLogStoreService  -->
+<g id="node2" class="node"><a xlink:href="../injectables/SessionLogStoreService.html" href="../injectables/SessionLogStoreService.html" target="_top">
+<title>SessionLogStoreService </title>
+<polygon fill="#fb8072" stroke="black" points="420.36,-252 263.64,-252 263.64,-216 420.36,-216 420.36,-252"/>
+<text text-anchor="middle" x="342" y="-229.8" font-family="Times,serif" font-size="14.00">SessionLogStoreService </text>
+</a></g>
+<!-- SessionLoggerService  -->
+<g id="node3" class="node"><a xlink:href="../injectables/SessionLoggerService.html" href="../injectables/SessionLoggerService.html" target="_top">
+<title>SessionLoggerService </title>
+<polygon fill="#fb8072" stroke="black" points="245.18,-252 100.82,-252 100.82,-216 245.18,-216 245.18,-252"/>
+<text text-anchor="middle" x="173" y="-229.8" font-family="Times,serif" font-size="14.00">SessionLoggerService </text>
+</a></g>
+<!-- SessionLoggingModule -->
+<g id="node4" class="node"><a xlink:href="../modules/SessionLoggingModule.html" href="../modules/SessionLoggingModule.html" target="_top">
+<title>SessionLoggingModule</title>
+<polygon fill="#8dd3c7" stroke="black" points="416.77,-187 413.77,-191 392.77,-191 389.77,-187 267.23,-187 267.23,-151 416.77,-151 416.77,-187"/>
+<text text-anchor="middle" x="342" y="-164.8" font-family="Times,serif" font-size="14.00">SessionLoggingModule</text>
+</a></g>
+<!-- SessionLoggingModule&#45;&gt;SessionAuditService  -->
+<g id="edge1" class="edge">
+<title>SessionLoggingModule&#45;&gt;SessionAuditService </title>
+<path fill="none" stroke="black" stroke-dasharray="5,2" d="M417.02,-175C431.71,-175 442.68,-175 442.68,-175 442.68,-175 442.68,-205.98 442.68,-205.98"/>
+<polygon fill="black" stroke="black" points="439.18,-205.98 442.68,-215.98 446.18,-205.98 439.18,-205.98"/>
+</g>
+<!-- SessionLoggingModule&#45;&gt;SessionLogStoreService  -->
+<g id="edge2" class="edge">
+<title>SessionLoggingModule&#45;&gt;SessionLogStoreService </title>
+<path fill="none" stroke="black" stroke-dasharray="5,2" d="M342,-187.11C342,-187.11 342,-205.99 342,-205.99"/>
+<polygon fill="black" stroke="black" points="338.5,-205.99 342,-215.99 345.5,-205.99 338.5,-205.99"/>
+</g>
+<!-- SessionLoggingModule&#45;&gt;SessionLoggerService  -->
+<g id="edge3" class="edge">
+<title>SessionLoggingModule&#45;&gt;SessionLoggerService </title>
+<path fill="none" stroke="black" stroke-dasharray="5,2" d="M266.97,-175C252.09,-175 240.95,-175 240.95,-175 240.95,-175 240.95,-205.98 240.95,-205.98"/>
+<polygon fill="black" stroke="black" points="237.45,-205.98 240.95,-215.98 244.45,-205.98 237.45,-205.98"/>
+</g>
+<!-- SessionAuditService -->
+<g id="node5" class="node"><a xlink:href="../injectables/SessionAuditService.html" href="../injectables/SessionAuditService.html" target="_top">
+<title>SessionAuditService</title>
+<ellipse fill="#fdb462" stroke="black" cx="557" cy="-104" rx="91.49" ry="18"/>
+<text text-anchor="middle" x="557" y="-99.8" font-family="Times,serif" font-size="14.00">SessionAuditService</text>
+</a></g>
+<!-- SessionAuditService&#45;&gt;SessionLoggingModule -->
+<g id="edge4" class="edge">
+<title>SessionAuditService&#45;&gt;SessionLoggingModule</title>
+<path fill="none" stroke="black" d="M519.79,-120.75C519.79,-138.19 519.79,-163 519.79,-163 519.79,-163 426.88,-163 426.88,-163"/>
+<polygon fill="black" stroke="black" points="426.88,-159.5 416.88,-163 426.88,-166.5 426.88,-159.5"/>
+</g>
+<!-- SessionLogStoreService -->
+<g id="node6" class="node"><a xlink:href="../injectables/SessionLogStoreService.html" href="../injectables/SessionLogStoreService.html" target="_top">
+<title>SessionLogStoreService</title>
+<ellipse fill="#fdb462" stroke="black" cx="342" cy="-104" rx="105.37" ry="18"/>
+<text text-anchor="middle" x="342" y="-99.8" font-family="Times,serif" font-size="14.00">SessionLogStoreService</text>
+</a></g>
+<!-- SessionLogStoreService&#45;&gt;SessionLoggingModule -->
+<g id="edge5" class="edge">
+<title>SessionLogStoreService&#45;&gt;SessionLoggingModule</title>
+<path fill="none" stroke="black" d="M342,-122.11C342,-122.11 342,-140.99 342,-140.99"/>
+<polygon fill="black" stroke="black" points="338.5,-140.99 342,-150.99 345.5,-140.99 338.5,-140.99"/>
+</g>
+<!-- SessionLoggerService -->
+<g id="node7" class="node"><a xlink:href="../injectables/SessionLoggerService.html" href="../injectables/SessionLoggerService.html" target="_top">
+<title>SessionLoggerService</title>
+<ellipse fill="#fdb462" stroke="black" cx="121" cy="-104" rx="97.27" ry="18"/>
+<text text-anchor="middle" x="121" y="-99.8" font-family="Times,serif" font-size="14.00">SessionLoggerService</text>
+</a></g>
+<!-- SessionLoggerService&#45;&gt;SessionLoggingModule -->
+<g id="edge6" class="edge">
+<title>SessionLoggerService&#45;&gt;SessionLoggingModule</title>
+<path fill="none" stroke="black" d="M159.52,-120.75C159.52,-138.19 159.52,-163 159.52,-163 159.52,-163 256.99,-163 256.99,-163"/>
+<polygon fill="black" stroke="black" points="256.99,-166.5 266.99,-163 256.99,-159.5 256.99,-166.5"/>
+</g>
+</g>
+</svg>
+
+    </div>
+    <i id="fullscreen" class="icon ion-ios-resize module-graph-fullscreen-btn" aria-hidden="true"></i>
+    <div class="btn-group size-buttons">
+        <button id="zoom-in" class="btn btn-default btn-sm">Zoom in</button>
+        <button id="reset" class="btn btn-default btn-sm">Reset</button>
+        <button id="zoom-out" class="btn btn-default btn-sm">Zoom out</button>
+    </div>
+</div>
+<script src="../js/libs/svg-pan-zoom.min.js"></script>
+<script src="../js/svg-pan-zoom.controls.js"></script>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+        <a href="#info" 
+            class="nav-link"
+            class="nav-link active"
+            role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+    </li>
+    <li class="nav-item">
+        <a href="#source" 
+            class="nav-link"
+            
+            role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+
+
+
+        <p class="comment">
+            <h3>Description</h3>
+        </p>
+        <p class="comment">
+            <p>Owns session-scoped protocol logging.</p>
+<p>Provides two services:</p>
+<ul>
+<li><code>SessionAuditService</code>: persists audit events to the database only.</li>
+<li><code>SessionLoggerService</code>: persists to the database AND logs via PinoLogger
+(exported to Loki via OpenTelemetry) for full observability.</li>
+</ul>
+
+        </p>
+
+
+        <div class="container-fluid module">
+            <div class="row">
+                <div class="col-sm-3">
+                    <h3>Providers<a href="https://angular.io/api/core/NgModule#providers" target="_blank" rel="noopener noreferrer"
+                            title="Official documentation about module providers"><span class="icon ion-ios-information-circle-outline"></a></h3>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <a href="../injectables/SessionAuditService.html">SessionAuditService</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/SessionLogStoreService.html">SessionLogStoreService</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/SessionLoggerService.html">SessionLoggerService</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-3">
+                    <h3>Exports<a href="https://angular.io/api/core/NgModule#exports" target="_blank" rel="noopener noreferrer"
+                            title="Official documentation about module exports"><span
+                                class="icon ion-ios-information-circle-outline"></a></h3>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <a href="../injectables/SessionAuditService.html">SessionAuditService</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/SessionLogStoreService.html">SessionLogStoreService</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../injectables/SessionLoggerService.html">SessionLoggerService</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/Iso18013Module.html" target="_self" >Iso18013Module</a></code>
+                                </li>
+                                <li>
+                                            <code><a href="../modules/SessionModule.html" target="_self" >SessionModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../injectables/SessionAuditService.html" target="_self" >SessionAuditService</a></code>
+                                </li>
+                                <li>
+                                            <code><a href="../injectables/SessionLogStoreService.html" target="_self" >SessionLogStoreService</a></code>
+                                </li>
+                                <li>
+                                            <code><a href="../injectables/SessionLoggerService.html" target="_self" >SessionLoggerService</a></code>
+                                </li>
+                        </ul>
+                </div>
+            </div>
+        </section>
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Module } from &quot;@nestjs/common&quot;;
+import { TypeOrmModule } from &quot;@nestjs/typeorm&quot;;
+import { SessionLogEntry } from &quot;../entities/session-log-entry.entity&quot;;
+import { SessionAuditService } from &quot;./session-audit.service&quot;;
+import { SessionLogStoreService } from &quot;./session-log-store.service&quot;;
+import { SessionLoggerService } from &quot;./session-logger.service&quot;;
+
+/**
+ * Owns session-scoped protocol logging.
+ *
+ * Provides two services:
+ * - &#x60;SessionAuditService&#x60;: persists audit events to the database only.
+ * - &#x60;SessionLoggerService&#x60;: persists to the database AND logs via PinoLogger
+ *   (exported to Loki via OpenTelemetry) for full observability.
+ */
+@Module({
+    imports: [TypeOrmModule.forFeature([SessionLogEntry])],
+    providers: [
+        SessionLogStoreService,
+        SessionAuditService,
+        SessionLoggerService,
+    ],
+    exports: [
+        SessionAuditService,
+        SessionLoggerService,
+        SessionLogStoreService,
+    ],
+})
+export class SessionLoggingModule {}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'module';
+            var COMPODOC_CURRENT_PAGE_URL = 'SessionLoggingModule.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

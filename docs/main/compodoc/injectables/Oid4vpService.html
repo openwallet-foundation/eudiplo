@@ -1191,10 +1191,10 @@ import { OfferResponse } from &quot;../../issuer/issuance/oid4vci/dto/offer-requ
 import { RegistrarService } from &quot;../../registrar/registrar.service&quot;;
 import { SessionStatus } from &quot;../../session/entities/session.entity&quot;;
 import { SessionService } from &quot;../../session/session.service&quot;;
-import { DEFAULT_VERIFIER_SKEW_SECONDS } from &quot;../../shared/trust/types&quot;;
-import { AuditLogContext } from &quot;../../shared/utils/logger/audit-log.service&quot;;
-import { SessionLoggerService } from &quot;../../shared/utils/logger/session-logger.service&quot;;
-import { WebhookService } from &quot;../../shared/utils/webhook/webhook.service&quot;;
+import { DEFAULT_VERIFIER_SKEW_SECONDS } from &quot;../../trust/types&quot;;
+import { AuditLogContext } from &quot;../../session/logging/session-audit.service&quot;;
+import { SessionLoggerService } from &quot;../../session/logging/session-logger.service&quot;;
+import { WebhookService } from &quot;../../webhook/webhook.service&quot;;
 import {
     AuthResponse,
     AuthResponseSchema,

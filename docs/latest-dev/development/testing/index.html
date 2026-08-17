@@ -2406,6 +2406,8 @@
       
         
       
+        
+      
     
     
     
@@ -2478,6 +2480,34 @@
     
   
     Workspace Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backend-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backend Structure
   
 
     
@@ -2983,23 +3013,19 @@
 
 
 <h1 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">¶</a></h1>
-<p>EUDIPLO is designed to be robust and easy to test both in development and CI
-environments. This guide outlines how to run, write, and automate tests for the
-project.</p>
-<p>The current focus is on end-to-end (E2E) tests, which verify the overall
-functionality of the application.</p>
+<p>EUDIPLO uses Vitest for colocated unit tests and backend end-to-end (E2E)
+tests. Run focused unit tests while developing, then add the relevant E2E suite
+when a change affects module wiring, persistence, or a protocol flow.</p>
 <hr>
 <h2 id="oidf-conformance-tests">OIDF Conformance Tests<a class="headerlink" href="#oidf-conformance-tests" title="Permanent link">¶</a></h2>
 <p>EUDIPLO includes dedicated tests for validating compliance with the <a href="https://openid.net/certification/conformance/">OpenID Foundation (OIDF) conformance suite</a> for OID4VCI and OID4VP. These tests ensure that the implementation of OID4VCI (OpenID for Verifiable Credential Issuance) and OID4VP (OpenID for Verifiable Presentations) strictly follows the protocol specifications.</p>
 <p>The test are part of the E2E tests that run in the Github Action CI pipeline for a pull request and on the <code>main</code> branch.</p>
 <hr>
 <h2 id="e2e-tests">E2E Tests<a class="headerlink" href="#e2e-tests" title="Permanent link">¶</a></h2>
-<p>Right now EUDIPLO has only implemented end-to-end (E2E) tests that are stored in
-the <code>/test</code> folder. These tests are designed to verify the overall functionality
-of the application, including interactions with external services like the EUDI
-Wallet.</p>
+<p>Backend E2E tests are stored in <code>apps/backend/test/</code>. They verify the assembled
+application, including protocol flows and integrations with external services.</p>
 <p>The following command will run the E2E tests and also provide a coverage report:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pnpm<span class="w"> </span>run<span class="w"> </span>test:e2e
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@eudiplo/backend<span class="w"> </span>run<span class="w"> </span>test:e2e
 </code></pre></div>
 <p>It is also accessible via
 <a href="https://app.codecov.io/github/openwallet-foundation/eudiplo/tree/main">codecov</a>.</p>
@@ -3013,7 +3039,7 @@ Wallet.</p>
 </div>
 <p>During writing E2E tests, you can use it in watch mode to automatically re-run
 tests on file changes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pnpm<span class="w"> </span>run<span class="w"> </span>test:e2e:watch
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@eudiplo/backend<span class="w"> </span>run<span class="w"> </span>test:e2e:watch
 </code></pre></div>
 <hr>
 <h2 id="linting">Linting<a class="headerlink" href="#linting" title="Permanent link">¶</a></h2>
@@ -3027,11 +3053,12 @@ Actions.</p>
 <p>You can find the workflow config in <code>.github/workflows/ci-and-release.yml</code>.</p>
 <hr>
 <h2 id="running-tests-locally">Running Tests Locally<a class="headerlink" href="#running-tests-locally" title="Permanent link">¶</a></h2>
-<p>To run all unit and integration tests locally:</p>
+<p>To run all workspace unit tests locally:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pnpm<span class="w"> </span>run<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
-<p>Or with watch mode:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pnpm<span class="w"> </span>run<span class="w"> </span>test:watch
+<p>To target the backend or use watch mode:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@eudiplo/backend<span class="w"> </span>run<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@eudiplo/backend<span class="w"> </span>run<span class="w"> </span>test:watch
 </code></pre></div>
 <p>This uses <a href="https://vitest.dev">Vitest</a> under the hood, which is configured for
 NestJS.</p>
@@ -3042,17 +3069,14 @@ NestJS.</p>
 your browser to view it.</p>
 <hr>
 <h2 id="test-structure">Test Structure<a class="headerlink" href="#test-structure" title="Permanent link">¶</a></h2>
-<p>Tests are located next to their implementation files:</p>
+<p>Unit tests are located next to their implementation files:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>src/
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>service/
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>my.service.ts
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>my.service.spec.ts<span class="w">  </span>&lt;--<span class="w"> </span>Test<span class="w"> </span>file
 </code></pre></div>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>At this point EUDIPLO only has E2E tests. Unit and integration tests may be added
-in the future.</p>
-</div>
+<p>Architecture and dependency-boundary tests also use the <code>.spec.ts</code> suffix, so
+they run with the same backend unit-test command.</p>
 
 
 

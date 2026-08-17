@@ -122,7 +122,7 @@
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
     <span class="icon ion-ios-document" aria-hidden="true"></span>
-    <code>src/shared/trust/wallet-attestation.service.ts</code>
+    <code>src/trust/wallet-attestation.service.ts</code>
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -272,7 +272,7 @@ and status list verification for wallet providers.</p>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/shared/trust/wallet-attestation.service.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/trust/wallet-attestation.service.ts:35</a></div>
                             </td>
                         </tr>
 
@@ -398,7 +398,7 @@ and status list verification for wallet providers.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="52"
-                                    class="link-to-prism">src/shared/trust/wallet-attestation.service.ts:52</a></div>
+                                    class="link-to-prism">src/trust/wallet-attestation.service.ts:52</a></div>
                         </td>
                     </tr>
 
@@ -491,7 +491,7 @@ Used for wallet attestation verification.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="445"
-                                    class="link-to-prism">src/shared/trust/wallet-attestation.service.ts:445</a></div>
+                                    class="link-to-prism">src/trust/wallet-attestation.service.ts:445</a></div>
                         </td>
                     </tr>
 
@@ -563,7 +563,7 @@ Used for wallet attestation verification.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="235"
-                                    class="link-to-prism">src/shared/trust/wallet-attestation.service.ts:235</a></div>
+                                    class="link-to-prism">src/trust/wallet-attestation.service.ts:235</a></div>
                         </td>
                     </tr>
 
@@ -682,7 +682,7 @@ from the same trusted entity that issued the wallet attestation.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="136"
-                                    class="link-to-prism">src/shared/trust/wallet-attestation.service.ts:136</a></div>
+                                    class="link-to-prism">src/trust/wallet-attestation.service.ts:136</a></div>
                         </td>
                     </tr>
 
@@ -784,7 +784,7 @@ Returns the matched entity and trust store for use in status list verification.<
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="314"
-                                    class="link-to-prism">src/shared/trust/wallet-attestation.service.ts:314</a></div>
+                                    class="link-to-prism">src/trust/wallet-attestation.service.ts:314</a></div>
                         </td>
                     </tr>
 
@@ -902,7 +902,7 @@ from the matched trusted entity.</p>
                     <tr>
                         <td class="col-md-4">
                             <div class="io-line">Defined in <a href="" data-line="74"
-                                    class="link-to-prism">src/shared/trust/wallet-attestation.service.ts:74</a></div>
+                                    class="link-to-prism">src/trust/wallet-attestation.service.ts:74</a></div>
                         </td>
                     </tr>
 
@@ -1061,7 +1061,7 @@ against configured trust lists, and verifies the status list if present.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/shared/trust/wallet-attestation.service.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/trust/wallet-attestation.service.ts:35</a></div>
                         </td>
                     </tr>
 
@@ -1081,8 +1081,8 @@ import { Openid4vciIssuer } from &quot;@openid4vc/openid4vci&quot;;
 import * as x509 from &quot;@peculiar/x509&quot;;
 import { decodeProtectedHeader, JWK } from &quot;jose&quot;;
 import { Span } from &quot;nestjs-otel&quot;;
-import { CryptoService } from &quot;../../crypto/crypto.service&quot;;
-import { CryptoImplementationService } from &quot;../../crypto/key/crypto-implementation/crypto-implementation.service&quot;;
+import { CryptoService } from &quot;../crypto/crypto.service&quot;;
+import { CryptoImplementationService } from &quot;../crypto/key/crypto-implementation/crypto-implementation.service&quot;;
 import { StatusListVerifierService } from &quot;./status-list-verifier.service&quot;;
 import { BuiltTrustStore, TrustStoreService } from &quot;./trust-store.service&quot;;
 import {
@@ -1094,7 +1094,7 @@ import {
     MatchedTrustedEntity,
     X509ValidationService,
 } from &quot;./x509-validation.service&quot;;
-import { TrustListRef } from &quot;../../verifier/presentations/entities/presentation-config.entity&quot;;
+import { TrustListRef } from &quot;../verifier/presentations/entities/presentation-config.entity&quot;;
 
 export interface ClientAttestation {
     clientAttestationJwt: string;

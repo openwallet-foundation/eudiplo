@@ -870,14 +870,14 @@ import { base64url, JWK } from &quot;jose&quot;;
 import { Span } from &quot;nestjs-otel&quot;;
 import { PinoLogger } from &quot;nestjs-pino&quot;;
 import { CryptoImplementationService } from &quot;../../../../crypto/key/crypto-implementation/crypto-implementation.service&quot;;
-import { VerifierOptions } from &quot;../../../../shared/trust/types&quot;;
-import { MatchedTrustedEntity } from &quot;../../../../shared/trust/x509-validation.service&quot;;
+import { VerifierOptions } from &quot;../../../../trust/types&quot;;
+import { MatchedTrustedEntity } from &quot;../../../../trust/x509-validation.service&quot;;
 import { ResolverService } from &quot;../../../resolver/resolver.service&quot;;
 import { CredentialChainValidationService } from &quot;../credential-chain-validation.service&quot;;
 import {
     isStatusListUnavailableError,
     resolveRevocationPolicy,
-} from &quot;../../../../shared/trust/revocation-policy.util&quot;;
+} from &quot;../../../../trust/revocation-policy.util&quot;;
 
 @Injectable()
 export class SdjwtvcverifierService {

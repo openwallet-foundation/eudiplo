@@ -129,7 +129,7 @@
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
     <span class="icon ion-ios-document" aria-hidden="true"></span>
-    <code>src/shared/utils/webhook/webhook.service.ts</code>
+    <code>src/webhook/webhook.service.ts</code>
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -216,7 +216,7 @@ Can include claims data for immediate issuance or a deferred flag for deferred i
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:32</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/webhook/webhook.service.ts:29</a></div>
                             </td>
                         </tr>
                 <tr>
@@ -270,7 +270,7 @@ Allows dynamic keys for credential configuration IDs.</p>
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:27</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/webhook/webhook.service.ts:24</a></div>
                                 </td>
                             </tr>
 
@@ -321,7 +321,7 @@ The wallet will receive a transaction_id to poll later.</p>
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:32</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/webhook/webhook.service.ts:29</a></div>
                                 </td>
                             </tr>
 
@@ -372,7 +372,7 @@ Defaults to 5 seconds if not specified.</p>
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/shared/utils/webhook/webhook.service.ts:22</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/webhook/webhook.service.ts:19</a></div>
                                 </td>
                             </tr>
 
@@ -393,11 +393,8 @@ Defaults to 5 seconds if not specified.</p>
 import { Injectable } from &quot;@nestjs/common&quot;;
 import { PinoLogger } from &quot;nestjs-pino&quot;;
 import { firstValueFrom } from &quot;rxjs&quot;;
-import {
-    Notification,
-    Session,
-} from &quot;../../../session/entities/session.entity&quot;;
-import { SessionService } from &quot;../../../session/session.service&quot;;
+import { Notification, Session } from &quot;../session/entities/session.entity&quot;;
+import { SessionService } from &quot;../session/session.service&quot;;
 import { OutboundUrlPolicyService } from &quot;./outbound-url-policy.service&quot;;
 import { WebhookConfig } from &quot;./webhook.dto&quot;;
 import { extractRawTokenFromSubmission } from &quot;./webhook.utils&quot;;

@@ -161,7 +161,7 @@
                     <h4>Used by</h4>
                         <ul class="list-unstyled relationships-list">
                                 <li>
-                                            <code><a href="../modules/ConfigurationModule.html" target="_self" >ConfigurationModule</a></code>
+                                            <code><a href="../modules/AttributeProviderModule.html" target="_self" >AttributeProviderModule</a></code>
                                 </li>
                         </ul>
                 </div>
@@ -966,14 +966,14 @@ import {
     extractRequestMeta,
     getChangedFields,
     resolveAuditActor,
-} from &quot;../../../shared/utils/audit-log-context.util&quot;;
+} from &quot;../../../audit-log/audit-log-context.util&quot;;
 import { loadConfigDto } from &quot;../../../shared/utils/config-file-loader.util&quot;;
-import { ConfigImportService } from &quot;../../../shared/utils/config-import/config-import.service&quot;;
+import { ConfigImportService } from &quot;../../../platform/config-import/config-import.service&quot;;
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from &quot;../../../shared/utils/config-import/config-import-orchestrator.service&quot;;
-import { OutboundUrlPolicyService } from &quot;../../../shared/utils/webhook/outbound-url-policy.service&quot;;
+} from &quot;../../../platform/config-import/config-import-orchestrator.service&quot;;
+import { OutboundUrlPolicyService } from &quot;../../../webhook/outbound-url-policy.service&quot;;
 import { CreateAttributeProviderDto } from &quot;./dto/create-attribute-provider.dto&quot;;
 import { AttributeProviderEntity } from &quot;./entities/attribute-provider.entity&quot;;
 import type {

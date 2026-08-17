@@ -129,7 +129,7 @@
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
     <span class="icon ion-ios-document" aria-hidden="true"></span>
-    <code>src/shared/utils/logger/audit-log.service.ts</code>
+    <code>src/session/logging/session-audit.service.ts</code>
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -243,7 +243,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/shared/utils/logger/audit-log.service.ts:15</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/session/logging/session-audit.service.ts:15</a></div>
                                 </td>
                             </tr>
 
@@ -282,7 +282,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/shared/utils/logger/audit-log.service.ts:13</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/session/logging/session-audit.service.ts:13</a></div>
                                 </td>
                             </tr>
 
@@ -326,7 +326,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/shared/utils/logger/audit-log.service.ts:16</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/session/logging/session-audit.service.ts:16</a></div>
                                 </td>
                             </tr>
 
@@ -370,7 +370,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/shared/utils/logger/audit-log.service.ts:14</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/session/logging/session-audit.service.ts:14</a></div>
                                 </td>
                             </tr>
 
@@ -383,7 +383,7 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
-import { SessionLogLevel } from &quot;../../../session/entities/session-log-entry.entity&quot;;
+import { SessionLogLevel } from &quot;../entities/session-log-entry.entity&quot;;
 import {
     SessionLogStoreService,
     SessionStoreMode,
@@ -412,7 +412,7 @@ export interface AuditLogContext {
  * to Loki via the OpenTelemetry transport.
  */
 @Injectable()
-export class AuditLogService {
+export class SessionAuditService {
     private readonly isEnabled: boolean;
     private readonly verbose: boolean;
 

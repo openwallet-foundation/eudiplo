@@ -169,7 +169,7 @@ It provides methods to get, store, and delete issuance configurations.</p>
                     <h4>Used by</h4>
                         <ul class="list-unstyled relationships-list">
                                 <li>
-                                            <code><a href="../modules/ConfigurationModule.html" target="_self" >ConfigurationModule</a></code>
+                                            <code><a href="../modules/IssuanceConfigModule.html" target="_self" >IssuanceConfigModule</a></code>
                                 </li>
                         </ul>
                 </div>
@@ -1326,18 +1326,18 @@ import { Repository } from &quot;typeorm&quot;;
 import { AuditLogService } from &quot;../../../audit-log/audit-log.service&quot;;
 import { TokenPayload } from &quot;../../../auth/token.decorator&quot;;
 import { RegistrarService } from &quot;../../../registrar/registrar.service&quot;;
-import { normalizeTrustListRefs } from &quot;../../../shared/trust/types&quot;;
+import { normalizeTrustListRefs } from &quot;../../../trust/types&quot;;
 import {
     extractRequestMeta,
     getChangedFields,
     resolveAuditActor,
-} from &quot;../../../shared/utils/audit-log-context.util&quot;;
+} from &quot;../../../audit-log/audit-log-context.util&quot;;
 import { loadConfigDto } from &quot;../../../shared/utils/config-file-loader.util&quot;;
-import { ConfigImportService } from &quot;../../../shared/utils/config-import/config-import.service&quot;;
+import { ConfigImportService } from &quot;../../../platform/config-import/config-import.service&quot;;
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from &quot;../../../shared/utils/config-import/config-import-orchestrator.service&quot;;
+} from &quot;../../../platform/config-import/config-import-orchestrator.service&quot;;
 import { FilesService } from &quot;../../../storage/files.service&quot;;
 import { CredentialConfigService } from &quot;../credentials/credential-config/credential-config.service&quot;;
 import { IssuerProvidedAttestation } from &quot;./dto/issuer-registration-certificate.dto&quot;;

@@ -226,7 +226,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(presentationsService: <a href="../injectables/PresentationsService.html" target="_self">PresentationsService</a>, sessionService: <a href="../injectables/SessionService.html" target="_self">SessionService</a>, encryptionService: <a href="../injectables/EncryptionService.html" target="_self">EncryptionService</a>, mdocverifierService: <a href="../injectables/MdocverifierService.html" target="_self">MdocverifierService</a>, webhookService: <a href="../injectables/WebhookService.html" target="_self">WebhookService</a>, auditLogService: <a href="../injectables/AuditLogService.html" target="_self">AuditLogService</a>, configService: ConfigService, certService: <a href="../injectables/CertService.html" target="_self">CertService</a>, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>, webhookEndpointRepo: <a href="../entitys/WebhookEndpointEntity.html" target="_self">Repository&lt;WebhookEndpointEntity&gt;</a>, logger: PinoLogger)</code>
+<code>constructor(presentationsService: <a href="../injectables/PresentationsService.html" target="_self">PresentationsService</a>, sessionService: <a href="../injectables/SessionService.html" target="_self">SessionService</a>, encryptionService: <a href="../injectables/EncryptionService.html" target="_self">EncryptionService</a>, mdocverifierService: <a href="../injectables/MdocverifierService.html" target="_self">MdocverifierService</a>, webhookService: <a href="../injectables/WebhookService.html" target="_self">WebhookService</a>, auditLogService: <a href="../injectables/SessionAuditService.html" target="_self">SessionAuditService</a>, configService: ConfigService, certService: <a href="../injectables/CertService.html" target="_self">CertService</a>, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>, webhookEndpointRepo: <a href="../entitys/WebhookEndpointEntity.html" target="_self">Repository&lt;WebhookEndpointEntity&gt;</a>, logger: PinoLogger)</code>
                     </td>
                 </tr>
                         <tr>
@@ -312,7 +312,7 @@
                                                         <td>auditLogService</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../injectables/AuditLogService.html" target="_self" >AuditLogService</a></code>
+                                                                        <code><a href="../injectables/SessionAuditService.html" target="_self" >SessionAuditService</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -843,15 +843,15 @@ import { WebhookEndpointEntity } from &quot;../../issuer/configuration/webhook-e
 import { ServiceTypeIdentifier } from &quot;../../issuer/trust-list/trustlist.service&quot;;
 import { SessionStatus } from &quot;../../session/entities/session.entity&quot;;
 import { SessionService } from &quot;../../session/session.service&quot;;
-import { revocationModeToPolicy } from &quot;../../shared/trust/revocation-policy.util&quot;;
+import { revocationModeToPolicy } from &quot;../../trust/revocation-policy.util&quot;;
 import {
     DEFAULT_VERIFIER_SKEW_SECONDS,
     RevocationCheckMode,
     VerifierOptions,
-} from &quot;../../shared/trust/types&quot;;
-import { AuditLogService } from &quot;../../shared/utils/logger/audit-log.service&quot;;
-import { WebhookConfig } from &quot;../../shared/utils/webhook/webhook.dto&quot;;
-import { WebhookService } from &quot;../../shared/utils/webhook/webhook.service&quot;;
+} from &quot;../../trust/types&quot;;
+import { SessionAuditService } from &quot;../../session/logging/session-audit.service&quot;;
+import { WebhookConfig } from &quot;../../webhook/webhook.dto&quot;;
+import { WebhookService } from &quot;../../webhook/webhook.service&quot;;
 import { MdocverifierService } from &quot;../presentations/credential/mdocverifier/mdocverifier.service&quot;;
 import {
     TrustedAuthorityQueryEtsiTl,
@@ -887,7 +887,7 @@ export class Iso18013Service {
         private readonly encryptionService: EncryptionService,
         private readonly mdocverifierService: MdocverifierService,
         private readonly webhookService: WebhookService,
-        private readonly auditLogService: AuditLogService,
+        private readonly auditLogService: SessionAuditService,
         private readonly configService: ConfigService,
         private readonly certService: CertService,
         private readonly keyChainService: KeyChainService,

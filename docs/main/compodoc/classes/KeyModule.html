@@ -249,11 +249,11 @@
 import { DynamicModule, Global } from &quot;@nestjs/common&quot;;
 import { ConfigModule } from &quot;@nestjs/config&quot;;
 import { TypeOrmModule } from &quot;@nestjs/typeorm&quot;;
-import { TenantEntity } from &quot;../../auth/tenant/entitites/tenant.entity&quot;;
+import { TenantEntity } from &quot;../../auth/tenant/entities/tenant.entity&quot;;
 import { CertService } from &quot;./cert/cert.service&quot;;
 import { CertificateBuilderService } from &quot;./cert/certificate-builder.service&quot;;
 import { CrlValidationService } from &quot;./cert/crl-validation.service&quot;;
-import { CryptoImplementatationModule } from &quot;./crypto-implementation/crypto-implementation.module&quot;;
+import { CryptoImplementationModule } from &quot;./crypto-implementation/crypto-implementation.module&quot;;
 import { KeyChainEntity } from &quot;./entities/key-chain.entity&quot;;
 import { KeyChainController } from &quot;./key-chain.controller&quot;;
 import { KeyChainImportService } from &quot;./key-chain-import.service&quot;;
@@ -272,7 +272,7 @@ export class KeyModule {
             imports: [
                 HttpModule,
                 ConfigModule,
-                CryptoImplementatationModule,
+                CryptoImplementationModule,
                 TypeOrmModule.forFeature([KeyChainEntity, TenantEntity]),
             ],
             controllers: [KeyChainController],

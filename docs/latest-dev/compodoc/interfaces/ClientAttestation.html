@@ -129,7 +129,7 @@
 
 <div class="io-file io-file-path" data-compodoc="entity-file-path">
     <span class="icon ion-ios-document" aria-hidden="true"></span>
-    <code>src/shared/trust/wallet-attestation.service.ts</code>
+    <code>src/trust/wallet-attestation.service.ts</code>
 </div>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -225,7 +225,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/shared/trust/wallet-attestation.service.ts:24</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/trust/wallet-attestation.service.ts:24</a></div>
                                 </td>
                             </tr>
 
@@ -269,7 +269,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/shared/trust/wallet-attestation.service.ts:25</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/trust/wallet-attestation.service.ts:25</a></div>
                                 </td>
                             </tr>
 
@@ -287,8 +287,8 @@ import { Openid4vciIssuer } from &quot;@openid4vc/openid4vci&quot;;
 import * as x509 from &quot;@peculiar/x509&quot;;
 import { decodeProtectedHeader, JWK } from &quot;jose&quot;;
 import { Span } from &quot;nestjs-otel&quot;;
-import { CryptoService } from &quot;../../crypto/crypto.service&quot;;
-import { CryptoImplementationService } from &quot;../../crypto/key/crypto-implementation/crypto-implementation.service&quot;;
+import { CryptoService } from &quot;../crypto/crypto.service&quot;;
+import { CryptoImplementationService } from &quot;../crypto/key/crypto-implementation/crypto-implementation.service&quot;;
 import { StatusListVerifierService } from &quot;./status-list-verifier.service&quot;;
 import { BuiltTrustStore, TrustStoreService } from &quot;./trust-store.service&quot;;
 import {
@@ -300,7 +300,7 @@ import {
     MatchedTrustedEntity,
     X509ValidationService,
 } from &quot;./x509-validation.service&quot;;
-import { TrustListRef } from &quot;../../verifier/presentations/entities/presentation-config.entity&quot;;
+import { TrustListRef } from &quot;../verifier/presentations/entities/presentation-config.entity&quot;;
 
 export interface ClientAttestation {
     clientAttestationJwt: string;

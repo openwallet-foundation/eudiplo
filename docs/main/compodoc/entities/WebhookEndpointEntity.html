@@ -503,11 +503,11 @@ per-offer via <code>webhookEndpointId</code> on the offer request.</p>
     getSchemaPath,
 } from &quot;@nestjs/swagger&quot;;
 import { Column, Entity, ManyToOne, PrimaryColumn } from &quot;typeorm&quot;;
-import { TenantEntity } from &quot;../../../../auth/tenant/entitites/tenant.entity&quot;;
+import { TenantEntity } from &quot;../../../../auth/tenant/entities/tenant.entity&quot;;
 import {
     WebHookAuthConfigHeader,
     WebHookAuthConfigNone,
-} from &quot;../../../../shared/utils/webhook/webhook.dto&quot;;
+} from &quot;../../../../webhook/webhook.dto&quot;;
 
 /**
  * A Webhook Endpoint is a reusable notification target that receives
