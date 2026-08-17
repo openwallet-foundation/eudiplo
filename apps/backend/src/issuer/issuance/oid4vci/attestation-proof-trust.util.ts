@@ -1,11 +1,11 @@
 import { decodeProtectedHeader } from "jose";
-import { TrustStoreService } from "../../../shared/trust/trust-store.service";
+import { TrustStoreService } from "../../../trust/trust-store.service";
 import {
     normalizeTrustListRefs,
     ServiceTypeIdentifiers,
     TrustListSource,
-} from "../../../shared/trust/types";
-import { X509ValidationService } from "../../../shared/trust/x509-validation.service";
+} from "../../../trust/types";
+import { X509ValidationService } from "../../../trust/x509-validation.service";
 import { CredentialRequestException } from "./exceptions";
 import { TrustListRef } from "../../../verifier/presentations/entities/presentation-config.entity";
 

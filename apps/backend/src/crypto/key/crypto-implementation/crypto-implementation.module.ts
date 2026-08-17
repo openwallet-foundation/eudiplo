@@ -8,4 +8,4 @@ import { CryptoImplementationService } from "./crypto-implementation.service";
     providers: [CryptoImplementationService],
     exports: [CryptoImplementationService],
 })
-export class CryptoImplementatationModule {}
+export class CryptoImplementationModule {}

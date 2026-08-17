@@ -9,7 +9,7 @@ import { CryptoImplementationService } from "../../../../../crypto/key/crypto-im
 import { KeyUsageType } from "../../../../../crypto/key/types/key-usage-type";
 import { KeyChainService } from "../../../../../crypto/key/key-chain.service";
 import { Session } from "../../../../../session/entities/session.entity";
-import { StatusListService } from "../../../../lifecycle/status/status-list.service";
+import { StatusListService } from "../../../../status-list/status-list.service";
 import {
     CredentialConfig,
     SdJwtTrustFormat,

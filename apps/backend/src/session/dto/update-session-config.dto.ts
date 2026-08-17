@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
-import { SessionCleanupMode } from "../../auth/tenant/entitites/session-storage-config";
+import { SessionCleanupMode } from "../../auth/tenant/entities/session-storage-config";
 
 const UpdateSessionConfigSchema = z
     .object({

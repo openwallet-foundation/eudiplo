@@ -3,7 +3,7 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { CryptoModule } from "../../../../crypto/crypto.module";
 import { SessionModule } from "../../../../session/session.module";
-import { TrustModule } from "../../../../shared/trust/trust.module";
+import { TrustModule } from "../../../../trust/trust.module";
 import { Oid4vpModule } from "../../../../verifier/oid4vp/oid4vp.module";
 import { PresentationsModule } from "../../../../verifier/presentations/presentations.module";
 import { ConfigurationModule } from "../../../configuration/configuration.module";

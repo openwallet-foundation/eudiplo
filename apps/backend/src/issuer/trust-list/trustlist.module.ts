@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { TenantEntity } from "../../auth/tenant/entitites/tenant.entity";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
 import { TrustList } from "./entities/trust-list.entity";
 import { TrustListVersion } from "./entities/trust-list-version.entity";
 import { TrustListPublicController } from "./trust-list-public/trust-list-public.controller";

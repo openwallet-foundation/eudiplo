@@ -3,7 +3,7 @@ import { z } from "zod";
 import {
     WebhookConfig,
     WebhookConfigSchema,
-} from "../../../../shared/utils/webhook/webhook.dto";
+} from "../../../../webhook/webhook.dto";
 
 const AuthenticationUrlConfigSchema = z
     .object({

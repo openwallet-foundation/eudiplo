@@ -1,11 +1,8 @@
 # Testing
 
-EUDIPLO is designed to be robust and easy to test both in development and CI
-environments. This guide outlines how to run, write, and automate tests for the
-project.
-
-The current focus is on end-to-end (E2E) tests, which verify the overall
-functionality of the application.
+EUDIPLO uses Vitest for colocated unit tests and backend end-to-end (E2E)
+tests. Run focused unit tests while developing, then add the relevant E2E suite
+when a change affects module wiring, persistence, or a protocol flow.
 
 ---
 
@@ -19,15 +16,13 @@ The test are part of the E2E tests that run in the Github Action CI pipeline for
 
 ## E2E Tests
 
-Right now EUDIPLO has only implemented end-to-end (E2E) tests that are stored in
-the `/test` folder. These tests are designed to verify the overall functionality
-of the application, including interactions with external services like the EUDI
-Wallet.
+Backend E2E tests are stored in `apps/backend/test/`. They verify the assembled
+application, including protocol flows and integrations with external services.
 
 The following command will run the E2E tests and also provide a coverage report:
 
 ```bash
-pnpm run test:e2e
+pnpm --filter @eudiplo/backend run test:e2e
 ```
 
 It is also accessible via
@@ -48,7 +43,7 @@ During writing E2E tests, you can use it in watch mode to automatically re-run
 tests on file changes:
 
 ```bash
-pnpm run test:e2e:watch
+pnpm --filter @eudiplo/backend run test:e2e:watch
 ```
 
 ---
@@ -74,16 +69,17 @@ You can find the workflow config in `.github/workflows/ci-and-release.yml`.
 
 ## Running Tests Locally
 
-To run all unit and integration tests locally:
+To run all workspace unit tests locally:
 
 ```bash
 pnpm run test
 ```
 
-Or with watch mode:
+To target the backend or use watch mode:
 
 ```bash
-pnpm run test:watch
+pnpm --filter @eudiplo/backend run test
+pnpm --filter @eudiplo/backend run test:watch
 ```
 
 This uses [Vitest](https://vitest.dev) under the hood, which is configured for
@@ -102,7 +98,7 @@ your browser to view it.
 
 ## Test Structure
 
-Tests are located next to their implementation files:
+Unit tests are located next to their implementation files:
 
 ```bash
 src/
@@ -111,7 +107,5 @@ src/
     my.service.spec.ts  <-- Test file
 ```
 
-!!! Info
-
-    At this point EUDIPLO only has E2E tests. Unit and integration tests may be added
-    in the future.
+Architecture and dependency-boundary tests also use the `.spec.ts` suffix, so
+they run with the same backend unit-test command.

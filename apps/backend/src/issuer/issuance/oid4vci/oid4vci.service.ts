@@ -8,7 +8,6 @@ import {
     NotFoundException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Cron, CronExpression } from "@nestjs/schedule";
 import { InjectRepository } from "@nestjs/typeorm";
 import {
     AuthorizationServerMetadata,
@@ -36,7 +35,7 @@ import type { Request } from "express";
 import { decodeJwt } from "jose";
 import { Span, TraceService } from "nestjs-otel";
 import { firstValueFrom } from "rxjs";
-import { LessThan, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { v4 } from "uuid";
 import { TokenPayload } from "../../../auth/token.decorator";
 import { CryptoService } from "../../../crypto/crypto.service";
@@ -46,13 +45,13 @@ import {
     SessionStatus,
 } from "../../../session/entities/session.entity";
 import { SessionService } from "../../../session/session.service";
-import { FederationTrustService } from "../../../shared/trust/federation-trust.service";
-import { TrustStoreService } from "../../../shared/trust/trust-store.service";
-import { FederationTrustSource } from "../../../shared/trust/types";
-import { X509ValidationService } from "../../../shared/trust/x509-validation.service";
-import { AuditLogContext } from "../../../shared/utils/logger/audit-log.service";
-import { SessionLoggerService } from "../../../shared/utils/logger/session-logger.service";
-import { WebhookService } from "../../../shared/utils/webhook/webhook.service";
+import { FederationTrustService } from "../../../trust/federation-trust.service";
+import { TrustStoreService } from "../../../trust/trust-store.service";
+import { FederationTrustSource } from "../../../trust/types";
+import { X509ValidationService } from "../../../trust/x509-validation.service";
+import { AuditLogContext } from "../../../session/logging/session-audit.service";
+import { SessionLoggerService } from "../../../session/logging/session-logger.service";
+import { WebhookService } from "../../../webhook/webhook.service";
 import { CredentialsService } from "../../configuration/credentials/credentials.service";
 import { AuthorizationIdentity } from "../../configuration/credentials/dto/authorization-identity";
 import { ClaimsWebhookResult } from "../../configuration/credentials/dto/claims-webhook-result";
@@ -81,8 +80,8 @@ import {
     OfferResponse,
 } from "./dto/offer-request.dto";
 import { DeferredTransactionEntity } from "./entities/deferred-transaction.entity";
-import { NonceEntity } from "./entities/nonces.entity";
 import { CredentialRequestException } from "./exceptions";
+import { NonceService } from "./nonce.service";
 import { validateAttestationProofTrust } from "./attestation-proof-trust.util";
 import { getHeadersFromRequest } from "./util";
 
@@ -162,11 +161,10 @@ export class Oid4vciService {
         private readonly deferredCredentialService: DeferredCredentialService,
         private readonly registrarService: RegistrarService,
         private readonly traceService: TraceService,
-        @InjectRepository(NonceEntity)
-        private readonly nonceRepository: Repository<NonceEntity>,
         @InjectRepository(WebhookEndpointEntity)
         private readonly webhookEndpointRepo: Repository<WebhookEndpointEntity>,
         private readonly encryptionService: EncryptionService,
+        private readonly nonceService: NonceService,
     ) {}
 
     /**
@@ -1076,24 +1074,7 @@ export class Oid4vciService {
      * @returns
      */
     async nonceRequest(tenantId: string) {
-        const nonce = v4();
-        await this.nonceRepository.save({
-            nonce,
-            tenantId,
-            expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
-        });
-        return nonce;
-    }
-
-    /**
-     * Cleanup expired nonces from the database.
-     */
-    @Cron(CronExpression.EVERY_10_MINUTES)
-    nonceCleanup() {
-        const now = new Date();
-        this.nonceRepository.delete({
-            expiresAt: LessThan(now),
-        });
+        return this.nonceService.issue(tenantId);
     }
 
     /**
@@ -1325,64 +1306,7 @@ export class Oid4vciService {
      * Extract and validate nonces from JWT proofs.
      * Ensures all proofs contain valid, non-expired nonces and consumes them.
      */
-    private async validateAndConsumeNonces(
-        proofs: string[],
-        proofType: SupportedCredentialProofType,
-        tenantId: string,
-        logContext: AuditLogContext,
-        credentialConfigurationId: string,
-    ): Promise<void> {
-        // OID4VCI spec Section 8.3.1.2: When the Credential Issuer has a Nonce Endpoint,
-        // all key proofs MUST contain a c_nonce value.
-        const uniqueNonces = new Set<string>();
-        for (const proofValue of proofs) {
-            const payload = decodeJwt(proofValue);
-            if (!payload.nonce) {
-                throw new CredentialRequestException(
-                    "invalid_proof",
-                    `All ${proofType} key proofs must contain a nonce when the nonce endpoint is offered`,
-                );
-            }
-            uniqueNonces.add(payload.nonce as string);
-        }
-
-        // Validate and consume all unique nonces upfront
-        for (const nonce of uniqueNonces) {
-            const nonceEntity = await this.nonceRepository.findOne({
-                where: { nonce, tenantId },
-            });
-
-            if (!nonceEntity) {
-                const nonceError = new CredentialRequestException(
-                    "invalid_nonce",
-                    "The nonce in the key proof is invalid or has already been used",
-                );
-                this.auditLogger.logFlowError(logContext, nonceError, {
-                    credentialConfigurationId,
-                });
-                throw nonceError;
-            }
-
-            if (nonceEntity.expiresAt < new Date()) {
-                await this.nonceRepository.delete({ nonce, tenantId });
-                const nonceError = new CredentialRequestException(
-                    "invalid_nonce",
-                    "The nonce in the key proof has expired",
-                );
-                this.auditLogger.logFlowError(logContext, nonceError, {
-                    credentialConfigurationId,
-                });
-                throw nonceError;
-            }
-
-            // Consume the nonce (delete it so it can't be reused)
-            await this.nonceRepository.delete({ nonce, tenantId });
-        }
-    }
-
-    /**
-     * Verify proofs and issue credentials for each provided proof.
-     */
+    /** Verify proofs and issue credentials for each provided proof. */
     private async issueCredentialsForProofs(
         proofs: string[],
         proofType: SupportedCredentialProofType,
@@ -1862,7 +1786,7 @@ export class Oid4vciService {
             }
 
             // Validate and consume nonces
-            await this.validateAndConsumeNonces(
+            await this.nonceService.validateAndConsume(
                 parsedProofs.values,
                 parsedProofs.proofType,
                 tenantId,

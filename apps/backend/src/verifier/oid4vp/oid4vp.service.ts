@@ -18,10 +18,10 @@ import { OfferResponse } from "../../issuer/issuance/oid4vci/dto/offer-request.d
 import { RegistrarService } from "../../registrar/registrar.service";
 import { SessionStatus } from "../../session/entities/session.entity";
 import { SessionService } from "../../session/session.service";
-import { DEFAULT_VERIFIER_SKEW_SECONDS } from "../../shared/trust/types";
-import { AuditLogContext } from "../../shared/utils/logger/audit-log.service";
-import { SessionLoggerService } from "../../shared/utils/logger/session-logger.service";
-import { WebhookService } from "../../shared/utils/webhook/webhook.service";
+import { DEFAULT_VERIFIER_SKEW_SECONDS } from "../../trust/types";
+import { AuditLogContext } from "../../session/logging/session-audit.service";
+import { SessionLoggerService } from "../../session/logging/session-logger.service";
+import { WebhookService } from "../../webhook/webhook.service";
 import {
     AuthResponse,
     AuthResponseSchema,

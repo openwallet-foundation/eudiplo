@@ -1,6 +1,4 @@
 import { createHash, createVerify, X509Certificate } from "node:crypto";
-import { lookup } from "node:dns/promises";
-import { isIP } from "node:net";
 import {
     BadRequestException,
     ConflictException,
@@ -24,22 +22,22 @@ import {
 } from "../../issuer/trust-list/trustlist.service";
 import { RegistrarService } from "../../registrar/registrar.service";
 import { Session } from "../../session/entities/session.entity";
-import { revocationModeToPolicy } from "../../shared/trust/revocation-policy.util";
+import { revocationModeToPolicy } from "../../trust/revocation-policy.util";
 import {
     DEFAULT_VERIFIER_SKEW_SECONDS,
     VerifierOptions,
-} from "../../shared/trust/types";
+} from "../../trust/types";
 import {
     extractRequestMeta,
     getChangedFields,
     resolveAuditActor,
-} from "../../shared/utils/audit-log-context.util";
+} from "../../audit-log/audit-log-context.util";
 import { loadJsonFile } from "../../shared/utils/config-file-loader.util";
-import { ConfigImportService } from "../../shared/utils/config-import/config-import.service";
+import { ConfigImportService } from "../../platform/config-import/config-import.service";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../../shared/utils/config-import/config-import-orchestrator.service";
+} from "../../platform/config-import/config-import-orchestrator.service";
 import {
     MdocSessionDataDcApi,
     MdocSessionDataOid4vp,
@@ -60,6 +58,7 @@ import {
     TrustListRef,
 } from "./entities/presentation-config.entity";
 import { IncompletePresentationException } from "./exceptions/incomplete-presentation.exception";
+import { MetadataFetchService } from "./metadata-fetch.service";
 
 type CredentialType = "dc+sd-jwt" | "mso_mdoc";
 
@@ -177,10 +176,6 @@ type SchemaMetaSdkCompat = {
  */
 @Injectable()
 export class PresentationsService {
-    private readonly METADATA_FETCH_TIMEOUT_MS = 5000;
-
-    private readonly METADATA_FETCH_MAX_REDIRECTS = 3;
-
     /**
      * Constructor for the PresentationsService.
      * @param httpService - Instance of HttpService for making HTTP requests.
@@ -200,6 +195,7 @@ export class PresentationsService {
         private readonly tenantActionLogService: AuditLogService,
         private readonly logger: PinoLogger,
         private readonly traceService: TraceService,
+        private readonly metadataFetchService: MetadataFetchService,
     ) {
         this.logger.setContext(PresentationsService.name);
         // Register presentation config import in REFERENCES phase
@@ -899,8 +895,11 @@ export class PresentationsService {
      * This is used by the web client to avoid browser CORS restrictions.
      */
     async resolveCredentialIssuerMetadata(issuerUrl: string) {
-        const metadataUrl = this.buildCredentialIssuerMetadataUrl(issuerUrl);
-        const metadata = await this.fetchCredentialIssuerMetadata(metadataUrl);
+        const metadataUrl =
+            this.metadataFetchService.buildCredentialIssuerMetadataUrl(
+                issuerUrl,
+            );
+        const metadata = await this.metadataFetchService.fetch(metadataUrl);
 
         if (!metadata || typeof metadata !== "object") {
             throw new BadRequestException(
@@ -1005,7 +1004,7 @@ export class PresentationsService {
         schema: ResolvedSchemaMetadataPayload;
     }> {
         const response =
-            await this.fetchCredentialIssuerMetadata(schemaMetadataUrl);
+            await this.metadataFetchService.fetch(schemaMetadataUrl);
 
         if (!response || typeof response !== "object") {
             throw new BadRequestException(
@@ -1049,8 +1048,7 @@ export class PresentationsService {
                       verifier,
                       selectedFormats: allFormats as AttestationFormat[],
                       resolve: async (uri: string) => ({
-                          content:
-                              await this.fetchCredentialIssuerMetadata(uri),
+                          content: await this.metadataFetchService.fetch(uri),
                       }),
                       includeTrustedAuthorities: true,
                   })
@@ -1079,7 +1077,7 @@ export class PresentationsService {
                                   allFormats as AttestationFormat[],
                               resolve: async (uri: string) => ({
                                   content:
-                                      await this.fetchCredentialIssuerMetadata(
+                                      await this.metadataFetchService.fetch(
                                           uri,
                                       ),
                               }),
@@ -1198,8 +1196,7 @@ export class PresentationsService {
                       verifier,
                       selectedFormats: allFormats as AttestationFormat[],
                       resolve: async (uri: string) => ({
-                          content:
-                              await this.fetchCredentialIssuerMetadata(uri),
+                          content: await this.metadataFetchService.fetch(uri),
                       }),
                       includeTrustedAuthorities: true,
                   })
@@ -1228,7 +1225,7 @@ export class PresentationsService {
                                   allFormats as AttestationFormat[],
                               resolve: async (uri: string) => ({
                                   content:
-                                      await this.fetchCredentialIssuerMetadata(
+                                      await this.metadataFetchService.fetch(
                                           uri,
                                       ),
                               }),
@@ -1300,205 +1297,6 @@ export class PresentationsService {
                 dcqlQuery: resolved.dcql,
             },
         };
-    }
-
-    private async fetchCredentialIssuerMetadata(metadataUrl: string) {
-        let currentUrl = metadataUrl;
-
-        for (
-            let redirectCount = 0;
-            redirectCount <= this.METADATA_FETCH_MAX_REDIRECTS;
-            redirectCount++
-        ) {
-            await this.assertSafeMetadataUrl(currentUrl);
-
-            const response = await fetch(currentUrl, {
-                method: "GET",
-                headers: {
-                    accept: "application/json",
-                },
-                redirect: "manual",
-                signal: AbortSignal.timeout(this.METADATA_FETCH_TIMEOUT_MS),
-            }).catch((error) => {
-                throw new BadRequestException(
-                    `Failed to fetch issuer metadata from ${currentUrl}: ${error instanceof Error ? error.message : "unknown error"}`,
-                );
-            });
-
-            if (response.status >= 300 && response.status < 400) {
-                const location = response.headers.get("location");
-                if (!location) {
-                    throw new BadRequestException(
-                        `Issuer metadata response from ${currentUrl} returned a redirect without a location header`,
-                    );
-                }
-
-                currentUrl = new URL(location, currentUrl).toString();
-                continue;
-            }
-
-            if (!response.ok) {
-                throw new BadRequestException(
-                    `Failed to fetch issuer metadata from ${currentUrl}: HTTP ${response.status}`,
-                );
-            }
-
-            // Try to parse as JSON; if it fails, check if it's a raw JWT string
-            const text = await response.text();
-            try {
-                return JSON.parse(text);
-            } catch {
-                // If JSON parsing fails, check if the response is a raw JWT string
-                // (format: base64url.base64url.base64url)
-                if (
-                    /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(
-                        text,
-                    )
-                ) {
-                    // Return as { signedJwt: string } to normalize for resolveSchemaMetadata
-                    return { signedJwt: text };
-                }
-                throw new BadRequestException(
-                    `Issuer metadata response from ${currentUrl} is not valid JSON or JWT`,
-                );
-            }
-        }
-
-        throw new BadRequestException(
-            `Issuer metadata fetch exceeded ${this.METADATA_FETCH_MAX_REDIRECTS} redirects`,
-        );
-    }
-
-    private async assertSafeMetadataUrl(inputUrl: string): Promise<void> {
-        const parsedUrl = new URL(inputUrl);
-
-        if (parsedUrl.username || parsedUrl.password) {
-            throw new BadRequestException(
-                "issuerUrl must not include userinfo credentials",
-            );
-        }
-
-        // In non-production environments, allow local/private hosts for testing
-        const isProduction =
-            this.configService.get<string>("NODE_ENV") === "production";
-        if (!isProduction) {
-            return;
-        }
-
-        const hostname = parsedUrl.hostname.toLowerCase();
-        if (
-            hostname === "localhost" ||
-            hostname.endsWith(".localhost") ||
-            hostname.endsWith(".local")
-        ) {
-            throw new BadRequestException(
-                "issuerUrl must resolve to a public host",
-            );
-        }
-
-        const resolvedAddresses = isIP(hostname)
-            ? [hostname]
-            : (
-                  await lookup(hostname, { all: true, verbatim: true }).catch(
-                      () => {
-                          throw new BadRequestException(
-                              "issuerUrl host could not be resolved",
-                          );
-                      },
-                  )
-              ).map((entry) => entry.address);
-
-        if (resolvedAddresses.length === 0) {
-            throw new BadRequestException(
-                "issuerUrl host could not be resolved",
-            );
-        }
-
-        if (
-            resolvedAddresses.some((address) =>
-                this.isPrivateIpAddress(address),
-            )
-        ) {
-            throw new BadRequestException(
-                "issuerUrl must resolve to a public host",
-            );
-        }
-    }
-
-    private isPrivateIpAddress(address: string): boolean {
-        const normalizedAddress =
-            address.startsWith("::ffff:") && isIP(address.slice(7)) === 4
-                ? address.slice(7)
-                : address;
-
-        const family = isIP(normalizedAddress);
-        if (family === 4) {
-            const octets = normalizedAddress.split(".").map(Number);
-            const [first, second] = octets;
-
-            return (
-                first === 0 ||
-                first === 10 ||
-                first === 127 ||
-                (first === 100 && second >= 64 && second <= 127) ||
-                (first === 169 && second === 254) ||
-                (first === 172 && second >= 16 && second <= 31) ||
-                (first === 192 && second === 168) ||
-                (first === 198 && (second === 18 || second === 19))
-            );
-        }
-
-        if (family === 6) {
-            const normalized = normalizedAddress.toLowerCase();
-            return (
-                normalized === "::" ||
-                normalized === "::1" ||
-                normalized.startsWith("fc") ||
-                normalized.startsWith("fd") ||
-                normalized.startsWith("fe8") ||
-                normalized.startsWith("fe9") ||
-                normalized.startsWith("fea") ||
-                normalized.startsWith("feb")
-            );
-        }
-
-        return true;
-    }
-
-    /**
-     * Build OID4VCI metadata endpoint URL.
-     * Accepts an issuer base URL and canonicalizes it to the exact
-     * OID4VCI credential issuer metadata endpoint.
-     */
-    private buildCredentialIssuerMetadataUrl(inputUrl: string): string {
-        const trimmed = inputUrl.trim();
-        let parsedUrl: URL;
-
-        try {
-            parsedUrl = new URL(trimmed);
-        } catch {
-            throw new BadRequestException("issuerUrl must be a valid URL");
-        }
-
-        if (parsedUrl.protocol !== "https:" && parsedUrl.protocol !== "http:") {
-            throw new BadRequestException(
-                "issuerUrl must use http or https protocol",
-            );
-        }
-
-        if (parsedUrl.search || parsedUrl.hash) {
-            throw new BadRequestException(
-                "issuerUrl must not include query parameters or fragments",
-            );
-        }
-
-        const wellKnownPrefix = "/.well-known/openid-credential-issuer";
-        const normalizedPath = parsedUrl.pathname.replace(/\/$/, "");
-        const issuerPath = normalizedPath.startsWith(wellKnownPrefix)
-            ? normalizedPath.slice(wellKnownPrefix.length) || ""
-            : normalizedPath;
-
-        return `${parsedUrl.origin}${wellKnownPrefix}${issuerPath}`;
     }
 
     /**

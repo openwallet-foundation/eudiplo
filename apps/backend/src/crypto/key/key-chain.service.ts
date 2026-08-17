@@ -6,7 +6,7 @@ import type { Signer } from "@sd-jwt/core";
 import type { JWK, JWSHeaderParameters, JWTPayload } from "jose";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
-import { TenantEntity } from "../../auth/tenant/entitites/tenant.entity";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
 import { CertificateBuilderService } from "./cert/certificate-builder.service";
 import { KeyChainCreateDto, KeyChainType } from "./dto/key-chain-create.dto";
 import { KeyChainExportDto } from "./dto/key-chain-export.dto";

@@ -24,8 +24,8 @@ import {
     test,
 } from "vitest";
 import { IssuanceDto } from "../../src/issuer/configuration/issuance/dto/issuance.dto";
-import { StatusListVerifierService } from "../../src/shared/trust/status-list-verifier.service";
-import { TrustStoreService } from "../../src/shared/trust/trust-store.service";
+import { StatusListVerifierService } from "../../src/trust/status-list-verifier.service";
+import { TrustStoreService } from "../../src/trust/trust-store.service";
 import {
     callbacks,
     getSignJwtCallback,

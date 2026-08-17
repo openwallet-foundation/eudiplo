@@ -12,11 +12,11 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { TenantEntity } from "../../auth/tenant/entitites/tenant.entity";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
 import { AuthorizeQueries } from "../../issuer/issuance/oid4vci/authorization/authorize/dto/authorize-request.dto";
 import { OfferRequestDto } from "../../issuer/issuance/oid4vci/dto/offer-request.dto";
-import { EncryptedJsonTransformer } from "../../shared/utils/encryption";
-import { WebhookConfig } from "../../shared/utils/webhook/webhook.dto";
+import { EncryptedJsonTransformer } from "../../platform/data-encryption";
+import { WebhookConfig } from "../../webhook/webhook.dto";
 import { TransactionData } from "../../verifier/presentations/entities/presentation-config.entity";
 import { JWK } from "jose";
 

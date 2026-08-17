@@ -4,9 +4,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { CryptoModule } from "../../crypto/crypto.module";
 import { RegistrarModule } from "../../registrar/registrar.module";
 import { SessionModule } from "../../session/session.module";
-import { OutboundUrlPolicyService } from "../../shared/utils/webhook/outbound-url-policy.service";
-import { TrustModule } from "../../shared/trust/trust.module";
-import { WebhookService } from "../../shared/utils/webhook/webhook.service";
+import { TrustModule } from "../../trust/trust.module";
+import { WebhookModule } from "../../webhook/webhook.module";
 import { Oid4vpModule } from "../../verifier/oid4vp/oid4vp.module";
 import { PresentationsModule } from "../../verifier/presentations/presentations.module";
 import { ConfigurationModule } from "../configuration/configuration.module";
@@ -20,6 +19,7 @@ import { NonceEntity } from "./oid4vci/entities/nonces.entity";
 import { Oid4vciMetadataController } from "./oid4vci/metadata/oid4vci-metadata.controller";
 import { Oid4vciController } from "./oid4vci/oid4vci.controller";
 import { Oid4vciService } from "./oid4vci/oid4vci.service";
+import { NonceService } from "./oid4vci/nonce.service";
 import { WellKnownController } from "./oid4vci/well-known/well-known.controller";
 import { WellKnownService } from "./oid4vci/well-known/well-known.service";
 
@@ -41,6 +41,7 @@ import { WellKnownService } from "./oid4vci/well-known/well-known.service";
         SessionModule,
         HttpModule,
         TrustModule,
+        WebhookModule,
         AuthorizationModule,
         RegistrarModule,
         TypeOrmModule.forFeature([
@@ -58,10 +59,9 @@ import { WellKnownService } from "./oid4vci/well-known/well-known.service";
     ],
     providers: [
         DeferredCredentialService,
+        NonceService,
         Oid4vciService,
         WellKnownService,
-        WebhookService,
-        OutboundUrlPolicyService,
     ],
     exports: [AuthorizationModule, Oid4vciService],
 })

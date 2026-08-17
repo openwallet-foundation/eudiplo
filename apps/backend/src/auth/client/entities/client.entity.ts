@@ -5,7 +5,7 @@ import {
 } from "@nestjs/swagger";
 import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { Role } from "../../roles/role.enum";
-import { TenantEntity } from "../../tenant/entitites/tenant.entity";
+import { TenantEntity } from "../../tenant/entities/tenant.entity";
 
 /**
  * Represents a client in the system that belongs to a tenant.

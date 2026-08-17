@@ -4,7 +4,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { z } from "zod";
-import { editorSchemaBundles } from "../apps/backend/src/shared/common/zod/editor-schema.registry";
+import { editorSchemaBundles } from "../apps/backend/src/platform/editor-schema.registry";
 
 type SchemaEntry = {
     uri: string;

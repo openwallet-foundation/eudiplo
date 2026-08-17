@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional, OmitType } from "@nestjs/swagger";
 import { ClientEntity } from "../../client/entities/client.entity";
-import { TenantEntity } from "../entitites/tenant.entity";
+import { TenantEntity } from "../entities/tenant.entity";
 
 export class TenantClientCredentialsDto {
     @ApiProperty({ description: "Generated client identifier" })

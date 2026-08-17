@@ -1,13 +1,11 @@
-import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { CryptoModule } from "../../crypto/crypto.module";
 import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { SessionModule } from "../../session/session.module";
-import { AuditLogModule } from "../../shared/utils/logger/audit-log.module";
-import { OutboundUrlPolicyService } from "../../shared/utils/webhook/outbound-url-policy.service";
-import { WebhookService } from "../../shared/utils/webhook/webhook.service";
+import { SessionLoggingModule } from "../../session/logging/session-logging.module";
+import { WebhookModule } from "../../webhook/webhook.module";
 import { PresentationsModule } from "../presentations/presentations.module";
 import { Iso18013Controller } from "./iso18013.controller";
 import { Iso18013Service } from "./iso18013.service";
@@ -17,13 +15,13 @@ import { Iso18013Service } from "./iso18013.service";
         ConfigModule,
         CryptoModule,
         SessionModule,
-        HttpModule,
+        WebhookModule,
         TypeOrmModule.forFeature([WebhookEndpointEntity]),
         PresentationsModule,
-        AuditLogModule,
+        SessionLoggingModule,
     ],
     controllers: [Iso18013Controller],
-    providers: [Iso18013Service, WebhookService, OutboundUrlPolicyService],
+    providers: [Iso18013Service],
     exports: [Iso18013Service],
 })
 export class Iso18013Module {}

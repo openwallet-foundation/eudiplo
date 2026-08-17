@@ -46,7 +46,7 @@ import { KeyChainImportDto } from "../src/crypto/key/dto/key-chain-import.dto";
 import { KeyChainService } from "../src/crypto/key/key-chain.service";
 import { CredentialConfigCreate } from "../src/issuer/configuration/credentials/dto/credential-config-create.dto";
 import { IssuanceDto } from "../src/issuer/configuration/issuance/dto/issuance.dto";
-import { StatusListService } from "../src/issuer/lifecycle/status/status-list.service";
+import { StatusListService } from "../src/issuer/status-list/status-list.service";
 import { TrustListCreateDto } from "../src/issuer/trust-list/dto/trust-list-create.dto";
 import { PresentationRequest } from "../src/verifier/oid4vp/dto/presentation-request.dto";
 import { PresentationConfigCreateDto } from "../src/verifier/presentations/dto/presentation-config-create.dto";

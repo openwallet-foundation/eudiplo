@@ -6,7 +6,7 @@ import {
     getSchemaPath,
 } from "@nestjs/swagger";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { TenantEntity } from "../../../../auth/tenant/entitites/tenant.entity";
+import { TenantEntity } from "../../../../auth/tenant/entities/tenant.entity";
 import { KeyChainEntity } from "../../../../crypto/key/entities/key-chain.entity";
 import { VCT } from "../../../issuance/oid4vci/metadata/dto/vct.dto";
 import { AttributeProviderEntity } from "../../attribute-provider/entities/attribute-provider.entity";

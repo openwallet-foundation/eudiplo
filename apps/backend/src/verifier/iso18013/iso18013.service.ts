@@ -26,15 +26,15 @@ import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoi
 import { ServiceTypeIdentifier } from "../../issuer/trust-list/trustlist.service";
 import { SessionStatus } from "../../session/entities/session.entity";
 import { SessionService } from "../../session/session.service";
-import { revocationModeToPolicy } from "../../shared/trust/revocation-policy.util";
+import { revocationModeToPolicy } from "../../trust/revocation-policy.util";
 import {
     DEFAULT_VERIFIER_SKEW_SECONDS,
     RevocationCheckMode,
     VerifierOptions,
-} from "../../shared/trust/types";
-import { AuditLogService } from "../../shared/utils/logger/audit-log.service";
-import { WebhookConfig } from "../../shared/utils/webhook/webhook.dto";
-import { WebhookService } from "../../shared/utils/webhook/webhook.service";
+} from "../../trust/types";
+import { SessionAuditService } from "../../session/logging/session-audit.service";
+import { WebhookConfig } from "../../webhook/webhook.dto";
+import { WebhookService } from "../../webhook/webhook.service";
 import { MdocverifierService } from "../presentations/credential/mdocverifier/mdocverifier.service";
 import {
     TrustedAuthorityQueryEtsiTl,
@@ -70,7 +70,7 @@ export class Iso18013Service {
         private readonly encryptionService: EncryptionService,
         private readonly mdocverifierService: MdocverifierService,
         private readonly webhookService: WebhookService,
-        private readonly auditLogService: AuditLogService,
+        private readonly auditLogService: SessionAuditService,
         private readonly configService: ConfigService,
         private readonly certService: CertService,
         private readonly keyChainService: KeyChainService,

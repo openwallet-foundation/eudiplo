@@ -4,11 +4,11 @@ import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { TenantEntity } from "../auth/tenant/entitites/tenant.entity";
+import { TenantEntity } from "../auth/tenant/entities/tenant.entity";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../shared/utils/config-import/config-import-orchestrator.service";
+} from "../platform/config-import/config-import-orchestrator.service";
 import { loadConfigDto } from "../shared/utils/config-file-loader.util";
 import { CreateRegistrarConfigDto } from "./dto/create-registrar-config.dto";
 import { RegistrarConfigEntity } from "./entities/registrar-config.entity";

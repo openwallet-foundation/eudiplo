@@ -6,7 +6,7 @@ import {
     ManyToOne,
     UpdateDateColumn,
 } from "typeorm";
-import { TenantEntity } from "../../../auth/tenant/entitites/tenant.entity";
+import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity";
 import { KeyChainEntity } from "../../../crypto/key/entities/key-chain.entity";
 import type { TrustListEntity } from "../dto/trust-list-create.dto";
 

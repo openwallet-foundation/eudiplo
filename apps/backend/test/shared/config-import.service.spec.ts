@@ -12,7 +12,7 @@ import { Logger } from "@nestjs/common";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CreateClientDto } from "../../src/auth/client/dto/create-client.dto";
 import { CreateClientSchema } from "../../src/auth/client/schemas/client.schema";
-import { ConfigImportService } from "../../src/shared/utils/config-import/config-import.service";
+import { ConfigImportService } from "../../src/platform/config-import/config-import.service";
 
 function createConfigServiceStub(configFolder: string) {
     return {

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { TenantEntity } from "../auth/tenant/entitites/tenant.entity";
+import { TenantEntity } from "../auth/tenant/entities/tenant.entity";
 import { AccessCertificateService } from "./access-certificate.service";
 import { RegistrarConfigEntity } from "./entities/registrar-config.entity";
 import { type RegistrationCertificateCreation } from "./generated";

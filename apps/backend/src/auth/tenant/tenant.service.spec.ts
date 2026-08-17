@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { TenantEntity } from "./entitites/tenant.entity";
+import { TenantEntity } from "./entities/tenant.entity";
 import { TenantService } from "./tenant.service";
 
 describe("TenantService updates", () => {

@@ -10,13 +10,13 @@ import {
     extractRequestMeta,
     getChangedFields,
     resolveAuditActor,
-} from "../../../../shared/utils/audit-log-context.util";
+} from "../../../../audit-log/audit-log-context.util";
 import { loadConfigDto } from "../../../../shared/utils/config-file-loader.util";
-import { ConfigImportService } from "../../../../shared/utils/config-import/config-import.service";
+import { ConfigImportService } from "../../../../platform/config-import/config-import.service";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../../../../shared/utils/config-import/config-import-orchestrator.service";
+} from "../../../../platform/config-import/config-import-orchestrator.service";
 import { FilesService } from "../../../../storage/files.service";
 import { PresentationsService } from "../../../../verifier/presentations/presentations.service";
 import { CredentialConfigCreate } from "../dto/credential-config-create.dto";

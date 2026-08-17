@@ -11,7 +11,7 @@ import {
 } from "@owf/eudi-lote";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
-import { TenantEntity } from "../../auth/tenant/entitites/tenant.entity";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
 import {
     CertificateInfo,
     CertService,
@@ -19,11 +19,11 @@ import {
 import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
 import { KeyChainService } from "../../crypto/key/key-chain.service";
 import { loadConfigDto } from "../../shared/utils/config-file-loader.util";
-import { ConfigImportService } from "../../shared/utils/config-import/config-import.service";
+import { ConfigImportService } from "../../platform/config-import/config-import.service";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../../shared/utils/config-import/config-import-orchestrator.service";
+} from "../../platform/config-import/config-import-orchestrator.service";
 import {
     TrustListCreateDto,
     TrustListEntityInfo,

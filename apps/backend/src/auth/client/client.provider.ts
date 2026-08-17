@@ -1,7 +1,7 @@
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../../shared/utils/config-import/config-import-orchestrator.service";
+} from "../../platform/config-import/config-import-orchestrator.service";
 import { ClientEntity } from "./entities/client.entity";
 import type { CreateClient, UpdateClient } from "./schemas/client.schema";
 

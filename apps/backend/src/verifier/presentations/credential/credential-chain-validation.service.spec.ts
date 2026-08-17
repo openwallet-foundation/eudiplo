@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { TrustListSource } from "../../../shared/trust/types";
+import type { TrustListSource } from "../../../trust/types";
 import { CredentialChainValidationService } from "./credential-chain-validation.service";
 
 /**

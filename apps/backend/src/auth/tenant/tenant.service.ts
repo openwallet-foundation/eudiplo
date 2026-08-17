@@ -18,13 +18,13 @@ import {
     extractRequestMeta,
     getChangedFieldsForKeys,
     resolveAuditActor,
-} from "../../shared/utils/audit-log-context.util";
-import { ConfigImportOrchestratorService } from "../../shared/utils/config-import/config-import-orchestrator.service";
+} from "../../audit-log/audit-log-context.util";
+import { ConfigImportOrchestratorService } from "../../platform/config-import/config-import-orchestrator.service";
 import { FilesService } from "../../storage/files.service";
 import { CLIENTS_PROVIDER, ClientsProvider } from "../client/client.provider";
 import { Role } from "../roles/role.enum";
 import { TokenPayload } from "../token.decorator";
-import { TenantEntity } from "./entitites/tenant.entity";
+import { TenantEntity } from "./entities/tenant.entity";
 import { ImportTenantSchema } from "./schemas/create-tenant.schema";
 import type {
     CreateTenant,

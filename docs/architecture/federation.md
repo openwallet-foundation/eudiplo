@@ -158,7 +158,7 @@ POST /api/verifier/config
 
 ### Federation Trust Service (`FederationTrustService`)
 
-**Location**: `apps/backend/src/shared/trust/federation-trust.service.ts`
+**Location**: `apps/backend/src/trust/federation-trust.service.ts`
 
 **Core Methods**:
 

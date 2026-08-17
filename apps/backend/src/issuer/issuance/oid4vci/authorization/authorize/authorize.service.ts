@@ -20,9 +20,9 @@ import { v4 } from "uuid";
 import { CryptoService } from "../../../../../crypto/crypto.service";
 import { KeyChainService } from "../../../../../crypto/key/key-chain.service";
 import { SessionService } from "../../../../../session/session.service";
-import { WalletAttestationService } from "../../../../../shared/trust/wallet-attestation.service";
+import { WalletAttestationService } from "../../../../../trust/wallet-attestation.service";
 import { IssuanceService } from "../../../../configuration/issuance/issuance.service";
-import { StatusListConfigService } from "../../../../lifecycle/status/status-list-config.service";
+import { StatusListConfigService } from "../../../../status-list/status-list-config.service";
 import {
     buildAuthorizationServerMetadata,
     buildWalletAttestationMetadata,

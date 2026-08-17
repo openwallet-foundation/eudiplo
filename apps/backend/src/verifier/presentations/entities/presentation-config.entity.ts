@@ -14,9 +14,9 @@ import {
     ManyToOne,
     UpdateDateColumn,
 } from "typeorm";
-import { TenantEntity } from "../../../auth/tenant/entitites/tenant.entity";
+import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity";
 import { WebhookEndpointEntity } from "../../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
-import { RevocationCheckMode } from "../../../shared/trust/types";
+import { RevocationCheckMode } from "../../../trust/types";
 import { RegistrationCertificateRequest } from "../dto/vp-request.dto";
 
 export enum TrustedAuthorityType {

@@ -5,8 +5,8 @@ import { Repository } from "typeorm";
 import {
     SessionCleanupMode,
     SessionStorageConfig,
-} from "../auth/tenant/entitites/session-storage-config";
-import { TenantEntity } from "../auth/tenant/entitites/tenant.entity";
+} from "../auth/tenant/entities/session-storage-config";
+import { TenantEntity } from "../auth/tenant/entities/tenant.entity";
 import { UpdateSessionConfigDto } from "./dto/update-session-config.dto";
 
 /**

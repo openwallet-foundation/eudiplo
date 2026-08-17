@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
-import { TenantEntity } from "../../../../auth/tenant/entitites/tenant.entity";
+import { TenantEntity } from "../../../../auth/tenant/entities/tenant.entity";
 
 @Entity()
 export class NonceEntity {

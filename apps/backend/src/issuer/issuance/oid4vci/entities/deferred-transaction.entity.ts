@@ -6,7 +6,7 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { TenantEntity } from "../../../../auth/tenant/entitites/tenant.entity";
+import { TenantEntity } from "../../../../auth/tenant/entities/tenant.entity";
 
 /**
  * Status of a deferred credential transaction.

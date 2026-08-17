@@ -13,10 +13,10 @@ import { DatabaseModule } from "./database/database.module";
 import { IssuerModule } from "./issuer/issuer.module";
 import { RegistrarModule } from "./registrar/registrar.module";
 import { SessionModule } from "./session/session.module";
-import { ConfigImportModule } from "./shared/utils/config-import/config-import.module";
-import { VALIDATION_SCHEMA } from "./shared/utils/config-printer/combined.schema";
-import { EncryptionModule } from "./shared/utils/encryption/encryption.module";
-import { createLoggerOptions } from "./shared/utils/logger/logger.factory";
+import { ConfigImportModule } from "./platform/config-import/config-import.module";
+import { VALIDATION_SCHEMA } from "./platform/config/combined.schema";
+import { DataEncryptionModule } from "./platform/data-encryption/data-encryption.module";
+import { createLoggerOptions } from "./platform/observability/logger.factory";
 import { StorageModule } from "./storage/storage.module";
 import { VerifierModule } from "./verifier/verifier.module";
 
@@ -33,9 +33,9 @@ import { VerifierModule } from "./verifier/verifier.module";
             inject: [ConfigService],
             useFactory: createLoggerOptions,
         }),
-        // EncryptionModule must be imported early to initialize transformers
+        // DataEncryptionModule must be imported early to initialize transformers
         // before TypeORM entities are loaded
-        EncryptionModule,
+        DataEncryptionModule,
         CoreModule,
         AuthModule,
         KeyModule.forRoot(),

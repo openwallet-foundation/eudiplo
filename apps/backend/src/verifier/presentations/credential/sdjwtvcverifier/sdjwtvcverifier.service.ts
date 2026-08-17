@@ -6,14 +6,14 @@ import { base64url, JWK } from "jose";
 import { Span } from "nestjs-otel";
 import { PinoLogger } from "nestjs-pino";
 import { CryptoImplementationService } from "../../../../crypto/key/crypto-implementation/crypto-implementation.service";
-import { VerifierOptions } from "../../../../shared/trust/types";
-import { MatchedTrustedEntity } from "../../../../shared/trust/x509-validation.service";
+import { VerifierOptions } from "../../../../trust/types";
+import { MatchedTrustedEntity } from "../../../../trust/x509-validation.service";
 import { ResolverService } from "../../../resolver/resolver.service";
 import { CredentialChainValidationService } from "../credential-chain-validation.service";
 import {
     isStatusListUnavailableError,
     resolveRevocationPolicy,
-} from "../../../../shared/trust/revocation-policy.util";
+} from "../../../../trust/revocation-policy.util";
 
 @Injectable()
 export class SdjwtvcverifierService {

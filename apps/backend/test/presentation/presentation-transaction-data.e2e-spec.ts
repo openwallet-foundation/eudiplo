@@ -11,8 +11,8 @@ import { base64url, CryptoKey } from "jose";
 import request from "supertest";
 import { App } from "supertest/types";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { StatusListService } from "../../src/issuer/lifecycle/status/status-list.service";
-import { AuthConfig } from "../../src/shared/utils/webhook/webhook.dto";
+import { StatusListService } from "../../src/issuer/status-list/status-list.service";
+import { AuthConfig } from "../../src/webhook/webhook.dto";
 import {
     PresentationRequest,
     ResponseType,

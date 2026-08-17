@@ -20,7 +20,9 @@ pnpm --filter @eudiplo/backend run start:dev
 pnpm --filter @eudiplo/client run dev
 ```
 
-See [Workspace Structure](workspace-structure.md) for detailed information about the monorepo organization.
+See [Workspace Structure](workspace-structure.md) for the monorepo layout and
+[Backend Structure](backend-structure.md) for backend ownership and dependency
+rules.
 
 ## Backend (NestJS)
 
@@ -56,6 +58,7 @@ Each module typically contains its own:
 
 - [API Authentication](../api/authentication.md) - Guide for using OAuth2
   authentication with the API
+- [Backend Structure](backend-structure.md) - Module ownership and dependency boundaries
 - [Code Quality Standards](code-quality.md) - Code formatting, linting, and style guidelines
 - [Contributing Guidelines](contributing.md) - How to contribute to the project
 - [Testing Guide](testing.md) - How to run and write tests

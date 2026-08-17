@@ -6,8 +6,8 @@ import {
     ManyToOne,
     UpdateDateColumn,
 } from "typeorm";
-import { TenantEntity } from "../../../auth/tenant/entitites/tenant.entity";
-import { EncryptedJsonTransformer } from "../../../shared/utils/encryption";
+import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity";
+import { EncryptedJsonTransformer } from "../../../platform/data-encryption";
 import { KeyUsageType } from "../types/key-usage-type";
 
 /**

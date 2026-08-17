@@ -1,21 +1,21 @@
 import { Injectable } from "@nestjs/common";
 import * as x509 from "@peculiar/x509";
 import { PinoLogger } from "nestjs-pino";
-import { FederationTrustService } from "../../../shared/trust/federation-trust.service";
-import { StatusListVerifierService } from "../../../shared/trust/status-list-verifier.service";
+import { FederationTrustService } from "../../../trust/federation-trust.service";
+import { StatusListVerifierService } from "../../../trust/status-list-verifier.service";
 import {
     BuiltTrustStore,
     TrustStoreService,
-} from "../../../shared/trust/trust-store.service";
+} from "../../../trust/trust-store.service";
 import {
     FederationTrustSource,
     TrustedEntity,
     TrustListSource,
-} from "../../../shared/trust/types";
+} from "../../../trust/types";
 import {
     MatchedTrustedEntity,
     X509ValidationService,
-} from "../../../shared/trust/x509-validation.service";
+} from "../../../trust/x509-validation.service";
 
 /**
  * Raised when a trust list WAS configured for a credential but could not be

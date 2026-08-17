@@ -8,14 +8,14 @@ import {
     extractRequestMeta,
     getChangedFields,
     resolveAuditActor,
-} from "../../../shared/utils/audit-log-context.util";
+} from "../../../audit-log/audit-log-context.util";
 import { loadConfigDto } from "../../../shared/utils/config-file-loader.util";
-import { ConfigImportService } from "../../../shared/utils/config-import/config-import.service";
+import { ConfigImportService } from "../../../platform/config-import/config-import.service";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../../../shared/utils/config-import/config-import-orchestrator.service";
-import { OutboundUrlPolicyService } from "../../../shared/utils/webhook/outbound-url-policy.service";
+} from "../../../platform/config-import/config-import-orchestrator.service";
+import { OutboundUrlPolicyService } from "../../../webhook/outbound-url-policy.service";
 import { CreateAttributeProviderDto } from "./dto/create-attribute-provider.dto";
 import { AttributeProviderEntity } from "./entities/attribute-provider.entity";
 import type {

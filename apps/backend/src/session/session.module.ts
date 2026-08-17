@@ -1,11 +1,11 @@
-import { forwardRef, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "../auth/auth.module";
-import { TenantEntity } from "../auth/tenant/entitites/tenant.entity";
-import { StatusListModule } from "../issuer/lifecycle/status/status-list.module";
-import { AuditLogModule } from "../shared/utils/logger/audit-log.module";
+import { TenantEntity } from "../auth/tenant/entities/tenant.entity";
+import { StatusListModule } from "../issuer/status-list/status-list.module";
 import { Session } from "./entities/session.entity";
 import { SessionLogEntry } from "./entities/session-log-entry.entity";
+import { SessionLoggingModule } from "./logging/session-logging.module";
 import { SessionController } from "./session.controller";
 import { SessionService } from "./session.service";
 import { SessionConfigController } from "./session-config.controller";
@@ -20,15 +20,15 @@ import { SessionEventsService } from "./session-events.service";
     imports: [
         TypeOrmModule.forFeature([Session, TenantEntity, SessionLogEntry]),
         StatusListModule,
-        AuditLogModule,
-        forwardRef(() => AuthModule),
+        SessionLoggingModule,
+        AuthModule,
     ],
     providers: [SessionService, SessionConfigService, SessionEventsService],
     exports: [
         SessionService,
         SessionConfigService,
         SessionEventsService,
-        AuditLogModule,
+        SessionLoggingModule,
     ],
     controllers: [
         SessionController,

@@ -14,8 +14,8 @@ import {
     Repository,
 } from "typeorm";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity.js";
-import { SessionCleanupMode } from "../auth/tenant/entitites/session-storage-config";
-import { TenantEntity } from "../auth/tenant/entitites/tenant.entity";
+import { SessionCleanupMode } from "../auth/tenant/entities/session-storage-config";
+import { TenantEntity } from "../auth/tenant/entities/tenant.entity";
 import { SessionQueryDto } from "./dto/session-query.dto";
 import { PaginatedSessionResponseDto } from "./dto/paginated-session-response.dto";
 import { Session, SessionStatus } from "./entities/session.entity";

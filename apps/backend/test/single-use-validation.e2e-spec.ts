@@ -10,7 +10,7 @@ import { CryptoKey } from "jose";
 import request from "supertest";
 import { App } from "supertest/types";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { StatusListService } from "../src/issuer/lifecycle/status/status-list.service";
+import { StatusListService } from "../src/issuer/status-list/status-list.service";
 import { ResponseType } from "../src/verifier/oid4vp/dto/presentation-request.dto";
 import {
     callbacks,

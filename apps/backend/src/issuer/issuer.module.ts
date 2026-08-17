@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { setGlobalConfig } from "@openid4vc/openid4vci";
 import { ConfigurationModule } from "./configuration/configuration.module";
 import { IssuanceModule } from "./issuance/issuance.module";
-import { LifecycleModule } from "./lifecycle/lifecycle.module";
+import { StatusListModule } from "./status-list/status-list.module";
 import { TrustListModule } from "./trust-list/trustlist.module";
 
 /**
@@ -19,10 +19,10 @@ import { TrustListModule } from "./trust-list/trustlist.module";
     imports: [
         ConfigurationModule,
         IssuanceModule,
-        LifecycleModule,
+        StatusListModule,
         TrustListModule,
     ],
-    exports: [ConfigurationModule, IssuanceModule, LifecycleModule],
+    exports: [ConfigurationModule, IssuanceModule, StatusListModule],
 })
 export class IssuerModule {
     constructor(configService: ConfigService) {

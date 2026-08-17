@@ -1,151 +1,93 @@
-```
-├── docs/                          # Documentation
-├── deployment/                    # Docker Compose configurations
-├── package.json                   # Root workspace configuration
-├── pnpm-workspace.yaml           # pnpm workspace definition
-└── docker-compose.yml            # Development compose file
+# Workspace Structure
+
+EUDIPLO is a pnpm monorepo. Applications live in `apps/`, reusable packages
+live in `packages/`, and operational resources are kept alongside the code they
+support.
+
+```text
+.
+├── apps/
+│   ├── backend/           # NestJS API server
+│   ├── client/            # Angular management UI
+│   ├── cli/               # Command-line client
+│   ├── kms-reference/     # Reference KMS implementation
+│   └── webhook/           # Webhook test application
+├── packages/              # Reusable SDK packages
+├── docs/                  # MkDocs documentation
+├── deployment/            # Docker Compose and Kubernetes resources
+├── monitor/               # Prometheus and Grafana setup
+├── scripts/               # Repository-wide generation and maintenance scripts
+├── package.json           # Root scripts and development dependencies
+└── pnpm-workspace.yaml    # Workspace package definitions
 ```
 
-## 🏗️ Applications
+## Applications
 
 ### Backend (`@eudiplo/backend`)
 
-- **Technology**: NestJS with TypeScript
-- **Purpose**: Core API server for EUDI Wallet integration
-- **Port**: 3000
-- **Key Features**:
-    - OID4VCI, OID4VP, SD-JWT VC support
-    - OAuth2 authentication
-    - Pluggable key management
-    - Database abstraction
+The backend is the NestJS API server and protocol implementation. It owns
+OID4VCI and OID4VP flows, authentication, configuration, persistence, trust,
+and key management. See [Backend Structure](backend-structure.md) before adding
+or moving backend code.
+
+The development server listens on port 3000 by default.
 
 ### Client (`@eudiplo/client`)
 
-- **Technology**: Angular with TypeScript
-- **Purpose**: Web interface for EUDIPLO management
-- **Port**: 4200
-- **Key Features**:
-    - Credential issuance configuration
-    - Presentation request management
-    - Real-time monitoring
-    - Admin dashboard
+The Angular management UI provides credential configuration, presentation
+management, monitoring, and administration. Its development server listens on
+port 4200 by default.
 
-### Webhook (`test-rp`)
+### CLI (`@eudiplo/cli`)
 
-- **Technology**: Cloudflare Worker
-- **Purpose**: Testing relying party implementation
-- **Key Features**:
-    - Webhook endpoints for testing
-    - Presentation verification
-    - Development utilities
-
-## 🔧 Workspace Commands
-
-The workspace provides several convenient commands:
-
-### Development
-
-```bash
-# Install all dependencies
-pnpm install
-```
-
-## 🏗️ Applications & Domains
-
-### Backend (`@eudiplo/backend`)
-
-- **Technology**: NestJS with TypeScript
-- **Purpose**: Core API server for EUDI Wallet integration
-- **Port**: 3000
-- **Structure**: Domain-driven, modular
-    - **core/**: Platform infrastructure (health, metrics, app info)
-    - **shared/**: Utilities, guards, filters, helpers
-    - **issuer/**: Credential Issuer (configuration, issuance, lifecycle)
-    - **verifier/**: Presentation Verifier (presentation, offer, OID4VP)
-    - **registrar/**: Entity onboarding and registry
-    - **auth/**, **crypto/**, **database/**, **session/**, **storage/**: Infrastructure modules
-
-### Client (`@eudiplo/client`)
-
-- **Technology**: Angular with TypeScript
-- **Purpose**: Web interface for EUDIPLO management
-- **Port**: 4200
-- **Features**: Credential config, presentation management, monitoring, admin dashboard
+The CLI provides scriptable access to management operations. Package-specific
+instructions are in `apps/cli/README.md`.
 
 ### Webhook (`@eudiplo/webhook`)
 
-- **Technology**: Cloudflare Worker
-- **Purpose**: Testing relying party implementation
-- **Features**: Webhook endpoints, presentation verification
+The webhook application is a test integration for presentation verification
+and webhook development.
 
-### SDK (`@eudiplo/eudiplo-sdk`)
+### KMS reference application
 
-- **Technology**: TypeScript
-- **Purpose**: Programmatic access to EUDIPLO APIs
+The KMS reference application demonstrates the external key-management
+contract used by EUDIPLO.
 
-### Other Packages
+## Packages and Supporting Directories
 
-- **schemas/**: JSON Schemas for API/data validation
-- **assets/**: Static configuration, root trust lists, uploads
-- **monitor/**: Prometheus/Grafana monitoring setup
+- `packages/` contains reusable TypeScript SDK code.
+- `docs/` contains hand-written and generated project documentation.
+- `deployment/` contains local and production deployment examples.
+- `monitor/` contains the observability stack used in development.
+- `scripts/` contains schema, API, and documentation generation utilities.
+
+## Common Workspace Commands
+
+Run commands from the repository root unless a guide says otherwise.
 
 ```bash
-# Check code quality across workspace
+# Install dependencies
+pnpm install
+
+# Start workspace applications in development mode
+pnpm run dev
+
+# Build, lint, and test all packages
+pnpm run build
 pnpm run lint
-pnpm run format:check
+pnpm run test
 
-# Fix issues automatically
-pnpm run lint:fix
-pnpm run format
+# Target one application
+pnpm --filter @eudiplo/backend run dev
+pnpm --filter @eudiplo/client run dev
 ```
 
-## 🐳 Docker & Deployment
-
-Each application has its own optimized Dockerfile:
-
-- **Backend**: `apps/backend/Dockerfile` (multi-stage build)
-- **Client**: `apps/client/Dockerfile` (Angular build, nginx serving)
-- **Webhook**: `apps/webhook/Dockerfile` (Cloudflare Worker)
-
-The root `docker-compose.yml` orchestrates all main services:
+Add an application-specific dependency through its workspace package instead
+of adding it to the repository root:
 
 ```bash
-# Start both services
-docker compose up -d
-
-# Build and start
-docker compose up -d --build
-
-# View logs
-docker compose logs -f
-```
-
-## 📦 Dependency Management
-
-The workspace uses **pnpm** for efficient dependency management:
-
-- **Shared dependencies** are hoisted to the root `node_modules`
-- **App-specific dependencies** remain in their respective `node_modules`
-- **Lockfile** (`pnpm-lock.yaml`) ensures consistent installs across environments
-
-### Adding Dependencies
-
-```bash
-# Add to workspace root (shared utilities)
-pnpm add dependency-name
-
-# Add to specific application
 pnpm --filter @eudiplo/backend add dependency-name
 pnpm --filter @eudiplo/client add dependency-name
 ```
 
-## 🚀 Benefits
-
-This workspace structure provides:
-
-1. **Domain-driven clarity**: Business logic, infrastructure, and cross-cutting concerns are clearly separated
-2. **Code Sharing**: Common utilities and types can be shared between applications
-3. **Unified Tooling**: Single configuration for linting, formatting, and testing
-4. **Atomic Changes**: Related changes across applications can be made in single commits
-5. **Efficient CI/CD**: Build and test processes can be optimized for the entire workspace
-6. **Developer Experience**: Single repository clone with all related code
+Root dependencies should be limited to tooling used by multiple workspaces.

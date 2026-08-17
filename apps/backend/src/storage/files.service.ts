@@ -5,11 +5,11 @@ import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { ConfigImportService } from "../shared/utils/config-import/config-import.service";
+import { ConfigImportService } from "../platform/config-import/config-import.service";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../shared/utils/config-import/config-import-orchestrator.service";
+} from "../platform/config-import/config-import-orchestrator.service";
 import {
     FILE_STORAGE,
     FileStorage,

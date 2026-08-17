@@ -4,7 +4,7 @@ import { z } from "zod";
 import {
     WebhookConfig,
     WebhookConfigSchema,
-} from "../../../shared/utils/webhook/webhook.dto";
+} from "../../../webhook/webhook.dto";
 
 /**
  * Values for the type of response expected from the presentation request.
