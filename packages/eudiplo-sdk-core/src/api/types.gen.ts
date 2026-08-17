@@ -192,14 +192,13 @@ export type UpdateTenantDto = {
      */
     name?: string;
     /**
-     * The description of the tenant.
+     * Tenant description. Omit to keep the current value or set to null to remove it.
      */
-    description?: string;
+    description?: string | null;
     /**
      * Session storage configuration. Controls TTL and cleanup behavior.
      */
     sessionConfig?: SessionStorageConfig;
-    roles?: Array<'presentation:manage' | 'presentation:request' | 'issuance:manage' | 'issuance:offer' | 'clients:manage' | 'users:manage' | 'tenants:manage' | 'registrar:manage'>;
 };
 
 export type AuditLogResponseDto = {

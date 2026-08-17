@@ -10778,32 +10778,21 @@
       "type": "object",
       "properties": {
         "name": {
-          "default": "EUDIPLO",
           "description": "Display name of the tenant.",
           "type": "string",
           "minLength": 1
         },
         "description": {
-          "description": "Optional tenant description.",
-          "type": "string",
-          "minLength": 1
-        },
-        "roles": {
-          "description": "Optional default role assignments for the tenant.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "tenants:manage",
-              "issuance:offer",
-              "issuance:manage",
-              "presentation:request",
-              "presentation:manage",
-              "clients:manage",
-              "users:manage",
-              "registrar:manage"
-            ]
-          }
+          "description": "Tenant description. Omit to keep the current value or set to null to remove it.",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "sessionConfig": {
           "description": "Optional tenant-specific session storage configuration.",

@@ -394,8 +394,16 @@ export const UpdateTenantDtoSchema = {
             description: 'The name of the tenant.'
         },
         description: {
-            type: 'string',
-            description: 'The description of the tenant.'
+            description: 'Tenant description. Omit to keep the current value or set to null to remove it.',
+            anyOf: [
+                {
+                    type: 'string',
+                    minLength: 1
+                },
+                {
+                    type: 'null'
+                }
+            ]
         },
         sessionConfig: {
             description: 'Session storage configuration. Controls TTL and cleanup behavior.',
@@ -404,22 +412,6 @@ export const UpdateTenantDtoSchema = {
                     $ref: '#/components/schemas/SessionStorageConfig'
                 }
             ]
-        },
-        roles: {
-            type: 'array',
-            items: {
-                type: 'string',
-                enum: [
-                    'presentation:manage',
-                    'presentation:request',
-                    'issuance:manage',
-                    'issuance:offer',
-                    'clients:manage',
-                    'users:manage',
-                    'tenants:manage',
-                    'registrar:manage'
-                ]
-            }
         }
     }
 } as const;

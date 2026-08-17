@@ -28,9 +28,12 @@ export class TenantEntity {
     /**
      * The description of the tenant.
      */
-    @ApiPropertyOptional({ description: "Tenant description" })
-    @Column({ nullable: true })
-    description?: string;
+    @ApiPropertyOptional({
+        description: "Tenant description",
+        nullable: true,
+    })
+    @Column("varchar", { nullable: true })
+    description?: string | null;
 
     /**
      * The current status of the tenant.

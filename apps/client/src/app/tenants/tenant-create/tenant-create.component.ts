@@ -82,10 +82,11 @@ export class TenantCreateComponent implements OnInit {
       this.tenantForm.patchValue({
         id: tenant.data.id,
         name: tenant.data.name,
-        description: tenant.data.description,
+        description: tenant.data.description ?? '',
       });
       // Disable ID field in edit mode
       this.tenantForm.get('id')?.disable();
+      this.tenantForm.markAsPristine();
     } catch {
       this.snackBar.open('Failed to load tenant', 'Close', { duration: 3000 });
       this.router.navigate(['../'], { relativeTo: this.route });
@@ -102,14 +103,31 @@ export class TenantCreateComponent implements OnInit {
     try {
       if (this.isEditMode) {
         const id = this.route.snapshot.paramMap.get('id')!;
+        const descriptionControl = this.tenantForm.get('description')!;
+        const description = descriptionControl.value.trim();
+        const body = {
+          name: this.tenantForm.get('name')!.value.trim(),
+          ...(descriptionControl.dirty
+            ? { description: description === '' ? null : description }
+            : {}),
+        };
+
         await tenantControllerUpdateTenant<true>({
           path: { id },
-          body: this.tenantForm.value,
+          body,
         });
         this.snackBar.open('Tenant updated successfully', 'Close', { duration: 3000 });
         await this.router.navigate(['../'], { relativeTo: this.route });
       } else {
-        const result = await tenantControllerInitTenant<true>({ body: this.tenantForm.value });
+        const value = this.tenantForm.getRawValue();
+        const description = value.description.trim();
+        const body = {
+          id: value.id.trim(),
+          name: value.name.trim(),
+          roles: value.roles,
+          ...(description ? { description } : {}),
+        };
+        const result = await tenantControllerInitTenant<true>({ body });
 
         // Cast to expected type since SDK returns generic response
         // The backend returns { ...tenant, client: { clientId, clientSecret } } on creation
@@ -131,11 +149,11 @@ export class TenantCreateComponent implements OnInit {
 
           // Wait for dialog to close before navigating
           dialogRef.afterClosed().subscribe(() => {
-            this.router.navigate(['../', this.tenantForm.value.id], { relativeTo: this.route });
+            this.router.navigate(['../', body.id], { relativeTo: this.route });
           });
         } else {
           this.snackBar.open('Tenant created successfully', 'Close', { duration: 3000 });
-          await this.router.navigate(['../', this.tenantForm.value.id], { relativeTo: this.route });
+          await this.router.navigate(['../', body.id], { relativeTo: this.route });
         }
       }
     } catch (error) {

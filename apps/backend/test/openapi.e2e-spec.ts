@@ -1,6 +1,6 @@
 import { INestApplication } from "@nestjs/common";
-import { Test, type TestingModule } from "@nestjs/testing";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { Test, type TestingModule } from "@nestjs/testing";
 import { cleanupOpenApiDoc } from "nestjs-zod";
 import { App } from "supertest/types";
 import { beforeAll, describe, expect, test } from "vitest";
@@ -45,11 +45,37 @@ describe("OpenAPI contract", () => {
             app,
             new DocumentBuilder()
                 .setTitle("EUDIPLO")
+                .setOpenAPIVersion("3.1.0")
                 .setVersion("test")
                 .build(),
         );
 
         document = cleanupOpenApiDoc(swaggerDocument);
+    });
+
+    test("documents tenant description clearing without create-only PATCH fields", () => {
+        const createTenantSchema = document.components?.schemas
+            ?.CreateTenantDto as any;
+        const updateTenantSchema = document.components?.schemas
+            ?.UpdateTenantDto as any;
+        const tenantResponseSchema = document.components?.schemas
+            ?.TenantResponseDto as any;
+
+        expect(createTenantSchema.properties.description).not.toMatchObject({
+            nullable: true,
+        });
+        expect(updateTenantSchema.properties.description.anyOf).toEqual(
+            expect.arrayContaining([{ type: "null" }]),
+        );
+        expect(updateTenantSchema.properties.description.description).toContain(
+            "set to null to remove it",
+        );
+        expect(updateTenantSchema.properties.name.default).toBeUndefined();
+        expect(updateTenantSchema.properties.roles).toBeUndefined();
+        expect(updateTenantSchema.properties.id).toBeUndefined();
+        expect(tenantResponseSchema.properties.description).toMatchObject({
+            nullable: true,
+        });
     });
 
     test("documents key JSON, form, binary, SSE, and no-content responses", () => {
