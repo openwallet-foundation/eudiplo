@@ -828,7 +828,7 @@ describe("Issuance - Wallet Attestation", () => {
         const trustListJwt = await createMockTrustListJwt(
             trustListSigningCert,
             walletProviderCert.certificate,
-            "http://uri.etsi.org/19602/SvcType/WalletProvider",
+            "http://uri.etsi.org/19602/SvcType/WalletSolution",
             revocationCert.certificate,
         );
 
@@ -970,7 +970,7 @@ describe("Issuance - Wallet Attestation", () => {
         const trustListJwt = await createMockTrustListJwt(
             trustListSigningCert,
             walletProviderCert.certificate,
-            "http://uri.etsi.org/19602/SvcType/WalletProvider",
+            "http://uri.etsi.org/19602/SvcType/WalletSolution",
             revocationCert.certificate,
         );
 
@@ -1111,7 +1111,7 @@ describe("Issuance - Wallet Attestation", () => {
         const trustListJwt = await createMockTrustListJwt(
             trustListSigningCert,
             walletProviderCert.certificate,
-            "http://uri.etsi.org/19602/SvcType/WalletProvider",
+            "http://uri.etsi.org/19602/SvcType/WalletSolution",
             revocationCert.certificate,
         );
 
@@ -1261,7 +1261,7 @@ describe("Issuance - Wallet Attestation", () => {
         const trustListJwt = await createMockTrustListJwt(
             trustListSigningCert,
             walletProviderCert.certificate,
-            "http://uri.etsi.org/19602/SvcType/WalletProvider",
+            "http://uri.etsi.org/19602/SvcType/WalletSolution",
             revocationCert.certificate,
         );
 
@@ -1621,7 +1621,7 @@ describe("Issuance - Wallet Attestation", () => {
         const trustListJwt = await createMockTrustListJwt(
             trustListSigningCert,
             walletProviderCert.certificate,
-            "http://uri.etsi.org/19602/SvcType/WalletProvider",
+            "http://uri.etsi.org/19602/SvcType/WalletSolution",
         );
 
         nock("http://localhost:8787")
@@ -1769,7 +1769,7 @@ describe("Issuance - Wallet Attestation", () => {
         const trustListJwt = await createMockTrustListJwt(
             trustListSigningCert,
             walletProviderCert.certificate,
-            "http://uri.etsi.org/19602/SvcType/WalletProvider",
+            "http://uri.etsi.org/19602/SvcType/WalletSolution",
             revocationCert.certificate,
         );
 
@@ -1900,7 +1900,7 @@ describe("Issuance - Wallet Attestation", () => {
         const trustListJwt = await createMockTrustListJwt(
             trustListSigningCert,
             walletProviderCert.certificate,
-            "http://uri.etsi.org/19602/SvcType/WalletProvider",
+            "http://uri.etsi.org/19602/SvcType/WalletSolution",
         );
 
         nock("http://localhost:8787")

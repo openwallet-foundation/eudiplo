@@ -41,37 +41,26 @@ export function normalizeTrustListRefs(
 
 export type ServiceTypeIdentifier = string;
 
-function canonicalizeServiceType(
-    serviceType: ServiceTypeIdentifier,
-): ServiceTypeIdentifier {
-    return serviceType.replace(/WalletProvider/g, "WalletSolution");
-}
-
 export function serviceTypeMatches(
     serviceType: ServiceTypeIdentifier,
     acceptedType: ServiceTypeIdentifier,
 ): boolean {
-    const normalizedServiceType = canonicalizeServiceType(serviceType);
-    const normalizedAcceptedType = canonicalizeServiceType(acceptedType);
-
-    if (normalizedServiceType === normalizedAcceptedType) {
+    if (serviceType === acceptedType) {
         return true;
     }
 
-    if (normalizedAcceptedType.startsWith("/")) {
-        return normalizedServiceType.endsWith(normalizedAcceptedType);
+    if (acceptedType.startsWith("/")) {
+        return serviceType.endsWith(acceptedType);
     }
 
-    const acceptedRoleSuffix = /(\/Issuance|\/Revocation)$/.exec(
-        normalizedAcceptedType,
-    );
+    const acceptedRoleSuffix = /(\/Issuance|\/Revocation)$/.exec(acceptedType);
     if (acceptedRoleSuffix) {
-        return normalizedServiceType === normalizedAcceptedType;
+        return serviceType === acceptedType;
     }
 
     return (
-        normalizedServiceType === normalizedAcceptedType ||
-        normalizedServiceType.startsWith(`${normalizedAcceptedType}/`)
+        serviceType === acceptedType ||
+        serviceType.startsWith(`${acceptedType}/`)
     );
 }
 

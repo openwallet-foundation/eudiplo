@@ -78,7 +78,7 @@ export async function createMockTrustListJwt(
                         {
                             ServiceInformation: {
                                 ServiceTypeIdentifier:
-                                    "http://uri.etsi.org/19602/SvcType/WalletProvider",
+                                    "http://uri.etsi.org/19602/SvcType/WalletSolution",
                                 ServiceName: [
                                     {
                                         lang: "en",
