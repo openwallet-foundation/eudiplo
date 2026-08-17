@@ -251,8 +251,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="119"
-                                    class="link-to-prism">src/trust/lote-parser.service.ts:119</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="120"
+                                    class="link-to-prism">src/trust/lote-parser.service.ts:120</a></div>
                         </td>
                     </tr>
 
@@ -333,8 +333,8 @@ Keeps all services of matching entities (not just the matching services).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="33"
-                                    class="link-to-prism">src/trust/lote-parser.service.ts:33</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="34"
+                                    class="link-to-prism">src/trust/lote-parser.service.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -416,7 +416,7 @@ This allows pairing issuance and revocation certificates from the same entity.</
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/trust/lote-parser.service.ts:27</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/trust/lote-parser.service.ts:28</a></div>
                         </td>
                     </tr>
 
@@ -433,6 +433,7 @@ This allows pairing issuance and revocation certificates from the same entity.</
 import type { LoTE } from &quot;@owf/eudi-lote&quot;;
 import {
     ServiceTypeIdentifier,
+    serviceTypeMatches,
     TrustedEntity,
     TrustedEntityServiceCert,
 } from &quot;./types&quot;;
@@ -551,10 +552,12 @@ export class LoteParserService {
         parsed: ParsedLoTE,
         accepted: ServiceTypeIdentifier[],
     ): ParsedLoTE {
-        const set &#x3D; new Set(accepted);
-
         const filteredEntities &#x3D; parsed.entities.filter((entity) &#x3D;&gt;
-            entity.services.some((s) &#x3D;&gt; set.has(s.serviceTypeIdentifier)),
+            entity.services.some((s) &#x3D;&gt;
+                accepted.some((acceptedType) &#x3D;&gt;
+                    serviceTypeMatches(s.serviceTypeIdentifier, acceptedType),
+                ),
+            ),
         );
 
         return {

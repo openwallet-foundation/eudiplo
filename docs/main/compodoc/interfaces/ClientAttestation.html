@@ -225,7 +225,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/trust/wallet-attestation.service.ts:24</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/trust/wallet-attestation.service.ts:25</a></div>
                                 </td>
                             </tr>
 
@@ -269,7 +269,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/trust/wallet-attestation.service.ts:25</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/trust/wallet-attestation.service.ts:26</a></div>
                                 </td>
                             </tr>
 
@@ -295,6 +295,7 @@ import {
     normalizeTrustListRefs,
     ServiceTypeIdentifiers,
     TrustListSource,
+    walletSolutionServiceTypes,
 } from &quot;./types&quot;;
 import {
     MatchedTrustedEntity,
@@ -382,7 +383,7 @@ export class WalletAttestationService {
 
             // Then validate the X.509 certificate against trust lists and get the matched entity
             const { matchedEntity, trustStore } &#x3D;
-                await this.validateWalletProviderCertificate(
+                await this.validateWalletSolutionCertificate(
                     clientAttestation.clientAttestationJwt,
                     walletProviderTrustLists,
                 );
@@ -415,7 +416,7 @@ export class WalletAttestationService {
      * @returns The matched entity and trust store (both null if no trust lists configured)
      * @throws UnauthorizedException if certificate is not trusted
      */
-    private async validateWalletProviderCertificate(
+    private async validateWalletSolutionCertificate(
         clientAttestationJwt: string,
         trustListInputs: TrustListRef[],
     ): Promise&lt;{
@@ -445,7 +446,7 @@ export class WalletAttestationService {
         // Build trust list source from configured URLs
         const trustListSource: TrustListSource &#x3D; {
             lotes: trustListRefs,
-            acceptedServiceTypes: [ServiceTypeIdentifiers.WalletProvider],
+            acceptedServiceTypes: [...walletSolutionServiceTypes],
         };
 
         // Fetch and build the trust store
@@ -480,7 +481,7 @@ export class WalletAttestationService {
                     path,
                     trustStore.entities,
                     &quot;leaf&quot;,
-                    ServiceTypeIdentifiers.WalletProvider,
+                    ServiceTypeIdentifiers.WalletSolution,
                 );
 
             if (!match) {

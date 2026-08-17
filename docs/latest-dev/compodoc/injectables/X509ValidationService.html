@@ -854,7 +854,7 @@ Defaults to &quot;/Issuance&quot; to match both PID and EAA issuance.</p>
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, Logger } from &quot;@nestjs/common&quot;;
 import * as x509 from &quot;@peculiar/x509&quot;;
-import { getRevocationCert, TrustedEntity } from &quot;./types&quot;;
+import { getRevocationCert, serviceTypeMatches, TrustedEntity } from &quot;./types&quot;;
 
 type X5cInput &#x3D; string[]; // base64 DER entries
 
@@ -999,11 +999,14 @@ export class X509ValidationService {
         for (const entity of entities) {
             // Find certificates matching the specified service type in this entity
             // If filter starts with &quot;/&quot;, use suffix matching (e.g., &quot;/Issuance&quot; matches PID/Issuance and EAA/Issuance)
-            // Otherwise use exact matching (e.g., full WalletProvider URI)
+            // Otherwise use exact or base-role matching (e.g., WalletSolution matches WalletSolution/Issuance)
             const matchingServices &#x3D; entity.services.filter((s) &#x3D;&gt;
                 serviceTypeFilter.startsWith(&quot;/&quot;)
                     ? s.serviceTypeIdentifier.endsWith(serviceTypeFilter)
-                    : s.serviceTypeIdentifier &#x3D;&#x3D;&#x3D; serviceTypeFilter,
+                    : serviceTypeMatches(
+                          s.serviceTypeIdentifier,
+                          serviceTypeFilter,
+                      ),
             );
 
             for (const svc of matchingServices) {

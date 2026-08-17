@@ -224,7 +224,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/issuer/issuance/oid4vci/attestation-proof-trust.util.ts:13</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/issuer/issuance/oid4vci/attestation-proof-trust.util.ts:14</a></div>
                                 </td>
                             </tr>
 
@@ -263,7 +263,7 @@
 
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">src/issuer/issuance/oid4vci/attestation-proof-trust.util.ts:14</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/issuer/issuance/oid4vci/attestation-proof-trust.util.ts:15</a></div>
                                 </td>
                             </tr>
 
@@ -280,10 +280,11 @@ import {
     normalizeTrustListRefs,
     ServiceTypeIdentifiers,
     TrustListSource,
+    walletSolutionServiceTypes,
 } from &quot;../../../trust/types&quot;;
-import { X509ValidationService } from &quot;../../../trust/x509-validation.service&quot;;
 import { CredentialRequestException } from &quot;./exceptions&quot;;
 import { TrustListRef } from &quot;../../../verifier/presentations/entities/presentation-config.entity&quot;;
+import { X509ValidationService } from &quot;../../../trust/x509-validation.service&quot;;
 
 export interface AttestationProofTrustValidationDeps {
     trustStoreService: TrustStoreService;
@@ -317,7 +318,7 @@ export async function validateAttestationProofTrust(
 
         const trustListSource: TrustListSource &#x3D; {
             lotes: trustListRefs,
-            acceptedServiceTypes: [ServiceTypeIdentifiers.WalletProvider],
+            acceptedServiceTypes: [...walletSolutionServiceTypes],
         };
 
         const trustStore &#x3D;
@@ -353,7 +354,7 @@ export async function validateAttestationProofTrust(
                 path,
                 trustStore.entities,
                 &quot;leaf&quot;,
-                ServiceTypeIdentifiers.WalletProvider,
+                ServiceTypeIdentifiers.WalletSolution,
             );
 
         if (!matched) {
