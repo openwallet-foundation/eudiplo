@@ -4,11 +4,7 @@ import { App } from "supertest/types";
 import { Agent, setGlobalDispatcher } from "undici";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { IssuanceDto } from "../../src/issuer/configuration/issuance/dto/issuance.dto";
-import {
-    getToken,
-    IssuanceTestContext,
-    setupIssuanceTestApp,
-} from "../utils";
+import { getToken, IssuanceTestContext, setupIssuanceTestApp } from "../utils";
 
 setGlobalDispatcher(
     new Agent({

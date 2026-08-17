@@ -48,7 +48,10 @@ export class AddAuthorizationServerIssuerToSession1776000000000
                 (column) => column.name === "authorizationServerIssuer",
             )
         ) {
-            await queryRunner.dropColumn("session", "authorizationServerIssuer");
+            await queryRunner.dropColumn(
+                "session",
+                "authorizationServerIssuer",
+            );
         }
     }
 }

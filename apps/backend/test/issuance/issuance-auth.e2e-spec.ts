@@ -268,7 +268,9 @@ describe("Issuance - Authorization Code Flow", () => {
             .get(`/session/${offerResponse.body.session}`)
             .trustLocalhost()
             .set("Authorization", `Bearer ${authToken}`);
-        expect(session.body.externalIssuer).toBe(externalAuthorizationServerUrl);
+        expect(session.body.externalIssuer).toBe(
+            externalAuthorizationServerUrl,
+        );
         expect(session.body.externalSubject).toBe("wallet");
         const notificationObj = session.body.notifications.find(
             (notification: any) =>
@@ -575,12 +577,15 @@ describe("Issuance - Authorization Code Flow", () => {
             authorizeUrl.searchParams.set("response_type", "code");
             authorizeUrl.searchParams.set("scope", "openid");
             authorizeUrl.searchParams.set("state", "state");
-            authorizeUrl.searchParams.set("issuer_state", offerResponse.body.session);
+            authorizeUrl.searchParams.set(
+                "issuer_state",
+                offerResponse.body.session,
+            );
 
             const authorizeResponse = await fetch(authorizeUrl.toString());
-            const authorizationCode = new URL(authorizeResponse.url).searchParams.get(
-                "code",
-            );
+            const authorizationCode = new URL(
+                authorizeResponse.url,
+            ).searchParams.get("code");
             expect(authorizationCode).toBeDefined();
 
             const tokenResponse = await fetch(`${secondAs.baseUrl}/token`, {

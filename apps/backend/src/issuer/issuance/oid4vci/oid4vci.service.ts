@@ -1205,8 +1205,8 @@ export class Oid4vciService {
                 );
             }
 
-            const tokenCredentialIdentifiers = matchingEntry
-                .credential_identifiers as unknown;
+            const tokenCredentialIdentifiers =
+                matchingEntry.credential_identifiers as unknown;
 
             if (Array.isArray(tokenCredentialIdentifiers)) {
                 if (!credentialIdentifier) {
@@ -1233,7 +1233,9 @@ export class Oid4vciService {
                     );
                 }
 
-                if (!tokenCredentialIdentifiers.includes(credentialIdentifier)) {
+                if (
+                    !tokenCredentialIdentifiers.includes(credentialIdentifier)
+                ) {
                     throw new CredentialRequestException(
                         "unknown_credential_identifier",
                         `Credential identifier '${credentialIdentifier}' is unknown`,
@@ -1244,10 +1246,11 @@ export class Oid4vciService {
             return;
         }
 
-        const credentialConfig = await this.credentialsService.getCredentialConfig(
-            credentialConfigurationId,
-            tenantId,
-        );
+        const credentialConfig =
+            await this.credentialsService.getCredentialConfig(
+                credentialConfigurationId,
+                tenantId,
+            );
         if (!credentialConfig) {
             throw new CredentialRequestException(
                 "unknown_credential_configuration",
@@ -1974,12 +1977,11 @@ export class Oid4vciService {
             allowedAuthenticationSchemes,
         });
 
-        const { session } = await this.tokenSessionResolver.resolveIssuanceSession(
-            {
+        const { session } =
+            await this.tokenSessionResolver.resolveIssuanceSession({
                 tenantId,
                 tokenPayload: tokenPayload as OAuth2TokenPayload,
-            },
-        );
+            });
 
         // Add session context to span for trace correlation
         const span = this.traceService.getSpan();

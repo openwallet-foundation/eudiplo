@@ -1036,14 +1036,13 @@ export async function startMockAuthorizationServer(): Promise<{
                         ...(grantType === "authorization_code"
                             ? {
                                   scope:
-                                      authorizationContext?.scope ??
-                                      "openid",
-                                                                    ...(authorizationContext?.issuerState
-                                                                            ? {
-                                                                                        issuer_state:
-                                                                                                authorizationContext.issuerState,
-                                                                                }
-                                                                            : {}),
+                                      authorizationContext?.scope ?? "openid",
+                                  ...(authorizationContext?.issuerState
+                                      ? {
+                                            issuer_state:
+                                                authorizationContext.issuerState,
+                                        }
+                                      : {}),
                               }
                             : {}),
                     };
@@ -1057,10 +1056,10 @@ export async function startMockAuthorizationServer(): Promise<{
                         .sign(privateKey);
 
                     const responseBody = {
-                            sessionBinding: {
-                                method: "access_token_claim",
-                                claim: "issuer_state",
-                            },
+                        sessionBinding: {
+                            method: "access_token_claim",
+                            claim: "issuer_state",
+                        },
                         access_token: accessToken,
                         token_type: cnf ? "DPoP" : "Bearer",
                         expires_in: 3600,

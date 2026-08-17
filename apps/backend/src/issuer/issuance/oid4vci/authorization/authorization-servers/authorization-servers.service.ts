@@ -112,9 +112,8 @@ export class AuthorizationServersService {
     async getExternalAuthorizationServerUrls(
         tenantId: string,
     ): Promise<string[]> {
-        const configs = await this.getExternalAuthorizationServerConfigs(
-            tenantId,
-        );
+        const configs =
+            await this.getExternalAuthorizationServerConfigs(tenantId);
 
         return configs
             .map((config) => config.issuer)
@@ -127,30 +126,26 @@ export class AuthorizationServersService {
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
 
-        return (issuanceConfig.authorizationServers ?? [])
-            .filter(
-                (
-                    config,
-                ): config is ExternalManagedAuthorizationServerConfig => {
-                    const candidate =
-                        config as Partial<ExternalManagedAuthorizationServerConfig>;
-                    return (
-                        config.enabled !== false &&
-                        config.type === "external" &&
-                        typeof candidate.issuer === "string" &&
-                        candidate.issuer.length > 0
-                    );
-                },
-            );
+        return (issuanceConfig.authorizationServers ?? []).filter(
+            (config): config is ExternalManagedAuthorizationServerConfig => {
+                const candidate =
+                    config as Partial<ExternalManagedAuthorizationServerConfig>;
+                return (
+                    config.enabled !== false &&
+                    config.type === "external" &&
+                    typeof candidate.issuer === "string" &&
+                    candidate.issuer.length > 0
+                );
+            },
+        );
     }
 
     async getExternalAuthorizationServerConfigByIssuer(
         tenantId: string,
         issuer: string,
     ): Promise<ExternalManagedAuthorizationServerConfig | undefined> {
-        const configs = await this.getExternalAuthorizationServerConfigs(
-            tenantId,
-        );
+        const configs =
+            await this.getExternalAuthorizationServerConfigs(tenantId);
         return configs.find((config) => config.issuer === issuer);
     }
 

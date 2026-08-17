@@ -1,6 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { Session, SessionStatus } from "../../../session/entities/session.entity";
+import {
+    Session,
+    SessionStatus,
+} from "../../../session/entities/session.entity";
 import { SessionService } from "../../../session/session.service";
 import { FlowType } from "./dto/offer-request.dto";
 import { CredentialRequestException } from "./exceptions";
@@ -45,8 +48,12 @@ export class TokenSessionResolverService {
         session: Session,
         credentialConfigurationId: string,
     ): void {
-        const offeredIds = session.credentialPayload?.credentialConfigurationIds;
-        if (!Array.isArray(offeredIds) || !offeredIds.includes(credentialConfigurationId)) {
+        const offeredIds =
+            session.credentialPayload?.credentialConfigurationIds;
+        if (
+            !Array.isArray(offeredIds) ||
+            !offeredIds.includes(credentialConfigurationId)
+        ) {
             throw new CredentialRequestException(
                 "invalid_credential_request",
                 `Credential configuration '${credentialConfigurationId}' is not authorized for this issuance session`,
@@ -57,7 +64,12 @@ export class TokenSessionResolverService {
     private async resolveExternalSession(
         options: ResolveIssuanceSessionOptions,
     ): Promise<Session> {
-        const { tenantId, tokenPayload, status, requiredCredentialConfigurationId } = options;
+        const {
+            tenantId,
+            tokenPayload,
+            status,
+            requiredCredentialConfigurationId,
+        } = options;
 
         const externalServerConfig =
             await this.authorizationServersService.getExternalAuthorizationServerConfigByIssuer(
@@ -85,17 +97,21 @@ export class TokenSessionResolverService {
         }
 
         const issuerState = tokenPayload[binding.claim];
-        if (typeof issuerState !== "string" || issuerState.trim().length === 0) {
+        if (
+            typeof issuerState !== "string" ||
+            issuerState.trim().length === 0
+        ) {
             throw new CredentialRequestException(
                 "credential_request_denied",
                 `Access token is missing required external session-binding claim '${binding.claim}'`,
             );
         }
 
-        const where: { id: string; tenantId: string; status?: SessionStatus } = {
-            id: issuerState,
-            tenantId,
-        };
+        const where: { id: string; tenantId: string; status?: SessionStatus } =
+            {
+                id: issuerState,
+                tenantId,
+            };
         if (status) {
             where.status = status;
         }
@@ -164,7 +180,10 @@ export class TokenSessionResolverService {
 
     async resolveIssuanceSession(
         options: ResolveIssuanceSessionOptions,
-    ): Promise<{ session: Session; tokenSource: "local" | "chained" | "external" }> {
+    ): Promise<{
+        session: Session;
+        tokenSource: "local" | "chained" | "external";
+    }> {
         const { tenantId, tokenPayload, status } = options;
 
         const localIssuer = this.authzService.getAuthzIssuer(tenantId);
@@ -183,7 +202,8 @@ export class TokenSessionResolverService {
 
         const isLocalAsToken = tokenPayload.iss === localIssuer;
         const isManagedToken =
-            (hasChainedAuthorizationServer && tokenPayload.iss === chainedAsIssuer) ||
+            (hasChainedAuthorizationServer &&
+                tokenPayload.iss === chainedAsIssuer) ||
             managedAuthorizationServerIssuers.has(tokenPayload.iss);
 
         const externalServerConfig =
@@ -206,7 +226,11 @@ export class TokenSessionResolverService {
                 );
             }
 
-            const where: { id: string; tenantId: string; status?: SessionStatus } = {
+            const where: {
+                id: string;
+                tenantId: string;
+                status?: SessionStatus;
+            } = {
                 id: issuerState,
                 tenantId,
             };
@@ -231,10 +255,11 @@ export class TokenSessionResolverService {
             );
         }
 
-        const where: { id: string; tenantId: string; status?: SessionStatus } = {
-            id: tokenPayload.sub,
-            tenantId,
-        };
+        const where: { id: string; tenantId: string; status?: SessionStatus } =
+            {
+                id: tokenPayload.sub,
+                tenantId,
+            };
         if (status) {
             where.status = status;
         }

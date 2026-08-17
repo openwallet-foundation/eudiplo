@@ -159,10 +159,11 @@ export class DeferredCredentialService {
         tenantId: string,
         requestedCredentialConfigurationId: string,
     ): Promise<void> {
-        const credentialConfig = await this.credentialsService.getCredentialConfig(
-            requestedCredentialConfigurationId,
-            tenantId,
-        );
+        const credentialConfig =
+            await this.credentialsService.getCredentialConfig(
+                requestedCredentialConfigurationId,
+                tenantId,
+            );
 
         if (!credentialConfig) {
             throw new CredentialRequestException(
@@ -406,12 +407,11 @@ export class DeferredCredentialService {
             );
         }
 
-        const { session } = await this.tokenSessionResolver.resolveIssuanceSession(
-            {
+        const { session } =
+            await this.tokenSessionResolver.resolveIssuanceSession({
                 tenantId,
                 tokenPayload: tokenPayload as OAuth2TokenPayload,
-            },
-        );
+            });
 
         if (session.id !== deferredTransaction.sessionId) {
             throw new CredentialRequestException(
