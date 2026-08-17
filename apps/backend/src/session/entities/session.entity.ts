@@ -175,6 +175,14 @@ export class Session {
      */
     @Column("varchar", { nullable: true })
     webhookEndpointId?: string;
+
+    /**
+     * Selected authorization server issuer URL for this issuance session.
+     * Used to ensure tokens are accepted only from the server chosen at offer creation.
+     */
+    @Column("varchar", { nullable: true })
+    authorizationServerIssuer?: string;
+
     /**
      * Notifications associated with the session.
      */

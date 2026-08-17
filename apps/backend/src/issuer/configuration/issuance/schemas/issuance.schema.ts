@@ -56,6 +56,23 @@ const ExternalAuthorizationServerConfigSchema = z
         issuer: z
             .url()
             .describe("Issuer URL for the external authorization server."),
+        sessionBinding: z
+            .object({
+                method: z
+                    .literal("access_token_claim")
+                    .describe(
+                        "Resolve issuer-initiated offer sessions from an external access-token claim.",
+                    ),
+                claim: z
+                    .string()
+                    .min(1)
+                    .describe(
+                        "Access-token claim name carrying the validated issuer_state.",
+                    ),
+            })
+            .strict()
+            .optional()
+            .describe("External AS session-binding contract."),
         label: z
             .string()
             .optional()

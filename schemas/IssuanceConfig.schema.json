@@ -74,6 +74,27 @@
                 "format": "uri",
                 "description": "Issuer URL for the external authorization server."
               },
+              "sessionBinding": {
+                "description": "External AS session-binding contract.",
+                "type": "object",
+                "properties": {
+                  "method": {
+                    "type": "string",
+                    "const": "access_token_claim",
+                    "description": "Resolve issuer-initiated offer sessions from an external access-token claim."
+                  },
+                  "claim": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Access-token claim name carrying the validated issuer_state."
+                  }
+                },
+                "required": [
+                  "method",
+                  "claim"
+                ],
+                "additionalProperties": false
+              },
               "label": {
                 "description": "Optional display label for UI selection.",
                 "type": "string"

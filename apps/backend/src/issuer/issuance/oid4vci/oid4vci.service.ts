@@ -84,6 +84,7 @@ import { DeferredTransactionEntity } from "./entities/deferred-transaction.entit
 import { NonceEntity } from "./entities/nonces.entity";
 import { CredentialRequestException } from "./exceptions";
 import { validateAttestationProofTrust } from "./attestation-proof-trust.util";
+import { TokenSessionResolverService } from "./token-session-resolver.service";
 import { getHeadersFromRequest } from "./util";
 
 /**
@@ -159,6 +160,7 @@ export class Oid4vciService {
         private readonly authorizationServersService: AuthorizationServersService,
         private readonly chainedAsService: ChainedAsService,
         private readonly chainedAsVpService: ChainedAsVpService,
+        private readonly tokenSessionResolver: TokenSessionResolverService,
         private readonly deferredCredentialService: DeferredCredentialService,
         private readonly registrarService: RegistrarService,
         private readonly traceService: TraceService,
@@ -939,6 +941,7 @@ export class Oid4vciService {
 
         let authorization_code: string | undefined;
         let grants: any;
+        let selectedAuthorizationServerIssuer: string | undefined;
         const issuer_state = v4();
         if (body.flow === FlowType.PRE_AUTH_CODE) {
             //check if tx_code is a number
@@ -955,6 +958,7 @@ export class Oid4vciService {
                     tenantId,
                     "pre_authorized_code",
                 ));
+            selectedAuthorizationServerIssuer = authServer;
 
             grants = {
                 [preAuthorizedCodeGrantIdentifier]: {
@@ -985,6 +989,7 @@ export class Oid4vciService {
                     tenantId,
                     "authorization_code",
                 ));
+            selectedAuthorizationServerIssuer = authServer;
             grants = {
                 [authorizationCodeGrantIdentifier]: {
                     issuer_state,
@@ -1017,6 +1022,10 @@ export class Oid4vciService {
             tenantId: user.entity!.id,
             authorization_code,
             webhookEndpointId: body.webhookEndpointId,
+            authorizationServerIssuer:
+                body.flow === FlowType.AUTH_CODE
+                    ? selectedAuthorizationServerIssuer
+                    : undefined,
         });
 
         // Add session context to span for trace correlation
@@ -1157,50 +1166,109 @@ export class Oid4vciService {
         return tokenPayload as OAuth2TokenPayload;
     }
 
-    /**
-     * Enforce that the requested `credential_configuration_id` is covered by
-     * the `authorization_details` bound to the presented access token, per
-     * OID4VCI Section 6. If the token does not carry `authorization_details`
-     * (e.g. scope-only external AS integrations), the check is skipped.
-     *
-     * @throws CredentialRequestException with `invalid_credential_request`
-     *   when the requested credential is not authorized by the token.
-     */
-    private enforceAuthorizationDetails(
+    private parseOpenidCredentialAuthorizationDetails(
         tokenPayload: OAuth2TokenPayload,
-        requestedCredentialConfigurationId: string,
-    ): void {
+    ): Array<Record<string, unknown>> {
         const raw = tokenPayload.authorization_details;
-        if (!Array.isArray(raw) || raw.length === 0) {
-            // No authorization_details bound to the token - nothing to enforce
-            // here (scope-based authorization or legacy tokens).
+        if (!Array.isArray(raw)) {
+            return [];
+        }
+
+        return raw.filter(
+            (ad): ad is Record<string, unknown> =>
+                typeof ad === "object" &&
+                ad !== null &&
+                (ad as Record<string, unknown>).type === "openid_credential",
+        );
+    }
+
+    private async enforceCredentialAuthorization(
+        tokenPayload: OAuth2TokenPayload,
+        tenantId: string,
+        credentialConfigurationId: string,
+        credentialIdentifier?: string,
+    ): Promise<void> {
+        const openidCredentialAuthorizationDetails =
+            this.parseOpenidCredentialAuthorizationDetails(tokenPayload);
+
+        if (openidCredentialAuthorizationDetails.length > 0) {
+            const matchingEntry = openidCredentialAuthorizationDetails.find(
+                (entry) =>
+                    entry.credential_configuration_id ===
+                    credentialConfigurationId,
+            );
+
+            if (!matchingEntry) {
+                throw new CredentialRequestException(
+                    "invalid_credential_request",
+                    `Access token is not authorized for credential_configuration_id '${credentialConfigurationId}'`,
+                );
+            }
+
+            const tokenCredentialIdentifiers = matchingEntry
+                .credential_identifiers as unknown;
+
+            if (Array.isArray(tokenCredentialIdentifiers)) {
+                if (!credentialIdentifier) {
+                    const sameConfigurationEntries =
+                        openidCredentialAuthorizationDetails.filter(
+                            (entry) =>
+                                entry.credential_configuration_id ===
+                                credentialConfigurationId,
+                        );
+
+                    // Backward compatibility: allow omitted credential_identifier
+                    // only when the token authorizes exactly one identifier for
+                    // this configuration and there is a single matching entry.
+                    if (
+                        tokenCredentialIdentifiers.length === 1 &&
+                        sameConfigurationEntries.length === 1
+                    ) {
+                        return;
+                    }
+
+                    throw new CredentialRequestException(
+                        "invalid_credential_request",
+                        "A credential_identifier is required for this access token",
+                    );
+                }
+
+                if (!tokenCredentialIdentifiers.includes(credentialIdentifier)) {
+                    throw new CredentialRequestException(
+                        "unknown_credential_identifier",
+                        `Credential identifier '${credentialIdentifier}' is unknown`,
+                    );
+                }
+            }
+
             return;
         }
 
-        const authorized = raw
-            .filter(
-                (ad): ad is Record<string, unknown> =>
-                    typeof ad === "object" &&
-                    ad !== null &&
-                    (ad as Record<string, unknown>).type ===
-                        "openid_credential",
-            )
-            .map((ad) => ad.credential_configuration_id as string | undefined)
-            .filter((id): id is string => typeof id === "string");
-
-        if (authorized.length === 0) {
-            // Token carries authorization_details but none of type
-            // `openid_credential` - treat as unauthorized for any credential.
+        const credentialConfig = await this.credentialsService.getCredentialConfig(
+            credentialConfigurationId,
+            tenantId,
+        );
+        if (!credentialConfig) {
             throw new CredentialRequestException(
-                "invalid_credential_request",
-                "Access token is not authorized for any credential configuration",
+                "unknown_credential_configuration",
+                `Credential configuration '${credentialConfigurationId}' is not supported`,
             );
         }
 
-        if (!authorized.includes(requestedCredentialConfigurationId)) {
+        const requiredScope = credentialConfig.config?.scope;
+        const scopeClaim = tokenPayload.scope;
+        const scopeValues =
+            typeof scopeClaim === "string"
+                ? scopeClaim
+                      .split(" ")
+                      .map((scope) => scope.trim())
+                      .filter((scope) => scope.length > 0)
+                : [];
+
+        if (!requiredScope || !scopeValues.includes(requiredScope)) {
             throw new CredentialRequestException(
                 "invalid_credential_request",
-                `Access token is not authorized for credential_configuration_id '${requestedCredentialConfigurationId}'`,
+                `Access token is not authorized for credential_configuration_id '${credentialConfigurationId}'`,
             );
         }
     }
@@ -1213,134 +1281,41 @@ export class Oid4vciService {
         tokenPayload: OAuth2TokenPayload,
         tenantId: string,
         credentialConfigurationId: string,
-        issuanceConfig: Awaited<
-            ReturnType<IssuanceService["getIssuanceConfiguration"]>
-        >,
     ): Promise<{
         session: Session;
         claimsResult: ClaimsWebhookResult | undefined;
         isExternalAsToken: boolean;
         isChainedAsToken: boolean;
     }> {
-        const localIssuer = this.authzService.getAuthzIssuer(tenantId);
-        const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
-        const chainedAsIssuer = `${publicUrl}/issuers/${tenantId}/chained-as`;
-        const hasChainedAuthorizationServer =
-            await this.authorizationServersService.hasEnabledChainedAuthorizationServer(
+        const { session, tokenSource } =
+            await this.tokenSessionResolver.resolveIssuanceSession({
                 tenantId,
-            );
-        const managedAuthorizationServerIssuers = new Set(
-            await this.authorizationServersService.getAuthorizationServerIssuerUrls(
-                tenantId,
-            ),
-        );
-
-        const isLocalAsToken = tokenPayload.iss === localIssuer;
-        const isChainedAsToken =
-            (hasChainedAuthorizationServer &&
-                tokenPayload.iss === chainedAsIssuer) ||
-            managedAuthorizationServerIssuers.has(tokenPayload.iss);
-        const isExternalAsToken = !isLocalAsToken && !isChainedAsToken;
-
-        let session: Session;
-        let claimsResult: ClaimsWebhookResult | undefined;
-
-        if (isChainedAsToken) {
-            // Chained AS flow - EUDIPLO-issued token with issuer_state for session correlation
-            const issuerState = tokenPayload.issuer_state as string | undefined;
-            if (!issuerState) {
-                throw new CredentialRequestException(
-                    "credential_request_denied",
-                    "Chained AS token is missing issuer_state claim",
-                );
-            }
-
-            session = await this.sessionService.getBy({ id: issuerState });
-
-            const upstreamIdentity =
-                tokenPayload.iss === chainedAsIssuer
-                    ? await this.chainedAsService.getUpstreamIdentityByIssuerState(
-                          issuerState,
-                      )
-                    : undefined;
-
-            const identity: AuthorizationIdentity = upstreamIdentity ?? {
-                iss: tokenPayload.iss,
-                sub: (tokenPayload.upstream_sub as string) ?? tokenPayload.sub,
-                token_claims: tokenPayload as unknown as Record<
-                    string,
-                    unknown
-                >,
-            };
-
-            claimsResult = await this.credentialsService.getClaimsFromWebhook(
-                credentialConfigurationId,
-                session,
-                { identity },
-            );
-        } else if (isExternalAsToken) {
-            // External AS flow (e.g., Keycloak)
-            const configuredAuthServers =
-                await this.authorizationServersService.getExternalAuthorizationServerUrls(
-                    tenantId,
-                );
-            if (!configuredAuthServers.includes(tokenPayload.iss)) {
-                throw new CredentialRequestException(
-                    "credential_request_denied",
-                    `Token issuer '${tokenPayload.iss}' is not a configured authorization server`,
-                );
-            }
-
-            session = await this.sessionService.findOrCreateByExternalIdentity(
-                tenantId,
-                tokenPayload.iss,
-                tokenPayload.sub,
-            );
-
-            const identity: AuthorizationIdentity = {
-                iss: tokenPayload.iss,
-                sub: tokenPayload.sub,
-                token_claims: tokenPayload as unknown as Record<
-                    string,
-                    unknown
-                >,
-            };
-
-            claimsResult = await this.credentialsService.getClaimsFromWebhook(
-                credentialConfigurationId,
-                session,
-                { identity, requireWebhook: true },
-            );
-        } else {
-            // Local AS flow - existing behavior
-            session = await this.sessionService.getBy({
-                id: tokenPayload.sub,
+                tokenPayload,
+                status: SessionStatus.Active,
+                requiredCredentialConfigurationId: credentialConfigurationId,
             });
 
-            if (tokenPayload.sub !== session.id) {
-                throw new CredentialRequestException(
-                    "credential_request_denied",
-                    "The access token is not associated with a valid session",
-                );
-            }
+        const identity: AuthorizationIdentity = {
+            iss: tokenPayload.iss,
+            sub: tokenPayload.sub,
+            token_claims: tokenPayload as unknown as Record<string, unknown>,
+        };
 
-            const identity: AuthorizationIdentity = {
-                iss: tokenPayload.iss,
-                sub: tokenPayload.sub,
-                token_claims: tokenPayload as unknown as Record<
-                    string,
-                    unknown
-                >,
-            };
+        const claimsResult = await this.credentialsService.getClaimsFromWebhook(
+            credentialConfigurationId,
+            session,
+            {
+                identity,
+                requireWebhook: tokenSource === "external",
+            },
+        );
 
-            claimsResult = await this.credentialsService.getClaimsFromWebhook(
-                credentialConfigurationId,
-                session,
-                { identity },
-            );
-        }
-
-        return { session, claimsResult, isExternalAsToken, isChainedAsToken };
+        return {
+            session,
+            claimsResult,
+            isExternalAsToken: tokenSource === "external",
+            isChainedAsToken: tokenSource === "chained",
+        };
     }
 
     /**
@@ -1807,9 +1782,11 @@ export class Oid4vciService {
         //    matching credential_configuration_id.
         //  - credential_configuration_id (direct)
         let credentialConfigurationId: string;
+        let credentialIdentifier: string | undefined;
         if (parsedCredentialRequest.credentialIdentifier) {
-            const credentialIdentifier =
+            const resolvedCredentialIdentifier =
                 parsedCredentialRequest.credentialIdentifier as string;
+            credentialIdentifier = resolvedCredentialIdentifier;
             const authDetails =
                 (tokenPayload.authorization_details as
                     | Array<Record<string, unknown>>
@@ -1818,7 +1795,7 @@ export class Oid4vciService {
                 (ad) =>
                     Array.isArray(ad.credential_identifiers) &&
                     (ad.credential_identifiers as string[]).includes(
-                        credentialIdentifier,
+                        resolvedCredentialIdentifier,
                     ),
             );
             if (
@@ -1836,16 +1813,6 @@ export class Oid4vciService {
                 parsedCredentialRequest.credentialConfigurationId as string;
         }
 
-        // Enforce that the access token is actually authorized to request
-        // this credential_configuration_id. Per OID4VCI Section 6, the
-        // `authorization_details` on the token define the authorized
-        // Credential Configurations. If the claim is present, the requested
-        // configuration MUST be one of them.
-        this.enforceAuthorizationDetails(
-            tokenPayload,
-            credentialConfigurationId,
-        );
-
         try {
             await this.enforceProofTypePolicy(
                 tenantId,
@@ -1861,8 +1828,14 @@ export class Oid4vciService {
                 tokenPayload,
                 tenantId,
                 credentialConfigurationId,
-                issuanceConfig,
             );
+
+        await this.enforceCredentialAuthorization(
+            tokenPayload,
+            tenantId,
+            credentialConfigurationId,
+            credentialIdentifier,
+        );
 
         // Add session context to span for trace correlation
         const span = this.traceService.getSpan();
@@ -2001,56 +1974,12 @@ export class Oid4vciService {
             allowedAuthenticationSchemes,
         });
 
-        const localIssuer = this.authzService.getAuthzIssuer(tenantId);
-        const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
-        const chainedAsIssuer = `${publicUrl}/issuers/${tenantId}/chained-as`;
-        const hasChainedAuthorizationServer =
-            await this.authorizationServersService.hasEnabledChainedAuthorizationServer(
+        const { session } = await this.tokenSessionResolver.resolveIssuanceSession(
+            {
                 tenantId,
-            );
-        const managedAuthorizationServerIssuers = new Set(
-            await this.authorizationServersService.getAuthorizationServerIssuerUrls(
-                tenantId,
-            ),
+                tokenPayload: tokenPayload as OAuth2TokenPayload,
+            },
         );
-
-        const isLocalAsToken = tokenPayload.iss === localIssuer;
-        const isChainedAsToken =
-            (hasChainedAuthorizationServer &&
-                tokenPayload.iss === chainedAsIssuer) ||
-            managedAuthorizationServerIssuers.has(tokenPayload.iss);
-        const isExternalAsToken = !isLocalAsToken && !isChainedAsToken;
-
-        let session: Session;
-
-        if (isExternalAsToken) {
-            const configuredAuthServers =
-                await this.authorizationServersService.getExternalAuthorizationServerUrls(
-                    tenantId,
-                );
-            if (!configuredAuthServers.includes(tokenPayload.iss)) {
-                throw new CredentialRequestException(
-                    "credential_request_denied",
-                    `Token issuer '${tokenPayload.iss}' is not a configured authorization server`,
-                );
-            }
-
-            console.log(tokenPayload);
-
-            session = await this.sessionService.findOrCreateByExternalIdentity(
-                tenantId,
-                tokenPayload.iss,
-                tokenPayload.sub,
-            );
-        } else {
-            session = await this.sessionService.getBy({
-                id: tokenPayload.sub,
-            });
-
-            if (session.id !== tokenPayload.sub) {
-                throw new BadRequestException("Session not found");
-            }
-        }
 
         // Add session context to span for trace correlation
         const span = this.traceService.getSpan();

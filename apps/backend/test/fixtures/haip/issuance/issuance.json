@@ -7,7 +7,11 @@
         {
             "id": "issuer-external",
             "type": "external",
-            "issuer": "https://auth.example.com"
+            "issuer": "https://auth.example.com",
+            "sessionBinding": {
+                "method": "access_token_claim",
+                "claim": "issuer_state"
+            }
         }
     ],
     "batchSize": 10,

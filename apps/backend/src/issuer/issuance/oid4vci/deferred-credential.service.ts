@@ -21,7 +21,6 @@ import { LessThan, Repository } from "typeorm";
 import { v4 } from "uuid";
 import { CryptoService } from "../../../crypto/crypto.service";
 import { Session } from "../../../session/entities/session.entity";
-import { SessionService } from "../../../session/session.service";
 import { TrustStoreService } from "../../../shared/trust/trust-store.service";
 import { X509ValidationService } from "../../../shared/trust/x509-validation.service";
 import { CredentialsService } from "../../configuration/credentials/credentials.service";
@@ -37,7 +36,12 @@ import {
     CredentialRequestException,
     DeferredCredentialException,
 } from "./exceptions";
+import {
+    OAuth2TokenPayload,
+    TokenSessionResolverService,
+} from "./token-session-resolver.service";
 import { getHeadersFromRequest } from "./util";
+import { SessionService } from "../../../session/session.service";
 
 /**
  * Parameters for creating a deferred credential transaction.
@@ -69,9 +73,10 @@ export class DeferredCredentialService {
     constructor(
         private readonly cryptoService: CryptoService,
         private readonly configService: ConfigService,
-        private readonly sessionService: SessionService,
         private readonly issuanceService: IssuanceService,
+        private readonly sessionService: SessionService,
         private readonly credentialsService: CredentialsService,
+        private readonly tokenSessionResolver: TokenSessionResolverService,
         private readonly traceService: TraceService,
         private readonly trustStoreService: TrustStoreService,
         private readonly x509ValidationService: X509ValidationService,
@@ -115,10 +120,10 @@ export class DeferredCredentialService {
     private enforceAuthorizationDetailsForDeferred(
         tokenPayload: Record<string, unknown>,
         requestedCredentialConfigurationId: string,
-    ): void {
+    ): { hasAuthorizationDetails: boolean } {
         const raw = tokenPayload.authorization_details;
         if (!Array.isArray(raw) || raw.length === 0) {
-            return;
+            return { hasAuthorizationDetails: false };
         }
 
         const authorized = raw
@@ -132,7 +137,51 @@ export class DeferredCredentialService {
             .map((ad) => ad.credential_configuration_id as string | undefined)
             .filter((id): id is string => typeof id === "string");
 
+        if (authorized.length === 0) {
+            throw new CredentialRequestException(
+                "invalid_credential_request",
+                "Access token is not authorized for any credential configuration",
+            );
+        }
+
         if (!authorized.includes(requestedCredentialConfigurationId)) {
+            throw new CredentialRequestException(
+                "invalid_credential_request",
+                `Access token is not authorized for credential_configuration_id '${requestedCredentialConfigurationId}'`,
+            );
+        }
+
+        return { hasAuthorizationDetails: true };
+    }
+
+    private async enforceScopeAuthorizationForDeferred(
+        tokenPayload: Record<string, unknown>,
+        tenantId: string,
+        requestedCredentialConfigurationId: string,
+    ): Promise<void> {
+        const credentialConfig = await this.credentialsService.getCredentialConfig(
+            requestedCredentialConfigurationId,
+            tenantId,
+        );
+
+        if (!credentialConfig) {
+            throw new CredentialRequestException(
+                "unknown_credential_configuration",
+                `Credential configuration '${requestedCredentialConfigurationId}' is not supported`,
+            );
+        }
+
+        const requiredScope = credentialConfig.config?.scope;
+        const tokenScope = tokenPayload.scope;
+        const tokenScopes =
+            typeof tokenScope === "string"
+                ? tokenScope
+                      .split(" ")
+                      .map((scope) => scope.trim())
+                      .filter((scope) => scope.length > 0)
+                : [];
+
+        if (!requiredScope || !tokenScopes.includes(requiredScope)) {
             throw new CredentialRequestException(
                 "invalid_credential_request",
                 `Access token is not authorized for credential_configuration_id '${requestedCredentialConfigurationId}'`,
@@ -343,10 +392,33 @@ export class DeferredCredentialService {
         // credential's configuration, per OID4VCI Section 6. When the token
         // carries `authorization_details`, the deferred credential's
         // configuration MUST be one of the authorized ones.
-        this.enforceAuthorizationDetailsForDeferred(
-            tokenPayload as Record<string, unknown>,
-            deferredTransaction.credentialConfigurationId,
+        const deferredAuthorization =
+            this.enforceAuthorizationDetailsForDeferred(
+                tokenPayload as Record<string, unknown>,
+                deferredTransaction.credentialConfigurationId,
+            );
+
+        if (!deferredAuthorization.hasAuthorizationDetails) {
+            await this.enforceScopeAuthorizationForDeferred(
+                tokenPayload as Record<string, unknown>,
+                tenantId,
+                deferredTransaction.credentialConfigurationId,
+            );
+        }
+
+        const { session } = await this.tokenSessionResolver.resolveIssuanceSession(
+            {
+                tenantId,
+                tokenPayload: tokenPayload as OAuth2TokenPayload,
+            },
         );
+
+        if (session.id !== deferredTransaction.sessionId) {
+            throw new CredentialRequestException(
+                "credential_request_denied",
+                "The access token is not bound to this deferred transaction",
+            );
+        }
 
         // Add session context to span for trace correlation
         const span = this.traceService.getSpan();

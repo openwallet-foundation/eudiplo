@@ -913,6 +913,10 @@ export async function startMockAuthorizationServer(): Promise<{
     close: () => Promise<void>;
 }> {
     let server: Server | undefined;
+    const authorizationCodes = new Map<
+        string,
+        { issuerState?: string; scope?: string }
+    >();
     const { privateKey, publicKey } = await ES256.generateKeyPair().then(
         (keyPair) => ({
             privateKey: keyPair.privateKey,
@@ -954,7 +958,11 @@ export async function startMockAuthorizationServer(): Promise<{
                     requestUrl.searchParams.get("redirect_uri") ??
                     "http://127.0.0.1/callback";
                 const state = requestUrl.searchParams.get("state") ?? "state";
-                const code = "mock-auth-code";
+                const code = crypto.randomUUID();
+                const issuerState =
+                    requestUrl.searchParams.get("issuer_state") ?? undefined;
+                const scope = requestUrl.searchParams.get("scope") ?? undefined;
+                authorizationCodes.set(code, { issuerState, scope });
 
                 const target = new URL(redirectUri);
                 target.searchParams.set("code", code);
@@ -985,6 +993,10 @@ export async function startMockAuthorizationServer(): Promise<{
                 req.on("end", async () => {
                     const params = new URLSearchParams(rawBody);
                     const grantType = params.get("grant_type");
+                    const authorizationCode = params.get("code") ?? undefined;
+                    const authorizationContext = authorizationCode
+                        ? authorizationCodes.get(authorizationCode)
+                        : undefined;
                     const dpopHeader = req.headers.dpop;
                     const dpopJwt =
                         typeof dpopHeader === "string" ? dpopHeader : undefined;
@@ -1023,7 +1035,15 @@ export async function startMockAuthorizationServer(): Promise<{
                         ...(cnf ? { cnf } : {}),
                         ...(grantType === "authorization_code"
                             ? {
-                                  scope: "openid",
+                                  scope:
+                                      authorizationContext?.scope ??
+                                      "openid",
+                                                                    ...(authorizationContext?.issuerState
+                                                                            ? {
+                                                                                        issuer_state:
+                                                                                                authorizationContext.issuerState,
+                                                                                }
+                                                                            : {}),
                               }
                             : {}),
                     };
@@ -1037,6 +1057,10 @@ export async function startMockAuthorizationServer(): Promise<{
                         .sign(privateKey);
 
                     const responseBody = {
+                            sessionBinding: {
+                                method: "access_token_claim",
+                                claim: "issuer_state",
+                            },
                         access_token: accessToken,
                         token_type: cnf ? "DPoP" : "Bearer",
                         expires_in: 3600,

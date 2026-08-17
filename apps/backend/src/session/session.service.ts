@@ -7,6 +7,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import type { UpDownCounter } from "@opentelemetry/api";
 import { MetricService } from "nestjs-otel";
 import {
+    Brackets,
     DeepPartial,
     FindOptionsWhere,
     IsNull,
@@ -520,5 +521,47 @@ export class SessionService implements OnApplicationBootstrap {
         );
 
         return newSession;
+    }
+
+    /**
+     * Atomically bind an external AS identity to an existing session.
+     *
+     * Rules:
+     * - If unbound, bind to provided iss/sub.
+     * - If already bound to same iss/sub, no-op.
+     * - If bound to different identity, reject by returning null.
+     */
+    async bindExternalIdentity(
+        sessionId: string,
+        tenantId: string,
+        externalIssuer: string,
+        externalSubject: string,
+    ): Promise<Session | null> {
+        const result = await this.sessionRepository
+            .createQueryBuilder()
+            .update(Session)
+            .set({ externalIssuer, externalSubject })
+            .where("id = :sessionId", { sessionId })
+            .andWhere("tenantId = :tenantId", { tenantId })
+            .andWhere(
+                new Brackets((qb) => {
+                    qb.where(
+                        '"externalIssuer" IS NULL AND "externalSubject" IS NULL',
+                    ).orWhere(
+                        '"externalIssuer" = :externalIssuer AND "externalSubject" = :externalSubject',
+                        { externalIssuer, externalSubject },
+                    );
+                }),
+            )
+            .execute();
+
+        if ((result.affected ?? 0) === 0) {
+            return null;
+        }
+
+        return this.sessionRepository.findOneBy({
+            id: sessionId,
+            tenantId,
+        });
     }
 }

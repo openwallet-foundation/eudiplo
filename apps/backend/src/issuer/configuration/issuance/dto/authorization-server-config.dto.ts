@@ -14,6 +14,13 @@ export type AuthorizationServerType =
     | "chained"
     | "built-in";
 
+const ExternalAccessTokenClaimSessionBindingSchema = z
+    .object({
+        method: z.literal("access_token_claim"),
+        claim: z.string().min(1),
+    })
+    .strict();
+
 const ManagedAuthorizationServerConfigSchema = z
     .object({
         type: z.enum(["external", "oid4vp", "chained", "built-in"]),
@@ -28,10 +35,30 @@ const ExternalAuthorizationServerConfigSchema = z
         type: z.literal("external"),
         id: z.string(),
         issuer: z.string(),
+        sessionBinding: ExternalAccessTokenClaimSessionBindingSchema.optional(),
         label: z.string().optional(),
         enabled: z.boolean().optional(),
     })
     .strict();
+
+export class ExternalAccessTokenClaimSessionBinding extends createZodDto(
+    ExternalAccessTokenClaimSessionBindingSchema,
+) {
+    @ApiProperty({
+        description:
+            "Session correlation method for external authorization servers.",
+        enum: ["access_token_claim"],
+        example: "access_token_claim",
+    })
+    method!: "access_token_claim";
+
+    @ApiProperty({
+        description:
+            "Name of the external access-token claim that carries issuer_state.",
+        example: "issuer_state",
+    })
+    claim!: string;
+}
 
 const Oid4VpAuthorizationServerConfigSchema = z
     .object({
@@ -119,6 +146,13 @@ export class ExternalAuthorizationServerConfig extends createZodDto(
         example: "https://auth.example.com",
     })
     declare issuer: string;
+
+    @ApiPropertyOptional({
+        description:
+            "Explicit contract describing how issuer_state is propagated by the external AS.",
+        type: () => ExternalAccessTokenClaimSessionBinding,
+    })
+    declare sessionBinding?: ExternalAccessTokenClaimSessionBinding;
 
     declare label?: string;
 

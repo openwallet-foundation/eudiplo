@@ -48,6 +48,10 @@ type ExternalManagedAuthorizationServerConfig =
     ManagedAuthorizationServerConfig & {
         type: "external";
         issuer: string;
+        sessionBinding?: {
+            method: "access_token_claim";
+            claim: string;
+        };
     };
 
 type ChainedManagedAuthorizationServerConfig =
@@ -108,6 +112,18 @@ export class AuthorizationServersService {
     async getExternalAuthorizationServerUrls(
         tenantId: string,
     ): Promise<string[]> {
+        const configs = await this.getExternalAuthorizationServerConfigs(
+            tenantId,
+        );
+
+        return configs
+            .map((config) => config.issuer)
+            .filter((url, index, arr) => arr.indexOf(url) === index);
+    }
+
+    async getExternalAuthorizationServerConfigs(
+        tenantId: string,
+    ): Promise<ExternalManagedAuthorizationServerConfig[]> {
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
 
@@ -125,9 +141,17 @@ export class AuthorizationServersService {
                         candidate.issuer.length > 0
                     );
                 },
-            )
-            .map((config) => config.issuer)
-            .filter((url, index, arr) => arr.indexOf(url) === index);
+            );
+    }
+
+    async getExternalAuthorizationServerConfigByIssuer(
+        tenantId: string,
+        issuer: string,
+    ): Promise<ExternalManagedAuthorizationServerConfig | undefined> {
+        const configs = await this.getExternalAuthorizationServerConfigs(
+            tenantId,
+        );
+        return configs.find((config) => config.issuer === issuer);
     }
 
     async hasEnabledChainedAuthorizationServer(

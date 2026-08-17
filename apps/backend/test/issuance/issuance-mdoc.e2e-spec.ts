@@ -91,8 +91,7 @@ describe("Issuance - mDOC Credentials", () => {
 
         const client = new Openid4vciClient({
             callbacks: {
-                ...callbacks,
-                fetch: createMockExternalAuthorizationServerFetch(),
+                ...callbacks,                
                 clientAuthentication: clientAuthenticationAnonymous(),
                 signJwt: getSignJwtCallback([holderPrivateKeyJwk as Jwk]),
             },

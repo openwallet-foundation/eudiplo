@@ -4,7 +4,11 @@ import { App } from "supertest/types";
 import { Agent, setGlobalDispatcher } from "undici";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { IssuanceDto } from "../../src/issuer/configuration/issuance/dto/issuance.dto";
-import { IssuanceTestContext, setupIssuanceTestApp } from "../utils";
+import {
+    getToken,
+    IssuanceTestContext,
+    setupIssuanceTestApp,
+} from "../utils";
 
 setGlobalDispatcher(
     new Agent({
@@ -53,10 +57,17 @@ describe("Issuance - Configuration", () => {
     }
 
     test("get should create a default issuance config when none exists", async () => {
+        const tenantToken = await getToken(
+            app,
+            ctx.clientId,
+            ctx.clientSecret,
+            `issuance-default-${Date.now()}`,
+        );
+
         const res = await request(app.getHttpServer())
             .get("/issuer/config")
             .trustLocalhost()
-            .set("Authorization", `Bearer ${authToken}`)
+            .set("Authorization", `Bearer ${tenantToken}`)
             .expect(200);
 
         expect(res.body.authorizationServers).toBeDefined();

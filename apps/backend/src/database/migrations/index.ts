@@ -41,3 +41,4 @@ export { AddPresentationStatusCheckMode1773000000000 } from "./1773000000000-Add
 export { AddReaderAuthToPresentationConfig1774000000000 } from "./1774000000000-AddReaderAuthToPresentationConfig";
 export { AddRootExternalKeyIdToKeyChain1774000000000 } from "./1774000000000-AddRootExternalKeyIdToKeyChain";
 export { AddPresentationResultFields1775000000000 } from "./1775000000000-AddPresentationResultFields";
+export { AddAuthorizationServerIssuerToSession1776000000000 } from "./1776000000000-AddAuthorizationServerIssuerToSession";
