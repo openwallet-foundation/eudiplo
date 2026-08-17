@@ -437,11 +437,11 @@ describe("Issuance - Wallet Attestation", () => {
             } as IssuanceDto)
             .expect(201);
 
-        // Mock the trust list endpoint
+        // Mock the trust list endpoint using the ETSI wallet-solution issuance service type.
         const trustListJwt = await createMockTrustListJwt(
             trustListSigningCert,
             walletProviderCert.certificate,
-            "http://uri.etsi.org/19602/SvcType/WalletProvider",
+            "http://uri.etsi.org/19602/SvcType/WalletSolution/Issuance",
         );
 
         const nockScope = nock("http://localhost:8787")

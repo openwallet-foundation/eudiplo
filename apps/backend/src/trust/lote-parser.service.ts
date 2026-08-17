@@ -2,6 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import type { LoTE } from "@owf/eudi-lote";
 import {
     ServiceTypeIdentifier,
+    serviceTypeMatches,
     TrustedEntity,
     TrustedEntityServiceCert,
 } from "./types";
@@ -120,10 +121,12 @@ export class LoteParserService {
         parsed: ParsedLoTE,
         accepted: ServiceTypeIdentifier[],
     ): ParsedLoTE {
-        const set = new Set(accepted);
-
         const filteredEntities = parsed.entities.filter((entity) =>
-            entity.services.some((s) => set.has(s.serviceTypeIdentifier)),
+            entity.services.some((s) =>
+                accepted.some((acceptedType) =>
+                    serviceTypeMatches(s.serviceTypeIdentifier, acceptedType),
+                ),
+            ),
         );
 
         return {

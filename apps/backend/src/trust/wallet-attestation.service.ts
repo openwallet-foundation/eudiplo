@@ -13,6 +13,7 @@ import {
     normalizeTrustListRefs,
     ServiceTypeIdentifiers,
     TrustListSource,
+    walletSolutionServiceTypes,
 } from "./types";
 import {
     MatchedTrustedEntity,
@@ -100,7 +101,7 @@ export class WalletAttestationService {
 
             // Then validate the X.509 certificate against trust lists and get the matched entity
             const { matchedEntity, trustStore } =
-                await this.validateWalletProviderCertificate(
+                await this.validateWalletSolutionCertificate(
                     clientAttestation.clientAttestationJwt,
                     walletProviderTrustLists,
                 );
@@ -133,7 +134,7 @@ export class WalletAttestationService {
      * @returns The matched entity and trust store (both null if no trust lists configured)
      * @throws UnauthorizedException if certificate is not trusted
      */
-    private async validateWalletProviderCertificate(
+    private async validateWalletSolutionCertificate(
         clientAttestationJwt: string,
         trustListInputs: TrustListRef[],
     ): Promise<{
@@ -163,7 +164,7 @@ export class WalletAttestationService {
         // Build trust list source from configured URLs
         const trustListSource: TrustListSource = {
             lotes: trustListRefs,
-            acceptedServiceTypes: [ServiceTypeIdentifiers.WalletProvider],
+            acceptedServiceTypes: [...walletSolutionServiceTypes],
         };
 
         // Fetch and build the trust store
@@ -198,7 +199,7 @@ export class WalletAttestationService {
                     path,
                     trustStore.entities,
                     "leaf",
-                    ServiceTypeIdentifiers.WalletProvider,
+                    ServiceTypeIdentifiers.WalletSolution,
                 );
 
             if (!match) {

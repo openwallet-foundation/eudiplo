@@ -4,10 +4,11 @@ import {
     normalizeTrustListRefs,
     ServiceTypeIdentifiers,
     TrustListSource,
+    walletSolutionServiceTypes,
 } from "../../../trust/types";
-import { X509ValidationService } from "../../../trust/x509-validation.service";
 import { CredentialRequestException } from "./exceptions";
 import { TrustListRef } from "../../../verifier/presentations/entities/presentation-config.entity";
+import { X509ValidationService } from "../../../trust/x509-validation.service";
 
 export interface AttestationProofTrustValidationDeps {
     trustStoreService: TrustStoreService;
@@ -41,7 +42,7 @@ export async function validateAttestationProofTrust(
 
         const trustListSource: TrustListSource = {
             lotes: trustListRefs,
-            acceptedServiceTypes: [ServiceTypeIdentifiers.WalletProvider],
+            acceptedServiceTypes: [...walletSolutionServiceTypes],
         };
 
         const trustStore =
@@ -77,7 +78,7 @@ export async function validateAttestationProofTrust(
                 path,
                 trustStore.entities,
                 "leaf",
-                ServiceTypeIdentifiers.WalletProvider,
+                ServiceTypeIdentifiers.WalletSolution,
             );
 
         if (!matched) {

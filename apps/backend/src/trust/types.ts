@@ -41,17 +41,57 @@ export function normalizeTrustListRefs(
 
 export type ServiceTypeIdentifier = string;
 
+function canonicalizeServiceType(
+    serviceType: ServiceTypeIdentifier,
+): ServiceTypeIdentifier {
+    return serviceType.replace(/WalletProvider/g, "WalletSolution");
+}
+
+export function serviceTypeMatches(
+    serviceType: ServiceTypeIdentifier,
+    acceptedType: ServiceTypeIdentifier,
+): boolean {
+    const normalizedServiceType = canonicalizeServiceType(serviceType);
+    const normalizedAcceptedType = canonicalizeServiceType(acceptedType);
+
+    if (normalizedServiceType === normalizedAcceptedType) {
+        return true;
+    }
+
+    if (normalizedAcceptedType.startsWith("/")) {
+        return normalizedServiceType.endsWith(normalizedAcceptedType);
+    }
+
+    const acceptedRoleSuffix = /(\/Issuance|\/Revocation)$/.exec(
+        normalizedAcceptedType,
+    );
+    if (acceptedRoleSuffix) {
+        return normalizedServiceType === normalizedAcceptedType;
+    }
+
+    return (
+        normalizedServiceType === normalizedAcceptedType ||
+        normalizedServiceType.startsWith(`${normalizedAcceptedType}/`)
+    );
+}
+
 /** Well-known service type identifiers from ETSI TS 119 602 */
 export const ServiceTypeIdentifiers = {
     EaaIssuance: "http://uri.etsi.org/19602/SvcType/EAA/Issuance",
-    EaaRevocation: "http://uri.etsi.org/19602/SvcType/EAA/Revocation",
-    /** Wallet provider service type for wallet attestation validation */
-    WalletProvider: "http://uri.etsi.org/19602/SvcType/WalletProvider",
+    EaaRevocation: "http://uri.etsi.org/19602/SvcType/EAA/Revocation",    
+    WalletSolution: "http://uri.etsi.org/19602/SvcType/WalletSolution",
+    WalletSolutionIssuance:
+        "http://uri.etsi.org/19602/SvcType/WalletSolution/Issuance",
+    WalletSolutionRevocation:
+        "http://uri.etsi.org/19602/SvcType/WalletSolution/Revocation",
 } as const;
 
-/**
- * A service certificate from a TrustedEntity in a LoTE.
- */
+export const walletSolutionServiceTypes = [
+    ServiceTypeIdentifiers.WalletSolution,
+    ServiceTypeIdentifiers.WalletSolutionIssuance,
+    ServiceTypeIdentifiers.WalletSolutionRevocation,
+] as const;
+
 export type TrustedEntityServiceCert = {
     serviceTypeIdentifier: ServiceTypeIdentifier;
     certValue: string; // PEM or base64 DER

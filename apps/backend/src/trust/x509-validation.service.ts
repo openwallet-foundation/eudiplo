@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import * as x509 from "@peculiar/x509";
-import { getRevocationCert, TrustedEntity } from "./types";
+import { getRevocationCert, serviceTypeMatches, TrustedEntity } from "./types";
 
 type X5cInput = string[]; // base64 DER entries
 
@@ -145,11 +145,14 @@ export class X509ValidationService {
         for (const entity of entities) {
             // Find certificates matching the specified service type in this entity
             // If filter starts with "/", use suffix matching (e.g., "/Issuance" matches PID/Issuance and EAA/Issuance)
-            // Otherwise use exact matching (e.g., full WalletProvider URI)
+            // Otherwise use exact or base-role matching (e.g., WalletSolution matches WalletSolution/Issuance)
             const matchingServices = entity.services.filter((s) =>
                 serviceTypeFilter.startsWith("/")
                     ? s.serviceTypeIdentifier.endsWith(serviceTypeFilter)
-                    : s.serviceTypeIdentifier === serviceTypeFilter,
+                    : serviceTypeMatches(
+                          s.serviceTypeIdentifier,
+                          serviceTypeFilter,
+                      ),
             );
 
             for (const svc of matchingServices) {
