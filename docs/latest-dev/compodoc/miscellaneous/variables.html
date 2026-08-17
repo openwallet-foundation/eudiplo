@@ -687,6 +687,9 @@
                             <a href="#Nn" title="src/verifier/iso18013/hpke.ts" class="reference-link "><span class="reference-badge reference-badge--variable" aria-hidden="true">V</span><span class="reference-link-label"><b>Nn</b>&nbsp;&nbsp;&nbsp;(src/.../hpke.ts)</span></a>
                         </li>
                         <li>
+                            <a href="#NonBlankStringSchema" title="src/auth/tenant/schemas/create-tenant.schema.ts" class="reference-link "><span class="reference-badge reference-badge--variable" aria-hidden="true">V</span><span class="reference-link-label"><b>NonBlankStringSchema</b>&nbsp;&nbsp;&nbsp;(src/.../create-tenant.schema.ts)</span></a>
+                        </li>
+                        <li>
                             <a href="#NoneAuthSchema" title="src/issuer/configuration/attribute-provider/schemas/attribute-provider.schema.ts" class="reference-link "><span class="reference-badge reference-badge--variable" aria-hidden="true">V</span><span class="reference-link-label"><b>NoneAuthSchema</b>&nbsp;&nbsp;&nbsp;(src/.../attribute-provider.schema.ts)</span></a>
                         </li>
                         <li>
@@ -8725,19 +8728,13 @@ This decorator can be used to determine the media type of the request.</p>
                     <td class="col-md-4">
                         <i>Default value : </i><code>z
     .strictObject({
-        id: z.string().trim().min(1).describe(&quot;Unique tenant identifier.&quot;),
-        name: z
-            .string()
-            .trim()
-            .min(1)
-            .default(&quot;EUDIPLO&quot;)
-            .describe(&quot;Display name of the tenant.&quot;),
-        description: z
-            .string()
-            .trim()
-            .min(1)
-            .optional()
-            .describe(&quot;Optional tenant description.&quot;),
+        id: NonBlankStringSchema.describe(&quot;Unique tenant identifier.&quot;),
+        name: NonBlankStringSchema.default(&quot;EUDIPLO&quot;).describe(
+            &quot;Display name of the tenant.&quot;,
+        ),
+        description: NonBlankStringSchema.optional().describe(
+            &quot;Optional tenant description.&quot;,
+        ),
         roles: z
             .array(RoleSchema)
             .optional()
@@ -8779,6 +8776,32 @@ This decorator can be used to determine the media type of the request.</p>
     name: true,
     description: true,
 }).describe(&quot;Payload used when importing tenant metadata from config files.&quot;)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="NonBlankStringSchema"></a>
+                    <span class="name">
+                        <span ><b>NonBlankStringSchema</b></span>
+                        <a href="#NonBlankStringSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z.string().trim().min(1)</code>
                     </td>
                 </tr>
 
@@ -8832,10 +8855,23 @@ This decorator can be used to determine the media type of the request.</p>
                 </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>CreateTenantSchema.omit({
-    id: true,
-})
-    .partial()
+                        <i>Default value : </i><code>z
+    .strictObject({
+        name: NonBlankStringSchema.optional().describe(
+            &quot;Display name of the tenant.&quot;,
+        ),
+        description: NonBlankStringSchema.nullable()
+            .optional()
+            .describe(
+                &quot;Tenant description. Omit to keep the current value or set to null to remove it.&quot;,
+            ),
+        sessionConfig: SessionStorageConfigSchema.optional().describe(
+            &quot;Optional tenant-specific session storage configuration.&quot;,
+        ),
+        statusListConfig: StatusListConfigSchema.optional().describe(
+            &quot;Optional tenant-specific status list defaults.&quot;,
+        ),
+    })
     .describe(&quot;Payload for partially updating tenant metadata.&quot;)</code>
                     </td>
                 </tr>

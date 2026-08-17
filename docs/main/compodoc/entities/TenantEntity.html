@@ -262,7 +262,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:77</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:80</a></div>
                         </td>
                     </tr>
 
@@ -291,7 +291,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <i>Type : </i>    <code>string | null</code>
 
                     </td>
                 </tr>
@@ -300,13 +300,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @ApiPropertyOptional({description: &#x27;Tenant description&#x27;})<br />@Column({nullable: true})<br />
+                            @ApiPropertyOptional({description: &#x27;Tenant description&#x27;, nullable: true})<br />@Column(&#x27;varchar&#x27;, {nullable: true})<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:33</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:36</a></div>
                         </td>
                     </tr>
 
@@ -436,7 +436,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:52</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:55</a></div>
                         </td>
                     </tr>
 
@@ -480,7 +480,7 @@ Controls how long sessions are kept and how they are cleaned up.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:43</a></div>
                         </td>
                     </tr>
 
@@ -524,7 +524,7 @@ Controls how long sessions are kept and how they are cleaned up.</p>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:64</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">src/auth/tenant/entitites/tenant.entity.ts:67</a></div>
                         </td>
                     </tr>
 
@@ -573,9 +573,12 @@ export class TenantEntity {
     /**
      * The description of the tenant.
      */
-    @ApiPropertyOptional({ description: &quot;Tenant description&quot; })
-    @Column({ nullable: true })
-    description?: string;
+    @ApiPropertyOptional({
+        description: &quot;Tenant description&quot;,
+        nullable: true,
+    })
+    @Column(&quot;varchar&quot;, { nullable: true })
+    description?: string | null;
 
     /**
      * The current status of the tenant.
