@@ -394,10 +394,12 @@ describe("Issuance - Wallet Attestation", () => {
         trustStoreService.clearCache();
         statusListVerifierService.clearCache();
 
+        //TODO: check why it needs to be disabled, maybe because of the nock intercepts
+        /* 
         // Enable nock to intercept HTTP requests
         nock.disableNetConnect();
         // Allow localhost connections for the test app itself (but not port 8787 which we mock)
-        nock.enableNetConnect(/127\.0\.0\.1/);
+        nock.enableNetConnect(/127\.0\.0\.1/); */
     });
 
     afterEach(() => {
@@ -480,7 +482,10 @@ describe("Issuance - Wallet Attestation", () => {
                 clientAuthentication: clientAuthenticationAnonymous(),
                 signJwt: getSignJwtCallback([holderPrivateKeyJwk as Jwk]),
             },
-        }).resolveCredentialOffer(offerResponse.body.uri);
+        }).resolveCredentialOffer(offerResponse.body.uri).catch((err) => {
+            console.error("Error resolving credential offer:", err);
+            throw err;
+        });
 
         const issuerMetadata = await new Openid4vciClient({
             callbacks: {

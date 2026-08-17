@@ -556,6 +556,10 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
                     id: "issuer-external",
                     type: "external",
                     issuer: fakeAuthServer,
+                    sessionBinding: {
+                        method: "access_token_claim",
+                        claim: "issuer_state"
+                    }
                 },
             ],
             dPopRequired: false,
