@@ -166,12 +166,13 @@ export class Oid4vciController {
         @Body() body: NotificationRequestDto,
         @Req() req: Request,
         @Param("tenantId") tenantId: string,
-    ) {        
+    ) {
         return this.oid4vciService.handleNotification(req, body, tenantId).then(
             (res) => {
                 console.log(res);
                 return res;
-            }, (err) => {
+            },
+            (err) => {
                 console.log(err);
                 return err;
             },

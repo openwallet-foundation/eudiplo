@@ -493,9 +493,11 @@ export class SessionService implements OnApplicationBootstrap {
                 { externalIssuer, externalSubject },
             );
 
-            const updatedSession = await this.sessionRepository.findOneByOrFail({
-                id: matchingOfferSession.id,
-            });
+            const updatedSession = await this.sessionRepository.findOneByOrFail(
+                {
+                    id: matchingOfferSession.id,
+                },
+            );
             this.logger.log(
                 `Reused active offer session for external identity: iss=${externalIssuer}, sub=${externalSubject}, session=${updatedSession.id}`,
             );

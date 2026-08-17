@@ -114,24 +114,23 @@ describe("Issuance - Authorization Code Flow", () => {
     });
 
     test("authorized code flow", async () => {
-
         const body: OfferRequestDto = {
-                response_type: "uri",
-                credentialConfigurationIds: ["pid-no-key"],
-                flow: "authorization_code",
-                credentialClaims: {
-                    "pid-no-key": {
-                        type: "attributeProvider",
-                        attributeProviderId: "citizen-ap"
-                    }
-                }
-            }; 
+            response_type: "uri",
+            credentialConfigurationIds: ["pid-no-key"],
+            flow: "authorization_code",
+            credentialClaims: {
+                "pid-no-key": {
+                    type: "attributeProvider",
+                    attributeProviderId: "citizen-ap",
+                },
+            },
+        };
 
         const offerResponse = await request(app.getHttpServer())
             .post("/issuer/offer")
             .trustLocalhost()
             .set("Authorization", `Bearer ${authToken}`)
-            .send(body);    
+            .send(body);
         expect(offerResponse.status).toBe(201);
 
         const holderKeyPair = await generateKeyPair("ES256", {
@@ -242,22 +241,24 @@ describe("Issuance - Authorization Code Flow", () => {
         // check that a key is present in the cnf
         expect(claims.cnf).toBeDefined();
 
-        await client.sendNotification({
-            issuerMetadata,
-            notification: {
-                notificationId:
-                    credentialResponse.credentialResponse.notification_id!,
-                event: "credential_accepted",
-            },
-            accessToken: accessTokenResponse.access_token,
-            dpop: {
-                ...dpop,
-                signer: dpopSigner,
-            },
-        }).catch((err) => {
-            console.error("Error sending notification:", err);
-            throw err;
-        });
+        await client
+            .sendNotification({
+                issuerMetadata,
+                notification: {
+                    notificationId:
+                        credentialResponse.credentialResponse.notification_id!,
+                    event: "credential_accepted",
+                },
+                accessToken: accessTokenResponse.access_token,
+                dpop: {
+                    ...dpop,
+                    signer: dpopSigner,
+                },
+            })
+            .catch((err) => {
+                console.error("Error sending notification:", err);
+                throw err;
+            });
         const session = await request(app.getHttpServer())
             .get(`/session/${offerResponse.body.session}`)
             .trustLocalhost()

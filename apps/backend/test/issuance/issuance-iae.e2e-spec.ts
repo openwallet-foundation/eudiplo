@@ -138,7 +138,7 @@ describe("Interactive Authorization Endpoint (IAE)", () => {
                     response_type: "uri",
                     credentialConfigurationIds: ["pid-no-key"],
                     flow: "authorization_code",
-                })
+                });
 
             console.log(offerResponse.body);
 

@@ -918,7 +918,7 @@ export async function startMockAuthorizationServer(): Promise<{
             privateKey: keyPair.privateKey,
             publicKey: keyPair.publicKey,
         }),
-    );    
+    );
 
     const waitForServer = new Promise<void>((resolve) => {
         server = createServer(async (req, res) => {
@@ -926,7 +926,8 @@ export async function startMockAuthorizationServer(): Promise<{
 
             if (
                 req.method === "GET" &&
-                (requestUrl.pathname === "/.well-known/oauth-authorization-server" ||
+                (requestUrl.pathname ===
+                    "/.well-known/oauth-authorization-server" ||
                     requestUrl.pathname === "/.well-known/openid-configuration")
             ) {
                 const baseUrl = `http://127.0.0.1:${(server as Server).address() && typeof (server as Server).address() === "object" ? (server as Server).address()!.port : 0}`;
@@ -968,7 +969,11 @@ export async function startMockAuthorizationServer(): Promise<{
 
             if (req.method === "GET" && requestUrl.pathname === "/jwks") {
                 res.writeHead(200, { "Content-Type": "application/json" });
-                res.end(JSON.stringify({ keys: [{ ...publicKey, kid: "mock-as-key" }] }));
+                res.end(
+                    JSON.stringify({
+                        keys: [{ ...publicKey, kid: "mock-as-key" }],
+                    }),
+                );
                 return;
             }
 
@@ -989,12 +994,18 @@ export async function startMockAuthorizationServer(): Promise<{
                         const [headerPart] = dpopJwt.split(".");
                         if (headerPart) {
                             const rawHeader = Buffer.from(
-                                headerPart.replace(/-/g, "+").replace(/_/g, "/"),
+                                headerPart
+                                    .replace(/-/g, "+")
+                                    .replace(/_/g, "/"),
                                 "base64",
                             ).toString("utf8");
-                            const header = JSON.parse(rawHeader) as { jwk?: Jwk };
+                            const header = JSON.parse(rawHeader) as {
+                                jwk?: Jwk;
+                            };
                             if (header.jwk) {
-                                const jkt = await calculateJwkThumbprint(header.jwk);
+                                const jkt = await calculateJwkThumbprint(
+                                    header.jwk,
+                                );
                                 cnf = { jkt };
                             }
                         }
@@ -1018,7 +1029,11 @@ export async function startMockAuthorizationServer(): Promise<{
                     };
 
                     const accessToken = await new SignJWT(tokenPayload)
-                        .setProtectedHeader({ alg: "ES256", kid: "mock-as-key", typ: "at+jwt" })
+                        .setProtectedHeader({
+                            alg: "ES256",
+                            kid: "mock-as-key",
+                            typ: "at+jwt",
+                        })
                         .sign(privateKey);
 
                     const responseBody = {

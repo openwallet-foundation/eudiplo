@@ -77,9 +77,8 @@ describe("Issuance - mDOC Credentials", () => {
                 credentialConfigurationIds: ["pid-mdoc-no-key"],
                 flow: "pre_authorized_code",
                 authorization_server: "issuer-built-in",
-                
-            })
-        expect(offerResponse.status).toBe(201);            
+            });
+        expect(offerResponse.status).toBe(201);
 
         expect(offerResponse.body.uri).toBeDefined();
 

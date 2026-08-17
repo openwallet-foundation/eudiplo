@@ -171,7 +171,7 @@ describe("Issuance - Pre-authorized Code Flow", () => {
                 response_type: "uri",
                 credentialConfigurationIds: ["pid-no-key"],
                 flow: "pre_authorized_code",
-            })
+            });
         console.log(offerResponse.body);
         expect(offerResponse.status).toBe(201);
 
