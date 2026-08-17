@@ -78,7 +78,7 @@ export function serviceTypeMatches(
 /** Well-known service type identifiers from ETSI TS 119 602 */
 export const ServiceTypeIdentifiers = {
     EaaIssuance: "http://uri.etsi.org/19602/SvcType/EAA/Issuance",
-    EaaRevocation: "http://uri.etsi.org/19602/SvcType/EAA/Revocation",    
+    EaaRevocation: "http://uri.etsi.org/19602/SvcType/EAA/Revocation",
     WalletSolution: "http://uri.etsi.org/19602/SvcType/WalletSolution",
     WalletSolutionIssuance:
         "http://uri.etsi.org/19602/SvcType/WalletSolution/Issuance",
