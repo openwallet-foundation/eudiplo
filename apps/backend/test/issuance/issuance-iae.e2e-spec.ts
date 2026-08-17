@@ -139,7 +139,10 @@ describe("Interactive Authorization Endpoint (IAE)", () => {
                     credentialConfigurationIds: ["pid-no-key"],
                     flow: "authorization_code",
                 })
-                .expect(201);
+
+            console.log(offerResponse.body);
+
+            expect(offerResponse.status).toBe(201);
 
             const offerUri = new URL(offerResponse.body.uri);
             const credentialOfferUri = offerUri.searchParams.get(

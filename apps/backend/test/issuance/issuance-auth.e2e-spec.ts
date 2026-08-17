@@ -21,6 +21,7 @@ import {
     IssuanceTestContext,
     setupIssuanceTestApp,
 } from "../utils";
+import { OfferRequestDto } from "../../src/issuer/issuance/oid4vci/dto/offer-request.dto";
 
 setGlobalDispatcher(
     new Agent({
@@ -33,6 +34,7 @@ setGlobalDispatcher(
 describe("Issuance - Authorization Code Flow", () => {
     let app: INestApplication<App>;
     let authToken: string;
+    let externalAuthorizationServerUrl: string;
     let ctx: IssuanceTestContext;
 
     const sdjwt = new SDJwtVcInstance({
@@ -44,6 +46,7 @@ describe("Issuance - Authorization Code Flow", () => {
         ctx = await setupIssuanceTestApp();
         app = ctx.app;
         authToken = ctx.authToken;
+        externalAuthorizationServerUrl = ctx.externalAuthorizationServerUrl;
     });
 
     afterAll(async () => {
@@ -61,7 +64,7 @@ describe("Issuance - Authorization Code Flow", () => {
                     {
                         id: "issuer-external",
                         type: "external",
-                        issuer: "https://auth.example.com",
+                        issuer: externalAuthorizationServerUrl,
                     },
                 ],
             })
@@ -89,7 +92,7 @@ describe("Issuance - Authorization Code Flow", () => {
         );
 
         expect(credentialOffer.grants?.authorization_code).toMatchObject({
-            authorization_server: "https://auth.example.com",
+            authorization_server: externalAuthorizationServerUrl,
         });
     });
 
@@ -111,16 +114,25 @@ describe("Issuance - Authorization Code Flow", () => {
     });
 
     test("authorized code flow", async () => {
+
+        const body: OfferRequestDto = {
+                response_type: "uri",
+                credentialConfigurationIds: ["pid-no-key"],
+                flow: "authorization_code",
+                credentialClaims: {
+                    "pid-no-key": {
+                        type: "attributeProvider",
+                        attributeProviderId: "citizen-ap"
+                    }
+                }
+            }; 
+
         const offerResponse = await request(app.getHttpServer())
             .post("/issuer/offer")
             .trustLocalhost()
             .set("Authorization", `Bearer ${authToken}`)
-            .send({
-                response_type: "uri",
-                credentialConfigurationIds: ["pid-no-key"],
-                flow: "authorization_code",
-            })
-            .expect(201);
+            .send(body);    
+        expect(offerResponse.status).toBe(201);
 
         const holderKeyPair = await generateKeyPair("ES256", {
             extractable: true,
@@ -242,6 +254,9 @@ describe("Issuance - Authorization Code Flow", () => {
                 ...dpop,
                 signer: dpopSigner,
             },
+        }).catch((err) => {
+            console.error("Error sending notification:", err);
+            throw err;
         });
         const session = await request(app.getHttpServer())
             .get(`/session/${offerResponse.body.session}`)

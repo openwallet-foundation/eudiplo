@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 import { readFileSync, rmSync } from "node:fs";
+import { createServer, type Server } from "node:http";
 import { join, resolve } from "node:path";
 import { INestApplication } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
@@ -257,6 +258,10 @@ export async function preparePresentation(
 }
 
 export const callbacks: any = {
+    fetch: async (url, options) => {
+        const response = await fetch(url, options);
+        return response;
+    },
     hash: (data, alg) =>
         crypto
             .createHash(alg.replace("-", "").toLowerCase())
@@ -442,6 +447,7 @@ export interface IssuanceTestContext {
     authToken: string;
     clientId: string;
     clientSecret: string;
+    externalAuthorizationServerUrl: string;
 }
 
 /**
@@ -469,6 +475,17 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
     await app.listen(3000);
 
     const authToken = await getToken(app, clientId, clientSecret);
+
+    const { baseUrl: fakeAuthServer, close: closeFakeAuthServer } =
+        await startMockAuthorizationServer();
+    const originalClose = app.close.bind(app);
+    app.close = (async () => {
+        try {
+            await closeFakeAuthServer();
+        } finally {
+            await originalClose();
+        }
+    }) as typeof app.close;
 
     const configFolder = resolve(__dirname + "/fixtures");
 
@@ -533,6 +550,14 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
             ...readConfig<IssuanceDto>(
                 join(configFolder, "haip/issuance/issuance.json"),
             ),
+            authorizationServers: [
+                { id: "issuer-built-in", type: "built-in" },
+                {
+                    id: "issuer-external",
+                    type: "external",
+                    issuer: fakeAuthServer,
+                },
+            ],
             dPopRequired: false,
             credentialResponseEncryption: false,
             credentialRequestEncryption: false,
@@ -618,7 +643,13 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
         )
         .expect(201);
 
-    return { app, authToken, clientId, clientSecret };
+    return {
+        app,
+        authToken,
+        clientId,
+        clientSecret,
+        externalAuthorizationServerUrl: fakeAuthServer,
+    };
 }
 
 /**
@@ -870,6 +901,172 @@ export async function encryptVpToken(
         .setIssuedAt()
         .setExpirationTime("2h")
         .encrypt(key);
+}
+
+/**
+ * Starts a tiny local authorization server that behaves like an external AS.
+ * It serves the metadata endpoints, the authorization redirect endpoint, and the
+ * token endpoint, so native fetch clients do not need a fake DNS hostname.
+ */
+export async function startMockAuthorizationServer(): Promise<{
+    baseUrl: string;
+    close: () => Promise<void>;
+}> {
+    let server: Server | undefined;
+    const { privateKey, publicKey } = await ES256.generateKeyPair().then(
+        (keyPair) => ({
+            privateKey: keyPair.privateKey,
+            publicKey: keyPair.publicKey,
+        }),
+    );    
+
+    const waitForServer = new Promise<void>((resolve) => {
+        server = createServer(async (req, res) => {
+            const requestUrl = new URL(req.url ?? "/", "http://127.0.0.1");
+
+            if (
+                req.method === "GET" &&
+                (requestUrl.pathname === "/.well-known/oauth-authorization-server" ||
+                    requestUrl.pathname === "/.well-known/openid-configuration")
+            ) {
+                const baseUrl = `http://127.0.0.1:${(server as Server).address() && typeof (server as Server).address() === "object" ? (server as Server).address()!.port : 0}`;
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(
+                    JSON.stringify({
+                        issuer: baseUrl,
+                        authorization_endpoint: `${baseUrl}/authorize`,
+                        token_endpoint: `${baseUrl}/token`,
+                        jwks_uri: `${baseUrl}/jwks`,
+                        response_types_supported: ["code"],
+                        grant_types_supported: ["authorization_code"],
+                        code_challenge_methods_supported: ["S256", "plain"],
+                        scopes_supported: ["openid"],
+                        dpop_signing_alg_values_supported: ["ES256"],
+                        token_endpoint_auth_methods_supported: ["none"],
+                    }),
+                );
+                return;
+            }
+
+            if (req.method === "GET" && requestUrl.pathname === "/authorize") {
+                const redirectUri =
+                    requestUrl.searchParams.get("redirect_uri") ??
+                    "http://127.0.0.1/callback";
+                const state = requestUrl.searchParams.get("state") ?? "state";
+                const code = "mock-auth-code";
+
+                const target = new URL(redirectUri);
+                target.searchParams.set("code", code);
+                target.searchParams.set("state", state);
+
+                res.writeHead(302, {
+                    Location: target.toString(),
+                });
+                res.end();
+                return;
+            }
+
+            if (req.method === "GET" && requestUrl.pathname === "/jwks") {
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({ keys: [{ ...publicKey, kid: "mock-as-key" }] }));
+                return;
+            }
+
+            if (req.method === "POST" && requestUrl.pathname === "/token") {
+                let rawBody = "";
+                req.on("data", (chunk) => {
+                    rawBody += chunk.toString();
+                });
+                req.on("end", async () => {
+                    const params = new URLSearchParams(rawBody);
+                    const grantType = params.get("grant_type");
+                    const dpopHeader = req.headers.dpop;
+                    const dpopJwt =
+                        typeof dpopHeader === "string" ? dpopHeader : undefined;
+
+                    let cnf: Record<string, unknown> | undefined;
+                    if (dpopJwt) {
+                        const [headerPart] = dpopJwt.split(".");
+                        if (headerPart) {
+                            const rawHeader = Buffer.from(
+                                headerPart.replace(/-/g, "+").replace(/_/g, "/"),
+                                "base64",
+                            ).toString("utf8");
+                            const header = JSON.parse(rawHeader) as { jwk?: Jwk };
+                            if (header.jwk) {
+                                const jkt = await calculateJwkThumbprint(header.jwk);
+                                cnf = { jkt };
+                            }
+                        }
+                    }
+
+                    const now = Math.floor(Date.now() / 1000);
+                    const tokenPayload = {
+                        iss: `http://127.0.0.1:${(server as Server).address() && typeof (server as Server).address() === "object" ? (server as Server).address()!.port : 0}`,
+                        sub: "wallet",
+                        aud: "http://localhost:3000/issuers/root",
+                        iat: now,
+                        exp: now + 3600,
+                        jti: crypto.randomUUID(),
+                        client_id: "wallet",
+                        ...(cnf ? { cnf } : {}),
+                        ...(grantType === "authorization_code"
+                            ? {
+                                  scope: "openid",
+                              }
+                            : {}),
+                    };
+
+                    const accessToken = await new SignJWT(tokenPayload)
+                        .setProtectedHeader({ alg: "ES256", kid: "mock-as-key", typ: "at+jwt" })
+                        .sign(privateKey);
+
+                    const responseBody = {
+                        access_token: accessToken,
+                        token_type: cnf ? "DPoP" : "Bearer",
+                        expires_in: 3600,
+                        ...(grantType === "authorization_code"
+                            ? {
+                                  refresh_token: "mock-refresh-token",
+                              }
+                            : {}),
+                    };
+
+                    res.writeHead(200, { "Content-Type": "application/json" });
+                    res.end(JSON.stringify(responseBody));
+                });
+                return;
+            }
+
+            res.writeHead(404, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: "not_found" }));
+        });
+
+        server.listen(0, "127.0.0.1", () => resolve());
+    });
+
+    await waitForServer;
+
+    const address = server?.address();
+    if (!server || !address || typeof address === "string") {
+        throw new Error("Failed to start mock authorization server");
+    }
+
+    const baseUrl = `http://127.0.0.1:${address.port}`;
+
+    return {
+        baseUrl,
+        close: () =>
+            new Promise<void>((resolve, reject) => {
+                server?.close((error) => {
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+                    resolve();
+                });
+            }),
+    };
 }
 
 /**

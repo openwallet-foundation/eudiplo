@@ -471,6 +471,37 @@ export class SessionService implements OnApplicationBootstrap {
             return existingSession;
         }
 
+        // In the wallet-initiated authorization_code flow, the original offer session
+        // may already exist with the offer payload and attribute-provider configuration,
+        // but it does not yet carry the external AS identity. Reuse that active issuance
+        // session so we keep the original credentialPayload/credentialClaims instead of
+        // creating a detached second session that loses the offer context.
+        const matchingOfferSession = await this.sessionRepository.findOne({
+            where: {
+                tenantId,
+                status: SessionStatus.Active,
+                credentialPayload: Not(IsNull()),
+                externalIssuer: IsNull(),
+                externalSubject: IsNull(),
+            },
+            order: { createdAt: "DESC" },
+        });
+
+        if (matchingOfferSession) {
+            await this.sessionRepository.update(
+                { id: matchingOfferSession.id },
+                { externalIssuer, externalSubject },
+            );
+
+            const updatedSession = await this.sessionRepository.findOneByOrFail({
+                id: matchingOfferSession.id,
+            });
+            this.logger.log(
+                `Reused active offer session for external identity: iss=${externalIssuer}, sub=${externalSubject}, session=${updatedSession.id}`,
+            );
+            return updatedSession;
+        }
+
         // Create new session for external identity
         const { v4: uuidv4 } = await import("uuid");
         const newSession = await this.create({

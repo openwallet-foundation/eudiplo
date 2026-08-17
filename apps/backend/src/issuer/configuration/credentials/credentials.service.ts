@@ -372,6 +372,7 @@ export class CredentialsService {
             allErrors: true,
             strict: true,
             useDefaults: true,
+            validateSchema: false,
         });
         //fetch the credential configuration
         return this.credentialConfigRepo

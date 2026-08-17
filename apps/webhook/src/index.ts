@@ -35,6 +35,37 @@ async function parseJsonBody<T>(request: Request): Promise<T | null> {
  * Handle notification webhook.
  * Called when wallet notifies about credential status (accepted, failed, deleted).
  */
+function createDefaultPidClaims(): Record<string, unknown> {
+    return {
+        address: {
+            country: "DE",
+            locality: "KÖLN",
+            postal_code: "51147",
+            street_address: "HEIDESTRAẞE 17",
+        },
+        age_birth_year: 1964,
+        age_equal_or_over: {
+            12: true,
+            14: true,
+            16: true,
+            18: true,
+            21: true,
+            65: false,
+        },
+        age_in_years: 61,
+        birthdate: "1964-08-12",
+        family_name: "MUSTERMANN",
+        given_name: "ERIKA",
+        issuing_authority: "DE",
+        issuing_country: "DE",
+        nationalities: ["DE"],
+        place_of_birth: {
+            locality: "BERLIN",
+        },
+        source_document_type: "id_card",
+    };
+}
+
 function handleNotification(data: NotificationWebhookRequest): Response {
     console.log("Received notification webhook:");
     console.log(`  Session: ${data.session}`);
@@ -115,18 +146,14 @@ function handleUnifiedClaims(data: ClaimsWebhookRequest): Response {
             JSON.stringify(data.identity.token_claims, null, 2),
         );
 
+        const claims: Record<string, unknown> =
+            data.credential_configuration_id === "pid-no-key"
+                ? createDefaultPidClaims()
+                : {};
+
         // Example: build a realistic diploma payload for university-diploma credentials.
         // Keep the field names aligned with the credential schema you configured for this
         // credential configuration; only return the claims that the schema allows.
-        const claims: Record<string, unknown> = {};
-
-        if (data.identity.token_claims.given_name) {
-            claims.given_name = data.identity.token_claims.given_name;
-        }
-        if (data.identity.token_claims.family_name) {
-            claims.family_name = data.identity.token_claims.family_name;
-        }
-
         if (data.credential_configuration_id === "university-diploma") {
             claims.degree_name = "Computer Science";
             claims.degree_type = "Master of Science";
@@ -140,6 +167,12 @@ function handleUnifiedClaims(data: ClaimsWebhookRequest): Response {
             claims.issuing_authority = "European Technical University";
             claims.issuing_country = "DE";
             claims.student_id = data.identity.sub;
+        } else if (data.identity.token_claims.given_name) {
+            claims.given_name = data.identity.token_claims.given_name;
+        }
+
+        if (data.identity.token_claims.family_name) {
+            claims.family_name = data.identity.token_claims.family_name;
         }
 
         const response: ClaimsWebhookResponse = createClaimsResponse(

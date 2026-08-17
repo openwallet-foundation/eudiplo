@@ -180,13 +180,15 @@ function mergeLeafSchema(existing: JsonSchema, next: JsonSchema): JsonSchema {
     if (existing.properties && Object.keys(existing.properties).length > 0) {
         merged.properties = existing.properties;
     }
-    if (Object.prototype.hasOwnProperty.call(existing, "additionalProperties")) {
+    if (
+        Object.prototype.hasOwnProperty.call(existing, "additionalProperties")
+    ) {
         merged.additionalProperties = existing.additionalProperties;
     }
     if (Array.isArray(existing.required) && existing.required.length > 0) {
         merged.required = existing.required;
     }
-    return merged;
+    return stripNonObjectKeywords(merged);
 }
 
 function buildLeafSchema(field: ClaimFieldDefinition): JsonSchema {
@@ -210,6 +212,18 @@ function addRequired(parent: JsonSchema, key: string): void {
     if (!parent.required.includes(key)) {
         parent.required.push(key);
     }
+}
+
+function stripNonObjectKeywords(schema: JsonSchema): JsonSchema {
+    const type = typeof schema.type === "string" ? schema.type : undefined;
+    if (!type || type === "object") {
+        return schema;
+    }
+
+    delete schema.properties;
+    delete schema.additionalProperties;
+    delete schema.required;
+    return schema;
 }
 
 function isArrayPathSegment(segment: string | number | null): boolean {
@@ -300,6 +314,10 @@ function mergeArrayLeafSchema(
     if (parent.type !== "array") {
         parent.type = "array";
     }
+
+    delete parent.properties;
+    delete parent.additionalProperties;
+    delete parent.required;
 
     const existingItems =
         parent.items &&

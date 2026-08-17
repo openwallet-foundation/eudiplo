@@ -104,9 +104,6 @@ describe("Issuance - Pre-authorized Code Flow", () => {
         const credentialOffer = await client.resolveCredentialOffer(
             offerResponse.body.uri,
         );
-
-        console.log(credentialOffer.credential_issuer);
-
         const issuerMetadata = await client.resolveIssuerMetadata(
             credentialOffer.credential_issuer,
         );
@@ -175,7 +172,8 @@ describe("Issuance - Pre-authorized Code Flow", () => {
                 credentialConfigurationIds: ["pid-no-key"],
                 flow: "pre_authorized_code",
             })
-            .expect(201);
+        console.log(offerResponse.body);
+        expect(offerResponse.status).toBe(201);
 
         const attestationSignerKeyPair = await generateKeyPair("ES256", {
             extractable: true,

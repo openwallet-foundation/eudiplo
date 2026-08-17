@@ -76,8 +76,10 @@ describe("Issuance - mDOC Credentials", () => {
                 response_type: "uri",
                 credentialConfigurationIds: ["pid-mdoc-no-key"],
                 flow: "pre_authorized_code",
+                authorization_server: "issuer-built-in",
+                
             })
-            .expect(201);
+        expect(offerResponse.status).toBe(201);            
 
         expect(offerResponse.body.uri).toBeDefined();
 
@@ -91,6 +93,7 @@ describe("Issuance - mDOC Credentials", () => {
         const client = new Openid4vciClient({
             callbacks: {
                 ...callbacks,
+                fetch: createMockExternalAuthorizationServerFetch(),
                 clientAuthentication: clientAuthenticationAnonymous(),
                 signJwt: getSignJwtCallback([holderPrivateKeyJwk as Jwk]),
             },
@@ -100,6 +103,8 @@ describe("Issuance - mDOC Credentials", () => {
         const credentialOffer = await client.resolveCredentialOffer(
             offerResponse.body.uri,
         );
+
+        console.log("Credential Offer:", credentialOffer);
 
         // Resolve issuer metadata
         const issuerMetadata = await client.resolveIssuerMetadata(
@@ -213,6 +218,7 @@ describe("Issuance - mDOC Credentials", () => {
         const client = new Openid4vciClient({
             callbacks: {
                 ...callbacks,
+                fetch: createMockExternalAuthorizationServerFetch(),
                 clientAuthentication: clientAuthenticationAnonymous(),
                 signJwt: getSignJwtCallback([holderPrivateKeyJwk as Jwk]),
             },

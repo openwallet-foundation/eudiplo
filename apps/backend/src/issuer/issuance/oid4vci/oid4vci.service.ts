@@ -377,7 +377,7 @@ export class Oid4vciService {
                     ),
                 ).then(
                     (response) => response.data,
-                    () => {
+                    (err) => {
                         throw new BadRequestException(
                             "Failed to fetch authorization server metadata",
                         );
@@ -2001,12 +2001,55 @@ export class Oid4vciService {
             allowedAuthenticationSchemes,
         });
 
-        const session = await this.sessionService.getBy({
-            id: tokenPayload.sub,
-        });
+        const localIssuer = this.authzService.getAuthzIssuer(tenantId);
+        const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
+        const chainedAsIssuer = `${publicUrl}/issuers/${tenantId}/chained-as`;
+        const hasChainedAuthorizationServer =
+            await this.authorizationServersService.hasEnabledChainedAuthorizationServer(
+                tenantId,
+            );
+        const managedAuthorizationServerIssuers = new Set(
+            await this.authorizationServersService.getAuthorizationServerIssuerUrls(
+                tenantId,
+            ),
+        );
 
-        if (session.id !== tokenPayload.sub) {
-            throw new BadRequestException("Session not found");
+        const isLocalAsToken = tokenPayload.iss === localIssuer;
+        const isChainedAsToken =
+            (hasChainedAuthorizationServer &&
+                tokenPayload.iss === chainedAsIssuer) ||
+            managedAuthorizationServerIssuers.has(tokenPayload.iss);
+        const isExternalAsToken = !isLocalAsToken && !isChainedAsToken;
+
+        let session: Session;
+
+        if (isExternalAsToken) {
+            const configuredAuthServers =
+                await this.authorizationServersService.getExternalAuthorizationServerUrls(
+                    tenantId,
+                );
+            if (!configuredAuthServers.includes(tokenPayload.iss)) {
+                throw new CredentialRequestException(
+                    "credential_request_denied",
+                    `Token issuer '${tokenPayload.iss}' is not a configured authorization server`,
+                );
+            }
+
+            console.log(tokenPayload);
+
+            session = await this.sessionService.findOrCreateByExternalIdentity(
+                tenantId,
+                tokenPayload.iss,
+                tokenPayload.sub,
+            );
+        } else {
+            session = await this.sessionService.getBy({
+                id: tokenPayload.sub,
+            });
+
+            if (session.id !== tokenPayload.sub) {
+                throw new BadRequestException("Session not found");
+            }
         }
 
         // Add session context to span for trace correlation
