@@ -1178,6 +1178,10 @@ export type IssuanceConfig = {
      */
     credentialRequestEncryption?: boolean;
     /**
+     * Whether the issuer notification endpoint is enabled and advertised in metadata.
+     */
+    notificationEndpointEnabled?: boolean;
+    /**
      * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
      */
     txCodeMaxAttempts?: number;
@@ -1247,6 +1251,10 @@ export type UpdateIssuanceDto = {
      * Whether `credential_request_encryption` should be advertised in the credential issuer metadata.
      */
     credentialRequestEncryption?: boolean;
+    /**
+     * Whether the issuer notification endpoint is enabled and advertised in metadata.
+     */
+    notificationEndpointEnabled?: boolean;
     /**
      * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
      */
@@ -3748,6 +3756,10 @@ export type IssuanceConfigWritable = {
      */
     credentialRequestEncryption?: boolean;
     /**
+     * Whether the issuer notification endpoint is enabled and advertised in metadata.
+     */
+    notificationEndpointEnabled?: boolean;
+    /**
      * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
      */
     txCodeMaxAttempts?: number;
@@ -3813,6 +3825,10 @@ export type UpdateIssuanceDtoWritable = {
      * Whether `credential_request_encryption` should be advertised in the credential issuer metadata.
      */
     credentialRequestEncryption?: boolean;
+    /**
+     * Whether the issuer notification endpoint is enabled and advertised in metadata.
+     */
+    notificationEndpointEnabled?: boolean;
     /**
      * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
      */

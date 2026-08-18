@@ -336,6 +336,12 @@ export const IssuanceConfigSchema = z
             .array(DisplayInfoSchema)
             .optional()
             .describe("Localized issuer metadata shown to wallets."),
+        notificationEndpointEnabled: z
+            .boolean()
+            .optional()
+            .describe(
+                "Whether the OID4VCI notification endpoint is exposed for this issuance configuration.",
+            ),
         credentialResponseEncryption: z
             .boolean()
             .optional()

@@ -183,6 +183,19 @@ export class IssuanceConfig {
     display!: DisplayInfo[];
 
     /**
+     * Whether the OID4VCI notification endpoint is advertised and accepts
+     * requests for this issuance configuration.
+     * Default: true
+     */
+    @ApiPropertyOptional({
+        description:
+            "Whether the OID4VCI notification endpoint is exposed for this issuance configuration.",
+        default: true,
+    })
+    @Column("boolean", { default: true })
+    notificationEndpointEnabled?: boolean;
+
+    /**
      * Whether to advertise support for credential response encryption in the
      * credential issuer metadata (`credential_response_encryption`). When
      * enabled, wallets MAY request encrypted credential responses. Some

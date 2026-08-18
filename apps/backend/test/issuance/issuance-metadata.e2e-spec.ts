@@ -74,6 +74,59 @@ describe("Issuance - Metadata", () => {
         expect(payload.iss).toBeDefined();
     });
 
+    test("metadata omits notification endpoint when disabled", async () => {
+        await request(app.getHttpServer())
+            .post("/issuer/config")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                notificationEndpointEnabled: false,
+                authorizationServers: [
+                    {
+                        id: "issuer-built-in",
+                        type: "built-in",
+                        enabled: true,
+                    },
+                ],
+            })
+            .expect(201);
+
+        const res = await request(app.getHttpServer())
+            .get("/.well-known/openid-credential-issuer/issuers/root")
+            .trustLocalhost()
+            .set("Accept", "application/json")
+            .expect(200);
+
+        expect(res.body.notification_endpoint).toBeUndefined();
+    });
+
+    test("disabled notification endpoint is rejected", async () => {
+        await request(app.getHttpServer())
+            .post("/issuer/config")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                notificationEndpointEnabled: false,
+                authorizationServers: [
+                    {
+                        id: "issuer-built-in",
+                        type: "built-in",
+                        enabled: true,
+                    },
+                ],
+            })
+            .expect(201);
+
+        await request(app.getHttpServer())
+            .post("/issuers/root/vci/notification")
+            .trustLocalhost()
+            .send({
+                notification_id: "does-not-matter",
+                event: "credential_accepted",
+            })
+            .expect(404);
+    });
+
     test("create oid4vci offer", async () => {
         const res = await request(app.getHttpServer())
             .post("/issuer/offer")

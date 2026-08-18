@@ -142,6 +142,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
       txCodeMaxAttempts: new FormControl<number | null>(null, [Validators.min(1)]),
       credentialResponseEncryption: new FormControl(false),
       credentialRequestEncryption: new FormControl(false),
+      notificationEndpointEnabled: new FormControl(true),
       walletAttestationRequired: new FormControl(false),
       walletProviderTrustLists: this.fb.array([]),
       federation: this.fb.group({
@@ -160,7 +161,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
         privacyPolicy: [''],
         supportUri: [''],
       }),
-    } as { [k in keyof IssuanceConfig]: any });
+    } as any);
   }
 
   ngOnInit(): void {
@@ -400,6 +401,9 @@ export class IssuanceConfigCreateComponent implements OnInit {
         credentialRequestEncryption:
           (config as { credentialRequestEncryption?: boolean }).credentialRequestEncryption ??
           false,
+        notificationEndpointEnabled:
+          (config as { notificationEndpointEnabled?: boolean }).notificationEndpointEnabled ??
+          true,
         walletAttestationRequired: config.walletAttestationRequired ?? false,
         txCodeMaxAttempts: config.txCodeMaxAttempts ?? null,
         registrationCertificate: {
@@ -592,6 +596,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
       dPopRequired: formValue.dPopRequired,
       credentialResponseEncryption: formValue.credentialResponseEncryption ?? false,
       credentialRequestEncryption: formValue.credentialRequestEncryption ?? false,
+      notificationEndpointEnabled: formValue.notificationEndpointEnabled ?? true,
       txCodeMaxAttempts: formValue.txCodeMaxAttempts ?? undefined,
       authorizationServers:
         unifiedAuthorizationServers.length > 0 ? unifiedAuthorizationServers : [],

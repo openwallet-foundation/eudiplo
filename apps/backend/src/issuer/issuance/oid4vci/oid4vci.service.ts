@@ -934,6 +934,11 @@ export class Oid4vciService {
             issuer_info,
         );
 
+        const notificationEndpoint =
+            issuanceConfig.notificationEndpointEnabled !== false
+                ? `${credential_issuer}/vci/notification`
+                : undefined;
+
         const credentialIssuer = issuer.createCredentialIssuerMetadata({
             credential_issuer,
             credential_configurations_supported:
@@ -943,7 +948,7 @@ export class Oid4vciService {
             credential_endpoint: `${credential_issuer}/vci/credential`,
             deferred_credential_endpoint: `${credential_issuer}/vci/deferred_credential`,
             authorization_servers: authServers,
-            notification_endpoint: `${credential_issuer}/vci/notification`,
+            notification_endpoint: notificationEndpoint,
             nonce_endpoint: `${credential_issuer}/vci/nonce`,
             display:
                 issuanceConfig.display !== null
@@ -1956,11 +1961,17 @@ export class Oid4vciService {
         body: NotificationRequestDto,
         tenantId: string,
     ) {
+        const issuanceConfig =
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        if (issuanceConfig.notificationEndpointEnabled === false) {
+            throw new NotFoundException(
+                "Notification endpoint is disabled for this issuance config",
+            );
+        }
+
         const issuer = this.getIssuer(tenantId);
         const resourceServer = this.getResourceServer(tenantId);
         const issuerMetadata = await this.issuerMetadata(tenantId, issuer);
-        const issuanceConfig =
-            await this.issuanceService.getIssuanceConfiguration(tenantId);
         const headers = getHeadersFromRequest(req);
 
         const allowedAuthenticationSchemes: SupportedAuthenticationScheme[] = [

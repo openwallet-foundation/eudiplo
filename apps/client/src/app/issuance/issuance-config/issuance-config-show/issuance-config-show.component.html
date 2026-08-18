@@ -43,6 +43,22 @@
                   <span matListItemTitle>Batch Size</span>
                   <span matListItemLine>{{ config.batchSize || 1 }} credential(s) per request</span>
                 </mat-list-item>
+                <mat-list-item>
+                  <mat-icon
+                    matListItemIcon
+                    [class]="config.notificationEndpointEnabled === false ? 'icon-disabled' : ''"
+                  >
+                    {{
+                      config.notificationEndpointEnabled === false
+                        ? 'notifications_off'
+                        : 'notifications'
+                    }}
+                  </mat-icon>
+                  <span matListItemTitle>Notification Endpoint</span>
+                  <span matListItemLine>
+                    {{ config.notificationEndpointEnabled === false ? 'Disabled' : 'Enabled' }}
+                  </span>
+                </mat-list-item>
               </mat-list>
             </mat-card-content>
           </mat-card>

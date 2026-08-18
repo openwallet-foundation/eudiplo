@@ -40,3 +40,4 @@ export { AddVerifierSkewSeconds1772000000000 } from "./1772000000000-AddVerifier
 export { AddPresentationStatusCheckMode1773000000000 } from "./1773000000000-AddPresentationStatusCheckMode";
 export { AddReaderAuthToPresentationConfig1774000000000 } from "./1774000000000-AddReaderAuthToPresentationConfig";
 export { AddRootExternalKeyIdToKeyChain1774000000000 } from "./1774000000000-AddRootExternalKeyIdToKeyChain";
+export { AddNotificationEndpointEnabledToIssuanceConfig1775000000000 } from "./1775000000000-AddNotificationEndpointEnabledToIssuanceConfig";

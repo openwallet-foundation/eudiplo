@@ -428,6 +428,7 @@ export class IssuanceService {
             federation: config.federation,
             registrationCertificate,
             registrationCertificateCache,
+            notificationEndpointEnabled: config.notificationEndpointEnabled,
             credentialResponseEncryption: config.credentialResponseEncryption,
             credentialRequestEncryption: config.credentialRequestEncryption,
             txCodeMaxAttempts: config.txCodeMaxAttempts,
