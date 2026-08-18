@@ -1,0 +1,466 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content module">
+                   <div class="content-data">
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">Modules</li>
+    <li class="breadcrumb-item" >SchemaMetadataModule</li>
+</ol>
+
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/registrar/schema-metadata/schema-metadata.module.ts</code>
+</div>
+
+<div class="text-center module-graph-container">
+    <div id="module-graph-svg">
+        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.47.0 (20210316.0004)
+ -->
+<!-- Title: dependencies Pages: 1 -->
+<svg width="798pt" height="211pt"
+ viewBox="0.00 0.00 798.00 211.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 207)">
+<title>dependencies</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-207 794,-207 794,4 -4,4"/>
+<text text-anchor="start" x="374.01" y="-42.4" font-family="Times-12" font-weight="bold" font-size="14.00">Legend</text>
+<polygon fill="#ffffb3" stroke="transparent" points="161,-10 161,-30 181,-30 181,-10 161,-10"/>
+<text text-anchor="start" x="184.63" y="-15.4" font-family="Times-12" font-size="14.00"> &#160;Declarations</text>
+<polygon fill="#8dd3c7" stroke="transparent" points="274,-10 274,-30 294,-30 294,-10 274,-10"/>
+<text text-anchor="start" x="297.73" y="-15.4" font-family="Times-12" font-size="14.00"> &#160;Module</text>
+<polygon fill="#80b1d3" stroke="transparent" points="360,-10 360,-30 380,-30 380,-10 360,-10"/>
+<text text-anchor="start" x="383.78" y="-15.4" font-family="Times-12" font-size="14.00"> &#160;Bootstrap</text>
+<polygon fill="#fdb462" stroke="transparent" points="457,-10 457,-30 477,-30 477,-10 457,-10"/>
+<text text-anchor="start" x="480.67" y="-15.4" font-family="Times-12" font-size="14.00"> &#160;Providers</text>
+<polygon fill="#fb8072" stroke="transparent" points="553,-10 553,-30 573,-30 573,-10 553,-10"/>
+<text text-anchor="start" x="576.73" y="-15.4" font-family="Times-12" font-size="14.00"> &#160;Exports</text>
+<g id="clust1" class="cluster">
+<title>cluster_SchemaMetadataModule</title>
+<polygon fill="none" stroke="black" stroke-dasharray="1,5" points="8,-70 8,-195 782,-195 782,-70 8,-70"/>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_SchemaMetadataModule_imports</title>
+<polygon fill="none" stroke="black" points="344,-78 344,-130 774,-130 774,-78 344,-78"/>
+</g>
+<g id="clust6" class="cluster">
+<title>cluster_SchemaMetadataModule_providers</title>
+<polygon fill="none" stroke="black" points="16,-78 16,-130 336,-130 336,-78 16,-78"/>
+</g>
+<!-- CredentialConfigModule -->
+<g id="node1" class="node"><a xlink:href="../modules/CredentialConfigModule.html" href="../modules/CredentialConfigModule.html" target="_top">
+<title>CredentialConfigModule</title>
+<polygon fill="#8dd3c7" stroke="black" points="766.25,-122 763.25,-126 742.25,-126 739.25,-122 609.75,-122 609.75,-86 766.25,-86 766.25,-122"/>
+<text text-anchor="middle" x="688" y="-99.8" font-family="Times,serif" font-size="14.00">CredentialConfigModule</text>
+</a></g>
+<!-- SchemaMetadataModule -->
+<g id="node4" class="node"><a xlink:href="../modules/SchemaMetadataModule.html" href="../modules/SchemaMetadataModule.html" target="_top">
+<title>SchemaMetadataModule</title>
+<polygon fill="#8dd3c7" stroke="black" points="548.95,-187 545.95,-191 524.95,-191 521.95,-187 393.05,-187 393.05,-151 548.95,-151 548.95,-187"/>
+<text text-anchor="middle" x="471" y="-164.8" font-family="Times,serif" font-size="14.00">SchemaMetadataModule</text>
+</a></g>
+<!-- CredentialConfigModule&#45;&gt;SchemaMetadataModule -->
+<g id="edge1" class="edge">
+<title>CredentialConfigModule&#45;&gt;SchemaMetadataModule</title>
+<path fill="none" stroke="black" d="M688,-122.11C688,-141.34 688,-169 688,-169 688,-169 559.04,-169 559.04,-169"/>
+<polygon fill="black" stroke="black" points="559.04,-165.5 549.04,-169 559.04,-172.5 559.04,-165.5"/>
+</g>
+<!-- RegistrarModule -->
+<g id="node2" class="node"><a xlink:href="../modules/RegistrarModule.html" href="../modules/RegistrarModule.html" target="_top">
+<title>RegistrarModule</title>
+<polygon fill="#8dd3c7" stroke="black" points="591.36,-122 588.36,-126 567.36,-126 564.36,-122 480.64,-122 480.64,-86 591.36,-86 591.36,-122"/>
+<text text-anchor="middle" x="536" y="-99.8" font-family="Times,serif" font-size="14.00">RegistrarModule</text>
+</a></g>
+<!-- RegistrarModule&#45;&gt;SchemaMetadataModule -->
+<g id="edge2" class="edge">
+<title>RegistrarModule&#45;&gt;SchemaMetadataModule</title>
+<path fill="none" stroke="black" d="M514.77,-122.11C514.77,-122.11 514.77,-140.99 514.77,-140.99"/>
+<polygon fill="black" stroke="black" points="511.27,-140.99 514.77,-150.99 518.27,-140.99 511.27,-140.99"/>
+</g>
+<!-- TrustListModule -->
+<g id="node3" class="node"><a xlink:href="../modules/TrustListModule.html" href="../modules/TrustListModule.html" target="_top">
+<title>TrustListModule</title>
+<polygon fill="#8dd3c7" stroke="black" points="462.38,-122 459.38,-126 438.38,-126 435.38,-122 351.62,-122 351.62,-86 462.38,-86 462.38,-122"/>
+<text text-anchor="middle" x="407" y="-99.8" font-family="Times,serif" font-size="14.00">TrustListModule</text>
+</a></g>
+<!-- TrustListModule&#45;&gt;SchemaMetadataModule -->
+<g id="edge3" class="edge">
+<title>TrustListModule&#45;&gt;SchemaMetadataModule</title>
+<path fill="none" stroke="black" d="M427.73,-122.11C427.73,-122.11 427.73,-140.99 427.73,-140.99"/>
+<polygon fill="black" stroke="black" points="424.23,-140.99 427.73,-150.99 431.23,-140.99 424.23,-140.99"/>
+</g>
+<!-- SchemaMetadataSubmissionService -->
+<g id="node5" class="node"><a xlink:href="../injectables/SchemaMetadataSubmissionService.html" href="../injectables/SchemaMetadataSubmissionService.html" target="_top">
+<title>SchemaMetadataSubmissionService</title>
+<ellipse fill="#fdb462" stroke="black" cx="176" cy="-104" rx="151.62" ry="18"/>
+<text text-anchor="middle" x="176" y="-99.8" font-family="Times,serif" font-size="14.00">SchemaMetadataSubmissionService</text>
+</a></g>
+<!-- SchemaMetadataSubmissionService&#45;&gt;SchemaMetadataModule -->
+<g id="edge4" class="edge">
+<title>SchemaMetadataSubmissionService&#45;&gt;SchemaMetadataModule</title>
+<path fill="none" stroke="black" d="M176,-122.11C176,-141.34 176,-169 176,-169 176,-169 382.72,-169 382.72,-169"/>
+<polygon fill="black" stroke="black" points="382.72,-172.5 392.72,-169 382.72,-165.5 382.72,-172.5"/>
+</g>
+</g>
+</svg>
+
+    </div>
+    <i id="fullscreen" class="icon ion-ios-resize module-graph-fullscreen-btn" aria-hidden="true"></i>
+    <div class="btn-group size-buttons">
+        <button id="zoom-in" class="btn btn-default btn-sm">Zoom in</button>
+        <button id="reset" class="btn btn-default btn-sm">Reset</button>
+        <button id="zoom-out" class="btn btn-default btn-sm">Zoom out</button>
+    </div>
+</div>
+<script src="../js/libs/svg-pan-zoom.min.js"></script>
+<script src="../js/svg-pan-zoom.controls.js"></script>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+        <a href="#info" 
+            class="nav-link"
+            class="nav-link active"
+            role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+    </li>
+    <li class="nav-item">
+        <a href="#source" 
+            class="nav-link"
+            
+            role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+
+
+
+        <p class="comment">
+            <h3>Description</h3>
+        </p>
+        <p class="comment">
+            <p>Management and publishing API for schema metadata.</p>
+<p>The low-level registrar client remains owned by RegistrarModule; this module
+composes it with credential configuration and trust-list capabilities.</p>
+
+        </p>
+
+
+        <div class="container-fluid module">
+            <div class="row">
+                <div class="col-sm-3">
+                    <h3>Providers<a href="https://angular.io/api/core/NgModule#providers" target="_blank" rel="noopener noreferrer"
+                            title="Official documentation about module providers"><span class="icon ion-ios-information-circle-outline"></a></h3>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <a href="../injectables/SchemaMetadataSubmissionService.html">SchemaMetadataSubmissionService</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-3">
+                    <h3>Controllers<a href="https://docs.nestjs.com/controllers" target="_blank" rel="noopener noreferrer"
+                            title="Official documentation about module controllers"><span
+                                class="icon ion-ios-information-circle-outline"></a></h3>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <a href="../controllers/SchemaMetadataController.html">SchemaMetadataController</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-3">
+                    <h3>Imports<a href="https://angular.io/api/core/NgModule#imports" target="_blank" rel="noopener noreferrer"
+                            title="Official documentation about module imports"><span
+                                class="icon ion-ios-information-circle-outline"></a></h3>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <a href="../modules/CredentialConfigModule.html">CredentialConfigModule</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../modules/RegistrarModule.html">RegistrarModule</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="../modules/TrustListModule.html">TrustListModule</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/ConfigurationModule.html" target="_self" >ConfigurationModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/CredentialConfigModule.html" target="_self" >CredentialConfigModule</a></code>
+                                </li>
+                                <li>
+                                            <code><a href="../modules/RegistrarModule.html" target="_self" >RegistrarModule</a></code>
+                                </li>
+                                <li>
+                                            <code><a href="../modules/TrustListModule.html" target="_self" >TrustListModule</a></code>
+                                </li>
+                                <li>
+                                            <code><a href="../controllers/SchemaMetadataController.html" target="_self" >SchemaMetadataController</a></code>
+                                </li>
+                                <li>
+                                            <code><a href="../injectables/SchemaMetadataSubmissionService.html" target="_self" >SchemaMetadataSubmissionService</a></code>
+                                </li>
+                        </ul>
+                </div>
+            </div>
+        </section>
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Module } from &quot;@nestjs/common&quot;;
+import { CredentialConfigModule } from &quot;../../issuer/configuration/credentials/credential-config.module&quot;;
+import { TrustListModule } from &quot;../../issuer/trust-list/trustlist.module&quot;;
+import { RegistrarModule } from &quot;../registrar.module&quot;;
+import { SchemaMetadataController } from &quot;./schema-metadata.controller&quot;;
+import { SchemaMetadataSubmissionService } from &quot;./schema-metadata-submission.service&quot;;
+
+/**
+ * Management and publishing API for schema metadata.
+ *
+ * The low-level registrar client remains owned by RegistrarModule; this module
+ * composes it with credential configuration and trust-list capabilities.
+ */
+@Module({
+    imports: [RegistrarModule, CredentialConfigModule, TrustListModule],
+    controllers: [SchemaMetadataController],
+    providers: [SchemaMetadataSubmissionService],
+})
+export class SchemaMetadataModule {}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'module';
+            var COMPODOC_CURRENT_PAGE_URL = 'SchemaMetadataModule.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
