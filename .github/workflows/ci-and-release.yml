@@ -447,6 +447,7 @@ jobs:
       contents: read
       pull-requests: read
       code-quality: write
+    continue-on-error: true
     name: Upload Coverage to GitHub Code Quality
     runs-on: ubuntu-latest
     needs: [test-coverage-report]
@@ -468,12 +469,14 @@ jobs:
           file: apps/backend/coverage/unit/cobertura-coverage.xml
           language: TypeScript
           label: backend-unit
+          fail-on-error: false
 
       - uses: actions/upload-code-coverage@v1
         with:
           file: apps/backend/coverage/e2e/cobertura-coverage.xml
           language: TypeScript
           label: backend-e2e
+          fail-on-error: false
 
   # =============================================================================
   # Docker Backend: Build, Test & Push (multi-platform with native runners)
