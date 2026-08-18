@@ -56,6 +56,14 @@ Before pushing code, check linting rules and fix them:
 pnpm run lint
 ```
 
+The repository's Git pre-push hook also runs the Knip check automatically:
+
+```bash
+pnpm run knip
+```
+
+Install dependencies with `pnpm install` to enable the Husky hooks locally.
+
 ---
 
 ## GitHub Actions

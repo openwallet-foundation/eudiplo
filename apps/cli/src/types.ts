@@ -1,5 +1,5 @@
 export type DeploymentTarget = "compose" | "external";
-export type CliInstallationMethod = "npm" | "standalone";
+type CliInstallationMethod = "npm" | "standalone";
 
 export interface InstanceConfig {
     target: DeploymentTarget;

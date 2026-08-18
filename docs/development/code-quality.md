@@ -36,15 +36,15 @@ pnpm run lint:fix
 
 1. **Install the Biome extension**:
 
-   ```string
-   Extension ID: biomejs.biome
-   ```
+    ```string
+    Extension ID: biomejs.biome
+    ```
 
 2. **Workspace settings are pre-configured** in `.vscode/settings.json`:
-   - Format on save enabled
-   - Biome set as default formatter
-   - Auto-organize imports on save
-   - Quick fixes applied automatically
+    - Format on save enabled
+    - Biome set as default formatter
+    - Auto-organize imports on save
+    - Quick fixes applied automatically
 
 ### Other Editors
 
@@ -58,18 +58,21 @@ Biome processes the following file types:
 - JavaScript files: `*.js`, `*.mjs`
 - JSON files: `*.json`, `*.jsonc`
 
-## Pre-commit Hooks
+## Git Hooks
 
-Consider setting up pre-commit hooks to automatically format and lint code:
+The repository uses Husky hooks to run checks locally:
+
+- `pre-commit` formats and lints the workspace.
+- `pre-push` runs `pnpm run knip` to detect unused files, dependencies, and
+  exports before a push.
+
+Install dependencies with `pnpm install` to enable the hooks. You can run the
+checks manually as well:
 
 ```bash
-# Example using husky + lint-staged
-pnpm add -D husky lint-staged
-
-# In package.json
-"lint-staged": {
-  "*.{ts,js,json}": ["pnpm run format", "pnpm run lint:fix"]
-}
+pnpm -r run format
+pnpm -r run lint
+pnpm run knip
 ```
 
 ## Code Style Guidelines
@@ -100,17 +103,17 @@ import { ConfigService } from '@nestjs/config';
  */
 @Injectable()
 export class AuthService {
-  constructor(private readonly configService: ConfigService) {}
+    constructor(private readonly configService: ConfigService) {}
 
-  /**
-   * Validates user credentials.
-   * @param email User's email address
-   * @param password User's password
-   * @returns Authentication result
-   */
-  async validateUser(email: string, password: string): Promise<boolean> {
-    const isValid = await this.checkCredentials(email, password);
-    return isValid;
-  }
+    /**
+     * Validates user credentials.
+     * @param email User's email address
+     * @param password User's password
+     * @returns Authentication result
+     */
+    async validateUser(email: string, password: string): Promise<boolean> {
+        const isValid = await this.checkCredentials(email, password);
+        return isValid;
+    }
 }
 ```
