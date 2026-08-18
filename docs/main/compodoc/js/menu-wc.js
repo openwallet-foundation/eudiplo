@@ -1155,6 +1155,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/AddKmsProvider1740500000000.html" data-type="entity-link" >AddKmsProvider1740500000000</a>
                             </li>
                             <li class="link">
+                                <a href="classes/AddNotificationEndpointEnabledToIssuanceConfig1775000000000.html" data-type="entity-link" >AddNotificationEndpointEnabledToIssuanceConfig1775000000000</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/AddPreferredAuthServerToIssuanceConfig1741500000000.html" data-type="entity-link" >AddPreferredAuthServerToIssuanceConfig1741500000000</a>
                             </li>
                             <li class="link">
