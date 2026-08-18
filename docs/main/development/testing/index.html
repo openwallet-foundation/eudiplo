@@ -640,9 +640,35 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../getting-started/cli/" class="md-nav__link">
+    
+    
+      
         
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1_7">
+        
+          
+          <label class="md-nav__link" for="__nav_1_7" id="__nav_1_7_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -656,7 +682,107 @@
   
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/cli/configuration-validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration Validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/cli/development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -3046,6 +3172,10 @@ tests on file changes:</p>
 <p>Before pushing code, check linting rules and fix them:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pnpm<span class="w"> </span>run<span class="w"> </span>lint
 </code></pre></div>
+<p>The repository's Git pre-push hook also runs the Knip check automatically:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pnpm<span class="w"> </span>run<span class="w"> </span>knip
+</code></pre></div>
+<p>Install dependencies with <code>pnpm install</code> to enable the Husky hooks locally.</p>
 <hr>
 <h2 id="github-actions">GitHub Actions<a class="headerlink" href="#github-actions" title="Permanent link">¶</a></h2>
 <p>Tests run automatically on every push to <code>main</code> or pull request via GitHub
@@ -3054,11 +3184,11 @@ Actions.</p>
 <hr>
 <h2 id="running-tests-locally">Running Tests Locally<a class="headerlink" href="#running-tests-locally" title="Permanent link">¶</a></h2>
 <p>To run all workspace unit tests locally:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pnpm<span class="w"> </span>run<span class="w"> </span><span class="nb">test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pnpm<span class="w"> </span>run<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
 <p>To target the backend or use watch mode:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@eudiplo/backend<span class="w"> </span>run<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@eudiplo/backend<span class="w"> </span>run<span class="w"> </span>test:watch
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@eudiplo/backend<span class="w"> </span>run<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>@eudiplo/backend<span class="w"> </span>run<span class="w"> </span>test:watch
 </code></pre></div>
 <p>This uses <a href="https://vitest.dev">Vitest</a> under the hood, which is configured for
 NestJS.</p>
@@ -3070,10 +3200,10 @@ your browser to view it.</p>
 <hr>
 <h2 id="test-structure">Test Structure<a class="headerlink" href="#test-structure" title="Permanent link">¶</a></h2>
 <p>Unit tests are located next to their implementation files:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>src/
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>service/
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>my.service.ts
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>my.service.spec.ts<span class="w">  </span>&lt;--<span class="w"> </span>Test<span class="w"> </span>file
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>src/
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>service/
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>my.service.ts
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>my.service.spec.ts<span class="w">  </span>&lt;--<span class="w"> </span>Test<span class="w"> </span>file
 </code></pre></div>
 <p>Architecture and dependency-boundary tests also use the <code>.spec.ts</code> suffix, so
 they run with the same backend unit-test command.</p>
