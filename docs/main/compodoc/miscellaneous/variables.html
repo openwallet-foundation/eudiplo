@@ -5271,6 +5271,12 @@ an OAuth 2.0 error response (when wallet cannot fulfill the request).</p>
         type: z.literal(&quot;external&quot;),
         id: z.string(),
         issuer: z.string(),
+        sessionBinding: z
+            .object({
+                method: z.literal(&quot;access_token_claim&quot;),
+                claim: z.string().min(1),
+            })
+            .optional(),
         label: z.string().optional(),
         enabled: z.boolean().optional(),
     })
@@ -5605,6 +5611,24 @@ an OAuth 2.0 error response (when wallet cannot fulfill the request).</p>
         issuer: z
             .url()
             .describe(&quot;Issuer URL for the external authorization server.&quot;),
+        sessionBinding: z
+            .object({
+                method: z
+                    .literal(&quot;access_token_claim&quot;)
+                    .describe(
+                        &quot;Read the correlation value from a configured access-token claim.&quot;,
+                    ),
+                claim: z
+                    .string()
+                    .min(1)
+                    .describe(
+                        &quot;Claim name that contains the issuance-session correlation value.&quot;,
+                    ),
+            })
+            .optional()
+            .describe(
+                &quot;Explicit mapping from an external access-token claim to an existing issuance session.&quot;,
+            ),
         label: z
             .string()
             .optional()

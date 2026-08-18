@@ -283,7 +283,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="212" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:212</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="231" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:231</a></div>
                         </td>
                     </tr>
 
@@ -320,7 +320,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="189" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:189</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="208" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:208</a></div>
                         </td>
                     </tr>
 
@@ -348,7 +348,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="210" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:210</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="229" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:229</a></div>
                         </td>
                     </tr>
 
@@ -386,7 +386,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="208" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:208</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="227" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:227</a></div>
                         </td>
                     </tr>
 
@@ -424,7 +424,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="201" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:201</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="220" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:220</a></div>
                         </td>
                     </tr>
 
@@ -461,7 +461,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="183" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:183</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="202" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:202</a></div>
                         </td>
                     </tr>
 
@@ -498,7 +498,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="195" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:195</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="214" class="link-to-prism">src/issuer/configuration/issuance/dto/authorization-server-config.dto.ts:214</a></div>
                         </td>
                     </tr>
 
@@ -547,6 +547,12 @@ const ExternalAuthorizationServerConfigSchema &#x3D; z
         type: z.literal(&quot;external&quot;),
         id: z.string(),
         issuer: z.string(),
+        sessionBinding: z
+            .object({
+                method: z.literal(&quot;access_token_claim&quot;),
+                claim: z.string().min(1),
+            })
+            .optional(),
         label: z.string().optional(),
         enabled: z.boolean().optional(),
     })
@@ -638,6 +644,19 @@ export class ExternalAuthorizationServerConfig extends createZodDto(
         example: &quot;https://auth.example.com&quot;,
     })
     declare issuer: string;
+
+    @ApiPropertyOptional({
+        description:
+            &quot;How to bind an external access token back to an existing issuance session&quot;,
+        example: {
+            method: &quot;access_token_claim&quot;,
+            claim: &quot;issuer_state&quot;,
+        },
+    })
+    declare sessionBinding?: {
+        method: &quot;access_token_claim&quot;;
+        claim: string;
+    };
 
     declare label?: string;
 

@@ -235,11 +235,6 @@
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                    <span class="modifier">Async</span>
-                                <a href="#findOrCreateByExternalIdentity" >findOrCreateByExternalIdentity</a>
-                            </li>
-                            <li>
-                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#get" >get</a>
                             </li>
                             <li>
@@ -260,6 +255,11 @@
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#onApplicationBootstrap" >onApplicationBootstrap</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#resolveExternalAuthorizationServerSession" >resolveExternalAuthorizationServerSession</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
@@ -790,116 +790,6 @@ Returns null if no session matches.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="findOrCreateByExternalIdentity"></a>
-                    <span class="name">
-                            <span class="modifier">Async</span>
-                        <span ><b>findOrCreateByExternalIdentity</b></span>
-                        <a href="#findOrCreateByExternalIdentity"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findOrCreateByExternalIdentity(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, externalIssuer: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, externalSubject: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="392"
-                                    class="link-to-prism">src/session/session.service.ts:392</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Find or create a session by external authorization server identity.
-Used for wallet-initiated flows where the wallet presents a token from an external AS (e.g., Keycloak).</p>
-</div>
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                                <td>Description</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>tenantId</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                            <td>
-                                                    <p>The tenant ID</p>
-
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                                <td>externalIssuer</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                            <td>
-                                                    <p>The issuer (iss) from the external AS token</p>
-
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                                <td>externalSubject</td>
-                                            <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                            <td>
-                                                    <p>The subject (sub) from the external AS token</p>
-
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../entitys/Session.html" target="_self" >Promise&lt;Session&gt;</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                <p>The existing or newly created session</p>
-
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="get"></a>
                     <span class="name">
                         <span ><b>get</b></span>
@@ -1242,6 +1132,140 @@ This will run every hour by default, but can be configured via the <code>SESSION
 
                         <div class="io-description">
                             <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resolveExternalAuthorizationServerSession"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>resolveExternalAuthorizationServerSession</b></span>
+                        <a href="#resolveExternalAuthorizationServerSession"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resolveExternalAuthorizationServerSession(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, externalIssuer: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, externalSubject: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, authorizationServerId?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, bindingClaim?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, bindingValue?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="390"
+                                    class="link-to-prism">src/session/session.service.ts:390</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Resolve an existing issuance session for an external authorization-server token.
+The lookup is intentionally strict: an access token must identify the trusted
+authorization server and a configured session-correlation claim, and the
+resulting session must already exist. No implicit &quot;create on miss&quot; behavior.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>externalIssuer</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>externalSubject</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>authorizationServerId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>bindingClaim</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>bindingValue</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../entitys/Session.html" target="_self" >Promise&lt;Session&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -1839,48 +1863,49 @@ export class SessionService implements OnApplicationBootstrap {
     }
 
     /**
-     * Find or create a session by external authorization server identity.
-     * Used for wallet-initiated flows where the wallet presents a token from an external AS (e.g., Keycloak).
-     * @param tenantId The tenant ID
-     * @param externalIssuer The issuer (iss) from the external AS token
-     * @param externalSubject The subject (sub) from the external AS token
-     * @returns The existing or newly created session
+     * Resolve an existing issuance session for an external authorization-server token.
+     * The lookup is intentionally strict: an access token must identify the trusted
+     * authorization server and a configured session-correlation claim, and the
+     * resulting session must already exist. No implicit &quot;create on miss&quot; behavior.
      */
-    async findOrCreateByExternalIdentity(
+    async resolveExternalAuthorizationServerSession(
         tenantId: string,
         externalIssuer: string,
         externalSubject: string,
+        authorizationServerId?: string,
+        bindingClaim?: string,
+        bindingValue?: string,
     ): Promise&lt;Session&gt; {
-        // Try to find existing session by external identity
+        if (!authorizationServerId || !bindingClaim || !bindingValue) {
+            throw new Error(
+                &quot;External authorization-server session resolution requires the authorization server id, the configured claim name, and the session-correlation value&quot;,
+            );
+        }
+
         const existingSession &#x3D; await this.sessionRepository.findOne({
             where: {
+                id: bindingValue,
                 tenantId,
-                externalIssuer,
-                externalSubject,
+                authorizationServerId,
                 status: SessionStatus.Active,
             },
         });
 
-        if (existingSession) {
-            return existingSession;
+        if (!existingSession) {
+            throw new Error(
+                &#x60;No existing issuance session found for external AS token for tenant ${tenantId}, auth server ${authorizationServerId}, claim ${bindingClaim}, value ${bindingValue}&#x60;,
+            );
         }
 
-        // Create new session for external identity
-        const { v4: uuidv4 } &#x3D; await import(&quot;uuid&quot;);
-        const newSession &#x3D; await this.create({
-            id: uuidv4(),
-            tenantId,
-            externalIssuer,
-            externalSubject,
-            status: SessionStatus.Active,
-            notifications: [],
-        });
-
-        this.logger.log(
-            &#x60;Created session for external identity: iss&#x3D;${externalIssuer}, sub&#x3D;${externalSubject}&#x60;,
+        await this.sessionRepository.update(
+            { id: existingSession.id },
+            {
+                externalIssuer,
+                externalSubject,
+            },
         );
 
-        return newSession;
+        return existingSession;
     }
 }
 </code></pre>
