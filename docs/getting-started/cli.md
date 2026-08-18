@@ -7,6 +7,11 @@ The **EUDIPLO CLI** has two distributions of the same command-line tool:
 
 The command name is `eudiplo` in both cases.
 
+For focused guidance, see:
+
+- [Configuration validation](cli/configuration-validation.md)
+- [Local development](cli/development.md)
+
 ## Installation
 
 ### Standalone CLI (Linux/macOS)

@@ -3,6 +3,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import Ajv2020 from "ajv/dist/2020";
 import type { ErrorObject, ValidateFunction } from "ajv";
+import addFormatsModule from "ajv-formats";
 import { CLI_VALIDATED_REGISTRY } from "./registry.js";
 import type {
     DirectoryResourceDefinition,
@@ -87,6 +88,7 @@ function createValidatorFactory(
     schemas: Map<string, Record<string, unknown>>,
 ): (schemaFile: string) => ValidateFunction {
     const ajv = new Ajv2020({ allErrors: true, strict: false });
+    addFormatsModule.default(ajv as Parameters<typeof addFormatsModule.default>[0]);
     const validators = new Map<string, ValidateFunction>();
     return (schemaFile: string): ValidateFunction => {
         const cached = validators.get(schemaFile);
