@@ -89,6 +89,21 @@ describe("EUDIPLO CLI", () => {
         expect(output.stdout).toContain("update available: npm install -g @eudiplo/cli@latest");
     });
 
+    it("uses the standalone installer when the binary has an update", async () => {
+        const { context, output } = await createContext({
+            fetch: async () => Response.json({ version: "99.0.0" }),
+            installationMethod: "standalone",
+        });
+
+        const code = await runCli(["version"], context);
+
+        expect(code).toBe(0);
+        expect(output.stdout).toContain(
+            "update available: curl -fsSL https://eudiplo.dev/install.sh | bash",
+        );
+        expect(output.stdout).not.toContain("npm install -g");
+    });
+
     it("does not fail version output when the registry is unavailable", async () => {
         const { context, output } = await createContext({
             fetch: async () => new Response("not found", { status: 404 }),
@@ -384,7 +399,12 @@ describe("EUDIPLO CLI", () => {
     });
 });
 
-async function createContext(options: { fetch?: typeof fetch } = {}) {
+async function createContext(
+    options: {
+        fetch?: typeof fetch;
+        installationMethod?: CommandContext["installationMethod"];
+    } = {},
+) {
     const cwd = await mkdtemp(join(tmpdir(), "eudiplo-cli-work-"));
     const home = await mkdtemp(join(tmpdir(), "eudiplo-cli-home-"));
     const configPath = join(home, "config.json");
@@ -395,6 +415,7 @@ async function createContext(options: { fetch?: typeof fetch } = {}) {
             EUDIPLO_CLI_CONFIG: configPath,
             PATH: process.env.PATH,
         },
+        installationMethod: options.installationMethod,
         stdout: {
             write(chunk: string | Uint8Array) {
                 output.stdout += String(chunk);

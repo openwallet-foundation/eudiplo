@@ -1,4 +1,5 @@
 import { isAbsolute, join, basename } from "node:path";
+import { isSea } from "node:sea";
 import { parseArgs, readStringFlag } from "./args.js";
 import { loadConfig, resolveConfigPath, saveConfig, upsertInstance } from "./config.js";
 import {
@@ -52,6 +53,7 @@ function defaultContext(): CommandContext {
     return {
         cwd: process.cwd(),
         env: process.env,
+        installationMethod: isSea() ? "standalone" : "npm",
         stdout: process.stdout,
         stderr: process.stderr,
         fetch,
@@ -377,7 +379,7 @@ Commands:
     eudiplo config validate              Validates the local CLI configuration file.
     eudiplo config validate tenant <path>    Validates one tenant's config-import files.
     eudiplo config validate tenants <path>   Validates every tenant under a config root.
-    eudiplo version                      Prints the installed version and checks npm for updates.
+    eudiplo version                      Prints the installed version and checks for updates.
 
 Options:
     --instance <name>                    Selects a configured instance.
@@ -503,7 +505,7 @@ Usage:
     eudiplo --version
     eudiplo -v
 
-Prints the installed CLI version. The version command also checks npm for updates.
+Prints the installed CLI version. The version command also checks for updates.
 
 Options:
     --help                               Shows this help message.`;
@@ -535,7 +537,7 @@ async function versionStatusText(context: CommandContext): Promise<string> {
         lines.push(`latest ${latestVersion}`);
         const comparison = compareSemver(currentVersion, latestVersion);
         if (comparison < 0) {
-            lines.push("update available: npm install -g @eudiplo/cli@latest");
+            lines.push(`update available: ${updateCommand(context)}`);
         } else if (comparison === 0) {
             lines.push("up to date");
         } else {
@@ -546,6 +548,14 @@ async function versionStatusText(context: CommandContext): Promise<string> {
     }
 
     return lines.join("\n");
+}
+
+function updateCommand(context: CommandContext): string {
+    const installationMethod =
+        context.installationMethod ?? (isSea() ? "standalone" : "npm");
+    return installationMethod === "standalone"
+        ? "curl -fsSL https://eudiplo.dev/install.sh | bash"
+        : "npm install -g @eudiplo/cli@latest";
 }
 
 async function fetchLatestVersion(context: CommandContext): Promise<string> {

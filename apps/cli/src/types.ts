@@ -1,4 +1,5 @@
 export type DeploymentTarget = "compose" | "external";
+export type CliInstallationMethod = "npm" | "standalone";
 
 export interface InstanceConfig {
     target: DeploymentTarget;
@@ -18,6 +19,7 @@ export interface CliConfig {
 export interface CommandContext {
     cwd: string;
     env: NodeJS.ProcessEnv;
+    installationMethod?: CliInstallationMethod;
     stdout: Pick<NodeJS.WriteStream, "write">;
     stderr: Pick<NodeJS.WriteStream, "write">;
     fetch: typeof fetch;
