@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "clientId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique client identifier."
+    },
+    "secret": {
+      "description": "Optional client secret for confidential clients.",
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "description": "Optional human-readable client description.",
+      "type": "string",
+      "minLength": 1
+    },
+    "roles": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "presentation:manage",
+          "presentation:request",
+          "issuance:manage",
+          "issuance:offer",
+          "clients:manage",
+          "users:manage",
+          "tenants:manage",
+          "registrar:manage"
+        ]
+      },
+      "description": "Roles assigned to the client. At least one role is required."
+    },
+    "allowedPresentationConfigs": {
+      "description": "Optional allow-list of presentation config ids this client can use.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "allowedIssuanceConfigs": {
+      "description": "Optional allow-list of issuance config ids this client can use.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "clientId",
+    "roles"
+  ],
+  "additionalProperties": false,
+  "$id": "./CreateClientDto.schema.json",
+  "title": "CreateClientDto"
+}

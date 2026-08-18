@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "default": "EUDIPLO",
+      "description": "Display name of the tenant.",
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "description": "Optional tenant description.",
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false,
+  "description": "Payload used when importing tenant metadata from config files.",
+  "$id": "./ImportTenantDto.schema.json",
+  "title": "ImportTenantDto"
+}

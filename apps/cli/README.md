@@ -59,6 +59,9 @@ eudiplo instance add production --url https://eudiplo.example.com
 eudiplo doctor --instance production
 eudiplo status --instance production
 eudiplo config validate
+eudiplo config validate tenant ./assets/config/root
+eudiplo config validate tenants ./assets/config
+eudiplo config validate tenants ./assets/config --format json
 eudiplo --version
 eudiplo version
 ```
@@ -66,6 +69,26 @@ eudiplo version
 `--version` and `-v` print the installed CLI version without network access.
 `version` also checks the npm registry and reports whether an update is
 available.
+
+`config validate tenant <path>` validates a single tenant's config-import
+files, and `config validate tenants <path>` validates every tenant directory
+under a configuration root. Both commands parse and validate every supported
+resource file (tenant metadata, clients, key chains, credential configs,
+issuance configs, presentation configs, status lists, trust lists, attribute
+providers, webhook endpoints, registrar config, and tenant-specific KMS
+config) against the same JSON Schemas the backend uses for config-import,
+without starting EUDIPLO, connecting to a database, or writing anything.
+Unresolved `${VAR}` placeholders without a default are reported without ever
+printing resolved secret values. Add `--format json` for a machine-readable
+report suitable for CI. The command exits non-zero when any selected tenant
+fails validation.
+
+`src/config-validate/registry.json` is the single source of truth mapping
+each tenant config-import file/folder to its resource type and schema. `pnpm
+run gen:api` regenerates the schemas, the CLI-bundled subset in
+`templates/schemas/`, and the corresponding `json.schemas` editor
+associations in the repository's `.vscode/settings.json` from this file, so
+none of them can drift from one another.
 
 Compose driver commands require a `compose` instance:
 
@@ -123,6 +146,8 @@ The build synchronizes and validates bundled CLI assets from canonical sources:
 
 - `deployment/docker-compose/docker-compose.yml`
 - `assets/config/demo/**`
+- `schemas/*.schema.json` referenced by `src/config-validate/registry.json`
+  (regenerate with `pnpm run gen:api` after changing backend import schemas)
 
 ## Single Executable Application
 

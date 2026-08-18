@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Optional key chain id. If omitted, one is generated.",
+      "type": "string"
+    },
+    "key": {
+      "type": "object",
+      "properties": {
+        "kty": {
+          "type": "string",
+          "description": "Key type (for example EC)."
+        },
+        "x": {
+          "type": "string",
+          "description": "Elliptic curve public x coordinate."
+        },
+        "y": {
+          "type": "string",
+          "description": "Elliptic curve public y coordinate."
+        },
+        "crv": {
+          "type": "string",
+          "description": "Elliptic curve name."
+        },
+        "d": {
+          "type": "string",
+          "description": "Private key value."
+        },
+        "alg": {
+          "description": "Optional algorithm hint.",
+          "type": "string"
+        },
+        "kid": {
+          "description": "Optional key identifier.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kty",
+        "x",
+        "y",
+        "crv",
+        "d"
+      ],
+      "additionalProperties": false,
+      "description": "Private key material in JWK format."
+    },
+    "description": {
+      "description": "Optional key chain description.",
+      "type": "string"
+    },
+    "usageType": {
+      "type": "string",
+      "enum": [
+        "access",
+        "attestation",
+        "trustList",
+        "statusList",
+        "encrypt"
+      ],
+      "description": "Key usage category for the imported key chain."
+    },
+    "crt": {
+      "description": "Optional certificate chain values in PEM or base64 DER.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "kmsProvider": {
+      "description": "Optional KMS provider id.",
+      "type": "string"
+    },
+    "rotationPolicy": {
+      "description": "Optional rotation policy for imported key chains.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable automatic rotation for imported key chains."
+        },
+        "intervalDays": {
+          "description": "Rotation interval in days.",
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3650
+        },
+        "certValidityDays": {
+          "description": "Certificate validity period in days.",
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3650
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "key",
+    "usageType"
+  ],
+  "additionalProperties": false,
+  "$id": "./KeyChainImportDto.schema.json",
+  "title": "KeyChainImportDto"
+}

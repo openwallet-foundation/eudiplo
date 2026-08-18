@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "registrarUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "Base URL of the registrar service."
+    },
+    "oidcUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "OIDC discovery or issuer URL used for authentication."
+    },
+    "clientId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "OAuth client ID used against the registrar."
+    },
+    "clientSecret": {
+      "description": "Optional OAuth client secret for registrar authentication.",
+      "type": "string",
+      "minLength": 1
+    },
+    "username": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Username used for registrar authentication."
+    },
+    "password": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Password used for registrar authentication."
+    },
+    "registrationCertificateDefaults": {
+      "description": "Optional default registration certificate values.",
+      "anyOf": [
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "registrarUrl",
+    "oidcUrl",
+    "clientId",
+    "username",
+    "password"
+  ],
+  "additionalProperties": false,
+  "$id": "./CreateRegistrarConfigDto.schema.json",
+  "title": "CreateRegistrarConfigDto"
+}

@@ -48,17 +48,19 @@
     },
     {
       "fileMatch": [
-        "/assets/config/*/issuance/issuance.json",
-        "/apps/backend/test/fixtures/*/issuance/issuance.json"
+        "/assets/config/kms.json",
+        "/assets/config/*/kms.json",
+        "/apps/backend/test/fixtures/kms.json",
+        "/apps/backend/test/fixtures/*/kms.json"
       ],
-      "url": "./schemas/IssuanceConfig.schema.json"
+      "url": "./schemas/KmsConfigDto.schema.json"
     },
     {
       "fileMatch": [
-        "/assets/config/*/issuance/credentials/*.json",
-        "/apps/backend/test/fixtures/*/issuance/credentials/*.json"
+        "/assets/config/*/clients/*.json",
+        "/apps/backend/test/fixtures/*/clients/*.json"
       ],
-      "url": "./schemas/CredentialConfigCreate.schema.json"
+      "url": "./schemas/CreateClientDto.schema.json"
     },
     {
       "fileMatch": [
@@ -69,33 +71,10 @@
     },
     {
       "fileMatch": [
-        "/assets/config/kms.json",
-        "/assets/config/*/kms.json",
-        "/apps/backend/test/fixtures/kms.json",
-        "/apps/backend/test/fixtures/*/kms.json"
-      ],
-      "url": "./schemas/KmsConfigDto.schema.json"
-    },
-    {
-      "fileMatch": [
         "/assets/config/*/certs/*.json",
         "/apps/backend/test/fixtures/*/certs/*.json"
       ],
       "url": "./schemas/CertImportDto.schema.json"
-    },
-    {
-      "fileMatch": [
-        "/assets/config/*/presentation/*.json",
-        "/apps/backend/test/fixtures/*/presentation/*.json"
-      ],
-      "url": "./schemas/PresentationConfigCreateDto.schema.json"
-    },
-    {
-      "fileMatch": [
-        "/assets/config/*/clients/*.json",
-        "/apps/backend/test/fixtures/*/clients/*.json"
-      ],
-      "url": "./schemas/CreateClientDto.schema.json"
     },
     {
       "fileMatch": [
@@ -113,10 +92,17 @@
     },
     {
       "fileMatch": [
-        "/assets/config/*/trust-lists/*.json",
-        "/apps/backend/test/fixtures/*/trust-lists/*.json"
+        "/assets/config/*/issuance/issuance.json",
+        "/apps/backend/test/fixtures/*/issuance/issuance.json"
       ],
-      "url": "./schemas/TrustListCreateDto.schema.json"
+      "url": "./schemas/IssuanceConfig.schema.json"
+    },
+    {
+      "fileMatch": [
+        "/assets/config/*/issuance/credentials/*.json",
+        "/apps/backend/test/fixtures/*/issuance/credentials/*.json"
+      ],
+      "url": "./schemas/CredentialConfigCreate.schema.json"
     },
     {
       "fileMatch": [
@@ -124,6 +110,20 @@
         "/apps/backend/test/fixtures/*/issuance/status-lists/*.json"
       ],
       "url": "./schemas/StatusListImportDto.schema.json"
+    },
+    {
+      "fileMatch": [
+        "/assets/config/*/trust-lists/*.json",
+        "/apps/backend/test/fixtures/*/trust-lists/*.json"
+      ],
+      "url": "./schemas/TrustListCreateDto.schema.json"
+    },
+    {
+      "fileMatch": [
+        "/assets/config/*/presentation/*.json",
+        "/apps/backend/test/fixtures/*/presentation/*.json"
+      ],
+      "url": "./schemas/PresentationConfigCreateDto.schema.json"
     }
   ],
   "chat.useNestedAgentsMdFiles": true,

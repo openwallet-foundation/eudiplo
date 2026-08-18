@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique webhook endpoint identifier."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Display name of the webhook endpoint."
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Optional webhook endpoint description."
+    },
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Destination URL for webhook delivery."
+    },
+    "auth": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "none",
+              "description": "Disable webhook authentication."
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "description": "No webhook authentication variant."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "apiKey",
+              "description": "Use API key authentication for webhook requests."
+            },
+            "config": {
+              "type": "object",
+              "properties": {
+                "headerName": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "HTTP header name for the API key."
+                },
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "API key value sent with webhook requests."
+                }
+              },
+              "required": [
+                "headerName",
+                "value"
+              ],
+              "additionalProperties": false,
+              "description": "API key webhook authentication settings."
+            }
+          },
+          "required": [
+            "type",
+            "config"
+          ],
+          "additionalProperties": false,
+          "description": "API key webhook authentication variant."
+        }
+      ],
+      "description": "Authentication configuration applied to outgoing webhook requests."
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "url",
+    "auth"
+  ],
+  "additionalProperties": false,
+  "$id": "./CreateWebhookEndpointDto.schema.json",
+  "title": "CreateWebhookEndpointDto"
+}

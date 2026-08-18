@@ -5,6 +5,7 @@
  * Canonical sources:
  * - deployment/docker-compose/docker-compose.yml
  * - assets/config/demo/**
+ * - schemas/*.schema.json (referenced by apps/cli/src/config-validate/registry.json)
  */
 
 const { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } = require("node:fs");
@@ -16,6 +17,13 @@ const cliComposePath = join(repoRoot, "apps/cli/templates/docker-compose.yml");
 const canonicalDemoDirectory = join(repoRoot, "assets/config/demo");
 const cliDemoDirectory = join(repoRoot, "apps/cli/templates/demo-config");
 const cliDemoManifestPath = join(repoRoot, "apps/cli/templates/demo-config.manifest.json");
+const canonicalSchemasDirectory = join(repoRoot, "schemas");
+const cliSchemasDirectory = join(repoRoot, "apps/cli/templates/schemas");
+const cliSchemasManifestPath = join(repoRoot, "apps/cli/templates/schemas.manifest.json");
+const tenantConfigRegistryPath = join(
+    repoRoot,
+    "apps/cli/src/config-validate/registry.json",
+);
 
 function collectFilesRecursive(root) {
     const files = [];
@@ -48,5 +56,25 @@ cpSync(canonicalDemoDirectory, cliDemoDirectory, { recursive: true });
 
 const manifest = collectFilesRecursive(cliDemoDirectory);
 writeFileSync(cliDemoManifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+
+const tenantConfigRegistry = JSON.parse(readFileSync(tenantConfigRegistryPath, "utf8"));
+const requiredSchemaFiles = [
+    ...new Set(
+        tenantConfigRegistry
+            .filter((entry) => entry.cliValidated !== false)
+            .map((entry) => entry.schemaFile),
+    ),
+].sort((left, right) => left.localeCompare(right));
+
+rmSync(cliSchemasDirectory, { recursive: true, force: true });
+mkdirSync(cliSchemasDirectory, { recursive: true });
+for (const schemaFile of requiredSchemaFiles) {
+    cpSync(join(canonicalSchemasDirectory, schemaFile), join(cliSchemasDirectory, schemaFile));
+}
+writeFileSync(
+    cliSchemasManifestPath,
+    `${JSON.stringify(requiredSchemaFiles, null, 2)}\n`,
+    "utf8",
+);
 
 console.log("CLI assets synchronized from canonical sources.");

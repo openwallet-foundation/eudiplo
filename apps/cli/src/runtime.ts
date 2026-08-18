@@ -1,3 +1,4 @@
+import { isAbsolute, join, basename } from "node:path";
 import { parseArgs, readStringFlag } from "./args.js";
 import { loadConfig, resolveConfigPath, saveConfig, upsertInstance } from "./config.js";
 import {
@@ -7,6 +8,13 @@ import {
     unsupportedCommand,
 } from "./drivers.js";
 import { formatChecks, hasFailedChecks, runDoctor } from "./doctor.js";
+import {
+    buildJsonReport,
+    formatTextReport,
+    loadTenantConfigSchemas,
+    validateTenantDirectory,
+    validateTenantsRoot,
+} from "./config-validate/index.js";
 import packageJson from "../package.json" with { type: "json" };
 import type { CliConfig, CommandContext, DeploymentTarget, ParsedArgs } from "./types.js";
 
@@ -222,6 +230,11 @@ async function validateConfigCommand(
         throw new Error("Usage: eudiplo config validate");
     }
 
+    const tenantTarget = parsed.positionals[0];
+    if (tenantTarget === "tenant" || tenantTarget === "tenants") {
+        return validateTenantConfigCommand(tenantTarget, parsed, context);
+    }
+
     const config = await loadConfig(configPath);
     const instanceNames = Object.keys(config.instances);
     context.stdout.write(`Config is valid: ${configPath}\n`);
@@ -234,6 +247,38 @@ async function validateConfigCommand(
         context.stdout.write(`- ${name}: ${instance.target} ${instance.url}\n`);
     }
     return 0;
+}
+
+async function validateTenantConfigCommand(
+    scope: "tenant" | "tenants",
+    parsed: ParsedArgs,
+    context: CommandContext,
+): Promise<number> {
+    const pathArg = parsed.positionals[1];
+    if (!pathArg) {
+        throw new Error(`Usage: eudiplo config validate ${scope} <path> [--format text|json]`);
+    }
+
+    const format = readStringFlag(parsed.flags, "format") ?? "text";
+    if (format !== "text" && format !== "json") {
+        throw new Error("Unsupported --format value. Use text or json.");
+    }
+
+    const rootPath = isAbsolute(pathArg) ? pathArg : join(context.cwd, pathArg);
+    const schemas = await loadTenantConfigSchemas();
+
+    const results =
+        scope === "tenant"
+            ? [await validateTenantDirectory(rootPath, basename(rootPath), schemas, context.env)]
+            : await validateTenantsRoot(rootPath, schemas, context.env);
+
+    context.stdout.write(
+        format === "json"
+            ? `${JSON.stringify(buildJsonReport(results), null, 2)}\n`
+            : formatTextReport(scope, rootPath, results),
+    );
+
+    return results.some((result) => !result.valid) ? 1 : 0;
 }
 
 async function doctor(
@@ -330,6 +375,8 @@ Commands:
     eudiplo doctor                       Checks API reachability, health, config, and client connectivity.
     eudiplo status                       Prints the selected instance status.
     eudiplo config validate              Validates the local CLI configuration file.
+    eudiplo config validate tenant <path>    Validates one tenant's config-import files.
+    eudiplo config validate tenants <path>   Validates every tenant under a config root.
     eudiplo version                      Prints the installed version and checks npm for updates.
 
 Options:
@@ -434,13 +481,19 @@ Options:
 
 Usage:
     eudiplo config validate
+    eudiplo config validate tenant <path> [--format text|json]
+    eudiplo config validate tenants <path> [--format text|json]
 
-Validates the local CLI configuration file.
+Validates the local CLI configuration file, or validates tenant config-import
+files against the same schemas the backend uses, without starting EUDIPLO.
 
 Commands:
     eudiplo config validate              Validates configured instances and URLs.
+    eudiplo config validate tenant <path>     Validates a single tenant directory.
+    eudiplo config validate tenants <path>    Validates every tenant under <path>.
 
 Options:
+    --format <text|json>                 Selects the report format. Defaults to text.
     --help                               Shows this help message.`;
         case "version":
             return `EUDIPLO CLI

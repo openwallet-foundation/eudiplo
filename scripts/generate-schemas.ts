@@ -15,6 +15,11 @@ type SchemaEntry = {
 const ROOT = resolve(process.cwd());
 const SCHEMAS_DIR = join(ROOT, "schemas");
 const CLIENT_SCHEMAS_FILE = join(ROOT, "apps/client/src/app/utils/schemas.json");
+const TENANT_CONFIG_REGISTRY_FILE = join(
+    ROOT,
+    "apps/cli/src/config-validate/registry.json",
+);
+const VSCODE_SETTINGS_FILE = join(ROOT, ".vscode/settings.json");
 
 function getIdBase(): string {
     const idBaseIndex = process.argv.indexOf("--id-base");
@@ -109,6 +114,34 @@ async function mergeRegistry(schemaEntries: SchemaEntry[]): Promise<SchemaEntry[
     return mergedRegistry;
 }
 
+type TenantConfigRegistryEntry = {
+    schemaFile: string;
+    fileMatch: string[];
+};
+
+/**
+ * `apps/cli/src/config-validate/registry.json` is the source of truth for which
+ * tenant config-import files map to which schema; this keeps the editor's
+ * `json.schemas` associations in `.vscode/settings.json` from drifting out of
+ * sync with it.
+ */
+async function syncVSCodeSettingsJsonSchemas(): Promise<number> {
+    const registryRaw = await readFile(TENANT_CONFIG_REGISTRY_FILE, "utf8");
+    const registry = JSON.parse(registryRaw) as TenantConfigRegistryEntry[];
+
+    const jsonSchemas = registry.map((entry) => ({
+        fileMatch: entry.fileMatch,
+        url: `./schemas/${entry.schemaFile}`,
+    }));
+
+    const settingsRaw = await readFile(VSCODE_SETTINGS_FILE, "utf8");
+    const settings = JSON.parse(settingsRaw) as Record<string, unknown>;
+    settings["json.schemas"] = jsonSchemas;
+
+    await writeFile(VSCODE_SETTINGS_FILE, `${JSON.stringify(settings, null, 2)}\n`, "utf8");
+    return jsonSchemas.length;
+}
+
 async function main() {
     const schemaEntries = editorSchemaBundles.flatMap((bundle) =>
         bundle.schemas.map((definition) => emitSchema(definition.name, definition.schema)),
@@ -117,12 +150,16 @@ async function main() {
     assertNoDuplicateSchemaNamesAndIds(schemaEntries);
     const mergedRegistry = await mergeRegistry(schemaEntries);
     await writeSchemas(schemaEntries);
+    const editorSchemaCount = await syncVSCodeSettingsJsonSchemas();
 
     const bundleNames = editorSchemaBundles
         .map((bundle) => bundle.domain)
         .join(", ");
     console.log(
         `✓ Wrote ${schemaEntries.length} generated schema(s) across ${bundleNames}; merged registry contains ${mergedRegistry.length} entries`,
+    );
+    console.log(
+        `✓ Synced ${editorSchemaCount} tenant config-import association(s) into .vscode/settings.json`,
     );
 }
 

@@ -14,6 +14,13 @@ const canonicalComposePath = join(
 const cliComposePath = join(__dirname, "../apps/cli/templates/docker-compose.yml");
 const canonicalDemoDirectory = join(__dirname, "../assets/config/demo");
 const cliDemoDirectory = join(__dirname, "../apps/cli/templates/demo-config");
+const canonicalSchemasDirectory = join(__dirname, "../schemas");
+const cliSchemasDirectory = join(__dirname, "../apps/cli/templates/schemas");
+const cliSchemasManifestPath = join(__dirname, "../apps/cli/templates/schemas.manifest.json");
+const tenantConfigRegistryPath = join(
+    __dirname,
+    "../apps/cli/src/config-validate/registry.json",
+);
 
 const canonicalCompose = readFileSync(canonicalComposePath, "utf8");
 const cliCompose = readFileSync(cliComposePath, "utf8");
@@ -51,6 +58,37 @@ for (const relativePath of canonicalDemoFiles) {
 }
 
 console.log("CLI deployment assets are in sync.");
+
+const tenantConfigRegistry = JSON.parse(readFileSync(tenantConfigRegistryPath, "utf8"));
+const requiredSchemaFiles = [
+    ...new Set(
+        tenantConfigRegistry
+            .filter((entry) => entry.cliValidated !== false)
+            .map((entry) => entry.schemaFile),
+    ),
+].sort((left, right) => left.localeCompare(right));
+
+const cliSchemaManifest = JSON.parse(readFileSync(cliSchemasManifestPath, "utf8"));
+if (JSON.stringify(requiredSchemaFiles) !== JSON.stringify(cliSchemaManifest)) {
+    console.error(
+        "apps/cli/templates/schemas.manifest.json is out of sync with apps/cli/src/config-validate/registry.json",
+    );
+    reportMissingAndExtra(requiredSchemaFiles, cliSchemaManifest);
+    process.exit(1);
+}
+
+for (const schemaFile of requiredSchemaFiles) {
+    const canonicalContents = readFileSync(join(canonicalSchemasDirectory, schemaFile), "utf8");
+    const cliContents = readFileSync(join(cliSchemasDirectory, schemaFile), "utf8");
+    if (canonicalContents !== cliContents) {
+        console.error(
+            `apps/cli/templates/schemas/${schemaFile} differs from schemas/${schemaFile}. Run "pnpm run gen:api" and "pnpm --filter @eudiplo/cli assets:sync".`,
+        );
+        process.exit(1);
+    }
+}
+
+console.log("CLI tenant config schemas are in sync.");
 
 function collectFilesRecursive(root) {
     const files = [];
