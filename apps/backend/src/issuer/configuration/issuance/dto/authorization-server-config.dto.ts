@@ -28,6 +28,12 @@ const ExternalAuthorizationServerConfigSchema = z
         type: z.literal("external"),
         id: z.string(),
         issuer: z.string(),
+        sessionBinding: z
+            .object({
+                method: z.literal("access_token_claim"),
+                claim: z.string().min(1),
+            })
+            .optional(),
         label: z.string().optional(),
         enabled: z.boolean().optional(),
     })
@@ -119,6 +125,19 @@ export class ExternalAuthorizationServerConfig extends createZodDto(
         example: "https://auth.example.com",
     })
     declare issuer: string;
+
+    @ApiPropertyOptional({
+        description:
+            "How to bind an external access token back to an existing issuance session",
+        example: {
+            method: "access_token_claim",
+            claim: "issuer_state",
+        },
+    })
+    declare sessionBinding?: {
+        method: "access_token_claim";
+        claim: string;
+    };
 
     declare label?: string;
 
