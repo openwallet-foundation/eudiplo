@@ -290,7 +290,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="179" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:179</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="185" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:185</a></div>
                         </td>
                     </tr>
 
@@ -327,7 +327,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="169" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:169</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="175" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:175</a></div>
                         </td>
                     </tr>
 
@@ -364,7 +364,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="189" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:189</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="195" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:195</a></div>
                         </td>
                     </tr>
 
@@ -400,7 +400,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="163" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:163</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="169" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:169</a></div>
                         </td>
                     </tr>
 
@@ -437,7 +437,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="184" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:184</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="190" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:190</a></div>
                         </td>
                     </tr>
 
@@ -474,7 +474,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="174" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:174</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="180" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:180</a></div>
                         </td>
                     </tr>
 
@@ -529,6 +529,7 @@ const ChainedAsAuthorizeQuerySchema &#x3D; z
     .object({
         client_id: z.string(),
         request_uri: z.string(),
+        state: z.string().optional(),
     })
     .strict();
 
@@ -643,6 +644,11 @@ export class ChainedAsAuthorizeQueryDto extends createZodDto(
         example: &quot;urn:ietf:params:oauth:request_uri:abc123&quot;,
     })
     request_uri!: string;
+
+    @ApiPropertyOptional({
+        description: &quot;State parameter (returned in redirect)&quot;,
+    })
+    state?: string;
 }
 
 /**

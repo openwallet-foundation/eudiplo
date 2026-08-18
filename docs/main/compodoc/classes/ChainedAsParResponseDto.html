@@ -235,7 +235,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="132" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:132</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="133" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:133</a></div>
                         </td>
                     </tr>
 
@@ -271,7 +271,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="126" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:126</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="127" class="link-to-prism">src/issuer/issuance/oid4vci/authorization/shared/dto/chained-as.dto.ts:127</a></div>
                         </td>
                     </tr>
 
@@ -326,6 +326,7 @@ const ChainedAsAuthorizeQuerySchema &#x3D; z
     .object({
         client_id: z.string(),
         request_uri: z.string(),
+        state: z.string().optional(),
     })
     .strict();
 
@@ -440,6 +441,11 @@ export class ChainedAsAuthorizeQueryDto extends createZodDto(
         example: &quot;urn:ietf:params:oauth:request_uri:abc123&quot;,
     })
     request_uri!: string;
+
+    @ApiPropertyOptional({
+        description: &quot;State parameter (returned in redirect)&quot;,
+    })
+    state?: string;
 }
 
 /**
