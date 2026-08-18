@@ -382,47 +382,48 @@ export class SessionService implements OnApplicationBootstrap {
     }
 
     /**
-     * Find or create a session by external authorization server identity.
-     * Used for wallet-initiated flows where the wallet presents a token from an external AS (e.g., Keycloak).
-     * @param tenantId The tenant ID
-     * @param externalIssuer The issuer (iss) from the external AS token
-     * @param externalSubject The subject (sub) from the external AS token
-     * @returns The existing or newly created session
+     * Resolve an existing issuance session for an external authorization-server token.
+     * The lookup is intentionally strict: an access token must identify the trusted
+     * authorization server and a configured session-correlation claim, and the
+     * resulting session must already exist. No implicit "create on miss" behavior.
      */
-    async findOrCreateByExternalIdentity(
+    async resolveExternalAuthorizationServerSession(
         tenantId: string,
         externalIssuer: string,
         externalSubject: string,
+        authorizationServerId?: string,
+        bindingClaim?: string,
+        bindingValue?: string,
     ): Promise<Session> {
-        // Try to find existing session by external identity
+        if (!authorizationServerId || !bindingClaim || !bindingValue) {
+            throw new Error(
+                "External authorization-server session resolution requires the authorization server id, the configured claim name, and the session-correlation value",
+            );
+        }
+
         const existingSession = await this.sessionRepository.findOne({
             where: {
+                id: bindingValue,
                 tenantId,
-                externalIssuer,
-                externalSubject,
+                authorizationServerId,
                 status: SessionStatus.Active,
             },
         });
 
-        if (existingSession) {
-            return existingSession;
+        if (!existingSession) {
+            throw new Error(
+                `No existing issuance session found for external AS token for tenant ${tenantId}, auth server ${authorizationServerId}, claim ${bindingClaim}, value ${bindingValue}`,
+            );
         }
 
-        // Create new session for external identity
-        const { v4: uuidv4 } = await import("uuid");
-        const newSession = await this.create({
-            id: uuidv4(),
-            tenantId,
-            externalIssuer,
-            externalSubject,
-            status: SessionStatus.Active,
-            notifications: [],
-        });
-
-        this.logger.log(
-            `Created session for external identity: iss=${externalIssuer}, sub=${externalSubject}`,
+        await this.sessionRepository.update(
+            { id: existingSession.id },
+            {
+                externalIssuer,
+                externalSubject,
+            },
         );
 
-        return newSession;
+        return existingSession;
     }
 }

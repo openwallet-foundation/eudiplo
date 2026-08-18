@@ -283,6 +283,14 @@ export class Session {
     externalIssuer?: string;
 
     /**
+     * Identifier of the authorization server selected when this issuance session
+     * was created. Required for deterministic mapping of external AS access
+     * tokens back to the correct issuance session.
+     */
+    @Column("varchar", { nullable: true })
+    authorizationServerId?: string;
+
+    /**
      * The subject (sub) from the external authorization server token.
      * Used to identify the user at the external AS.
      */

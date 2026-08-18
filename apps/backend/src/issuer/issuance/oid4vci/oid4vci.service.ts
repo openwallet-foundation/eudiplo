@@ -114,6 +114,10 @@ type ExternalServerConfig = ManagedAuthorizationServerConfig & {
     type: "external";
     id: string;
     issuer: string;
+    sessionBinding?: {
+        method: "access_token_claim";
+        claim: string;
+    };
 };
 
 type ChainedServerConfig = ManagedAuthorizationServerConfig & {
@@ -176,6 +180,51 @@ export class Oid4vciService {
             await this.issuanceService.getIssuanceConfiguration(tenantId);
         const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
 
+        const configuredServer =
+            await this.getSelectedAuthorizationServerConfig(tenantId);
+
+        if (configuredServer) {
+            const externalServer =
+                configuredServer as Partial<ExternalServerConfig>;
+            const oid4vpServer =
+                configuredServer as Partial<Oid4vpServerConfig>;
+            const chainedServer =
+                configuredServer as Partial<ChainedServerConfig>;
+
+            if (
+                configuredServer.type === "external" &&
+                typeof externalServer.issuer === "string" &&
+                externalServer.issuer.length > 0
+            ) {
+                return externalServer.issuer;
+            }
+
+            if (
+                configuredServer.type === "oid4vp" &&
+                typeof oid4vpServer.id === "string" &&
+                oid4vpServer.id.length > 0
+            ) {
+                return this.authorizationServersService.getAuthorizationServerBaseUrl(
+                    tenantId,
+                    oid4vpServer.id,
+                );
+            }
+
+            if (configuredServer.type === "built-in") {
+                return this.authzService.getAuthzIssuer(tenantId);
+            }
+
+            if (configuredServer.type === "chained") {
+                if (chainedServer.upstream) {
+                    return `${publicUrl}/issuers/${tenantId}/chained-as`;
+                }
+
+                if (chainedServer.vp?.enabled) {
+                    return `${publicUrl}/issuers/${tenantId}/chained-as-vp`;
+                }
+            }
+        }
+
         for (const server of issuanceConfig.authorizationServers ?? []) {
             const externalServer = server as Partial<ExternalServerConfig>;
             const oid4vpServer = server as Partial<Oid4vpServerConfig>;
@@ -222,6 +271,26 @@ export class Oid4vciService {
         throw new BadRequestException(
             "No enabled authorization server configured",
         );
+    }
+
+    private async getSelectedAuthorizationServerConfig(
+        tenantId: string,
+        selectedAuthorizationServer?: string,
+    ) {
+        const issuanceConfig =
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
+        const enabledServers = (
+            issuanceConfig.authorizationServers ?? []
+        ).filter((server) => server.enabled !== false);
+
+        if (selectedAuthorizationServer) {
+            return enabledServers.find(
+                (server) => server.id === selectedAuthorizationServer,
+            );
+        }
+
+        return enabledServers[0];
     }
 
     private async resolveAuthorizationServerSelection(
@@ -924,14 +993,14 @@ export class Oid4vciService {
         let authorization_code: string | undefined;
         let grants: any;
         const issuer_state = v4();
+        const selectedAuthorizationServer =
+            await this.resolveAuthorizationServerSelection(
+                tenantId,
+                body.authorization_server,
+            );
         if (body.flow === FlowType.PRE_AUTH_CODE) {
             //check if tx_code is a number
             authorization_code = v4();
-            const selectedAuthorizationServer =
-                await this.resolveAuthorizationServerSelection(
-                    tenantId,
-                    body.authorization_server,
-                );
             const authServer =
                 selectedAuthorizationServer ??
                 (await this.getAuthorizationServer(tenantId));
@@ -953,11 +1022,6 @@ export class Oid4vciService {
             };
         } else {
             // For authorization code flow, use Chained AS if configured
-            const selectedAuthorizationServer =
-                await this.resolveAuthorizationServerSelection(
-                    tenantId,
-                    body.authorization_server,
-                );
             const authServer =
                 selectedAuthorizationServer ??
                 (await this.getAuthorizationServer(tenantId));
@@ -993,6 +1057,14 @@ export class Oid4vciService {
             tenantId: user.entity!.id,
             authorization_code,
             webhookEndpointId: body.webhookEndpointId,
+            authorizationServerId:
+                selectedAuthorizationServer ??
+                (
+                    await this.getSelectedAuthorizationServerConfig(
+                        tenantId,
+                        undefined,
+                    )
+                )?.id,
         });
 
         // Add session context to span for trace correlation
@@ -1250,11 +1322,46 @@ export class Oid4vciService {
                 );
             }
 
-            session = await this.sessionService.findOrCreateByExternalIdentity(
-                tenantId,
-                tokenPayload.iss,
-                tokenPayload.sub,
+            const externalConfig = (
+                await this.issuanceService.getIssuanceConfiguration(tenantId)
+            ).authorizationServers?.find(
+                (server) =>
+                    server.type === "external" &&
+                    server.enabled !== false &&
+                    (server as Partial<ExternalServerConfig>).issuer ===
+                        tokenPayload.iss,
             );
+
+            if (!externalConfig) {
+                throw new CredentialRequestException(
+                    "credential_request_denied",
+                    `Token issuer '${tokenPayload.iss}' is not a configured external authorization server`,
+                );
+            }
+
+            const bindingClaim = (
+                externalConfig as Partial<ExternalServerConfig>
+            ).sessionBinding?.claim;
+            const bindingValue = tokenPayload[bindingClaim ?? ""] as
+                | string
+                | undefined;
+
+            if (!bindingClaim || !bindingValue) {
+                throw new CredentialRequestException(
+                    "credential_request_denied",
+                    `External authorization server '${tokenPayload.iss}' is missing the configured session-binding claim '${bindingClaim ?? "<unset>"}'`,
+                );
+            }
+
+            session =
+                await this.sessionService.resolveExternalAuthorizationServerSession(
+                    tenantId,
+                    tokenPayload.iss,
+                    tokenPayload.sub,
+                    externalConfig.id,
+                    bindingClaim,
+                    bindingValue,
+                );
 
             const identity: AuthorizationIdentity = {
                 iss: tokenPayload.iss,

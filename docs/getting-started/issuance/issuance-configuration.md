@@ -57,7 +57,11 @@ The array must contain at least one entry.
             "type": "external",
             "id": "external-corp-idp",
             "label": "Corporate IdP",
-            "issuer": "https://auth.example.com"
+            "issuer": "https://auth.example.com",
+            "sessionBinding": {
+                "method": "access_token_claim",
+                "claim": "issuer_state"
+            }
         },
         {
             "type": "oid4vp",
@@ -117,6 +121,9 @@ The array must contain at least one entry.
 
 - `external`
     - `issuer` (required): External AS issuer URL.
+    - `sessionBinding` (required for external token-backed issuance): Defines how EUDIPLO maps an external access token to an existing issuance session.
+        - `method` (required): Must be `access_token_claim`.
+        - `claim` (required): Access-token claim containing the EUDIPLO issuance session id. `issuer_state` is recommended.
 - `oid4vp`
     - `presentationConfigId` (required): Presentation config used for the VP flow.
     - `immediateWalletRedirect` (optional): Redirect browser immediately to wallet request.
@@ -125,6 +132,48 @@ The array must contain at least one entry.
     - `upstream.clientId` (required): Client ID at upstream provider.
     - `upstream.clientSecret` (optional): Client secret for confidential clients.
     - `upstream.scopes` (optional): Scopes requested upstream.
+
+### External Authorization Server Session Binding
+
+External access tokens must be bound to the issuance session created for the
+credential offer. Configure a claim that the external authorization server will
+include in its access token:
+
+```json
+{
+    "type": "external",
+    "id": "external-corp-idp",
+    "issuer": "https://auth.example.com",
+    "sessionBinding": {
+        "method": "access_token_claim",
+        "claim": "issuer_state"
+    }
+}
+```
+
+The value of the configured claim must be the EUDIPLO issuance session id. For
+the standard authorization-code flow, this is the `issuer_state` value from the
+credential offer. The external authorization server must copy that value into
+the access token without changing it.
+
+When creating an offer, select the external authorization server by its
+configured `id` so the session is associated with the intended server:
+
+```json
+{
+    "response_type": "uri",
+    "flow": "authorization_code",
+    "credentialConfigurationIds": ["pid"],
+    "authorization_server": "external-corp-idp"
+}
+```
+
+EUDIPLO validates the token first, verifies that its issuer matches the
+configured server, reads the configured claim, and resolves exactly one
+existing session. Tokens are rejected when the claim is missing, empty, points
+to an unknown session, or belongs to another tenant or authorization server.
+EUDIPLO does not create a new issuance session from an external token and does
+not implicitly use the token `sub` claim for session correlation.
 
 ### Selecting Authorization Server for Offers
 

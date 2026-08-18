@@ -212,4 +212,37 @@ describe("Issuance - Configuration", () => {
             })
             .expect(400);
     });
+
+    test("external authorization servers should accept explicit session binding config", async () => {
+        await request(app.getHttpServer())
+            .post("/issuer/config")
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                batchSize: 2,
+                authorizationServers: [
+                    {
+                        type: "external",
+                        id: "issuer-external",
+                        issuer: "https://auth.example.com",
+                        sessionBinding: {
+                            method: "access_token_claim",
+                            claim: "issuer_state",
+                        },
+                    },
+                ],
+            })
+            .expect(201)
+            .expect((res) => {
+                expect(res.body.authorizationServers[0]).toMatchObject({
+                    type: "external",
+                    id: "issuer-external",
+                    issuer: "https://auth.example.com",
+                    sessionBinding: {
+                        method: "access_token_claim",
+                        claim: "issuer_state",
+                    },
+                });
+            });
+    });
 });
