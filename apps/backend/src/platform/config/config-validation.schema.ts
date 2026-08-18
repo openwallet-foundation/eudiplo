@@ -16,7 +16,7 @@ export const CONFIG_VALIDATION_SCHEMA = Joi.object({
         .meta({ group: "config", order: 20 }),
 
     CONFIG_FOLDER: Joi.string()
-        .default(resolve(__dirname + "/../../../../../assets/config"))
+        .default(resolve(__dirname + "/../../../../assets/config"))
         .description("Path to config import folder")
         .meta({ group: "config", order: 30 }),
     CONFIG_VARIABLE_STRICT: Joi.alternatives()
