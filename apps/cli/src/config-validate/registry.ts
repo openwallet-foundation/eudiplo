@@ -1,7 +1,7 @@
 import registryData from "./registry.json" with { type: "json" };
 import type { TenantResourceDefinition } from "./types.js";
 
-export const TENANT_RESOURCE_REGISTRY: readonly TenantResourceDefinition[] =
+const TENANT_RESOURCE_REGISTRY: readonly TenantResourceDefinition[] =
     registryData as TenantResourceDefinition[];
 
 /** Entries actually scanned by the CLI validator (excludes editor-authoring-only schemas). */

@@ -13,7 +13,7 @@ import type {
 
 const PLACEHOLDER_PATTERN = /\$\{([A-Z0-9_]+)(?::([^}]*))?\}/g;
 
-export async function discoverTenantDirectories(rootPath: string): Promise<string[]> {
+async function discoverTenantDirectories(rootPath: string): Promise<string[]> {
     const entries = await readdir(rootPath, { withFileTypes: true });
     return entries
         .filter((entry) => entry.isDirectory())
