@@ -162,6 +162,29 @@ describe('IssuanceOfferComponent', () => {
     expect(component.authCodeAuthorizationServerOptions).toEqual([]);
   });
 
+  it('selects the only available attribute provider automatically', async () => {
+    component.credentialConfigs = [buildMdocConfig() as any];
+    component.availableAttributeProviders = [{ id: 'provider-one' } as any];
+
+    await component.setClaimFormFields(['pid']);
+
+    expect(component.getWebhookFormGroup('pid')?.get('attributeProviderId')?.value).toBe(
+      'provider-one'
+    );
+  });
+
+  it('leaves attribute provider selection empty when multiple providers are available', async () => {
+    component.credentialConfigs = [buildMdocConfig() as any];
+    component.availableAttributeProviders = [
+      { id: 'provider-one' } as any,
+      { id: 'provider-two' } as any,
+    ];
+
+    await component.setClaimFormFields(['pid']);
+
+    expect(component.getWebhookFormGroup('pid')?.get('attributeProviderId')?.value).toBe('');
+  });
+
   it('auto-selects the only authorization server and excludes built-in for auth code', () => {
     component.issuanceConfig = {
       authorizationServers: [

@@ -34,6 +34,7 @@ const ChainedAsAuthorizeQuerySchema = z
     .object({
         client_id: z.string(),
         request_uri: z.string(),
+        state: z.string().optional(),
     })
     .strict();
 
@@ -148,6 +149,11 @@ export class ChainedAsAuthorizeQueryDto extends createZodDto(
         example: "urn:ietf:params:oauth:request_uri:abc123",
     })
     request_uri!: string;
+
+    @ApiPropertyOptional({
+        description: "State parameter (returned in redirect)",
+    })
+    state?: string;
 }
 
 /**

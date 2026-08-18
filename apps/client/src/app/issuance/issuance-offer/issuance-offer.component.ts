@@ -356,8 +356,14 @@ export class IssuanceOfferComponent implements OnInit {
     for (const id of credentialConfigIds) {
       if (!this.externalAsWebhooks.has(id)) {
         const config = this.credentialConfigs.find((cred) => cred.id === id);
+        const configuredProviderId = config?.attributeProviderId || '';
+        const attributeProviderId =
+          configuredProviderId ||
+          (this.availableAttributeProviders.length === 1
+            ? this.availableAttributeProviders[0].id
+            : '');
         const apGroup = new FormGroup({
-          attributeProviderId: new FormControl(config?.attributeProviderId || ''),
+          attributeProviderId: new FormControl(attributeProviderId),
         });
         this.externalAsWebhooks.set(id, apGroup);
       }
