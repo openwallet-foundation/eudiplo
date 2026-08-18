@@ -402,8 +402,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
           (config as { credentialRequestEncryption?: boolean }).credentialRequestEncryption ??
           false,
         notificationEndpointEnabled:
-          (config as { notificationEndpointEnabled?: boolean }).notificationEndpointEnabled ??
-          true,
+          (config as { notificationEndpointEnabled?: boolean }).notificationEndpointEnabled ?? true,
         walletAttestationRequired: config.walletAttestationRequired ?? false,
         txCodeMaxAttempts: config.txCodeMaxAttempts ?? null,
         registrationCertificate: {
