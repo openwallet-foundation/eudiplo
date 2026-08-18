@@ -272,6 +272,7 @@ export class IssuanceOfferComponent implements OnInit {
     this.hasChainedAuthorizationServer = ((issuanceConfig as any)?.authorizationServers || []).some(
       (server: any) => server?.type === 'chained' && server?.enabled !== false
     );
+    this.syncAuthorizationServerControl(this.selectedFlow);
 
     // Check for pre-fill data from navigation state (recreate offer flow)
     // Must be done BEFORE setting up subscriptions to avoid interference
@@ -305,6 +306,11 @@ export class IssuanceOfferComponent implements OnInit {
         authorization_server: this.getDefaultAuthServerForFlow(flow),
         tx_code: '',
       });
+      this.syncAuthorizationServerControl(flow);
+    });
+
+    this.credentialStepForm.get('credentialConfigurationIds')?.valueChanges.subscribe(() => {
+      this.syncAuthorizationServerControl(this.selectedFlow);
     });
 
     // Pre-select preferred AS if set and we're already on auth-code-external flow (and not prefilling)
@@ -424,14 +430,21 @@ export class IssuanceOfferComponent implements OnInit {
   }
 
   get preAuthAuthorizationServerOptions(): { value: string; label: string }[] {
-    return this.authCodeAuthorizationServerOptions;
+    return this.getAuthorizationServerOptions('pre_authorized_code');
   }
 
   get authCodeAuthorizationServerOptions(): { value: string; label: string }[] {
+    return this.getAuthorizationServerOptions('authorization_code');
+  }
+
+  private getAuthorizationServerOptions(
+    flow: 'authorization_code' | 'pre_authorized_code'
+  ): { value: string; label: string }[] {
     const servers = ((this.issuanceConfig as any)?.authorizationServers ?? []) as any[];
 
     return servers
       .filter((server) => server?.enabled !== false)
+      .filter((server) => flow !== 'authorization_code' || server?.type !== 'built-in')
       .map((server) => {
         if (server?.type === 'external' && typeof server?.issuer === 'string') {
           return {
@@ -488,8 +501,10 @@ export class IssuanceOfferComponent implements OnInit {
    */
   private getDefaultAuthServerForFlow(flow: string): string {
     let options: { value: string; label: string }[] = [];
-    if (flow === 'authorization_code_external' || flow === 'pre_authorized_code') {
+    if (flow === 'authorization_code_external') {
       options = this.authCodeAuthorizationServerOptions;
+    } else if (flow === 'pre_authorized_code') {
+      options = this.preAuthAuthorizationServerOptions;
     }
 
     if (options.length === 0) {
@@ -497,6 +512,29 @@ export class IssuanceOfferComponent implements OnInit {
     }
 
     return options[0]?.value || '';
+  }
+
+  private syncAuthorizationServerControl(flow: string): void {
+    const control = this.configStepForm.get('authorization_server');
+    const options = this.getAuthorizationServerOptions(
+      flow as 'authorization_code' | 'pre_authorized_code'
+    );
+    const selected = control?.value;
+
+    if (options.length === 1) {
+      control?.setValue(options[0].value, { emitEvent: false });
+      control?.clearValidators();
+    } else if (options.length > 1) {
+      if (!options.some((option) => option.value === selected)) {
+        control?.setValue('', { emitEvent: false });
+      }
+      control?.setValidators(Validators.required);
+    } else {
+      control?.setValue('', { emitEvent: false });
+      control?.clearValidators();
+    }
+
+    control?.updateValueAndValidity({ emitEvent: false });
   }
 
   isSelectedAuthorizationServerChained(): boolean {
@@ -660,7 +698,12 @@ export class IssuanceOfferComponent implements OnInit {
 
   async onSubmit(): Promise<void> {
     // Validate all step forms
-    if (this.flowStepForm.invalid || this.credentialStepForm.invalid) {
+    this.syncAuthorizationServerControl(this.selectedFlow);
+    if (
+      this.flowStepForm.invalid ||
+      this.credentialStepForm.invalid ||
+      this.configStepForm.invalid
+    ) {
       this.flowStepForm.markAllAsTouched();
       this.credentialStepForm.markAllAsTouched();
       this.configStepForm.markAllAsTouched();
@@ -852,6 +895,7 @@ export class IssuanceOfferComponent implements OnInit {
       authorization_server:
         offer.authorization_server || this.getDefaultAuthServerForFlow(formFlow),
     });
+    this.syncAuthorizationServerControl(formFlow);
 
     // Pre-fill claims for pre-auth flow
     if (offer.credentialClaims && formFlow === 'pre_authorized_code') {

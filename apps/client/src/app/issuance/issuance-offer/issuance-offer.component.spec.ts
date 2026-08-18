@@ -141,4 +141,95 @@ describe('IssuanceOfferComponent', () => {
 
     expect(defaultServer).toBe('ext-auth');
   });
+
+  it('defaults pre-authorized flow to a built-in server when it is first configured', () => {
+    component.issuanceConfig = {
+      authorizationServers: [
+        { type: 'built-in', id: 'issuer-built-in', enabled: true },
+        { type: 'external', id: 'ext-auth', issuer: 'https://auth.example.com', enabled: true },
+      ],
+    } as any;
+
+    const defaultServer = (component as any).getDefaultAuthServerForFlow('pre_authorized_code');
+
+    expect(defaultServer).toBe('issuer-built-in');
+  });
+
+  it('does not expose authorization servers when none are configured', () => {
+    component.issuanceConfig = { authorizationServers: [] } as any;
+
+    expect(component.preAuthAuthorizationServerOptions).toEqual([]);
+    expect(component.authCodeAuthorizationServerOptions).toEqual([]);
+  });
+
+  it('auto-selects the only authorization server and excludes built-in for auth code', () => {
+    component.issuanceConfig = {
+      authorizationServers: [
+        { type: 'external', id: 'external-auth', issuer: 'https://auth.example.com' },
+        { type: 'built-in', id: 'issuer-built-in' },
+      ],
+    } as any;
+
+    (component as any).syncAuthorizationServerControl('authorization_code');
+
+    expect(component.authCodeAuthorizationServerOptions).toEqual([
+      { value: 'external-auth', label: 'external-auth' },
+    ]);
+    expect(component.configStepForm.get('authorization_server')?.value).toBe('external-auth');
+    expect(component.configStepForm.get('authorization_server')?.valid).toBeTrue();
+  });
+
+  it('requires a valid explicit selection when multiple servers are available', () => {
+    component.issuanceConfig = {
+      authorizationServers: [
+        { type: 'external', id: 'first-auth', issuer: 'https://first.example.com' },
+        { type: 'oid4vp', id: 'second-auth' },
+      ],
+    } as any;
+
+    (component as any).syncAuthorizationServerControl('pre_authorized_code');
+
+    expect(component.configStepForm.get('authorization_server')?.value).toBe('');
+    expect(component.configStepForm.get('authorization_server')?.invalid).toBeTrue();
+
+    component.configStepForm.patchValue({ authorization_server: 'second-auth' });
+    expect(component.configStepForm.get('authorization_server')?.valid).toBeTrue();
+  });
+
+  it('clears a stale authorization server when the flow changes', () => {
+    component.issuanceConfig = {
+      authorizationServers: [
+        { type: 'external', id: 'external-auth', issuer: 'https://auth.example.com' },
+        { type: 'built-in', id: 'issuer-built-in' },
+      ],
+    } as any;
+    component.configStepForm.patchValue({ authorization_server: 'issuer-built-in' });
+
+    (component as any).syncAuthorizationServerControl('authorization_code');
+
+    expect(component.configStepForm.get('authorization_server')?.value).toBe('external-auth');
+  });
+
+  it('submits the selected authorization server identifier', async () => {
+    component.issuanceConfig = {
+      authorizationServers: [
+        { type: 'external', id: 'first-auth', issuer: 'https://first.example.com' },
+        { type: 'oid4vp', id: 'second-auth' },
+      ],
+    } as any;
+    component.credentialConfigs = [buildMdocConfig() as any];
+    await component.setClaimFormFields(['pid']);
+    component.credentialStepForm.patchValue({ credentialConfigurationIds: ['pid'] });
+    component.configStepForm.patchValue({
+      authorization_server: 'second-auth',
+      claims: { pid: { given_name: 'Ada' } },
+    });
+
+    await component.onSubmit();
+
+    const issuanceConfigService = TestBed.inject(IssuanceConfigService) as any;
+    expect(issuanceConfigService.getOffer.calls.mostRecent().args[0].authorization_server).toBe(
+      'second-auth'
+    );
+  });
 });

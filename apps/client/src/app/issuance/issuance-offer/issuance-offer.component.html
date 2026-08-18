@@ -167,20 +167,16 @@
                 Provide the claims data for each selected credential configuration.
               </p>
 
-              @if (preAuthAuthorizationServerOptions.length > 0) {
+              @if (preAuthAuthorizationServerOptions.length > 1) {
                 <mat-form-field class="full-width external-as-select">
-                  <mat-label>Authorization Server (Optional)</mat-label>
-                  <mat-select formControlName="authorization_server">
-                    <mat-option value="">Use issuer default</mat-option>
+                  <mat-label>Authorization Server</mat-label>
+                  <mat-select formControlName="authorization_server" required>
                     @for (server of preAuthAuthorizationServerOptions; track server.value) {
                       <mat-option [value]="server.value">{{ server.label }}</mat-option>
                     }
                   </mat-select>
                   <mat-icon matSuffix>dns</mat-icon>
-                  <mat-hint
-                    >Pre-authorized offers can target configured external or internal authorization
-                    servers. Default uses the built-in authorization server.</mat-hint
-                  >
+                  <mat-hint>Select the authorization server for this offer</mat-hint>
                 </mat-form-field>
               }
 
