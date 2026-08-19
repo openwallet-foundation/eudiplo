@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
-import Ajv2020 from "ajv/dist/2020";
+import Ajv2020Module from "ajv/dist/2020.js";
 import type { ErrorObject, ValidateFunction } from "ajv";
 import addFormatsModule from "ajv-formats";
 import { CLI_VALIDATED_REGISTRY } from "./registry.js";
@@ -12,7 +12,7 @@ import type {
     ValidationIssue,
 } from "./types.js";
 
-const PLACEHOLDER_PATTERN = /\$\{([A-Z0-9_]+)(?::([^}]*))?\}/g;
+const ENV_PLACEHOLDER_PATTERN = /\$\{([A-Z0-9_]+)(?::([^}]*))?\}/g;
 
 async function discoverTenantDirectories(rootPath: string): Promise<string[]> {
     const entries = await readdir(rootPath, { withFileTypes: true });
@@ -87,7 +87,7 @@ interface TenantValidationState {
 function createValidatorFactory(
     schemas: Map<string, Record<string, unknown>>,
 ): (schemaFile: string) => ValidateFunction {
-    const ajv = new Ajv2020({ allErrors: true, strict: false });
+    const ajv = new Ajv2020Module.default({ allErrors: true, strict: false });
     addFormatsModule.default(ajv as Parameters<typeof addFormatsModule.default>[0]);
     const validators = new Map<string, ValidateFunction>();
     return (schemaFile: string): ValidateFunction => {
@@ -237,20 +237,23 @@ function resolvePlaceholders(
     errors: ValidationIssue[],
 ): unknown {
     if (typeof value === "string") {
-        return value.replace(PLACEHOLDER_PATTERN, (match, varName: string, defaultValue?: string) => {
-            const envValue = env[varName];
-            if (envValue !== undefined && envValue !== "") {
-                return envValue;
-            }
-            if (defaultValue !== undefined) {
-                return defaultValue;
-            }
-            errors.push({
-                file,
-                message: `Unresolved placeholder \${${varName}}: no environment value or default is available`,
-            });
-            return match;
-        });
+        return value.replace(
+            ENV_PLACEHOLDER_PATTERN,
+            (match, varName: string, defaultValue?: string) => {
+                const envValue = env[varName];
+                if (envValue !== undefined && envValue !== "") {
+                    return envValue;
+                }
+                if (defaultValue !== undefined) {
+                    return defaultValue;
+                }
+                errors.push({
+                    file,
+                    message: `Unresolved placeholder \${${varName}}: no environment value or default is available`,
+                });
+                return match;
+            },
+        );
     }
     if (Array.isArray(value)) {
         return value.map((item) => resolvePlaceholders(item, env, file, errors));

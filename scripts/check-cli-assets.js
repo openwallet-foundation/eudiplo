@@ -19,7 +19,7 @@ const cliSchemasDirectory = join(__dirname, "../apps/cli/templates/schemas");
 const cliSchemasManifestPath = join(__dirname, "../apps/cli/templates/schemas.manifest.json");
 const tenantConfigRegistryPath = join(
     __dirname,
-    "../apps/cli/src/config-validate/registry.json",
+    "../apps/cli/src/commands/config/validate/registry.json",
 );
 
 const canonicalCompose = readFileSync(canonicalComposePath, "utf8");
@@ -71,7 +71,7 @@ const requiredSchemaFiles = [
 const cliSchemaManifest = JSON.parse(readFileSync(cliSchemasManifestPath, "utf8"));
 if (JSON.stringify(requiredSchemaFiles) !== JSON.stringify(cliSchemaManifest)) {
     console.error(
-        "apps/cli/templates/schemas.manifest.json is out of sync with apps/cli/src/config-validate/registry.json",
+        "apps/cli/templates/schemas.manifest.json is out of sync with apps/cli/src/commands/config/validate/registry.json",
     );
     reportMissingAndExtra(requiredSchemaFiles, cliSchemaManifest);
     process.exit(1);

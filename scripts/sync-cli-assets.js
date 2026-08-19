@@ -5,7 +5,7 @@
  * Canonical sources:
  * - deployment/docker-compose/docker-compose.yml
  * - assets/config/demo/**
- * - schemas/*.schema.json (referenced by apps/cli/src/config-validate/registry.json)
+ * - schemas/*.schema.json (referenced by apps/cli/src/commands/config/validate/registry.json)
  */
 
 const { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } = require("node:fs");
@@ -22,7 +22,7 @@ const cliSchemasDirectory = join(repoRoot, "apps/cli/templates/schemas");
 const cliSchemasManifestPath = join(repoRoot, "apps/cli/templates/schemas.manifest.json");
 const tenantConfigRegistryPath = join(
     repoRoot,
-    "apps/cli/src/config-validate/registry.json",
+    "apps/cli/src/commands/config/validate/registry.json",
 );
 
 function collectFilesRecursive(root) {

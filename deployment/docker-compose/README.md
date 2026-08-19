@@ -51,6 +51,9 @@ nano .env
 docker compose up -d                      # Minimal (default)
 docker compose --profile standard up -d   # Standard
 docker compose --profile full up -d       # Full
+
+# Components can also be enabled independently
+docker compose --profile postgres --profile s3 up -d
 ```
 
 ## Config Mounting
@@ -105,6 +108,10 @@ You can override this behavior with:
 | **Minimal**  | `docker compose up`                    | EUDIPLO only               | Local dev, quick testing  |
 | **Standard** | `docker compose --profile standard up` | + PostgreSQL, MinIO        | Staging, small production |
 | **Full**     | `docker compose --profile full up`     | + PostgreSQL, MinIO, Vault | Enterprise production     |
+
+The component profiles `postgres`, `s3`, and `vault` can be combined directly.
+The EUDIPLO CLI uses these component profiles for custom `eudiplo init`
+selections.
 
 ## Configuration Matrix
 

@@ -4,6 +4,7 @@
 #   docker compose up                              # Minimal: just EUDIPLO (SQLite, local storage)
 #   docker compose --profile standard up           # Standard: + Postgres + MinIO
 #   docker compose --profile full up               # Full: + Postgres + MinIO + Vault
+#   docker compose --profile postgres --profile s3 up  # Custom components
 #
 # For more information, see the documentation:
 # https://openwallet-foundation.github.io/eudiplo/docs/latest/deployment/docker-compose/
@@ -67,7 +68,7 @@ services:
   postgres:
     image: postgres:16
     restart: always
-    profiles: ['standard', 'full']
+    profiles: ['postgres', 'standard', 'full']
     environment:
       POSTGRES_USER: ${DB_USERNAME:-eudiplo}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
@@ -89,7 +90,7 @@ services:
   minio:
     image: quay.io/minio/minio:latest
     restart: always
-    profiles: ['standard', 'full']
+    profiles: ['s3', 'standard', 'full']
     ports:
       - '9000:9000'
       - '9001:9001'
@@ -111,7 +112,7 @@ services:
   # MinIO bucket initialization job
   minio-init:
     image: quay.io/minio/mc:latest
-    profiles: ['standard', 'full']
+    profiles: ['s3', 'standard', 'full']
     depends_on:
       minio:
         condition: service_healthy
@@ -136,7 +137,7 @@ services:
   vault:
     image: hashicorp/vault:latest
     restart: always
-    profiles: ['full']
+    profiles: ['vault', 'full']
     ports:
       - '8200:8200'
     environment:

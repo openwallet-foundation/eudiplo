@@ -17,7 +17,7 @@ const SCHEMAS_DIR = join(ROOT, "schemas");
 const CLIENT_SCHEMAS_FILE = join(ROOT, "apps/client/src/app/utils/schemas.json");
 const TENANT_CONFIG_REGISTRY_FILE = join(
     ROOT,
-    "apps/cli/src/config-validate/registry.json",
+    "apps/cli/src/commands/config/validate/registry.json",
 );
 const VSCODE_SETTINGS_FILE = join(ROOT, ".vscode/settings.json");
 
@@ -120,7 +120,7 @@ type TenantConfigRegistryEntry = {
 };
 
 /**
- * `apps/cli/src/config-validate/registry.json` is the source of truth for which
+ * `apps/cli/src/commands/config/validate/registry.json` is the source of truth for which
  * tenant config-import files map to which schema; this keeps the editor's
  * `json.schemas` associations in `.vscode/settings.json` from drifting out of
  * sync with it.

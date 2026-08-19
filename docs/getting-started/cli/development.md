@@ -36,7 +36,7 @@ sources:
 
 - `deployment/docker-compose/docker-compose.yml`
 - `assets/config/demo/**`
-- `schemas/*.schema.json` referenced by `apps/cli/src/config-validate/registry.json`
+- `schemas/*.schema.json` referenced by `apps/cli/src/commands/config/validate/registry.json`
 
 Run `pnpm run gen:api` after changing backend import schemas so the generated
 schema copies are updated before building the CLI.

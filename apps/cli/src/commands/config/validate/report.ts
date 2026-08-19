@@ -26,7 +26,7 @@ export function formatTextReport(
     rootPath: string,
     results: TenantValidationResult[],
 ): string {
-    const header =
+    const header: string =
         scope === "tenants"
             ? `Validating tenant configuration root: ${rootPath}`
             : `Validating tenant configuration: ${rootPath}`;
