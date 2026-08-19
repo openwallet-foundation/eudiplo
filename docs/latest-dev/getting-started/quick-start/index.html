@@ -871,6 +871,8 @@
       
         
       
+        
+      
     
     
     
@@ -936,6 +938,34 @@
     
   
     Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/server-setup-cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server Setup Cookbook
   
 
     
@@ -3353,8 +3383,9 @@ production setup and advanced configuration, see the
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">eudiplo</span> <span class="n">demo</span>
 </code></pre></div>
 <p>Both options run the same <strong>EUDIPLO CLI</strong>. The standalone CLI removes the
-Node.js requirement, but Docker and Docker Compose are still required for
-<code>eudiplo demo</code>.</p>
+Node.js requirement, but Docker and Docker Compose, or Podman and Podman
+Compose, are still required for <code>eudiplo demo</code>. Docker is preferred by default;
+set <code>EUDIPLO_CONTAINER_RUNTIME=podman</code> to force Podman.</p>
 <p>The CLI asks for a project directory and suggests <code>./</code>. Accepting the default
 generates editable demo files in your current directory:</p>
 <ul>

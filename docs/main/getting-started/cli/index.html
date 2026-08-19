@@ -11,7 +11,7 @@
         <link rel="prev" href="../web-client/">
       
       
-        <link rel="next" href="configuration-validation/">
+        <link rel="next" href="server-setup-cookbook/">
       
       
         
@@ -654,6 +654,8 @@
       
         
       
+        
+      
     
     
     
@@ -819,6 +821,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#uninstall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uninstall
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#run-a-local-demo-deployment" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -877,6 +890,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="server-setup-cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server Setup Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -3088,6 +3129,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#uninstall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uninstall
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#run-a-local-demo-deployment" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3233,6 +3285,7 @@
 <p>The command name is <code>eudiplo</code> in both cases.</p>
 <p>For focused guidance, see:</p>
 <ul>
+<li><a href="server-setup-cookbook/">Server setup cookbook</a></li>
 <li><a href="configuration-validation/">Configuration validation</a></li>
 <li><a href="development/">Local development</a></li>
 </ul>
@@ -3271,11 +3324,29 @@ Windows x64 release archive.</p>
 <li><code>npx @eudiplo/cli ...</code> runs the package without a global install.</li>
 <li><code>eudiplo ...</code> runs the installed command (standalone or npm-installed).</li>
 </ul>
+<h2 id="uninstall">Uninstall<a class="headerlink" href="#uninstall" title="Permanent link">¶</a></h2>
+<p>Use the removal path that matches how the CLI was installed. A separate
+<code>eudiplo uninstall</code> command is intentionally not provided because the executable
+may be managed by npm, a release archive, or a local installation directory.</p>
+<p>For the standalone Linux/macOS installer, remove the installed binary:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>rm<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">EUDIPLO_INSTALL_DIR</span><span class="k">:-</span><span class="nv">$HOME</span><span class="p">/.local/bin</span><span class="si">}</span><span class="s2">/eudiplo"</span>
+</code></pre></div>
+<p>If you installed the npm package globally, remove it with npm:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>npm<span class="w"> </span>uninstall<span class="w"> </span>-g<span class="w"> </span>@eudiplo/cli
+</code></pre></div>
+<p>If you added it to a project, remove the project dependency with your package
+manager, for example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pnpm<span class="w"> </span>remove<span class="w"> </span>@eudiplo/cli
+</code></pre></div>
+<p>The CLI stores instance metadata in <code>~/.eudiplo/config.json</code> by default. Remove
+that directory only if you also want to delete local CLI instance registrations:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>rm<span class="w"> </span>-rf<span class="w"> </span>~/.eudiplo
+</code></pre></div>
 <h2 id="run-a-local-demo-deployment">Run a Local Demo Deployment<a class="headerlink" href="#run-a-local-demo-deployment" title="Permanent link">¶</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>eudiplo<span class="w"> </span>demo<span class="w"> </span>./eudiplo-demo
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>eudiplo<span class="w"> </span>demo<span class="w"> </span>./eudiplo-demo
 </code></pre></div>
 <p>or, with npm one-off execution:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>demo<span class="w"> </span>./eudiplo-demo
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>demo<span class="w"> </span>./eudiplo-demo
 </code></pre></div>
 <p>The demo command copies EUDIPLO's bundled Docker Compose deployment template,
 creates local demo assets, and starts a deliberately minimal stack using SQLite,
@@ -3286,13 +3357,16 @@ local file storage, database-backed key management, and the web client:</p>
 <li><code>config/demo</code> (editable generated demo tenant configuration)</li>
 </ul>
 <p>The standalone CLI removes the Node.js requirement only. Docker and Docker
-Compose are still required for <code>demo</code>.</p>
+Compose, or Podman and Podman Compose, are still required for <code>demo</code>.</p>
+<p>Docker is preferred by default. If Docker is not found, the CLI tries Podman.
+Set <code>EUDIPLO_CONTAINER_RUNTIME=docker</code> or <code>EUDIPLO_CONTAINER_RUNTIME=podman</code> to
+force a specific Compose runtime.</p>
 <p>Demo mode warning: generated demo credentials are for local onboarding only and
 must not be used in production.</p>
 <h2 id="register-an-existing-deployment">Register an Existing Deployment<a class="headerlink" href="#register-an-existing-deployment" title="Permanent link">¶</a></h2>
 <p>For Kubernetes, Helm, standalone containers, or any externally managed instance,
 register the public API URL:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>eudiplo<span class="w"> </span>instance<span class="w"> </span>add<span class="w"> </span>production<span class="w"> </span>--url<span class="w"> </span>https://eudiplo.example.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>eudiplo<span class="w"> </span>instance<span class="w"> </span>add<span class="w"> </span>production<span class="w"> </span>--url<span class="w"> </span>https://eudiplo.example.com
 </code></pre></div>
 <p>Instance metadata is stored in the user's EUDIPLO CLI config directory, not in
 the source tree. Do not put secrets in this config; commands that need client
@@ -3301,11 +3375,11 @@ environment.</p>
 <h2 id="deployment-neutral-commands">Deployment-Neutral Commands<a class="headerlink" href="#deployment-neutral-commands" title="Permanent link">¶</a></h2>
 <p>These commands work with both <code>compose</code> and <code>external</code> instances and do not
 require Docker:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>eudiplo<span class="w"> </span>doctor<span class="w"> </span>--instance<span class="w"> </span>production
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>eudiplo<span class="w"> </span>status<span class="w"> </span>--instance<span class="w"> </span>production
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>validate
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>eudiplo<span class="w"> </span>--version
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>eudiplo<span class="w"> </span>version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>eudiplo<span class="w"> </span>doctor<span class="w"> </span>--instance<span class="w"> </span>production
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>eudiplo<span class="w"> </span>status<span class="w"> </span>--instance<span class="w"> </span>production
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>validate
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>eudiplo<span class="w"> </span>--version
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>eudiplo<span class="w"> </span>version
 </code></pre></div>
 <p><code>--version</code> and <code>-v</code> print the installed CLI version without network access.
 <code>version</code> also checks the npm registry and reports whether an update is
@@ -3319,16 +3393,16 @@ prints the configured instances. It does not require Docker or contact the
 deployment.</p>
 <h2 id="compose-driver-commands">Compose Driver Commands<a class="headerlink" href="#compose-driver-commands" title="Permanent link">¶</a></h2>
 <p>These commands are available only for <code>compose</code> instances:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>eudiplo<span class="w"> </span>init
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>./eudiplo-minimal<span class="w"> </span>--preset<span class="w"> </span>minimal
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>./eudiplo-standard<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--start
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--database<span class="w"> </span>postgres<span class="w"> </span>--storage<span class="w"> </span><span class="nb">local</span><span class="w"> </span>--kms<span class="w"> </span>vault
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--public-url<span class="w"> </span>https://eudiplo.example.com
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--demo-tenant
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>eudiplo<span class="w"> </span>up
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>eudiplo<span class="w"> </span>down
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>eudiplo<span class="w"> </span>logs
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>eudiplo<span class="w"> </span>demo<span class="w"> </span>--reset<span class="w"> </span>--force
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>eudiplo<span class="w"> </span>init
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>./eudiplo-minimal<span class="w"> </span>--preset<span class="w"> </span>minimal
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>./eudiplo-standard<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--start
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--database<span class="w"> </span>postgres<span class="w"> </span>--storage<span class="w"> </span><span class="nb">local</span><span class="w"> </span>--kms<span class="w"> </span>vault
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--public-url<span class="w"> </span>https://eudiplo.example.com
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--demo-tenant
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>eudiplo<span class="w"> </span>up
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>eudiplo<span class="w"> </span>down
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>eudiplo<span class="w"> </span>logs
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>eudiplo<span class="w"> </span>demo<span class="w"> </span>--reset<span class="w"> </span>--force
 </code></pre></div>
 <p>When run in an interactive terminal, <code>init</code> opens a wizard for the project
 directory, deployment preset, database, storage, key management, public URL,
@@ -3387,10 +3461,10 @@ demo assets without starting containers. New onboarding instructions should use
 <code>demo</code> for evaluation and <code>init</code> for configurable deployments.</p>
 <h2 id="local-tenant-configuration-commands">Local Tenant Configuration Commands<a class="headerlink" href="#local-tenant-configuration-commands" title="Permanent link">¶</a></h2>
 <p>The tenant commands scaffold and manage local config-import folders:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>list
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>create<span class="w"> </span>acme<span class="w"> </span>--name<span class="w"> </span><span class="s2">"Acme GmbH"</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>create<span class="w"> </span>sample<span class="w"> </span>--template<span class="w"> </span>demo
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>remove<span class="w"> </span>acme<span class="w"> </span>--force
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>list
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>create<span class="w"> </span>acme<span class="w"> </span>--name<span class="w"> </span><span class="s2">"Acme GmbH"</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>create<span class="w"> </span>sample<span class="w"> </span>--template<span class="w"> </span>demo
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>remove<span class="w"> </span>acme<span class="w"> </span>--force
 </code></pre></div>
 <p><code>create</code> generates <code>info.json</code> and the supported resource subdirectories.
 <code>--template demo</code> copies the bundled demo resources instead. Aliases <code>ls</code>,
@@ -3455,13 +3529,13 @@ clear error such as <code>logs is not available for externally managed deploymen
         
         
           
-          <a href="configuration-validation/" class="md-footer__link md-footer__link--next" aria-label="Next: Configuration Validation">
+          <a href="server-setup-cookbook/" class="md-footer__link md-footer__link--next" aria-label="Next: Server Setup Cookbook">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Configuration Validation
+                Server Setup Cookbook
               </div>
             </div>
             <div class="md-footer__button md-icon">
