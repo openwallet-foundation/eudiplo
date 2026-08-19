@@ -18,7 +18,7 @@ export function createDeploymentCommands(
     return (["up", "down", "logs"] as const).map((name) =>
         new Command(name)
             .description(descriptions[name])
-            .argument("[args...]", "additional arguments passed to Docker Compose")
+            .argument("[args...]", "additional arguments passed to the Compose runtime")
             .option("--instance <name>", "select a configured Compose instance")
             .action(async (args, options) => {
                 const { config } = await loadCliState(context);

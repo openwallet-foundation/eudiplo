@@ -71,12 +71,22 @@ Both options run the same **EUDIPLO CLI**.
 
 - **Standalone CLI**: native executable, no Node.js required.
 - **npm package**: `@eudiplo/cli`, requires Node.js 22+.
-- The demo requires Docker and Docker Compose.
+- The demo requires Docker and Docker Compose, or Podman and Podman Compose.
 - `eudiplo demo` creates a local demo deployment for evaluation, not production.
 
-Continue with:
+## What Should I Do Next?
 
-- [Quick Start](./getting-started/quick-start.md)
+If you are new to EUDIPLO, follow this path:
+
+| Step | Guide                                                                                      | Goal                                                                   |
+| ---- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| 1    | [Quick Start](./getting-started/quick-start.md)                                            | Run the demo and confirm EUDIPLO works on your machine.                |
+| 2    | [Server setup cookbook](./getting-started/cli/server-setup-cookbook.md)                    | Set up a reusable local or server instance with tenant config folders. |
+| 3    | [Credential configuration](./getting-started/issuance/credential-configuration.md)         | Define what your tenant can issue.                                     |
+| 4    | [Presentation configuration](./getting-started/presentation/presentation-configuration.md) | Define what your tenant can verify.                                    |
+
+Useful references once the first setup works:
+
 - [CLI documentation](./getting-started/cli.md)
 - [Production deployment](./deployment/index.md)
 - [GitHub Releases](https://github.com/openwallet-foundation/eudiplo/releases)

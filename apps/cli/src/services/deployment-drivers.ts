@@ -1,5 +1,5 @@
 import { access, mkdir, rm, stat, unlink, writeFile } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { delimiter, join, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import {
     copyBundledDemoConfig,
@@ -23,14 +23,21 @@ import type {
     InstanceConfig,
 } from "../types.js";
 
+type ContainerRuntimeName = "docker" | "podman";
+
+interface ComposeRuntime {
+    command: string;
+    name: ContainerRuntimeName;
+}
+
 export const drivers: Record<DeploymentTarget, DeploymentDriver> = {
     compose: {
         target: "compose",
         async diagnostics(instance, context) {
             const messages: string[] = [];
             const projectDirectory = instance.projectDirectory ?? context.cwd;
-            if (!(await resolveDockerExecutable())) {
-                messages.push("Docker was not found in a supported install location.");
+            if (!(await resolveComposeRuntime(context.env))) {
+                messages.push("Docker or Podman was not found in a supported install location.");
             }
             for (const composeFile of getComposeFiles(instance)) {
                 try {
@@ -238,14 +245,14 @@ async function runCompose(
     }
     composeArgs.push(...args);
 
-    const dockerExecutable = await resolveDockerExecutable();
-    if (!dockerExecutable) {
-        context.stderr.write("Docker was not found in a supported install location.\n");
+    const composeRuntime = await resolveComposeRuntime(context.env);
+    if (!composeRuntime) {
+        context.stderr.write("Docker or Podman was not found in a supported install location.\n");
         return 1;
     }
 
     return new Promise((resolveProcess) => {
-        const child = spawn(dockerExecutable, composeArgs, {
+        const child = spawn(composeRuntime.command, composeArgs, {
             cwd: projectDirectory,
             env: context.env,
             stdio: "inherit",
@@ -259,19 +266,87 @@ async function runCompose(
     });
 }
 
-async function resolveDockerExecutable(): Promise<string | undefined> {
-    const executablePaths =
-        process.platform === "win32"
-            ? [String.raw`C:\Program Files\Docker\Docker\resources\bin\docker.exe`]
-            : ["/usr/local/bin/docker", "/opt/homebrew/bin/docker", "/usr/bin/docker"];
+export async function resolveComposeRuntime(
+    env: NodeJS.ProcessEnv,
+): Promise<ComposeRuntime | undefined> {
+    const preferredRuntime = parsePreferredRuntime(env.EUDIPLO_CONTAINER_RUNTIME);
+    const candidates = preferredRuntime
+        ? [preferredRuntime]
+        : (["docker", "podman"] as const);
 
-    for (const executablePath of executablePaths) {
+    for (const runtime of candidates) {
+        const command = await resolveRuntimeExecutable(runtime, env);
+        if (command) {
+            return { command, name: runtime };
+        }
+    }
+
+    return undefined;
+}
+
+function parsePreferredRuntime(value: string | undefined): ContainerRuntimeName | undefined {
+    if (!value) {
+        return undefined;
+    }
+    if (value === "docker" || value === "podman") {
+        return value;
+    }
+    throw new Error("EUDIPLO_CONTAINER_RUNTIME must be docker or podman.");
+}
+
+async function resolveRuntimeExecutable(
+    runtime: ContainerRuntimeName,
+    env: NodeJS.ProcessEnv,
+): Promise<string | undefined> {
+    for (const executablePath of runtimeExecutablePaths(runtime, env)) {
         if (await exists(executablePath)) {
             return executablePath;
         }
     }
 
     return undefined;
+}
+
+function runtimeExecutablePaths(
+    runtime: ContainerRuntimeName,
+    env: NodeJS.ProcessEnv,
+): string[] {
+    const pathCandidates = (env.PATH ?? "")
+        .split(delimiter)
+        .filter(Boolean)
+        .flatMap((pathEntry) => runtimePathCandidates(pathEntry, runtime, env));
+
+    if (process.platform === "win32") {
+        if (runtime === "docker") {
+            return [
+                String.raw`C:\Program Files\Docker\Docker\resources\bin\docker.exe`,
+                ...pathCandidates,
+            ];
+        }
+        return [String.raw`C:\Program Files\RedHat\Podman\podman.exe`, ...pathCandidates];
+    }
+
+    return [
+        `/usr/local/bin/${runtime}`,
+        `/opt/homebrew/bin/${runtime}`,
+        `/usr/bin/${runtime}`,
+        ...pathCandidates,
+    ];
+}
+
+function runtimePathCandidates(
+    pathEntry: string,
+    runtime: ContainerRuntimeName,
+    env: NodeJS.ProcessEnv,
+): string[] {
+    if (process.platform !== "win32") {
+        return [join(pathEntry, runtime)];
+    }
+
+    const extensions = (env.PATHEXT ?? ".EXE;.CMD;.BAT;.COM")
+        .split(";")
+        .filter(Boolean);
+    return [join(pathEntry, runtime), ...extensions.map((ext) => join(pathEntry, `${runtime}${ext}`))];
 }
 
 async function exists(path: string): Promise<boolean> {

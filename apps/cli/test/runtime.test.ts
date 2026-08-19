@@ -1,8 +1,8 @@
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { chmod, mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { basename, join } from "node:path";
 import { tmpdir } from "node:os";
 import { describe, expect, it } from "vitest";
-import { drivers } from "../src/services/deployment-drivers.js";
+import { drivers, resolveComposeRuntime } from "../src/services/deployment-drivers.js";
 import { runCli } from "../src/runtime.js";
 import type { CommandContext } from "../src/types.js";
 
@@ -456,7 +456,7 @@ describe("EUDIPLO CLI", () => {
             const code = await runCli(["init", "--preset", "full", "--start"], context);
 
             expect(code).toBe(0);
-            expect(output.stdout).toContain("Starting EUDIPLO with Docker Compose...");
+            expect(output.stdout).toContain("Starting EUDIPLO with the Compose runtime...");
             expect(profiles).toEqual(["postgres", "s3", "vault"]);
         } finally {
             drivers.compose.up = originalUp;
@@ -577,6 +577,29 @@ describe("EUDIPLO CLI", () => {
         }
     });
 
+    it("selects Podman when requested with EUDIPLO_CONTAINER_RUNTIME", async () => {
+        const { cwd } = await createContext();
+        const binDirectory = join(cwd, "bin");
+        const podmanPath = join(binDirectory, "podman");
+        await mkdir(binDirectory);
+        await writeFile(podmanPath, "#!/bin/sh\nexit 0\n", "utf8");
+        await chmod(podmanPath, 0o700);
+
+        const runtime = await resolveComposeRuntime({
+            EUDIPLO_CONTAINER_RUNTIME: "podman",
+            PATH: binDirectory,
+        });
+
+        expect(runtime?.name).toBe("podman");
+        expect(basename(runtime?.command ?? "")).toBe("podman");
+    });
+
+    it("rejects unsupported container runtime preferences", async () => {
+        await expect(
+            resolveComposeRuntime({ EUDIPLO_CONTAINER_RUNTIME: "nerdctl" }),
+        ).rejects.toThrow("EUDIPLO_CONTAINER_RUNTIME must be docker or podman.");
+    });
+
     it("demo generates local assets and starts compose", async () => {
         const { context, output, cwd } = await createContext();
         const originalUp = drivers.compose.up;
@@ -586,7 +609,7 @@ describe("EUDIPLO CLI", () => {
             const code = await runCli(["demo"], context);
 
             expect(code).toBe(0);
-            expect(output.stdout).toContain("Starting EUDIPLO demo with Docker Compose...");
+            expect(output.stdout).toContain("Starting EUDIPLO demo with the Compose runtime...");
             expect(output.stdout).toContain("Demo mode - not for production.");
             await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
                 "EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo:latest",

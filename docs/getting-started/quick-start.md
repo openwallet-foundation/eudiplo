@@ -52,8 +52,9 @@ eudiplo demo
 ```
 
 Both options run the same **EUDIPLO CLI**. The standalone CLI removes the
-Node.js requirement, but Docker and Docker Compose are still required for
-`eudiplo demo`.
+Node.js requirement, but Docker and Docker Compose, or Podman and Podman
+Compose, are still required for `eudiplo demo`. Docker is preferred by default;
+set `EUDIPLO_CONTAINER_RUNTIME=podman` to force Podman.
 
 The CLI asks for a project directory and suggests `./`. Accepting the default
 generates editable demo files in your current directory:

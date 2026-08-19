@@ -87,7 +87,7 @@ export async function runInit(
         }
 
         if (initOptions.start) {
-            context.stdout.write("Starting EUDIPLO with Docker Compose...\n");
+            context.stdout.write("Starting EUDIPLO with the Compose runtime...\n");
             return (
                 (await drivers.compose.up?.({
                     instanceName: name,

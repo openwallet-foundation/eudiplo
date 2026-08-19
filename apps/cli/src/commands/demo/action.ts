@@ -70,7 +70,7 @@ export async function runDemo(
     });
     const nextConfig = upsertInstance(config, "local", instance);
     await saveConfig(configPath, nextConfig);
-    context.stdout.write("Starting EUDIPLO demo with Docker Compose...\n");
+    context.stdout.write("Starting EUDIPLO demo with the Compose runtime...\n");
     const exitCode =
         (await drivers.compose.up?.({
             instanceName: "local",

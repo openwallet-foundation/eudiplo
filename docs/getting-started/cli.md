@@ -9,6 +9,7 @@ The command name is `eudiplo` in both cases.
 
 For focused guidance, see:
 
+- [Server setup cookbook](cli/server-setup-cookbook.md)
 - [Configuration validation](cli/configuration-validation.md)
 - [Local development](cli/development.md)
 
@@ -60,6 +61,38 @@ eudiplo --version
 - `npx @eudiplo/cli ...` runs the package without a global install.
 - `eudiplo ...` runs the installed command (standalone or npm-installed).
 
+## Uninstall
+
+Use the removal path that matches how the CLI was installed. A separate
+`eudiplo uninstall` command is intentionally not provided because the executable
+may be managed by npm, a release archive, or a local installation directory.
+
+For the standalone Linux/macOS installer, remove the installed binary:
+
+```bash
+rm "${EUDIPLO_INSTALL_DIR:-$HOME/.local/bin}/eudiplo"
+```
+
+If you installed the npm package globally, remove it with npm:
+
+```bash
+npm uninstall -g @eudiplo/cli
+```
+
+If you added it to a project, remove the project dependency with your package
+manager, for example:
+
+```bash
+pnpm remove @eudiplo/cli
+```
+
+The CLI stores instance metadata in `~/.eudiplo/config.json` by default. Remove
+that directory only if you also want to delete local CLI instance registrations:
+
+```bash
+rm -rf ~/.eudiplo
+```
+
 ## Run a Local Demo Deployment
 
 ```bash
@@ -81,7 +114,11 @@ local file storage, database-backed key management, and the web client:
 - `config/demo` (editable generated demo tenant configuration)
 
 The standalone CLI removes the Node.js requirement only. Docker and Docker
-Compose are still required for `demo`.
+Compose, or Podman and Podman Compose, are still required for `demo`.
+
+Docker is preferred by default. If Docker is not found, the CLI tries Podman.
+Set `EUDIPLO_CONTAINER_RUNTIME=docker` or `EUDIPLO_CONTAINER_RUNTIME=podman` to
+force a specific Compose runtime.
 
 Demo mode warning: generated demo credentials are for local onboarding only and
 must not be used in production.
@@ -165,11 +202,11 @@ explicitly use the DB provider, even when Vault is the default for new keys.
 
 All wizard choices are also available as flags for repeatable setup:
 
-| Preset | Database | Storage | Key management |
-| --- | --- | --- | --- |
-| `minimal` | SQLite | Local filesystem | Database-backed |
+| Preset     | Database   | Storage            | Key management  |
+| ---------- | ---------- | ------------------ | --------------- |
+| `minimal`  | SQLite     | Local filesystem   | Database-backed |
 | `standard` | PostgreSQL | S3 via local MinIO | Database-backed |
-| `full` | PostgreSQL | S3 via local MinIO | Vault |
+| `full`     | PostgreSQL | S3 via local MinIO | Vault           |
 
 Explicit `--database`, `--storage`, and `--kms` flags override the corresponding
 preset choices. Use `--yes` or `--no-interactive` to suppress the wizard. Use

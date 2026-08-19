@@ -1,7 +1,7 @@
 # EUDIPLO CLI
 
 The EUDIPLO CLI provides deployment-neutral commands for inspecting an EUDIPLO
-instance and deployment-driver commands for local Docker Compose demos.
+instance and deployment-driver commands for local Compose demos.
 
 For installation, command reference, configuration validation, standalone
 releases, and local development, see the [CLI documentation](../../docs/getting-started/cli.md).
@@ -36,7 +36,9 @@ preserved unless you pass `--force`.
 
 The standalone CLI and this npm package are two distributions of the same
 `eudiplo` command. The standalone CLI removes the Node.js requirement, but
-Docker and Docker Compose are still required for the demo deployment.
+Docker and Docker Compose, or Podman and Podman Compose, are still required for
+the demo deployment. Docker is preferred by default; set
+`EUDIPLO_CONTAINER_RUNTIME=podman` to force Podman.
 
 ## Package and Binary Names
 
@@ -51,6 +53,24 @@ eudiplo status
 pnpm add -D @eudiplo/cli
 pnpm eudiplo status
 ```
+
+## Uninstall
+
+Use the removal path that matches how the CLI was installed:
+
+```bash
+# Standalone Linux/macOS installer
+rm "${EUDIPLO_INSTALL_DIR:-$HOME/.local/bin}/eudiplo"
+
+# npm global install
+npm uninstall -g @eudiplo/cli
+
+# project dependency
+pnpm remove @eudiplo/cli
+```
+
+The CLI stores instance metadata in `~/.eudiplo/config.json` by default. Remove
+`~/.eudiplo` only if you also want to delete local CLI instance registrations.
 
 ## Compose Driver Commands
 
@@ -95,7 +115,7 @@ stored under `config/<tenant-id>/`. The demo tenant is excluded by default and
 can be added with `--demo-tenant`.
 
 `init --target compose --demo` writes demo-specific assets (`.eudiplo.demo.env`
-and `config/demo`) without starting Docker Compose. Add `--no-client`
+and `config/demo`) without starting the Compose runtime. Add `--no-client`
 to generate a small Compose override that skips the web client container.
 
 `demo --reset --force` stops the managed demo stack, removes managed demo
@@ -181,9 +201,9 @@ running it:
 sha256sum -c SHA256SUMS.txt
 ```
 
-The standalone binary does not replace Docker or Docker Compose. You still need
-Docker to run the local deployment stack, but you do not need a local Node.js
-installation just to use the CLI itself.
+The standalone binary does not replace Docker, Podman, or Compose. You still
+need a container runtime to run the local deployment stack, but you do not need a
+local Node.js installation just to use the CLI itself.
 
 ## Developing and Extending the CLI
 
@@ -248,34 +268,34 @@ truth.
 
 ```ts
 // commands/example/index.ts
-import { Command } from "commander";
-import type { CommandContext } from "../../types.js";
-import type { SetExitCode } from "../shared.js";
-import { runExample } from "./action.js";
+import { Command } from 'commander';
+import type { CommandContext } from '../../types.js';
+import type { SetExitCode } from '../shared.js';
+import { runExample } from './action.js';
 
 export function createExampleCommand(
-    context: CommandContext,
-    setExitCode: SetExitCode,
+  context: CommandContext,
+  setExitCode: SetExitCode,
 ): Command {
-    return new Command("example")
-        .description("Describe what the command does")
-        .requiredOption("--input <path>", "input file")
-        .action(async (options) => {
-            setExitCode(await runExample(options.input, context));
-        });
+  return new Command('example')
+    .description('Describe what the command does')
+    .requiredOption('--input <path>', 'input file')
+    .action(async (options) => {
+      setExitCode(await runExample(options.input, context));
+    });
 }
 ```
 
 ```ts
 // commands/example/action.ts
-import type { CommandContext } from "../../types.js";
+import type { CommandContext } from '../../types.js';
 
 export async function runExample(
-    input: string,
-    context: CommandContext,
+  input: string,
+  context: CommandContext,
 ): Promise<number> {
-    context.stdout.write(`Processing ${input}\n`);
-    return 0;
+  context.stdout.write(`Processing ${input}\n`);
+  return 0;
 }
 ```
 
