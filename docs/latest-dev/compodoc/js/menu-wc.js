@@ -1359,6 +1359,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/CredentialRequestException.html" data-type="entity-link" >CredentialRequestException</a>
                             </li>
                             <li class="link">
+                                <a href="classes/CredentialReusePolicy.html" data-type="entity-link" >CredentialReusePolicy</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/CredentialSetQuery.html" data-type="entity-link" >CredentialSetQuery</a>
                             </li>
                             <li class="link">

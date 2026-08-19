@@ -366,6 +366,12 @@
                             <a href="#CredentialQueryMsoMdocSchema" title="src/verifier/presentations/schemas/presentation-config.schema.ts" class="reference-link "><span class="reference-badge reference-badge--variable" aria-hidden="true">V</span><span class="reference-link-label"><b>CredentialQueryMsoMdocSchema</b>&nbsp;&nbsp;&nbsp;(src/.../presentation-config.schema.ts)</span></a>
                         </li>
                         <li>
+                            <a href="#CredentialReusePolicyOptionSchema" title="src/issuer/configuration/credentials/schemas/credential-config.schema.ts" class="reference-link "><span class="reference-badge reference-badge--variable" aria-hidden="true">V</span><span class="reference-link-label"><b>CredentialReusePolicyOptionSchema</b>&nbsp;&nbsp;&nbsp;(src/.../credential-config.schema.ts)</span></a>
+                        </li>
+                        <li>
+                            <a href="#CredentialReusePolicySchema" title="src/issuer/configuration/credentials/schemas/credential-config.schema.ts" class="reference-link "><span class="reference-badge reference-badge--variable" aria-hidden="true">V</span><span class="reference-link-label"><b>CredentialReusePolicySchema</b>&nbsp;&nbsp;&nbsp;(src/.../credential-config.schema.ts)</span></a>
+                        </li>
+                        <li>
                             <a href="#CredentialSetQuerySchema" title="src/verifier/presentations/schemas/presentation-config.schema.ts" class="reference-link "><span class="reference-badge reference-badge--variable" aria-hidden="true">V</span><span class="reference-link-label"><b>CredentialSetQuerySchema</b>&nbsp;&nbsp;&nbsp;(src/.../presentation-config.schema.ts)</span></a>
                         </li>
                         <li>
@@ -1699,6 +1705,136 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="CredentialReusePolicyOptionSchema"></a>
+                    <span class="name">
+                        <span ><b>CredentialReusePolicyOptionSchema</b></span>
+                        <a href="#CredentialReusePolicyOptionSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z
+    .object({
+        details: z
+            .array(
+                z.enum([
+                    &quot;once_only&quot;,
+                    &quot;limited_time&quot;,
+                    &quot;limited-time&quot;,
+                    &quot;rotating-batch&quot;,
+                    &quot;per-relying-party&quot;,
+                ]),
+            )
+            .min(1),
+        batch_size: z.number().int().min(2).optional(),
+        reissue_trigger_unused: z.number().int().min(0).optional(),
+        reissue_trigger_lifetime_left: z.number().int().min(0).optional(),
+    })
+    .strict()
+    .superRefine((option, context) &#x3D;&gt; {
+        const details &#x3D; new Set(option.details);
+        if (
+            (details.has(&quot;once_only&quot;) ||
+                details.has(&quot;rotating-batch&quot;) ||
+                details.has(&quot;per-relying-party&quot;)) &amp;&amp;
+            option.batch_size &#x3D;&#x3D;&#x3D; undefined
+        ) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: [&quot;batch_size&quot;],
+                message: &quot;batch_size is required for this reuse policy&quot;,
+            });
+        }
+        if (details.has(&quot;once_only&quot;)) {
+            if (option.reissue_trigger_unused &#x3D;&#x3D;&#x3D; undefined) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: [&quot;reissue_trigger_unused&quot;],
+                    message: &quot;reissue_trigger_unused is required for once_only&quot;,
+                });
+            } else if (
+                option.batch_size !&#x3D;&#x3D; undefined &amp;&amp;
+                option.reissue_trigger_unused &gt;&#x3D; option.batch_size
+            ) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: [&quot;reissue_trigger_unused&quot;],
+                    message: &quot;must be lower than batch_size&quot;,
+                });
+            }
+        }
+        if (
+            (details.has(&quot;limited_time&quot;) ||
+                details.has(&quot;limited-time&quot;) ||
+                details.has(&quot;rotating-batch&quot;) ||
+                details.has(&quot;per-relying-party&quot;)) &amp;&amp;
+            option.reissue_trigger_lifetime_left &#x3D;&#x3D;&#x3D; undefined
+        ) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: [&quot;reissue_trigger_lifetime_left&quot;],
+                message:
+                    &quot;reissue_trigger_lifetime_left is required for this reuse policy&quot;,
+            });
+        }
+    })</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="CredentialReusePolicySchema"></a>
+                    <span class="name">
+                        <span ><b>CredentialReusePolicySchema</b></span>
+                        <a href="#CredentialReusePolicySchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>z
+    .object({
+        id: z.string().min(1),
+        options: z.array(CredentialReusePolicyOptionSchema).optional(),
+    })
+    .strict()
+    .superRefine((policy, context) &#x3D;&gt; {
+        if (policy.id &#x3D;&#x3D;&#x3D; &quot;arf_annex_ii&quot; &amp;&amp; !policy.options) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: [&quot;options&quot;],
+                message: &quot;options is required for arf_annex_ii&quot;,
+            });
+        }
+    })</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="DisplayImageSchema"></a>
                     <span class="name">
                         <span ><b>DisplayImageSchema</b></span>
@@ -1955,6 +2091,9 @@
             .array(z.enum([&quot;jwt&quot;, &quot;attestation&quot;]))
             .optional()
             .describe(&quot;Supported proof types for issuance requests.&quot;),
+        credentialReusePolicy: CredentialReusePolicySchema.optional().describe(
+            &quot;Optional PID/EAA reuse policy published in credential metadata.&quot;,
+        ),
     })
     .describe(&quot;Credential metadata configuration exposed by issuer metadata.&quot;)
     .strict()</code>

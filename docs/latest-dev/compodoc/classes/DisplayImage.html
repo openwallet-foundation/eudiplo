@@ -212,7 +212,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:31</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:32</a></div>
                         </td>
                     </tr>
 
@@ -246,6 +246,7 @@ import { AttributeProviderEntity } from &quot;../../attribute-provider/entities/
 import { KeyAttestationsRequired } from &quot;../../issuance/dto/key-attestations-required.dto&quot;;
 import { WebhookEndpointEntity } from &quot;../../webhook-endpoint/entities/webhook-endpoint.entity&quot;;
 import { ClaimFieldDefinitionDto } from &quot;../dto/claim-field-definition.dto&quot;;
+import { CredentialReusePolicy } from &quot;../dto/credential-reuse-policy.dto&quot;;
 import { SchemaMetaConfig } from &quot;../dto/schema-meta-config.dto&quot;;
 import {
     IaeAction,
@@ -327,6 +328,9 @@ export class IssuerMetadataCredentialConfig {
         example: [CredentialProofType.ATTESTATION, CredentialProofType.JWT],
     })
     proofTypesSupported?: CredentialProofType[];
+
+    @ApiPropertyOptional({ type: () &#x3D;&gt; CredentialReusePolicy })
+    credentialReusePolicy?: CredentialReusePolicy;
 }
 
 @ApiExtraModels(

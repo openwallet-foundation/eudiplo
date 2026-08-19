@@ -241,7 +241,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:38</a></div>
                         </td>
                     </tr>
 
@@ -268,7 +268,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -294,7 +294,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:36</a></div>
                         </td>
                     </tr>
 
@@ -320,7 +320,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:36</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -347,7 +347,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:41</a></div>
                         </td>
                     </tr>
 
@@ -373,7 +373,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:34</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:35</a></div>
                         </td>
                     </tr>
 
@@ -400,7 +400,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:38</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/issuer/configuration/credentials/entities/credential.entity.ts:39</a></div>
                         </td>
                     </tr>
 
@@ -434,6 +434,7 @@ import { AttributeProviderEntity } from &quot;../../attribute-provider/entities/
 import { KeyAttestationsRequired } from &quot;../../issuance/dto/key-attestations-required.dto&quot;;
 import { WebhookEndpointEntity } from &quot;../../webhook-endpoint/entities/webhook-endpoint.entity&quot;;
 import { ClaimFieldDefinitionDto } from &quot;../dto/claim-field-definition.dto&quot;;
+import { CredentialReusePolicy } from &quot;../dto/credential-reuse-policy.dto&quot;;
 import { SchemaMetaConfig } from &quot;../dto/schema-meta-config.dto&quot;;
 import {
     IaeAction,
@@ -515,6 +516,9 @@ export class IssuerMetadataCredentialConfig {
         example: [CredentialProofType.ATTESTATION, CredentialProofType.JWT],
     })
     proofTypesSupported?: CredentialProofType[];
+
+    @ApiPropertyOptional({ type: () &#x3D;&gt; CredentialReusePolicy })
+    credentialReusePolicy?: CredentialReusePolicy;
 }
 
 @ApiExtraModels(
