@@ -9,7 +9,7 @@ export const defaultEnvFileName = ".eudiplo.env";
 export const demoComposeFileName = "eudiplo.demo.compose.yaml";
 export const demoEnvFileName = ".eudiplo.demo.env";
 export const configDirectoryName = "config";
-export const demoTenantId = "demo";
+const demoTenantId = "demo";
 export const demoConfigDirectory = `${configDirectoryName}/${demoTenantId}`;
 const demoConfigManifestAssetKey = "templates/demo-config.manifest.json";
 

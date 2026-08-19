@@ -32,7 +32,7 @@ export async function runCli(
     }
 }
 
-export function createProgram(
+function createProgram(
     context: CommandContext,
     setExitCode: (exitCode: number) => void,
 ): Command {
