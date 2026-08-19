@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
+import { dirname, isAbsolute, join, resolve } from "node:path";
 import { homedir } from "node:os";
-import type { CliConfig, InstanceConfig } from "./types.js";
+import type { CliConfig, InstanceConfig } from "../types.js";
 
 const emptyConfig = (): CliConfig => ({ instances: {} });
 
@@ -107,6 +107,9 @@ function validateInstanceConfig(name: string, value: unknown): InstanceConfig {
 
     validateHttpUrl(value.url, `Instance ${name} url`);
     validateOptionalHttpUrl(value.clientUrl, `Instance ${name} clientUrl`);
+    if (typeof value.projectDirectory === "string" && !isAbsolute(value.projectDirectory)) {
+        throw new Error(`Instance ${name} projectDirectory must be absolute.`);
+    }
 
     return {
         target: value.target,
@@ -114,8 +117,10 @@ function validateInstanceConfig(name: string, value: unknown): InstanceConfig {
         clientUrl: optionalString(value.clientUrl),
         composeFile: optionalString(value.composeFile),
         composeFiles: optionalStringArray(value.composeFiles),
+        composeProfiles: optionalStringArray(value.composeProfiles, "composeProfiles"),
         envFile: optionalString(value.envFile),
         projectName: optionalString(value.projectName),
+        projectDirectory: optionalString(value.projectDirectory),
     };
 }
 
@@ -123,12 +128,15 @@ function optionalString(value: unknown): string | undefined {
     return typeof value === "string" ? value : undefined;
 }
 
-function optionalStringArray(value: unknown): string[] | undefined {
+function optionalStringArray(
+    value: unknown,
+    label = "composeFiles",
+): string[] | undefined {
     if (!Array.isArray(value)) {
         return undefined;
     }
     if (value.some((item) => typeof item !== "string")) {
-        throw new Error("composeFiles must contain only strings.");
+        throw new Error(`${label} must contain only strings.`);
     }
     return value;
 }

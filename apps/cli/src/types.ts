@@ -7,8 +7,10 @@ export interface InstanceConfig {
     clientUrl?: string;
     composeFile?: string;
     composeFiles?: string[];
+    composeProfiles?: string[];
     envFile?: string;
     projectName?: string;
+    projectDirectory?: string;
 }
 
 export interface CliConfig {
@@ -20,6 +22,8 @@ export interface CommandContext {
     cwd: string;
     env: NodeJS.ProcessEnv;
     installationMethod?: CliInstallationMethod;
+    interactive?: boolean;
+    prompt?: (question: string) => Promise<string>;
     stdout: Pick<NodeJS.WriteStream, "write">;
     stderr: Pick<NodeJS.WriteStream, "write">;
     fetch: typeof fetch;

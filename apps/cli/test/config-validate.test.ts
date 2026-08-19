@@ -6,6 +6,34 @@ import { runCli } from "../src/runtime.js";
 import type { CommandContext } from "../src/types.js";
 
 describe("eudiplo config validate tenant(s)", () => {
+    it("validates a configured tenant through the tenant command", async () => {
+        const { context, output, cwd } = await createContext();
+        await writeTenantInfo(join(cwd, "root"), { name: "Root Tenant" });
+
+        const code = await runCli(
+            ["config", "tenant", "validate", "root", "--config-directory", cwd],
+            context,
+        );
+
+        expect(code).toBe(0);
+        expect(output.stdout).toContain("PASS root");
+    });
+
+    it("validates all configured tenants when no tenant ID is given", async () => {
+        const { context, output, cwd } = await createContext();
+        await writeTenantInfo(join(cwd, "root"), { name: "Root Tenant" });
+        await mkdir(join(cwd, "partner-a"), { recursive: true });
+
+        const code = await runCli(
+            ["config", "tenant", "validate", "--config-directory", cwd],
+            context,
+        );
+
+        expect(code).toBe(1);
+        expect(output.stdout).toContain("PASS root");
+        expect(output.stdout).toContain("FAIL partner-a");
+    });
+
     it("reports usage when no path is given", async () => {
         const { context, output } = await createContext();
 

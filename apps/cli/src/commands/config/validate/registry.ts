@@ -4,7 +4,7 @@ import type { TenantResourceDefinition } from "./types.js";
 const TENANT_RESOURCE_REGISTRY: readonly TenantResourceDefinition[] =
     registryData as TenantResourceDefinition[];
 
-/** Entries actually scanned by the CLI validator (excludes editor-authoring-only schemas). */
+/** Resources scanned by the CLI validator, excluding editor-only schemas. */
 export const CLI_VALIDATED_REGISTRY: readonly TenantResourceDefinition[] =
     TENANT_RESOURCE_REGISTRY.filter((entry) => entry.cliValidated !== false);
 

@@ -98,11 +98,26 @@ Both commands run the same **EUDIPLO CLI**:
 
 `eudiplo demo` creates a **demo deployment** for local evaluation:
 
-- Creates editable demo configuration (`.eudiplo.demo.env` and `.eudiplo/demo-config`).
+- Creates editable demo configuration (`.eudiplo.demo.env` and `config/demo/`).
+- Uses the minimal topology: SQLite, local file storage, and database-backed keys.
 - Starts the backend and web client using Docker Compose.
 - Exposes the API at `http://localhost:3000`.
 - Exposes the web client at `http://localhost:4200`.
 - Uses demo credentials that must not be used in production.
+
+For a configurable local deployment, run `eudiplo init ./eudiplo-local`. In an
+interactive terminal it asks for a preset or individual database, storage,
+key-management, public URL, and authentication choices. The same choices are
+available as flags, for example
+`eudiplo init ./eudiplo-local --preset standard --start`.
+
+Local tenant configuration can be scaffolded and managed with:
+
+```bash
+eudiplo config tenant list
+eudiplo config tenant create acme --name "Acme GmbH"
+eudiplo config tenant remove acme --force
+```
 
 See the detailed guides:
 

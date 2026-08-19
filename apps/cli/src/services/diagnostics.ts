@@ -1,4 +1,4 @@
-import type { CommandContext, InstanceConfig } from "./types.js";
+import type { CommandContext, InstanceConfig } from "../types.js";
 
 type CheckStatus = "pass" | "warn" | "fail";
 

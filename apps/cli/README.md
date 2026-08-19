@@ -9,27 +9,27 @@ releases, and local development, see the [CLI documentation](../../docs/getting-
 ## Quick Start
 
 This package is the npm distribution of the **EUDIPLO CLI** and requires
-Node.js 22+.
+Node.js 22.12+.
 
 For users who do not want a local Node.js dependency, use the standalone CLI
 installer instead: `curl -fsSL https://eudiplo.dev/install.sh | bash`
 
 ```bash
-npx @eudiplo/cli demo
+npx @eudiplo/cli demo ./eudiplo-demo
 npx @eudiplo/cli instance add production --url https://eudiplo.example.com
 npx @eudiplo/cli doctor --instance production
 ```
 
 `demo` creates a local editable demo deployment, writes `.eudiplo.demo.env`,
-copies canonical demo configuration into `.eudiplo/demo-config`, and starts the
-`compose` driver.
+copies canonical demo configuration into `config/demo`, and starts the
+minimal `compose` stack. It always uses SQLite, local file storage,
+database-backed key management, the backend, and the web client.
 
 - Backend image: `ghcr.io/openwallet-foundation/eudiplo:<tag>`
 - Client image: `ghcr.io/openwallet-foundation/eudiplo-client:<tag>`
 
-Tag selection defaults to the CLI version. For prerelease versions containing
-`-main.`, the CLI uses the `main` tag for both images. Use `--image-tag` (or
-`EUDIPLO_IMAGE_TAG`) to override.
+Tag selection defaults to `latest` for both images. Use `--image-tag` (or
+`EUDIPLO_IMAGE_TAG`) to select `main`, a release tag, or an immutable SHA tag.
 
 The generated demo config remains editable after creation. Existing files are
 preserved unless you pass `--force`.
@@ -57,7 +57,11 @@ pnpm eudiplo status
 Compose driver commands require a `compose` instance:
 
 ```bash
-eudiplo init --target compose
+eudiplo init
+eudiplo init ./eudiplo-minimal --preset minimal
+eudiplo init ./eudiplo-standard --preset standard --start
+eudiplo init --database postgres --storage local --kms vault
+eudiplo init --preset standard --demo-tenant
 eudiplo init --target compose --demo
 eudiplo init --target compose --demo --image-tag main
 eudiplo init --target compose --no-client
@@ -67,13 +71,48 @@ eudiplo logs
 eudiplo demo --reset --force
 ```
 
-`init --target compose` writes a local `.eudiplo.env` using Compose defaults.
+In an interactive terminal, `init` opens a wizard for the project directory,
+preset, components, public URL, authentication, client, and startup choices.
+For scripts and CI, the same values can be supplied with `--directory`,
+`--preset`, `--database`, `--storage`, `--kms`, `--public-url`,
+`--auth-client-id`, and `--auth-client-secret`. The directory can also be passed
+positionally. When it is omitted, the wizard suggests `./`; non-interactive and
+`--yes` runs use `./` automatically. Its absolute path is saved with the
+instance, allowing later Compose commands to run from a different working
+directory.
+
+Interactive `demo` runs use the same directory prompt. Pass a positional
+directory, `--directory`, or `--yes` to skip it.
+
+`init --preset minimal` writes a local `.eudiplo.env` using SQLite and local
+storage. `standard` provisions PostgreSQL and MinIO, while `full` additionally
+provisions Vault. Arbitrary combinations are supported through the component
+flags.
+
+Every initialized project contains one mounted `config/` root. Global KMS
+configuration is written to `config/kms.json`, while tenant configuration is
+stored under `config/<tenant-id>/`. The demo tenant is excluded by default and
+can be added with `--demo-tenant`.
+
 `init --target compose --demo` writes demo-specific assets (`.eudiplo.demo.env`
-and `.eudiplo/demo-config`) without starting Docker Compose. Add `--no-client`
+and `config/demo`) without starting Docker Compose. Add `--no-client`
 to generate a small Compose override that skips the web client container.
 
 `demo --reset --force` stops the managed demo stack, removes managed demo
 volumes, and recreates only CLI-managed demo assets.
+
+## Local Tenant Configuration Commands
+
+```bash
+eudiplo config tenant list
+eudiplo config tenant create acme --name "Acme GmbH"
+eudiplo config tenant create sample --template demo
+eudiplo config tenant remove acme --force
+```
+
+The aliases `ls`, `new`, `rm`, and `delete` are also supported. These commands manage
+local config-import folders only; removing a folder does not delete an already
+imported tenant from a running EUDIPLO instance.
 
 If a driver-specific command is used with an unsupported target, the CLI exits
 with a clear error, for example:
@@ -145,3 +184,144 @@ sha256sum -c SHA256SUMS.txt
 The standalone binary does not replace Docker or Docker Compose. You still need
 Docker to run the local deployment stack, but you do not need a local Node.js
 installation just to use the CLI itself.
+
+## Developing and Extending the CLI
+
+The CLI uses Commander and an injectable `CommandContext`. Command definitions
+are organized under `src/commands`; `src/runtime.ts` only assembles the command
+tree and connects Commander output and exit handling to the current context.
+
+### Running the CLI locally
+
+Append CLI arguments directly after the `dev` script. `init` is a root command,
+while `config` contains only configuration-related subcommands:
+
+```bash
+pnpm --filter @eudiplo/cli dev init ./eudiplo-local --yes
+pnpm --filter @eudiplo/cli dev config tenant list
+```
+
+Generated Compose projects use `latest` by default and do not derive container
+tags from `apps/cli/package.json`. Select `main` or an immutable SHA explicitly
+when testing changes that require a different backend or client build:
+
+```bash
+pnpm --filter @eudiplo/cli dev demo ./eudiplo-demo --image-tag main
+```
+
+Use a new project directory or add `--force` when regenerating an existing
+project, because the CLI preserves managed environment files by default. The
+`version` command still reports the CLI package version, but that value is not
+used for container image selection.
+
+```text
+src/
+├── runtime.ts                 # creates the root Commander program
+├── commands/
+│   ├── demo/
+│   │   ├── index.ts           # command registration and options
+│   │   └── action.ts          # demo workflow
+│   ├── init/
+│   │   ├── index.ts           # command registration and wizard options
+│   │   └── action.ts          # initialization workflow
+│   ├── instance/
+│   │   ├── index.ts           # command group and its subcommands
+│   │   └── action.ts          # instance persistence
+│   └── config/
+│       ├── index.ts           # config group
+│       ├── validate/          # validation command module
+│       └── tenant/            # tenant-config command module
+├── services/
+│   ├── cli-config.ts          # persisted CLI instance configuration
+│   ├── compose-project.ts     # generated Compose assets
+│   ├── deployment-drivers.ts  # Compose and external drivers
+│   └── diagnostics.ts         # deployment health checks
+└── types.ts                   # injectable context and shared CLI types
+```
+
+### Adding a root command
+
+Create a directory for the command with `index.ts` as its public entrypoint and
+`action.ts` for its workflow. Declare arguments, options, validation,
+descriptions, and aliases in `index.ts` so generated help remains the source of
+truth.
+
+```ts
+// commands/example/index.ts
+import { Command } from "commander";
+import type { CommandContext } from "../../types.js";
+import type { SetExitCode } from "../shared.js";
+import { runExample } from "./action.js";
+
+export function createExampleCommand(
+    context: CommandContext,
+    setExitCode: SetExitCode,
+): Command {
+    return new Command("example")
+        .description("Describe what the command does")
+        .requiredOption("--input <path>", "input file")
+        .action(async (options) => {
+            setExitCode(await runExample(options.input, context));
+        });
+}
+```
+
+```ts
+// commands/example/action.ts
+import type { CommandContext } from "../../types.js";
+
+export async function runExample(
+    input: string,
+    context: CommandContext,
+): Promise<number> {
+    context.stdout.write(`Processing ${input}\n`);
+    return 0;
+}
+```
+
+Register the factory once in `createProgram` in `src/runtime.ts`. Do not add a
+root dispatch switch or manually maintained help text.
+
+### Adding nested commands
+
+Create a parent `Command`, add independently configured child modules with
+`addCommand`, and return the parent from its factory. Each nested command gets
+the same `index.ts` plus `action.ts` structure. `config/tenant` and
+`config/validate` are the reference patterns.
+
+Keep these boundaries when extending the command tree:
+
+- A command module owns its registration, options, action, and command-specific
+  helpers.
+- `services/` is only for infrastructure shared by multiple command modules,
+  such as config persistence, Compose generation, and instance selection.
+- Load CLI state lazily inside actions that require it; help must work without a
+  valid local configuration.
+- Write through `CommandContext.stdout` and `CommandContext.stderr`; do not call
+  `console.log` or `process.exit` from a command.
+- Throw normal errors for operational failures. Let Commander handle unknown
+  options, required arguments, choices, aliases, and contextual help.
+- Prefer a coherent command structure over preserving accidental parser
+  behavior. Document intentional breaking syntax changes in the user guides.
+
+Runtime dependencies are welcome when they materially improve usability or
+maintainability. They must support ESM, Node.js 22.12+, TypeScript, and the
+single-executable bundle. Avoid dependencies that require spawning separate
+subcommand executables, because the released CLI is also packaged as one SEA
+binary.
+
+### Testing a command change
+
+Exercise commands through `runCli(args, context)` so tests cover the real
+Commander tree while keeping output, environment variables, prompts, and
+network access injectable. Add coverage for successful execution, invalid
+arguments or options, and the relevant help level.
+
+Run the complete CLI verification before submitting a change:
+
+```bash
+pnpm --filter @eudiplo/cli test
+pnpm --filter @eudiplo/cli lint
+pnpm --filter @eudiplo/cli build
+pnpm --filter @eudiplo/cli build:sea:bundle
+```

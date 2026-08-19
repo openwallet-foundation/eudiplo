@@ -6,10 +6,30 @@ connecting to a database, or writing anything.
 ## Validate one tenant
 
 ```bash
+eudiplo config tenant validate <tenant-id>
+```
+
+When using a configured Compose instance, this validates the tenant from its
+local `config/` directory. Use `--config-directory` when validating a specific
+configuration root:
+
+```bash
+eudiplo config tenant validate root --config-directory ./config
+```
+
+The explicit path-based form remains available:
+
+```bash
 eudiplo config validate tenant ./assets/config/playground
 ```
 
 ## Validate multiple tenants
+
+```bash
+eudiplo config tenant validate --config-directory ./config
+```
+
+The explicit path-based form is also supported:
 
 ```bash
 eudiplo config validate tenants ./assets/config
@@ -33,7 +53,7 @@ status when any selected tenant fails validation.
 
 ## Schema sources
 
-`apps/cli/src/config-validate/registry.json` maps each tenant config-import
+`apps/cli/src/commands/config/validate/registry.json` maps each tenant config-import
 file or folder to its resource type and schema. Run the following from the
 repository root after changing backend import schemas:
 

@@ -6,7 +6,7 @@ export type FixedFileResourceDefinition = {
     required: boolean;
     /** Editor (`.vscode/settings.json`) `json.schemas` fileMatch globs generated for this entry. */
     fileMatch: string[];
-    /** Set to false for schemas that aren't scanned by the CLI validator (editor authoring only). */
+    /** False for editor-only schemas that are not scanned by the CLI validator. */
     cliValidated?: boolean;
 };
 

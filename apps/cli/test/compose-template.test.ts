@@ -1,21 +1,114 @@
 import { describe, expect, it } from "vitest";
-import { createComposeEnv, resolveImageTag } from "../src/compose-template.js";
+import {
+    createComposeEnv,
+    createGlobalKmsConfig,
+    resolveImageTag,
+} from "../src/services/compose-project.js";
 
 describe("compose template helpers", () => {
-    it("uses full stable version tags by default", () => {
-        const env = createComposeEnv({ mode: "demo", cliVersion: "1.2.3" });
+    it("uses latest image tags by default", () => {
+        const env = createComposeEnv({ mode: "demo" });
 
-        expect(env).toContain("EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo:1.2.3");
+        expect(env).toContain("EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo:latest");
         expect(env).toContain(
-            "EUDIPLO_CLIENT_IMAGE=ghcr.io/openwallet-foundation/eudiplo-client:1.2.3",
+            "EUDIPLO_CLIENT_IMAGE=ghcr.io/openwallet-foundation/eudiplo-client:latest",
         );
     });
 
-    it("maps main prerelease versions to the main tag", () => {
-        expect(resolveImageTag("2.0.0-main.abcdef1")).toBe("main");
+    it("keeps demo mode minimal regardless of optional component inputs", () => {
+        const env = createComposeEnv({
+            mode: "demo",
+            database: "postgres",
+            storage: "s3",
+            kms: "vault",
+        });
+
+        expect(env).toContain("DB_TYPE=sqlite");
+        expect(env).toContain("STORAGE_DRIVER=local");
+        expect(env).toContain("KM_TYPE=db");
+        expect(env).toContain("EUDIPLO_CONFIG_MOUNT=./config:/app/config");
+        expect(env).toContain("CONFIG_FOLDER=/app/config");
+        expect(env).not.toContain("DB_HOST=postgres");
+        expect(env).not.toContain("S3_ENDPOINT=");
+        expect(env).not.toContain("VAULT_ADDR=");
+    });
+
+    it("generates a global db KMS configuration", () => {
+        const config = JSON.parse(createGlobalKmsConfig("db"));
+
+        expect(config.defaultProvider).toBe("db");
+        expect(config.providers).toEqual([
+            {
+                id: "db",
+                type: "db",
+                description: "Database-backed key provider",
+            },
+        ]);
+    });
+
+    it("keeps db available when Vault is the default KMS provider", () => {
+        const config = JSON.parse(createGlobalKmsConfig("vault"));
+
+        expect(config.defaultProvider).toBe("vault");
+        expect(config.providers.map((provider: { id: string }) => provider.id)).toEqual([
+            "db",
+            "vault",
+        ]);
+        expect(config.providers[1].vaultUrl).toBe("${VAULT_ADDR}");
+        expect(config.providers[1].vaultToken).toBe("${VAULT_TOKEN}");
+    });
+
+    it("generates environment variables for selected compose components", () => {
+        const env = createComposeEnv({
+            mode: "standard",
+            database: "postgres",
+            storage: "s3",
+            kms: "vault",
+            publicUrl: "https://eudiplo.example.com",
+            authClientId: "example-client",
+            authClientSecret: "example-secret",
+        });
+
+        expect(env).toContain("PUBLIC_URL=https://eudiplo.example.com");
+        expect(env).toContain("AUTH_CLIENT_ID=example-client");
+        expect(env).toContain("AUTH_CLIENT_SECRET=example-secret");
+        expect(env).toContain("EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo:latest");
+        expect(env).toContain(
+            "EUDIPLO_CLIENT_IMAGE=ghcr.io/openwallet-foundation/eudiplo-client:latest",
+        );
+        expect(env).toContain("DB_TYPE=postgres");
+        expect(env).toContain("DB_HOST=postgres");
+        expect(env).toContain("STORAGE_DRIVER=s3");
+        expect(env).toContain("S3_ENDPOINT=http://minio:9000");
+        expect(env).toContain("KM_TYPE=vault");
+        expect(env).toContain("VAULT_ADDR=http://vault:8200");
+    });
+
+    it("quotes user-provided environment values without interpolating dollar signs", () => {
+        const env = createComposeEnv({
+            mode: "standard",
+            authClientId: "client with spaces",
+            authClientSecret: "secret$value",
+        });
+
+        expect(env).toContain("AUTH_CLIENT_ID='client with spaces'");
+        expect(env).toContain("AUTH_CLIENT_SECRET='secret$value'");
+    });
+
+    it("resolves latest when no image tag override is supplied", () => {
+        expect(resolveImageTag()).toBe("latest");
     });
 
     it("supports explicit image tag overrides", () => {
-        expect(resolveImageTag("2.0.0", "sha-deadbeef")).toBe("sha-deadbeef");
+        expect(resolveImageTag("sha-deadbeef")).toBe("sha-deadbeef");
+
+        const env = createComposeEnv({
+            mode: "standard",
+            imageTagOverride: "main",
+        });
+        expect(env).toContain("EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo:main");
+        expect(env).toContain(
+            "EUDIPLO_CLIENT_IMAGE=ghcr.io/openwallet-foundation/eudiplo-client:main",
+        );
     });
 });

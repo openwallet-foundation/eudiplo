@@ -1,11 +1,13 @@
-import { access, rm, unlink, writeFile } from "node:fs/promises";
+import { access, mkdir, rm, stat, unlink, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import {
     copyBundledDemoConfig,
     createComposeFile,
     createComposeEnv,
+    createGlobalKmsConfig,
     createNoClientComposeOverride,
+    configDirectoryName,
     demoComposeFileName,
     demoConfigDirectory,
     demoEnvFileName,
@@ -13,25 +15,26 @@ import {
     defaultComposeOverrideFileName,
     defaultEnvFileName,
     hasFiles,
-} from "./compose-template.js";
+} from "./compose-project.js";
 import type {
     DeploymentDriver,
     DeploymentTarget,
     DriverCommandOptions,
     InstanceConfig,
-} from "./types.js";
+} from "../types.js";
 
 export const drivers: Record<DeploymentTarget, DeploymentDriver> = {
     compose: {
         target: "compose",
         async diagnostics(instance, context) {
             const messages: string[] = [];
+            const projectDirectory = instance.projectDirectory ?? context.cwd;
             if (!(await resolveDockerExecutable())) {
                 messages.push("Docker was not found in a supported install location.");
             }
             for (const composeFile of getComposeFiles(instance)) {
                 try {
-                    await access(resolve(context.cwd, composeFile));
+                    await access(resolve(projectDirectory, composeFile));
                 } catch {
                     messages.push(`Compose file not found: ${composeFile}`);
                 }
@@ -60,13 +63,20 @@ export async function ensureComposeProject(
     cwd: string,
     options: {
         mode?: "standard" | "demo";
+        database?: "sqlite" | "postgres";
+        storage?: "local" | "s3";
+        kms?: "db" | "vault";
+        publicUrl?: string;
+        authClientId?: string;
+        authClientSecret?: string;
+        demoTenant?: boolean;
         noClient?: boolean;
         force?: boolean;
         reset?: boolean;
-        cliVersion: string;
         imageTagOverride?: string;
     },
 ): Promise<InstanceConfig> {
+    await ensureProjectDirectory(cwd);
     const mode = options.mode ?? "standard";
     const composeFileName = mode === "demo" ? demoComposeFileName : defaultComposeFileName;
     const envFileName = mode === "demo" ? demoEnvFileName : defaultEnvFileName;
@@ -74,6 +84,10 @@ export async function ensureComposeProject(
     const composePath = join(cwd, composeFileName);
     const overridePath = join(cwd, defaultComposeOverrideFileName);
     const envPath = join(cwd, envFileName);
+    const configPath = join(cwd, configDirectoryName);
+    const globalKmsPath = join(configPath, "kms.json");
+
+    await mkdir(configPath, { recursive: true, mode: 0o700 });
 
     if (mode === "demo" && options.reset === true) {
         await removeDemoProjectAssets(cwd);
@@ -87,8 +101,13 @@ export async function ensureComposeProject(
             envPath,
             createComposeEnv({
                 mode,
-                cliVersion: options.cliVersion,
                 imageTagOverride: options.imageTagOverride,
+                database: options.database,
+                storage: options.storage,
+                kms: options.kms,
+                publicUrl: options.publicUrl,
+                authClientId: options.authClientId,
+                authClientSecret: options.authClientSecret,
             }),
             {
             encoding: "utf8",
@@ -97,7 +116,15 @@ export async function ensureComposeProject(
         );
     }
 
-    if (mode === "demo") {
+    if (!(await exists(globalKmsPath)) || options.force === true) {
+        await writeFile(
+            globalKmsPath,
+            createGlobalKmsConfig(options.kms ?? "db"),
+            { encoding: "utf8", mode: 0o600 },
+        );
+    }
+
+    if (mode === "demo" || options.demoTenant === true) {
         const demoConfigPath = join(cwd, demoConfigDirectory);
         const hasExistingConfig = await hasFiles(demoConfigPath);
         if (!hasExistingConfig || options.force === true || options.reset === true) {
@@ -122,16 +149,57 @@ export async function ensureComposeProject(
         clientUrl: options.noClient === true ? undefined : "http://localhost:4200",
         composeFile: defaultComposeFileName,
         composeFiles,
+        composeProfiles: composeProfiles(options),
         envFile: envFileName,
-        projectName: "eudiplo-demo",
+        projectName: mode === "demo" ? "eudiplo-demo" : "eudiplo",
+        projectDirectory: resolve(cwd),
     };
+}
+
+async function ensureProjectDirectory(directory: string): Promise<void> {
+    try {
+        const entry = await stat(directory);
+        if (!entry.isDirectory()) {
+            throw new Error(`Project directory points to a file: ${directory}`);
+        }
+    } catch (error) {
+        if (isNodeError(error) && error.code === "ENOENT") {
+            await mkdir(directory, { recursive: true, mode: 0o700 });
+            return;
+        }
+        throw error;
+    }
+}
+
+function composeProfiles(options: {
+    mode?: "standard" | "demo";
+    database?: "sqlite" | "postgres";
+    storage?: "local" | "s3";
+    kms?: "db" | "vault";
+}): string[] | undefined {
+    if (options.mode === "demo") {
+        return undefined;
+    }
+
+    const profiles: string[] = [];
+    if (options.database === "postgres") {
+        profiles.push("postgres");
+    }
+    if (options.storage === "s3") {
+        profiles.push("s3");
+    }
+    if (options.kms === "vault") {
+        profiles.push("vault");
+    }
+    return profiles.length > 0 ? profiles : undefined;
 }
 
 export async function demoProjectExists(cwd: string): Promise<boolean> {
     return (
         (await exists(join(cwd, demoComposeFileName))) ||
         (await exists(join(cwd, demoEnvFileName))) ||
-        (await exists(join(cwd, demoConfigDirectory)))
+        (await exists(join(cwd, demoConfigDirectory))) ||
+        (await exists(join(cwd, ".eudiplo/demo-config")))
     );
 }
 
@@ -140,6 +208,7 @@ async function removeDemoProjectAssets(cwd: string): Promise<void> {
     await rm(join(cwd, demoEnvFileName), { force: true });
     await rm(join(cwd, defaultComposeOverrideFileName), { force: true });
     await rm(join(cwd, demoConfigDirectory), { recursive: true, force: true });
+    await rm(join(cwd, ".eudiplo/demo-config"), { recursive: true, force: true });
 }
 
 export function unsupportedCommand(command: string, target: DeploymentTarget): string {
@@ -153,12 +222,16 @@ async function runCompose(
     args: string[],
     { instance, context }: DriverCommandOptions,
 ): Promise<number> {
+    const projectDirectory = instance.projectDirectory ?? context.cwd;
     const composeArgs = ["compose"];
     if (instance.envFile) {
-        composeArgs.push("--env-file", resolve(context.cwd, instance.envFile));
+        composeArgs.push("--env-file", resolve(projectDirectory, instance.envFile));
     }
     for (const composeFile of getComposeFiles(instance)) {
-        composeArgs.push("-f", resolve(context.cwd, composeFile));
+        composeArgs.push("-f", resolve(projectDirectory, composeFile));
+    }
+    for (const profile of instance.composeProfiles ?? []) {
+        composeArgs.push("--profile", profile);
     }
     if (instance.projectName) {
         composeArgs.push("--project-name", instance.projectName);
@@ -173,7 +246,7 @@ async function runCompose(
 
     return new Promise((resolveProcess) => {
         const child = spawn(dockerExecutable, composeArgs, {
-            cwd: context.cwd,
+            cwd: projectDirectory,
             env: context.env,
             stdio: "inherit",
         });
@@ -208,6 +281,10 @@ async function exists(path: string): Promise<boolean> {
     } catch {
         return false;
     }
+}
+
+function isNodeError(error: unknown): error is NodeJS.ErrnoException {
+    return error instanceof Error && "code" in error;
 }
 
 function getComposeFiles(instance: InstanceConfig): string[] {

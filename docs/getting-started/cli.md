@@ -63,20 +63,22 @@ eudiplo --version
 ## Run a Local Demo Deployment
 
 ```bash
-eudiplo demo
+eudiplo demo ./eudiplo-demo
 ```
 
 or, with npm one-off execution:
 
 ```bash
-npx @eudiplo/cli demo
+npx @eudiplo/cli demo ./eudiplo-demo
 ```
 
 The demo command copies EUDIPLO's bundled Docker Compose deployment template,
-creates local demo assets, and starts the `compose` driver:
+creates local demo assets, and starts a deliberately minimal stack using SQLite,
+local file storage, database-backed key management, and the web client:
 
 - `.eudiplo.demo.env`
-- `.eudiplo/demo-config` (editable generated demo configuration)
+- `config/kms.json` (global KMS configuration)
+- `config/demo` (editable generated demo tenant configuration)
 
 The standalone CLI removes the Node.js requirement only. Docker and Docker
 Compose are still required for `demo`.
@@ -129,19 +131,74 @@ deployment.
 These commands are available only for `compose` instances:
 
 ```bash
-eudiplo init --target compose
-eudiplo init --target compose --demo
-eudiplo init --target compose --demo --image-tag main
-eudiplo init --target compose --no-client
+eudiplo init
+eudiplo init ./eudiplo-minimal --preset minimal
+eudiplo init ./eudiplo-standard --preset standard --start
+eudiplo init --database postgres --storage local --kms vault
+eudiplo init --preset standard --public-url https://eudiplo.example.com
+eudiplo init --preset standard --demo-tenant
 eudiplo up
 eudiplo down
 eudiplo logs
 eudiplo demo --reset --force
 ```
 
-`init --target compose` creates local Compose assets without starting them.
-`init --target compose --demo` generates the same editable demo deployment as
-`demo`, but does not start containers.
+When run in an interactive terminal, `init` opens a wizard for the project
+directory, deployment preset, database, storage, key management, public URL,
+authentication client, web client, and whether to start immediately. The
+generated environment file is created with owner-only permissions. Leaving the
+authentication secret empty generates a random secret.
+
+The optional positional directory is the project root for generated Compose,
+environment, override, and demo configuration files. It is created when needed.
+When no directory is supplied, interactive `init` and `demo` commands prompt
+with `./` as the default; non-interactive and `--yes` runs use `./`
+automatically. `--directory <path>` is an equivalent flag form. The CLI stores
+its absolute path with the instance, so later `up`, `down`, `logs`, and `doctor`
+commands work from any directory.
+
+Each project has one `config/` root mounted at `/app/config`. Global files such
+as `kms.json` live directly in that root; tenant resources live under
+`config/<tenant-id>/`. The initializer does not add a demo tenant unless
+`--demo-tenant` is passed or selected in the wizard. Bundled demo private keys
+explicitly use the DB provider, even when Vault is the default for new keys.
+
+All wizard choices are also available as flags for repeatable setup:
+
+| Preset | Database | Storage | Key management |
+| --- | --- | --- | --- |
+| `minimal` | SQLite | Local filesystem | Database-backed |
+| `standard` | PostgreSQL | S3 via local MinIO | Database-backed |
+| `full` | PostgreSQL | S3 via local MinIO | Vault |
+
+Explicit `--database`, `--storage`, and `--kms` flags override the corresponding
+preset choices. Use `--yes` or `--no-interactive` to suppress the wizard. Use
+`--auth-client-id` and `--auth-client-secret` in automation; avoid exposing the
+secret in shared shell history.
+
+The older `init --demo` form remains available for compatibility and generates
+demo assets without starting containers. New onboarding instructions should use
+`demo` for evaluation and `init` for configurable deployments.
+
+## Local Tenant Configuration Commands
+
+The tenant commands scaffold and manage local config-import folders:
+
+```bash
+eudiplo config tenant list
+eudiplo config tenant create acme --name "Acme GmbH"
+eudiplo config tenant create sample --template demo
+eudiplo config tenant remove acme --force
+```
+
+`create` generates `info.json` and the supported resource subdirectories.
+`--template demo` copies the bundled demo resources instead. Aliases `ls`,
+`new`, `rm`, and `delete` are available.
+
+By default, the selected Compose instance determines the config root. Use
+`--instance <name>` to select another instance or `--config-directory <path>`
+to work with a config root directly. `remove` deletes only local files; it does
+not delete an already imported tenant from a running backend.
 
 `demo --reset --force` recreates only CLI-managed demo assets and managed demo
 volumes.

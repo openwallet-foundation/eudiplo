@@ -301,7 +301,7 @@ The validator:
 - Returns a non-zero exit code when validation fails, making it suitable for
   pull request checks.
 
-`apps/cli/src/config-validate/registry.json` is the single source of truth
+`apps/cli/src/commands/config/validate/registry.json` is the single source of truth
 mapping each tenant config-import file/folder to its schema. It also drives
 the editor's `json.schemas` associations in `.vscode/settings.json` and the
 schemas bundled with the CLI, so they cannot drift from one another; both are
