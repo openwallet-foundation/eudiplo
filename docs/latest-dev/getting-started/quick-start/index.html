@@ -3355,10 +3355,12 @@ production setup and advanced configuration, see the
 <p>Both options run the same <strong>EUDIPLO CLI</strong>. The standalone CLI removes the
 Node.js requirement, but Docker and Docker Compose are still required for
 <code>eudiplo demo</code>.</p>
-<p>This generates editable demo files in your current directory:</p>
+<p>The CLI asks for a project directory and suggests <code>./</code>. Accepting the default
+generates editable demo files in your current directory:</p>
 <ul>
 <li><code>.eudiplo.demo.env</code></li>
-<li><code>.eudiplo/demo-config</code></li>
+<li><code>config/kms.json</code></li>
+<li><code>config/demo/</code></li>
 </ul>
 <p>It then starts backend and client containers using compatible image tags.</p>
 <div class="admonition warning">

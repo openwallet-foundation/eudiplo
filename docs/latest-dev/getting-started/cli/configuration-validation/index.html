@@ -3084,13 +3084,24 @@
 <p>The CLI can validate local EUDIPLO configuration without starting EUDIPLO,
 connecting to a database, or writing anything.</p>
 <h2 id="validate-one-tenant">Validate one tenant<a class="headerlink" href="#validate-one-tenant" title="Permanent link">¶</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>validate<span class="w"> </span>tenant<span class="w"> </span>./assets/config/playground
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>validate<span class="w"> </span>&lt;tenant-id&gt;
+</code></pre></div>
+<p>When using a configured Compose instance, this validates the tenant from its
+local <code>config/</code> directory. Use <code>--config-directory</code> when validating a specific
+configuration root:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>validate<span class="w"> </span>root<span class="w"> </span>--config-directory<span class="w"> </span>./config
+</code></pre></div>
+<p>The explicit path-based form remains available:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>validate<span class="w"> </span>tenant<span class="w"> </span>./assets/config/playground
 </code></pre></div>
 <h2 id="validate-multiple-tenants">Validate multiple tenants<a class="headerlink" href="#validate-multiple-tenants" title="Permanent link">¶</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>validate<span class="w"> </span>tenants<span class="w"> </span>./assets/config
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>validate<span class="w"> </span>--config-directory<span class="w"> </span>./config
+</code></pre></div>
+<p>The explicit path-based form is also supported:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>validate<span class="w"> </span>tenants<span class="w"> </span>./assets/config
 </code></pre></div>
 <p>Use <code>--format json</code> for a machine-readable report suitable for CI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>validate<span class="w"> </span>tenants<span class="w"> </span>./assets/config<span class="w"> </span>--format<span class="w"> </span>json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>validate<span class="w"> </span>tenants<span class="w"> </span>./assets/config<span class="w"> </span>--format<span class="w"> </span>json
 </code></pre></div>
 <p>The validator checks every supported config-import resource against the same
 JSON Schemas used by the backend, including tenant metadata, clients, key
@@ -3101,10 +3112,10 @@ and tenant-specific KMS config.</p>
 name without printing resolved secret values. The command exits with a non-zero
 status when any selected tenant fails validation.</p>
 <h2 id="schema-sources">Schema sources<a class="headerlink" href="#schema-sources" title="Permanent link">¶</a></h2>
-<p><code>apps/cli/src/config-validate/registry.json</code> maps each tenant config-import
+<p><code>apps/cli/src/commands/config/validate/registry.json</code> maps each tenant config-import
 file or folder to its resource type and schema. Run the following from the
 repository root after changing backend import schemas:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pnpm<span class="w"> </span>run<span class="w"> </span>gen:api
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pnpm<span class="w"> </span>run<span class="w"> </span>gen:api
 </code></pre></div>
 <p>This regenerates the schemas, the CLI-bundled subset in
 <code>apps/cli/templates/schemas/</code>, and the corresponding editor associations.</p>

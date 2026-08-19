@@ -862,6 +862,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#local-tenant-configuration-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Tenant Configuration Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3120,6 +3131,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#local-tenant-configuration-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Tenant Configuration Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3250,16 +3272,18 @@ Windows x64 release archive.</p>
 <li><code>eudiplo ...</code> runs the installed command (standalone or npm-installed).</li>
 </ul>
 <h2 id="run-a-local-demo-deployment">Run a Local Demo Deployment<a class="headerlink" href="#run-a-local-demo-deployment" title="Permanent link">¶</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>eudiplo<span class="w"> </span>demo
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>eudiplo<span class="w"> </span>demo<span class="w"> </span>./eudiplo-demo
 </code></pre></div>
 <p>or, with npm one-off execution:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>demo
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>npx<span class="w"> </span>@eudiplo/cli<span class="w"> </span>demo<span class="w"> </span>./eudiplo-demo
 </code></pre></div>
 <p>The demo command copies EUDIPLO's bundled Docker Compose deployment template,
-creates local demo assets, and starts the <code>compose</code> driver:</p>
+creates local demo assets, and starts a deliberately minimal stack using SQLite,
+local file storage, database-backed key management, and the web client:</p>
 <ul>
 <li><code>.eudiplo.demo.env</code></li>
-<li><code>.eudiplo/demo-config</code> (editable generated demo configuration)</li>
+<li><code>config/kms.json</code> (global KMS configuration)</li>
+<li><code>config/demo</code> (editable generated demo tenant configuration)</li>
 </ul>
 <p>The standalone CLI removes the Node.js requirement only. Docker and Docker
 Compose are still required for <code>demo</code>.</p>
@@ -3295,18 +3319,86 @@ prints the configured instances. It does not require Docker or contact the
 deployment.</p>
 <h2 id="compose-driver-commands">Compose Driver Commands<a class="headerlink" href="#compose-driver-commands" title="Permanent link">¶</a></h2>
 <p>These commands are available only for <code>compose</code> instances:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose<span class="w"> </span>--demo
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose<span class="w"> </span>--demo<span class="w"> </span>--image-tag<span class="w"> </span>main
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--target<span class="w"> </span>compose<span class="w"> </span>--no-client
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>eudiplo<span class="w"> </span>up
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>eudiplo<span class="w"> </span>down
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>eudiplo<span class="w"> </span>logs
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>eudiplo<span class="w"> </span>demo<span class="w"> </span>--reset<span class="w"> </span>--force
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>eudiplo<span class="w"> </span>init
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>./eudiplo-minimal<span class="w"> </span>--preset<span class="w"> </span>minimal
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>./eudiplo-standard<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--start
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--database<span class="w"> </span>postgres<span class="w"> </span>--storage<span class="w"> </span><span class="nb">local</span><span class="w"> </span>--kms<span class="w"> </span>vault
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--public-url<span class="w"> </span>https://eudiplo.example.com
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--demo-tenant
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>eudiplo<span class="w"> </span>up
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>eudiplo<span class="w"> </span>down
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>eudiplo<span class="w"> </span>logs
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>eudiplo<span class="w"> </span>demo<span class="w"> </span>--reset<span class="w"> </span>--force
 </code></pre></div>
-<p><code>init --target compose</code> creates local Compose assets without starting them.
-<code>init --target compose --demo</code> generates the same editable demo deployment as
-<code>demo</code>, but does not start containers.</p>
+<p>When run in an interactive terminal, <code>init</code> opens a wizard for the project
+directory, deployment preset, database, storage, key management, public URL,
+authentication client, web client, and whether to start immediately. The
+generated environment file is created with owner-only permissions. Leaving the
+authentication secret empty generates a random secret.</p>
+<p>The optional positional directory is the project root for generated Compose,
+environment, override, and demo configuration files. It is created when needed.
+When no directory is supplied, interactive <code>init</code> and <code>demo</code> commands prompt
+with <code>./</code> as the default; non-interactive and <code>--yes</code> runs use <code>./</code>
+automatically. <code>--directory &lt;path&gt;</code> is an equivalent flag form. The CLI stores
+its absolute path with the instance, so later <code>up</code>, <code>down</code>, <code>logs</code>, and <code>doctor</code>
+commands work from any directory.</p>
+<p>Each project has one <code>config/</code> root mounted at <code>/app/config</code>. Global files such
+as <code>kms.json</code> live directly in that root; tenant resources live under
+<code>config/&lt;tenant-id&gt;/</code>. The initializer does not add a demo tenant unless
+<code>--demo-tenant</code> is passed or selected in the wizard. Bundled demo private keys
+explicitly use the DB provider, even when Vault is the default for new keys.</p>
+<p>All wizard choices are also available as flags for repeatable setup:</p>
+<table>
+<thead>
+<tr>
+<th>Preset</th>
+<th>Database</th>
+<th>Storage</th>
+<th>Key management</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>minimal</code></td>
+<td>SQLite</td>
+<td>Local filesystem</td>
+<td>Database-backed</td>
+</tr>
+<tr>
+<td><code>standard</code></td>
+<td>PostgreSQL</td>
+<td>S3 via local MinIO</td>
+<td>Database-backed</td>
+</tr>
+<tr>
+<td><code>full</code></td>
+<td>PostgreSQL</td>
+<td>S3 via local MinIO</td>
+<td>Vault</td>
+</tr>
+</tbody>
+</table>
+<p>Explicit <code>--database</code>, <code>--storage</code>, and <code>--kms</code> flags override the corresponding
+preset choices. Use <code>--yes</code> or <code>--no-interactive</code> to suppress the wizard. Use
+<code>--auth-client-id</code> and <code>--auth-client-secret</code> in automation; avoid exposing the
+secret in shared shell history.</p>
+<p>The older <code>init --demo</code> form remains available for compatibility and generates
+demo assets without starting containers. New onboarding instructions should use
+<code>demo</code> for evaluation and <code>init</code> for configurable deployments.</p>
+<h2 id="local-tenant-configuration-commands">Local Tenant Configuration Commands<a class="headerlink" href="#local-tenant-configuration-commands" title="Permanent link">¶</a></h2>
+<p>The tenant commands scaffold and manage local config-import folders:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>list
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>create<span class="w"> </span>acme<span class="w"> </span>--name<span class="w"> </span><span class="s2">"Acme GmbH"</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>create<span class="w"> </span>sample<span class="w"> </span>--template<span class="w"> </span>demo
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>remove<span class="w"> </span>acme<span class="w"> </span>--force
+</code></pre></div>
+<p><code>create</code> generates <code>info.json</code> and the supported resource subdirectories.
+<code>--template demo</code> copies the bundled demo resources instead. Aliases <code>ls</code>,
+<code>new</code>, <code>rm</code>, and <code>delete</code> are available.</p>
+<p>By default, the selected Compose instance determines the config root. Use
+<code>--instance &lt;name&gt;</code> to select another instance or <code>--config-directory &lt;path&gt;</code>
+to work with a config root directly. <code>remove</code> deletes only local files; it does
+not delete an already imported tenant from a running backend.</p>
 <p><code>demo --reset --force</code> recreates only CLI-managed demo assets and managed demo
 volumes.</p>
 <p>If a compose-only command is used against an external instance, the CLI returns a
