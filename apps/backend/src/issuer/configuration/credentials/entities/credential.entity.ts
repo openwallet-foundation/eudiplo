@@ -13,6 +13,7 @@ import { AttributeProviderEntity } from "../../attribute-provider/entities/attri
 import { KeyAttestationsRequired } from "../../issuance/dto/key-attestations-required.dto";
 import { WebhookEndpointEntity } from "../../webhook-endpoint/entities/webhook-endpoint.entity";
 import { ClaimFieldDefinitionDto } from "../dto/claim-field-definition.dto";
+import { CredentialReusePolicy } from "../dto/credential-reuse-policy.dto";
 import { SchemaMetaConfig } from "../dto/schema-meta-config.dto";
 import {
     IaeAction,
@@ -94,6 +95,9 @@ export class IssuerMetadataCredentialConfig {
         example: [CredentialProofType.ATTESTATION, CredentialProofType.JWT],
     })
     proofTypesSupported?: CredentialProofType[];
+
+    @ApiPropertyOptional({ type: () => CredentialReusePolicy })
+    credentialReusePolicy?: CredentialReusePolicy;
 }
 
 @ApiExtraModels(

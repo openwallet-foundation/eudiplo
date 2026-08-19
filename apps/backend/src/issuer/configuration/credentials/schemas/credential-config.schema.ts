@@ -300,6 +300,88 @@ const CredentialDisplaySchema = FieldDisplaySchema.extend({
     logo: DisplayImageSchema.optional().describe("Optional logo image."),
 }).strict();
 
+const CredentialReusePolicyOptionSchema = z
+    .object({
+        details: z
+            .array(
+                z.enum([
+                    "once_only",
+                    "limited_time",
+                    "limited-time",
+                    "rotating-batch",
+                    "per-relying-party",
+                ]),
+            )
+            .min(1),
+        batch_size: z.number().int().min(2).optional(),
+        reissue_trigger_unused: z.number().int().min(0).optional(),
+        reissue_trigger_lifetime_left: z.number().int().min(0).optional(),
+    })
+    .strict()
+    .superRefine((option, context) => {
+        const details = new Set(option.details);
+        if (
+            (details.has("once_only") ||
+                details.has("rotating-batch") ||
+                details.has("per-relying-party")) &&
+            option.batch_size === undefined
+        ) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ["batch_size"],
+                message: "batch_size is required for this reuse policy",
+            });
+        }
+        if (details.has("once_only")) {
+            if (option.reissue_trigger_unused === undefined) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ["reissue_trigger_unused"],
+                    message: "reissue_trigger_unused is required for once_only",
+                });
+            } else if (
+                option.batch_size !== undefined &&
+                option.reissue_trigger_unused >= option.batch_size
+            ) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ["reissue_trigger_unused"],
+                    message: "must be lower than batch_size",
+                });
+            }
+        }
+        if (
+            (details.has("limited_time") ||
+                details.has("limited-time") ||
+                details.has("rotating-batch") ||
+                details.has("per-relying-party")) &&
+            option.reissue_trigger_lifetime_left === undefined
+        ) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ["reissue_trigger_lifetime_left"],
+                message:
+                    "reissue_trigger_lifetime_left is required for this reuse policy",
+            });
+        }
+    });
+
+export const CredentialReusePolicySchema = z
+    .object({
+        id: z.string().min(1),
+        options: z.array(CredentialReusePolicyOptionSchema).optional(),
+    })
+    .strict()
+    .superRefine((policy, context) => {
+        if (policy.id === "arf_annex_ii" && !policy.options) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ["options"],
+                message: "options is required for arf_annex_ii",
+            });
+        }
+    });
+
 const IssuerMetadataCredentialConfigSchema = z
     .object({
         format: z
@@ -323,6 +405,9 @@ const IssuerMetadataCredentialConfigSchema = z
             .array(z.enum(["jwt", "attestation"]))
             .optional()
             .describe("Supported proof types for issuance requests."),
+        credentialReusePolicy: CredentialReusePolicySchema.optional().describe(
+            "Optional PID/EAA reuse policy published in credential metadata.",
+        ),
     })
     .describe("Credential metadata configuration exposed by issuer metadata.")
     .strict();

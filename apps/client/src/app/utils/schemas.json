@@ -6533,6 +6533,7 @@
         "clientId": {
           "type": "string",
           "minLength": 1,
+          "pattern": "^[A-Za-z0-9._:-]+$",
           "description": "Unique client identifier."
         },
         "secret": {
@@ -7039,6 +7040,57 @@
                 "type": "string",
                 "enum": ["jwt", "attestation"]
               }
+            },
+            "credentialReusePolicy": {
+              "description": "Optional PID/EAA reuse policy published in credential metadata.",
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "details": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "once_only",
+                            "limited_time",
+                            "limited-time",
+                            "rotating-batch",
+                            "per-relying-party"
+                          ]
+                        }
+                      },
+                      "batch_size": {
+                        "type": "integer",
+                        "minimum": 2,
+                        "maximum": 9007199254740991
+                      },
+                      "reissue_trigger_unused": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "reissue_trigger_lifetime_left": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": ["details"],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": ["id"],
+              "additionalProperties": false
             }
           },
           "required": ["format", "display"],
@@ -8095,6 +8147,24 @@
                     "format": "uri",
                     "description": "Issuer URL for the external authorization server."
                   },
+                  "sessionBinding": {
+                    "description": "Explicit mapping from an external access-token claim to an existing issuance session.",
+                    "type": "object",
+                    "properties": {
+                      "method": {
+                        "type": "string",
+                        "const": "access_token_claim",
+                        "description": "Read the correlation value from a configured access-token claim."
+                      },
+                      "claim": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Claim name that contains the issuance-session correlation value."
+                      }
+                    },
+                    "required": ["method", "claim"],
+                    "additionalProperties": false
+                  },
                   "label": {
                     "description": "Optional display label for UI selection.",
                     "type": "string"
@@ -8446,6 +8516,10 @@
             },
             "additionalProperties": {}
           }
+        },
+        "notificationEndpointEnabled": {
+          "description": "Whether the OID4VCI notification endpoint is exposed for this issuance configuration.",
+          "type": "boolean"
         },
         "credentialResponseEncryption": {
           "description": "Enable encrypted credential responses.",

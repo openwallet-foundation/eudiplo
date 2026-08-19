@@ -180,6 +180,23 @@ export class CredentialsService {
         );
     }
 
+    private buildCredentialMetadata(
+        entity: CredentialConfig,
+    ): Record<string, unknown> | undefined {
+        const metadata: Record<string, unknown> = {};
+        if (entity.config.display) {
+            metadata.display = entity.config.display;
+        }
+        if (entity.fields.length > 0) {
+            metadata.claims = buildClaimsMetadata(entity.fields as any);
+        }
+        if (entity.config.credentialReusePolicy) {
+            metadata.credential_reuse_policy =
+                entity.config.credentialReusePolicy;
+        }
+        return Object.keys(metadata).length > 0 ? metadata : undefined;
+    }
+
     async getSupportedProofTypesForCredentialConfig(
         tenantId: string,
         credentialConfigurationId: string,
@@ -213,16 +230,7 @@ export class CredentialsService {
         }
 
         // Build credential_metadata with display and claims
-        const credentialMetadata = entity.config.display
-            ? {
-                  display: entity.config.display,
-                  ...(entity.fields.length > 0 && {
-                      claims: buildClaimsMetadata(entity.fields as any),
-                  }),
-              }
-            : entity.fields.length > 0
-              ? { claims: buildClaimsMetadata(entity.fields as any) }
-              : undefined;
+        const credentialMetadata = this.buildCredentialMetadata(entity);
 
         // Build proof_types_supported with optional key_attestations_required
         const keyAttestationsRequired = entity.config.keyAttestationsRequired;
@@ -298,16 +306,7 @@ export class CredentialsService {
         }
 
         // Build credential_metadata with display and claims
-        const credentialMetadata = entity.config.display
-            ? {
-                  display: entity.config.display,
-                  ...(entity.fields.length > 0 && {
-                      claims: buildClaimsMetadata(entity.fields as any),
-                  }),
-              }
-            : entity.fields.length > 0
-              ? { claims: buildClaimsMetadata(entity.fields as any) }
-              : undefined;
+        const credentialMetadata = this.buildCredentialMetadata(entity);
 
         // Build proof_types_supported with optional key_attestations_required
         const keyAttestationsRequired = entity.config.keyAttestationsRequired;

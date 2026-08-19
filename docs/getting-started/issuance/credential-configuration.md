@@ -55,6 +55,7 @@ For a complete configuration example, see the [Complete Configuration Example](#
 - `sdJwtTrustFormat`: **OPTIONAL (SD-JWT only)** - Controls trust signaling in issued SD-JWT credentials:
     - `x5c` (default): include the X.509 chain in the JWT header
     - `federation`: use federation issuer identity (`iss`) for trust resolution
+- `credentialReusePolicy`: **OPTIONAL** - Publishes a PID/EAA reuse policy in the credential metadata. See [Credential Reuse Policy](#credential-reuse-policy) for details.
 - `embeddedDisclosurePolicy`: **OPTIONAL** - Defines the embedded disclosure policy for the credential. See [Embedded Disclosure Policy](#embedded-disclosure-policy) for details.
 - `iaeActions`: **OPTIONAL** - Sequence of Interactive Authorization actions required before credential issuance. See [Interactive Authorization Actions](#interactive-authorization-actions) for details.
 
@@ -557,6 +558,54 @@ When `lifeTime` is specified:
 | 1 week   | 604800   | Weekly permits              |
 | 1 month  | 2592000  | Monthly subscriptions       |
 | 1 year   | 31536000 | Annual licenses             |
+
+---
+
+## Credential Reuse Policy
+
+`credentialReusePolicy` controls how a wallet should limit repeated presentations of a PID/EAA. EUDIPLO publishes it as `credential_reuse_policy` inside the credential's `credential_metadata` in issuer metadata.
+
+The current implementation supports the ARF Annex II profile from ETSI TS 119 472-3. Configure it with:
+
+- `id`: Use `arf_annex_ii` for the predefined ARF profile.
+- `options`: An array containing the policy details. For `arf_annex_ii`, this is required.
+- `options[].details`: One or more reuse methods, in descending preference order.
+- `options[].batch_size`: Required for `once_only`, `rotating-batch`, and `per-relying-party`. It must be at least `2`.
+- `options[].reissue_trigger_unused`: Required for `once_only`. It is the lower limit for unused credentials and must be lower than `batch_size`.
+- `options[].reissue_trigger_lifetime_left`: Required for `limited_time`, `rotating-batch`, and `per-relying-party`. It specifies the number of seconds before credential expiration when the wallet should request a new credential.
+
+### Reuse Methods
+
+- `once_only`: The wallet uses a credential only once.
+- `limited_time`: The wallet reuses a credential for a limited time.
+- `rotating-batch`: The wallet uses credentials from a batch and requests a new batch as the lifetime trigger is reached.
+- `per-relying-party`: The wallet applies reuse independently for each relying party.
+
+When multiple methods are listed in `details`, they are ordered preferences, not simultaneous restrictions. The wallet uses the first method it supports and falls back to the next supported method. For example, `per-relying-party` followed by `once_only` means that capable wallets use the per-relying-party method, while wallets without that capability fall back to one-time use.
+
+```json
+{
+    "id": "pid-sd-jwt",
+    "config": {
+        "format": "dc+sd-jwt",
+        "display": [],
+        "credentialReusePolicy": {
+            "id": "arf_annex_ii",
+            "options": [
+                {
+                    "details": ["per-relying-party", "once_only"],
+                    "batch_size": 10,
+                    "reissue_trigger_unused": 2,
+                    "reissue_trigger_lifetime_left": 86400
+                }
+            ]
+        }
+    },
+    "fields": []
+}
+```
+
+In the example, `per-relying-party` has priority. `once_only` is a compatibility fallback. The policy is optional; if it is omitted, the issuer does not limit how many times the wallet presents the credential through this metadata mechanism.
 
 ---
 

@@ -74,6 +74,27 @@
                 "format": "uri",
                 "description": "Issuer URL for the external authorization server."
               },
+              "sessionBinding": {
+                "description": "Explicit mapping from an external access-token claim to an existing issuance session.",
+                "type": "object",
+                "properties": {
+                  "method": {
+                    "type": "string",
+                    "const": "access_token_claim",
+                    "description": "Read the correlation value from a configured access-token claim."
+                  },
+                  "claim": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Claim name that contains the issuance-session correlation value."
+                  }
+                },
+                "required": [
+                  "method",
+                  "claim"
+                ],
+                "additionalProperties": false
+              },
               "label": {
                 "description": "Optional display label for UI selection.",
                 "type": "string"
@@ -461,6 +482,10 @@
         "additionalProperties": {}
       }
     },
+    "notificationEndpointEnabled": {
+      "description": "Whether the OID4VCI notification endpoint is exposed for this issuance configuration.",
+      "type": "boolean"
+    },
     "credentialResponseEncryption": {
       "description": "Enable encrypted credential responses.",
       "type": "boolean"
@@ -468,11 +493,6 @@
     "credentialRequestEncryption": {
       "description": "Require encrypted credential requests.",
       "type": "boolean"
-    },
-    "notificationEndpointEnabled": {
-      "description": "Whether the issuer notification endpoint is enabled and advertised in metadata.",
-      "type": "boolean",
-      "default": true
     },
     "txCodeMaxAttempts": {
       "description": "Maximum verification attempts for transaction codes. Null resets to defaults.",
