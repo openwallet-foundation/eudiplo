@@ -1,8 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, Unique } from "typeorm";
 import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity";
 import { StatusListEntity } from "./status-list.entity";
 
 @Entity()
+@Unique("UQ_status_mapping_tenant_list_index", [
+    "tenantId",
+    "statusListId",
+    "index",
+])
 export class StatusMapping {
     @Column({ type: "varchar", primary: true })
     tenantId!: string;
