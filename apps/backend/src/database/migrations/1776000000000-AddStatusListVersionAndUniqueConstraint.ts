@@ -18,51 +18,53 @@ export class AddStatusListVersionAndUniqueConstraint1776000000000
     name = "AddStatusListVersionAndUniqueConstraint1776000000000";
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        // Determine database type for dialect-specific SQL
         const dbType = queryRunner.connection.driver.options.type;
+        const statusListTableName =
+            await this.resolveStatusListTableName(queryRunner);
 
-        // Add version column to status_list
-        const statusListTable = await queryRunner.getTable("status_list");
-        if (!statusListTable) {
+        if (!statusListTableName) {
             console.log(
-                "[Migration] status_list table not found — skipping (schema may not exist yet).",
+                "[Migration] status list table not found — skipping version column (schema may not exist yet).",
+            );
+        } else {
+            const statusListTable =
+                await queryRunner.getTable(statusListTableName);
+            const hasVersionColumn = statusListTable?.columns.some(
+                (col) => col.name === "version",
+            );
+            if (!hasVersionColumn) {
+                await queryRunner.addColumn(
+                    statusListTableName,
+                    new TableColumn({
+                        name: "version",
+                        type: "integer",
+                        isNullable: false,
+                        default: 1,
+                    }),
+                );
+                console.log(
+                    `[Migration] Added version column to ${statusListTableName}.`,
+                );
+            }
+        }
+
+        const statusMappingTable = await queryRunner.getTable("status_mapping");
+        if (!statusMappingTable) {
+            console.log(
+                "[Migration] status_mapping table not found — skipping (schema may not exist yet).",
             );
             return;
         }
 
-        const hasVersionColumn = statusListTable.columns.some(
-            (col) => col.name === "version",
-        );
-        if (!hasVersionColumn) {
-            await queryRunner.addColumn(
-                "status_list",
-                new TableColumn({
-                    name: "version",
-                    type: "integer",
-                    isNullable: false,
-                    default: 1,
-                }),
-            );
-            console.log("[Migration] Added version column to status_list.");
-        }
-
-        // Check for duplicates before adding unique constraint
-        let duplicateQuery = `SELECT "tenantId", "statusListId", "index", COUNT(*) as count
-             FROM status_mapping
-             GROUP BY "tenantId", "statusListId", "index"
+        const escape = (identifier: string) =>
+            queryRunner.connection.driver.escape(identifier);
+        const duplicateQuery = `SELECT ${escape("tenantId")}, ${escape("statusListId")}, ${escape("index")}, COUNT(*) AS count
+             FROM ${escape(statusMappingTable.name)}
+             GROUP BY ${escape("tenantId")}, ${escape("statusListId")}, ${escape("index")}
              HAVING COUNT(*) > 1`;
-
-        // SQLite uses different quote style
-        if (dbType === "better-sqlite3") {
-            duplicateQuery = `SELECT tenantId, statusListId, "index", COUNT(*) as count
-             FROM status_mapping
-             GROUP BY tenantId, statusListId, "index"
-             HAVING COUNT(*) > 1`;
-        }
-
         const duplicates = await queryRunner.query(duplicateQuery);
 
-        if (duplicates && duplicates.length > 0) {
+        if (duplicates.length > 0) {
             console.error(
                 "[Migration] ERROR: Found duplicate allocations in status_mapping:",
             );
@@ -77,42 +79,38 @@ export class AddStatusListVersionAndUniqueConstraint1776000000000
             );
         }
 
-        // Add unique constraint to status_mapping using raw SQL
-        // This is more portable than using the QueryRunner API which differs between TypeORM versions
-        const statusMappingTable = await queryRunner.getTable("status_mapping");
-        if (!statusMappingTable) {
-            console.log(
-                "[Migration] status_mapping table not found — skipping (schema may not exist yet).",
+        const hasConstraint =
+            statusMappingTable.uniques.some(
+                (unique) =>
+                    unique.name === "UQ_status_mapping_tenant_list_index" ||
+                    (unique.columnNames &&
+                        unique.columnNames.length === 3 &&
+                        unique.columnNames.includes("tenantId") &&
+                        unique.columnNames.includes("statusListId") &&
+                        unique.columnNames.includes("index")),
+            ) ||
+            statusMappingTable.indices.some(
+                (index) =>
+                    index.name === "UQ_status_mapping_tenant_list_index" ||
+                    (index.isUnique &&
+                        index.columnNames.length === 3 &&
+                        index.columnNames.includes("tenantId") &&
+                        index.columnNames.includes("statusListId") &&
+                        index.columnNames.includes("index")),
             );
-            return;
-        }
-
-        const hasConstraint = statusMappingTable.uniques.some(
-            (unique) =>
-                unique.name === "UQ_status_mapping_tenant_list_index" ||
-                (unique.columnNames &&
-                    unique.columnNames.length === 3 &&
-                    unique.columnNames.includes("tenantId") &&
-                    unique.columnNames.includes("statusListId") &&
-                    unique.columnNames.includes("index")),
-        );
 
         if (!hasConstraint) {
-            // Create unique constraint using raw SQL for better compatibility
             if (dbType === "postgres") {
                 await queryRunner.query(
-                    `ALTER TABLE status_mapping ADD CONSTRAINT UQ_status_mapping_tenant_list_index UNIQUE ("tenantId", "statusListId", "index")`,
+                    `ALTER TABLE ${escape(statusMappingTable.name)} ADD CONSTRAINT ${escape("UQ_status_mapping_tenant_list_index")} UNIQUE (${escape("tenantId")}, ${escape("statusListId")}, ${escape("index")})`,
                 );
             } else if (dbType === "better-sqlite3") {
-                // SQLite doesn't support adding unique constraints to existing tables directly
-                // We'll create it via a raw statement
                 await queryRunner.query(
-                    `CREATE UNIQUE INDEX UQ_status_mapping_tenant_list_index ON status_mapping (tenantId, statusListId, "index")`,
+                    `CREATE UNIQUE INDEX ${escape("UQ_status_mapping_tenant_list_index")} ON ${escape(statusMappingTable.name)} (${escape("tenantId")}, ${escape("statusListId")}, ${escape("index")})`,
                 );
             } else {
-                // Fallback for other databases
-                await queryRunner.query(
-                    `ALTER TABLE status_mapping ADD CONSTRAINT UQ_status_mapping_tenant_list_index UNIQUE (tenantId, statusListId, \`index\`)`,
+                throw new Error(
+                    `Unsupported database type for status-list concurrency migration: ${dbType}`,
                 );
             }
             console.log(
@@ -122,45 +120,52 @@ export class AddStatusListVersionAndUniqueConstraint1776000000000
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        // Determine database type for dialect-specific SQL
         const dbType = queryRunner.connection.driver.options.type;
+        const escape = (identifier: string) =>
+            queryRunner.connection.driver.escape(identifier);
+        const statusMappingTable = await queryRunner.getTable("status_mapping");
 
-        // Remove unique constraint using raw SQL
-        try {
+        if (statusMappingTable) {
             if (dbType === "postgres") {
                 await queryRunner.query(
-                    `ALTER TABLE status_mapping DROP CONSTRAINT IF EXISTS UQ_status_mapping_tenant_list_index`,
+                    `ALTER TABLE ${escape(statusMappingTable.name)} DROP CONSTRAINT IF EXISTS ${escape("UQ_status_mapping_tenant_list_index")}`,
                 );
             } else if (dbType === "better-sqlite3") {
                 await queryRunner.query(
-                    `DROP INDEX IF EXISTS UQ_status_mapping_tenant_list_index`,
-                );
-            } else {
-                await queryRunner.query(
-                    `ALTER TABLE status_mapping DROP INDEX UQ_status_mapping_tenant_list_index`,
+                    `DROP INDEX IF EXISTS ${escape("UQ_status_mapping_tenant_list_index")}`,
                 );
             }
-            console.log(
-                "[Migration] Removed unique constraint from status_mapping.",
-            );
-        } catch (_error) {
-            console.log(
-                "[Migration] Could not remove unique constraint (may not exist).",
-            );
+            console.log("[Migration] Removed unique status mapping index.");
         }
 
-        // Remove version column
-        const statusListTable = await queryRunner.getTable("status_list");
-        if (statusListTable) {
-            const versionColumn = statusListTable.columns.find(
+        const statusListTableName =
+            await this.resolveStatusListTableName(queryRunner);
+        if (statusListTableName) {
+            const statusListTable =
+                await queryRunner.getTable(statusListTableName);
+            const versionColumn = statusListTable?.columns.find(
                 (col) => col.name === "version",
             );
             if (versionColumn) {
-                await queryRunner.dropColumn("status_list", versionColumn);
+                await queryRunner.dropColumn(
+                    statusListTableName,
+                    versionColumn,
+                );
                 console.log(
-                    "[Migration] Removed version column from status_list.",
+                    `[Migration] Removed version column from ${statusListTableName}.`,
                 );
             }
         }
+    }
+
+    private async resolveStatusListTableName(
+        queryRunner: QueryRunner,
+    ): Promise<string | null> {
+        for (const candidate of ["status_list_entity", "status_list"]) {
+            if (await queryRunner.hasTable(candidate)) {
+                return candidate;
+            }
+        }
+        return null;
     }
 }
