@@ -130,6 +130,10 @@ register the public API URL:
 
 ```bash
 eudiplo instance add production --url https://eudiplo.example.com
+eudiplo instance ls
+eudiplo instance show production
+eudiplo instance use production
+eudiplo instance remove old-production
 ```
 
 Instance metadata is stored in the user's EUDIPLO CLI config directory, not in

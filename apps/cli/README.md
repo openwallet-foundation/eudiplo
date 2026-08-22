@@ -17,6 +17,9 @@ installer instead: `curl -fsSL https://eudiplo.dev/install.sh | bash`
 ```bash
 npx @eudiplo/cli demo ./eudiplo-demo
 npx @eudiplo/cli instance add production --url https://eudiplo.example.com
+npx @eudiplo/cli instance ls
+npx @eudiplo/cli instance show production
+npx @eudiplo/cli instance use production
 npx @eudiplo/cli doctor --instance production
 ```
 

@@ -107,6 +107,10 @@ describe("EUDIPLO CLI", () => {
 
         expect(await runCli(["instance"], context)).toBe(0);
         expect(output.stdout).toContain("Usage: eudiplo instance [options] [command]");
+        expect(output.stdout).toContain("list|ls");
+        expect(output.stdout).toContain("show [name]");
+        expect(output.stdout).toContain("use <name>");
+        expect(output.stdout).toContain("remove|rm <name>");
         expect(output.stdout).toContain("add [options] <name>");
 
         output.stdout = "";
@@ -199,6 +203,100 @@ describe("EUDIPLO CLI", () => {
             url: "https://eudiplo.example.com",
         });
         expect(JSON.stringify(config)).not.toContain("secret");
+    });
+
+    it("lists configured instances through the ls alias", async () => {
+        const { context, output } = await createContext();
+
+        expect(await runCli(["instance", "ls"], context)).toBe(0);
+        expect(output.stdout).toBe("No configured instances.\n");
+
+        await runCli(
+            ["instance", "add", "production", "--url", "https://eudiplo.example.com"],
+            context,
+        );
+        await runCli(
+            ["instance", "add", "alpha", "--url", "https://alpha.example.com"],
+            context,
+        );
+        output.stdout = "";
+
+        expect(await runCli(["instance", "ls"], context)).toBe(0);
+        expect(output.stdout).toBe(
+            "Configured instances:\n" +
+                "- alpha: external https://alpha.example.com\n" +
+                "- production (default): external https://eudiplo.example.com\n",
+        );
+    });
+
+    it("changes the default instance and shows its details", async () => {
+        const { context, output } = await createContext();
+        await runCli(
+            ["instance", "add", "production", "--url", "https://eudiplo.example.com"],
+            context,
+        );
+        await runCli(
+            [
+                "instance",
+                "add",
+                "staging",
+                "--url",
+                "https://staging.example.com",
+                "--client-url",
+                "https://client.staging.example.com",
+            ],
+            context,
+        );
+        output.stdout = "";
+
+        expect(await runCli(["instance", "use", "staging"], context)).toBe(0);
+        expect(output.stdout).toContain("Default instance set to staging.");
+
+        output.stdout = "";
+        expect(await runCli(["instance", "show"], context)).toBe(0);
+        expect(output.stdout).toContain("Instance staging (default)");
+        expect(output.stdout).toContain("Target: external");
+        expect(output.stdout).toContain("API URL: https://staging.example.com");
+        expect(output.stdout).toContain("Client URL: https://client.staging.example.com");
+    });
+
+    it("unregisters non-default and final instances without removing deployments", async () => {
+        const { context, output, configPath } = await createContext();
+        await runCli(
+            ["instance", "add", "production", "--url", "https://eudiplo.example.com"],
+            context,
+        );
+        await runCli(
+            ["instance", "add", "staging", "--url", "https://staging.example.com"],
+            context,
+        );
+
+        output.stdout = "";
+        expect(await runCli(["instance", "rm", "staging"], context)).toBe(0);
+        expect(output.stdout).toContain("Unregistered instance staging.");
+        expect(output.stdout).toContain("Deployment resources were not removed.");
+
+        output.stdout = "";
+        expect(await runCli(["instance", "remove", "production"], context)).toBe(0);
+        const config = JSON.parse(await readFile(configPath, "utf8"));
+        expect(config).toEqual({ instances: {} });
+    });
+
+    it("requires switching before unregistering the default instance", async () => {
+        const { context, output } = await createContext();
+        await runCli(
+            ["instance", "add", "production", "--url", "https://eudiplo.example.com"],
+            context,
+        );
+        await runCli(
+            ["instance", "add", "staging", "--url", "https://staging.example.com"],
+            context,
+        );
+        output.stdout = "";
+
+        expect(await runCli(["instance", "remove", "production"], context)).toBe(1);
+        expect(output.stderr).toContain("Cannot remove default instance production");
+        expect(output.stderr).toContain("eudiplo instance use <name>");
     });
 
     it("rejects compose-only commands for external instances", async () => {

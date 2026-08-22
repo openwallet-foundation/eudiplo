@@ -71,6 +71,31 @@ export function upsertInstance(
     };
 }
 
+export function setDefaultInstance(config: CliConfig, name: string): CliConfig {
+    if (!Object.hasOwn(config.instances, name)) {
+        throw new Error(`Unknown instance: ${name}`);
+    }
+    return { ...config, defaultInstance: name };
+}
+
+export function removeInstance(config: CliConfig, name: string): CliConfig {
+    if (!Object.hasOwn(config.instances, name)) {
+        throw new Error(`Unknown instance: ${name}`);
+    }
+    if (config.defaultInstance === name && Object.keys(config.instances).length > 1) {
+        throw new Error(
+            `Cannot remove default instance ${name}. Select another with: eudiplo instance use <name>`,
+        );
+    }
+
+    const instances = { ...config.instances };
+    delete instances[name];
+    return {
+        defaultInstance: config.defaultInstance === name ? undefined : config.defaultInstance,
+        instances,
+    };
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === "object" && value !== null && !Array.isArray(value);
 }
