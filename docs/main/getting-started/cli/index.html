@@ -865,6 +865,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#shell-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shell Completion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#compose-driver-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3173,6 +3184,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#shell-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shell Completion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#compose-driver-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3367,6 +3389,10 @@ must not be used in production.</p>
 <p>For Kubernetes, Helm, standalone containers, or any externally managed instance,
 register the public API URL:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>eudiplo<span class="w"> </span>instance<span class="w"> </span>add<span class="w"> </span>production<span class="w"> </span>--url<span class="w"> </span>https://eudiplo.example.com
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>eudiplo<span class="w"> </span>instance<span class="w"> </span>ls
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>eudiplo<span class="w"> </span>instance<span class="w"> </span>show<span class="w"> </span>production
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>eudiplo<span class="w"> </span>instance<span class="w"> </span>use<span class="w"> </span>production
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>eudiplo<span class="w"> </span>instance<span class="w"> </span>remove<span class="w"> </span>old-production
 </code></pre></div>
 <p>Instance metadata is stored in the user's EUDIPLO CLI config directory, not in
 the source tree. Do not put secrets in this config; commands that need client
@@ -3391,18 +3417,33 @@ available.</p>
 HTTP(S) URLs, verifies the default instance points to a configured instance, and
 prints the configured instances. It does not require Docker or contact the
 deployment.</p>
+<p>Use <code>config path</code> to print the resolved CLI config file and <code>config show</code> to
+inspect its validated contents. The JSON form is suitable for scripts:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>path
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>show
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>show<span class="w"> </span>--json
+</code></pre></div>
+<h2 id="shell-completion">Shell Completion<a class="headerlink" href="#shell-completion" title="Permanent link">¶</a></h2>
+<p>Generate command, option, and enumerated-value completion for the current shell:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>eudiplo<span class="w"> </span>completion<span class="w"> </span>bash<span class="o">)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>eudiplo<span class="w"> </span>completion<span class="w"> </span>zsh<span class="o">)</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>eudiplo<span class="w"> </span>completion<span class="w"> </span>fish<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nb">source</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>eudiplo<span class="w"> </span>completion<span class="w"> </span>powershell<span class="w"> </span><span class="p">|</span><span class="w"> </span>Out-String<span class="w"> </span><span class="p">|</span><span class="w"> </span>Invoke-Expression
+</code></pre></div>
+<p>Persist the generated script in the shell's normal completion directory to load
+it automatically in future sessions.</p>
 <h2 id="compose-driver-commands">Compose Driver Commands<a class="headerlink" href="#compose-driver-commands" title="Permanent link">¶</a></h2>
 <p>These commands are available only for <code>compose</code> instances:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>eudiplo<span class="w"> </span>init
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>./eudiplo-minimal<span class="w"> </span>--preset<span class="w"> </span>minimal
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>./eudiplo-standard<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--start
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--database<span class="w"> </span>postgres<span class="w"> </span>--storage<span class="w"> </span><span class="nb">local</span><span class="w"> </span>--kms<span class="w"> </span>vault
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--public-url<span class="w"> </span>https://eudiplo.example.com
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--demo-tenant
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>eudiplo<span class="w"> </span>up
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>eudiplo<span class="w"> </span>down
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>eudiplo<span class="w"> </span>logs
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>eudiplo<span class="w"> </span>demo<span class="w"> </span>--reset<span class="w"> </span>--force
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>eudiplo<span class="w"> </span>init
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>./eudiplo-minimal<span class="w"> </span>--preset<span class="w"> </span>minimal
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>./eudiplo-standard<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--start
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--database<span class="w"> </span>postgres<span class="w"> </span>--storage<span class="w"> </span><span class="nb">local</span><span class="w"> </span>--kms<span class="w"> </span>vault
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--public-url<span class="w"> </span>https://eudiplo.example.com
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>eudiplo<span class="w"> </span>init<span class="w"> </span>--preset<span class="w"> </span>standard<span class="w"> </span>--demo-tenant
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>eudiplo<span class="w"> </span>up
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>eudiplo<span class="w"> </span>down
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>eudiplo<span class="w"> </span>logs
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>eudiplo<span class="w"> </span>demo<span class="w"> </span>--reset<span class="w"> </span>--force
 </code></pre></div>
 <p>When run in an interactive terminal, <code>init</code> opens a wizard for the project
 directory, deployment preset, database, storage, key management, public URL,
@@ -3461,10 +3502,10 @@ demo assets without starting containers. New onboarding instructions should use
 <code>demo</code> for evaluation and <code>init</code> for configurable deployments.</p>
 <h2 id="local-tenant-configuration-commands">Local Tenant Configuration Commands<a class="headerlink" href="#local-tenant-configuration-commands" title="Permanent link">¶</a></h2>
 <p>The tenant commands scaffold and manage local config-import folders:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>list
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>create<span class="w"> </span>acme<span class="w"> </span>--name<span class="w"> </span><span class="s2">"Acme GmbH"</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>create<span class="w"> </span>sample<span class="w"> </span>--template<span class="w"> </span>demo
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>remove<span class="w"> </span>acme<span class="w"> </span>--force
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>list
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>create<span class="w"> </span>acme<span class="w"> </span>--name<span class="w"> </span><span class="s2">"Acme GmbH"</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>create<span class="w"> </span>sample<span class="w"> </span>--template<span class="w"> </span>demo
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>eudiplo<span class="w"> </span>config<span class="w"> </span>tenant<span class="w"> </span>remove<span class="w"> </span>acme<span class="w"> </span>--force
 </code></pre></div>
 <p><code>create</code> generates <code>info.json</code> and the supported resource subdirectories.
 <code>--template demo</code> copies the bundled demo resources instead. Aliases <code>ls</code>,
