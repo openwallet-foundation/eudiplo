@@ -1,5 +1,9 @@
 import { isSea } from "node:sea";
 import { Command, CommanderError } from "commander";
+import {
+    createCompletionCandidatesCommand,
+    createCompletionCommand,
+} from "./commands/completion/index.js";
 import { createConfigCommand } from "./commands/config/index.js";
 import { createDemoCommand } from "./commands/demo/index.js";
 import { createDeploymentCommands } from "./commands/deployment/index.js";
@@ -56,6 +60,10 @@ function createProgram(
     program.addCommand(createDoctorCommand(context, setExitCode));
     program.addCommand(createStatusCommand(context, setExitCode));
     program.addCommand(createVersionCommand(context, setExitCode));
+    program.addCommand(createCompletionCommand(context, setExitCode));
+    program.addCommand(createCompletionCandidatesCommand(context, setExitCode), {
+        hidden: true,
+    });
     program.action(function showRootHelp() {
         this.outputHelp();
     });

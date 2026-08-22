@@ -154,9 +154,29 @@ EUDIPLO_CLI_HOME=/tmp/eudiplo-cli eudiplo config validate
 EUDIPLO_CLI_CONFIG=/tmp/eudiplo-cli/config.json eudiplo config validate
 ```
 
+Print the resolved file path or inspect the validated configuration with:
+
+```bash
+eudiplo config path
+eudiplo config show
+eudiplo config show --json
+```
+
 Do not store secrets in the CLI config. Commands that need authenticated API
 access read credentials from environment variables such as `EUDIPLO_CLIENT_ID`
 and `EUDIPLO_CLIENT_SECRET`.
+
+## Shell Completion
+
+The CLI generates completion scripts for Bash, Zsh, Fish, and PowerShell. For
+the current shell session, use one of:
+
+```bash
+source <(eudiplo completion bash)
+source <(eudiplo completion zsh)
+eudiplo completion fish | source
+eudiplo completion powershell | Out-String | Invoke-Expression
+```
 
 ## Single Executable Application
 
