@@ -197,6 +197,18 @@
                                     <span class="modifier">Readonly</span>
                                 <a href="#logger" >logger</a>
                             </li>
+                            <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#maxRetries" >maxRetries</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#retryDelayMs" >retryDelayMs</a>
+                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -211,6 +223,12 @@
                     </td>
                     <td class="col-md-9">
                         <ul class="index-list">
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#allocateEntries" >allocateEntries</a>
+                            </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
@@ -235,6 +253,11 @@
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
                                 <a href="#createNewList" >createNewList</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#delay" >delay</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
@@ -303,6 +326,11 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
+                                <a href="#isRetryableConcurrencyError" >isRetryableConcurrencyError</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#processStatusListConfig" >processStatusListConfig</a>
                             </li>
@@ -310,7 +338,19 @@
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
+                                <a href="#regenerateListTokens" >regenerateListTokens</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
                                 <a href="#setEntry" >setEntry</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#setEntryWithRetry" >setEntryWithRetry</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
@@ -351,12 +391,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(configService: ConfigService, certService: <a href="../injectables/CertService.html" target="_self">CertService</a>, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>, statusMappingRepository: <a href="../entitys/StatusMapping.html" target="_self">Repository&lt;StatusMapping&gt;</a>, statusListRepository: <a href="../entitys/StatusListEntity.html" target="_self">Repository&lt;StatusListEntity&gt;</a>, tenantRepository: <a href="../entitys/TenantEntity.html" target="_self">Repository&lt;TenantEntity&gt;</a>, configImportService: <a href="../injectables/ConfigImportService.html" target="_self">ConfigImportService</a>, statusListConfigService: <a href="../injectables/StatusListConfigService.html" target="_self">StatusListConfigService</a>, configImportOrchestrator: <a href="../injectables/ConfigImportOrchestratorService.html" target="_self">ConfigImportOrchestratorService</a>)</code>
+<code>constructor(configService: ConfigService, certService: <a href="../injectables/CertService.html" target="_self">CertService</a>, keyChainService: <a href="../injectables/KeyChainService.html" target="_self">KeyChainService</a>, dataSource: DataSource, statusMappingRepository: <a href="../classes/StatusMapping.html" target="_self">Repository&lt;StatusMapping&gt;</a>, statusListRepository: <a href="../entitys/StatusListEntity.html" target="_self">Repository&lt;StatusListEntity&gt;</a>, tenantRepository: <a href="../entitys/TenantEntity.html" target="_self">Repository&lt;TenantEntity&gt;</a>, configImportService: <a href="../injectables/ConfigImportService.html" target="_self">ConfigImportService</a>, statusListConfigService: <a href="../injectables/StatusListConfigService.html" target="_self">StatusListConfigService</a>, configImportOrchestrator: <a href="../injectables/ConfigImportOrchestratorService.html" target="_self">ConfigImportOrchestratorService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/issuer/status-list/status-list.service.ts:44</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/issuer/status-list/status-list.service.ts:45</a></div>
                             </td>
                         </tr>
 
@@ -410,10 +450,22 @@
                                                     
                                                 </tr>
                                                 <tr>
+                                                        <td>dataSource</td>
+                                                  
+                                                        <td>
+                                                                    <code>DataSource</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
                                                         <td>statusMappingRepository</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../entitys/StatusMapping.html" target="_self" >Repository&lt;StatusMapping&gt;</a></code>
+                                                                        <code><a href="../classes/StatusMapping.html" target="_self" >Repository&lt;StatusMapping&gt;</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -499,6 +551,86 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="allocateEntries"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>allocateEntries</b></span>
+                        <a href="#allocateEntries"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>allocateEntries(options: { tenantId: string; sessionId: string; credentialConfigurationId: string; count: number })</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="582"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:582</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Allocate one or more status list entries atomically.
+All entries for a single credential are allocated in one transaction,
+ensuring consistency and preventing partial allocations.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>options</td>
+                                            <td>
+                                                        <code>{ tenantId: string; sessionId: string; credentialConfigurationId: string; count: number }</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Allocation request parameters</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Array&lt;{ statusListId: string; index: number; uri: string }&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Array of allocated entries</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="buildAggregationUri"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -517,8 +649,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="139"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:139</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="141"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:141</a></div>
                         </td>
                     </tr>
 
@@ -590,8 +722,8 @@ See RFC draft-ietf-oauth-status-list Section 9.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="129"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:129</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="131"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:131</a></div>
                         </td>
                     </tr>
 
@@ -673,8 +805,8 @@ See RFC draft-ietf-oauth-status-list Section 9.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="520"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:520</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="527"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:527</a></div>
                         </td>
                     </tr>
 
@@ -682,7 +814,8 @@ See RFC draft-ietf-oauth-status-list Section 9.</p>
             <tr>
                 <td class="col-md-4">
                         <div class="io-description"><p>Get the next free entry in the status list.
-Automatically creates a new list if no available list is found.</p>
+Automatically creates a new list if no available list is found.
+Uses atomic batch allocation to prevent race conditions.</p>
 </div>
 
                             <div class="io-description">
@@ -767,8 +900,8 @@ Automatically creates a new list if no available list is found.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="208"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:208</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="211"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:211</a></div>
                         </td>
                     </tr>
 
@@ -783,6 +916,7 @@ The JWT includes:</p>
 <li><code>ttl</code>: How long verifiers can cache before fetching fresh copy (RECOMMENDED)</li>
 <li><code>aggregation_uri</code>: URI to fetch all status list URIs (OPTIONAL, per RFC Section 9)</li>
 </ul>
+<p>Uses optimistic locking to prevent stale token values from overwriting newer state.</p>
 </div>
 
                             <div class="io-description">
@@ -813,7 +947,7 @@ The JWT includes:</p>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -845,8 +979,8 @@ The JWT includes:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="150"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:150</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="152"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:152</a></div>
                         </td>
                     </tr>
 
@@ -920,6 +1054,77 @@ The JWT includes:</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="delay"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>delay</b></span>
+                        <a href="#delay"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>delay(ms: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="717"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:717</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Helper function to introduce a delay for retry logic.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>ms</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="deleteList"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -938,8 +1143,8 @@ The JWT includes:</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="636"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:636</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="905"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:905</a></div>
                         </td>
                     </tr>
 
@@ -1032,8 +1237,8 @@ Only allows deletion if the list has no used entries.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="475"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:475</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="481"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:481</a></div>
                         </td>
                     </tr>
 
@@ -1127,8 +1332,8 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="106"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:106</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="108"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:108</a></div>
                         </td>
                     </tr>
 
@@ -1199,8 +1404,8 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="95"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:95</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="97"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:97</a></div>
                         </td>
                     </tr>
 
@@ -1270,8 +1475,8 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="355"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:355</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="402"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:402</a></div>
                         </td>
                     </tr>
 
@@ -1363,8 +1568,8 @@ Priority: dedicated list for the credential config &gt; shared lists</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="395"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:395</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="440"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:440</a></div>
                         </td>
                     </tr>
 
@@ -1447,8 +1652,8 @@ The CWT follows the same caching/freshness policy as JWT status list tokens.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="375"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:375</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="422"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:422</a></div>
                         </td>
                     </tr>
 
@@ -1540,8 +1745,8 @@ The CWT follows the same caching/freshness policy as JWT status list tokens.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="331"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:331</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="378"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:378</a></div>
                         </td>
                     </tr>
 
@@ -1618,8 +1823,8 @@ The CWT follows the same caching/freshness policy as JWT status list tokens.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="67"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:67</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="69"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:69</a></div>
                         </td>
                     </tr>
 
@@ -1687,8 +1892,8 @@ The CWT follows the same caching/freshness policy as JWT status list tokens.</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="344"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:344</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="391"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:391</a></div>
                         </td>
                     </tr>
 
@@ -1765,8 +1970,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="456"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:456</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="462"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:462</a></div>
                         </td>
                     </tr>
 
@@ -1858,8 +2063,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="712"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:712</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="979"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:979</a></div>
                         </td>
                     </tr>
 
@@ -1911,6 +2116,75 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="isRetryableConcurrencyError"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>isRetryableConcurrencyError</b></span>
+                        <a href="#isRetryableConcurrencyError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isRetryableConcurrencyError(error: unknown)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="721"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:721</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>error</td>
+                                            <td>
+                                                        <code>unknown</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="processStatusListConfig"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -1930,8 +2204,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="756"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:756</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="1023"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:1023</a></div>
                         </td>
                     </tr>
 
@@ -1995,6 +2269,91 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="regenerateListTokens"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>regenerateListTokens</b></span>
+                        <a href="#regenerateListTokens"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>regenerateListTokens(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, listId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="309"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:309</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Generate tokens from the latest status-list snapshot, retrying when the
+list changes while the asynchronous signing operation is in progress.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>listId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../entitys/StatusListEntity.html" target="_self" >Promise&lt;StatusListEntity&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="setEntry"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -2014,8 +2373,8 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="580"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:580</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="768"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:768</a></div>
                         </td>
                     </tr>
 
@@ -2023,9 +2382,10 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
             <tr>
                 <td class="col-md-4">
                         <div class="io-description"><p>Update the value of an entry in a specific status list.
+Uses optimistic locking to ensure atomic updates and prevent lost writes.
 JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> setting:</p>
 <ul>
-<li>If true: JWT is regenerated immediately</li>
+<li>If true: JWT is regenerated immediately (after transaction commits)</li>
 <li>If false (default): JWT is only regenerated on next request when TTL expires</li>
 </ul>
 </div>
@@ -2125,6 +2485,114 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="setEntryWithRetry"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>setEntryWithRetry</b></span>
+                        <a href="#setEntryWithRetry"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setEntryWithRetry(listId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="800"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:800</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Internal method that performs a single attempt to update an entry.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>listId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>index</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="shuffleArray"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -2143,8 +2611,8 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="117"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:117</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="119"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:119</a></div>
                         </td>
                     </tr>
 
@@ -2223,8 +2691,8 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="282"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:282</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="329"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:329</a></div>
                         </td>
                     </tr>
 
@@ -2328,8 +2796,8 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="661"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:661</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="930"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:930</a></div>
                         </td>
                     </tr>
 
@@ -2436,8 +2904,8 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="606"
-                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:606</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="875"
+                                    class="link-to-prism">src/issuer/status-list/status-list.service.ts:875</a></div>
                         </td>
                     </tr>
 
@@ -2534,7 +3002,7 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/issuer/status-list/status-list.service.ts:49</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/issuer/status-list/status-list.service.ts:50</a></div>
                         </td>
                     </tr>
 
@@ -2567,7 +3035,73 @@ JWT regeneration depends on the tenant&#39;s <code>immediateUpdate</code> settin
                 </tr>
                     <tr>
                         <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/issuer/status-list/status-list.service.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="maxRetries"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>maxRetries</b></span>
+                        <a href="#maxRetries"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>3</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
                                 <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/issuer/status-list/status-list.service.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="retryDelayMs"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>retryDelayMs</b></span>
+                        <a href="#retryDelayMs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>100</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/issuer/status-list/status-list.service.ts:45</a></div>
                         </td>
                     </tr>
 
@@ -2586,36 +3120,35 @@ import {
     Injectable,
     Logger,
     NotFoundException,
+    ServiceUnavailableException,
 } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
+import { SignatureAlgorithm } from &quot;@owf/cose&quot;;
 import {
     BitsPerStatus,
     createHeaderAndPayload,
     JWTwithStatusListPayload,
-    getListFromStatusListJWT,
     StatusList,
     StatusListCwt,
     StatusListJWTHeaderParameters,
 } from &quot;@owf/token-status-list&quot;;
-import { JwtPayload } from &quot;@sd-jwt/core&quot;;
-import { SignatureAlgorithm } from &quot;@owf/cose&quot;;
 import { X509Certificate } from &quot;@peculiar/x509&quot;;
-import { decodeJwt } from &quot;jose&quot;;
-import { IsNull, Repository } from &quot;typeorm&quot;;
+import { JwtPayload } from &quot;@sd-jwt/core&quot;;
+import { DataSource, IsNull, Repository } from &quot;typeorm&quot;;
 import { v4 } from &quot;uuid&quot;;
 import { TenantEntity } from &quot;../../auth/tenant/entities/tenant.entity&quot;;
 import { CertService } from &quot;../../crypto/key/cert/cert.service&quot;;
-import { KeyUsageType } from &quot;../../crypto/key/types/key-usage-type&quot;;
 import { KeyChainService } from &quot;../../crypto/key/key-chain.service&quot;;
-import { Session } from &quot;../../session/entities/session.entity&quot;;
+import { KeyUsageType } from &quot;../../crypto/key/types/key-usage-type&quot;;
 import { ConfigImportService } from &quot;../../platform/config-import/config-import.service&quot;;
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
 } from &quot;../../platform/config-import/config-import-orchestrator.service&quot;;
-import { StatusListImportDto } from &quot;./dto/status-list-import.dto&quot;;
+import { Session } from &quot;../../session/entities/session.entity&quot;;
 import { StatusListImportSchema } from &quot;./dto/status-list.schema&quot;;
+import { StatusListImportDto } from &quot;./dto/status-list-import.dto&quot;;
 import { StatusUpdateDto } from &quot;./dto/status-update.dto&quot;;
 import { StatusListEntity } from &quot;./entities/status-list.entity&quot;;
 import { StatusMapping } from &quot;./entities/status-mapping.entity&quot;;
@@ -2624,11 +3157,14 @@ import { StatusListConfigService } from &quot;./status-list-config.service&quot;
 @Injectable()
 export class StatusListService {
     private readonly logger &#x3D; new Logger(StatusListService.name);
+    private readonly maxRetries &#x3D; 3;
+    private readonly retryDelayMs &#x3D; 100;
 
     constructor(
         private readonly configService: ConfigService,
         private readonly certService: CertService,
         public readonly keyChainService: KeyChainService,
+        private readonly dataSource: DataSource,
         @InjectRepository(StatusMapping)
         private readonly statusMappingRepository: Repository&lt;StatusMapping&gt;,
         @InjectRepository(StatusListEntity)
@@ -2775,8 +3311,7 @@ export class StatusListService {
             bits,
         });
 
-        await this.createListJWT(entry);
-        return entry;
+        return this.regenerateListTokens(entry.tenantId, entry.id);
     }
 
     /**
@@ -2786,8 +3321,10 @@ export class StatusListService {
      * - &#x60;exp&#x60;: When the token expires (RECOMMENDED)
      * - &#x60;ttl&#x60;: How long verifiers can cache before fetching fresh copy (RECOMMENDED)
      * - &#x60;aggregation_uri&#x60;: URI to fetch all status list URIs (OPTIONAL, per RFC Section 9)
+     *
+     * Uses optimistic locking to prevent stale token values from overwriting newer state.
      */
-    async createListJWT(entry: StatusListEntity): Promise&lt;void&gt; {
+    async createListJWT(entry: StatusListEntity): Promise&lt;boolean&gt; {
         // Get TTL from tenant config or global default
         const effectiveConfig &#x3D;
             await this.statusListConfigService.getEffectiveConfig(
@@ -2853,11 +3390,55 @@ export class StatusListService {
             },
         );
 
-        // Store JWT/CWT and expiration time
+        // Only cache tokens if the entity still matches the snapshot that was signed.
         const expiresAt &#x3D; new Date(exp * 1000);
-        await this.statusListRepository.update(
-            { id: entry.id, tenantId: entry.tenantId },
-            { jwt, cwt: Buffer.from(cwt).toString(&quot;base64url&quot;), expiresAt },
+        const updateResult &#x3D; await this.statusListRepository.update(
+            {
+                id: entry.id,
+                tenantId: entry.tenantId,
+                version: entry.version,
+            },
+            {
+                jwt,
+                cwt: Buffer.from(cwt).toString(&quot;base64url&quot;),
+                expiresAt,
+                version: () &#x3D;&gt; &quot;version + 1&quot;,
+            },
+        );
+
+        if (updateResult.affected &#x3D;&#x3D;&#x3D; 0) {
+            // Version mismatch - entry was modified concurrently
+            // Log but don&#x27;t fail - JWT regeneration will be retried on next request
+            this.logger.warn(
+                &#x60;Stale JWT generation for list ${entry.id} (tenant: ${entry.tenantId}) - version changed concurrently&#x60;,
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Generate tokens from the latest status-list snapshot, retrying when the
+     * list changes while the asynchronous signing operation is in progress.
+     */
+    private async regenerateListTokens(
+        tenantId: string,
+        listId: string,
+    ): Promise&lt;StatusListEntity&gt; {
+        for (let attempt &#x3D; 0; attempt &lt; this.maxRetries; attempt++) {
+            const entry &#x3D; await this.getListById(tenantId, listId);
+            if (await this.createListJWT(entry)) {
+                return this.getListById(tenantId, listId);
+            }
+
+            if (attempt &lt; this.maxRetries - 1) {
+                await this.delay(this.retryDelayMs * Math.pow(2, attempt));
+            }
+        }
+
+        throw new ServiceUnavailableException(
+            &#x60;Could not generate current tokens for status list ${listId}&#x60;,
         );
     }
 
@@ -2962,9 +3543,7 @@ export class StatusListService {
             !list.jwt || !list.expiresAt || list.expiresAt &lt;&#x3D; new Date();
 
         if (needsRegeneration) {
-            await this.createListJWT(list);
-            // Reload to get the updated JWT
-            list &#x3D; await this.getListById(tenantId, listId);
+            list &#x3D; await this.regenerateListTokens(tenantId, listId);
         }
 
         return list.jwt!;
@@ -2978,52 +3557,13 @@ export class StatusListService {
         let list &#x3D; await this.getListById(tenantId, listId);
 
         const needsRegeneration &#x3D;
-            !list.jwt || !list.expiresAt || list.expiresAt &lt;&#x3D; new Date();
+            !list.jwt ||
+            !list.cwt ||
+            !list.expiresAt ||
+            list.expiresAt &lt;&#x3D; new Date();
 
         if (needsRegeneration) {
-            await this.createListJWT(list);
-            list &#x3D; await this.getListById(tenantId, listId);
-        }
-
-        if (!list.cwt) {
-            const jwt &#x3D; list.jwt!;
-            const jwtPayload &#x3D; decodeJwt(jwt);
-            const statusList &#x3D; getListFromStatusListJWT(jwt);
-            const cert &#x3D; await this.getSigningCert(list);
-
-            const subject &#x3D;
-                typeof jwtPayload.sub &#x3D;&#x3D;&#x3D; &quot;string&quot;
-                    ? jwtPayload.sub
-                    : this.buildStatusListUri(tenantId, listId);
-            const issuedAt &#x3D;
-                typeof jwtPayload.iat &#x3D;&#x3D;&#x3D; &quot;number&quot;
-                    ? new Date(jwtPayload.iat * 1000)
-                    : new Date();
-            const expirationTime &#x3D;
-                typeof jwtPayload.exp &#x3D;&#x3D;&#x3D; &quot;number&quot;
-                    ? new Date(jwtPayload.exp * 1000)
-                    : undefined;
-            const ttl &#x3D;
-                typeof jwtPayload.ttl &#x3D;&#x3D;&#x3D; &quot;number&quot; ? jwtPayload.ttl : undefined;
-
-            const cwt &#x3D; await this.signStatusListCwt(
-                tenantId,
-                cert.keyId,
-                cert.crt,
-                {
-                    subject,
-                    issuedAt,
-                    expirationTime,
-                    ttl,
-                    statusList,
-                },
-            );
-
-            await this.statusListRepository.update(
-                { id: list.id, tenantId: list.tenantId },
-                { cwt: Buffer.from(cwt).toString(&quot;base64url&quot;) },
-            );
-            list &#x3D; await this.getListById(tenantId, listId);
+            list &#x3D; await this.regenerateListTokens(tenantId, listId);
         }
 
         return Uint8Array.from(Buffer.from(list.cwt!, &quot;base64url&quot;));
@@ -3095,6 +3635,7 @@ export class StatusListService {
     /**
      * Get the next free entry in the status list.
      * Automatically creates a new list if no available list is found.
+     * Uses atomic batch allocation to prevent race conditions.
      * @param session The session for which to create the entry.
      * @param credentialConfigurationId The credential configuration ID.
      * @returns The status list payload to include in the credential.
@@ -3103,56 +3644,237 @@ export class StatusListService {
         session: Session,
         credentialConfigurationId: string,
     ): Promise&lt;JWTwithStatusListPayload&gt; {
-        // Find an available list or create a new one
-        // If no available list found, create a new shared list
-        // (dedicated lists must be created explicitly via the API)
-        const list &#x3D;
-            (await this.findAvailableList(
-                session.tenantId,
-                credentialConfigurationId,
-            )) ?? (await this.createNewList(session.tenantId));
+        for (let attempt &#x3D; 0; attempt &lt; this.maxRetries; attempt++) {
+            try {
+                const result &#x3D; await this.allocateEntries({
+                    tenantId: session.tenantId,
+                    sessionId: session.id,
+                    credentialConfigurationId,
+                    count: 1,
+                });
 
-        // Pop an index from the stack
-        const idx &#x3D; list.stack.pop();
-        if (idx &#x3D;&#x3D;&#x3D; undefined) {
-            // This shouldn&#x27;t happen since we just checked, but handle it gracefully
-            throw new ConflictException(
-                &quot;No free entries available in any status list&quot;,
-            );
+                if (result.length &#x3D;&#x3D;&#x3D; 0) {
+                    throw new ConflictException(
+                        &quot;Failed to allocate status entry after retries&quot;,
+                    );
+                }
+
+                const entry &#x3D; result[0];
+                return {
+                    status: {
+                        status_list: {
+                            idx: entry.index,
+                            uri: entry.uri,
+                        },
+                    },
+                };
+            } catch (error) {
+                if (this.isRetryableConcurrencyError(error)) {
+                    if (attempt &lt; this.maxRetries - 1) {
+                        await this.delay(
+                            this.retryDelayMs * Math.pow(2, attempt),
+                        );
+                        continue;
+                    }
+                    break;
+                }
+                throw error;
+            }
         }
 
-        // Save the updated stack
-        await this.statusListRepository.update(
-            { id: list.id },
-            { stack: list.stack },
+        throw new ServiceUnavailableException(
+            &quot;Could not allocate status entry after maximum retries&quot;,
         );
+    }
 
-        const uri &#x3D; this.buildStatusListUri(session.tenantId, list.id);
+    /**
+     * Allocate one or more status list entries atomically.
+     * All entries for a single credential are allocated in one transaction,
+     * ensuring consistency and preventing partial allocations.
+     *
+     * @param options Allocation request parameters
+     * @returns Array of allocated entries
+     */
+    private async allocateEntries(options: {
+        tenantId: string;
+        sessionId: string;
+        credentialConfigurationId: string;
+        count: number;
+    }): Promise&lt;Array&lt;{ statusListId: string; index: number; uri: string }&gt;&gt; {
+        const queryRunner &#x3D; this.dataSource.createQueryRunner();
+        let shouldCreateList &#x3D; false;
 
-        // Store the index in the status mapping
-        await this.statusMappingRepository.save({
-            tenantId: session.tenantId,
-            sessionId: session.id,
-            statusListId: list.id,
-            index: idx,
-            list: uri,
-            credentialConfigurationId,
-        });
+        try {
+            await queryRunner.connect();
+            await queryRunner.startTransaction();
 
-        return {
-            status: {
-                status_list: {
-                    idx,
-                    uri,
+            // Find an available status list
+            const manager &#x3D; queryRunner.manager;
+            const dedicatedLists &#x3D; await manager.find(StatusListEntity, {
+                where: {
+                    tenantId: options.tenantId,
+                    credentialConfigurationId:
+                        options.credentialConfigurationId,
                 },
-            },
+                order: { createdAt: &quot;ASC&quot; },
+            });
+            let list &#x3D; dedicatedLists.find(
+                (candidate) &#x3D;&gt; candidate.stack.length &gt;&#x3D; options.count,
+            );
+
+            if (!list) {
+                // Try to find a shared list
+                const sharedLists &#x3D; await manager.find(StatusListEntity, {
+                    where: {
+                        tenantId: options.tenantId,
+                        credentialConfigurationId: IsNull(),
+                    },
+                    order: { createdAt: &quot;ASC&quot; },
+                });
+
+                for (const candidateList of sharedLists) {
+                    if (candidateList.stack.length &gt;&#x3D; options.count) {
+                        list &#x3D; candidateList;
+                        break;
+                    }
+                }
+            }
+
+            // If still no list found, create a new one
+            if (!list || list.stack.length &lt; options.count) {
+                await queryRunner.commitTransaction();
+                shouldCreateList &#x3D; true;
+            } else {
+                // Allocate indices from the stack
+                const allocatedIndices: number[] &#x3D; [];
+                for (let i &#x3D; 0; i &lt; options.count; i++) {
+                    const idx &#x3D; list.stack.pop();
+                    if (idx &#x3D;&#x3D;&#x3D; undefined) {
+                        throw new ConflictException(
+                            &quot;Stack underflow during allocation&quot;,
+                        );
+                    }
+                    allocatedIndices.push(idx);
+                }
+
+                // The version predicate makes this update portable across
+                // PostgreSQL and SQLite without relying on driver-specific locks.
+                const updateResult &#x3D; await manager.update(
+                    StatusListEntity,
+                    {
+                        id: list.id,
+                        tenantId: options.tenantId,
+                        version: list.version,
+                    },
+                    {
+                        stack: list.stack,
+                        version: () &#x3D;&gt; &quot;version + 1&quot;,
+                    },
+                );
+
+                if (updateResult.affected &#x3D;&#x3D;&#x3D; 0) {
+                    throw new ConflictException(
+                        &quot;Status list was modified concurrently&quot;,
+                    );
+                }
+
+                const uri &#x3D; this.buildStatusListUri(options.tenantId, list.id);
+                const mappings &#x3D; allocatedIndices.map((index) &#x3D;&gt; ({
+                    tenantId: options.tenantId,
+                    sessionId: options.sessionId,
+                    statusListId: list.id,
+                    index,
+                    list: uri,
+                    credentialConfigurationId:
+                        options.credentialConfigurationId,
+                }));
+
+                await manager.insert(StatusMapping, mappings);
+                await queryRunner.commitTransaction();
+
+                return allocatedIndices.map((index) &#x3D;&gt; ({
+                    statusListId: list.id,
+                    index,
+                    uri,
+                }));
+            }
+        } catch (error) {
+            if (queryRunner.isTransactionActive) {
+                await queryRunner.rollbackTransaction();
+            }
+
+            if (this.isRetryableConcurrencyError(error)) {
+                throw new ConflictException(
+                    &quot;Status list index allocation conflict - please retry&quot;,
+                );
+            }
+
+            throw error;
+        } finally {
+            await queryRunner.release();
+        }
+
+        if (shouldCreateList) {
+            const newList &#x3D; await this.createNewList(options.tenantId);
+            if (newList.stack.length &lt; options.count) {
+                throw new ConflictException(
+                    &quot;Status list capacity is smaller than the requested allocation&quot;,
+                );
+            }
+            return this.allocateEntries(options);
+        }
+
+        throw new ConflictException(&quot;No status list available for allocation&quot;);
+    }
+
+    /**
+     * Helper function to introduce a delay for retry logic.
+     */
+    private delay(ms: number): Promise&lt;void&gt; {
+        return new Promise((resolve) &#x3D;&gt; setTimeout(resolve, ms));
+    }
+
+    private isRetryableConcurrencyError(error: unknown): boolean {
+        if (error instanceof ConflictException) {
+            return true;
+        }
+
+        if (!(error instanceof Error)) {
+            return false;
+        }
+
+        const databaseError &#x3D; error as Error &amp; {
+            code?: string;
+            driverError?: { code?: string };
         };
+        const code &#x3D; databaseError.driverError?.code ?? databaseError.code;
+        if (
+            code &amp;&amp;
+            [
+                &quot;23505&quot;,
+                &quot;40001&quot;,
+                &quot;40P01&quot;,
+                &quot;SQLITE_BUSY&quot;,
+                &quot;SQLITE_BUSY_SNAPSHOT&quot;,
+                &quot;SQLITE_LOCKED&quot;,
+            ].includes(code)
+        ) {
+            return true;
+        }
+
+        const message &#x3D; error.message.toLowerCase();
+        return (
+            message.includes(&quot;version&quot;) ||
+            message.includes(&quot;unique constraint&quot;) ||
+            message.includes(&quot;database is locked&quot;)
+        );
     }
 
     /**
      * Update the value of an entry in a specific status list.
+     * Uses optimistic locking to ensure atomic updates and prevent lost writes.
      * JWT regeneration depends on the tenant&#x27;s &#x60;immediateUpdate&#x60; setting:
-     * - If true: JWT is regenerated immediately
+     * - If true: JWT is regenerated immediately (after transaction commits)
      * - If false (default): JWT is only regenerated on next request when TTL expires
      * @param listId The ID of the status list.
      * @param index The index in the status list.
@@ -3165,18 +3887,99 @@ export class StatusListService {
         value: number,
         tenantId: string,
     ): Promise&lt;void&gt; {
-        const entry &#x3D; await this.getListById(tenantId, listId);
-        entry.elements[index] &#x3D; value;
-        await this.statusListRepository.update(
-            { id: listId },
-            { elements: entry.elements },
-        );
+        for (let attempt &#x3D; 0; attempt &lt; this.maxRetries; attempt++) {
+            try {
+                await this.setEntryWithRetry(listId, index, value, tenantId);
+                return;
+            } catch (error) {
+                if (this.isRetryableConcurrencyError(error)) {
+                    if (attempt &lt; this.maxRetries - 1) {
+                        await this.delay(
+                            this.retryDelayMs * Math.pow(2, attempt),
+                        );
+                        continue;
+                    }
+                    break;
+                }
+                throw error;
+            }
+        }
 
-        // Check if immediate JWT regeneration is enabled
-        const effectiveConfig &#x3D;
-            await this.statusListConfigService.getEffectiveConfig(tenantId);
-        if (effectiveConfig.immediateUpdate) {
-            await this.createListJWT(entry);
+        throw new ServiceUnavailableException(
+            &quot;Could not update status entry after maximum retries&quot;,
+        );
+    }
+
+    /**
+     * Internal method that performs a single attempt to update an entry.
+     */
+    private async setEntryWithRetry(
+        listId: string,
+        index: number,
+        value: number,
+        tenantId: string,
+    ): Promise&lt;void&gt; {
+        const queryRunner &#x3D; this.dataSource.createQueryRunner();
+        let updateCommitted &#x3D; false;
+
+        try {
+            await queryRunner.connect();
+            await queryRunner.startTransaction();
+
+            const manager &#x3D; queryRunner.manager;
+
+            const entry &#x3D; await manager.findOne(StatusListEntity, {
+                where: { id: listId, tenantId },
+            });
+
+            if (!entry) {
+                throw new NotFoundException(
+                    &#x60;Status list ${listId} not found for tenant ${tenantId}&#x60;,
+                );
+            }
+
+            // Modify the elements array
+            const updatedElements &#x3D; [...entry.elements];
+            updatedElements[index] &#x3D; value;
+
+            // Perform atomic update with version check
+            const updateResult &#x3D; await manager.update(
+                StatusListEntity,
+                {
+                    id: listId,
+                    tenantId,
+                    version: entry.version,
+                },
+                {
+                    elements: updatedElements,
+                    version: () &#x3D;&gt; &quot;version + 1&quot;,
+                },
+            );
+
+            if (updateResult.affected &#x3D;&#x3D;&#x3D; 0) {
+                // Version mismatch - another transaction modified the list
+                throw new ConflictException(
+                    &quot;Status list version changed concurrently&quot;,
+                );
+            }
+
+            await queryRunner.commitTransaction();
+            updateCommitted &#x3D; true;
+        } catch (error) {
+            if (queryRunner.isTransactionActive) {
+                await queryRunner.rollbackTransaction();
+            }
+            throw error;
+        } finally {
+            await queryRunner.release();
+        }
+
+        if (updateCommitted) {
+            const effectiveConfig &#x3D;
+                await this.statusListConfigService.getEffectiveConfig(tenantId);
+            if (effectiveConfig.immediateUpdate) {
+                await this.regenerateListTokens(tenantId, listId);
+            }
         }
     }
 
@@ -3280,9 +4083,7 @@ export class StatusListService {
 
         // Regenerate JWT if the certificate changed
         if (needsJwtRegeneration) {
-            await this.createListJWT(savedList);
-            // Reload to get the updated JWT
-            return this.getListById(tenantId, listId);
+            return this.regenerateListTokens(tenantId, listId);
         }
 
         return savedList;
@@ -3376,8 +4177,7 @@ export class StatusListService {
             bits,
         });
 
-        // Generate the JWT
-        await this.createListJWT(entry);
+        await this.regenerateListTokens(entry.tenantId, entry.id);
     }
 }
 </code></pre>

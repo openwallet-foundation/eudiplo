@@ -1197,6 +1197,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/AddSigningKeyIdToIssuanceConfig1741000000000.html" data-type="entity-link" >AddSigningKeyIdToIssuanceConfig1741000000000</a>
                             </li>
                             <li class="link">
+                                <a href="classes/AddStatusListVersionAndUniqueConstraint1776000000000.html" data-type="entity-link" >AddStatusListVersionAndUniqueConstraint1776000000000</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/AddTenantActionLog1762000000000.html" data-type="entity-link" >AddTenantActionLog1762000000000</a>
                             </li>
                             <li class="link">
@@ -1744,6 +1747,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/StatusListResponseDto.html" data-type="entity-link" >StatusListResponseDto</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/StatusMapping.html" data-type="entity-link" >StatusMapping</a>
                             </li>
                             <li class="link">
                                 <a href="classes/StatusUpdateDto.html" data-type="entity-link" >StatusUpdateDto</a>
